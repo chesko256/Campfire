@@ -62,10 +62,10 @@ Furniture property _DE_TanningRack auto
 
 message property _DE_Enchanting_BoneMealError auto
 message property _DE_Placement_Combat auto
-message property _DE_Placement_Multiple auto
 message property _DE_Placement_Swimming auto
 message property _DE_Placement_InUse auto
 
+;@TODO: Rework simple placement to prevent stack usage
 Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
 	if _DE_Setting_SimplePlacement.GetValueInt() != 2
 		if _DE_CampsitePlacementOn.GetValue() == 1
