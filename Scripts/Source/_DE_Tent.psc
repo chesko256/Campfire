@@ -1102,27 +1102,18 @@ function UnDisplayHelm_Player()
 endFunction
 
 function DisplayQuiver_Player()
+	;Just unequip the quiver
 	myQuiver = GetPlayerEquippedAmmo()
 	if myQuiver
 		myActor.UnequipItem(myQuiver, abSilent = true)
-;		myDisplayQuiver = _DE_TentQuiverMarkerREF.PlaceAtMe(myQuiver)
-;		if myDisplayQuiver
-;			while !myDisplayQuiver.Is3DLoaded()
-;			endwhile
-;			myDisplayQuiver.SetMotionType(Motion_Keyframed)
-;			myDisplayQuiver.BlockActivation()
-;		endif
 	endif
 endfunction
 
 function UnDisplayQuiver_Player()
+	;Just re-equip the quiver
 	if myQuiver
 		myActor.EquipItem(myQuiver, abSilent = true)
 	endif
-;	if myDisplayQuiver
-;		myDisplayQuiver.Disable()
-;		myDisplayQuiver.Delete()
-;	endif
 endFunction
 
 function DisplayBackpack_Player()
@@ -1492,126 +1483,5 @@ endFunction
 
 function DoSpareBedroll3Event(ObjectReference akActionRef)
 
-endFunction
-/;
-
-;=======================================Deprecated Frostfall 2.3============================================
-
-message property _DE_CampTent2_WaitMenu auto
-message property _DE_CampTent2_WaitUntilMenu auto
-message property _DE_Tent_Storm auto
-
-;/
-Event OnUpdateGameTime()
-	if _DE_HoursToSleep.GetValue() > 0 && _DE_bContinueToWait.GetValue() == 2
-		_DE_HoursToSleep.SetValue(_DE_HoursToSleep.GetValue() - 1)
-		RegisterForSingleUpdateGameTime(1)
-		;trace("[FROSTFALL] Registering for update game time..._DE_HoursToSleep = " + _DE_HoursToSleep.GetValue())
-	else
-		;trace("[FROSTFALL] Stopping loop. _DE_HoursToSleep = " + _DE_HoursToSleep.GetValue() + ", _DE_bContinueToWait = " + _DE_bContinueToWait.GetValue())
-		_DE_bContinueToWait.SetValue(2)
-		Timescale.SetValue(myTimeScale)
-		_DE_HoursToSleep.SetValue(1.0)
-		_DE_Tent_InteractTriggerREF.MoveTo(PlayerRef)
-		_DE_Tent_StopWaitTriggerREF.MoveTo(_DE_Anchor)
-	endif
-endEvent
-
-function ShowWaitMenu(ObjectReference akActionRef)
-	int i = _DE_CampTent2_WaitMenu.Show(_DE_HoursToSleep.GetValue())
-	if i == 0		;-6 Hr
-		if _DE_HoursToSleep.GetValue() < 7
-			_DE_HoursToSleep.SetValue(1)
-		else
-			_DE_HoursToSleep.SetValue(_DE_HoursToSleep.GetValue() - 6)
-		endif
-		ShowWaitMenu(akActionRef)
-	elseif i == 1	;-1 Hr
-		if _DE_HoursToSleep.GetValue() < 2
-			_DE_HoursToSleep.SetValue(1)
-		else
-			_DE_HoursToSleep.SetValue(_DE_HoursToSleep.GetValue() - 1)
-		endif
-		ShowWaitMenu(akActionRef)
-	elseif i == 2	;+1 Hr
-		if _DE_HoursToSleep.GetValue() > 23
-			_DE_HoursToSleep.SetValue(24)
-		else
-			_DE_HoursToSleep.SetValue(_DE_HoursToSleep.GetValue() + 1)
-		endif
-		ShowWaitMenu(akActionRef)
-	elseif i == 3	;+6 Hr
-		if _DE_HoursToSleep.GetValue() > 18
-			_DE_HoursToSleep.SetValue(24)
-		else
-			_DE_HoursToSleep.SetValue(_DE_HoursToSleep.GetValue() + 6)
-		endif
-		ShowWaitMenu(akActionRef)
-	elseif i == 4
-		myTimeScale = Timescale.GetValue()
-		Timescale.SetValue(3600.0)
-		_DE_bContinueToWait.SetValue(2)
-		RegisterForSingleUpdateGameTime(1)
-		_DE_Tent_InteractTriggerREF.MoveTo(_DE_Anchor)
-		_DE_Tent_StopWaitTriggerREF.MoveTo(PlayerRef)
-	elseif i == 5
-		ShowSitMenu(akActionRef)
-	endif
-endFunction
-
-function WaitUntil(ObjectReference akActionRef)
-	int i = _DE_CampTent2_WaitUntilMenu.Show()
-	if i == 0
-		WaitMorning()		;Wait until morning
-	elseif i == 1
-		WaitStorm()			;Wait until storm passes
-	elseif i == 2
-		ShowSitMenu(akActionRef)	;Back
-	endif
-endFunction
-
-function WaitMorning()
-	myTimeScale = Timescale.GetValue()
-	_DE_Tent_InteractTriggerREF.MoveTo(_DE_Anchor)
-	_DE_Tent_StopWaitTriggerREF.MoveTo(PlayerRef)
-	_DE_bContinueToWait.SetValue(2)
-	
-	if GameHour.GetValue() >= 6.0
-		_DE_HoursToSleep.SetValue(((24.0 - (GameHour.GetValue() - 6.0))))
-	else
-		_DE_HoursToSleep.SetValue((6.0 - GameHour.GetValue()))
-	endif
-	
-	;messagebox("_DE_HoursToSleep = " + _DE_HoursToSleep.GetValue() + ", GetCurrentGameTime = " + (GetCurrentGameTime() * 24.0))
-	
-	Timescale.SetValue(3600.0)
-	
-	RegisterForSingleUpdateGameTime(1)
-	
-	ApplySnow()
-endFunction
-
-function WaitStorm()
-
-	myTimeScale = Timescale.GetValue()
-	Timescale.SetValue(3600.0)
-	_DE_Tent_InteractTriggerREF.MoveTo(_DE_Anchor)
-	_DE_Tent_StopWaitTriggerREF.MoveTo(PlayerRef)
-	_DE_bContinueToWait.SetValue(2.0)
-	_DE_HoursToSleep.SetValue((GetCurrentGameTime() + 1.0))		;use days instead
-	while (Weather.GetCurrentWeather().GetClassification() == 2 || Weather.GetCurrentWeather().GetClassification() == 3) && _DE_bContinueToWait.GetValue() == 2
-		wait(0.5)
-		if GetCurrentGameTime() >= _DE_HoursToSleep.GetValue()
-			_DE_Tent_Storm.Show()
-			_DE_bContinueToWait.SetValue(0.0)
-		endif
-	endWhile
-	_DE_bContinueToWait.SetValue(2.0)
-	Timescale.SetValue(myTimeScale)
-	_DE_HoursToSleep.SetValue(1.0)
-	_DE_Tent_StopWaitTriggerREF.MoveTo(_DE_Anchor)
-	_DE_Tent_InteractTriggerREF.MoveTo(PlayerRef)
-	
-	ApplySnow()	
 endFunction
 /;

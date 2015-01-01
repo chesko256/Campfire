@@ -35,7 +35,6 @@ Activator property _DE_CampVis_CampTentHideLarge3BR auto
 Activator property _DE_CampVis_CampTentHideLarge4BR auto
 Activator property _DE_CampVis_CookingPot auto
 
-;GlobalVariable property _DE_SwimState auto
 GlobalVariable property _DE_CampsitePlacementOn auto
 GlobalVariable property _DE_Setting_SimplePlacement auto
 
