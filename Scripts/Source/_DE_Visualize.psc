@@ -24,7 +24,7 @@ form property myPlacementRequirement auto hidden
 GlobalVariable property _DE_ZTestValA auto
 GlobalVariable property _DE_ZTestValB auto
 GlobalVariable property _DE_ZTestValC auto
-GlobalVariable property _DE_CampsitePlacementOn auto
+GlobalVariable property _Camp_CurrentlyPlacingObject auto
 ;GlobalVariable property _DE_SwimState auto
 GlobalVariable property _DE_Setting_Help auto
 GlobalVariable property _DE_HelpDone_Visualize auto
@@ -66,32 +66,24 @@ function StartPlacement()
 	endif
 	;#Help Text=========================
 	self.SetAngle(0.0, 0.0, 0.0)
-	_DE_CampsitePlacementOn.SetValue(2)
+	_Camp_CurrentlyPlacingObject.SetValue(2)
 	myTrigger.MoveTo(PlayerRef)
 	Legal.GetCampingLegalStart()
 	RegisterForSingleUpdate(fUpdateSpeed)
 
 endFunction
 
-bool function GetFrostfallSwimState()
-	;/if Compatibility.IsFrostfallLoaded && _DE_SwimState.GetValue() == 1.0
-		return true
-	else
-		return false
-	endif/;
-	return false
-endFunction
-
 function PerformPlacement(float fDistance, formlist akWarmList = none, float fHeight = 1.0, float fRot = 0.0, float fHeatDist = 0.0, bool bLockToPlayer = false)
 	
 	float fTimeDeltaSec = GetCurrentRealTime() - fLastUpdateTime			;(difference in game-time days)
 
-	bool bHaltPlacement = PlayerRef.IsInCombat() || GetFrostfallSwimState() || self.GetDistance(PlayerRef) > 3000.0
+	;@TODO: Drop IsInCombat, check for OnHit event instead
+	bool bHaltPlacement = PlayerRef.IsInCombat() || PlayerRef.IsSwimming() || self.GetDistance(PlayerRef) > 3000.0
 	if bHaltPlacement
 		StopPlacement()
 		GiveBackItem()
 		_DE_Placement_Cancelled.Show()
-		_DE_CampsitePlacementOn.SetValue(1)
+		_Camp_CurrentlyPlacingObject.SetValue(1)
 		return
 	endif
 	
@@ -102,7 +94,7 @@ function PerformPlacement(float fDistance, formlist akWarmList = none, float fHe
 	float[] myCenterPoint = new float[2]
 	myCenterPoint = GetTerrainAngleData(fDistance)
 	
-	if _DE_CampsitePlacementOn.GetValueInt() == 3 && _DE_HelpDone_PlacementError.GetValue() == 1
+	if _Camp_CurrentlyPlacingObject.GetValueInt() == 3 && _DE_HelpDone_PlacementError.GetValue() == 1
 		StopPlacement()
 		GiveBackItem()
 		if _DE_HelpDone_PlacementError.GetValue() == 1
@@ -118,9 +110,9 @@ function PerformPlacement(float fDistance, formlist akWarmList = none, float fHe
 			endif
 		endif
 		_DE_Placement_Cancelled.Show()
-		_DE_CampsitePlacementOn.SetValue(1)
+		_Camp_CurrentlyPlacingObject.SetValue(1)
 		return
-	elseif _DE_CampsitePlacementOn.GetValueInt() == 2
+	elseif _Camp_CurrentlyPlacingObject.GetValueInt() == 2
 	
 		;I have gathered the Z-Test data. Use that data to learn the x and y axis rotation of the terrain.
 		float[] myRot = new float[3]
@@ -171,10 +163,10 @@ function PerformPlacement(float fDistance, formlist akWarmList = none, float fHe
 			if ibutton == 0
 				StopPlacement()
 				GiveBackItem()
-				_DE_CampsitePlacementOn.SetValue(1)
+				_Camp_CurrentlyPlacingObject.SetValue(1)
 				_DE_Placement_Cancelled.Show()
 			elseif ibutton == 1		;Back
-				_DE_CampsitePlacementOn.SetValue(2)
+				_Camp_CurrentlyPlacingObject.SetValue(2)
 				RegisterForSingleUpdate(fUpdateSpeed)
 			endif
 		else
@@ -201,7 +193,7 @@ function PerformPlacement(float fDistance, formlist akWarmList = none, float fHe
 				GiveBackItem()
 				_DE_Placement_Cancelled.Show()
 			elseif ibutton == 2		;Back
-				_DE_CampsitePlacementOn.SetValue(2)
+				_Camp_CurrentlyPlacingObject.SetValue(2)
 				RegisterForSingleUpdate(fUpdateSpeed)
 			endif
 		endif

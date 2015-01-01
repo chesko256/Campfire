@@ -4,7 +4,7 @@ Scriptname _DE_Visualize_CampTentLeatherSmall extends _DE_Visualize
 message property _DE_CampVisPrompt_Tent auto
 
 ;Visualization trigger
-ObjectReference property _DE_CampVisTrigger_CampTentHideSmallREF auto
+ObjectReference property _DE_CampVisTrigger_TentREF auto
 
 ;Inventory item
 MiscObject property _DE_CampTent2_LeatherSmall1BR_MISC auto
@@ -17,7 +17,7 @@ FormList property _DE_HeatSources_All auto
 
 Event OnInit()
 	myVisPrompt = _DE_CampVisPrompt_Tent
-	myTrigger = _DE_CampVisTrigger_CampTentHideSmallREF
+	myTrigger = _DE_CampVisTrigger_TentREF
 	myInvItem = _DE_CampTent2_LeatherSmall1BR_MISC
 	myPlacedItem = _DE_CampTent2_SmallLeather1BRACT
 	

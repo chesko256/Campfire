@@ -1,7 +1,7 @@
 scriptname _DE_Visualize_Campsite_Trigger extends ObjectReference
 
-GlobalVariable property _DE_CampsitePlacementOn auto
+GlobalVariable property _Camp_CurrentlyPlacingObject auto
 
 Event OnActivate(ObjectReference akActionRef)
-	_DE_CampsitePlacementOn.SetValue(1)
+	_Camp_CurrentlyPlacingObject.SetValue(1)
 endEvent

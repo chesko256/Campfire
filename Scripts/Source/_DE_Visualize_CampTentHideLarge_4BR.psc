@@ -7,7 +7,7 @@ import utility
 message property _DE_CampVisPrompt_Tent auto
 
 ;Visualization trigger
-ObjectReference property _DE_CampVisTrigger_CampTentHideSmallREF auto
+ObjectReference property _DE_CampVisTrigger_TentREF auto
 
 ;Inventory item
 MiscObject property _DE_CampTentHideLarge_4BR auto
@@ -20,7 +20,7 @@ FormList property _DE_HeatSources_All auto
 
 Event OnInit()
 	myVisPrompt = _DE_CampVisPrompt_Tent
-	myTrigger = _DE_CampVisTrigger_CampTentHideSmallREF
+	myTrigger = _DE_CampVisTrigger_TentREF
 	myInvItem = _DE_CampTentHideLarge_4BR
 	myPlacedItem = _DE_CampTent2_LargeHide4BRACT
 	

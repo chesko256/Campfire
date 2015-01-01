@@ -156,6 +156,7 @@ Armor function GetPlayerEquippedHead() global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
+		return None
 	else
 		return Campfire.CampData.CurrentHead
 	endif
@@ -165,6 +166,7 @@ Armor function GetPlayerEquippedBody() global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
+		return None
 	else
 		return Campfire.CampData.CurrentBody
 	endif
@@ -174,6 +176,7 @@ Armor function GetPlayerEquippedHands() global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
+		return None
 	else
 		return Campfire.CampData.CurrentHands
 	endif
@@ -183,6 +186,7 @@ Armor function GetPlayerEquippedFeet() global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
+		return None
 	else
 		return Campfire.CampData.CurrentFeet
 	endif
@@ -192,6 +196,7 @@ Armor function GetPlayerEquippedBackpack() global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
+		return None
 	else
 		return Campfire.CampData.CurrentBackpack
 	endif
@@ -201,6 +206,7 @@ Ammo function GetPlayerEquippedAmmo() global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
+		return None
 	else
 		return Campfire.CampData.CurrentAmmo
 	endif
@@ -244,6 +250,7 @@ bool function IsRefInInterior(ObjectReference akObject) global
 
 	if Campfire == none
 		RaiseCampAPIError()
+		return False
 	else
 		if akObject.IsInInterior()
 			return True
@@ -261,14 +268,18 @@ bool function PlayerCanPlaceObjects() global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
+		return False
 	else
 		;Eliminated combat check; this can happen too often.
-		if Campfire.PlayerRef.IsSwimming()
+		if IsPlayerPlacingObject()
+			;_DE_Placement_InUse.Show()
+			notification("[Debug]You are already trying to place something.")
+		elseif Campfire.PlayerRef.IsSwimming()
 			;_DE_Placement_Swimming.Show()	;@TODO: Rename
 			notification("[Debug]You can't use this while swimming.")
 			return False
 		elseif Campfire.PlayerRef.IsOnMount()
-			;silently fail 					;@TODO: Provide error
+			;@TODO: Provide error
 			notification("[Debug]You can't use this while mounted.")
 			return False
 		elseif Campfire.PlayerRef.GetSleepState() != 0
@@ -289,8 +300,13 @@ bool function IsPlayerPlacingObject() global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
+		return False
 	else
-
+		if Campfire._Camp_CurrentlyPlacingObject.GetValueInt() == 2
+			return True
+		else
+			return False
+		endif
 	endif
 endFunction
 
