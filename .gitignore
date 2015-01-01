@@ -19,6 +19,7 @@
 #Interface
 !Interface/frostfall/*
 !Interface/Translations/Chesko_Frostfall_*.txt
+!Interface/Translations/Campfire*.txt
 !Interface/exported/widgets/frostfall/*
 
 #Meshes
