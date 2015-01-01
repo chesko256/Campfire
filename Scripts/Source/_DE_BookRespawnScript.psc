@@ -1,0 +1,1 @@
+Scriptname _DE_BookRespawnScript extends ObjectReference

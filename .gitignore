@@ -1,0 +1,45 @@
+#Ignore everything:
+*
+
+#Git files:
+!.gitignore
+!LICENSE
+!README.md
+
+#Whitelist directories:
+!*/
+
+#Top-level files
+!Campfire.esp
+!Campfire.esm
+!Chesko_Frostfall.esp
+!Frostfall.esp
+!LastSeed.esp
+
+#Interface
+!Interface/frostfall/*
+!Interface/Translations/Chesko_Frostfall_*.txt
+!Interface/exported/widgets/frostfall/*
+
+#Meshes
+!Meshes/campfire/*
+!Meshes/frostfall/*
+
+#Readmes
+!readmes/Frostfall*.txt
+!readmes/Campfire*.txt
+
+#Sound
+!sound/fx/frostfall/*
+
+#Scripts
+!qf__de_trackingquest_010177d7.pex
+!_DE_*.pex
+!_DE_*.psc
+!_Camp_*.pex
+!_Camp_*.psc
+!Camp*.pex
+!Camp*.psc
+
+#Textures
+!textures/frostfall/*

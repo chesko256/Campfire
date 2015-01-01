@@ -1,0 +1,1 @@
+Scriptname _DE_ClothingMonitor_1_6 extends ReferenceAlias
