@@ -42,5 +42,8 @@
 !Camp*.pex
 !Camp*.psc
 
+#Ignore working files
+Scripts/Source/_Camp_SkyUIConfigPanelScript - Copy.psc
+
 #Textures
 !textures/frostfall/*
