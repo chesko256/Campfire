@@ -38,7 +38,7 @@ Activator property _DE_CampVis_CookingPot auto
 ;GlobalVariable property _DE_SwimState auto
 GlobalVariable property _DE_CampsitePlacementOn auto
 GlobalVariable property _DE_Setting_SimplePlacement auto
-;Form list for Inventory Event Filter
+
 formlist property _DE_MiscTentObjects auto
 formlist property _Camp_PlaceableObjects auto
 
@@ -62,10 +62,6 @@ Ingredient property BoneMeal auto
 Furniture property _DE_MortarAndPestleFurniture auto
 Furniture property _DE_TanningRack auto
 
-message property _DE_CampTent2_DropChoice auto 		;@TODO: Delete message
-message property _DE_CookingPot_DropChoice auto		;@TODO: Delete message
-message property _DE_Enchanting_DropChoice auto		;@TODO: Delete message
-message property _DE_TanningRack_DropChoice auto	;@TODO: Delete message
 message property _DE_Enchanting_BoneMealError auto
 message property _DE_Placement_Combat auto
 message property _DE_Placement_Multiple auto
@@ -77,7 +73,6 @@ Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
 		if _DE_CampsitePlacementOn.GetValue() == 1
 			if _Camp_PlaceableObjects.HasForm(akBaseObject)
 				if PlayerCanPlaceObjects()
-					;int i = _DE_CampTent2_DropChoice.Show()	;@TODO: Delete this message
 					PlaceObject(akBaseObject)
 				endif
 			endif
