@@ -39,7 +39,6 @@ GlobalVariable property _DE_CampsitePlacementOn auto
 GlobalVariable property _DE_Setting_SimplePlacement auto
 
 formlist property _DE_MiscTentObjects auto
-formlist property _Camp_PlaceableObjects auto
 
 ;Misc (Inventory) items
 MiscObject property _DE_EnchantingMISC auto
@@ -70,7 +69,7 @@ message property _DE_Placement_InUse auto
 Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
 	if _DE_Setting_SimplePlacement.GetValueInt() != 2
 		if _DE_CampsitePlacementOn.GetValue() == 1
-			if _Camp_PlaceableObjects.HasForm(akBaseObject)
+			if IsPlaceableObject(akBaseObject)
 				if PlayerCanPlaceObjects()
 					PlaceObject(akBaseObject)
 				endif

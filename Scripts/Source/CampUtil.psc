@@ -310,6 +310,20 @@ bool function IsPlayerPlacingObject() global
 	endif
 endFunction
 
+bool function IsPlaceableObject(Form akBaseObject) global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return False
+	else
+		if Campfire._Camp_PlaceableObjects.HasForm(akBaseObject)
+			return True
+		else
+			return False
+		endif
+	endif
+endFunction
+
 ;@TODO: LegalForPlayerToPlaceObject()
 
 function ExitMenus() global
