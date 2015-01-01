@@ -285,6 +285,9 @@ bool function PlayerCanPlaceObjects() global
 	endif
 endFunction
 
+;@TODO: IsPlacingObject()
+;@TODO: LegalForPlayerToPlaceObject()
+
 function ExitMenus() global
 	Game.DisablePlayerControls()
 	Game.EnablePlayerControls()
