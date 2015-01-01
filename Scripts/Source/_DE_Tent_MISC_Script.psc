@@ -78,7 +78,7 @@ Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
 			if _Camp_PlaceableObjects.HasForm(akBaseObject)
 				if PlayerCanPlaceObjects()
 					;int i = _DE_CampTent2_DropChoice.Show()	;@TODO: Delete this message
-					PlaceObject(akBaseObject, akReference)
+					PlaceObject(akBaseObject)
 				endif
 			endif
 		endif
@@ -123,7 +123,7 @@ function TentVisualization(form akBaseItem)
 	endif
 endFunction
 
-function PlaceObject(Form akBaseObject, ObjectReference akReference)
+function PlaceObject(Form akBaseObject)
 	ExitMenus()
 	PlayerRef.RemoveItem(akBaseObject, 1, true)
 	if _DE_MiscTentObjects.HasForm(akBaseObject)
