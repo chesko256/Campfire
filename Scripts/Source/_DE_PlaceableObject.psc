@@ -13,7 +13,7 @@ Ingredient property myRequiredIngredient auto
 MiscObject property myRequiredItem auto
 {Fill only the ingredient or the misc item property, not both.}
 message property myRequirementErrorMsg auto
-{Fill if a required item is necessary.}
+{Fill if a required ingredient or item is necessary.}
 message property _DE_PlacedObjectIllegalLocation auto
 message property _DE_PlacedObjectChoice auto
 ObjectReference property _DE_XMarker_Placement auto

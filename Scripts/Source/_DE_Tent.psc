@@ -259,7 +259,6 @@ ReferenceAlias property StaticFollower1 auto
 ReferenceAlias property StaticFollower2 auto
 ReferenceAlias property StaticFollower3 auto
 pDBEntranceQuestScript property DBEntranceQuestScript auto
-Formlist property _DE_WorldspacesInteriors auto
 Message property _DE_Help_Tents auto
 Message property _DE_TentSeeThruError auto
 static property _DE_Tent_LanternOnGround auto
