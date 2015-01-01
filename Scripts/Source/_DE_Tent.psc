@@ -92,7 +92,6 @@ Actor property myActor auto hidden
 GlobalVariable property _DE_HoursToSleep auto
 GlobalVariable property GameHour auto
 GlobalVariable property Timescale auto
-GlobalVariable property _DE_bContinueToWait auto
 GlobalVariable property _DE_Setting_CampingArmorTakeOff auto
 ;GlobalVariable property _DE_CurrentTemp auto
 ;GlobalVariable property _DE_ExposurePoints auto
@@ -273,8 +272,6 @@ static property _DE_Tent_BedrollHayNoGround02 auto
 static property _DE_Tent_BedrollHayNoGround03 auto
 static property Rug03 auto
 static property _DE_TentWard auto
-ObjectReference property _DE_Tent_StopSleepTriggerREF auto
-ObjectReference property _DE_Tent_StopWaitTriggerREF auto
 ObjectReference property _DE_Tent_InteractTriggerREF auto
 ObjectReference property _DE_Anchor auto
 ImageSpaceModifier property _DE_FadeDown auto
@@ -1170,8 +1167,7 @@ function PackTent()
 	
 	myActor.AddItem(TentMiscItem, abSilent = true)
 	
-	;Move activation cubes to the anchor
-	_DE_Tent_StopWaitTriggerREF.MoveTo(_DE_Anchor)
+	;Move activation trigger to the anchor
 	_DE_Tent_InteractTriggerREF.MoveTo(_DE_Anchor)
 
 	;Delete display models, if any
@@ -1350,7 +1346,6 @@ function CleanUpTent()
 	UnDisplayQuiver_Player()
 	UnDisplayBackpack_Player()
 
-	_DE_Tent_StopWaitTriggerREF.MoveTo(_DE_Anchor)
 	_DE_Tent_InteractTriggerREF.MoveTo(_DE_Anchor)
 	;_DE_HoursToSleep.SetValue(1.0)
 	if myTentExterior
@@ -1366,6 +1361,7 @@ function UnequipUsingDummyWeapon()
 	myActor.RemoveItem(_DE_DummyWeapon, abSilent = true)
 endFunction
 
+;@TODO: Settle on Follower support approach
 ;/ObjectReference property Spare1LastUser auto
 ObjectReference property Spare2LastUser auto
 ObjectReference property Spare3LastUser auto

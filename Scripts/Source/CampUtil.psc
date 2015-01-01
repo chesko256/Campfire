@@ -285,7 +285,15 @@ bool function PlayerCanPlaceObjects() global
 	endif
 endFunction
 
-;@TODO: IsPlacingObject()
+bool function IsPlayerPlacingObject() global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+	else
+
+	endif
+endFunction
+
 ;@TODO: LegalForPlayerToPlaceObject()
 
 function ExitMenus() global
