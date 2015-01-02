@@ -157,9 +157,9 @@ Armor function GetPlayerEquippedHead() global
 	if Campfire == none
 		RaiseCampAPIError()
 		return None
-	else
-		return Campfire.CampData.CurrentHead
 	endif
+	
+	return Campfire.CampData.CurrentHead
 endFunction
 
 Armor function GetPlayerEquippedBody() global
@@ -167,9 +167,9 @@ Armor function GetPlayerEquippedBody() global
 	if Campfire == none
 		RaiseCampAPIError()
 		return None
-	else
-		return Campfire.CampData.CurrentBody
 	endif
+
+	return Campfire.CampData.CurrentBody
 endFunction
 
 Armor function GetPlayerEquippedHands() global
@@ -177,9 +177,9 @@ Armor function GetPlayerEquippedHands() global
 	if Campfire == none
 		RaiseCampAPIError()
 		return None
-	else
-		return Campfire.CampData.CurrentHands
 	endif
+
+	return Campfire.CampData.CurrentHands
 endFunction
 
 Armor function GetPlayerEquippedFeet() global
@@ -187,9 +187,9 @@ Armor function GetPlayerEquippedFeet() global
 	if Campfire == none
 		RaiseCampAPIError()
 		return None
-	else
-		return Campfire.CampData.CurrentFeet
 	endif
+
+	return Campfire.CampData.CurrentFeet
 endFunction
 
 Armor function GetPlayerEquippedBackpack() global
@@ -197,9 +197,9 @@ Armor function GetPlayerEquippedBackpack() global
 	if Campfire == none
 		RaiseCampAPIError()
 		return None
-	else
-		return Campfire.CampData.CurrentBackpack
 	endif
+
+	return Campfire.CampData.CurrentBackpack
 endFunction
 
 Ammo function GetPlayerEquippedAmmo() global
@@ -207,9 +207,9 @@ Ammo function GetPlayerEquippedAmmo() global
 	if Campfire == none
 		RaiseCampAPIError()
 		return None
-	else
-		return Campfire.CampData.CurrentAmmo
 	endif
+
+	return Campfire.CampData.CurrentAmmo
 endFunction
 
 bool function IsRefInInterior(ObjectReference akObject) global
@@ -247,19 +247,18 @@ bool function IsRefInInterior(ObjectReference akObject) global
 	;	  evaluating the object reference's location.
 
 	CampfireAPI Campfire = GetAPI()
-
 	if Campfire == none
 		RaiseCampAPIError()
 		return False
+	endif
+
+	if akObject.IsInInterior()
+		return True
 	else
-		if akObject.IsInInterior()
+		if Campfire._Camp_WorldspacesInteriors.HasForm(akObject.GetWorldSpace())
 			return True
 		else
-			if Campfire._Camp_WorldspacesInteriors.HasForm(akObject.GetWorldSpace())
-				return True
-			else
-				return False
-			endif
+			return False
 		endif
 	endif
 endFunction
@@ -269,30 +268,30 @@ bool function PlayerCanPlaceObjects() global
 	if Campfire == none
 		RaiseCampAPIError()
 		return False
+	endif
+
+	;Don't check combat; this can happen too often.
+	if IsPlayerPlacingObject()
+		;_DE_Placement_InUse.Show()
+		notification("[Debug]You are already trying to place something.")
+	elseif Campfire.PlayerRef.IsSwimming()
+		;_DE_Placement_Swimming.Show()	;@TODO: Rename
+		notification("[Debug]You can't use this while swimming.")
+		return False
+	elseif Campfire.PlayerRef.IsOnMount()
+		;@TODO: Provide error
+		notification("[Debug]You can't use this while mounted.")
+		return False
+	elseif Campfire.PlayerRef.GetSleepState() != 0
+		;@TODO: Error
+		notification("[Debug]You can't use this while lying down.")
+		return False
+	elseif Campfire.PlayerRef.GetSitState() != 0
+		;@TODO: Error
+		notification("[Debug]You can't use this while using something else.")
+		return False
 	else
-		;Eliminated combat check; this can happen too often.
-		if IsPlayerPlacingObject()
-			;_DE_Placement_InUse.Show()
-			notification("[Debug]You are already trying to place something.")
-		elseif Campfire.PlayerRef.IsSwimming()
-			;_DE_Placement_Swimming.Show()	;@TODO: Rename
-			notification("[Debug]You can't use this while swimming.")
-			return False
-		elseif Campfire.PlayerRef.IsOnMount()
-			;@TODO: Provide error
-			notification("[Debug]You can't use this while mounted.")
-			return False
-		elseif Campfire.PlayerRef.GetSleepState() != 0
-			;@TODO: Error
-			notification("[Debug]You can't use this while lying down.")
-			return False
-		elseif Campfire.PlayerRef.GetSitState() != 0
-			;@TODO: Error
-			notification("[Debug]You can't use this while using something else.")
-			return False
-		else
-			return True
-		endif
+		return True
 	endif
 endFunction
 
@@ -301,12 +300,12 @@ bool function IsPlayerPlacingObject() global
 	if Campfire == none
 		RaiseCampAPIError()
 		return False
+	endif
+	
+	if Campfire._Camp_CurrentlyPlacingObject.GetValueInt() == 2
+		return True
 	else
-		if Campfire._Camp_CurrentlyPlacingObject.GetValueInt() == 2
-			return True
-		else
-			return False
-		endif
+		return False
 	endif
 endFunction
 
@@ -315,16 +314,79 @@ bool function IsPlaceableObject(Form akBaseObject) global
 	if Campfire == none
 		RaiseCampAPIError()
 		return False
+	endif
+	
+	if Campfire._Camp_PlaceableObjects.HasForm(akBaseObject)
+		return True
 	else
-		if Campfire._Camp_PlaceableObjects.HasForm(akBaseObject)
-			return True
-		else
-			return False
-		endif
+		return False
 	endif
 endFunction
 
-;@TODO: LegalForPlayerToPlaceObject()
+;@TODO: bool function LegalForPlayerToPlaceObject()
+;@TODO: int function IsPlayerUnderShelter()
+
+int function GetCurrentTentType() global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return 0
+	endif
+
+	int TentType = 0
+	
+	;0	=	None
+	;1	=	Small Fur Tent
+	;2  =   Large Fur Tent
+	;3	=	Small Leather Tent
+	;4	=	Large Leather Tent
+	;5  =	Conjured Shelter
+	
+	ObjectReference myTent = Game.FindClosestReferenceOfAnyTypeInListFromRef(Campfire._Camp_FurTentsSmall, Campfire.PlayerRef, 50.0)
+	if myTent
+		if Campfire.PlayerRef.GetSitState() == 3
+			TentType = 1
+			;notification("I'm in a small hide tent!")
+			return TentType
+		endif
+	endif
+	
+	if !myTent
+		myTent = Game.FindClosestReferenceOfAnyTypeInListFromRef(Campfire._Camp_FurTentsLarge, Campfire.PlayerRef, 146.0)
+		if myTent
+			TentType = 2
+			return TentType
+		endif
+	endif
+	
+	if !myTent
+		myTent = Game.FindClosestReferenceOfAnyTypeInListFromRef(Campfire._Camp_LeatherTentsSmall, Campfire.PlayerRef, 85.0)
+		if myTent
+			if Campfire.PlayerRef.GetSitState() == 3
+				TentType = 3
+				return TentType
+			endif
+		endif
+	endif
+	
+	if !myTent
+		myTent = Game.FindClosestReferenceOfAnyTypeInListFromRef(Campfire._Camp_LeatherTentsLarge, Campfire.PlayerRef, 195.0)
+		if myTent
+			TentType = 4
+			return TentType
+		endif
+	endif
+
+	if !myTent
+		myTent = Game.FindClosestReferenceOfAnyTypeInListFromRef(Campfire._Camp_ConjuredShelters, Campfire.PlayerRef, 235.0)
+		if myTent
+			TentType = 5
+			return TentType
+		endif
+	endif
+	
+	return TentType
+endFunction
 
 function ExitMenus() global
 	Game.DisablePlayerControls()

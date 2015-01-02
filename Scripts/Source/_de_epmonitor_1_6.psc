@@ -1456,6 +1456,8 @@ bool function GetOtherHeatSource()					;Approved 2.5
 	endif
 endFunction
 
+;@TODO: Superseded by CampUtil.GetCurrentTentType
+;@TODO: Update all users, return values have changed!!!
 int function GetInTent()							;Approved 2.5
 	iIsInTent = 0
 	

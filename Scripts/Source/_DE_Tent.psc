@@ -95,8 +95,8 @@ GlobalVariable property Timescale auto
 GlobalVariable property _DE_Setting_CampingArmorTakeOff auto
 ;GlobalVariable property _DE_CurrentTemp auto
 ;GlobalVariable property _DE_ExposurePoints auto
+GlobalVariable property _Camp_HelpDone_TentActivate auto
 GlobalVariable property _DE_Setting_Help auto
-GlobalVariable property _DE_HelpDone_Tents auto
 GlobalVariable property _DE_TentSeeThru auto
 GlobalVariable property _DE_FollowersUseBedrollAI auto
 
@@ -109,6 +109,7 @@ message property _DE_CampTent2_LayMenu_Positive auto
 message property _DE_CampTent2_PickUpError auto
 message property _DE_Tent_Combat auto
 message property _DE_Combat_Error auto
+message property _Camp_Help_TentActivate auto
 
 ;Equipment markers
 static property _DE_Tent_MainWeaponMarker auto
@@ -346,15 +347,23 @@ function ShowMainMenu(ObjectReference akActionRef)
 	myActor = PlayerRef
 		int i = _DE_CampTent_Placed_ACT_Menu.Show()
 		if i == 0										;Sit
-			if _DE_Setting_Help.GetValueInt() == 2 && _DE_HelpDone_Tents.GetValueInt() == 1
-				_DE_Help_Tents.Show()
-				_DE_HelpDone_Tents.SetValue(2)
+			if _DE_Setting_Help.GetValueInt() == 2 && _Camp_HelpDone_TentActivate.GetValueInt() == 1
+				;@TODO: Move to Frostfall
+				;_DE_Help_Tents.Show()
+				;_DE_HelpDone_Tents.SetValue(2)
+				;Message.ResetHelpMessage("Activate")
+				;_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
+				;Message.ResetHelpMessage("Activate")
 			endif
 			PlayerSit(akActionRef)
 		elseif i == 1									;Lie Down
-			if _DE_Setting_Help.GetValueInt() == 2 && _DE_HelpDone_Tents.GetValueInt() == 1
-				_DE_Help_Tents.Show()
-				_DE_HelpDone_Tents.SetValue(2)
+			if _DE_Setting_Help.GetValueInt() == 2 && _Camp_HelpDone_TentActivate.GetValueInt() == 1
+				;@TODO: Move to Frostfall
+				;_DE_Help_Tents.Show()
+				;_DE_HelpDone_Tents.SetValue(2)
+				;Message.ResetHelpMessage("Activate")
+				;_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
+				;Message.ResetHelpMessage("Activate")
 			endif
 			PlayerLieDown(akActionRef)
 		elseif i == 2									;Pack
@@ -682,6 +691,7 @@ function PlayerLieDown(ObjectReference akActionRef)
 	if !(myActor.IsInCombat())
 		ShowLayMenu(akActionRef)
 	endif
+	
 	_DE_Tent_InteractTriggerREF.MoveTo(myActor)
 	RegisterForSingleUpdate(0.5)
 	

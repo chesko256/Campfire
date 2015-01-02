@@ -144,10 +144,12 @@ bool bAddedSpellBooks = false
 Event OnPlayerLoadGame()
 	RunStartupCheck()
 	RegisterForKeysOnLoad()
+	RegisterForControlsOnLoad()
 endEvent
 
 function RunStartupCheck()
 	VanillaGameLoadUp()
+	RegisterForControlsOnLoad()
 	Campfire.CheckFollowerPolling()
 	
 	;debug.notification("[Frostfall]Compatibility startup check...")
@@ -684,4 +686,9 @@ endFunction
 
 function RegisterForKeysOnLoad()
 	CampConfig.RegisterForKeysOnLoad()
+endFunction
+
+function RegisterForControlsOnLoad()
+	trace("[Campfire] Compatibility is trying to call Campfire.RegisterForControlsOnLoad()")
+	Campfire.RegisterForControlsOnLoad()
 endFunction

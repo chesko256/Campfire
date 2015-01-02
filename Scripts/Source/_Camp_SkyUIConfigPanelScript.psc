@@ -14,6 +14,7 @@ Scriptname _Camp_SkyUIConfigPanelScript extends SKI_ConfigBase
 _Camp_Compatibility property Compatibility auto
 GlobalVariable property _DE_Setting_Lighting auto
 GlobalVariable property _DE_Setting_Tent auto
+GlobalVariable property _Camp_HelpDone_TentActivate auto
 GlobalVariable property _DE_Setting_CampingArmorTakeOff auto
 GlobalVariable property _DE_Setting_WoodCinematic auto
 GlobalVariable property _DE_Setting_SystemMsg auto
@@ -217,26 +218,26 @@ endEvent
 event OnOptionSelect(int option)																		;TRANSLATED
 	if option == Gameplay_SettingCampingArmorTentsText_OID
 		if _DE_Setting_CampingArmorTakeOff.GetValueInt() == 2
-			_DE_Setting_CampingArmorTakeOff.SetValue(1)
+			_DE_Setting_CampingArmorTakeOff.SetValueInt(1)
 			SetToggleOptionValue(Gameplay_SettingCampingArmorTentsText_OID, false)
 		else
-			_DE_Setting_CampingArmorTakeOff.SetValue(2)
+			_DE_Setting_CampingArmorTakeOff.SetValueInt(2)
 			SetToggleOptionValue(Gameplay_SettingCampingArmorTentsText_OID, true)
 		endif
 	elseif option == Gameplay_SettingCampingPlacementVisualizationText_OID
 		if _DE_Setting_SimplePlacement.GetValueInt() == 2
-			_DE_Setting_SimplePlacement.SetValue(1)
+			_DE_Setting_SimplePlacement.SetValueInt(1)
 			SetToggleOptionValue(Gameplay_SettingCampingPlacementVisualizationText_OID, true)
 		else
-			_DE_Setting_SimplePlacement.SetValue(2)
+			_DE_Setting_SimplePlacement.SetValueInt(2)
 			SetToggleOptionValue(Gameplay_SettingCampingPlacementVisualizationText_OID, false)
 		endif
 	elseif option == Gameplay_SettingCampingFireLightingText_OID
 		if _DE_Setting_Lighting.GetValueInt() == 1
-			_DE_Setting_Lighting.SetValue(2)
+			_DE_Setting_Lighting.SetValueInt(2)
 			SetTextOptionValue(Gameplay_SettingCampingFireLightingText_OID, "$CampfireManual")
 		else
-			_DE_Setting_Lighting.SetValue(1)
+			_DE_Setting_Lighting.SetValueInt(1)
 			SetTextOptionValue(Gameplay_SettingCampingFireLightingText_OID, "$CampfireAutomatic")
 		endif
 	endif
@@ -245,10 +246,10 @@ event OnOptionSelect(int option)																		;TRANSLATED
 	
 	if option == Visuals_SettingAnimationToggle_OID
 		if _DE_Setting_Animation.GetValueInt() == 2
-			_DE_Setting_Animation.SetValue(1)
+			_DE_Setting_Animation.SetValueInt(1)
 			SetToggleOptionValue(Visuals_SettingAnimationToggle_OID, false)
 		else
-			_DE_Setting_Animation.SetValue(2)
+			_DE_Setting_Animation.SetValueInt(2)
 			SetToggleOptionValue(Visuals_SettingAnimationToggle_OID, true)
 		endif
 	endif
@@ -257,24 +258,25 @@ event OnOptionSelect(int option)																		;TRANSLATED
 	;#Region Help Page
 	if option == Help_TutorialsToggle_OID
 		if _DE_Setting_Help.GetValueInt() == 2
-			_DE_Setting_Help.SetValue(1)
+			_DE_Setting_Help.SetValueInt(1)
 			SetToggleOptionValue(Help_TutorialsToggle_OID, false)
 		else
-			_DE_Setting_Help.SetValue(2)
+			_DE_Setting_Help.SetValueInt(2)
 			SetToggleOptionValue(Help_TutorialsToggle_OID, true)
 		endif
 	elseif option == Help_TutorialsResetText_OID
 		bool bChoice = ShowMessage("$CampfireTutorialResetPrompt")
 		if bChoice
-			_DE_HelpDone_Visualize.SetValue(1)
-			_DE_HelpDone_PlacementError.SetValue(1)
+			_Camp_HelpDone_TentActivate.SetValueInt(1)
+			_DE_HelpDone_Visualize.SetValueInt(1)
+			_DE_HelpDone_PlacementError.SetValueInt(1)
 		endif
 	elseif option == Visuals_SettingSystemMsgToggle_OID
 		if _DE_Setting_SystemMsg.GetValueInt() == 2
-			_DE_Setting_SystemMsg.SetValue(1)
+			_DE_Setting_SystemMsg.SetValueInt(1)
 			SetToggleOptionValue(Visuals_SettingSystemMsgToggle_OID, false)
 		else
-			_DE_Setting_SystemMsg.SetValue(2)
+			_DE_Setting_SystemMsg.SetValueInt(2)
 			SetToggleOptionValue(Visuals_SettingSystemMsgToggle_OID, true)
 		endif
 	endif

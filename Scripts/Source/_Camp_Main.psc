@@ -1,10 +1,14 @@
 scriptname _Camp_Main extends Quest
 
+import CampUtil
+
 Actor property PlayerRef auto
 ReferenceAlias property PlayerAlias auto
 _Camp_Compatibility property Compatibility auto
 spell property _DE_SurvivalSkillsCombo_Spell auto
 spell property _DE_WalkingStickSpell auto
+
+formlist property _DE_TentActivators auto
 
 GlobalVariable property _Camp_Setting_FollowerPolling auto
 GlobalVariable property _Camp_FollowerCount auto
@@ -35,6 +39,34 @@ function CheckFollowerPolling()
 	if _Camp_Setting_FollowerPolling.GetValueInt() != 0
 		SyncFollowers()
 		RegisterForSingleUpdate(8)
+	endif
+endFunction
+
+function RegisterForControlsOnLoad()
+	debug.trace("[Campfire] Registering for control!")
+	RegisterForControl("Activate")
+endFunction
+
+Event OnControlDown(string control)
+	if control == "Activate"
+		debug.trace("[Campfire] I got an activate!")
+		int i = GetCurrentTentType()
+		debug.trace("[Campfire] GetCurrentTentType " + i)
+		if i == 1 || i == 3
+			;activate on button press in small tents
+			ActivateTent()
+		elseif (i == 2 || i == 4) && PlayerRef.GetSitState() == 3
+			;activate on button press while using large tent
+			ActivateTent()
+		endif
+	endif
+endEvent
+
+function ActivateTent()
+	debug.trace("[Campfire] Activating tent!")
+	ObjectReference myTent = Game.FindClosestReferenceOfAnyTypeInListFromRef(_DE_TentActivators, PlayerRef, 150.0)
+	if myTent
+		myTent.Activate(PlayerRef)
 	endif
 endFunction
 
