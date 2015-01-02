@@ -17,7 +17,6 @@ GlobalVariable property _DE_Setting_Tent auto
 GlobalVariable property _Camp_HelpDone_TentActivate auto
 GlobalVariable property _DE_Setting_CampingArmorTakeOff auto
 GlobalVariable property _DE_Setting_WoodCinematic auto
-GlobalVariable property _DE_Setting_SystemMsg auto
 GlobalVariable property _DE_HelpDone_Visualize auto
 GlobalVariable property _DE_HelpDone_PlacementError auto
 GlobalVariable property _DE_Setting_Help auto
@@ -42,8 +41,9 @@ int Gameplay_SettingCampingDynamicCampfiresText_OID
 int Gameplay_SettingCampingPlacementVisualizationText_OID
 int Visuals_SettingWoodCinematicToggle_OID
 int Visuals_SettingAnimationToggle_OID
-int Visuals_SettingSystemMsgToggle_OID
 int Visuals_HotkeySurvivalSkills_OID
+int Config_SaveText_OID
+int Config_LoadText_OID
 
 int Help_TroubleshootingMenu_OID
 int Help_TutorialsToggle_OID
@@ -52,20 +52,6 @@ int Guide_Topic1
 int Guide_Topic2
 int Guide_Topic3
 int Guide_Topic4
-int Guide_Topic5
-int Guide_Topic6
-int Guide_Topic7
-int Guide_Topic8
-int Guide_Topic9
-int Guide_Topic10
-int Guide_Topic11
-int Guide_Topic12
-int Guide_Topic13
-int Guide_Topic14
-int Guide_Topic15
-int Guide_Topic16
-int Guide_Topic17
-int Guide_Topic18
 
 Spell property _DE_SurvivalSkillsCombo_Spell auto
 Spell property _DE_WalkingStickSpell auto
@@ -124,11 +110,20 @@ function PageReset_Gameplay()																			;TRANSLATED
 		Visuals_SettingAnimationToggle_OID = AddToggleOption("$CampfireVisualsSettingAnimation", false)
 	endif
 
-	SetCursorPosition(1) ; Move cursor to top right position
+	AddEmptyOption()
+	AddEmptyOption()
 	
 	AddHeaderOption("$CampfireVisualsHeaderHotkeys")
 	Visuals_HotkeySurvivalSkills_OID = AddKeyMapOption("$CampfireVisualsHotkeySurvivalSkills", _DE_HotkeySurvivalSkills.GetValueInt())
 	
+	AddEmptyOption()
+
+	;AddHeaderOption("$CampfireHelpHeaderSaveConfig")
+	;Config_SaveText_OID = AddTextOption("", "$CampfireConfigSave")
+	;Config_LoadText_OID = AddTextOption("", "$CampfireConfigLoad")
+
+	SetCursorPosition(1) ; Move cursor to top right position
+
 	AddHeaderOption("$CampfireHelpHeaderTutorials")
 	if _DE_Setting_Help.GetValueInt() == 2
 		Help_TutorialsToggle_OID = AddToggleOption("$CampfireHelpSettingTutorialsShow", true)
@@ -137,48 +132,22 @@ function PageReset_Gameplay()																			;TRANSLATED
 	endif
 	Help_TutorialsResetText_OID = AddTextOption("", "$CampfireHelpSettingTutorialsReset")
 
+	AddEmptyOption()
+	AddEmptyOption()
+	AddEmptyOption()
+	AddEmptyOption()
+
 	AddHeaderOption("$CampfireHelpHeaderTroubleshooting")
 	Help_TroubleshootingMenu_OID = AddMenuOption("$CampfireHelpTroubleshootingSelectProblem", TroubleshootingList[TroubleshootingIndex]) ;ZZZ
-
-	if _DE_Setting_SystemMsg.GetValueInt() == 2
-		Visuals_SettingSystemMsgToggle_OID = AddToggleOption("$CampfireVisualsSettingSystem", true)
-	else
-		Visuals_SettingSystemMsgToggle_OID = AddToggleOption("$CampfireVisualsSettingSystem", false)
-	endif
 endFunction
 
 function PageReset_Guide()																				;TRANSLATED
 	SetCursorFillMode(TOP_TO_BOTTOM)
-	AddHeaderOption("$CampfireGuideHeaderExposure")
-	Guide_Topic1 = AddTextOption("$CampfireGuideExposureTopic1", "")
-	Guide_Topic2 = AddTextOption("$CampfireGuideExposureTopic2", "")
-	Guide_Topic3 = AddTextOption("$CampfireGuideExposureTopic3", "")
-	Guide_Topic4 = AddTextOption("$CampfireGuideExposureTopic4", "")
-	Guide_Topic7 = AddTextOption("$CampfireGuideExposureTopic5", "")
-	Guide_Topic13 = AddTextOption("$CampfireGuideExposureTopic6", "")
-	Guide_Topic8 = AddTextOption("$CampfireGuideExposureTopic7", "")
-	Guide_Topic9 = AddTextOption("$CampfireGuideExposureTopic8", "")
-	
-	AddHeaderOption("$CampfireGuideHeaderWater")
-	Guide_Topic5 = AddTextOption("$CampfireGuideWaterTopic1", "")
-	Guide_Topic6 = AddTextOption("$CampfireGuideWaterTopic2", "")
-	
-	SetCursorPosition(1) ; Move cursor to top right position
-	
 	AddHeaderOption("$CampfireGuideHeaderCamping")
-	Guide_Topic14 = AddTextOption("$CampfireGuideCampingTopic1", "")
-	Guide_Topic15 = AddTextOption("$CampfireGuideCampingTopic2", "")
-	Guide_Topic16 = AddTextOption("$CampfireGuideCampingTopic3", "")
-	
-	AddHeaderOption("$CampfireGuideHeaderGear")
-	Guide_Topic11 = AddTextOption("$CampfireGuideGearTopic1", "")
-	Guide_Topic12 = AddTextOption("$CampfireGuideGearTopic2", "")
-	Guide_Topic18 = AddTextOption("$CampfireGuideGearTopic3", "")
-	Guide_Topic17 = AddTextOption("$CampfireGuideGearTopic4", "")
-
-	AddHeaderOption("$CampfireGuideHeaderExtraFeatures")
-	Guide_Topic10 = AddTextOption("$CampfireGuideExtraTopic1", "")
-	
+	Guide_Topic1 = AddTextOption("$CampfireGuideCampingTopic1", "")
+	Guide_Topic2 = AddTextOption("$CampfireGuideCampingTopic2", "")
+	Guide_Topic3 = AddTextOption("$CampfireGuideCampingTopic3", "")
+	Guide_Topic4 = AddTextOption("$CampfireGuideGearTopic1", "")
 endFunction
 
 event OnPageReset(string page)																			;TRANSLATED
@@ -210,8 +179,10 @@ event OnOptionHighlight(int option)																		;TRANSLATED
 		SetInfoText("$CampfireOptionHighlightAnimation")
 	elseif option == Visuals_HotkeySurvivalSkills_OID
 		SetInfoText("$CampfireOptionHighlightHKSurvivalSkills")
-	elseif option == Visuals_SettingSystemMsgToggle_OID
-		SetInfoText("$CampfireOptionHighlightSystem")
+	elseif option == Config_SaveText_OID
+		SetInfoText("$CampfireOptionHighlightConfigSave")
+	elseif option == Config_LoadText_OID
+		SetInfoText("$CampfireOptionHighlightConfigLoad")
 	endif
 endEvent
 
@@ -271,14 +242,6 @@ event OnOptionSelect(int option)																		;TRANSLATED
 			_DE_HelpDone_Visualize.SetValueInt(1)
 			_DE_HelpDone_PlacementError.SetValueInt(1)
 		endif
-	elseif option == Visuals_SettingSystemMsgToggle_OID
-		if _DE_Setting_SystemMsg.GetValueInt() == 2
-			_DE_Setting_SystemMsg.SetValueInt(1)
-			SetToggleOptionValue(Visuals_SettingSystemMsgToggle_OID, false)
-		else
-			_DE_Setting_SystemMsg.SetValueInt(2)
-			SetToggleOptionValue(Visuals_SettingSystemMsgToggle_OID, true)
-		endif
 	endif
 	;#EndRegion
 	
@@ -291,34 +254,6 @@ event OnOptionSelect(int option)																		;TRANSLATED
 		ShowGuideTopic3()
 	elseif option == Guide_Topic4
 		ShowGuideTopic4()
-	elseif option == Guide_Topic5
-		ShowGuideTopic5()
-	elseif option == Guide_Topic6
-		ShowGuideTopic6()
-	elseif option == Guide_Topic7
-		ShowGuideTopic7()
-	elseif option == Guide_Topic8
-		ShowGuideTopic8()
-	elseif option == Guide_Topic9
-		ShowGuideTopic9()
-	elseif option == Guide_Topic10
-		ShowGuideTopic10()
-	elseif option == Guide_Topic11
-		ShowGuideTopic11()
-	elseif option == Guide_Topic12
-		ShowGuideTopic12()
-	elseif option == Guide_Topic13
-		ShowGuideTopic13()
-	elseif option == Guide_Topic14
-		ShowGuideTopic14()
-	elseif option == Guide_Topic15
-		ShowGuideTopic15()
-	elseif option == Guide_Topic16
-		ShowGuideTopic16()
-	elseif option == Guide_Topic17
-		ShowGuideTopic17()
-	elseif option == Guide_Topic18
-		ShowGuideTopic18()
 	endif
 	;#EndRegion
 endEvent
@@ -401,59 +336,17 @@ endFunction
 
 ;#Region Help Topics																					;TRANSLATED
 function ShowGuideTopic1()
-	ShowMessage("$CampfireGuideExposureTopic1Text", false)
-endfunction
-function ShowGuideTopic2()
-	ShowMessage("$CampfireGuideExposureTopic2Text", false)
-endfunction
-function ShowGuideTopic3()
-	ShowMessage("$CampfireGuideExposureTopic3Text", false)
-endfunction
-function ShowGuideTopic4()
-	ShowMessage("$CampfireGuideExposureTopic4Text", false)
-endfunction
-function ShowGuideTopic5()
-	ShowMessage("$CampfireGuideWaterTopic1Text", false)
-endfunction
-function ShowGuideTopic6()
-	ShowMessage("$CampfireGuideWaterTopic2Text", false)
-endfunction
-function ShowGuideTopic7()
-	ShowMessage("$CampfireGuideExposureTopic5Text", false)
-endfunction
-function ShowGuideTopic8()
-	ShowMessage("$CampfireGuideExposureTopic7Text", false)
-endfunction
-function ShowGuideTopic9()
-	ShowMessage("$CampfireGuideExposureTopic8Text", false)
-endfunction
-function ShowGuideTopic10()
-	ShowMessage("$CampfireGuideExtraTopic1Text", false)
-endfunction
-function ShowGuideTopic11()
-	ShowMessage("$CampfireGuideGearTopic1Text", false)
-endfunction
-function ShowGuideTopic12()
-	ShowMessage("$CampfireGuideGearTopic2Text", false)
-endfunction
-function ShowGuideTopic13()
-	ShowMessage("$CampfireGuideExposureTopic6Text", false)
-endfunction
-function ShowGuideTopic14()
 	ShowMessage("$CampfireGuideCampingTopic1Text", false)
 endfunction
-function ShowGuideTopic15()
+function ShowGuideTopic2()
 	ShowMessage("$CampfireGuideCampingTopic2Text", false)
-endFunction
-function ShowGuideTopic16()
-	ShowMessage("$CampfireGuideCampingTopic3Text", false)
-endFunction
-function ShowGuideTopic17()
-	ShowMessage("$CampfireGuideGearTopic4Text", false)
 endfunction
-function ShowGuideTopic18()
-	ShowMessage("$CampfireGuideGearTopic3Text", false)
-endFunction
+function ShowGuideTopic3()
+	ShowMessage("$CampfireGuideCampingTopic3Text", false)
+endfunction
+function ShowGuideTopic4()
+	ShowMessage("$CampfireGuideGearTopic1Text", false)
+endfunction
 ;#EndRegion
 
 ;#Region Troubleshooters																				;TRANSLATED
