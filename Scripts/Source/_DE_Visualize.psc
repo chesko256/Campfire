@@ -26,6 +26,7 @@ GlobalVariable property _DE_ZTestValB auto
 GlobalVariable property _DE_ZTestValC auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 ;GlobalVariable property _DE_SwimState auto
+GlobalVariable property _Camp_Setting_Legality auto
 GlobalVariable property _DE_Setting_Help auto
 GlobalVariable property _DE_HelpDone_Visualize auto
 GlobalVariable property TimeScale auto
@@ -139,7 +140,7 @@ function PerformPlacement(float fDistance, formlist akWarmList = none, float fHe
 			myTrigger.MoveTo(PlayerRef)
 		endif
 		
-		if !Legal.CampingLegal
+		if _Camp_Setting_Legality.GetValueInt() == 1 && !Legal.CampingLegal
 			_DE_VisError.Play(self)
 		else
 			if akWarmList
@@ -158,7 +159,7 @@ function PerformPlacement(float fDistance, formlist akWarmList = none, float fHe
 		
 		RegisterForSingleUpdate(fUpdateSpeed)
 	else
-		if !Legal.CampingLegal
+		if _Camp_Setting_Legality.GetValueInt() == 1 && !Legal.CampingLegal
 			int ibutton = _DE_CampVisIllegal.Show()
 			if ibutton == 0
 				StopPlacement()

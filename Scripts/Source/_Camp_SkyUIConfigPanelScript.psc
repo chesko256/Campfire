@@ -17,6 +17,7 @@ GlobalVariable property _DE_Setting_Tent auto
 GlobalVariable property _Camp_HelpDone_TentActivate auto
 GlobalVariable property _DE_Setting_CampingArmorTakeOff auto
 GlobalVariable property _DE_Setting_WoodCinematic auto
+GlobalVariable property _Camp_Setting_Legality auto
 GlobalVariable property _DE_HelpDone_Visualize auto
 GlobalVariable property _DE_HelpDone_PlacementError auto
 GlobalVariable property _DE_Setting_Help auto
@@ -41,6 +42,7 @@ int Gameplay_SettingCampingDynamicCampfiresText_OID
 int Gameplay_SettingCampingPlacementVisualizationText_OID
 int Visuals_SettingWoodCinematicToggle_OID
 int Visuals_SettingAnimationToggle_OID
+int Gameplay_SettingCampingLegalityToggle_OID
 int Visuals_HotkeySurvivalSkills_OID
 int Config_SaveText_OID
 int Config_LoadText_OID
@@ -110,7 +112,12 @@ function PageReset_Gameplay()																			;TRANSLATED
 		Visuals_SettingAnimationToggle_OID = AddToggleOption("$CampfireVisualsSettingAnimation", false)
 	endif
 
-	AddEmptyOption()
+	if _Camp_Setting_Legality.GetValueInt() == 2
+		Gameplay_SettingCampingLegalityToggle_OID = AddToggleOption("$CampfireGameplaySettingLegality", false)
+	else
+		Gameplay_SettingCampingLegalityToggle_OID = AddToggleOption("$CampfireGameplaySettingLegality", true)
+	endif
+
 	AddEmptyOption()
 	
 	AddHeaderOption("$CampfireVisualsHeaderHotkeys")
@@ -173,6 +180,8 @@ event OnOptionHighlight(int option)																		;TRANSLATED
 		SetInfoText("$CampfireOptionHighlightSettingCampingFireLightingText")
 	elseif option == Gameplay_SettingCampingDynamicCampfiresText_OID
 		SetInfoText("")
+	elseif option == Gameplay_SettingCampingLegalityToggle_OID
+		SetInfoText("$CampfireOptionHighlightSettingLegality")
 	elseif option == Visuals_SettingWoodCinematicToggle_OID
 		SetInfoText("$CampfireOptionHighlightSettingWoodCinematicToggle")
 	elseif option == Visuals_SettingAnimationToggle_OID
@@ -210,6 +219,14 @@ event OnOptionSelect(int option)																		;TRANSLATED
 		else
 			_DE_Setting_Lighting.SetValueInt(1)
 			SetTextOptionValue(Gameplay_SettingCampingFireLightingText_OID, "$CampfireAutomatic")
+		endif
+	elseif option == Gameplay_SettingCampingLegalityToggle_OID
+		if _Camp_Setting_Legality.GetValueInt() == 2
+			_Camp_Setting_Legality.SetValueInt(1)
+			SetToggleOptionValue(Gameplay_SettingCampingLegalityToggle_OID, true)
+		else
+			_Camp_Setting_Legality.SetValueInt(2)
+			SetToggleOptionValue(Gameplay_SettingCampingLegalityToggle_OID, false)
 		endif
 	endif
 	
@@ -265,6 +282,9 @@ event OnOptionDefault(int option)																		;TRANSLATED
 	elseif option == Gameplay_SettingCampingFireLightingText_OID
 		_DE_Setting_Lighting.SetValue(1)
 		SetTextOptionValue(Gameplay_SettingCampingFireLightingText_OID, "$CampfireAutomatic")
+	elseif option == Gameplay_SettingCampingLegalityToggle_OID
+		_Camp_Setting_Legality.SetValueInt(1)
+		SetToggleOptionValue(Gameplay_SettingCampingLegalityToggle_OID, true)
 	endif
 	if option == Visuals_HotkeySurvivalSkills_OID
 		UnregisterForKey(_DE_HotkeySurvivalSkills.GetValueInt())
