@@ -278,7 +278,7 @@ ImageSpaceModifier property _DE_FadeDown auto
 ImageSpaceModifier property _DE_FadeUp auto
 ImageSpaceModifier property _DE_Black auto
 Sound property ITMGenericArmorUp auto
-Weapon property _DE_WalkingStickWarAxe auto
+Armor property _Camp_WalkingStickShield auto
 keyword property ClothingBody auto
 keyword property ArmorCuirass auto
 
@@ -888,6 +888,10 @@ endFunction
 
 function DisplayShield_Player()
 	myShield = myActor.GetEquippedShield()
+	if myShield == _Camp_WalkingStickShield
+		myShield = None
+	endif
+
 	if myShield
 		myActor.UnequipItem(myShield, abSilent = true)
 		if IsRefInInterior(PlayerRef)
@@ -937,9 +941,7 @@ function DisplayWeapons_Player()
 		if IsRefInInterior(PlayerRef)
 			myDisplayMainWeapon = myPlayerMarker_MainWeapon.PlaceAtMe(myMainWeapon)
 		else
-			if myMainWeapon != _DE_WalkingStickWarAxe
-				myDisplayMainWeapon = myPlayerMarker_MainWeapon.PlaceAtMe(myMainWeapon)
-			endif
+			myDisplayMainWeapon = myPlayerMarker_MainWeapon.PlaceAtMe(myMainWeapon)
 		endif
 		if myDisplayMainWeapon
 			while !myDisplayMainWeapon.Is3DLoaded()
@@ -953,9 +955,7 @@ function DisplayWeapons_Player()
 		if IsRefInInterior(PlayerRef)
 			myDisplayOffHandWeapon = myPlayerMarker_OffHandWeapon.PlaceAtMe(myOffHandWeapon)
 		else
-			if myOffHandWeapon != _DE_WalkingStickWarAxe
-				myDisplayOffHandWeapon = myPlayerMarker_OffHandWeapon.PlaceAtMe(myOffHandWeapon)
-			endif
+			myDisplayOffHandWeapon = myPlayerMarker_OffHandWeapon.PlaceAtMe(myOffHandWeapon)
 		endif
 		if myDisplayOffHandWeapon
 			while !myDisplayOffHandWeapon.Is3DLoaded()
