@@ -6,7 +6,6 @@ Actor property PlayerRef auto
 ReferenceAlias property PlayerAlias auto
 _Camp_Compatibility property Compatibility auto
 spell property _DE_SurvivalSkillsCombo_Spell auto
-spell property _DE_WalkingStickSpell auto
 
 formlist property _DE_TentActivators auto
 
@@ -31,7 +30,6 @@ event OnInit()
 	Compatibility.RunStartupCheck()
 
 	PlayerRef.AddSpell(_DE_SurvivalSkillsCombo_Spell, false)		;Survival Skills (multi-select)
-	PlayerRef.AddSpell(_DE_WalkingStickSpell, false)
 endEvent
 
 function CheckFollowerPolling()

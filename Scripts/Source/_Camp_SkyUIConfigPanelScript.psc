@@ -35,7 +35,6 @@ bool bPresetChange = false
 string[] TroubleshootingList
 int TroubleshootingIndex = 0
 
-int Overview_CampfireText_OID
 int Gameplay_SettingCampingArmorTentsText_OID
 int Gameplay_SettingCampingFireLightingText_OID
 int Gameplay_SettingCampingDynamicCampfiresText_OID
@@ -56,7 +55,6 @@ int Guide_Topic3
 int Guide_Topic4
 
 Spell property _DE_SurvivalSkillsCombo_Spell auto
-Spell property _DE_WalkingStickSpell auto
 Spell property _DE_HandWarmingSpell auto
 ReferenceAlias property Alias_DE_Player auto
 
