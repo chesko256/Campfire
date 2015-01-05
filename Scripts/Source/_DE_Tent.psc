@@ -1058,7 +1058,7 @@ function UnDisplayWeapon_Follower()
 endFunction
 
 function DisplayCuirass_Player()
-	myCuirass = GetPlayerEquippedFeet()
+	myCuirass = GetPlayerEquippedBody()
 	if myCuirass
 		myActor.UnequipItem(myCuirass, abSilent = true)
 		myDisplayCuirass = myPlayerMarker_Cuirass.PlaceAtMe(myCuirass)
