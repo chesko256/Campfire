@@ -7,7 +7,7 @@ ReferenceAlias property PlayerAlias auto
 _Camp_Compatibility property Compatibility auto
 spell property _DE_SurvivalSkillsCombo_Spell auto
 
-formlist property _DE_TentActivators auto
+formlist property _Camp_TentActivators auto
 
 GlobalVariable property _Camp_Setting_FollowerPolling auto
 GlobalVariable property _Camp_FollowerCount auto
@@ -42,14 +42,15 @@ endFunction
 
 function RegisterForControlsOnLoad()
 	debug.trace("[Campfire] Registering for control!")
-	RegisterForControl("Activate")
+	RegisterForControl("Jump")
 endFunction
 
 Event OnControlDown(string control)
-	if control == "Activate"
-		debug.trace("[Campfire] I got an activate!")
+	if control == "Jump"
+		debug.trace("[Campfire] I got a jump!")
 		int i = GetCurrentTentType()
-		debug.trace("[Campfire] GetCurrentTentType " + i)
+		debug.trace("[Campfire] GetCurrentTentType: " + i)
+		debug.trace("[Campfire] Current sit state: " + PlayerRef.GetSitState())
 		if i == 1 || i == 3
 			;activate on button press in small tents
 			ActivateTent()
@@ -62,7 +63,7 @@ endEvent
 
 function ActivateTent()
 	debug.trace("[Campfire] Activating tent!")
-	ObjectReference myTent = Game.FindClosestReferenceOfAnyTypeInListFromRef(_DE_TentActivators, PlayerRef, 150.0)
+	ObjectReference myTent = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_TentActivators, PlayerRef, 150.0)
 	if myTent
 		myTent.Activate(PlayerRef)
 	endif

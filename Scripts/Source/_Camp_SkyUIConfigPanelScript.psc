@@ -16,6 +16,18 @@ GlobalVariable property _DE_Setting_Lighting auto
 GlobalVariable property _DE_Setting_Tent auto
 GlobalVariable property _Camp_HelpDone_TentActivate auto
 GlobalVariable property _DE_Setting_CampingArmorTakeOff auto
+
+GlobalVariable property _Camp_Setting_TakeOff_Helm auto
+GlobalVariable property _Camp_Setting_TakeOff_Cuirass auto
+GlobalVariable property _Camp_Setting_TakeOff_Gauntlets auto
+GlobalVariable property _Camp_Setting_TakeOff_Boots auto
+GlobalVariable property _Camp_Setting_TakeOff_Backpack auto
+GlobalVariable property _Camp_Setting_TakeOff_Weapons auto
+GlobalVariable property _Camp_Setting_TakeOff_Shield auto
+GlobalVariable property _Camp_Setting_TakeOff_Ammo auto
+
+GlobalVariable property _Camp_Setting_EquipTentOutfit auto
+
 GlobalVariable property _DE_Setting_WoodCinematic auto
 GlobalVariable property _Camp_Setting_Legality auto
 GlobalVariable property _DE_HelpDone_Visualize auto
@@ -39,6 +51,16 @@ int Gameplay_SettingCampingArmorTentsText_OID
 int Gameplay_SettingCampingFireLightingText_OID
 int Gameplay_SettingCampingDynamicCampfiresText_OID
 int Gameplay_SettingCampingPlacementVisualizationText_OID
+
+int Gameplay_SettingCampingPlaceHelm_OID
+int Gameplay_SettingCampingPlaceCuirass_OID
+int Gameplay_SettingCampingPlaceBoots_OID
+int Gameplay_SettingCampingPlaceGauntlets_OID
+int Gameplay_SettingCampingPlaceBackpack_OID
+int Gameplay_SettingCampingPlaceWeapons_OID
+int Gameplay_SettingCampingPlaceShield_OID
+int Gameplay_SettingCampingPlaceAmmo_OID
+
 int Visuals_SettingWoodCinematicToggle_OID
 int Visuals_SettingAnimationToggle_OID
 int Gameplay_SettingCampingLegalityToggle_OID
@@ -129,6 +151,49 @@ function PageReset_Gameplay()																			;TRANSLATED
 
 	SetCursorPosition(1) ; Move cursor to top right position
 
+	AddHeaderOption("$CampfireGameplayHeaderTentDisplay")
+
+	if _Camp_Setting_TakeOff_Cuirass.GetValueInt() == 2
+		Gameplay_SettingCampingPlaceCuirass_OID = AddToggleOption("$CampfireGameplaySettingShowCuirass", false)
+	else
+		Gameplay_SettingCampingPlaceCuirass_OID = AddToggleOption("$CampfireGameplaySettingShowCuirass", true)
+	endif
+		if _Camp_Setting_TakeOff_Gauntlets.GetValueInt() == 2
+		Gameplay_SettingCampingPlaceGauntlets_OID = AddToggleOption("$CampfireGameplaySettingShowGauntlets", false)
+	else
+		Gameplay_SettingCampingPlaceGauntlets_OID = AddToggleOption("$CampfireGameplaySettingShowGauntlets", true)
+	endif
+	if _Camp_Setting_TakeOff_Backpack.GetValueInt() == 2
+		Gameplay_SettingCampingPlaceBackpack_OID = AddToggleOption("$CampfireGameplaySettingShowBackpack", false)
+	else
+		Gameplay_SettingCampingPlaceBackpack_OID = AddToggleOption("$CampfireGameplaySettingShowBackpack", true)
+	endif
+	if _Camp_Setting_TakeOff_Weapons.GetValueInt() == 2
+		Gameplay_SettingCampingPlaceWeapons_OID = AddToggleOption("$CampfireGameplaySettingShowWeapons", false)
+	else
+		Gameplay_SettingCampingPlaceWeapons_OID = AddToggleOption("$CampfireGameplaySettingShowWeapons", true)
+	endif
+	if _Camp_Setting_TakeOff_Shield.GetValueInt() == 2
+		Gameplay_SettingCampingPlaceShield_OID = AddToggleOption("$CampfireGameplaySettingShowShield", false)
+	else
+		Gameplay_SettingCampingPlaceShield_OID = AddToggleOption("$CampfireGameplaySettingShowShield", true)
+	endif
+	if _Camp_Setting_TakeOff_Ammo.GetValueInt() == 2
+		Gameplay_SettingCampingPlaceAmmo_OID = AddToggleOption("$CampfireGameplaySettingShowAmmo", false)
+	else
+		Gameplay_SettingCampingPlaceAmmo_OID = AddToggleOption("$CampfireGameplaySettingShowAmmo", true)
+	endif
+	if _Camp_Setting_TakeOff_Helm.GetValueInt() == 2
+		Gameplay_SettingCampingPlaceHelm_OID = AddToggleOption("$CampfireGameplaySettingShowHelm", false)
+	else
+		Gameplay_SettingCampingPlaceHelm_OID = AddToggleOption("$CampfireGameplaySettingShowHelm", true)
+	endif
+	if _Camp_Setting_TakeOff_Boots.GetValueInt() == 2
+		Gameplay_SettingCampingPlaceBoots_OID = AddToggleOption("$CampfireGameplaySettingShowBoots", false)
+	else
+		Gameplay_SettingCampingPlaceBoots_OID = AddToggleOption("$CampfireGameplaySettingShowBoots", true)
+	endif
+
 	AddHeaderOption("$CampfireHelpHeaderTutorials")
 	if _DE_Setting_Help.GetValueInt() == 2
 		Help_TutorialsToggle_OID = AddToggleOption("$CampfireHelpSettingTutorialsShow", true)
@@ -190,6 +255,22 @@ event OnOptionHighlight(int option)																		;TRANSLATED
 		SetInfoText("$CampfireOptionHighlightConfigSave")
 	elseif option == Config_LoadText_OID
 		SetInfoText("$CampfireOptionHighlightConfigLoad")
+	elseif option == Gameplay_SettingCampingPlaceHelm_OID
+		SetInfoText("$CampfireOptionHighlightShowHelm")
+	elseif option == Gameplay_SettingCampingPlaceCuirass_OID
+		SetInfoText("$CampfireOptionHighlightShowCuirass")
+	elseif option == Gameplay_SettingCampingPlaceBoots_OID
+		SetInfoText("$CampfireOptionHighlightShowBoots")
+	elseif option == Gameplay_SettingCampingPlaceGauntlets_OID
+		SetInfoText("$CampfireOptionHighlightShowGauntlets")
+	elseif option == Gameplay_SettingCampingPlaceBackpack_OID
+		SetInfoText("$CampfireOptionHighlightShowBackpack")
+	elseif option == Gameplay_SettingCampingPlaceWeapons_OID
+		SetInfoText("$CampfireOptionHighlightShowWeapons")
+	elseif option == Gameplay_SettingCampingPlaceShield_OID
+		SetInfoText("$CampfireOptionHighlightShowShield")
+	elseif option == Gameplay_SettingCampingPlaceAmmo_OID
+		SetInfoText("$CampfireOptionHighlightShowAmmo")
 	endif
 endEvent
 
@@ -225,6 +306,70 @@ event OnOptionSelect(int option)																		;TRANSLATED
 		else
 			_Camp_Setting_Legality.SetValueInt(2)
 			SetToggleOptionValue(Gameplay_SettingCampingLegalityToggle_OID, false)
+		endif
+	elseif option == Gameplay_SettingCampingPlaceHelm_OID
+		if _Camp_Setting_TakeOff_Helm.GetValueInt() == 2
+			_Camp_Setting_TakeOff_Helm.SetValueInt(1)
+			SetToggleOptionValue(Gameplay_SettingCampingPlaceHelm_OID, true)
+		else
+			_Camp_Setting_TakeOff_Helm.SetValueInt(2)
+			SetToggleOptionValue(Gameplay_SettingCampingPlaceHelm_OID, false)
+		endif
+	elseif option == Gameplay_SettingCampingPlaceCuirass_OID
+		if _Camp_Setting_TakeOff_Cuirass.GetValueInt() == 2
+			_Camp_Setting_TakeOff_Cuirass.SetValueInt(1)
+			SetToggleOptionValue(Gameplay_SettingCampingPlaceCuirass_OID, true)
+		else
+			_Camp_Setting_TakeOff_Cuirass.SetValueInt(2)
+			SetToggleOptionValue(Gameplay_SettingCampingPlaceCuirass_OID, false)
+		endif
+	elseif option == Gameplay_SettingCampingPlaceGauntlets_OID
+		if _Camp_Setting_TakeOff_Gauntlets.GetValueInt() == 2
+			_Camp_Setting_TakeOff_Gauntlets.SetValueInt(1)
+			SetToggleOptionValue(Gameplay_SettingCampingPlaceGauntlets_OID, true)
+		else
+			_Camp_Setting_TakeOff_Gauntlets.SetValueInt(2)
+			SetToggleOptionValue(Gameplay_SettingCampingPlaceGauntlets_OID, false)
+		endif
+	elseif option == Gameplay_SettingCampingPlaceBoots_OID
+		if _Camp_Setting_TakeOff_Boots.GetValueInt() == 2
+			_Camp_Setting_TakeOff_Boots.SetValueInt(1)
+			SetToggleOptionValue(Gameplay_SettingCampingPlaceBoots_OID, true)
+		else
+			_Camp_Setting_TakeOff_Boots.SetValueInt(2)
+			SetToggleOptionValue(Gameplay_SettingCampingPlaceBoots_OID, false)
+		endif
+	elseif option == Gameplay_SettingCampingPlaceShield_OID
+		if _Camp_Setting_TakeOff_Shield.GetValueInt() == 2
+			_Camp_Setting_TakeOff_Shield.SetValueInt(1)
+			SetToggleOptionValue(Gameplay_SettingCampingPlaceShield_OID, true)
+		else
+			_Camp_Setting_TakeOff_Shield.SetValueInt(2)
+			SetToggleOptionValue(Gameplay_SettingCampingPlaceShield_OID, false)
+		endif
+	elseif option == Gameplay_SettingCampingPlaceWeapons_OID
+		if _Camp_Setting_TakeOff_Weapons.GetValueInt() == 2
+			_Camp_Setting_TakeOff_Weapons.SetValueInt(1)
+			SetToggleOptionValue(Gameplay_SettingCampingPlaceWeapons_OID, true)
+		else
+			_Camp_Setting_TakeOff_Weapons.SetValueInt(2)
+			SetToggleOptionValue(Gameplay_SettingCampingPlaceWeapons_OID, false)
+		endif
+	elseif option == Gameplay_SettingCampingPlaceAmmo_OID
+		if _Camp_Setting_TakeOff_Ammo.GetValueInt() == 2
+			_Camp_Setting_TakeOff_Ammo.SetValueInt(1)
+			SetToggleOptionValue(Gameplay_SettingCampingPlaceAmmo_OID, true)
+		else
+			_Camp_Setting_TakeOff_Ammo.SetValueInt(2)
+			SetToggleOptionValue(Gameplay_SettingCampingPlaceAmmo_OID, false)
+		endif
+	elseif option == Gameplay_SettingCampingPlaceBackpack_OID
+		if _Camp_Setting_TakeOff_Backpack.GetValueInt() == 2
+			_Camp_Setting_TakeOff_Backpack.SetValueInt(1)
+			SetToggleOptionValue(Gameplay_SettingCampingPlaceBackpack_OID, true)
+		else
+			_Camp_Setting_TakeOff_Backpack.SetValueInt(2)
+			SetToggleOptionValue(Gameplay_SettingCampingPlaceBackpack_OID, false)
 		endif
 	endif
 	

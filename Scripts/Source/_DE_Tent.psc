@@ -45,6 +45,7 @@ float[] property myPlayerMarker_Bow_Pos auto hidden
 float[] property myPlayerMarker_Helm_Pos auto hidden
 float[] property myPlayerMarker_Boots_Pos auto hidden
 float[] property myPlayerMarker_Gauntlets_Pos auto hidden
+float[] property myPlayerMarker_Cuirass_Pos auto hidden
 float[] property myPlayerMarker_Backpack_Pos auto hidden
 float[] property myPlayerMarker_Shield_Pos auto hidden
 float[] property myPlayerMarker_ShieldInterior_Pos auto hidden
@@ -93,6 +94,14 @@ GlobalVariable property _DE_HoursToSleep auto
 GlobalVariable property GameHour auto
 GlobalVariable property Timescale auto
 GlobalVariable property _DE_Setting_CampingArmorTakeOff auto
+GlobalVariable property _Camp_Setting_TakeOff_Helm auto
+GlobalVariable property _Camp_Setting_TakeOff_Cuirass auto
+GlobalVariable property _Camp_Setting_TakeOff_Gauntlets auto
+GlobalVariable property _Camp_Setting_TakeOff_Boots auto
+GlobalVariable property _Camp_Setting_TakeOff_Backpack auto
+GlobalVariable property _Camp_Setting_TakeOff_Weapons auto
+GlobalVariable property _Camp_Setting_TakeOff_Shield auto
+GlobalVariable property _Camp_Setting_TakeOff_Ammo auto
 ;GlobalVariable property _DE_CurrentTemp auto
 ;GlobalVariable property _DE_ExposurePoints auto
 GlobalVariable property _Camp_HelpDone_TentActivate auto
@@ -145,6 +154,7 @@ ObjectReference property myPlayerMarker_Bow auto hidden
 ObjectReference property myPlayerMarker_Helm auto hidden
 ObjectReference property myPlayerMarker_Boots auto hidden
 ObjectReference property myPlayerMarker_Gauntlets auto hidden
+ObjectReference property myPlayerMarker_Cuirass auto hidden
 ObjectReference property myPlayerMarker_Backpack auto hidden
 ObjectReference property myPlayerMarker_Shield auto hidden
 ObjectReference property myPlayerMarker_ShieldInterior auto hidden
@@ -199,6 +209,7 @@ Armor property myHelm auto hidden
 Armor property myBackpack auto hidden
 Armor property myBoots auto hidden
 Armor property myGauntlets auto hidden
+Armor property myCuirass auto hidden
 Weapon property myMainWeapon auto hidden
 Weapon property myOffHandWeapon auto hidden
 Weapon property myBigWeapon auto hidden
@@ -231,6 +242,7 @@ ObjectReference property myDisplayHelm auto hidden
 ObjectReference property myDisplayBackpack auto hidden
 ObjectReference property myDisplayBoots auto hidden
 ObjectReference property myDisplayGauntlets auto hidden
+ObjectReference property myDisplayCuirass auto hidden
 ObjectReference property myDisplayMainWeapon auto hidden
 ObjectReference property myDisplayOffHandWeapon auto hidden
 ObjectReference property myDisplayBigWeapon auto hidden
@@ -350,20 +362,18 @@ function ShowMainMenu(ObjectReference akActionRef)
 			if _DE_Setting_Help.GetValueInt() == 2 && _Camp_HelpDone_TentActivate.GetValueInt() == 1
 				;@TODO: Move to Frostfall
 				;_DE_Help_Tents.Show()
-				;_DE_HelpDone_Tents.SetValue(2)
-				;Message.ResetHelpMessage("Activate")
-				;_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
-				;Message.ResetHelpMessage("Activate")
+				Message.ResetHelpMessage("Activate")
+				_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
+				_Camp_HelpDone_TentActivate.SetValueInt(2)
 			endif
 			PlayerSit(akActionRef)
 		elseif i == 1									;Lie Down
 			if _DE_Setting_Help.GetValueInt() == 2 && _Camp_HelpDone_TentActivate.GetValueInt() == 1
 				;@TODO: Move to Frostfall
 				;_DE_Help_Tents.Show()
-				;_DE_HelpDone_Tents.SetValue(2)
-				;Message.ResetHelpMessage("Activate")
-				;_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
-				;Message.ResetHelpMessage("Activate")
+				Message.ResetHelpMessage("Activate")
+				_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
+				_Camp_HelpDone_TentActivate.SetValueInt(2)
 			endif
 			PlayerLieDown(akActionRef)
 		elseif i == 2									;Pack
@@ -606,30 +616,51 @@ function PlayerSit(ObjectReference akActionRef)
 	if _DE_Setting_CampingArmorTakeOff.GetValueInt() == 2
 		;@TODO: Use new gear processing function	
 		;if Frostfall.GetFireState() || _DE_CurrentTemp.GetValue() >= 6.0 || Frostfall.bInInterior
-			DisplayBoots_Player()
-			DisplayGauntlets_Player()
-			DisplayHelm_Player()
-			DisplayShield_Player()
-			DisplayWeapons_Player()
-			DisplayQuiver_Player()
-			DisplayBackpack_Player()
+			DisplayPlayerTentEquipment()
 		;else
-		;	DisplayShield_Player()
-		;	DisplayWeapons_Player()
-		;	DisplayQuiver_Player()
-		;	DisplayBackpack_Player()
+		;	DisplayPlayerTentEquipment(true)
 		;endif
 	endif
 	if _DE_TentSeeThru.GetValueInt() == 2 && myTentExterior
 		myTentExterior.Disable(true)
 	endif
 	Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
-	wait(3.0)
-	if !(myActor.IsInCombat())
-		ShowSitMenu(akActionRef)
-	endif
-	_DE_Tent_InteractTriggerREF.MoveTo(myActor)
+	;wait(3.0)
+	;if !(myActor.IsInCombat())
+	;	ShowSitMenu(akActionRef)
+	;endif
+	;@TODO: Remove
+	;_DE_Tent_InteractTriggerREF.MoveTo(myActor)
 	RegisterForSingleUpdate(0.5)
+endFunction
+
+function DisplayPlayerTentEquipment(bool bLimited = false)
+	if bLimited == false
+		if _Camp_Setting_TakeOff_Helm.GetValueInt() == 1
+			DisplayHelm_Player()
+		endif
+		if _Camp_Setting_TakeOff_Cuirass.GetValueInt() == 1
+			DisplayCuirass_Player()
+		endif
+		if _Camp_Setting_TakeOff_Gauntlets.GetValueInt() == 1
+			DisplayGauntlets_Player()
+		endif
+		if _Camp_Setting_TakeOff_Boots.GetValueInt() == 1
+			DisplayBoots_Player()
+		endif
+	endif
+	if _Camp_Setting_TakeOff_Weapons.GetValueInt() == 1
+		DisplayWeapons_Player()
+	endif
+	if _Camp_Setting_TakeOff_Shield.GetValueInt() == 1
+		DisplayShield_Player()
+	endif
+	if _Camp_Setting_TakeOff_Ammo.GetValueInt() == 1
+		DisplayQuiver_Player()
+	endif
+	if _Camp_Setting_TakeOff_Backpack.GetValueInt() == 1
+		DisplayBackpack_Player()
+	endif
 endFunction
 
 function PlayerLieDown(ObjectReference akActionRef)
@@ -669,30 +700,21 @@ function PlayerLieDown(ObjectReference akActionRef)
 		;@TODO: Wrap in IsFrostfallLoaded
 		
 		;if Frostfall.GetFireState() || _DE_CurrentTemp.GetValue() >= 10.0 || Frostfall.bInInterior
-			DisplayBoots_Player()
-			DisplayGauntlets_Player()
-			DisplayHelm_Player()
-			DisplayShield_Player()
-			DisplayWeapons_Player()
-			DisplayQuiver_Player()
-			DisplayBackpack_Player()
+			DisplayPlayerTentEquipment()
 		;else
-		;	DisplayShield_Player()
-		;	DisplayWeapons_Player()
-		;	DisplayQuiver_Player()
-		;	DisplayBackpack_Player()
+		;	DisplayPlayerTentEquipment(true)
 		;endif
 	endif
 	if _DE_TentSeeThru.GetValueInt() == 2 && myTentExterior
 		myTentExterior.Disable(true)
 	endif
 	Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
-	wait(3.0)
-	if !(myActor.IsInCombat())
-		ShowLayMenu(akActionRef)
-	endif
-	
-	_DE_Tent_InteractTriggerREF.MoveTo(myActor)
+	;wait(3.0)
+	;if !(myActor.IsInCombat())
+	;	ShowLayMenu(akActionRef)
+	;endif
+	;@TODO: Remove
+	;_DE_Tent_InteractTriggerREF.MoveTo(myActor)
 	RegisterForSingleUpdate(0.5)
 	
 endFunction
@@ -1035,6 +1057,30 @@ function UnDisplayWeapon_Follower()
 
 endFunction
 
+function DisplayCuirass_Player()
+	myCuirass = GetPlayerEquippedFeet()
+	if myCuirass
+		myActor.UnequipItem(myCuirass, abSilent = true)
+		myDisplayCuirass = myPlayerMarker_Cuirass.PlaceAtMe(myCuirass)
+		if myDisplayCuirass
+			while !myDisplayCuirass.Is3DLoaded()
+			endwhile
+			myDisplayCuirass.SetMotionType(Motion_Keyframed)
+			myDisplayCuirass.BlockActivation()
+		endif
+	endif
+endFunction
+
+function UnDisplayCuirass_Player()
+	if myCuirass
+		myActor.EquipItem(myCuirass, abSilent = true)
+	endif
+	if myDisplayCuirass
+		myDisplayCuirass.Disable()
+		myDisplayCuirass.Delete()
+	endif
+endFunction
+
 function DisplayBoots_Player()
 	myBoots = GetPlayerEquippedFeet()
 	if myBoots && !myBoots.HasKeyword(ClothingBody) && !myBoots.HasKeyword(ArmorCuirass)
@@ -1177,11 +1223,13 @@ function PackTent()
 	myActor.AddItem(TentMiscItem, abSilent = true)
 	
 	;Move activation trigger to the anchor
-	_DE_Tent_InteractTriggerREF.MoveTo(_DE_Anchor)
+	;@TODO: Remove
+	;_DE_Tent_InteractTriggerREF.MoveTo(_DE_Anchor)
 
 	;Delete display models, if any
 	UnDisplayShield_Player()
 	UnDisplayWeapons_Player()
+	UnDisplayCuirass_Player()
 	UnDisplayBoots_Player()
 	UnDisplayGauntlets_Player()
 	UnDisplayHelm_Player()
@@ -1205,6 +1253,10 @@ function PackTent()
 	if myPlayerMarker_Bow
 		myPlayerMarker_Bow.Disable()
 		myPlayerMarker_Bow.Delete()
+	endif
+	if myPlayerMarker_Cuirass
+		myPlayerMarker_Cuirass.Disable()
+		myPlayerMarker_Cuirass.Delete()
 	endif
 	if myPlayerMarker_Helm
 		myPlayerMarker_Helm.Disable()
@@ -1349,13 +1401,15 @@ function CleanUpTent()
 	Game.EnablePlayerControls()
 	UnDisplayShield_Player()
 	UnDisplayWeapons_Player()
+	UnDisplayCuirass_Player()
 	UnDisplayBoots_Player()
 	UnDisplayGauntlets_Player()
 	UnDisplayHelm_Player()
 	UnDisplayQuiver_Player()
 	UnDisplayBackpack_Player()
 
-	_DE_Tent_InteractTriggerREF.MoveTo(_DE_Anchor)
+	;@TODO: Remove
+	;_DE_Tent_InteractTriggerREF.MoveTo(_DE_Anchor)
 	;_DE_HoursToSleep.SetValue(1.0)
 	if myTentExterior
 		myTentExterior.Enable(true)

@@ -15,6 +15,7 @@ ObjectReference property _DE_LargeHideTent4BR_Tent_PosRef auto
 ObjectReference property _DE_LargeHideTent4BR_Backpack_PosRef auto
 ObjectReference property _DE_LargeHideTent4BR_Boots_PosRef auto
 ObjectReference property _DE_LargeHideTent4BR_Gauntlets_PosRef auto
+ObjectReference property _DE_LargeHideTent4BR_Cuirass_PosRef auto
 ObjectReference property _DE_LargeHideTent4BR_PlayerBow_PosRef auto
 ObjectReference property _DE_LargeHideTent4BR_Helmet_PosRef auto
 ObjectReference property _DE_LargeHideTent4BR_LanternA_PosRef auto
@@ -103,6 +104,7 @@ Event OnInit()
 	myPlayerMarker_Helm = PlaceAtMeRelative(self, _DE_Tent_HelmMarker, myOriginAng, myPlayerMarker_Helm_Pos)
 	myPlayerMarker_Boots = PlaceAtMeRelative(self, _DE_Tent_BootsMarker, myOriginAng, myPlayerMarker_Boots_Pos)
 	myPlayerMarker_Gauntlets = PlaceAtMeRelative(self, _DE_Tent_GauntletsMarker, myOriginAng, myPlayerMarker_Gauntlets_Pos)
+	myPlayerMarker_Cuirass = PlaceAtMeRelative(self, _DE_Tent_CuirassMarker, myOriginAng, myPlayerMarker_Cuirass_Pos)
 	myPlayerMarker_Backpack = PlaceAtMeRelative(self, _DE_Tent_BackpackMarker, myOriginAng, myPlayerMarker_Backpack_Pos)
 	myPlayerSitMarker = PlaceAtMeRelative(self, _DE_TentSitMarker, myOriginAng, myPlayerSitMarker_Pos)
 	myPlayerLayDownMarker = PlaceAtMeRelative(self, _DE_TentLayDownMarker, myOriginAng, myPlayerLayDownMarker_Pos, fZLocalAngAdjust = 180.0)
@@ -151,6 +153,7 @@ function GetRelativePositions()
 	myPlayerMarker_Helm_Pos = GetRelativePosition(_DE_LargeHideTent4BR_Tent_PosRef, _DE_LargeHideTent4BR_Helmet_PosRef)
 	myPlayerMarker_Boots_Pos = GetRelativePosition(_DE_LargeHideTent4BR_Tent_PosRef, _DE_LargeHideTent4BR_Boots_PosRef)
 	myPlayerMarker_Gauntlets_Pos = GetRelativePosition(_DE_LargeHideTent4BR_Tent_PosRef, _DE_LargeHideTent4BR_Gauntlets_PosRef)
+	myPlayerMarker_Cuirass_Pos = GetRelativePosition(_DE_LargeHideTent4BR_Tent_PosRef, _DE_LargeHideTent4BR_Cuirass_PosRef)
 	myPlayerMarker_Backpack_Pos = GetRelativePosition(_DE_LargeHideTent4BR_Tent_PosRef, _DE_LargeHideTent4BR_Backpack_PosRef)
 	myPlayerMarker_Shield_Pos = GetRelativePosition(_DE_LargeHideTent4BR_Tent_PosRef, _DE_LargeHideTent4BR_PlayerShield_PosRef)
 	myPlayerMarker_ShieldInterior_Pos = GetRelativePosition(_DE_LargeHideTent4BR_Tent_PosRef, _DE_LargeHideTent4BR_PlayerShieldInterior_PosRef)

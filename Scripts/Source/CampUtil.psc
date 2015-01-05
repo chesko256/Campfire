@@ -341,50 +341,22 @@ int function GetCurrentTentType() global
 	;3	=	Small Leather Tent
 	;4	=	Large Leather Tent
 	;5  =	Conjured Shelter
-	
-	ObjectReference myTent = Game.FindClosestReferenceOfAnyTypeInListFromRef(Campfire._Camp_FurTentsSmall, Campfire.PlayerRef, 50.0)
-	if myTent
-		if Campfire.PlayerRef.GetSitState() == 3
-			TentType = 1
-			;notification("I'm in a small hide tent!")
-			return TentType
-		endif
-	endif
-	
-	if !myTent
-		myTent = Game.FindClosestReferenceOfAnyTypeInListFromRef(Campfire._Camp_FurTentsLarge, Campfire.PlayerRef, 146.0)
-		if myTent
-			TentType = 2
-			return TentType
-		endif
-	endif
-	
-	if !myTent
-		myTent = Game.FindClosestReferenceOfAnyTypeInListFromRef(Campfire._Camp_LeatherTentsSmall, Campfire.PlayerRef, 85.0)
-		if myTent
-			if Campfire.PlayerRef.GetSitState() == 3
-				TentType = 3
-				return TentType
-			endif
-		endif
-	endif
-	
-	if !myTent
-		myTent = Game.FindClosestReferenceOfAnyTypeInListFromRef(Campfire._Camp_LeatherTentsLarge, Campfire.PlayerRef, 195.0)
-		if myTent
-			TentType = 4
-			return TentType
-		endif
-	endif
 
-	if !myTent
-		myTent = Game.FindClosestReferenceOfAnyTypeInListFromRef(Campfire._Camp_ConjuredShelters, Campfire.PlayerRef, 235.0)
-		if myTent
+	ObjectReference myTent = Game.FindClosestReferenceOfAnyTypeInListFromRef(Campfire._Camp_TentActivators, Campfire.PlayerRef, 235.0)
+	if myTent
+		Form myTentBaseObject = myTent.GetBaseObject()
+		if Campfire._Camp_FurTentsSmall.HasForm(myTentBaseObject)
+			TentType = 1
+		elseif Campfire._Camp_FurTentsLarge.HasForm(myTentBaseObject)
+			TentType = 2
+		elseif Campfire._Camp_LeatherTentsSmall.HasForm(myTentBaseObject)
+			TentType = 3
+		elseif Campfire._Camp_LeatherTentsLarge.HasForm(myTentBaseObject)
+			TentType = 4
+		elseif Campfire._Camp_ConjuredShelters.HasForm(myTentBaseObject)
 			TentType = 5
-			return TentType
 		endif
 	endif
-	
 	return TentType
 endFunction
 
