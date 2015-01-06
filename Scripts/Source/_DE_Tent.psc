@@ -121,16 +121,16 @@ message property _DE_Combat_Error auto
 message property _Camp_Help_TentActivate auto
 
 ;Equipment markers
-static property _DE_Tent_MainWeaponMarker auto
-static property _DE_Tent_OffHandWeaponMarker auto
-static property _DE_Tent_BigWeaponMarker auto
-static property _DE_Tent_BowMarker auto
-static property _DE_Tent_HelmMarker auto
-static property _DE_Tent_CuirassMarker auto
-static property _DE_Tent_GauntletsMarker auto
-static property _DE_Tent_BootsMarker auto
-static property _DE_Tent_BackpackMarker auto
-static property _DE_Tent_ShieldMarker auto
+static property _Camp_Tent_MainWeaponMarker auto
+static property _Camp_Tent_OffHandWeaponMarker auto
+static property _Camp_Tent_BigWeaponMarker auto
+static property _Camp_Tent_BowMarker auto
+static property _Camp_Tent_HelmMarker auto
+static property _Camp_Tent_CuirassMarker auto
+static property _Camp_Tent_GauntletsMarker auto
+static property _Camp_Tent_BootsMarker auto
+static property _Camp_Tent_BackpackMarker auto
+static property _Camp_Tent_ShieldMarker auto
 
 ;Run-time objects
 ObjectReference property myTent auto hidden
@@ -274,16 +274,16 @@ ReferenceAlias property StaticFollower3 auto
 pDBEntranceQuestScript property DBEntranceQuestScript auto
 Message property _DE_Help_Tents auto
 Message property _DE_TentSeeThruError auto
-static property _DE_Tent_LanternOnGround auto
-static property _DE_Tent_LanternOffGround auto
-static property _DE_Tent_LanternOnHang auto
-static property _DE_Tent_LanternOffHang auto
+static property _Camp_Tent_LanternOnGround auto
+static property _Camp_Tent_LanternOffGround auto
+static property _Camp_Tent_LanternOnHang auto
+static property _Camp_Tent_LanternOffHang auto
 Light property _DE_LanternLight auto
-static property _DE_Tent_BedrollHayNoGround01 auto
-static property _DE_Tent_BedrollHayNoGround02 auto
-static property _DE_Tent_BedrollHayNoGround03 auto
+static property _Camp_Tent_BedrollHayNoGround01 auto
+static property _Camp_Tent_BedrollHayNoGround02 auto
+static property _Camp_Tent_BedrollHayNoGround03 auto
 static property Rug03 auto
-static property _DE_TentWard auto
+static property _Camp_TentWard auto
 ObjectReference property _DE_Tent_InteractTriggerREF auto
 ObjectReference property _DE_Anchor auto
 ImageSpaceModifier property _DE_FadeDown auto
