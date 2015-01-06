@@ -16,7 +16,7 @@ import utility
 import debug
 import CampUtil
 
-weapon property _DE_DummyWeapon auto
+weapon property _Camp_DummyWeapon auto
 
 ;Scripts
 ;@TODO: Resolve at startup
@@ -90,7 +90,6 @@ Actor property PlayerRef auto
 Actor property myActor auto hidden
 
 ;Globals
-GlobalVariable property _DE_HoursToSleep auto
 GlobalVariable property GameHour auto
 GlobalVariable property Timescale auto
 GlobalVariable property _DE_Setting_CampingArmorTakeOff auto
@@ -1410,7 +1409,6 @@ function CleanUpTent()
 
 	;@TODO: Remove
 	;_DE_Tent_InteractTriggerREF.MoveTo(_DE_Anchor)
-	;_DE_HoursToSleep.SetValue(1.0)
 	if myTentExterior
 		myTentExterior.Enable(true)
 	endif
@@ -1418,10 +1416,10 @@ function CleanUpTent()
 endFunction
 
 function UnequipUsingDummyWeapon()
-	myActor.AddItem(_DE_DummyWeapon, abSilent = true)
-	myActor.EquipItem(_DE_DummyWeapon, abSilent = true)
-	myActor.UnEquipItem(_DE_DummyWeapon, abSilent = true)
-	myActor.RemoveItem(_DE_DummyWeapon, abSilent = true)
+	myActor.AddItem(_Camp_DummyWeapon, abSilent = true)
+	myActor.EquipItem(_Camp_DummyWeapon, abSilent = true)
+	myActor.UnEquipItem(_Camp_DummyWeapon, abSilent = true)
+	myActor.RemoveItem(_Camp_DummyWeapon, abSilent = true)
 endFunction
 
 ;@TODO: Settle on Follower support approach
