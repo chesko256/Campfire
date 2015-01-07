@@ -1,8 +1,8 @@
-scriptname _DE_Tent extends ObjectReference
+scriptname _Camp_Tent extends ObjectReference
 {Generic Tent class that other tent activators extend.}
 
 ; #SUMMARY# =====================================================================================================================
-; Name ...................: _DE_Tent
+; Name ...................: _Camp_Tent
 ; Attached To (EditorID)..: 
 ; Description ............: Tent base class script that all other tents extend. Handles all main tent functionality.
 ; Author .................: Chesko
@@ -188,18 +188,18 @@ bool property bGettingUp = false auto hidden
 float property myTimeScale = 20.0 auto hidden
 
 ;Bedrolls and other furniture
-furniture property _DE_TentSitMarker auto
-furniture property _DE_TentLayDownMarker auto
-furniture property _DE_TentLayDownMarkerL auto
-furniture property _DE_TentLayDownMarkerR auto
-furniture property _DE_Bedroll_ActualF auto
-furniture property _DE_Bedroll_ActualL auto
-furniture property _DE_Bedroll_ActualR auto
-furniture property _DE_Bedroll_NPC_F auto
-furniture property _DE_Bedroll_NPC_FL auto
-furniture property _DE_Bedroll_NPC_FR auto
-furniture property _DE_Bedroll_NPC_L auto
-furniture property _DE_Bedroll_NPC_R auto
+furniture property _Camp_TentSitMarker auto
+furniture property _Camp_TentLayDownMarker auto
+furniture property _Camp_TentLayDownMarkerL auto
+furniture property _Camp_TentLayDownMarkerR auto
+furniture property _Camp_Bedroll_ActualF auto
+furniture property _Camp_Bedroll_ActualL auto
+furniture property _Camp_Bedroll_ActualR auto
+furniture property _Camp_Bedroll_NPC_F auto
+furniture property _Camp_Bedroll_NPC_FL auto
+furniture property _Camp_Bedroll_NPC_FR auto
+furniture property _Camp_Bedroll_NPC_L auto
+furniture property _Camp_Bedroll_NPC_R auto
 
 ;Learned equipment
 Ammo property myQuiver auto hidden
@@ -277,7 +277,7 @@ static property _Camp_Tent_LanternOnGround auto
 static property _Camp_Tent_LanternOffGround auto
 static property _Camp_Tent_LanternOnHang auto
 static property _Camp_Tent_LanternOffHang auto
-Light property _DE_LanternLight auto
+Light property _Camp_LanternLight auto
 static property _Camp_Tent_BedrollHayNoGround01 auto
 static property _Camp_Tent_BedrollHayNoGround02 auto
 static property _Camp_Tent_BedrollHayNoGround03 auto
