@@ -42,6 +42,8 @@
 !_Camp_*.psc
 !Camp*.pex
 !Camp*.psc
+!Tent*.pex
+!Tent*.psc
 
 #Ignore working files
 Scripts/Source/_Camp_SkyUIConfigPanelScript - Copy.psc

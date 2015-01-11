@@ -1,8 +1,5 @@
 scriptname CampTentEx extends CampTent
 
-import CampUtil
-;import TentUtil
-
 ; OPTIONAL PROPERTIES
 
 ObjectReference property PositionRef_Lantern2 auto

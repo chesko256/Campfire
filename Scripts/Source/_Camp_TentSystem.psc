@@ -1,8 +1,8 @@
-scriptname _Camp_TentBase extends ObjectReference
+scriptname _Camp_TentSystem extends Quest
 {@TODO}
 
 ; #SUMMARY# =====================================================================================================================
-; Name ...................: _Camp_TentBase
+; Name ...................: _Camp_TentSystem
 ; Attached To (EditorID)..: 
 ; Description ............: 
 ; Author .................: Chesko
@@ -26,6 +26,7 @@ _Camp_Compatibility property Compatibility auto
 weapon property _Camp_DummyWeapon auto
 static property XMarker auto
 Actor property PlayerRef auto
+;@TODO: Remove
 GlobalVariable property _DE_Setting_CampingArmorTakeOff auto
 GlobalVariable property _Camp_Setting_TakeOff_Helm auto
 GlobalVariable property _Camp_Setting_TakeOff_Cuirass auto
@@ -55,7 +56,6 @@ ReferenceAlias property StaticFollower1 auto
 ReferenceAlias property StaticFollower2 auto
 ReferenceAlias property StaticFollower3 auto
 pDBEntranceQuestScript property DBEntranceQuestScript auto
-Message property _DE_Help_Tents auto
 Message property _DE_TentSeeThruError auto
 static property _Camp_Tent_LanternOnGround auto
 static property _Camp_Tent_LanternOffGround auto
@@ -88,49 +88,51 @@ furniture property _Camp_Bedroll_NPC_L auto
 furniture property _Camp_Bedroll_NPC_R auto
 
 ;@From OnUpdate on CampTent / CampTentEx
-bool function UpdateTentUseState(ObjectReference myExitFront = None)
+bool function UpdateTentUseState(ObjectReference akTent)
 	;@TODO: Might need to reintroduce some idea of myActor in order to maintain async state
 	;@TODO: Check hit, not combat!
+	CampTent TentObject = akTent as CampTent
 	if PlayerRef.IsInCombat()
 		;Player entered combat, kick them out of the tent
 		_Camp_FadeDown.Apply()
 		wait(0.5)
 		_Camp_FadeDown.PopTo(_Camp_Black)
-		if myExitFront && PlayerRef.GetDistance(myExitFront) < 1000.0
-			PlayerRef.MoveTo(myExitFront)
+		if TentObject.myExitFront && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
+			PlayerRef.MoveTo(TentObject.myExitFront)
 		else
 			;@TODO: Test this
 			PlayerRef.MoveTo(PlayerRef)
 		endif
 		_Camp_Black.PopTo(_Camp_FadeUp)
 		_Camp_Tent_Combat.Show()
-		return false
-	elseif !(PlayerRef.GetSitState() == 2 || PlayerRef.GetSitState() == 3) && !bGettingUp
+		CleanUpTent(akTent)
+	elseif !(PlayerRef.GetSitState() == 2 || PlayerRef.GetSitState() == 3) && !TentObject.bGettingUp
 		;Player getting up from sitting
-		if myExitFront && PlayerRef.GetDistance(myExitFront) < 1000.0
-			PlayerRef.SplineTranslateToRef(myExitFront, 1.0, 65.0)
+		if TentObject.myExitFront && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
+			PlayerRef.SplineTranslateToRef(TentObject.myExitFront, 1.0, 65.0)
 		endif
-		return false
+		CleanUpTent(akTent)
 	else
-		return true
+		TentObject.RegisterForSingleUpdate(0.5)
 	endif
-endEvent
+endFunction
 
 ;@From OnActivate on CampTent / CampTentEx
-Event ActivateTent(ObjectReference akActionRef, ObjectReference myPlayerSitMarker, ObjectReference myPlayerLayDownMarker)	
+function ActivateTent(ObjectReference akActionRef, ObjectReference akTent)
 	if akActionRef == PlayerRef
+		CampTent TentObject = akTent as CampTent
 		int iSitState = (akActionRef as Actor).GetSitState()
 		if iSitState == 0
-			ShowMainMenu(akActionRef)
-		elseif iSitState == 3 && myPlayerSitMarker.IsFurnitureInUse()
-			ShowSitMenu(akActionRef)
-		elseif iSitState == 3 && myPlayerLayDownMarker.IsFurnitureInUse()
-			ShowLayMenu(akActionRef)
+			ShowMainMenu(akTent)
+		elseif iSitState == 3 && TentObject.myPlayerSitMarker.IsFurnitureInUse()
+			ShowSitMenu(akTent)
+		elseif iSitState == 3 && TentObject.myPlayerLayDownMarker.IsFurnitureInUse()
+			ShowLayMenu(akTent)
 		endif
 	endif
-endEvent
+endFunction
 
-function ShowMainMenu(ObjectReference akActionRef)
+function ShowMainMenu(ObjectReference akTent)
 	int i = _DE_CampTent_Placed_ACT_Menu.Show()
 	if i == 0										;Sit
 		if _Camp_Setting_Help.GetValueInt() == 2 && _Camp_HelpDone_TentActivate.GetValueInt() == 1
@@ -140,7 +142,7 @@ function ShowMainMenu(ObjectReference akActionRef)
 			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
 			_Camp_HelpDone_TentActivate.SetValueInt(2)
 		endif
-		PlayerSit(akActionRef)
+		PlayerSit(akTent)
 	elseif i == 1									;Lie Down
 		if _Camp_Setting_Help.GetValueInt() == 2 && _Camp_HelpDone_TentActivate.GetValueInt() == 1
 			;@TODO: Move to Frostfall
@@ -149,17 +151,17 @@ function ShowMainMenu(ObjectReference akActionRef)
 			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
 			_Camp_HelpDone_TentActivate.SetValueInt(2)
 		endif
-		PlayerLieDown(akActionRef)
+		PlayerLieDown(akTent)
 	elseif i == 2									;Pack
-		PackTent()
+		PackTent(akTent)
 	elseif i == 3									;Lantern
-		ToggleLantern()
+		ToggleLantern(akTent)
 	else
 		;exit
 	endif
 endFunction
 
-function ShowSitMenu(ObjectReference akActionRef)
+function ShowSitMenu(ObjectReference akTent)
 	;float myEP
 	;@TODO: Wrap in IsFrostfallLoaded, otherwise display alternate message
 	;/if _DE_ExposurePoints.GetValueInt() > 120.0				;Don't show the player that it is greater than 120 - will self-correct next cycle
@@ -174,35 +176,32 @@ function ShowSitMenu(ObjectReference akActionRef)
 	else
 		i = _DE_CampTent2_SitMenu.Show(myEP - 100, ((Frostfall.pWetPoints/750) * 100))
 	endif/;
+	CampTent TentObject = akTent as CampTent
 	int i
 	i = _DE_CampTent2_SitMenu.Show(0, 0)
 	if i == 0										;Wait
-		ToggleLantern()
+		ToggleLantern(akTent)
 	elseif i == 1
 		if IsRefInInterior(PlayerRef)
 			_DE_TentSeeThruError.Show()
 		else
-			if myTentExterior.IsDisabled()
+			if TentObject.myTentExterior.IsDisabled()
 				_DE_TentSeeThru.SetValue(1)
-				if myTentExterior
-					myTentExterior.Enable(true)
-				endif
+				TryToEnableRef(TentObject.myTentExterior)
 			else
 				_DE_TentSeeThru.SetValue(2)
-				if myTentExterior
-					myTentExterior.Disable(true)
-				endif
+				TryToDisableRef(TentObject.myTentExterior, true)
 			endif
 		endif
 	elseif i == 2
-		myPlayerSitMarker.Activate(PlayerRef)
-		StopFollowerUse()
+		TentObject.myPlayerSitMarker.Activate(PlayerRef)
+		StopFollowerUse(akTent)
 	elseif i == 3
 		;do nothing
 	endif
 endFunction
 
-function ShowLayMenu(ObjectReference akActionRef)
+function ShowLayMenu(ObjectReference akTent)
 	;float myEP
 	;@TODO: Wrap in IsFrostfallLoaded, otherwise display alternate message
 	;/if _DE_ExposurePoints.GetValueInt() > 120.0				;Don't show the player that it is greater than 120 - will self-correct next cycle
@@ -216,149 +215,113 @@ function ShowLayMenu(ObjectReference akActionRef)
 	else
 		i = _DE_CampTent2_LayMenu.Show(myEP - 100, ((Frostfall.pWetPoints/750) * 100))
 	endif/;
+	CampTent TentObject = akTent as CampTent
 	int i
 	i = _DE_CampTent2_LayMenu.Show(0, 0)
 	if i == 0										;Sleep
-		bGettingUp = true
+		TentObject.bGettingUp = true
 		_Camp_FadeDown.Apply()
 		wait(1.0)
 		_Camp_FadeDown.PopTo(_Camp_Black)
 		if PlayerRef
-			PlayerRef.MoveTo(self)			;Get up
+			PlayerRef.MoveTo(akTent)			;Get up
 			wait(0.4)
-			myBedRoll.Activate(PlayerRef)		;Spawns sleep menu
+			TentObject.myBedRoll.Activate(PlayerRef)		;Spawns sleep menu
 			wait(0.4)
-			myPlayerLayDownMarker.Activate(PlayerRef)				
+			TentObject.myPlayerLayDownMarker.Activate(PlayerRef)				
 			wait(3.5)
-			ApplySnow()
+			ApplySnow(akTent)
 			_Camp_Black.PopTo(_Camp_FadeUp)
 		else
 			;Something went wrong, make sure that the player's vision is restored!
 			_Camp_Black.PopTo(_Camp_FadeUp)
 		endif
-		bGettingUp = false
+		TentObject.bGettingUp = false
 	elseif i == 1									;Lantern
-		ToggleLantern()
+		ToggleLantern(akTent)
 	elseif i == 2 									;Toggle View
 		if IsRefInInterior(PlayerRef)
 			_DE_TentSeeThruError.Show()
 		else
-			if myTentExterior.IsDisabled()
+			if TentObject.myTentExterior.IsDisabled()
 				_DE_TentSeeThru.SetValue(1)
-				if myTentExterior
-					myTentExterior.Enable(true)
-				endif
+				TryToEnableRef(TentObject.myTentExterior)
 			else
 				_DE_TentSeeThru.SetValue(2)
-				if myTentExterior
-					myTentExterior.Disable(true)
-				endif
+				TryToDisableRef(TentObject.myTentExterior, true)
 			endif
 		endif
 	elseif i == 3									;Get Up
-		myPlayerLayDownMarker.Activate(PlayerRef)
-		StopFollowerUse()
+		TentObject.myPlayerLayDownMarker.Activate(PlayerRef)
+		StopFollowerUse(akTent)
 	elseif i == 3									;Nothing
 		;do nothing
 	endif
 endFunction
 
-function ToggleLantern()
-	if bLanternLit
-		TryToDisableRef(myLanternLit)
-		TryToDisableRef(myLanternLit2)
-		TryToDisableRef(myLanternLit3)
+function ToggleLantern(ObjectReference akTent)
+	CampTent TentObject = akTent as CampTent
+	if TentObject.bLanternLit
+		TryToDisableRef(TentObject.myLanternLit)
+		TryToDisableRef(TentObject.myLanternLit2)
+		TryToDisableRef(TentObject.myLanternLit3)
 
-		TryToEnableRef(myLanternUnlit)
-		TryToEnableRef(myLanternUnlit2)
-		TryToEnableRef(myLanternUnlit3)
+		TryToEnableRef(TentObject.myLanternUnlit)
+		TryToEnableRef(TentObject.myLanternUnlit2)
+		TryToEnableRef(TentObject.myLanternUnlit3)
 		
-		TryToDisableRef(myLanternLight)
-		TryToDisableRef(myLanternLight2)
-		TryToDisableRef(myLanternLight3)
-		bLanternLit = false
+		TryToDisableRef(TentObject.myLanternLight)
+		TryToDisableRef(TentObject.myLanternLight2)
+		TryToDisableRef(TentObject.myLanternLight3)
+		TentObject.bLanternLit = false
 	else
-		TryToEnableRef(myLanternLit)
-		TryToEnableRef(myLanternLit2)
-		TryToEnableRef(myLanternLit3)
+		TryToEnableRef(TentObject.myLanternLit)
+		TryToEnableRef(TentObject.myLanternLit2)
+		TryToEnableRef(TentObject.myLanternLit3)
 
-		TryToDisableRef(myLanternUnlit)
-		TryToDisableRef(myLanternUnlit2)
-		TryToDisableRef(myLanternUnlit3)
+		TryToDisableRef(TentObject.myLanternUnlit)
+		TryToDisableRef(TentObject.myLanternUnlit2)
+		TryToDisableRef(TentObject.myLanternUnlit3)
 		
-		TryToEnableRef(myLanternLight)
-		TryToEnableRef(myLanternLight2)
-		TryToEnableRef(myLanternLight3)
-		bLanternLit = true
+		TryToEnableRef(TentObject.myLanternLight)
+		TryToEnableRef(TentObject.myLanternLight2)
+		TryToEnableRef(TentObject.myLanternLight3)
+		TentObject.bLanternLit = true
 	endif
 endFunction
 
-function PlayerSit(ObjectReference akActionRef)
+function PlayerSit(ObjectReference akTent)
 
-	TryToMakeFollowersUse()
+	;@TODO: Come back to this
+	;TryToMakeFollowersUse()
 
+	CampTent TentObject = akTent as CampTent
 	Game.ForceThirdPerson()
-	myPlayerSitMarker.Activate(PlayerRef)
+	TentObject.myPlayerSitMarker.Activate(PlayerRef)
 	if _DE_Setting_CampingArmorTakeOff.GetValueInt() == 2
 		;@TODO: Use new gear processing function	
 		;if Frostfall.GetFireState() || _DE_CurrentTemp.GetValue() >= 6.0 || Frostfall.bInInterior
-			DisplayPlayerTentEquipment()
+			DisplayPlayerTentEquipment(akTent)
 		;else
 		;	DisplayPlayerTentEquipment(true)
 		;endif
 	endif
-	if _DE_TentSeeThru.GetValueInt() == 2 && myTentExterior
-		myTentExterior.Disable(true)
+	if _DE_TentSeeThru.GetValueInt() == 2
+		TryToDisableRef(TentObject.myTentExterior, true)
 	endif
 	Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
-	;wait(3.0)
-	;if !(PlayerRef.IsInCombat())
-	;	ShowSitMenu(akActionRef)
-	;endif
-	RegisterForSingleUpdate(0.5)
+	TentObject.RegisterForSingleUpdate(0.5)
 endFunction
 
-function DisplayPlayerTentEquipment(bool bLimited = false)
-	if bLimited == false
-		if _Camp_Setting_TakeOff_Helm.GetValueInt() == 1
-			DisplayHelm_Player()
-		endif
-		if _Camp_Setting_TakeOff_Cuirass.GetValueInt() == 1
-			DisplayCuirass_Player()
-		endif
-		if _Camp_Setting_TakeOff_Gauntlets.GetValueInt() == 1
-			DisplayGauntlets_Player()
-		endif
-		if _Camp_Setting_TakeOff_Boots.GetValueInt() == 1
-			DisplayBoots_Player()
-		endif
-	endif
-	if _Camp_Setting_TakeOff_Weapons.GetValueInt() == 1
-		DisplayWeapons_Player()
-	endif
-	if _Camp_Setting_TakeOff_Shield.GetValueInt() == 1
-		DisplayShield_Player()
-	endif
-	if _Camp_Setting_TakeOff_Ammo.GetValueInt() == 1
-		DisplayQuiver_Player()
-	endif
-	if _Camp_Setting_TakeOff_Backpack.GetValueInt() == 1
-		DisplayBackpack_Player()
-	endif
-endFunction
+function PlayerLieDown(ObjectReference akTent)
 
-function PlayerLieDown(ObjectReference akActionRef)
-
-	;===============================Frostfall 2.3 / Skyrim 1.9 Update===================================
-	;
-	;  Skyrim 1.9 has broken the player's eyes from re-opening if you lie down (sleepstate = 4).
-	;  Using alternative lie down animation.
-	;
-	;===================================================================================================
+	CampTent TentObject = akTent as CampTent
+	; Skyrim 1.9 has broken the player's eyes from re-opening if you lie down (sleepstate = 4).
+	; An alternative animation must be used.
 	
 	;Don't lie down in tent if on the Dark Brotherhood entrance quest
 	if DBEntranceQuest.GetStage() == 20 && DBEntranceQuestScript.pSleepyTime == 1
-		myBedRoll.Activate(akActionRef)
+		TentObject.myBedRoll.Activate(PlayerRef)
 		return
 	endif
 
@@ -370,85 +333,113 @@ function PlayerLieDown(ObjectReference akActionRef)
 
 		if DLC2MQ03B.IsCompleted() == false && PlayerRef.IsInLocation(DLC2SolstheimLocation)
 			if PlayerRef.GetWorldspace() == DLC2SolstheimWorld
-				myBedRoll.Activate(akActionRef)
+				TentObject.myBedRoll.Activate(PlayerRef)
 				return
 			endif
 		endif
 	endif
 
-	TryToMakeFollowersUse()
+	;@TODO: Come back to this
+	;TryToMakeFollowersUse()
 
 	Game.ForceThirdPerson()
-	myPlayerLayDownMarker.Activate(PlayerRef)
+	TentObject.myPlayerLayDownMarker.Activate(PlayerRef)
 	if _DE_Setting_CampingArmorTakeOff.GetValueInt() == 2
 		;@TODO: Wrap in IsFrostfallLoaded
 		
 		;if Frostfall.GetFireState() || _DE_CurrentTemp.GetValue() >= 10.0 || Frostfall.bInInterior
-			DisplayPlayerTentEquipment()
+			DisplayPlayerTentEquipment(akTent)
 		;else
 		;	DisplayPlayerTentEquipment(true)
 		;endif
 	endif
-	if _DE_TentSeeThru.GetValueInt() == 2 && myTentExterior
-		myTentExterior.Disable(true)
+	if _DE_TentSeeThru.GetValueInt() == 2
+		TryToDisableRef(TentObject.myTentExterior, true)
 	endif
 	Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
-	;wait(3.0)
-	;if !(PlayerRef.IsInCombat())
-	;	ShowLayMenu(akActionRef)
-	;endif
-	RegisterForSingleUpdate(0.5)
+	TentObject.RegisterForSingleUpdate(0.5)
 	
 endFunction
 
-function ApplySnow()
-	
+function DisplayPlayerTentEquipment(ObjectReference akTent, bool bLimited = false)
+	CampTent TentObject = akTent as CampTent
+	if bLimited == false
+		if _Camp_Setting_TakeOff_Helm.GetValueInt() == 1
+			DisplayHelm_Player(TentObject)
+		endif
+		if _Camp_Setting_TakeOff_Cuirass.GetValueInt() == 1
+			DisplayCuirass_Player(TentObject)
+		endif
+		if _Camp_Setting_TakeOff_Gauntlets.GetValueInt() == 1
+			DisplayGauntlets_Player(TentObject)
+		endif
+		if _Camp_Setting_TakeOff_Boots.GetValueInt() == 1
+			DisplayBoots_Player(TentObject)
+		endif
+	endif
+	if _Camp_Setting_TakeOff_Weapons.GetValueInt() == 1
+		DisplayWeapons_Player(TentObject)
+	endif
+	if _Camp_Setting_TakeOff_Shield.GetValueInt() == 1
+		DisplayShield_Player(TentObject)
+	endif
+	if _Camp_Setting_TakeOff_Ammo.GetValueInt() == 1
+		DisplayQuiver_Player(TentObject)
+	endif
+	if _Camp_Setting_TakeOff_Backpack.GetValueInt() == 1
+		DisplayBackpack_Player(TentObject)
+	endif
+endFunction
+
+function ApplySnow(ObjectReference akTent)
+	;@TODO: Rework slightly to account for no myTentExterior object, use the shelter object instead
 	Weather myWeather = Weather.GetCurrentWeather()
 
+	CampTent TentObject = akTent as CampTent
 	bool bShowExterior = false
-	if myTentExterior == none
+	if TentObject.myTentExterior == none
 		bShowExterior = true
 	endif
 
 	if myWeather.GetClassification() == 3
 		if Compatibility.isDLC2Loaded
 			if myWeather == Compatibility.DLC2AshStorm
-				myTentExterior = myAshTent
+				TentObject.myTentExterior = TentObject.myAshTent
 			else
-				myTentExterior = mySnowTent
+				TentObject.myTentExterior = TentObject.mySnowTent
 			endif
 		else
-			myTentExterior = mySnowTent
+			TentObject.myTentExterior = TentObject.mySnowTent
 		endif
 	else
-		if myTentExterior == mySnowTent || myTentExterior == myAshTent
+		if TentObject.myTentExterior == TentObject.mySnowTent || TentObject.myTentExterior == TentObject.myAshTent
 			return
 		endif
-		myTentExterior = myNormalTent
+		TentObject.myTentExterior = TentObject.myNormalTent
 	endif
 
 	if bShowExterior
-		myNormalTent.Disable()
-		mySnowTent.Disable()
-		myAshTent.Disable()
-		if myTentExterior
-			myTentExterior.Enable(true)
-		endif
+		TryToDisableRef(TentObject.myNormalTent)
+		TryToDisableRef(TentObject.mySnowTent)
+		TryToDisableRef(TentObject.myAshTent)
+		TryToEnableRef(TentObject.myTentExterior)
 	endif
 
 endFunction
 
-function TryToMakeFollowersUse()
+function TryToMakeFollowersUse(ObjectReference akTent)
 	;debug.trace("[Frostfall] Trying to make NPC sleep...")
 	;Move bedroll out of range of NPCs, so they won't path here
-	myBedRoll.SetPosition(myBedRoll.GetPositionX(), myBedRoll.GetPositionY(), myBedRoll.GetPositionZ() + 3000.0)
+	CampTent TentObject = akTent as CampTent
+	TentObject.myBedRoll.SetPosition(TentObject.myBedRoll.GetPositionX(), TentObject.myBedRoll.GetPositionY(), TentObject.myBedRoll.GetPositionZ() + 3000.0)
 	_DE_FollowersUseBedrollAI.SetValueInt(1)
 endFunction
 
-function StopFollowerUse()
+function StopFollowerUse(ObjectReference akTent)
 	;debug.trace("[Frostfall] Trying to make NPC stop sleeping...")
 	;Move bedroll back in range
-	myBedRoll.SetPosition(self.GetPositionX(), self.GetPositionY(), self.GetPositionZ())
+	CampTent TentObject = akTent as CampTent
+	TentObject.myBedRoll.SetPosition(akTent.GetPositionX(), akTent.GetPositionY(), akTent.GetPositionZ())
 	_DE_FollowersUseBedrollAI.SetValueInt(0)
 endFunction
 
@@ -457,9 +448,9 @@ float[] function GetPosXYZRotateAroundRef(ObjectReference akOrigin, ObjectRefere
 	;-----------\
 	;Description \ 
 	;----------------------------------------------------------------
-	;Rotates a point (akObject) offset from the center of 
+	;Rotates a 3D position (akObject) offset from the center of 
 	;rotation (akOrigin) by the supplied degrees fAngleX, fAngleY,
-	;fAngleZ, and returns the new position of the point.
+	;fAngleZ, and returns the new 3D position of the point.
 	
 	;-------------\
 	;Return Values \
@@ -589,214 +580,215 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
     return myObject
 endFunction
 
-function DisplayShield_Player()
-	myShield = PlayerRef.GetEquippedShield()
-	if myShield == _Camp_WalkingStickShield
-		myShield = None
+function DisplayShield_Player(CampTent TentObject)
+	TentObject.myShield = PlayerRef.GetEquippedShield()
+	if TentObject.myShield == _Camp_WalkingStickShield
+		TentObject.myShield = None
 	endif
 
-	if myShield
-		PlayerRef.UnequipItem(myShield, abSilent = true)
+	if TentObject.myShield
+		PlayerRef.UnequipItem(TentObject.myShield, abSilent = true)
 		if IsRefInInterior(PlayerRef)
-			myDisplayShield = PlaceAndWaitFor3DLoaded(myPlayerMarker_ShieldInterior, myShield, bDisableInteraction = true)
+			TentObject.myDisplayShield = PlaceAndWaitFor3DLoaded(TentObject.myPlayerMarker_ShieldInterior, TentObject.myShield, bDisableInteraction = true)
 		else
-			myDisplayShield = PlaceAndWaitFor3DLoaded(myPlayerMarker_Shield, myShield, bDisableInteraction = true)
+			TentObject.myDisplayShield = PlaceAndWaitFor3DLoaded(TentObject.myPlayerMarker_Shield, TentObject.myShield, bDisableInteraction = true)
 		endif
 	endif
 endFunction
 
-function UnDisplayShield_Player()
-	if myShield
-		PlayerRef.EquipItem(myShield, abSilent = true)
+function UnDisplayShield_Player(CampTent TentObject)
+	if TentObject.myShield
+		PlayerRef.EquipItem(TentObject.myShield, abSilent = true)
 	endif
-	TryToDisableAndDeleteRef(myDisplayShield)
+	TryToDisableAndDeleteRef(TentObject.myDisplayShield)
 endFunction
 
-function DisplayWeapons_Player()
+function DisplayWeapons_Player(CampTent TentObject)
 	int iWeaponType = PlayerRef.GetEquippedItemType(1)
 	if (iWeaponType <= 4 || iWeaponType == 8) && iWeaponType > 0
 		;Player has a one-handed weapon
-		myMainWeapon = PlayerRef.GetEquippedWeapon()
+		TentObject.myMainWeapon = PlayerRef.GetEquippedWeapon()
 		;Does the player have an off-hand weapon?
 		int iOffWeaponType = PlayerRef.GetEquippedItemType(0)
 		if (iOffWeaponType <= 4 || iOffWeaponType == 8) && iOffWeaponType > 0
 			;Player has an off-hand weapon
-			myOffHandWeapon = PlayerRef.GetEquippedWeapon(true)
+			TentObject.myOffHandWeapon = PlayerRef.GetEquippedWeapon(true)
 		endif
 	elseif iWeaponType == 5 || iWeaponType == 6
 		;Player has a two-handed weapon
-		myBigWeapon = PlayerRef.GetEquippedWeapon()
+		TentObject.myBigWeapon = PlayerRef.GetEquippedWeapon()
 	elseif iWeaponType == 7
-		myBow = PlayerRef.GetEquippedWeapon()
+		TentObject.myBow = PlayerRef.GetEquippedWeapon()
 	endif
 	
-	if myMainWeapon
-		PlayerRef.UnequipItem(myMainWeapon, abSilent = true)
-		myDisplayMainWeapon =  PlaceAndWaitFor3DLoaded(myPlayerMarker_MainWeapon, myMainWeapon, bDisableInteraction = true)
+	if TentObject.myMainWeapon
+		PlayerRef.UnequipItem(TentObject.myMainWeapon, abSilent = true)
+		TentObject.myDisplayMainWeapon =  PlaceAndWaitFor3DLoaded(TentObject.myPlayerMarker_MainWeapon, TentObject.myMainWeapon, bDisableInteraction = true)
 	endif
 	
-	if myOffHandWeapon
-		myDisplayOffHandWeapon = PlaceAndWaitFor3DLoaded(myPlayerMarker_OffHandWeapon, myOffHandWeapon, bDisableInteraction = true)
+	if TentObject.myOffHandWeapon
+		TentObject.myDisplayOffHandWeapon = PlaceAndWaitFor3DLoaded(TentObject.myPlayerMarker_OffHandWeapon, TentObject.myOffHandWeapon, bDisableInteraction = true)
 	endif
 	
-	if myBigWeapon
+	if TentObject.myBigWeapon
 		UnequipUsingDummyWeapon()
-		myDisplayBigWeapon = PlaceAndWaitFor3DLoaded(myPlayerMarker_BigWeapon, myBigWeapon, bDisableInteraction = true)
+		TentObject.myDisplayBigWeapon = PlaceAndWaitFor3DLoaded(TentObject.myPlayerMarker_BigWeapon, TentObject.myBigWeapon, bDisableInteraction = true)
 	endif
 	
-	if myBow
+	if TentObject.myBow
 		UnequipUsingDummyWeapon()
-		myDisplayBow = PlaceAndWaitFor3DLoaded(myPlayerMarker_Bow, myBow, bDisableInteraction = true)
+		TentObject.myDisplayBow = PlaceAndWaitFor3DLoaded(TentObject.myPlayerMarker_Bow, TentObject.myBow, bDisableInteraction = true)
 	endif
 endfunction
 
-function UnDisplayWeapons_Player()
+function UnDisplayWeapons_Player(CampTent TentObject)
 	
-	if myMainWeapon
-		PlayerRef.EquipItem(myMainWeapon, abSilent = true)
-		myMainWeapon = none
+	if TentObject.myMainWeapon
+		PlayerRef.EquipItem(TentObject.myMainWeapon, abSilent = true)
+		TentObject.myMainWeapon = none
 	endif
-	TryToDisableAndDeleteRef(myDisplayMainWeapon)
+	TryToDisableAndDeleteRef(TentObject.myDisplayMainWeapon)
 	
-	if myOffHandWeapon
-		myOffHandWeapon = none
+	if TentObject.myOffHandWeapon
+		TentObject.myOffHandWeapon = none
 	endif
-	TryToDisableAndDeleteRef(myDisplayOffHandWeapon)
+	TryToDisableAndDeleteRef(TentObject.myDisplayOffHandWeapon)
 
-	if myBigWeapon
-		PlayerRef.EquipItem(myBigWeapon, abSilent = true)
-		myBigWeapon = none
+	if TentObject.myBigWeapon
+		PlayerRef.EquipItem(TentObject.myBigWeapon, abSilent = true)
+		TentObject.myBigWeapon = none
 	endif
-	TryToDisableAndDeleteRef(myDisplayBigWeapon)
+	TryToDisableAndDeleteRef(TentObject.myDisplayBigWeapon)
 	
-	if myBow
-		PlayerRef.EquipItem(myBow, abSilent = true)
-		myBow = none
+	if TentObject.myBow
+		PlayerRef.EquipItem(TentObject.myBow, abSilent = true)
+		TentObject.myBow = none
 	endif
-	TryToDisableAndDeleteRef(myDisplayBow)
+	TryToDisableAndDeleteRef(TentObject.myDisplayBow)
 	
 endFunction
 
-function DisplayWeapon_Follower()
-	;myFollowerAMarker
+function DisplayWeapon_Follower(CampTent TentObject)
+	;TentObject.myFollowerAMarker
 endFunction
 
 function UnDisplayWeapon_Follower()
 
 endFunction
 
-function DisplayCuirass_Player()
-	myCuirass = GetPlayerEquippedBody()
-	if myCuirass
-		PlayerRef.UnequipItem(myCuirass, abSilent = true)
-		myDisplayCuirass = PlaceAndWaitFor3DLoaded(myPlayerMarker_Cuirass, myCuirass, bDisableInteraction = true)
+function DisplayCuirass_Player(CampTent TentObject)
+	TentObject.myCuirass = GetPlayerEquippedBody()
+	if TentObject.myCuirass
+		PlayerRef.UnequipItem(TentObject.myCuirass, abSilent = true)
+		TentObject.myDisplayCuirass = PlaceAndWaitFor3DLoaded(TentObject.myPlayerMarker_Cuirass, TentObject.myCuirass, bDisableInteraction = true)
 	endif
 endFunction
 
-function UnDisplayCuirass_Player()
-	if myCuirass
-		PlayerRef.EquipItem(myCuirass, abSilent = true)
+function UnDisplayCuirass_Player(CampTent TentObject)
+	if TentObject.myCuirass
+		PlayerRef.EquipItem(TentObject.myCuirass, abSilent = true)
 	endif
-	TryToDisableAndDeleteRef(myDisplayCuirass)
+	TryToDisableAndDeleteRef(TentObject.myDisplayCuirass)
 endFunction
 
-function DisplayBoots_Player()
-	myBoots = GetPlayerEquippedFeet()
-	if myBoots && !myBoots.HasKeyword(ClothingBody) && !myBoots.HasKeyword(ArmorCuirass)
-		PlayerRef.UnequipItem(myBoots, abSilent = true)
-		myDisplayBoots = PlaceAndWaitFor3DLoaded(myPlayerMarker_Boots, myBoots, bDisableInteraction = true)
-	endif
-endFunction
-
-function UnDisplayBoots_Player()
-	if myBoots
-		PlayerRef.EquipItem(myBoots, abSilent = true)
-	endif
-	TryToDisableAndDeleteRef(myDisplayBoots)
-endFunction
-
-function DisplayGauntlets_Player()
-	myGauntlets = GetPlayerEquippedHands()
-	if myGauntlets && !myGauntlets.HasKeyword(ClothingBody) && !myGauntlets.HasKeyword(ArmorCuirass)
-		PlayerRef.UnequipItem(myGauntlets, abSilent = true)
-		myDisplayGauntlets = PlaceAndWaitFor3DLoaded(myPlayerMarker_Gauntlets, myGauntlets, bDisableInteraction = true)
+function DisplayBoots_Player(CampTent TentObject)
+	TentObject.myBoots = GetPlayerEquippedFeet()
+	if TentObject.myBoots && !TentObject.myBoots.HasKeyword(ClothingBody) && !TentObject.myBoots.HasKeyword(ArmorCuirass)
+		PlayerRef.UnequipItem(TentObject.myBoots, abSilent = true)
+		TentObject.myDisplayBoots = PlaceAndWaitFor3DLoaded(TentObject.myPlayerMarker_Boots, TentObject.myBoots, bDisableInteraction = true)
 	endif
 endFunction
 
-function UnDisplayGauntlets_Player()
-	if myGauntlets
-		PlayerRef.EquipItem(myGauntlets, abSilent = true)
+function UnDisplayBoots_Player(CampTent TentObject)
+	if TentObject.myBoots
+		PlayerRef.EquipItem(TentObject.myBoots, abSilent = true)
 	endif
-	TryToDisableAndDeleteRef(myDisplayGauntlets)
+	TryToDisableAndDeleteRef(TentObject.myDisplayBoots)
 endFunction
 
-function DisplayHelm_Player()
-	myHelm = GetPlayerEquippedHead()
-	if myHelm && !myHelm.HasKeyword(ClothingBody) && !myHelm.HasKeyword(ArmorCuirass)
-		PlayerRef.UnequipItem(myHelm, abSilent = true)
-		myDisplayHelm = PlaceAndWaitFor3DLoaded(myPlayerMarker_Helm, myHelm, bDisableInteraction = true)
+function DisplayGauntlets_Player(CampTent TentObject)
+	TentObject.myGauntlets = GetPlayerEquippedHands()
+	if TentObject.myGauntlets && !TentObject.myGauntlets.HasKeyword(ClothingBody) && !TentObject.myGauntlets.HasKeyword(ArmorCuirass)
+		PlayerRef.UnequipItem(TentObject.myGauntlets, abSilent = true)
+		TentObject.myDisplayGauntlets = PlaceAndWaitFor3DLoaded(TentObject.myPlayerMarker_Gauntlets, TentObject.myGauntlets, bDisableInteraction = true)
+	endif
+endFunction
+
+function UnDisplayGauntlets_Player(CampTent TentObject)
+	if TentObject.myGauntlets
+		PlayerRef.EquipItem(TentObject.myGauntlets, abSilent = true)
+	endif
+	TryToDisableAndDeleteRef(TentObject.myDisplayGauntlets)
+endFunction
+
+function DisplayHelm_Player(CampTent TentObject)
+	TentObject.myHelm = GetPlayerEquippedHead()
+	if TentObject.myHelm && !TentObject.myHelm.HasKeyword(ClothingBody) && !TentObject.myHelm.HasKeyword(ArmorCuirass)
+		PlayerRef.UnequipItem(TentObject.myHelm, abSilent = true)
+		TentObject.myDisplayHelm = PlaceAndWaitFor3DLoaded(TentObject.myPlayerMarker_Helm, TentObject.myHelm, bDisableInteraction = true)
 	endif
 endfunction
 
-function UnDisplayHelm_Player()
-	if myHelm
-		PlayerRef.EquipItem(myHelm, abSilent = true)
+function UnDisplayHelm_Player(CampTent TentObject)
+	if TentObject.myHelm
+		PlayerRef.EquipItem(TentObject.myHelm, abSilent = true)
 	endif
-	TryToDisableAndDeleteRef(myDisplayHelm)
+	TryToDisableAndDeleteRef(TentObject.myDisplayHelm)
 endFunction
 
-function DisplayQuiver_Player()
+function DisplayQuiver_Player(CampTent TentObject)
 	;Just unequip the quiver
-	myQuiver = GetPlayerEquippedAmmo()
-	if myQuiver
-		PlayerRef.UnequipItem(myQuiver, abSilent = true)
+	TentObject.myQuiver = GetPlayerEquippedAmmo()
+	if TentObject.myQuiver
+		PlayerRef.UnequipItem(TentObject.myQuiver, abSilent = true)
 	endif
 endfunction
 
-function UnDisplayQuiver_Player()
+function UnDisplayQuiver_Player(CampTent TentObject)
 	;Just re-equip the quiver
-	if myQuiver
-		PlayerRef.EquipItem(myQuiver, abSilent = true)
+	if TentObject.myQuiver
+		PlayerRef.EquipItem(TentObject.myQuiver, abSilent = true)
 	endif
 endFunction
 
-function DisplayBackpack_Player()
-	myBackpack = GetPlayerEquippedBackpack()
-	if myBackpack
-		PlayerRef.UnequipItem(myBackpack, abSilent = true)
-		myDisplayBackpack = PlaceAndWaitFor3DLoaded(myPlayerMarker_Backpack, myBackpack, bDisableInteraction = true)
+function DisplayBackpack_Player(CampTent TentObject)
+	TentObject.myBackpack = GetPlayerEquippedBackpack()
+	if TentObject.myBackpack
+		PlayerRef.UnequipItem(TentObject.myBackpack, abSilent = true)
+		TentObject.myDisplayBackpack = PlaceAndWaitFor3DLoaded(TentObject.myPlayerMarker_Backpack, TentObject.myBackpack, bDisableInteraction = true)
 	endif
 endfunction
 
-function UnDisplayBackpack_Player()
-	if myBackpack
-		PlayerRef.EquipItem(myBackpack, abSilent = true)
+function UnDisplayBackpack_Player(CampTent TentObject)
+	if TentObject.myBackpack
+		PlayerRef.EquipItem(TentObject.myBackpack, abSilent = true)
 	endif
-	TryToDisableAndDeleteRef(myDisplayBackpack)
+	TryToDisableAndDeleteRef(TentObject.myDisplayBackpack)
 endFunction
 
-function PackTent()
+function PackTent(ObjectReference akTent)
+	CampTent TentObject = akTent as CampTent
 	;Are any of the bed rolls in use?
-	if myBedRoll
-		if myBedRoll.IsFurnitureInUse()
+	if TentObject.myBedRoll
+		if TentObject.myBedRoll.IsFurnitureInUse()
 			_DE_CampTent2_PickUpError.Show()
 			return
 		endif
 	endif
-	if mySpareBedRoll1
-		if mySpareBedRoll1.IsFurnitureInUse()
+	if TentObject.mySpareBedRoll1
+		if TentObject.mySpareBedRoll1.IsFurnitureInUse()
 			_DE_CampTent2_PickUpError.Show()
 			return
 		endif
 	endif
-	if mySpareBedRoll2
-		if mySpareBedRoll2.IsFurnitureInUse()
+	if TentObject.mySpareBedRoll2
+		if TentObject.mySpareBedRoll2.IsFurnitureInUse()
 			_DE_CampTent2_PickUpError.Show()
 			return
 		endif
 	endif
-	if mySpareBedRoll3
-		if mySpareBedRoll3.IsFurnitureInUse()
+	if TentObject.mySpareBedRoll3
+		if TentObject.mySpareBedRoll3.IsFurnitureInUse()
 			_DE_CampTent2_PickUpError.Show()
 			return
 		endif
@@ -807,90 +799,84 @@ function PackTent()
 	;_DE_Tent_InteractTriggerREF.MoveTo(_DE_Anchor)
 
 	;Delete display models, if any
-	UnDisplayShield_Player()
-	UnDisplayWeapons_Player()
-	UnDisplayCuirass_Player()
-	UnDisplayBoots_Player()
-	UnDisplayGauntlets_Player()
-	UnDisplayHelm_Player()
-	UnDisplayQuiver_Player()
-	UnDisplayBackpack_Player()	
+	UnDisplayShield_Player(TentObject)
+	UnDisplayWeapons_Player(TentObject)
+	UnDisplayCuirass_Player(TentObject)
+	UnDisplayBoots_Player(TentObject)
+	UnDisplayGauntlets_Player(TentObject)
+	UnDisplayHelm_Player(TentObject)
+	UnDisplayQuiver_Player(TentObject)
+	UnDisplayBackpack_Player(TentObject)	
 	
 	;Delete markers and furniture
-	TryToDisableAndDeleteRef(myPlayerMarker_MainWeapon)
-	TryToDisableAndDeleteRef(myPlayerMarker_OffHandWeapon)
-	TryToDisableAndDeleteRef(myPlayerMarker_BigWeapon)
-	TryToDisableAndDeleteRef(myPlayerMarker_Bow)
-	TryToDisableAndDeleteRef(myPlayerMarker_Cuirass)
-	TryToDisableAndDeleteRef(myPlayerMarker_Helm)
-	TryToDisableAndDeleteRef(myPlayerMarker_Boots)
-	TryToDisableAndDeleteRef(myPlayerMarker_Gauntlets)
-	TryToDisableAndDeleteRef(myPlayerMarker_Backpack)
-	TryToDisableAndDeleteRef(myPlayerMarker_Shield)
-	TryToDisableAndDeleteRef(myPlayerMarker_ShieldInterior)
-	TryToDisableAndDeleteRef(myClutter1)
-	TryToDisableAndDeleteRef(myClutter2)
-	TryToDisableAndDeleteRef(myClutter3)
-	TryToDisableAndDeleteRef(myClutter4)
-	TryToDisableAndDeleteRef(myClutter5)
-	TryToDisableAndDeleteRef(myClutter6)
-	TryToDisableAndDeleteRef(myClutter7)
-	TryToDisableAndDeleteRef(myClutter8)
-	TryToDisableAndDeleteRef(myClutter9)
-	TryToDisableAndDeleteRef(myClutter10)
-	TryToDisableAndDeleteRef(myPlayerSitMarker)
-	TryToDisableAndDeleteRef(myPlayerLayDownMarker)
-	TryToDisableAndDeleteRef(myExitFront)
-	TryToDisableAndDeleteRef(myBedRoll)
-	TryToDisableAndDeleteRef(myWard)
-	TryToDisableAndDeleteRef(myLanternLit)
-	TryToDisableAndDeleteRef(myLanternUnlit)
-	TryToDisableAndDeleteRef(myLanternLight)
-	TryToDisableAndDeleteRef(myLanternLit2)
-	TryToDisableAndDeleteRef(myLanternUnlit2)
-	TryToDisableAndDeleteRef(myLanternLight2)
-	TryToDisableAndDeleteRef(myLanternLit3)
-	TryToDisableAndDeleteRef(myLanternUnlit3)
-	TryToDisableAndDeleteRef(myLanternLight3)
-	TryToDisableAndDeleteRef(mySpareBedRoll1)
-	TryToDisableAndDeleteRef(mySpareBedRoll2)
-	TryToDisableAndDeleteRef(mySpareBedRoll3)
-	TryToDisableAndDeleteRef(mySnowTent)
-	TryToDisableAndDeleteRef(myAshTent)
-	TryToDisableAndDeleteRef(myNormalTent)
-	TryToDisableAndDeleteRef(myTent)
+	TryToDisableAndDeleteRef(TentObject.myPlayerMarker_MainWeapon)
+	TryToDisableAndDeleteRef(TentObject.myPlayerMarker_OffHandWeapon)
+	TryToDisableAndDeleteRef(TentObject.myPlayerMarker_BigWeapon)
+	TryToDisableAndDeleteRef(TentObject.myPlayerMarker_Bow)
+	TryToDisableAndDeleteRef(TentObject.myPlayerMarker_Cuirass)
+	TryToDisableAndDeleteRef(TentObject.myPlayerMarker_Helm)
+	TryToDisableAndDeleteRef(TentObject.myPlayerMarker_Boots)
+	TryToDisableAndDeleteRef(TentObject.myPlayerMarker_Gauntlets)
+	TryToDisableAndDeleteRef(TentObject.myPlayerMarker_Backpack)
+	TryToDisableAndDeleteRef(TentObject.myPlayerMarker_Shield)
+	TryToDisableAndDeleteRef(TentObject.myPlayerMarker_ShieldInterior)
+	TryToDisableAndDeleteRef(TentObject.myClutter1)
+	TryToDisableAndDeleteRef(TentObject.myClutter2)
+	TryToDisableAndDeleteRef(TentObject.myClutter3)
+	TryToDisableAndDeleteRef(TentObject.myClutter4)
+	TryToDisableAndDeleteRef(TentObject.myClutter5)
+	TryToDisableAndDeleteRef(TentObject.myClutter6)
+	TryToDisableAndDeleteRef(TentObject.myClutter7)
+	TryToDisableAndDeleteRef(TentObject.myClutter8)
+	TryToDisableAndDeleteRef(TentObject.myClutter9)
+	TryToDisableAndDeleteRef(TentObject.myClutter10)
+	TryToDisableAndDeleteRef(TentObject.myPlayerSitMarker)
+	TryToDisableAndDeleteRef(TentObject.myPlayerLayDownMarker)
+	TryToDisableAndDeleteRef(TentObject.myExitFront)
+	TryToDisableAndDeleteRef(TentObject.myBedRoll)
+	TryToDisableAndDeleteRef(TentObject.myWard)
+	TryToDisableAndDeleteRef(TentObject.myLanternLit)
+	TryToDisableAndDeleteRef(TentObject.myLanternUnlit)
+	TryToDisableAndDeleteRef(TentObject.myLanternLight)
+	TryToDisableAndDeleteRef(TentObject.myLanternLit2)
+	TryToDisableAndDeleteRef(TentObject.myLanternUnlit2)
+	TryToDisableAndDeleteRef(TentObject.myLanternLight2)
+	TryToDisableAndDeleteRef(TentObject.myLanternLit3)
+	TryToDisableAndDeleteRef(TentObject.myLanternUnlit3)
+	TryToDisableAndDeleteRef(TentObject.myLanternLight3)
+	TryToDisableAndDeleteRef(TentObject.mySpareBedRoll1)
+	TryToDisableAndDeleteRef(TentObject.mySpareBedRoll2)
+	TryToDisableAndDeleteRef(TentObject.mySpareBedRoll3)
+	TryToDisableAndDeleteRef(TentObject.mySnowTent)
+	TryToDisableAndDeleteRef(TentObject.myAshTent)
+	TryToDisableAndDeleteRef(TentObject.myNormalTent)
+	TryToDisableAndDeleteRef(TentObject.myTent)
 	
 	wait(0.2)
-	PlayerRef.AddItem(TentMiscItem, abSilent = true)
-	ITMGenericArmorUp.Play(self)
+	PlayerRef.AddItem(TentObject.Required_InventoryItem, abSilent = true)
+	ITMGenericArmorUp.Play(akTent)
 
-	StopFollowerUse()
+	StopFollowerUse(akTent)
 	
 	;Finally, delete myself
-	self.Disable()
-	self.Delete()
+	TryToDisableAndDeleteRef(akTent)
 endFunction
 
-function CleanUpTent(Activator TentActivator)
-	CampTentEx TentObject = TentActivator as CampTentEx
-	if !TentObject
-		TentObject = TentActivator as CampTent
-	endif
-	StopFollowerUse()
+function CleanUpTent(ObjectReference akTent)
+	CampTent TentObject = akTent as CampTent
+	StopFollowerUse(akTent)
 	Game.EnablePlayerControls()
-	UnDisplayShield_Player(TentObject.myShield)
-	UnDisplayWeapons_Player(TentObject.myMainWeapon, TentObject.myOffHandWeapon, TentObject.myBigWeapon, TentObject.myBow)
-	UnDisplayCuirass_Player(TentObject.myCuirass)
-	UnDisplayBoots_Player(TentObject.myBoots)
-	UnDisplayGauntlets_Player(TentObject.myGauntlets)
-	UnDisplayHelm_Player(TentObject.myHelm)
-	UnDisplayQuiver_Player(TentObject.myQuiver)
-	UnDisplayBackpack_Player(TentObject.myBackpack)
+	UnDisplayShield_Player(TentObject)
+	UnDisplayWeapons_Player(TentObject)
+	UnDisplayCuirass_Player(TentObject)
+	UnDisplayBoots_Player(TentObject)
+	UnDisplayGauntlets_Player(TentObject)
+	UnDisplayHelm_Player(TentObject)
+	UnDisplayQuiver_Player(TentObject)
+	UnDisplayBackpack_Player(TentObject)
 
-	if TentObject.myTentExterior
-		TentObject.myTentExterior.Enable(true)
-	endif
-	PlayerRef = none
+	TryToEnableRef(TentObject.myTentExterior)
+	;myActorRef = none
 endFunction
 
 function UnequipUsingDummyWeapon()

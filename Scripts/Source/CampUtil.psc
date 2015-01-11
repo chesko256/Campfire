@@ -347,7 +347,8 @@ endFunction
 
 ObjectReference function PlaceAndWaitFor3DLoaded(ObjectReference akOrigin, Form FormToPlace, int Count = 1, bool ForcePersist = false, bool bDisableInteraction = false) global
 	;A more concise way to place an object and wait until the object's 3D is loaded.
-	;Prevents infinite loop if object never loads.
+	;Prevents infinite loop if object never loads. 
+	;Optionally set bDisableInteraction to True to make this object behave like a static (disable Havok physics) and disable activation.
 	;@TODO: Profile this
 	ObjectReference myObject = akOrigin.PlaceAtMe(FormToPlace, Count, ForcePersist, false)
 	int iTryCount = 0
@@ -408,5 +409,5 @@ function ExitMenus() global
 endFunction
 
 function RaiseCampAPIError() global
-	debug.trace("[Campfire] Fatal API error occurred.")
+	debug.trace("[Campfire] Fatal Campfire API error occurred.")
 endFunction
