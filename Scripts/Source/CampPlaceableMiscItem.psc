@@ -1,4 +1,4 @@
-scriptname _DE_PlaceableObject extends ObjectReference
+scriptname CampPlaceableMiscItem extends ObjectReference
 
 import math
 
@@ -6,8 +6,8 @@ _DE_GetCampingLegal property Legal auto
 ;_DE_EPMonitor_1_6 property Frostfall auto
 float property fZOffset auto
 float property fZAngleOffset auto
-Activator property myPlacedActivator auto
-Furniture property myPlacedFurniture auto
+Form property Required_PlacedObject auto
+{The object (activator, furniture, etc) that will be placed when this item is used.}
 Ingredient property myRequiredIngredient auto
 {Fill only the ingredient or the misc item property, not both.}
 MiscObject property myRequiredItem auto
@@ -90,23 +90,16 @@ function PlaceObjectMessage()
 endFunction
 
 function PlaceObject()
-	if myPlacedFurniture
-		float[] myOffset = new float[2]
-		myOffset = GetOffsets(Game.GetPlayer(), 150.0)
-		_DE_XMarker_Placement.MoveTo(Game.GetPlayer(), myOffset[0], myOffset[1], fZOffset, abMatchRotation = false)
-		_DE_XMarker_Placement.SetAngle(0.0, 0.0, Game.GetPlayer().GetAngleZ() - fZAngleOffset)
-		_DE_XMarker_Placement.PlaceAtMe(myPlacedFurniture)
-		_DE_XMarker_Placement.MoveTo(_DE_Anchor)
-	elseif myPlacedActivator
-		float[] myOffset = new float[2]
-		myOffset = GetOffsets(Game.GetPlayer(), 150.0)
-		_DE_XMarker_Placement.MoveTo(Game.GetPlayer(), myOffset[0], myOffset[1], fZOffset, abMatchRotation = false)
-		_DE_XMarker_Placement.SetAngle(0.0, 0.0, Game.GetPlayer().GetAngleZ() - fZAngleOffset)
-		_DE_XMarker_Placement.PlaceAtMe(myPlacedActivator)
-		_DE_XMarker_Placement.MoveTo(_DE_Anchor)
-	endif
+	;/float[] myOffset = new float[2]
+	myOffset = GetOffsets(Game.GetPlayer(), 150.0)
+	_DE_XMarker_Placement.MoveTo(Game.GetPlayer(), myOffset[0], myOffset[1], fZOffset, abMatchRotation = false)
+	_DE_XMarker_Placement.SetAngle(0.0, 0.0, Game.GetPlayer().GetAngleZ() - fZAngleOffset)
+	_DE_XMarker_Placement.PlaceAtMe(myPlacedActivator)
+	_DE_XMarker_Placement.MoveTo(_DE_Anchor)
+	
 	self.Disable()
 	self.Delete()
+	/;
 endFunction
 
 function IllegalCampingMessage()

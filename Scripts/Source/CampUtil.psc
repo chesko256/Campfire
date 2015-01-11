@@ -316,7 +316,7 @@ bool function IsPlaceableObject(Form akBaseObject) global
 		return False
 	endif
 	
-	if Campfire._Camp_PlaceableObjects.HasForm(akBaseObject)
+	if akBaseObject.HasKeyword(Campfire.isPlaceableItem)
 		return True
 	else
 		return False

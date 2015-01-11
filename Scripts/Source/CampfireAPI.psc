@@ -4,7 +4,7 @@ scriptname CampfireAPI extends Quest
 CampfireData property CampData auto
 Actor property PlayerRef auto
 Formlist property _Camp_WorldspacesInteriors auto
-Formlist property _Camp_PlaceableObjects auto
+Keyword property isPlaceableItem auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 
 Formlist property _Camp_TentActivators auto
