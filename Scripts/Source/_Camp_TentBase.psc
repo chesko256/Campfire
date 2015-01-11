@@ -1,14 +1,14 @@
 scriptname _Camp_TentBase extends ObjectReference
-{Generic Tent class that other tent activators extend.}
+{@TODO}
 
 ; #SUMMARY# =====================================================================================================================
-; Name ...................: _Camp_Tent
+; Name ...................: _Camp_TentBase
 ; Attached To (EditorID)..: 
-; Description ............: Tent base class script that all other tents extend. Handles all main tent functionality.
+; Description ............: 
 ; Author .................: Chesko
-; Last Approved (version) : 2.6
-; Status .................: Complete
-; Remarks ................: Follower implementation done in 2.6.
+; Last Approved (version) : 
+; Status .................: 
+; Remarks ................: 
 ; ===============================================================================================================================
 
 import math
@@ -16,79 +16,16 @@ import utility
 import debug
 import CampUtil
 
-weapon property _Camp_DummyWeapon auto
-
 ;Scripts
 ;@TODO: Resolve at startup
 ;_DE_EPMonitor_1_6 property Frostfall auto
 ;@TODO: Resolve at startup
 
+; TO KEEP IN UTIL
 _Camp_Compatibility property Compatibility auto
-
+weapon property _Camp_DummyWeapon auto
 static property XMarker auto
-
-;Object locations
-float[] property myOriginAng auto hidden
-float[] property myPlayerMarker_MainWeapon_Pos auto hidden
-float[] property myPlayerMarker_OffHandWeapon_Pos auto hidden
-float[] property myPlayerMarker_BigWeapon_Pos auto hidden
-float[] property myPlayerMarker_Bow_Pos auto hidden
-float[] property myPlayerMarker_Helm_Pos auto hidden
-float[] property myPlayerMarker_Boots_Pos auto hidden
-float[] property myPlayerMarker_Gauntlets_Pos auto hidden
-float[] property myPlayerMarker_Cuirass_Pos auto hidden
-float[] property myPlayerMarker_Backpack_Pos auto hidden
-float[] property myPlayerMarker_Shield_Pos auto hidden
-float[] property myPlayerMarker_ShieldInterior_Pos auto hidden
-float[] property myFollowerAMarker_MainWeapon_Pos auto hidden
-float[] property myFollowerAMarker_OffHandWeapon_Pos auto hidden
-float[] property myFollowerAMarker_BigWeapon_Pos auto hidden
-float[] property myFollowerAMarker_Bow_Pos auto hidden
-float[] property myFollowerAMarker_Shield_Pos auto hidden
-float[] property myFollowerBMarker_MainWeapon_Pos auto hidden
-float[] property myFollowerBMarker_OffHandWeapon_Pos auto hidden
-float[] property myFollowerBMarker_BigWeapon_Pos auto hidden
-float[] property myFollowerBMarker_Bow_Pos auto hidden
-float[] property myFollowerBMarker_Shield_Pos auto hidden
-float[] property myFollowerCMarker_MainWeapon_Pos auto hidden
-float[] property myFollowerCMarker_OffHandWeapon_Pos auto hidden
-float[] property myFollowerCMarker_BigWeapon_Pos auto hidden
-float[] property myFollowerCMarker_Bow_Pos auto hidden
-float[] property myFollowerCMarker_Shield_Pos auto hidden
-float[] property myClutter1_Pos auto hidden
-float[] property myClutter2_Pos auto hidden
-float[] property myClutter3_Pos auto hidden
-float[] property myClutter4_Pos auto hidden
-float[] property myClutter5_Pos auto hidden
-float[] property myClutter6_Pos auto hidden
-float[] property myClutter7_Pos auto hidden
-float[] property myClutter8_Pos auto hidden
-float[] property myClutter9_Pos auto hidden
-float[] property myClutter10_Pos auto hidden
-float[] property myTent_Pos auto hidden
-float[] property myLanternLit_Pos auto hidden
-float[] property myLanternLit2_Pos auto hidden
-float[] property myLanternLit3_Pos auto hidden
-float[] property myLanternUnlit_Pos auto hidden
-float[] property myLanternUnlit2_Pos auto hidden
-float[] property myLanternUnlit3_Pos auto hidden
-float[] property myLanternLight_Pos auto hidden
-float[] property myLanternLight2_Pos auto hidden
-float[] property myLanternLight3_Pos auto hidden
-float[] property myPlayerSitMarker_Pos auto hidden
-float[] property myPlayerLayDownMarker_Pos auto hidden
-float[] property myExitFront_Pos auto hidden
-float[] property myBedRoll_Pos auto hidden
-float[] property mySpareBedRoll1_Pos auto hidden
-float[] property mySpareBedRoll2_Pos auto hidden
-float[] property mySpareBedRoll3_Pos auto hidden
-float[] property myWard_Pos auto hidden
-float[] property mySelf_Pos auto hidden
-
-;Player and actors
 Actor property PlayerRef auto
-
-;Globals
 GlobalVariable property _DE_Setting_CampingArmorTakeOff auto
 GlobalVariable property _Camp_Setting_TakeOff_Helm auto
 GlobalVariable property _Camp_Setting_TakeOff_Cuirass auto
@@ -101,176 +38,18 @@ GlobalVariable property _Camp_Setting_TakeOff_Ammo auto
 ;GlobalVariable property _DE_CurrentTemp auto
 ;GlobalVariable property _DE_ExposurePoints auto
 GlobalVariable property _Camp_HelpDone_TentActivate auto
-GlobalVariable property _DE_Setting_Help auto
+GlobalVariable property _Camp_Setting_Help auto
 GlobalVariable property _DE_TentSeeThru auto
 GlobalVariable property _DE_FollowersUseBedrollAI auto
-
-;Messages
 message property _DE_CampTent_Placed_ACT_Menu auto
 message property _DE_CampTent2_SitMenu auto
 message property _DE_CampTent2_SitMenu_Positive auto
 message property _DE_CampTent2_LayMenu auto
 message property _DE_CampTent2_LayMenu_Positive auto
 message property _DE_CampTent2_PickUpError auto
-message property _DE_Tent_Combat auto
+message property _Camp_Tent_Combat auto
 message property _DE_Combat_Error auto
 message property _Camp_Help_TentActivate auto
-
-;Equipment markers
-static property _Camp_Tent_MainWeaponMarker auto
-static property _Camp_Tent_OffHandWeaponMarker auto
-static property _Camp_Tent_BigWeaponMarker auto
-static property _Camp_Tent_BowMarker auto
-static property _Camp_Tent_HelmMarker auto
-static property _Camp_Tent_CuirassMarker auto
-static property _Camp_Tent_GauntletsMarker auto
-static property _Camp_Tent_BootsMarker auto
-static property _Camp_Tent_BackpackMarker auto
-static property _Camp_Tent_ShieldMarker auto
-
-;Run-time objects
-ObjectReference property myTent auto hidden
-ObjectReference property myTentExterior auto hidden
-ObjectReference property myNormalTent auto hidden
-ObjectReference property mySnowTent auto hidden
-ObjectReference property myAshTent auto hidden
-ObjectReference property myLanternLit auto hidden
-ObjectReference property myLanternUnlit auto hidden
-ObjectReference property myLanternLight auto hidden
-ObjectReference property myLanternLit2 auto hidden
-ObjectReference property myLanternUnlit2 auto hidden
-ObjectReference property myLanternLight2 auto hidden
-ObjectReference property myLanternLit3 auto hidden
-ObjectReference property myLanternUnlit3 auto hidden
-ObjectReference property myLanternLight3 auto hidden
-ObjectReference property myPlayerMarker_MainWeapon auto hidden
-ObjectReference property myPlayerMarker_OffHandWeapon auto hidden
-ObjectReference property myPlayerMarker_BigWeapon auto hidden
-ObjectReference property myPlayerMarker_Bow auto hidden
-ObjectReference property myPlayerMarker_Helm auto hidden
-ObjectReference property myPlayerMarker_Boots auto hidden
-ObjectReference property myPlayerMarker_Gauntlets auto hidden
-ObjectReference property myPlayerMarker_Cuirass auto hidden
-ObjectReference property myPlayerMarker_Backpack auto hidden
-ObjectReference property myPlayerMarker_Shield auto hidden
-ObjectReference property myPlayerMarker_ShieldInterior auto hidden
-ObjectReference property myFollowerAMarker_MainWeapon auto hidden
-ObjectReference property myFollowerAMarker_OffHandWeapon auto hidden
-ObjectReference property myFollowerAMarker_BigWeapon auto hidden
-ObjectReference property myFollowerAMarker_Bow auto hidden
-ObjectReference property myFollowerAMarker_Shield auto hidden
-ObjectReference property myFollowerBMarker_MainWeapon auto hidden
-ObjectReference property myFollowerBMarker_OffHandWeapon auto hidden
-ObjectReference property myFollowerBMarker_BigWeapon auto hidden
-ObjectReference property myFollowerBMarker_Bow auto hidden
-ObjectReference property myFollowerBMarker_Shield auto hidden
-ObjectReference property myFollowerCMarker_MainWeapon auto hidden
-ObjectReference property myFollowerCMarker_OffHandWeapon auto hidden
-ObjectReference property myFollowerCMarker_BigWeapon auto hidden
-ObjectReference property myFollowerCMarker_Bow auto hidden
-ObjectReference property myFollowerCMarker_Shield auto hidden
-ObjectReference property myClutter1 auto hidden
-ObjectReference property myClutter2 auto hidden
-ObjectReference property myClutter3 auto hidden
-ObjectReference property myClutter4 auto hidden
-ObjectReference property myClutter5 auto hidden
-ObjectReference property myClutter6 auto hidden
-ObjectReference property myClutter7 auto hidden
-ObjectReference property myClutter8 auto hidden
-ObjectReference property myClutter9 auto hidden
-ObjectReference property myClutter10 auto hidden
-ObjectReference property myPlayerSitMarker auto hidden
-ObjectReference property myPlayerLayDownMarker auto hidden
-ObjectReference property myExitFront auto hidden
-ObjectReference property myBedRoll auto hidden
-ObjectReference property mySpareBedRoll1 auto hidden
-ObjectReference property mySpareBedRoll2 auto hidden
-ObjectReference property mySpareBedRoll3 auto hidden
-ObjectReference property myWard auto hidden
-
-;Run-time variables
-bool property bLanternLit = false auto hidden
-bool property bGettingUp = false auto hidden
-
-;Bedrolls and other furniture
-furniture property _Camp_TentSitMarker auto
-furniture property _Camp_TentLayDownMarker auto
-furniture property _Camp_TentLayDownMarkerL auto
-furniture property _Camp_TentLayDownMarkerR auto
-furniture property _Camp_Bedroll_ActualF auto
-furniture property _Camp_Bedroll_ActualL auto
-furniture property _Camp_Bedroll_ActualR auto
-furniture property _Camp_Bedroll_NPC_F auto
-furniture property _Camp_Bedroll_NPC_FL auto
-furniture property _Camp_Bedroll_NPC_FR auto
-furniture property _Camp_Bedroll_NPC_L auto
-furniture property _Camp_Bedroll_NPC_R auto
-
-;Learned equipment
-Ammo property myQuiver auto hidden
-Armor property myShield auto hidden
-Armor property myHelm auto hidden
-Armor property myBackpack auto hidden
-Armor property myBoots auto hidden
-Armor property myGauntlets auto hidden
-Armor property myCuirass auto hidden
-Weapon property myMainWeapon auto hidden
-Weapon property myOffHandWeapon auto hidden
-Weapon property myBigWeapon auto hidden
-Weapon property myBow auto hidden
-
-;Learned follower equipment
-Armor property myFollowerAShield auto hidden
-Weapon property myFollowerAMainWeapon auto hidden
-Weapon property myFollowerAOffHandWeapon auto hidden
-Weapon property myFollowerABigWeapon auto hidden
-Weapon property myFollowerABow auto hidden
-
-Armor property myFollowerBShield auto hidden
-Weapon property myFollowerBMainWeapon auto hidden
-Weapon property myFollowerBOffHandWeapon auto hidden
-Weapon property myFollowerBBigWeapon auto hidden
-Weapon property myFollowerBBow auto hidden
-
-Armor property myFollowerCShield auto hidden
-Weapon property myFollowerCMainWeapon auto hidden
-Weapon property myFollowerCOffHandWeapon auto hidden
-Weapon property myFollowerCBigWeapon auto hidden
-Weapon property myFollowerCBow auto hidden
-
-
-;Display Equipment
-ObjectReference property myDisplayQuiver auto hidden
-ObjectReference property myDisplayShield auto hidden
-ObjectReference property myDisplayHelm auto hidden
-ObjectReference property myDisplayBackpack auto hidden
-ObjectReference property myDisplayBoots auto hidden
-ObjectReference property myDisplayGauntlets auto hidden
-ObjectReference property myDisplayCuirass auto hidden
-ObjectReference property myDisplayMainWeapon auto hidden
-ObjectReference property myDisplayOffHandWeapon auto hidden
-ObjectReference property myDisplayBigWeapon auto hidden
-ObjectReference property myDisplayBow auto hidden
-
-Armor property myDisplayFollowerAShield auto hidden
-Weapon property myDisplayFollowerAMainWeapon auto hidden
-Weapon property myDisplayFollowerAOffHandWeapon auto hidden
-Weapon property myDisplayFollowerABigWeapon auto hidden
-Weapon property myDisplayFollowerABow auto hidden
-
-Armor property myDisplayFollowerBShield auto hidden
-Weapon property myDisplayFollowerBMainWeapon auto hidden
-Weapon property myDisplayFollowerBOffHandWeapon auto hidden
-Weapon property myDisplayFollowerBBigWeapon auto hidden
-Weapon property myDisplayFollowerBBow auto hidden
-
-Armor property myDisplayFollowerCShield auto hidden
-Weapon property myDisplayFollowerCMainWeapon auto hidden
-Weapon property myDisplayFollowerCOffHandWeapon auto hidden
-Weapon property myDisplayFollowerCBigWeapon auto hidden
-Weapon property myDisplayFollowerCBow auto hidden
-
-;Misc
 Quest property DBEntranceQuest auto
 ReferenceAlias property StaticFollower1 auto
 ReferenceAlias property StaticFollower2 auto
@@ -286,335 +65,230 @@ Light property _Camp_LanternLight auto
 static property _Camp_Tent_BedrollHayNoGround01 auto
 static property _Camp_Tent_BedrollHayNoGround02 auto
 static property _Camp_Tent_BedrollHayNoGround03 auto
-static property Rug03 auto
 static property _Camp_TentWard auto
-ObjectReference property _DE_Tent_InteractTriggerREF auto
 ObjectReference property _DE_Anchor auto
-ImageSpaceModifier property _DE_FadeDown auto
-ImageSpaceModifier property _DE_FadeUp auto
-ImageSpaceModifier property _DE_Black auto
+ImageSpaceModifier property _Camp_FadeDown auto
+ImageSpaceModifier property _Camp_FadeUp auto
+ImageSpaceModifier property _Camp_Black auto
 Sound property ITMGenericArmorUp auto
 Armor property _Camp_WalkingStickShield auto
 keyword property ClothingBody auto
 keyword property ArmorCuirass auto
+furniture property _Camp_TentSitMarker auto
+furniture property _Camp_TentLayDownMarker auto
+furniture property _Camp_TentLayDownMarkerL auto
+furniture property _Camp_TentLayDownMarkerR auto
+furniture property _Camp_Bedroll_ActualF auto
+furniture property _Camp_Bedroll_ActualL auto
+furniture property _Camp_Bedroll_ActualR auto
+furniture property _Camp_Bedroll_NPC_F auto
+furniture property _Camp_Bedroll_NPC_FL auto
+furniture property _Camp_Bedroll_NPC_FR auto
+furniture property _Camp_Bedroll_NPC_L auto
+furniture property _Camp_Bedroll_NPC_R auto
 
-Event OnUpdate()
-	if PlayerRef
-		;notification("Sleep State: " + PlayerRef.GetSleepState() + ", Sit State: " + PlayerRef.GetSitState())
-		if PlayerRef == PlayerRef
-			if PlayerRef.IsInCombat()
-				;Player got in trouble, bail them out of the tent
-				_DE_FadeDown.Apply()
-				wait(0.5)
-				_DE_FadeDown.PopTo(_DE_Black)
-				if myExitFront && PlayerRef.GetDistance(myExitFront) < 1000.0
-					PlayerRef.MoveTo(myExitFront)
-				else
-					PlayerRef.MoveTo(self)
-				endif
-				_DE_Black.PopTo(_DE_FadeUp)
-				_DE_Tent_Combat.Show()
-				StopFollowerUse()
-				CleanUpTent()
-			else
-				if !(PlayerRef.GetSitState() == 2 || PlayerRef.GetSitState() == 3) && !bGettingUp
-					;Player getting up from sitting
-					if myExitFront && PlayerRef.GetDistance(myExitFront) < 1000.0
-						PlayerRef.SplineTranslateToRef(myExitFront, 1.0, 65.0)
-					endif
-					StopFollowerUse()
-					CleanUpTent()
-				else
-					RegisterForSingleUpdate(0.5)
-				endif
-			endif
+;@From OnUpdate on CampTent / CampTentEx
+bool function UpdateTentUseState(ObjectReference myExitFront = None)
+	;@TODO: Might need to reintroduce some idea of myActor in order to maintain async state
+	;@TODO: Check hit, not combat!
+	if PlayerRef.IsInCombat()
+		;Player entered combat, kick them out of the tent
+		_Camp_FadeDown.Apply()
+		wait(0.5)
+		_Camp_FadeDown.PopTo(_Camp_Black)
+		if myExitFront && PlayerRef.GetDistance(myExitFront) < 1000.0
+			PlayerRef.MoveTo(myExitFront)
 		else
-			;Follower support goes here
+			;@TODO: Test this
+			PlayerRef.MoveTo(PlayerRef)
 		endif
+		_Camp_Black.PopTo(_Camp_FadeUp)
+		_Camp_Tent_Combat.Show()
+		return false
+	elseif !(PlayerRef.GetSitState() == 2 || PlayerRef.GetSitState() == 3) && !bGettingUp
+		;Player getting up from sitting
+		if myExitFront && PlayerRef.GetDistance(myExitFront) < 1000.0
+			PlayerRef.SplineTranslateToRef(myExitFront, 1.0, 65.0)
+		endif
+		return false
 	else
-		;Where'd they go? No matter, stop updating
-		StopFollowerUse()
-		CleanUpTent()
+		return true
 	endif
 endEvent
 
-Event OnActivate(ObjectReference akActionRef)
-	
-	int iSitState = (akActionRef as Actor).GetSitState()
-	
+;@From OnActivate on CampTent / CampTentEx
+Event ActivateTent(ObjectReference akActionRef, ObjectReference myPlayerSitMarker, ObjectReference myPlayerLayDownMarker)	
 	if akActionRef == PlayerRef
-		if (akActionRef as Actor).IsInCombat()
-			_DE_Combat_Error.Show()
-		else
-			if iSitState == 0
-				ShowMainMenu(akActionRef)
-			elseif iSitState == 3 && myPlayerSitMarker.IsFurnitureInUse()
-				ShowSitMenu(akActionRef)
-			elseif iSitState == 3 && myPlayerLayDownMarker.IsFurnitureInUse()
-				ShowLayMenu(akActionRef)
-			endif
+		int iSitState = (akActionRef as Actor).GetSitState()
+		if iSitState == 0
+			ShowMainMenu(akActionRef)
+		elseif iSitState == 3 && myPlayerSitMarker.IsFurnitureInUse()
+			ShowSitMenu(akActionRef)
+		elseif iSitState == 3 && myPlayerLayDownMarker.IsFurnitureInUse()
+			ShowLayMenu(akActionRef)
 		endif
 	endif
-	
 endEvent
 
 function ShowMainMenu(ObjectReference akActionRef)
-	if akActionRef == PlayerRef
-		int i = _DE_CampTent_Placed_ACT_Menu.Show()
-		if i == 0										;Sit
-			if _DE_Setting_Help.GetValueInt() == 2 && _Camp_HelpDone_TentActivate.GetValueInt() == 1
-				;@TODO: Move to Frostfall
-				;_DE_Help_Tents.Show()
-				Message.ResetHelpMessage("Activate")
-				_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
-				_Camp_HelpDone_TentActivate.SetValueInt(2)
-			endif
-			PlayerSit(akActionRef)
-		elseif i == 1									;Lie Down
-			if _DE_Setting_Help.GetValueInt() == 2 && _Camp_HelpDone_TentActivate.GetValueInt() == 1
-				;@TODO: Move to Frostfall
-				;_DE_Help_Tents.Show()
-				Message.ResetHelpMessage("Activate")
-				_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
-				_Camp_HelpDone_TentActivate.SetValueInt(2)
-			endif
-			PlayerLieDown(akActionRef)
-		elseif i == 2									;Pack
-			StopFollowerUse()
-			PackTent()
-		elseif i == 3									;Lantern
-			ToggleLantern()
-		else
-			;exit
+	int i = _DE_CampTent_Placed_ACT_Menu.Show()
+	if i == 0										;Sit
+		if _Camp_Setting_Help.GetValueInt() == 2 && _Camp_HelpDone_TentActivate.GetValueInt() == 1
+			;@TODO: Move to Frostfall
+			;_DE_Help_Tents.Show()
+			Message.ResetHelpMessage("Activate")
+			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
+			_Camp_HelpDone_TentActivate.SetValueInt(2)
 		endif
+		PlayerSit(akActionRef)
+	elseif i == 1									;Lie Down
+		if _Camp_Setting_Help.GetValueInt() == 2 && _Camp_HelpDone_TentActivate.GetValueInt() == 1
+			;@TODO: Move to Frostfall
+			;_DE_Help_Tents.Show()
+			Message.ResetHelpMessage("Activate")
+			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
+			_Camp_HelpDone_TentActivate.SetValueInt(2)
+		endif
+		PlayerLieDown(akActionRef)
+	elseif i == 2									;Pack
+		PackTent()
+	elseif i == 3									;Lantern
+		ToggleLantern()
+	else
+		;exit
 	endif
 endFunction
 
-function CreatePositionArrays()
-	myPlayerMarker_MainWeapon_Pos = new float[6]
-	myPlayerMarker_OffHandWeapon_Pos = new float[6]
-	myPlayerMarker_BigWeapon_Pos = new float[6]
-	myPlayerMarker_Bow_Pos = new float[6]
-	myPlayerMarker_Helm_Pos = new float[6]
-	myPlayerMarker_Boots_Pos = new float[6]
-	myPlayerMarker_Gauntlets_Pos = new float[6]
-	myPlayerMarker_Backpack_Pos = new float[6]
-	myPlayerMarker_Shield_Pos = new float[6]
-	myPlayerMarker_ShieldInterior_Pos = new float[6]
-	myFollowerAMarker_MainWeapon_Pos = new float[6]
-	myFollowerAMarker_OffHandWeapon_Pos = new float[6]
-	myFollowerAMarker_BigWeapon_Pos = new float[6]
-	myFollowerAMarker_Bow_Pos = new float[6]
-	myFollowerAMarker_Shield_Pos = new float[6]
-	myFollowerBMarker_MainWeapon_Pos = new float[6]
-	myFollowerBMarker_OffHandWeapon_Pos = new float[6]
-	myFollowerBMarker_BigWeapon_Pos = new float[6]
-	myFollowerBMarker_Bow_Pos = new float[6]
-	myFollowerBMarker_Shield_Pos = new float[6]
-	myFollowerCMarker_MainWeapon_Pos = new float[6]
-	myFollowerCMarker_OffHandWeapon_Pos = new float[6]
-	myFollowerCMarker_BigWeapon_Pos = new float[6]
-	myFollowerCMarker_Bow_Pos = new float[6]
-	myFollowerCMarker_Shield_Pos = new float[6]
-	myClutter1_Pos = new float[6]
-	myClutter2_Pos = new float[6]
-	myClutter3_Pos = new float[6]
-	myClutter4_Pos = new float[6]
-	myClutter5_Pos = new float[6]
-	myClutter6_Pos = new float[6]
-	myClutter7_Pos = new float[6]
-	myClutter8_Pos = new float[6]
-	myClutter9_Pos = new float[6]
-	myClutter10_Pos = new float[6]
-	myTent_Pos = new float[6]
-	myLanternLit_Pos = new float[6]
-	myLanternLit2_Pos = new float[6]
-	myLanternLit3_Pos = new float[6]
-	myLanternUnlit_Pos = new float[6]
-	myLanternUnlit2_Pos = new float[6]
-	myLanternUnlit3_Pos = new float[6]
-	myLanternLight_Pos = new float[6]
-	myLanternLight2_Pos = new float[6]
-	myLanternLight3_Pos = new float[6]
-	myPlayerSitMarker_Pos = new float[6]
-	myPlayerLayDownMarker_Pos = new float[6]
-	myExitFront_Pos = new float[6]
-	myBedRoll_Pos = new float[6]
-	mySpareBedRoll1_Pos = new float[6]
-	mySpareBedRoll2_Pos = new float[6]
-	mySpareBedRoll3_Pos = new float[6]
-	mySelf_Pos = new float[6]
-endFunction
-
 function ShowSitMenu(ObjectReference akActionRef)
-	if akActionRef == PlayerRef
-		float myEP
-		;@TODO: Wrap in IsFrostfallLoaded, otherwise display alternate message
-		;/if _DE_ExposurePoints.GetValueInt() > 120.0				;Don't show the player that it is greater than 120 - will self-correct next cycle
-			myEP = 120
+	;float myEP
+	;@TODO: Wrap in IsFrostfallLoaded, otherwise display alternate message
+	;/if _DE_ExposurePoints.GetValueInt() > 120.0				;Don't show the player that it is greater than 120 - will self-correct next cycle
+		myEP = 120
+	else
+		myEP = _DE_ExposurePoints.GetValueInt()
+	endif
+
+	int i 
+	if myEP > 100
+		i = _DE_CampTent2_SitMenu_Positive.Show(myEP - 100, ((Frostfall.pWetPoints/750) * 100))
+	else
+		i = _DE_CampTent2_SitMenu.Show(myEP - 100, ((Frostfall.pWetPoints/750) * 100))
+	endif/;
+	int i
+	i = _DE_CampTent2_SitMenu.Show(0, 0)
+	if i == 0										;Wait
+		ToggleLantern()
+	elseif i == 1
+		if IsRefInInterior(PlayerRef)
+			_DE_TentSeeThruError.Show()
 		else
-			myEP = _DE_ExposurePoints.GetValueInt()
-		endif
-		
-		int i 
-		if myEP > 100
-			i = _DE_CampTent2_SitMenu_Positive.Show(myEP - 100, ((Frostfall.pWetPoints/750) * 100))
-		else
-			i = _DE_CampTent2_SitMenu.Show(myEP - 100, ((Frostfall.pWetPoints/750) * 100))
-		endif/;
-		int i
-		i = _DE_CampTent2_SitMenu.Show(0, 0)
-		if i == 0										;Wait
-			ToggleLantern()
-		elseif i == 1
-			if IsRefInInterior(PlayerRef)
-				_DE_TentSeeThruError.Show()
+			if myTentExterior.IsDisabled()
+				_DE_TentSeeThru.SetValue(1)
+				if myTentExterior
+					myTentExterior.Enable(true)
+				endif
 			else
-				if myTentExterior.IsDisabled()
-					_DE_TentSeeThru.SetValue(1)
-					if myTentExterior
-						myTentExterior.Enable(true)
-					endif
-				else
-					_DE_TentSeeThru.SetValue(2)
-					if myTentExterior
-						myTentExterior.Disable(true)
-					endif
+				_DE_TentSeeThru.SetValue(2)
+				if myTentExterior
+					myTentExterior.Disable(true)
 				endif
 			endif
-		elseif i == 2
-			myPlayerSitMarker.Activate(PlayerRef)
-			StopFollowerUse()
-		elseif i == 3
-			;do nothing
 		endif
+	elseif i == 2
+		myPlayerSitMarker.Activate(PlayerRef)
+		StopFollowerUse()
+	elseif i == 3
+		;do nothing
 	endif
 endFunction
 
 function ShowLayMenu(ObjectReference akActionRef)
-	if akActionRef == PlayerRef
-		float myEP
-		;@TODO: Wrap in IsFrostfallLoaded, otherwise display alternate message
-		;/if _DE_ExposurePoints.GetValueInt() > 120.0				;Don't show the player that it is greater than 120 - will self-correct next cycle
-			myEP = 120
+	;float myEP
+	;@TODO: Wrap in IsFrostfallLoaded, otherwise display alternate message
+	;/if _DE_ExposurePoints.GetValueInt() > 120.0				;Don't show the player that it is greater than 120 - will self-correct next cycle
+		myEP = 120
+	else
+		myEP = _DE_ExposurePoints.GetValueInt()
+	endif		
+	int i
+	if myEP > 100
+		i = _DE_CampTent2_LayMenu_Positive.Show(myEP - 100, ((Frostfall.pWetPoints/750) * 100))
+	else
+		i = _DE_CampTent2_LayMenu.Show(myEP - 100, ((Frostfall.pWetPoints/750) * 100))
+	endif/;
+	int i
+	i = _DE_CampTent2_LayMenu.Show(0, 0)
+	if i == 0										;Sleep
+		bGettingUp = true
+		_Camp_FadeDown.Apply()
+		wait(1.0)
+		_Camp_FadeDown.PopTo(_Camp_Black)
+		if PlayerRef
+			PlayerRef.MoveTo(self)			;Get up
+			wait(0.4)
+			myBedRoll.Activate(PlayerRef)		;Spawns sleep menu
+			wait(0.4)
+			myPlayerLayDownMarker.Activate(PlayerRef)				
+			wait(3.5)
+			ApplySnow()
+			_Camp_Black.PopTo(_Camp_FadeUp)
 		else
-			myEP = _DE_ExposurePoints.GetValueInt()
+			;Something went wrong, make sure that the player's vision is restored!
+			_Camp_Black.PopTo(_Camp_FadeUp)
 		endif
-		
-		int i
-		if myEP > 100
-			i = _DE_CampTent2_LayMenu_Positive.Show(myEP - 100, ((Frostfall.pWetPoints/750) * 100))
+		bGettingUp = false
+	elseif i == 1									;Lantern
+		ToggleLantern()
+	elseif i == 2 									;Toggle View
+		if IsRefInInterior(PlayerRef)
+			_DE_TentSeeThruError.Show()
 		else
-			i = _DE_CampTent2_LayMenu.Show(myEP - 100, ((Frostfall.pWetPoints/750) * 100))
-		endif/;
-		int i
-		i = _DE_CampTent2_LayMenu.Show(0, 0)
-		if i == 0										;Sleep
-			bGettingUp = true
-			_DE_FadeDown.Apply()
-			wait(1.0)
-			_DE_FadeDown.PopTo(_DE_Black)
-			if PlayerRef
-				PlayerRef.MoveTo(self)			;Get up
-				wait(0.4)
-				myBedRoll.Activate(PlayerRef)		;Spawns sleep menu
-				wait(0.4)
-				myPlayerLayDownMarker.Activate(PlayerRef)
-				
-				wait(3.5)
-				ApplySnow()
-				_DE_Black.PopTo(_DE_FadeUp)
+			if myTentExterior.IsDisabled()
+				_DE_TentSeeThru.SetValue(1)
+				if myTentExterior
+					myTentExterior.Enable(true)
+				endif
 			else
-				;Something went wrong, make sure that the player's vision is restored!
-				_DE_Black.PopTo(_DE_FadeUp)
-			endif
-			bGettingUp = false
-		elseif i == 1									;Lantern
-			ToggleLantern()
-		elseif i == 2 									;Toggle View
-			if IsRefInInterior(PlayerRef)
-				_DE_TentSeeThruError.Show()
-			else
-				if myTentExterior.IsDisabled()
-					_DE_TentSeeThru.SetValue(1)
-					if myTentExterior
-						myTentExterior.Enable(true)
-					endif
-				else
-					_DE_TentSeeThru.SetValue(2)
-					if myTentExterior
-						myTentExterior.Disable(true)
-					endif
+				_DE_TentSeeThru.SetValue(2)
+				if myTentExterior
+					myTentExterior.Disable(true)
 				endif
 			endif
-		elseif i == 3									;Get Up
-			myPlayerLayDownMarker.Activate(PlayerRef)
-			StopFollowerUse()
-		elseif i == 3									;Nothing
-			;do nothing
 		endif
+	elseif i == 3									;Get Up
+		myPlayerLayDownMarker.Activate(PlayerRef)
+		StopFollowerUse()
+	elseif i == 3									;Nothing
+		;do nothing
 	endif
 endFunction
 
 function ToggleLantern()
-
 	if bLanternLit
-		if myLanternLit
-			myLanternLit.Disable()
-		endif
-		if myLanternLit2
-			myLanternLit2.Disable()
-		endif
-		if myLanternLit3
-			myLanternLit3.Disable()
-		endif
-		if myLanternUnlit
-			myLanternUnlit.Enable()
-		endif
-		if myLanternUnlit2
-			myLanternUnlit2.Enable()
-		endif
-		if myLanternUnlit3
-			myLanternUnlit3.Enable()
-		endif
-		if myLanternLight
-			myLanternLight.Disable()
-		endif
-		if myLanternLight2
-			myLanternLight2.Disable()
-		endif
-		if myLanternLight3
-			myLanternLight3.Disable()
-		endif
+		TryToDisableRef(myLanternLit)
+		TryToDisableRef(myLanternLit2)
+		TryToDisableRef(myLanternLit3)
+
+		TryToEnableRef(myLanternUnlit)
+		TryToEnableRef(myLanternUnlit2)
+		TryToEnableRef(myLanternUnlit3)
+		
+		TryToDisableRef(myLanternLight)
+		TryToDisableRef(myLanternLight2)
+		TryToDisableRef(myLanternLight3)
 		bLanternLit = false
 	else
-		if myLanternLit
-			myLanternLit.Enable()
-		endif
-		if myLanternLit2
-			myLanternLit2.Enable()
-		endif
-		if myLanternLit3
-			myLanternLit3.Enable()
-		endif
-		if myLanternUnlit
-			myLanternUnlit.Disable()
-		endif
-		if myLanternUnlit2
-			myLanternUnlit2.Disable()
-		endif
-		if myLanternUnlit3
-			myLanternUnlit3.Disable()
-		endif
-		if myLanternLight
-			myLanternLight.Enable()
-		endif
-		if myLanternLight2
-			myLanternLight2.Enable()
-		endif
-		if myLanternLight3
-			myLanternLight3.Enable()
-		endif
+		TryToEnableRef(myLanternLit)
+		TryToEnableRef(myLanternLit2)
+		TryToEnableRef(myLanternLit3)
+
+		TryToDisableRef(myLanternUnlit)
+		TryToDisableRef(myLanternUnlit2)
+		TryToDisableRef(myLanternUnlit3)
+		
+		TryToEnableRef(myLanternLight)
+		TryToEnableRef(myLanternLight2)
+		TryToEnableRef(myLanternLight3)
 		bLanternLit = true
 	endif
 endFunction
@@ -641,8 +315,6 @@ function PlayerSit(ObjectReference akActionRef)
 	;if !(PlayerRef.IsInCombat())
 	;	ShowSitMenu(akActionRef)
 	;endif
-	;@TODO: Remove
-	;_DE_Tent_InteractTriggerREF.MoveTo(PlayerRef)
 	RegisterForSingleUpdate(0.5)
 endFunction
 
@@ -725,8 +397,6 @@ function PlayerLieDown(ObjectReference akActionRef)
 	;if !(PlayerRef.IsInCombat())
 	;	ShowLayMenu(akActionRef)
 	;endif
-	;@TODO: Remove
-	;_DE_Tent_InteractTriggerREF.MoveTo(PlayerRef)
 	RegisterForSingleUpdate(0.5)
 	
 endFunction
@@ -919,7 +589,6 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
     return myObject
 endFunction
 
-
 function DisplayShield_Player()
 	myShield = PlayerRef.GetEquippedShield()
 	if myShield == _Camp_WalkingStickShield
@@ -929,15 +598,9 @@ function DisplayShield_Player()
 	if myShield
 		PlayerRef.UnequipItem(myShield, abSilent = true)
 		if IsRefInInterior(PlayerRef)
-			myDisplayShield = myPlayerMarker_ShieldInterior.PlaceAtMe(myShield)
+			myDisplayShield = PlaceAndWaitFor3DLoaded(myPlayerMarker_ShieldInterior, myShield, bDisableInteraction = true)
 		else
-			myDisplayShield = myPlayerMarker_Shield.PlaceAtMe(myShield)
-		endif
-		if myDisplayShield
-			while !myDisplayShield.Is3DLoaded()
-			endwhile
-			myDisplayShield.SetMotionType(Motion_Keyframed)
-			myDisplayShield.BlockActivation()
+			myDisplayShield = PlaceAndWaitFor3DLoaded(myPlayerMarker_Shield, myShield, bDisableInteraction = true)
 		endif
 	endif
 endFunction
@@ -946,10 +609,7 @@ function UnDisplayShield_Player()
 	if myShield
 		PlayerRef.EquipItem(myShield, abSilent = true)
 	endif
-	if myDisplayShield
-		myDisplayShield.Disable()
-		myDisplayShield.Delete()
-	endif
+	TryToDisableAndDeleteRef(myDisplayShield)
 endFunction
 
 function DisplayWeapons_Player()
@@ -972,53 +632,21 @@ function DisplayWeapons_Player()
 	
 	if myMainWeapon
 		PlayerRef.UnequipItem(myMainWeapon, abSilent = true)
-		if IsRefInInterior(PlayerRef)
-			myDisplayMainWeapon = myPlayerMarker_MainWeapon.PlaceAtMe(myMainWeapon)
-		else
-			myDisplayMainWeapon = myPlayerMarker_MainWeapon.PlaceAtMe(myMainWeapon)
-		endif
-		if myDisplayMainWeapon
-			while !myDisplayMainWeapon.Is3DLoaded()
-			endwhile
-			myDisplayMainWeapon.SetMotionType(Motion_Keyframed)
-			myDisplayMainWeapon.BlockActivation()
-		endif
+		myDisplayMainWeapon =  PlaceAndWaitFor3DLoaded(myPlayerMarker_MainWeapon, myMainWeapon, bDisableInteraction = true)
 	endif
 	
 	if myOffHandWeapon
-		if IsRefInInterior(PlayerRef)
-			myDisplayOffHandWeapon = myPlayerMarker_OffHandWeapon.PlaceAtMe(myOffHandWeapon)
-		else
-			myDisplayOffHandWeapon = myPlayerMarker_OffHandWeapon.PlaceAtMe(myOffHandWeapon)
-		endif
-		if myDisplayOffHandWeapon
-			while !myDisplayOffHandWeapon.Is3DLoaded()
-			endwhile
-			myDisplayOffHandWeapon.SetMotionType(Motion_Keyframed)
-			myDisplayOffHandWeapon.BlockActivation()
-		endif
+		myDisplayOffHandWeapon = PlaceAndWaitFor3DLoaded(myPlayerMarker_OffHandWeapon, myOffHandWeapon, bDisableInteraction = true)
 	endif
 	
 	if myBigWeapon
 		UnequipUsingDummyWeapon()
-		myDisplayBigWeapon = myPlayerMarker_BigWeapon.PlaceAtMe(myBigWeapon)
-		if myDisplayBigWeapon
-			while !myDisplayBigWeapon.Is3DLoaded()
-			endwhile
-			myDisplayBigWeapon.SetMotionType(Motion_Keyframed)
-			myDisplayBigWeapon.BlockActivation()
-		endif
+		myDisplayBigWeapon = PlaceAndWaitFor3DLoaded(myPlayerMarker_BigWeapon, myBigWeapon, bDisableInteraction = true)
 	endif
 	
 	if myBow
 		UnequipUsingDummyWeapon()
-		myDisplayBow = myPlayerMarker_Bow.PlaceAtMe(myBow)
-		if myDisplayBow
-			while !myDisplayBow.Is3DLoaded()
-			endwhile
-			myDisplayBow.SetMotionType(Motion_Keyframed)
-			myDisplayBow.BlockActivation()
-		endif
+		myDisplayBow = PlaceAndWaitFor3DLoaded(myPlayerMarker_Bow, myBow, bDisableInteraction = true)
 	endif
 endfunction
 
@@ -1028,36 +656,24 @@ function UnDisplayWeapons_Player()
 		PlayerRef.EquipItem(myMainWeapon, abSilent = true)
 		myMainWeapon = none
 	endif
-	if myDisplayMainWeapon
-		myDisplayMainWeapon.Disable()
-		myDisplayMainWeapon.Delete()
-	endif
+	TryToDisableAndDeleteRef(myDisplayMainWeapon)
 	
 	if myOffHandWeapon
 		myOffHandWeapon = none
 	endif
-	if myDisplayOffHandWeapon
-		myDisplayOffHandWeapon.Disable()
-		myDisplayOffHandWeapon.Delete()
-	endif
+	TryToDisableAndDeleteRef(myDisplayOffHandWeapon)
 
 	if myBigWeapon
 		PlayerRef.EquipItem(myBigWeapon, abSilent = true)
 		myBigWeapon = none
 	endif
-	if myDisplayBigWeapon
-		myDisplayBigWeapon.Disable()
-		myDisplayBigWeapon.Delete()
-	endif
+	TryToDisableAndDeleteRef(myDisplayBigWeapon)
 	
 	if myBow
 		PlayerRef.EquipItem(myBow, abSilent = true)
 		myBow = none
 	endif
-	if myDisplayBow
-		myDisplayBow.Disable()
-		myDisplayBow.Delete()
-	endif
+	TryToDisableAndDeleteRef(myDisplayBow)
 	
 endFunction
 
@@ -1073,13 +689,7 @@ function DisplayCuirass_Player()
 	myCuirass = GetPlayerEquippedBody()
 	if myCuirass
 		PlayerRef.UnequipItem(myCuirass, abSilent = true)
-		myDisplayCuirass = myPlayerMarker_Cuirass.PlaceAtMe(myCuirass)
-		if myDisplayCuirass
-			while !myDisplayCuirass.Is3DLoaded()
-			endwhile
-			myDisplayCuirass.SetMotionType(Motion_Keyframed)
-			myDisplayCuirass.BlockActivation()
-		endif
+		myDisplayCuirass = PlaceAndWaitFor3DLoaded(myPlayerMarker_Cuirass, myCuirass, bDisableInteraction = true)
 	endif
 endFunction
 
@@ -1087,23 +697,14 @@ function UnDisplayCuirass_Player()
 	if myCuirass
 		PlayerRef.EquipItem(myCuirass, abSilent = true)
 	endif
-	if myDisplayCuirass
-		myDisplayCuirass.Disable()
-		myDisplayCuirass.Delete()
-	endif
+	TryToDisableAndDeleteRef(myDisplayCuirass)
 endFunction
 
 function DisplayBoots_Player()
 	myBoots = GetPlayerEquippedFeet()
 	if myBoots && !myBoots.HasKeyword(ClothingBody) && !myBoots.HasKeyword(ArmorCuirass)
 		PlayerRef.UnequipItem(myBoots, abSilent = true)
-		myDisplayBoots = myPlayerMarker_Boots.PlaceAtMe(myBoots)
-		if myDisplayBoots
-			while !myDisplayBoots.Is3DLoaded()
-			endwhile
-			myDisplayBoots.SetMotionType(Motion_Keyframed)
-			myDisplayBoots.BlockActivation()
-		endif
+		myDisplayBoots = PlaceAndWaitFor3DLoaded(myPlayerMarker_Boots, myBoots, bDisableInteraction = true)
 	endif
 endFunction
 
@@ -1111,23 +712,14 @@ function UnDisplayBoots_Player()
 	if myBoots
 		PlayerRef.EquipItem(myBoots, abSilent = true)
 	endif
-	if myDisplayBoots
-		myDisplayBoots.Disable()
-		myDisplayBoots.Delete()
-	endif
+	TryToDisableAndDeleteRef(myDisplayBoots)
 endFunction
 
 function DisplayGauntlets_Player()
 	myGauntlets = GetPlayerEquippedHands()
 	if myGauntlets && !myGauntlets.HasKeyword(ClothingBody) && !myGauntlets.HasKeyword(ArmorCuirass)
 		PlayerRef.UnequipItem(myGauntlets, abSilent = true)
-		myDisplayGauntlets = myPlayerMarker_Gauntlets.PlaceAtMe(myGauntlets)
-		if myDisplayGauntlets
-			while !myDisplayGauntlets.Is3DLoaded()
-			endwhile
-			myDisplayGauntlets.SetMotionType(Motion_Keyframed)
-			myDisplayGauntlets.BlockActivation()
-		endif
+		myDisplayGauntlets = PlaceAndWaitFor3DLoaded(myPlayerMarker_Gauntlets, myGauntlets, bDisableInteraction = true)
 	endif
 endFunction
 
@@ -1135,23 +727,14 @@ function UnDisplayGauntlets_Player()
 	if myGauntlets
 		PlayerRef.EquipItem(myGauntlets, abSilent = true)
 	endif
-	if myDisplayGauntlets
-		myDisplayGauntlets.Disable()
-		myDisplayGauntlets.Delete()
-	endif
+	TryToDisableAndDeleteRef(myDisplayGauntlets)
 endFunction
 
 function DisplayHelm_Player()
 	myHelm = GetPlayerEquippedHead()
 	if myHelm && !myHelm.HasKeyword(ClothingBody) && !myHelm.HasKeyword(ArmorCuirass)
 		PlayerRef.UnequipItem(myHelm, abSilent = true)
-		myDisplayHelm = myPlayerMarker_Helm.PlaceAtMe(myHelm)
-		if myDisplayHelm
-			while !myDisplayHelm.Is3DLoaded()
-			endwhile
-			myDisplayHelm.SetMotionType(Motion_Keyframed)
-			myDisplayHelm.BlockActivation()
-		endif
+		myDisplayHelm = PlaceAndWaitFor3DLoaded(myPlayerMarker_Helm, myHelm, bDisableInteraction = true)
 	endif
 endfunction
 
@@ -1159,10 +742,7 @@ function UnDisplayHelm_Player()
 	if myHelm
 		PlayerRef.EquipItem(myHelm, abSilent = true)
 	endif
-	if myDisplayHelm
-		myDisplayHelm.Disable()
-		myDisplayHelm.Delete()
-	endif
+	TryToDisableAndDeleteRef(myDisplayHelm)
 endFunction
 
 function DisplayQuiver_Player()
@@ -1184,13 +764,7 @@ function DisplayBackpack_Player()
 	myBackpack = GetPlayerEquippedBackpack()
 	if myBackpack
 		PlayerRef.UnequipItem(myBackpack, abSilent = true)
-		myDisplayBackpack = myPlayerMarker_Backpack.PlaceAtMe(myBackpack)
-		if myDisplayBackpack
-			while !myDisplayBackpack.Is3DLoaded()
-			endwhile
-			myDisplayBackpack.SetMotionType(Motion_Keyframed)
-			myDisplayBackpack.BlockActivation()
-		endif
+		myDisplayBackpack = PlaceAndWaitFor3DLoaded(myPlayerMarker_Backpack, myBackpack, bDisableInteraction = true)
 	endif
 endfunction
 
@@ -1198,14 +772,10 @@ function UnDisplayBackpack_Player()
 	if myBackpack
 		PlayerRef.EquipItem(myBackpack, abSilent = true)
 	endif
-	if myDisplayBackpack
-		myDisplayBackpack.Disable()
-		myDisplayBackpack.Delete()
-	endif
+	TryToDisableAndDeleteRef(myDisplayBackpack)
 endFunction
 
 function PackTent()
-
 	;Are any of the bed rolls in use?
 	if myBedRoll
 		if myBedRoll.IsFurnitureInUse()
@@ -1232,8 +802,6 @@ function PackTent()
 		endif
 	endif
 	
-	PlayerRef.AddItem(TentMiscItem, abSilent = true)
-	
 	;Move activation trigger to the anchor
 	;@TODO: Remove
 	;_DE_Tent_InteractTriggerREF.MoveTo(_DE_Anchor)
@@ -1248,193 +816,52 @@ function PackTent()
 	UnDisplayQuiver_Player()
 	UnDisplayBackpack_Player()	
 	
-	;Check for variable population - Papyrus log error prevention
 	;Delete markers and furniture
-	if myPlayerMarker_MainWeapon
-		myPlayerMarker_MainWeapon.Disable()
-		myPlayerMarker_MainWeapon.Delete()
-	endif
-	if myPlayerMarker_OffHandWeapon
-		myPlayerMarker_OffHandWeapon.Disable()
-		myPlayerMarker_OffHandWeapon.Delete()
-	endif
-	if myPlayerMarker_BigWeapon
-		myPlayerMarker_BigWeapon.Disable()
-		myPlayerMarker_BigWeapon.Delete()
-	endif
-	if myPlayerMarker_Bow
-		myPlayerMarker_Bow.Disable()
-		myPlayerMarker_Bow.Delete()
-	endif
-	if myPlayerMarker_Cuirass
-		myPlayerMarker_Cuirass.Disable()
-		myPlayerMarker_Cuirass.Delete()
-	endif
-	if myPlayerMarker_Helm
-		myPlayerMarker_Helm.Disable()
-		myPlayerMarker_Helm.Delete()
-	endif
-	if myPlayerMarker_Boots
-		myPlayerMarker_Boots.Disable()
-		myPlayerMarker_Boots.Delete()
-	endif
-	if myPlayerMarker_Gauntlets
-		myPlayerMarker_Gauntlets.Disable()
-		myPlayerMarker_Gauntlets.Delete()
-	endif
-	if myPlayerMarker_Backpack
-		myPlayerMarker_Backpack.Disable()
-		myPlayerMarker_Backpack.Delete()
-	endif
-	if myPlayerMarker_Shield
-		myPlayerMarker_Shield.Disable()
-		myPlayerMarker_Shield.Delete()
-	endif
-	if myPlayerMarker_ShieldInterior
-		myPlayerMarker_ShieldInterior.Disable()
-		myPlayerMarker_ShieldInterior.Delete()
-	endif
-	if myClutter1
-		myClutter1.Disable()
-		myClutter1.Delete()
-	endif
-	if myClutter2
-		myClutter2.Disable()
-		myClutter2.Delete()
-	endif
-	if myClutter3
-		myClutter3.Disable()
-		myClutter3.Delete()
-	endif
-	if myClutter4
-		myClutter4.Disable()
-		myClutter4.Delete()
-	endif
-	if myClutter5
-		myClutter5.Disable()
-		myClutter5.Delete()
-	endif
-	if myClutter6
-		myClutter6.Disable()
-		myClutter6.Delete()
-	endif
-	if myClutter7
-		myClutter7.Disable()
-		myClutter7.Delete()
-	endif
-	if myClutter8
-		myClutter8.Disable()
-		myClutter8.Delete()
-	endif
-	if myClutter9
-		myClutter9.Disable()
-		myClutter9.Delete()
-	endif
-	if myClutter10
-		myClutter10.Disable()
-		myClutter10.Delete()
-	endif
-	if myPlayerSitMarker
-		myPlayerSitMarker.Disable()
-		myPlayerSitMarker.Delete()
-	endif
-	if myPlayerLayDownMarker
-		myPlayerLayDownMarker.Disable()
-		myPlayerLayDownMarker.Delete()
-	endif
-	if myExitFront
-		myExitFront.Disable()
-		myExitFront.Delete()
-	endif
-	if myBedRoll
-		myBedRoll.Disable()
-		myBedRoll.Delete()
-	endif	
-	if myWard
-		myWard.Disable()
-		myWard.Delete()
-	endif
+	TryToDisableAndDeleteRef(myPlayerMarker_MainWeapon)
+	TryToDisableAndDeleteRef(myPlayerMarker_OffHandWeapon)
+	TryToDisableAndDeleteRef(myPlayerMarker_BigWeapon)
+	TryToDisableAndDeleteRef(myPlayerMarker_Bow)
+	TryToDisableAndDeleteRef(myPlayerMarker_Cuirass)
+	TryToDisableAndDeleteRef(myPlayerMarker_Helm)
+	TryToDisableAndDeleteRef(myPlayerMarker_Boots)
+	TryToDisableAndDeleteRef(myPlayerMarker_Gauntlets)
+	TryToDisableAndDeleteRef(myPlayerMarker_Backpack)
+	TryToDisableAndDeleteRef(myPlayerMarker_Shield)
+	TryToDisableAndDeleteRef(myPlayerMarker_ShieldInterior)
+	TryToDisableAndDeleteRef(myClutter1)
+	TryToDisableAndDeleteRef(myClutter2)
+	TryToDisableAndDeleteRef(myClutter3)
+	TryToDisableAndDeleteRef(myClutter4)
+	TryToDisableAndDeleteRef(myClutter5)
+	TryToDisableAndDeleteRef(myClutter6)
+	TryToDisableAndDeleteRef(myClutter7)
+	TryToDisableAndDeleteRef(myClutter8)
+	TryToDisableAndDeleteRef(myClutter9)
+	TryToDisableAndDeleteRef(myClutter10)
+	TryToDisableAndDeleteRef(myPlayerSitMarker)
+	TryToDisableAndDeleteRef(myPlayerLayDownMarker)
+	TryToDisableAndDeleteRef(myExitFront)
+	TryToDisableAndDeleteRef(myBedRoll)
+	TryToDisableAndDeleteRef(myWard)
+	TryToDisableAndDeleteRef(myLanternLit)
+	TryToDisableAndDeleteRef(myLanternUnlit)
+	TryToDisableAndDeleteRef(myLanternLight)
+	TryToDisableAndDeleteRef(myLanternLit2)
+	TryToDisableAndDeleteRef(myLanternUnlit2)
+	TryToDisableAndDeleteRef(myLanternLight2)
+	TryToDisableAndDeleteRef(myLanternLit3)
+	TryToDisableAndDeleteRef(myLanternUnlit3)
+	TryToDisableAndDeleteRef(myLanternLight3)
+	TryToDisableAndDeleteRef(mySpareBedRoll1)
+	TryToDisableAndDeleteRef(mySpareBedRoll2)
+	TryToDisableAndDeleteRef(mySpareBedRoll3)
+	TryToDisableAndDeleteRef(mySnowTent)
+	TryToDisableAndDeleteRef(myAshTent)
+	TryToDisableAndDeleteRef(myNormalTent)
+	TryToDisableAndDeleteRef(myTent)
 	
-	;Delete the lantern(s)
-	if myLanternLit
-		myLanternLit.Disable()
-		myLanternLit.Delete()
-	endif
-	if myLanternUnlit
-		myLanternUnlit.Disable()
-		myLanternUnlit.Delete()
-	endif
-	if myLanternLight
-		myLanternLight.Disable()
-		myLanternLight.Delete()
-	endif
-	
-	if myLanternLit2
-		myLanternLit2.Disable()
-		myLanternLit2.Delete()
-	endif
-	if myLanternUnlit2
-		myLanternUnlit2.Disable()
-		myLanternUnlit2.Delete()
-	endif
-	if myLanternLight2
-		myLanternLight2.Disable()
-		myLanternLight2.Delete()
-	endif
-	
-	if myLanternLit3
-		myLanternLit3.Disable()
-		myLanternLit3.Delete()
-	endif
-	if myLanternUnlit3
-		myLanternUnlit3.Disable()
-		myLanternUnlit3.Delete()
-	endif
-	if myLanternLight3
-		myLanternLight3.Disable()
-		myLanternLight3.Delete()
-	endif
-	
-	if mySpareBedRoll1
-		mySpareBedRoll1.Disable()
-		mySpareBedRoll1.Delete()
-	endif
-	
-	if mySpareBedRoll2
-		mySpareBedRoll2.Disable()
-		mySpareBedRoll2.Delete()
-	endif
-	
-	if mySpareBedRoll3
-		mySpareBedRoll3.Disable()
-		mySpareBedRoll3.Delete()
-	endif
-	
-	;Delete the snow tent
-	if mySnowTent
-		mySnowTent.Disable()
-		mySnowTent.Delete()
-	endif
-	
-	;Delete the ash tent
-	if myAshTent
-		myAshTent.Disable()
-		myAshTent.Delete()
-	endif
-	
-	;Delete the tent exterior object
-	if myNormalTent
-		myNormalTent.Disable()
-		myNormalTent.Delete()
-	endif
-
-	;Delete the tent object
-	if myTent
-		myTent.Disable()
-		myTent.Delete()
-	endif
-
 	wait(0.2)
+	PlayerRef.AddItem(TentMiscItem, abSilent = true)
 	ITMGenericArmorUp.Play(self)
 
 	StopFollowerUse()
@@ -1442,24 +869,26 @@ function PackTent()
 	;Finally, delete myself
 	self.Disable()
 	self.Delete()
-
 endFunction
 
-function CleanUpTent()
+function CleanUpTent(Activator TentActivator)
+	CampTentEx TentObject = TentActivator as CampTentEx
+	if !TentObject
+		TentObject = TentActivator as CampTent
+	endif
+	StopFollowerUse()
 	Game.EnablePlayerControls()
-	UnDisplayShield_Player()
-	UnDisplayWeapons_Player()
-	UnDisplayCuirass_Player()
-	UnDisplayBoots_Player()
-	UnDisplayGauntlets_Player()
-	UnDisplayHelm_Player()
-	UnDisplayQuiver_Player()
-	UnDisplayBackpack_Player()
+	UnDisplayShield_Player(TentObject.myShield)
+	UnDisplayWeapons_Player(TentObject.myMainWeapon, TentObject.myOffHandWeapon, TentObject.myBigWeapon, TentObject.myBow)
+	UnDisplayCuirass_Player(TentObject.myCuirass)
+	UnDisplayBoots_Player(TentObject.myBoots)
+	UnDisplayGauntlets_Player(TentObject.myGauntlets)
+	UnDisplayHelm_Player(TentObject.myHelm)
+	UnDisplayQuiver_Player(TentObject.myQuiver)
+	UnDisplayBackpack_Player(TentObject.myBackpack)
 
-	;@TODO: Remove
-	;_DE_Tent_InteractTriggerREF.MoveTo(_DE_Anchor)
-	if myTentExterior
-		myTentExterior.Enable(true)
+	if TentObject.myTentExterior
+		TentObject.myTentExterior.Enable(true)
 	endif
 	PlayerRef = none
 endFunction
