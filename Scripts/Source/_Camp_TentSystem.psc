@@ -1,16 +1,6 @@
 scriptname _Camp_TentSystem extends Quest
 {@TODO}
 
-; #SUMMARY# =====================================================================================================================
-; Name ...................: _Camp_TentSystem
-; Attached To (EditorID)..: 
-; Description ............: 
-; Author .................: Chesko
-; Last Approved (version) : 
-; Status .................: 
-; Remarks ................: 
-; ===============================================================================================================================
-
 import math
 import utility
 import debug
@@ -23,10 +13,11 @@ import CampUtil
 
 ; TO KEEP IN UTIL
 _Camp_Compatibility property Compatibility auto
-weapon property _Camp_DummyWeapon auto
-static property XMarker auto
-Actor property PlayerRef auto
+pDBEntranceQuestScript property DBEntranceQuestScript auto
+Quest property DBEntranceQuest auto
 ;@TODO: Remove
+Actor property PlayerRef auto
+Armor property _Camp_WalkingStickShield auto
 GlobalVariable property _DE_Setting_CampingArmorTakeOff auto
 GlobalVariable property _Camp_Setting_TakeOff_Helm auto
 GlobalVariable property _Camp_Setting_TakeOff_Cuirass auto
@@ -42,48 +33,47 @@ GlobalVariable property _Camp_HelpDone_TentActivate auto
 GlobalVariable property _Camp_Setting_Help auto
 GlobalVariable property _DE_TentSeeThru auto
 GlobalVariable property _DE_FollowersUseBedrollAI auto
-message property _DE_CampTent_Placed_ACT_Menu auto
-message property _DE_CampTent2_SitMenu auto
-message property _DE_CampTent2_SitMenu_Positive auto
-message property _DE_CampTent2_LayMenu auto
-message property _DE_CampTent2_LayMenu_Positive auto
-message property _DE_CampTent2_PickUpError auto
-message property _Camp_Tent_Combat auto
-message property _DE_Combat_Error auto
-message property _Camp_Help_TentActivate auto
-Quest property DBEntranceQuest auto
+Message property _DE_CampTent_Placed_ACT_Menu auto
+Message property _DE_CampTent2_SitMenu auto
+Message property _DE_CampTent2_SitMenu_Positive auto
+Message property _DE_CampTent2_LayMenu auto
+Message property _DE_CampTent2_LayMenu_Positive auto
+Message property _DE_CampTent2_PickUpError auto
+Message property _Camp_Tent_Combat auto
+Message property _DE_Combat_Error auto
+Message property _Camp_Help_TentActivate auto
+Message property _DE_TentSeeThruError auto
 ReferenceAlias property StaticFollower1 auto
 ReferenceAlias property StaticFollower2 auto
 ReferenceAlias property StaticFollower3 auto
-pDBEntranceQuestScript property DBEntranceQuestScript auto
-Message property _DE_TentSeeThruError auto
-static property _Camp_Tent_LanternOnGround auto
-static property _Camp_Tent_LanternOffGround auto
-static property _Camp_Tent_LanternOnHang auto
-static property _Camp_Tent_LanternOffHang auto
-Light property _Camp_LanternLight auto
-static property _Camp_Tent_BedrollHayNoGround01 auto
-static property _Camp_Tent_BedrollHayNoGround02 auto
-static property _Camp_Tent_BedrollHayNoGround03 auto
-static property _Camp_TentWard auto
 ObjectReference property _DE_Anchor auto
+Light property _Camp_LanternLight auto
+Static property XMarker auto
+Static property _Camp_Tent_LanternOnGround auto
+Static property _Camp_Tent_LanternOffGround auto
+Static property _Camp_Tent_LanternOnHang auto
+Static property _Camp_Tent_LanternOffHang auto
+Static property _Camp_Tent_BedrollHayNoGround01 auto
+Static property _Camp_Tent_BedrollHayNoGround02 auto
+Static property _Camp_Tent_BedrollHayNoGround03 auto
+Static property _Camp_TentWard auto
+Keyword property ClothingBody auto
+Keyword property ArmorCuirass auto
+Furniture property _Camp_TentSitMarker auto
+Furniture property _Camp_TentLayDownMarker auto
+Furniture property _Camp_TentLayDownMarkerL auto
+Furniture property _Camp_TentLayDownMarkerR auto
+Furniture property _Camp_Bedroll_ActualF auto
+Furniture property _Camp_Bedroll_ActualL auto
+Furniture property _Camp_Bedroll_ActualR auto
+Furniture property _Camp_Bedroll_NPC_F auto
+Furniture property _Camp_Bedroll_NPC_L auto
+Furniture property _Camp_Bedroll_NPC_R auto
 ImageSpaceModifier property _Camp_FadeDown auto
 ImageSpaceModifier property _Camp_FadeUp auto
 ImageSpaceModifier property _Camp_Black auto
 Sound property ITMGenericArmorUp auto
-Armor property _Camp_WalkingStickShield auto
-keyword property ClothingBody auto
-keyword property ArmorCuirass auto
-furniture property _Camp_TentSitMarker auto
-furniture property _Camp_TentLayDownMarker auto
-furniture property _Camp_TentLayDownMarkerL auto
-furniture property _Camp_TentLayDownMarkerR auto
-furniture property _Camp_Bedroll_ActualF auto
-furniture property _Camp_Bedroll_ActualL auto
-furniture property _Camp_Bedroll_ActualR auto
-furniture property _Camp_Bedroll_NPC_F auto
-furniture property _Camp_Bedroll_NPC_L auto
-furniture property _Camp_Bedroll_NPC_R auto
+Weapon property _Camp_DummyWeapon auto
 ;@TODO: Remove
 ;furniture property _Camp_Bedroll_NPC_FL auto
 ;furniture property _Camp_Bedroll_NPC_FR auto
