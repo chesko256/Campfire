@@ -308,6 +308,7 @@ Event OnInit()
 
 	Placement()
 
+	;@TODO: Remove
 	GenerateDebugReport()
 endEvent
 

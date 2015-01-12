@@ -89,7 +89,7 @@ furniture property _Camp_Bedroll_NPC_R auto
 ;furniture property _Camp_Bedroll_NPC_FR auto
 
 ;@From OnUpdate on CampTent / CampTentEx
-bool function UpdateTentUseState(ObjectReference akTent)
+function UpdateTentUseState(ObjectReference akTent)
 	;@TODO: Might need to reintroduce some idea of myActor in order to maintain async state
 	;@TODO: Check hit, not combat!
 	CampTent TentObject = akTent as CampTent
