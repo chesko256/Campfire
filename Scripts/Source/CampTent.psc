@@ -307,6 +307,8 @@ Event OnInit()
 	SetRelativePositions()
 
 	Placement()
+
+	GenerateDebugReport()
 endEvent
 
 Event OnUpdate()
@@ -646,35 +648,33 @@ endFunction
 
 function Placement()
 	CampTentEx Extended = self as CampTentEx
-	if !myTent && TentAsset_ShelterModel && PositionRef_Shelter
+	if TentAsset_ShelterModel && PositionRef_Shelter
 		PlaceTentObject_Tent()
 	endif
-	if !myNormalTent && myTent && TentAsset_ShelterModelExterior && PositionRef_Shelter
+	if myTent && TentAsset_ShelterModelExterior && PositionRef_Shelter
 		PlaceTentObject_NormalTent()
 	endif
-	if !mySnowTent && myTent && TentAsset_ShelterModelMaterialSnow && PositionRef_Shelter
+	if myTent && TentAsset_ShelterModelMaterialSnow && PositionRef_Shelter
 		PlaceTentObject_SnowTent()
 	endif
-	if !myAshTent && myTent && TentAsset_ShelterModelMaterialAsh && PositionRef_Shelter
+	if myTent && TentAsset_ShelterModelMaterialAsh && PositionRef_Shelter
 		PlaceTentObject_AshTent()
 	endif
 	TentSystem.ApplySnow(self)
-	if !myWard
-		PlaceTentObject_Ward()
-	endif
-	if !myStaticClutter1 && TentAsset_StaticClutter1 && PositionRef_StaticClutter1
+	PlaceTentObject_Ward()
+	if TentAsset_StaticClutter1 && PositionRef_StaticClutter1
 		PlaceTentObject_StaticClutter1()
 	endif
-	if !myStaticClutter2 && TentAsset_StaticClutter2 && PositionRef_StaticClutter2
+	if TentAsset_StaticClutter2 && PositionRef_StaticClutter2
 		PlaceTentObject_StaticClutter2()
 	endif
-	if !myStaticClutter3 && TentAsset_StaticClutter3 && PositionRef_StaticClutter3
+	if TentAsset_StaticClutter3 && PositionRef_StaticClutter3
 		PlaceTentObject_StaticClutter3()
 	endif
-	if !myStaticClutter4 && TentAsset_StaticClutter4 && PositionRef_StaticClutter4
+	if TentAsset_StaticClutter4 && PositionRef_StaticClutter4
 		PlaceTentObject_StaticClutter4()
 	endif
-	if !myStaticClutter5 && TentAsset_StaticClutter5 && PositionRef_StaticClutter5
+	if TentAsset_StaticClutter5 && PositionRef_StaticClutter5
 		PlaceTentObject_StaticClutter5()
 	endif
 	if Extended
@@ -694,13 +694,9 @@ function Placement()
 			PlaceTentObject_ActivatorClutter5(Extended)
 		endif
 	endif
-	if !myLanternLit && PositionRef_Lantern1
+	if PositionRef_Lantern1
 		PlaceTentObject_LanternLit()
-	endif
-	if !myLanternUnlit && PositionRef_Lantern1
 		PlaceTentObject_LanternUnlit()
-	endif
-	if !myLanternLight && PositionRef_Lantern1
 		PlaceTentObject_LanternLight()
 	endif
 	if Extended
@@ -723,117 +719,181 @@ function Placement()
 			PlaceTentObject_LanternLight3()
 		endif
 	endif
-	if !myPlayerMarker_MainWeapon && PositionRef_Player_WeaponMainHand
+	if PositionRef_Player_WeaponMainHand
 		PlaceTentObject_PlayerMainWeapon()
 	endif
-	if !myPlayerMarker_OffHandWeapon && PositionRef_Player_WeaponOffHand
+	if PositionRef_Player_WeaponOffHand
 		PlaceTentObject_PlayerOffHandWeapon()
 	endif
-	if !myPlayerMarker_BigWeapon && PositionRef_Player_WeaponTwoHand
+	if PositionRef_Player_WeaponTwoHand
 		PlaceTentObject_PlayerBigWeapon()
 	endif
-	if !myPlayerMarker_Bow && PositionRef_Player_WeaponBow
+	if PositionRef_Player_WeaponBow
 		PlaceTentObject_PlayerBow()
 	endif
-	if !myPlayerMarker_Helm && PositionRef_Player_ArmorHelm
+	if PositionRef_Player_ArmorHelm
 		PlaceTentObject_PlayerHelm()
 	endif
-	if !myPlayerMarker_Boots && PositionRef_Player_ArmorBoots
+	if PositionRef_Player_ArmorBoots
 		PlaceTentObject_PlayerBoots()
 	endif
-	if !myPlayerMarker_Gauntlets && PositionRef_Player_ArmorGauntlets
+	if PositionRef_Player_ArmorGauntlets
 		PlaceTentObject_PlayerGauntlets()
 	endif
-	if !myPlayerMarker_Cuirass && PositionRef_Player_ArmorCuirass
+	if PositionRef_Player_ArmorCuirass
 		PlaceTentObject_PlayerCuirass()
 	endif
-	if !myPlayerMarker_Backpack && PositionRef_Player_Backpack
+	if PositionRef_Player_Backpack
 		PlaceTentObject_PlayerBackpack()
 	endif
-	if !myPlayerMarker_Shield && PositionRef_Player_Shield
+	if PositionRef_Player_Shield
 		PlaceTentObject_PlayerShield()
 	endif
-	if !myPlayerMarker_ShieldInterior && PositionRef_Player_ShieldInterior
+	if PositionRef_Player_ShieldInterior
 		PlaceTentObject_PlayerShieldInterior()
 	endif
 	if Extended
-		if !myFollowerAMarker_MainWeapon && Extended.PositionRef_Follower1_WeaponMainHand
+		if Extended.PositionRef_Follower1_WeaponMainHand
 			PlaceTentObject_Follower1MainWeapon()
 		endif
-		if !myFollowerAMarker_OffHandWeapon && Extended.PositionRef_Follower1_WeaponOffHand
+		if Extended.PositionRef_Follower1_WeaponOffHand
 			PlaceTentObject_Follower1OffHandWeapon()
 		endif
-		if !myFollowerAMarker_BigWeapon && Extended.PositionRef_Follower1_WeaponTwoHand
+		if Extended.PositionRef_Follower1_WeaponTwoHand
 			PlaceTentObject_Follower1BigWeapon()
 		endif
-		if !myFollowerAMarker_Bow && Extended.PositionRef_Follower1_WeaponBow
+		if Extended.PositionRef_Follower1_WeaponBow
 			PlaceTentObject_Follower1Bow()
 		endif
-		if !myFollowerAMarker_Shield && Extended.PositionRef_Follower1_Shield
+		if Extended.PositionRef_Follower1_Shield
 			PlaceTentObject_Follower1Shield()
 		endif
-		if !myFollowerBMarker_MainWeapon && Extended.PositionRef_Follower2_WeaponMainHand
+		if Extended.PositionRef_Follower2_WeaponMainHand
 			PlaceTentObject_Follower2MainWeapon()
 		endif
-		if !myFollowerBMarker_OffHandWeapon && Extended.PositionRef_Follower2_WeaponOffHand
+		if Extended.PositionRef_Follower2_WeaponOffHand
 			PlaceTentObject_Follower2OffHandWeapon()
 		endif
-		if !myFollowerBMarker_BigWeapon && Extended.PositionRef_Follower2_WeaponTwoHand
+		if Extended.PositionRef_Follower2_WeaponTwoHand
 			PlaceTentObject_Follower2BigWeapon()
 		endif
-		if !myFollowerBMarker_Bow && Extended.PositionRef_Follower2_WeaponBow
+		if Extended.PositionRef_Follower2_WeaponBow
 			PlaceTentObject_Follower2Bow()
 		endif
-		if !myFollowerBMarker_Shield && Extended.PositionRef_Follower2_Shield
+		if Extended.PositionRef_Follower2_Shield
 			PlaceTentObject_Follower2Shield()
 		endif
-		if !myFollowerCMarker_MainWeapon && Extended.PositionRef_Follower3_WeaponMainHand
+		if Extended.PositionRef_Follower3_WeaponMainHand
 			PlaceTentObject_Follower3MainWeapon()
 		endif
-		if !myFollowerCMarker_OffHandWeapon && Extended.PositionRef_Follower3_WeaponOffHand
+		if Extended.PositionRef_Follower3_WeaponOffHand
 			PlaceTentObject_Follower3OffHandWeapon()
 		endif
-		if !myFollowerCMarker_BigWeapon && Extended.PositionRef_Follower3_WeaponTwoHand
+		if Extended.PositionRef_Follower3_WeaponTwoHand
 			PlaceTentObject_Follower3BigWeapon()
 		endif
-		if !myFollowerCMarker_Bow && Extended.PositionRef_Follower3_WeaponBow
+		if Extended.PositionRef_Follower3_WeaponBow
 			PlaceTentObject_Follower3Bow()
 		endif
-		if !myFollowerCMarker_Shield && Extended.PositionRef_Follower3_Shield
+		if Extended.PositionRef_Follower3_Shield
 			PlaceTentObject_Follower3Shield()
 		endif
 	endif
-	if !myPlayerSitMarker
-		PlaceTentObject_PlayerSitMarker()
-	endif
-	if !myPlayerLayDownMarker
-		PlaceTentObject_PlayerLayDownMarker()
-	endif
-	if !myExitFront && PositionRef_FrontExitMarker
+	PlaceTentObject_PlayerSitMarker()
+	PlaceTentObject_PlayerLayDownMarker()
+	if PositionRef_FrontExitMarker
 		PlaceTentObject_ExitFront()
 	endif
-	if !myBedRoll
-		PlaceTentObject_BedRoll()
-	endif
+	PlaceTentObject_BedRoll()
 	if Extended
-		if !mySpareBedRoll1 && Extended.PositionRef_Follower1_Bed
+		if Extended.PositionRef_Follower1_Bed
 			PlaceTentObject_SpareBedRoll1()
 		endif
-		if !mySpareBedRoll2 && Extended.PositionRef_Follower1_Bed
+		if Extended.PositionRef_Follower1_Bed
 			PlaceTentObject_SpareBedRoll2()
 		endif
-		if !mySpareBedRoll3 && Extended.PositionRef_Follower1_Bed
+		if Extended.PositionRef_Follower1_Bed
 			PlaceTentObject_SpareBedRoll3()
 		endif
 	endif
+
+	self.MoveTo(myBedRoll)
+endFunction
+
+function GenerateDebugReport()
+	debug.trace("[Campfire] Placement complete. Placed object report:")
+	debug.trace("[Campfire] ======================================================================")
+	debug.trace("[Campfire] myTent: " + myTent)
+	debug.trace("[Campfire] myTentExterior: " + myTentExterior)
+	debug.trace("[Campfire] myNormalTent: " + myNormalTent)
+	debug.trace("[Campfire] mySnowTent: " + mySnowTent)
+	debug.trace("[Campfire] myAshTent: " + myAshTent)
+	debug.trace("[Campfire] myLanternLit: " + myLanternLit)
+	debug.trace("[Campfire] myLanternUnlit: " + myLanternUnlit)
+	debug.trace("[Campfire] myLanternLight: " + myLanternLight)
+	debug.trace("[Campfire] myLanternLit2: " + myLanternLit2)
+	debug.trace("[Campfire] myLanternUnlit2: " + myLanternUnlit2)
+	debug.trace("[Campfire] myLanternLight2: " + myLanternLight2)
+	debug.trace("[Campfire] myLanternLit3: " + myLanternLit3)
+	debug.trace("[Campfire] myLanternUnlit3: " + myLanternUnlit3)
+	debug.trace("[Campfire] myLanternLight3: " + myLanternLight3)
+	debug.trace("[Campfire] myPlayerMarker_MainWeapon: " + myPlayerMarker_MainWeapon)
+	debug.trace("[Campfire] myPlayerMarker_OffHandWeapon: " + myPlayerMarker_OffHandWeapon)
+	debug.trace("[Campfire] myPlayerMarker_BigWeapon: " + myPlayerMarker_BigWeapon)
+	debug.trace("[Campfire] myPlayerMarker_Bow: " + myPlayerMarker_Bow)
+	debug.trace("[Campfire] myPlayerMarker_Helm: " + myPlayerMarker_Helm)
+	debug.trace("[Campfire] myPlayerMarker_Boots: " + myPlayerMarker_Boots)
+	debug.trace("[Campfire] myPlayerMarker_Gauntlets: " + myPlayerMarker_Gauntlets)
+	debug.trace("[Campfire] myPlayerMarker_Cuirass: " + myPlayerMarker_Cuirass)
+	debug.trace("[Campfire] myPlayerMarker_Backpack: " + myPlayerMarker_Backpack)
+	debug.trace("[Campfire] myPlayerMarker_Shield: " + myPlayerMarker_Shield)
+	debug.trace("[Campfire] myPlayerMarker_ShieldInterior: " + myPlayerMarker_ShieldInterior)
+	debug.trace("[Campfire] myFollowerAMarker_MainWeapon: " + myFollowerAMarker_MainWeapon)
+	debug.trace("[Campfire] myFollowerAMarker_OffHandWeapon: " + myFollowerAMarker_OffHandWeapon)
+	debug.trace("[Campfire] myFollowerAMarker_BigWeapon: " + myFollowerAMarker_BigWeapon)
+	debug.trace("[Campfire] myFollowerAMarker_Bow: " + myFollowerAMarker_Bow)
+	debug.trace("[Campfire] myFollowerAMarker_Shield: " + myFollowerAMarker_Shield)
+	debug.trace("[Campfire] myFollowerBMarker_MainWeapon: " + myFollowerBMarker_MainWeapon)
+	debug.trace("[Campfire] myFollowerBMarker_OffHandWeapon: " + myFollowerBMarker_OffHandWeapon)
+	debug.trace("[Campfire] myFollowerBMarker_BigWeapon: " + myFollowerBMarker_BigWeapon)
+	debug.trace("[Campfire] myFollowerBMarker_Bow: " + myFollowerBMarker_Bow)
+	debug.trace("[Campfire] myFollowerBMarker_Shield: " + myFollowerBMarker_Shield)
+	debug.trace("[Campfire] myFollowerCMarker_MainWeapon: " + myFollowerCMarker_MainWeapon)
+	debug.trace("[Campfire] myFollowerCMarker_OffHandWeapon: " + myFollowerCMarker_OffHandWeapon)
+	debug.trace("[Campfire] myFollowerCMarker_BigWeapon: " + myFollowerCMarker_BigWeapon)
+	debug.trace("[Campfire] myFollowerCMarker_Bow: " + myFollowerCMarker_Bow)
+	debug.trace("[Campfire] myFollowerCMarker_Shield: " + myFollowerCMarker_Shield)
+	debug.trace("[Campfire] myStaticClutter1: " + myStaticClutter1)
+	debug.trace("[Campfire] myStaticClutter2: " + myStaticClutter2)
+	debug.trace("[Campfire] myStaticClutter3: " + myStaticClutter3)
+	debug.trace("[Campfire] myStaticClutter4: " + myStaticClutter4)
+	debug.trace("[Campfire] myStaticClutter5: " + myStaticClutter5)
+	debug.trace("[Campfire] myActivatorClutter1: " + myActivatorClutter1)
+	debug.trace("[Campfire] myActivatorClutter2: " + myActivatorClutter2)
+	debug.trace("[Campfire] myActivatorClutter3: " + myActivatorClutter3)
+	debug.trace("[Campfire] myActivatorClutter4: " + myActivatorClutter4)
+	debug.trace("[Campfire] myActivatorClutter5: " + myActivatorClutter5)
+	debug.trace("[Campfire] myPlayerSitMarker: " + myPlayerSitMarker)
+	debug.trace("[Campfire] myPlayerLayDownMarker: " + myPlayerLayDownMarker)
+	debug.trace("[Campfire] myExitFront: " + myExitFront)
+	debug.trace("[Campfire] myBedRoll: " + myBedRoll)
+	debug.trace("[Campfire] mySpareBedRoll1: " + mySpareBedRoll1)
+	debug.trace("[Campfire] mySpareBedRoll2: " + mySpareBedRoll2)
+	debug.trace("[Campfire] mySpareBedRoll3: " + mySpareBedRoll3)
+	debug.trace("[Campfire] myWard: " + myWard)
+	debug.trace("[Campfire] ======================================================================")
 endFunction
 
 function RotateOnStartUp()
-	self.SetAngle(self.X, self.Y, self.Z + Setting_StartUpRotation)
+	self.SetAngle(self.GetAngleX(), self.GetAngleY(), self.GetAngleZ() + Setting_StartUpRotation)
 endFunction
 
 function PlaceTentObject_Tent()
-	myTent = PlaceAtMeRelative(self, TentAsset_ShelterModel, myOriginAng, myTent_Pos)
+	debug.trace("[Campfire] What is the value of myTent right now?: " + myTent)
+	ObjectReference akTemp = PlaceAtMeRelative(self, TentAsset_ShelterModel, myOriginAng, myTent_Pos)
+	debug.trace("[Campfire] What is the value of akTemp after placement?: " + akTemp)
+	myTent = akTemp
+	debug.trace("[Campfire] What is the value of myTent after placement?: " + myTent)
 endFunction
 
 function PlaceTentObject_NormalTent()

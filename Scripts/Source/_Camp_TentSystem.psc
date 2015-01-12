@@ -555,7 +555,7 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
 			return None
 		endif
 	endif
-	
+
 	ObjectReference myObject
     ObjectReference myTempMarker = akOrigin.PlaceAtMe(XMarker)
 	
@@ -585,7 +585,7 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
 	endif
     
     TryToDisableAndDeleteRef(myTempMarker)
-	
+
     return myObject
 endFunction
 

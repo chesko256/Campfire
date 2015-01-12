@@ -53,7 +53,7 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
 		return None
 	endif
 
-	TentAPI.PlaceAtMeRelative(akOrigin, akFormToPlace, fOriginAng, fRelativePos, fZGlobalAngAdjust, fXLocalAngAdjust, fYLocalAngAdjust, fZLocalAngAdjust, fZHangingOffset, abInvertedLocalY, abInitiallyDisabled, abIsPropped, abIsHanging)
+	return TentAPI.PlaceAtMeRelative(akOrigin, akFormToPlace, fOriginAng, fRelativePos, fZGlobalAngAdjust, fXLocalAngAdjust, fYLocalAngAdjust, fZLocalAngAdjust, fZHangingOffset, abInvertedLocalY, abInitiallyDisabled, abIsPropped, abIsHanging)
 endFunction
 
 function ApplySnow(ObjectReference akTent) global
