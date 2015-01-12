@@ -150,6 +150,20 @@ bool function RaiseEvent_CampfireOnGearUnequipped(Form akBaseObject, int iGearTy
 	endif
 endFunction
 
+bool function RaiseEvent_CampfireOnPlaceableObjectUsed(Form akBaseObject, Form akPlacementIndicator) global
+	trace("[Campfire] Raising Event: CampfireOnPlaceableObjectUsed(" + akBaseObject + ", " + akPlacementIndicator + ")")
+
+	int handle = ModEvent.Create("Campfire_CampfireOnPlaceableObjectUsed")
+	if handle
+		ModEvent.PushForm(handle, akBaseObject)
+		ModEvent.PushForm(handle, akPlacementIndicator)
+		ModEvent.Send(handle)
+		return True
+	else
+		return False
+	endif
+endFunction
+
 ; Functions ==================================================================================
 
 Armor function GetPlayerEquippedHead() global

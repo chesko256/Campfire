@@ -5,24 +5,42 @@ import TentSystem
 
 ; REQUIRED PROPERTIES
 ObjectReference property RequiredPositionRef_PlayerBed auto
-{The player's bed roll (main interactible) position reference.}
+{REQUIRED: The player's bed roll (main interactible) position reference.}
 
 ObjectReference property RequiredPositionRef_SitFurniture auto
-{The player's sitting furniture position reference.}
+{REQUIRED: The player's sitting furniture position reference.}
 
 ObjectReference property RequiredPositionRef_LieDownFurniture auto
-{The player's lying down furniture position reference.}
+{REQUIRED: The player's lying down furniture position reference.}
 
 ; OPTIONAL PROPERTIES
 
 Static property TentAsset_ShelterModel auto
-{Optional: The tent (structure) static object.}
+{Optional: The tent static object.}
 
-Static property TentAsset_ShelterModelSnow auto
-{Optional: The tent (structure) static object, with snow directional shader applied.}
+Static property TentAsset_ShelterModelExterior auto
+{Optional: The tent static object exterior (for use with Toggle View feature).}
 
-Static property TentAsset_ShelterModelAsh auto
-{Optional: The tent (structure) static object, with ash directional shader applied (use _Camp_AshMaterialSolstheim1P_2 instead of a direct dependency on Dragonborn.esm)}
+Static property TentAsset_ShelterModelMaterialSnow auto
+{Optional: The tent (ShelterModel or ShelterModelExterior) with snow directional shader applied.}
+
+Static property TentAsset_ShelterModelMaterialAsh auto
+{Optional: The tent (ShelterModel or ShelterModelExterior) with ash directional shader applied (use _Camp_AshMaterialSolstheim1P_2 instead of a direct dependency on Dragonborn.esm)}
+
+Static property TentAsset_StaticClutter1 auto
+{Optional: A static to place in or around the tent.}
+
+Static property TentAsset_StaticClutter2 auto
+{Optional: A static to place in or around the tent.}
+
+Static property TentAsset_StaticClutter3 auto
+{Optional: A static to place in or around the tent.}
+
+Static property TentAsset_StaticClutter4 auto
+{Optional: A static to place in or around the tent.}
+
+Static property TentAsset_StaticClutter5 auto
+{Optional: A static to place in or around the tent.}
 
 ObjectReference property PositionRef_FrontExitMarker auto
 {Optional: Position reference of marker to move the player to when exiting a small tent.}
@@ -35,44 +53,55 @@ ObjectReference property PositionRef_Ward auto
 ObjectReference property PositionRef_Lantern1 auto
 {Optional: The first lantern's position reference.}
 
-ObjectReference property PositionRef_Clutter1 auto
+ObjectReference property PositionRef_StaticClutter1 auto
 {Optional: Clutter position reference.}
 
-ObjectReference property PositionRef_Clutter2 auto
+ObjectReference property PositionRef_StaticClutter2 auto
 {Optional: Clutter position reference.}
 
-ObjectReference property PositionRef_Clutter3 auto
+ObjectReference property PositionRef_StaticClutter3 auto
 {Optional: Clutter position reference.}
 
-ObjectReference property PositionRef_Clutter4 auto
+ObjectReference property PositionRef_StaticClutter4 auto
 {Optional: Clutter position reference.}
 
-ObjectReference property PositionRef_Clutter5 auto
+ObjectReference property PositionRef_StaticClutter5 auto
 {Optional: Clutter position reference.}
 
 ObjectReference property PositionRef_Player_Backpack auto
+{Optional: Position reference of player's backpack.}
 
 ObjectReference property PositionRef_Player_Shield auto
+{Optional: Position reference of player's shield.}
 
 ObjectReference property PositionRef_Player_ShieldInterior auto
+{Optional: Position reference of player's shield when in an interior (usually lying flat).}
 
 ObjectReference property PositionRef_Player_WeaponMainHand auto
+{Optional: Position reference of player's main hand weapon.}
 
 ObjectReference property PositionRef_Player_WeaponOffHand auto
+{Optional: Position reference of player's off hand weapon.}
 
 ObjectReference property PositionRef_Player_WeaponTwoHand auto
+{Optional: Position reference of player's two-handed weapon.}
 
 ObjectReference property PositionRef_Player_WeaponBow auto
+{Optional: Position reference of player's bow.}
 
 ObjectReference property PositionRef_Player_ArmorHelm auto
+{Optional: Position reference of player's head gear.}
 
 ObjectReference property PositionRef_Player_ArmorCuirass auto
+{Optional: Position reference of player's body gear.}
 
 ObjectReference property PositionRef_Player_ArmorGauntlets auto
+{Optional: Position reference of player's hand gear.}
 
 ObjectReference property PositionRef_Player_ArmorBoots auto
+{Optional: Position reference of player's foot gear.}
 
-ObjectReference property CenterReferenceOverride auto
+ObjectReference property PositionRef_CenterObjectOverride auto
 {Optional: Set this to specify a different object as the one which all other tent objects "orbit" when rotated. Uses the Shelter or Player Bed if left blank.}
 
 ; PRIVATE
@@ -104,16 +133,21 @@ float[] property myFollowerCMarker_OffHandWeapon_Pos auto hidden
 float[] property myFollowerCMarker_BigWeapon_Pos auto hidden
 float[] property myFollowerCMarker_Bow_Pos auto hidden
 float[] property myFollowerCMarker_Shield_Pos auto hidden
-float[] property myClutter1_Pos auto hidden
-float[] property myClutter2_Pos auto hidden
-float[] property myClutter3_Pos auto hidden
-float[] property myClutter4_Pos auto hidden
-float[] property myClutter5_Pos auto hidden
-float[] property myClutter6_Pos auto hidden
-float[] property myClutter7_Pos auto hidden
-float[] property myClutter8_Pos auto hidden
-float[] property myClutter9_Pos auto hidden
-float[] property myClutter10_Pos auto hidden
+float[] property myStaticClutter1_Pos auto hidden
+float[] property myStaticClutter2_Pos auto hidden
+float[] property myStaticClutter3_Pos auto hidden
+float[] property myStaticClutter4_Pos auto hidden
+float[] property myStaticClutter5_Pos auto hidden
+float[] property myActivatorClutter1_Pos auto hidden
+float[] property myActivatorClutter2_Pos auto hidden
+float[] property myActivatorClutter3_Pos auto hidden
+float[] property myActivatorClutter4_Pos auto hidden
+float[] property myActivatorClutter5_Pos auto hidden
+float[] property myFurnitureClutter1_Pos auto hidden
+float[] property myFurnitureClutter2_Pos auto hidden
+float[] property myFurnitureClutter3_Pos auto hidden
+float[] property myFurnitureClutter4_Pos auto hidden
+float[] property myFurnitureClutter5_Pos auto hidden
 float[] property myTent_Pos auto hidden
 float[] property myLanternLit_Pos auto hidden
 float[] property myLanternLit2_Pos auto hidden
@@ -175,16 +209,16 @@ ObjectReference property myFollowerCMarker_OffHandWeapon auto hidden
 ObjectReference property myFollowerCMarker_BigWeapon auto hidden
 ObjectReference property myFollowerCMarker_Bow auto hidden
 ObjectReference property myFollowerCMarker_Shield auto hidden
-ObjectReference property myClutter1 auto hidden
-ObjectReference property myClutter2 auto hidden
-ObjectReference property myClutter3 auto hidden
-ObjectReference property myClutter4 auto hidden
-ObjectReference property myClutter5 auto hidden
-ObjectReference property myClutter6 auto hidden
-ObjectReference property myClutter7 auto hidden
-ObjectReference property myClutter8 auto hidden
-ObjectReference property myClutter9 auto hidden
-ObjectReference property myClutter10 auto hidden
+ObjectReference property myStaticClutter1 auto hidden
+ObjectReference property myStaticClutter2 auto hidden
+ObjectReference property myStaticClutter3 auto hidden
+ObjectReference property myStaticClutter4 auto hidden
+ObjectReference property myStaticClutter5 auto hidden
+ObjectReference property myActivatorClutter1 auto hidden
+ObjectReference property myActivatorClutter2 auto hidden
+ObjectReference property myActivatorClutter3 auto hidden
+ObjectReference property myActivatorClutter4 auto hidden
+ObjectReference property myActivatorClutter5 auto hidden
 ObjectReference property myPlayerSitMarker auto hidden
 ObjectReference property myPlayerLayDownMarker auto hidden
 ObjectReference property myExitFront auto hidden
@@ -258,6 +292,10 @@ bool property bLanternLit = false auto hidden
 bool property bGettingUp = false auto hidden
 
 Event OnInit()
+	Initialize()
+endEvent
+
+function Initialize()
 	while !self.Is3DLoaded()
 	endWhile
 
@@ -265,20 +303,19 @@ Event OnInit()
 
 	CreatePositionArrays()
 
-	myOriginAng = TentSystem.GetAngleData(self)
+	myOriginAng = GetAngleData(self)
 
 	SetRelativePositions()
 
-	;PLACEMENT FUNCTIONS
-
-endEvent
+	Placement()
+endFunction
 
 Event OnUpdate()
-	TentSystem.UpdateTentUseState(self)
+	UpdateTentUseState(self)
 endEvent
 
 Event OnActivate(ObjectReference akActionRef)
-	TentSystem.ActivateTent(akActionRef, self)
+	ActivateTent(akActionRef, self)
 endEvent
 
 function CreatePositionArrays()
@@ -305,20 +342,20 @@ function CreatePositionArrays()
 		myLanternLit_Pos = new float[6]
 		myLanternLight_Pos = new float[6]
 	endif
-	if PositionRef_Clutter1
-		myClutter1_Pos = new float[6]
+	if PositionRef_StaticClutter1
+		myStaticClutter1_Pos = new float[6]
 	endif
-	if PositionRef_Clutter2
-		myClutter2_Pos = new float[6]
+	if PositionRef_StaticClutter2
+		myStaticClutter2_Pos = new float[6]
 	endif
-	if PositionRef_Clutter3
-		myClutter3_Pos = new float[6]
+	if PositionRef_StaticClutter3
+		myStaticClutter3_Pos = new float[6]
 	endif
-	if PositionRef_Clutter4
-		myClutter4_Pos = new float[6]
+	if PositionRef_StaticClutter4
+		myStaticClutter4_Pos = new float[6]
 	endif
-	if PositionRef_Clutter5
-		myClutter5_Pos = new float[6]
+	if PositionRef_StaticClutter5
+		myStaticClutter5_Pos = new float[6]
 	endif
 	if PositionRef_Player_Backpack
 		myPlayerMarker_Backpack_Pos = new float[6]
@@ -339,7 +376,7 @@ function CreatePositionArrays()
 		myPlayerMarker_BigWeapon_Pos = new float[6]
 	endif
 	if PositionRef_Player_WeaponBow
-		myFollowerCMarker_Bow_Pos = new float[6]
+		myPlayerMarker_Bow_Pos = new float[6]
 	endif
 	if PositionRef_Player_ArmorHelm
 		myPlayerMarker_Helm_Pos = new float[6]
@@ -355,85 +392,85 @@ function CreatePositionArrays()
 	endif
 
 	;Check extended objects
-	CampTentEx ChildSelf = self as CampTentEx
-	if ChildSelf
-		if ChildSelf.PositionRef_Lantern2
+	CampTentEx Extended = self as CampTentEx
+	if Extended
+		if Extended.PositionRef_Lantern2
 			myLanternUnlit2_Pos = new float[6]
 			myLanternLit2_Pos = new float[6]
 			myLanternLight2_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Lantern3
+		if Extended.PositionRef_Lantern3
 			myLanternUnlit3_Pos = new float[6]
 			myLanternLit3_Pos = new float[6]
 			myLanternLight3_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Clutter6
-			myClutter6_Pos = new float[6]
+		if Extended.PositionRef_ActivatorClutter1
+			myActivatorClutter1_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Clutter7
-			myClutter7_Pos = new float[6]
+		if Extended.PositionRef_ActivatorClutter2
+			myActivatorClutter2_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Clutter8
-			myClutter8_Pos = new float[6]
+		if Extended.PositionRef_ActivatorClutter3
+			myActivatorClutter3_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Clutter9
-			myClutter9_Pos = new float[6]
+		if Extended.PositionRef_ActivatorClutter4
+			myActivatorClutter4_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Clutter10
-			myClutter10_Pos = new float[6]
+		if Extended.PositionRef_ActivatorClutter5
+			myActivatorClutter5_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Follower1_Bed
+		if Extended.PositionRef_Follower1_Bed
 			mySpareBedRoll1_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Follower1_Shield
+		if Extended.PositionRef_Follower1_Shield
 			myFollowerAMarker_Shield_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Follower1_WeaponMainHand
+		if Extended.PositionRef_Follower1_WeaponMainHand
 			myFollowerAMarker_MainWeapon_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Follower1_WeaponOffHand
+		if Extended.PositionRef_Follower1_WeaponOffHand
 			myFollowerAMarker_OffHandWeapon_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Follower1_WeaponTwoHand
+		if Extended.PositionRef_Follower1_WeaponTwoHand
 			myFollowerAMarker_BigWeapon_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Follower1_WeaponBow
+		if Extended.PositionRef_Follower1_WeaponBow
 			myFollowerAMarker_Bow_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Follower2_Bed
+		if Extended.PositionRef_Follower2_Bed
 			mySpareBedRoll2_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Follower2_Shield
+		if Extended.PositionRef_Follower2_Shield
 			myFollowerBMarker_Shield_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Follower2_WeaponMainHand
+		if Extended.PositionRef_Follower2_WeaponMainHand
 			myFollowerBMarker_MainWeapon_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Follower2_WeaponOffHand
+		if Extended.PositionRef_Follower2_WeaponOffHand
 			myFollowerBMarker_OffHandWeapon_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Follower2_WeaponTwoHand
+		if Extended.PositionRef_Follower2_WeaponTwoHand
 			myFollowerBMarker_BigWeapon_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Follower2_WeaponBow
+		if Extended.PositionRef_Follower2_WeaponBow
 			myFollowerBMarker_Bow_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Follower3_Bed
+		if Extended.PositionRef_Follower3_Bed
 			mySpareBedRoll3_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Follower3_Shield
+		if Extended.PositionRef_Follower3_Shield
 			myFollowerCMarker_Shield_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Follower3_WeaponMainHand
+		if Extended.PositionRef_Follower3_WeaponMainHand
 			myFollowerCMarker_MainWeapon_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Follower3_WeaponOffHand
+		if Extended.PositionRef_Follower3_WeaponOffHand
 			myFollowerCMarker_OffHandWeapon_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Follower3_WeaponTwoHand
+		if Extended.PositionRef_Follower3_WeaponTwoHand
 			myFollowerCMarker_BigWeapon_Pos = new float[6]
 		endif
-		if ChildSelf.PositionRef_Follower3_WeaponBow
+		if Extended.PositionRef_Follower3_WeaponBow
 			myFollowerCMarker_Bow_Pos = new float[6]
 		endif
 	endif
@@ -441,8 +478,8 @@ endFunction
 
 function SetRelativePositions()
 	ObjectReference myCenterObject
-	if CenterReferenceOverride
-		myCenterObject = CenterReferenceOverride
+	if PositionRef_CenterObjectOverride
+		myCenterObject = PositionRef_CenterObjectOverride
 	else
 		if PositionRef_Shelter
 			myCenterObject = PositionRef_Shelter
@@ -474,20 +511,20 @@ function SetRelativePositions()
 		myLanternLit_Pos = GetRelativePosition(myCenterObject, PositionRef_Lantern1)
 		myLanternLight_Pos = GetRelativePosition(myCenterObject, PositionRef_Lantern1)
 	endif
-	if PositionRef_Clutter1
-		myClutter1_Pos = GetRelativePosition(myCenterObject, PositionRef_Clutter1)
+	if PositionRef_StaticClutter1
+		myStaticClutter1_Pos = GetRelativePosition(myCenterObject, PositionRef_StaticClutter1)
 	endif
-	if PositionRef_Clutter2
-		myClutter2_Pos = GetRelativePosition(myCenterObject, PositionRef_Clutter2)
+	if PositionRef_StaticClutter2
+		myStaticClutter2_Pos = GetRelativePosition(myCenterObject, PositionRef_StaticClutter2)
 	endif
-	if PositionRef_Clutter3
-		myClutter3_Pos = GetRelativePosition(myCenterObject, PositionRef_Clutter3)
+	if PositionRef_StaticClutter3
+		myStaticClutter3_Pos = GetRelativePosition(myCenterObject, PositionRef_StaticClutter3)
 	endif
-	if PositionRef_Clutter4
-		myClutter4_Pos = GetRelativePosition(myCenterObject, PositionRef_Clutter4)
+	if PositionRef_StaticClutter4
+		myStaticClutter4_Pos = GetRelativePosition(myCenterObject, PositionRef_StaticClutter4)
 	endif
-	if PositionRef_Clutter5
-		myClutter5_Pos = GetRelativePosition(myCenterObject, PositionRef_Clutter5)
+	if PositionRef_StaticClutter5
+		myStaticClutter5_Pos = GetRelativePosition(myCenterObject, PositionRef_StaticClutter5)
 	endif
 	if PositionRef_Player_Backpack
 		myPlayerMarker_Backpack_Pos = GetRelativePosition(myCenterObject, PositionRef_Player_Backpack)
@@ -524,131 +561,498 @@ function SetRelativePositions()
 	endif
 
 	;Check extended objects
-	CampTentEx ChildSelf = self as CampTentEx
-	if ChildSelf
-		if ChildSelf.PositionRef_Lantern2
-			myLanternUnlit2_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Lantern2)
-			myLanternLit2_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Lantern2)
-			myLanternLight2_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Lantern2)
+	CampTentEx Extended = self as CampTentEx
+	if Extended
+		if Extended.PositionRef_Lantern2
+			myLanternUnlit2_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Lantern2)
+			myLanternLit2_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Lantern2)
+			myLanternLight2_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Lantern2)
 		endif
-		if ChildSelf.PositionRef_Lantern3
-			myLanternUnlit3_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Lantern2)
-			myLanternLit3_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Lantern2)
-			myLanternLight3_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Lantern2)
+		if Extended.PositionRef_Lantern3
+			myLanternUnlit3_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Lantern2)
+			myLanternLit3_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Lantern2)
+			myLanternLight3_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Lantern2)
 		endif
-		if ChildSelf.PositionRef_Clutter6
-			myClutter6_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Clutter6)
+		if Extended.PositionRef_ActivatorClutter1
+			myActivatorClutter1_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_ActivatorClutter1)
 		endif
-		if ChildSelf.PositionRef_Clutter7
-			myClutter7_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Clutter7)
+		if Extended.PositionRef_ActivatorClutter2
+			myActivatorClutter2_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_ActivatorClutter2)
 		endif
-		if ChildSelf.PositionRef_Clutter8
-			myClutter8_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Clutter8)
+		if Extended.PositionRef_ActivatorClutter3
+			myActivatorClutter3_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_ActivatorClutter3)
 		endif
-		if ChildSelf.PositionRef_Clutter9
-			myClutter9_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Clutter9)
+		if Extended.PositionRef_ActivatorClutter4
+			myActivatorClutter4_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_ActivatorClutter4)
 		endif
-		if ChildSelf.PositionRef_Clutter10
-			myClutter10_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Clutter10)
+		if Extended.PositionRef_ActivatorClutter5
+			myActivatorClutter5_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_ActivatorClutter5)
 		endif
-		if ChildSelf.PositionRef_Follower1_Bed
-			mySpareBedRoll1_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Follower1_Bed)
+		if Extended.PositionRef_Follower1_Bed
+			mySpareBedRoll1_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower1_Bed)
 		endif
-		if ChildSelf.PositionRef_Follower1_Shield
-			myFollowerAMarker_Shield_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Follower1_Shield)
+		if Extended.PositionRef_Follower1_Shield
+			myFollowerAMarker_Shield_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower1_Shield)
 		endif
-		if ChildSelf.PositionRef_Follower1_WeaponMainHand
-			myFollowerAMarker_MainWeapon_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Follower1_WeaponMainHand)
+		if Extended.PositionRef_Follower1_WeaponMainHand
+			myFollowerAMarker_MainWeapon_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower1_WeaponMainHand)
 		endif
-		if ChildSelf.PositionRef_Follower1_WeaponOffHand
-			myFollowerAMarker_OffHandWeapon_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Follower1_WeaponOffHand)
+		if Extended.PositionRef_Follower1_WeaponOffHand
+			myFollowerAMarker_OffHandWeapon_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower1_WeaponOffHand)
 		endif
-		if ChildSelf.PositionRef_Follower1_WeaponTwoHand
-			myFollowerAMarker_BigWeapon_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Follower1_WeaponTwoHand)
+		if Extended.PositionRef_Follower1_WeaponTwoHand
+			myFollowerAMarker_BigWeapon_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower1_WeaponTwoHand)
 		endif
-		if ChildSelf.PositionRef_Follower1_WeaponBow
-			myFollowerAMarker_Bow_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Follower1_WeaponBow)
+		if Extended.PositionRef_Follower1_WeaponBow
+			myFollowerAMarker_Bow_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower1_WeaponBow)
 		endif
-		if ChildSelf.PositionRef_Follower2_Bed
-			mySpareBedRoll2_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Follower2_Bed)
+		if Extended.PositionRef_Follower2_Bed
+			mySpareBedRoll2_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower2_Bed)
 		endif
-		if ChildSelf.PositionRef_Follower2_Shield
-			myFollowerBMarker_Shield_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Follower2_Shield)
+		if Extended.PositionRef_Follower2_Shield
+			myFollowerBMarker_Shield_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower2_Shield)
 		endif
-		if ChildSelf.PositionRef_Follower2_WeaponMainHand
-			myFollowerBMarker_MainWeapon_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Follower2_WeaponMainHand)
+		if Extended.PositionRef_Follower2_WeaponMainHand
+			myFollowerBMarker_MainWeapon_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower2_WeaponMainHand)
 		endif
-		if ChildSelf.PositionRef_Follower2_WeaponOffHand
-			myFollowerBMarker_OffHandWeapon_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Follower2_WeaponOffHand)
+		if Extended.PositionRef_Follower2_WeaponOffHand
+			myFollowerBMarker_OffHandWeapon_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower2_WeaponOffHand)
 		endif
-		if ChildSelf.PositionRef_Follower2_WeaponTwoHand
-			myFollowerBMarker_BigWeapon_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Follower2_WeaponTwoHand)
+		if Extended.PositionRef_Follower2_WeaponTwoHand
+			myFollowerBMarker_BigWeapon_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower2_WeaponTwoHand)
 		endif
-		if ChildSelf.PositionRef_Follower2_WeaponBow
-			myFollowerBMarker_Bow_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Follower2_WeaponBow)
+		if Extended.PositionRef_Follower2_WeaponBow
+			myFollowerBMarker_Bow_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower2_WeaponBow)
 		endif
-		if ChildSelf.PositionRef_Follower3_Bed
-			mySpareBedRoll3_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Follower3_Bed)
+		if Extended.PositionRef_Follower3_Bed
+			mySpareBedRoll3_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower3_Bed)
 		endif
-		if ChildSelf.PositionRef_Follower3_Shield
-			myFollowerCMarker_Shield_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Follower3_Shield)
+		if Extended.PositionRef_Follower3_Shield
+			myFollowerCMarker_Shield_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower3_Shield)
 		endif
-		if ChildSelf.PositionRef_Follower3_WeaponMainHand
-			myFollowerCMarker_MainWeapon_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Follower3_WeaponMainHand)
+		if Extended.PositionRef_Follower3_WeaponMainHand
+			myFollowerCMarker_MainWeapon_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower3_WeaponMainHand)
 		endif
-		if ChildSelf.PositionRef_Follower3_WeaponOffHand
-			myFollowerCMarker_OffHandWeapon_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Follower3_WeaponOffHand)
+		if Extended.PositionRef_Follower3_WeaponOffHand
+			myFollowerCMarker_OffHandWeapon_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower3_WeaponOffHand)
 		endif
-		if ChildSelf.PositionRef_Follower3_WeaponTwoHand
-			myFollowerCMarker_BigWeapon_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Follower3_WeaponTwoHand)
+		if Extended.PositionRef_Follower3_WeaponTwoHand
+			myFollowerCMarker_BigWeapon_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower3_WeaponTwoHand)
 		endif
-		if ChildSelf.PositionRef_Follower3_WeaponBow
-			myFollowerCMarker_Bow_Pos = GetRelativePosition(myCenterObject, ChildSelf.PositionRef_Follower3_WeaponBow)
+		if Extended.PositionRef_Follower3_WeaponBow
+			myFollowerCMarker_Bow_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower3_WeaponBow)
 		endif
 	endif
 endFunction
 
+function Placement()
+	CampTentEx Extended = self as CampTentEx
+	if !myTent && TentAsset_ShelterModel && PositionRef_Shelter
+		PlaceTentObject_Tent()
+	endif
+	if !myNormalTent && myTent && TentAsset_ShelterModelExterior && PositionRef_Shelter
+		PlaceTentObject_NormalTent()
+	endif
+	if !mySnowTent && myTent && TentAsset_ShelterModelMaterialSnow && PositionRef_Shelter
+		PlaceTentObject_SnowTent()
+	endif
+	if !myAshTent && myTent && TentAsset_ShelterModelMaterialAsh && PositionRef_Shelter
+		PlaceTentObject_AshTent()
+	endif
+	TentSystem.ApplySnow(self)
+	if !myWard
+		PlaceTentObject_Ward()
+	endif
+	if !myStaticClutter1 && TentAsset_StaticClutter1 && PositionRef_StaticClutter1
+		PlaceTentObject_StaticClutter1()
+	endif
+	if !myStaticClutter2 && TentAsset_StaticClutter2 && PositionRef_StaticClutter2
+		PlaceTentObject_StaticClutter2()
+	endif
+	if !myStaticClutter3 && TentAsset_StaticClutter3 && PositionRef_StaticClutter3
+		PlaceTentObject_StaticClutter3()
+	endif
+	if !myStaticClutter4 && TentAsset_StaticClutter4 && PositionRef_StaticClutter4
+		PlaceTentObject_StaticClutter4()
+	endif
+	if !myStaticClutter5 && TentAsset_StaticClutter5 && PositionRef_StaticClutter5
+		PlaceTentObject_StaticClutter5()
+	endif
+	if Extended
+		if !myActivatorClutter1 && Extended.TentAsset_ActivatorClutter1 && Extended.PositionRef_ActivatorClutter1
+			PlaceTentObject_ActivatorClutter1(Extended)
+		endif
+		if !myActivatorClutter2 && Extended.TentAsset_ActivatorClutter2 && Extended.PositionRef_ActivatorClutter2
+			PlaceTentObject_ActivatorClutter2(Extended)
+		endif
+		if !myActivatorClutter3 && Extended.TentAsset_ActivatorClutter3 && Extended.PositionRef_ActivatorClutter3
+			PlaceTentObject_ActivatorClutter3(Extended)
+		endif
+		if !myActivatorClutter4 && Extended.TentAsset_ActivatorClutter4 && Extended.PositionRef_ActivatorClutter4
+			PlaceTentObject_ActivatorClutter4(Extended)
+		endif
+		if !myActivatorClutter5 && Extended.TentAsset_ActivatorClutter5 && Extended.PositionRef_ActivatorClutter5
+			PlaceTentObject_ActivatorClutter5(Extended)
+		endif
+	endif
+	if !myLanternLit && PositionRef_Lantern1
+		PlaceTentObject_LanternLit()
+	endif
+	if !myLanternUnlit && PositionRef_Lantern1
+		PlaceTentObject_LanternUnlit()
+	endif
+	if !myLanternLight && PositionRef_Lantern1
+		PlaceTentObject_LanternLight()
+	endif
+	if Extended
+		if !myLanternLit2 && Extended.PositionRef_Lantern2
+			PlaceTentObject_LanternLit2()
+		endif
+		if !myLanternUnlit2 && Extended.PositionRef_Lantern2
+			PlaceTentObject_LanternUnlit2()
+		endif
+		if !myLanternLight2 && Extended.PositionRef_Lantern2
+			PlaceTentObject_LanternLight2()
+		endif
+		if !myLanternLit3 && Extended.PositionRef_Lantern3
+			PlaceTentObject_LanternLit3()
+		endif
+		if !myLanternUnlit3 && Extended.PositionRef_Lantern3
+			PlaceTentObject_LanternUnlit3()
+		endif
+		if !myLanternLight3 && Extended.PositionRef_Lantern3
+			PlaceTentObject_LanternLight3()
+		endif
+	endif
+	if !myPlayerMarker_MainWeapon && PositionRef_Player_WeaponMainHand
+		PlaceTentObject_PlayerMainWeapon()
+	endif
+	if !myPlayerMarker_OffHandWeapon && PositionRef_Player_WeaponOffHand
+		PlaceTentObject_PlayerOffHandWeapon()
+	endif
+	if !myPlayerMarker_BigWeapon && PositionRef_Player_WeaponTwoHand
+		PlaceTentObject_PlayerBigWeapon()
+	endif
+	if !myPlayerMarker_Bow && PositionRef_Player_WeaponBow
+		PlaceTentObject_PlayerBow()
+	endif
+	if !myPlayerMarker_Helm && PositionRef_Player_ArmorHelm
+		PlaceTentObject_PlayerHelm()
+	endif
+	if !myPlayerMarker_Boots && PositionRef_Player_ArmorBoots
+		PlaceTentObject_PlayerBoots()
+	endif
+	if !myPlayerMarker_Gauntlets && PositionRef_Player_ArmorGauntlets
+		PlaceTentObject_PlayerGauntlets()
+	endif
+	if !myPlayerMarker_Cuirass && PositionRef_Player_ArmorCuirass
+		PlaceTentObject_PlayerCuirass()
+	endif
+	if !myPlayerMarker_Backpack && PositionRef_Player_Backpack
+		PlaceTentObject_PlayerBackpack()
+	endif
+	if !myPlayerMarker_Shield && PositionRef_Player_Shield
+		PlaceTentObject_PlayerShield()
+	endif
+	if !myPlayerMarker_ShieldInterior && PositionRef_Player_ShieldInterior
+		PlaceTentObject_PlayerShieldInterior()
+	endif
+	if Extended
+		if !myFollowerAMarker_MainWeapon && Extended.PositionRef_Follower1_WeaponMainHand
+			PlaceTentObject_Follower1MainWeapon()
+		endif
+		if !myFollowerAMarker_OffHandWeapon && Extended.PositionRef_Follower1_WeaponOffHand
+			PlaceTentObject_Follower1OffHandWeapon()
+		endif
+		if !myFollowerAMarker_BigWeapon && Extended.PositionRef_Follower1_WeaponTwoHand
+			PlaceTentObject_Follower1BigWeapon()
+		endif
+		if !myFollowerAMarker_Bow && Extended.PositionRef_Follower1_WeaponBow
+			PlaceTentObject_Follower1Bow()
+		endif
+		if !myFollowerAMarker_Shield && Extended.PositionRef_Follower1_Shield
+			PlaceTentObject_Follower1Shield()
+		endif
+		if !myFollowerBMarker_MainWeapon && Extended.PositionRef_Follower2_WeaponMainHand
+			PlaceTentObject_Follower2MainWeapon()
+		endif
+		if !myFollowerBMarker_OffHandWeapon && Extended.PositionRef_Follower2_WeaponOffHand
+			PlaceTentObject_Follower2OffHandWeapon()
+		endif
+		if !myFollowerBMarker_BigWeapon && Extended.PositionRef_Follower2_WeaponTwoHand
+			PlaceTentObject_Follower2BigWeapon()
+		endif
+		if !myFollowerBMarker_Bow && Extended.PositionRef_Follower2_WeaponBow
+			PlaceTentObject_Follower2Bow()
+		endif
+		if !myFollowerBMarker_Shield && Extended.PositionRef_Follower2_Shield
+			PlaceTentObject_Follower2Shield()
+		endif
+		if !myFollowerCMarker_MainWeapon && Extended.PositionRef_Follower3_WeaponMainHand
+			PlaceTentObject_Follower3MainWeapon()
+		endif
+		if !myFollowerCMarker_OffHandWeapon && Extended.PositionRef_Follower3_WeaponOffHand
+			PlaceTentObject_Follower3OffHandWeapon()
+		endif
+		if !myFollowerCMarker_BigWeapon && Extended.PositionRef_Follower3_WeaponTwoHand
+			PlaceTentObject_Follower3BigWeapon()
+		endif
+		if !myFollowerCMarker_Bow && Extended.PositionRef_Follower3_WeaponBow
+			PlaceTentObject_Follower3Bow()
+		endif
+		if !myFollowerCMarker_Shield && Extended.PositionRef_Follower3_Shield
+			PlaceTentObject_Follower3Shield()
+		endif
+	endif
+	if !myPlayerSitMarker
+		PlaceTentObject_PlayerSitMarker()
+	endif
+	if !myPlayerLayDownMarker
+		PlaceTentObject_PlayerLayDownMarker()
+	endif
+	if !myExitFront && PositionRef_FrontExitMarker
+		PlaceTentObject_ExitFront()
+	endif
+	if !myBedRoll
+		PlaceTentObject_BedRoll()
+	endif
+	if Extended
+		if !mySpareBedRoll1 && Extended.PositionRef_Follower1_Bed
+			PlaceTentObject_SpareBedRoll1()
+		endif
+		if !mySpareBedRoll2 && Extended.PositionRef_Follower1_Bed
+			PlaceTentObject_SpareBedRoll2()
+		endif
+		if !mySpareBedRoll3 && Extended.PositionRef_Follower1_Bed
+			PlaceTentObject_SpareBedRoll3()
+		endif
+	endif
+endFunction
 
+function PlaceTentObject_Tent()
+	myTent = PlaceAtMeRelative(self, TentAsset_ShelterModel, myOriginAng, myTent_Pos)
+endFunction
 
-;TryToDisableAndDeleteRef(myPlayerMarker_MainWeapon)
-;TryToDisableAndDeleteRef(myPlayerMarker_OffHandWeapon)
-;TryToDisableAndDeleteRef(myPlayerMarker_BigWeapon)
-;TryToDisableAndDeleteRef(myPlayerMarker_Bow)
-;TryToDisableAndDeleteRef(myPlayerMarker_Cuirass)
-;TryToDisableAndDeleteRef(myPlayerMarker_Helm)
-;TryToDisableAndDeleteRef(myPlayerMarker_Boots)
-;TryToDisableAndDeleteRef(myPlayerMarker_Gauntlets)
-;TryToDisableAndDeleteRef(myPlayerMarker_Backpack)
-;TryToDisableAndDeleteRef(myPlayerMarker_Shield)
-;TryToDisableAndDeleteRef(myPlayerMarker_ShieldInterior)
-;TryToDisableAndDeleteRef(myClutter1)
-;TryToDisableAndDeleteRef(myClutter2)
-;TryToDisableAndDeleteRef(myClutter3)
-;TryToDisableAndDeleteRef(myClutter4)
-;TryToDisableAndDeleteRef(myClutter5)
-;TryToDisableAndDeleteRef(myClutter6)
-;TryToDisableAndDeleteRef(myClutter7)
-;TryToDisableAndDeleteRef(myClutter8)
-;TryToDisableAndDeleteRef(myClutter9)
-;TryToDisableAndDeleteRef(myClutter10)
-;TryToDisableAndDeleteRef(myPlayerSitMarker)
-;TryToDisableAndDeleteRef(myPlayerLayDownMarker)
-;TryToDisableAndDeleteRef(myExitFront)
-;TryToDisableAndDeleteRef(myBedRoll)
-;TryToDisableAndDeleteRef(myWard)
-;TryToDisableAndDeleteRef(myLanternLit)
-;TryToDisableAndDeleteRef(myLanternUnlit)
-;TryToDisableAndDeleteRef(myLanternLight)
-;TryToDisableAndDeleteRef(myLanternLit2)
-;TryToDisableAndDeleteRef(myLanternUnlit2)
-;TryToDisableAndDeleteRef(myLanternLight2)
-;TryToDisableAndDeleteRef(myLanternLit3)
-;TryToDisableAndDeleteRef(myLanternUnlit3)
-;TryToDisableAndDeleteRef(myLanternLight3)
-;TryToDisableAndDeleteRef(mySpareBedRoll1)
-;TryToDisableAndDeleteRef(mySpareBedRoll2)
-;TryToDisableAndDeleteRef(mySpareBedRoll3)
-;TryToDisableAndDeleteRef(mySnowTent)
-;TryToDisableAndDeleteRef(myAshTent)
-;TryToDisableAndDeleteRef(myNormalTent)
-;TryToDisableAndDeleteRef(myTent)
+function PlaceTentObject_NormalTent()
+	myNormalTent = myTent.PlaceAtMe(TentAsset_ShelterModelExterior, abInitiallyDisabled = true)	
+endFunction
+
+function PlaceTentObject_SnowTent()
+	mySnowTent = myTent.PlaceAtMe(TentAsset_ShelterModelMaterialSnow, abInitiallyDisabled = true)
+endFunction
+
+function PlaceTentObject_AshTent()
+	myAshTent = myTent.PlaceAtMe(TentAsset_ShelterModelMaterialAsh, abInitiallyDisabled = true)
+endFunction
+
+function PlaceTentObject_StaticClutter1()
+	myStaticClutter1 = PlaceAtMeRelative(self, TentAsset_StaticClutter1, myOriginAng, myStaticClutter1_Pos)
+endFunction
+
+function PlaceTentObject_StaticClutter2()
+	myStaticClutter2 = PlaceAtMeRelative(self, TentAsset_StaticClutter2, myOriginAng, myStaticClutter2_Pos)
+endFunction
+
+function PlaceTentObject_StaticClutter3()
+	myStaticClutter3 = PlaceAtMeRelative(self, TentAsset_StaticClutter3, myOriginAng, myStaticClutter3_Pos)
+endFunction
+
+function PlaceTentObject_StaticClutter4()
+	myStaticClutter4 = PlaceAtMeRelative(self, TentAsset_StaticClutter4, myOriginAng, myStaticClutter4_Pos)
+endFunction
+
+function PlaceTentObject_StaticClutter5()
+	myStaticClutter5 = PlaceAtMeRelative(self, TentAsset_StaticClutter5, myOriginAng, myStaticClutter5_Pos)
+endFunction
+
+function PlaceTentObject_ActivatorClutter1(CampTentEx Extended)
+	myActivatorClutter1 = PlaceAtMeRelative(self, Extended.TentAsset_ActivatorClutter1, myOriginAng, myActivatorClutter1_Pos)
+endFunction
+
+function PlaceTentObject_ActivatorClutter2(CampTentEx Extended)
+	myActivatorClutter2 = PlaceAtMeRelative(self, Extended.TentAsset_ActivatorClutter2, myOriginAng, myActivatorClutter2_Pos)
+endFunction
+
+function PlaceTentObject_ActivatorClutter3(CampTentEx Extended)
+	myActivatorClutter3 = PlaceAtMeRelative(self, Extended.TentAsset_ActivatorClutter3, myOriginAng, myActivatorClutter3_Pos)
+endFunction
+
+function PlaceTentObject_ActivatorClutter4(CampTentEx Extended)
+	myActivatorClutter4 = PlaceAtMeRelative(self, Extended.TentAsset_ActivatorClutter4, myOriginAng, myActivatorClutter4_Pos)
+endFunction
+
+function PlaceTentObject_ActivatorClutter5(CampTentEx Extended)
+	myActivatorClutter5 = PlaceAtMeRelative(self, Extended.TentAsset_ActivatorClutter5, myOriginAng, myActivatorClutter5_Pos)
+endFunction
+
+function PlaceTentObject_PlayerMainWeapon()
+	myPlayerMarker_MainWeapon = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_MainWeapon_Pos)
+endFunction
+
+function PlaceTentObject_PlayerOffHandWeapon()
+	myPlayerMarker_OffHandWeapon = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_OffHandWeapon_Pos)
+endFunction
+
+function PlaceTentObject_PlayerBigWeapon()
+	myPlayerMarker_BigWeapon = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_BigWeapon_Pos)
+endFunction
+
+function PlaceTentObject_PlayerBow()
+	myPlayerMarker_Bow = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_Bow_Pos)
+endFunction
+
+function PlaceTentObject_PlayerShield()
+	myPlayerMarker_Shield = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_Shield_Pos, fXLocalAngAdjust = 90.0, fZLocalAngAdjust = 124.0, abInvertedLocalY = true, abIsPropped = true)
+endFunction
+
+function PlaceTentObject_PlayerCuirass()
+	myPlayerMarker_Cuirass = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_Cuirass_Pos)
+endFunction
+
+function PlaceTentObject_PlayerHelm()
+	myPlayerMarker_Helm = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_Helm_Pos)
+endFunction
+
+function PlaceTentObject_PlayerBoots()
+	myPlayerMarker_Boots = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_Boots_Pos)
+endFunction
+
+function PlaceTentObject_PlayerGauntlets()
+	myPlayerMarker_Gauntlets = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_Gauntlets_Pos)
+endFunction
+
+function PlaceTentObject_PlayerBackpack()
+	myPlayerMarker_Backpack = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_Backpack_Pos)
+endFunction
+
+function PlaceTentObject_PlayerShieldInterior()
+	myPlayerMarker_ShieldInterior = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_ShieldInterior_Pos)
+endFunction
+
+function PlaceTentObject_PlayerSitMarker()
+	myPlayerSitMarker = PlaceAtMeRelative(self, TentSystem.GetSitMarker(), myOriginAng, myPlayerSitMarker_Pos)
+endFunction
+
+function PlaceTentObject_PlayerLayDownMarker()
+	myPlayerLayDownMarker = PlaceAtMeRelative(self, TentSystem.GetLieDownMarker(), myOriginAng, myPlayerLayDownMarker_Pos, fZLocalAngAdjust = 180.0)
+endFunction
+
+function PlaceTentObject_ExitFront()
+	myExitFront = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myExitFront_Pos)
+endFunction
+
+function PlaceTentObject_BedRoll()
+	myBedRoll = PlaceAtMeRelative(self, TentSystem.GetPlayerBedroll(), myOriginAng, myBedRoll_Pos)
+endFunction
+
+function PlaceTentObject_Ward()
+	myWard = PlaceAtMeRelative(self, TentSystem.GetWard(), myOriginAng, myWard_Pos, fXLocalAngAdjust = -90.0, abIsPropped = true)
+endFunction
+
+function PlaceTentObject_LanternLit()
+	myLanternLit = PlaceAtMeRelative(self, TentSystem.GetLantern(bOn = true, bHanging = false), myOriginAng, myLanternLit_Pos, abInitiallyDisabled = true)
+endFunction
+
+function PlaceTentObject_LanternUnlit()
+	myLanternUnlit = PlaceAtMeRelative(self, TentSystem.GetLantern(bOn = false, bHanging = false), myOriginAng, myLanternUnlit_Pos)
+endFunction
+
+function PlaceTentObject_LanternLight()
+	myLanternLight = PlaceAtMeRelative(self, TentSystem.GetLanternLight(), myOriginAng, myLanternLight_Pos, abInitiallyDisabled = true)
+endFunction
+
+function PlaceTentObject_LanternLit2()
+
+endFunction
+
+function PlaceTentObject_LanternUnlit2()
+
+endFunction
+
+function PlaceTentObject_LanternLight2()
+
+endFunction
+
+function PlaceTentObject_LanternLit3()
+
+endFunction
+
+function PlaceTentObject_LanternUnlit3()
+
+endFunction
+
+function PlaceTentObject_LanternLight3()
+
+endFunction
+
+function PlaceTentObject_SpareBedRoll1()
+
+endFunction
+
+function PlaceTentObject_SpareBedRoll2()
+
+endFunction
+
+function PlaceTentObject_SpareBedRoll3()
+
+endFunction
+
+function PlaceTentObject_Follower1MainWeapon()
+
+endFunction
+
+function PlaceTentObject_Follower1OffHandWeapon()
+
+endFunction
+
+function PlaceTentObject_Follower1BigWeapon()
+
+endFunction
+
+function PlaceTentObject_Follower1Bow()
+
+endFunction
+
+function PlaceTentObject_Follower1Shield()
+
+endFunction
+
+function PlaceTentObject_Follower2MainWeapon()
+
+endFunction
+
+function PlaceTentObject_Follower2OffHandWeapon()
+
+endFunction
+
+function PlaceTentObject_Follower2BigWeapon()
+
+endFunction
+
+function PlaceTentObject_Follower2Bow()
+
+endFunction
+
+function PlaceTentObject_Follower2Shield()
+
+endFunction
+
+function PlaceTentObject_Follower3MainWeapon()
+
+endFunction
+
+function PlaceTentObject_Follower3OffHandWeapon()
+
+endFunction
+
+function PlaceTentObject_Follower3BigWeapon()
+
+endFunction
+
+function PlaceTentObject_Follower3Bow()
+
+endFunction
+
+function PlaceTentObject_Follower3Shield()
+
+endFunction

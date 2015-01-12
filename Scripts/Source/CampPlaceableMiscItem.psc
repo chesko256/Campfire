@@ -1,13 +1,18 @@
 scriptname CampPlaceableMiscItem extends ObjectReference
 
 import math
+import CampUtil
+
+Activator property Required_PlacementIndicator auto
+{Required: The object that will indicate to the user where to place this item.}
+
+MiscObject property Required_Self auto
+{Required: Fill this property with the base object this script is attached to.}
 
 _DE_GetCampingLegal property Legal auto
 ;_DE_EPMonitor_1_6 property Frostfall auto
 float property fZOffset auto
 float property fZAngleOffset auto
-Form property Required_PlacedObject auto
-{The object (activator, furniture, etc) that will be placed when this item is used.}
 Ingredient property myRequiredIngredient auto
 {Fill only the ingredient or the misc item property, not both.}
 MiscObject property myRequiredItem auto
@@ -20,6 +25,13 @@ ObjectReference property _DE_XMarker_Placement auto
 ObjectReference property _DE_Anchor auto
 GlobalVariable property _DE_Setting_SimplePlacement auto
 
+Event OnEquipped(Actor akActor)
+	if akActor == Game.GetPlayer()
+		RaiseEvent_CampfireOnPlaceableObjectUsed(Required_Self, Required_PlacementIndicator as Form)
+	endif
+endEvent
+
+;/
 Event OnActivate(ObjectReference akActionRef)
 endEvent
 
@@ -99,7 +111,7 @@ function PlaceObject()
 	
 	self.Disable()
 	self.Delete()
-	/;
+	
 endFunction
 
 function IllegalCampingMessage()
@@ -124,3 +136,4 @@ float[] function GetOffsets(Actor akSource, Float afDistance = 100.0, float afOf
 	Offsets[1] = XDist
 	Return Offsets
 EndFunction
+/;

@@ -2,25 +2,55 @@ scriptname CampTentEx extends CampTent
 
 ; OPTIONAL PROPERTIES
 
+Activator property TentAsset_ActivatorClutter1 auto
+{Optional: An activator to place in or around the tent.}
+
+Activator property TentAsset_ActivatorClutter2 auto
+{Optional: An activator to place in or around the tent.}
+
+Activator property TentAsset_ActivatorClutter3 auto
+{Optional: An activator to place in or around the tent.}
+
+Activator property TentAsset_ActivatorClutter4 auto
+{Optional: An activator to place in or around the tent.}
+
+Activator property TentAsset_ActivatorClutter5 auto
+{Optional: An activator to place in or around the tent.}
+
+Furniture property TentAsset_FurnitureClutter1 auto
+{Optional: A furniture object to place in or around the tent.}
+
+Furniture property TentAsset_FurnitureClutter2 auto
+{Optional: A furniture object to place in or around the tent.}
+
+Furniture property TentAsset_FurnitureClutter3 auto
+{Optional: A furniture object to place in or around the tent.}
+
+Furniture property TentAsset_FurnitureClutter4 auto
+{Optional: A furniture object to place in or around the tent.}
+
+Furniture property TentAsset_FurnitureClutter5 auto
+{Optional: A furniture object to place in or around the tent.}
+
 ObjectReference property PositionRef_Lantern2 auto
 {Optional: The second lantern's position reference.}
 
 ObjectReference property PositionRef_Lantern3 auto
 {Optional: The third lantern's position reference.}
 
-ObjectReference property PositionRef_Clutter6 auto
+ObjectReference property PositionRef_ActivatorClutter1 auto
 {Optional: Clutter position reference.}
 
-ObjectReference property PositionRef_Clutter7 auto
+ObjectReference property PositionRef_ActivatorClutter2 auto
 {Optional: Clutter position reference.}
 
-ObjectReference property PositionRef_Clutter8 auto
+ObjectReference property PositionRef_ActivatorClutter3 auto
 {Optional: Clutter position reference.}
 
-ObjectReference property PositionRef_Clutter9 auto
+ObjectReference property PositionRef_ActivatorClutter4 auto
 {Optional: Clutter position reference.}
 
-ObjectReference property PositionRef_Clutter10 auto
+ObjectReference property PositionRef_ActivatorClutter5 auto
 {Optional: Clutter position reference.}
 
 ObjectReference property PositionRef_Follower1_Bed auto

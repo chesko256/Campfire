@@ -82,10 +82,11 @@ furniture property _Camp_Bedroll_ActualF auto
 furniture property _Camp_Bedroll_ActualL auto
 furniture property _Camp_Bedroll_ActualR auto
 furniture property _Camp_Bedroll_NPC_F auto
-furniture property _Camp_Bedroll_NPC_FL auto
-furniture property _Camp_Bedroll_NPC_FR auto
 furniture property _Camp_Bedroll_NPC_L auto
 furniture property _Camp_Bedroll_NPC_R auto
+;@TODO: Remove
+;furniture property _Camp_Bedroll_NPC_FL auto
+;furniture property _Camp_Bedroll_NPC_FR auto
 
 ;@From OnUpdate on CampTent / CampTentEx
 bool function UpdateTentUseState(ObjectReference akTent)
@@ -545,6 +546,15 @@ float[] function GetRelativePosition(ObjectReference akOrigin, ObjectReference a
 endFunction
 
 ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akFormToPlace, float[] fOriginAng, float[] fRelativePos, float fZGlobalAngAdjust = 0.0, float fXLocalAngAdjust = 0.0, float fYLocalAngAdjust = 0.0, float fZLocalAngAdjust = 0.0, float fZHangingOffset = 0.0, bool abInvertedLocalY = false, bool abInitiallyDisabled = false, bool abIsPropped = false, bool abIsHanging = false)
+	CampTent TentObject = akOrigin as CampTent
+	
+	;Respect interior rules
+	if IsRefInInterior(PlayerRef)
+		;Certain objects should not be placed in interiors
+		if akFormToPlace == TentObject.TentAsset_ShelterModel || akFormToPlace == TentObject.TentAsset_ShelterModelExterior || akFormToPlace == TentObject.TentAsset_ShelterModelMaterialSnow || akFormToPlace == TentObject.TentAsset_ShelterModelMaterialAsh || akFormToPlace == _Camp_TentWard
+			return None
+		endif
+	endif
 	
 	ObjectReference myObject
     ObjectReference myTempMarker = akOrigin.PlaceAtMe(XMarker)
@@ -574,8 +584,7 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
 		myObject = myTempMarker.PlaceAtMe(akFormToPlace)
 	endif
     
-	myTempMarker.Disable()
-    myTempMarker.Delete()
+    TryToDisableAndDeleteRef(myTempMarker)
 	
     return myObject
 endFunction
@@ -820,16 +829,16 @@ function PackTent(ObjectReference akTent)
 	TryToDisableAndDeleteRef(TentObject.myPlayerMarker_Backpack)
 	TryToDisableAndDeleteRef(TentObject.myPlayerMarker_Shield)
 	TryToDisableAndDeleteRef(TentObject.myPlayerMarker_ShieldInterior)
-	TryToDisableAndDeleteRef(TentObject.myClutter1)
-	TryToDisableAndDeleteRef(TentObject.myClutter2)
-	TryToDisableAndDeleteRef(TentObject.myClutter3)
-	TryToDisableAndDeleteRef(TentObject.myClutter4)
-	TryToDisableAndDeleteRef(TentObject.myClutter5)
-	TryToDisableAndDeleteRef(TentObject.myClutter6)
-	TryToDisableAndDeleteRef(TentObject.myClutter7)
-	TryToDisableAndDeleteRef(TentObject.myClutter8)
-	TryToDisableAndDeleteRef(TentObject.myClutter9)
-	TryToDisableAndDeleteRef(TentObject.myClutter10)
+	TryToDisableAndDeleteRef(TentObject.myStaticClutter1)
+	TryToDisableAndDeleteRef(TentObject.myStaticClutter2)
+	TryToDisableAndDeleteRef(TentObject.myStaticClutter3)
+	TryToDisableAndDeleteRef(TentObject.myStaticClutter4)
+	TryToDisableAndDeleteRef(TentObject.myStaticClutter5)
+	TryToDisableAndDeleteRef(TentObject.myActivatorClutter1)
+	TryToDisableAndDeleteRef(TentObject.myActivatorClutter2)
+	TryToDisableAndDeleteRef(TentObject.myActivatorClutter3)
+	TryToDisableAndDeleteRef(TentObject.myActivatorClutter4)
+	TryToDisableAndDeleteRef(TentObject.myActivatorClutter5)
 	TryToDisableAndDeleteRef(TentObject.myPlayerSitMarker)
 	TryToDisableAndDeleteRef(TentObject.myPlayerLayDownMarker)
 	TryToDisableAndDeleteRef(TentObject.myExitFront)

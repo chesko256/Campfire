@@ -145,11 +145,13 @@ Event OnPlayerLoadGame()
 	RunStartupCheck()
 	RegisterForKeysOnLoad()
 	RegisterForControlsOnLoad()
+	RegisterForEventsOnLoad()
 endEvent
 
 function RunStartupCheck()
 	VanillaGameLoadUp()
 	RegisterForControlsOnLoad()
+	RegisterForEventsOnLoad()
 	Campfire.CheckFollowerPolling()
 	
 	;debug.notification("[Frostfall]Compatibility startup check...")
@@ -691,4 +693,8 @@ endFunction
 function RegisterForControlsOnLoad()
 	trace("[Campfire] Compatibility is trying to call Campfire.RegisterForControlsOnLoad()")
 	Campfire.RegisterForControlsOnLoad()
+endFunction
+
+function RegisterForEventsOnLoad()
+	Campfire.RegisterForEventsOnLoad()
 endFunction
