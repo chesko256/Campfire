@@ -104,6 +104,9 @@ ObjectReference property PositionRef_Player_ArmorBoots auto
 ObjectReference property PositionRef_CenterObjectOverride auto
 {Optional: Set this to specify a different object as the one which all other tent objects "orbit" when rotated. Uses the Shelter or Player Bed if left blank.}
 
+Float property Setting_StartUpRotation = 0.0 auto
+{Optional: The amount, in degrees, to rotate the tent on the Z axis on start-up. Helpful if the Shelter asset is not aligned correctly.}
+
 ; PRIVATE
 ;Object locations
 float[] property myOriginAng auto hidden
@@ -292,14 +295,10 @@ bool property bLanternLit = false auto hidden
 bool property bGettingUp = false auto hidden
 
 Event OnInit()
-	Initialize()
-endEvent
-
-function Initialize()
 	while !self.Is3DLoaded()
 	endWhile
 
-	;SELF ANGLE OVERRIDE
+	RotateOnStartUp()
 
 	CreatePositionArrays()
 
@@ -308,7 +307,7 @@ function Initialize()
 	SetRelativePositions()
 
 	Placement()
-endFunction
+endEvent
 
 Event OnUpdate()
 	UpdateTentUseState(self)
@@ -827,6 +826,10 @@ function Placement()
 			PlaceTentObject_SpareBedRoll3()
 		endif
 	endif
+endFunction
+
+function RotateOnStartUp()
+	self.SetAngle(self.X, self.Y, self.Z + Setting_StartUpRotation)
 endFunction
 
 function PlaceTentObject_Tent()
