@@ -469,13 +469,13 @@ float[] function GetPosXYZRotateAroundRef(ObjectReference akOrigin, ObjectRefere
 	fAngleY = -(fAngleY)
 	fAngleZ = -(fAngleZ)
 	
-	float myOriginPosX = akOrigin.GetPositionX()
-	float myOriginPosY = akOrigin.GetPositionY()
-	float myOriginPosZ = akOrigin.GetPositionZ()
+	float myOriginPosX = akOrigin.X
+	float myOriginPosY = akOrigin.Y
+	float myOriginPosZ = akOrigin.Z
 	
-	float fInitialX = akObject.GetPositionX() - myOriginPosX
-	float fInitialY = akObject.GetPositionY() - myOriginPosY
-	float fInitialZ = akObject.GetPositionZ() - myOriginPosZ
+	float fInitialX = akObject.X - myOriginPosX
+	float fInitialY = akObject.Y - myOriginPosY
+	float fInitialZ = akObject.Z - myOriginPosZ
 	
 	float fNewX
 	float fNewY
@@ -525,9 +525,9 @@ endFunction
 
 float[] function GetRelativePosition(ObjectReference akOrigin, ObjectReference akObject)
 	float[] myRelativePosition = new float[6]
-	myRelativePosition[0] = akObject.GetPositionX() - akOrigin.GetPositionX()
-	myRelativePosition[1] = akObject.GetPositionY() - akOrigin.GetPositionY()
-	myRelativePosition[2] = akObject.GetPositionZ() - akOrigin.GetPositionZ()
+	myRelativePosition[0] = akObject.X - akOrigin.X
+	myRelativePosition[1] = akObject.Y - akOrigin.Y
+	myRelativePosition[2] = akObject.Z - akOrigin.Z
 	myRelativePosition[3] = akObject.GetAngleX()
 	myRelativePosition[4] = akObject.GetAngleY()
 	myRelativePosition[5] = akObject.GetAngleZ()

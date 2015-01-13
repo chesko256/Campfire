@@ -479,6 +479,9 @@ function CreatePositionArrays()
 endFunction
 
 function SetRelativePositions()
+	StartObjectProfiling()
+	debug.StartStackProfiling()
+	debug.StartScriptProfiling("CampTent")
 	ObjectReference myCenterObject
 	if PositionRef_CenterObjectOverride
 		myCenterObject = PositionRef_CenterObjectOverride
@@ -651,6 +654,9 @@ function SetRelativePositions()
 			myFollowerCMarker_Bow_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower3_WeaponBow)
 		endif
 	endif
+	StopObjectProfiling()
+	debug.StopStackProfiling()
+	debug.StopScriptProfiling("CampTent")
 endFunction
 
 function Placement()
