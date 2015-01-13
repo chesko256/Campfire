@@ -2,34 +2,34 @@ scriptname CampTentEx extends CampTent
 
 ; OPTIONAL PROPERTIES
 
-Activator property TentAsset_ActivatorClutter1 auto
+Activator property TentAsset_ClutterActivator1 auto
 {Optional: An activator to place in or around the tent.}
 
-Activator property TentAsset_ActivatorClutter2 auto
+Activator property TentAsset_ClutterActivator2 auto
 {Optional: An activator to place in or around the tent.}
 
-Activator property TentAsset_ActivatorClutter3 auto
+Activator property TentAsset_ClutterActivator3 auto
 {Optional: An activator to place in or around the tent.}
 
-Activator property TentAsset_ActivatorClutter4 auto
+Activator property TentAsset_ClutterActivator4 auto
 {Optional: An activator to place in or around the tent.}
 
-Activator property TentAsset_ActivatorClutter5 auto
+Activator property TentAsset_ClutterActivator5 auto
 {Optional: An activator to place in or around the tent.}
 
-Furniture property TentAsset_FurnitureClutter1 auto
+Furniture property TentAsset_ClutterFurniture1 auto
 {Optional: A furniture object to place in or around the tent.}
 
-Furniture property TentAsset_FurnitureClutter2 auto
+Furniture property TentAsset_ClutterFurniture2 auto
 {Optional: A furniture object to place in or around the tent.}
 
-Furniture property TentAsset_FurnitureClutter3 auto
+Furniture property TentAsset_ClutterFurniture3 auto
 {Optional: A furniture object to place in or around the tent.}
 
-Furniture property TentAsset_FurnitureClutter4 auto
+Furniture property TentAsset_ClutterFurniture4 auto
 {Optional: A furniture object to place in or around the tent.}
 
-Furniture property TentAsset_FurnitureClutter5 auto
+Furniture property TentAsset_ClutterFurniture5 auto
 {Optional: A furniture object to place in or around the tent.}
 
 ObjectReference property PositionRef_Lantern2 auto
@@ -38,19 +38,19 @@ ObjectReference property PositionRef_Lantern2 auto
 ObjectReference property PositionRef_Lantern3 auto
 {Optional: The third lantern's position reference.}
 
-ObjectReference property PositionRef_ActivatorClutter1 auto
+ObjectReference property PositionRef_ClutterActivator1 auto
 {Optional: Clutter position reference.}
 
-ObjectReference property PositionRef_ActivatorClutter2 auto
+ObjectReference property PositionRef_ClutterActivator2 auto
 {Optional: Clutter position reference.}
 
-ObjectReference property PositionRef_ActivatorClutter3 auto
+ObjectReference property PositionRef_ClutterActivator3 auto
 {Optional: Clutter position reference.}
 
-ObjectReference property PositionRef_ActivatorClutter4 auto
+ObjectReference property PositionRef_ClutterActivator4 auto
 {Optional: Clutter position reference.}
 
-ObjectReference property PositionRef_ActivatorClutter5 auto
+ObjectReference property PositionRef_ClutterActivator5 auto
 {Optional: Clutter position reference.}
 
 ObjectReference property PositionRef_Follower1_Bed auto
