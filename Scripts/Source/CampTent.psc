@@ -512,6 +512,8 @@ function SetRelativePositions()
 		myLanternUnlit_Pos = GetRelativePosition(myCenterObject, PositionRef_Lantern1)
 		myLanternLit_Pos = GetRelativePosition(myCenterObject, PositionRef_Lantern1)
 		myLanternLight_Pos = GetRelativePosition(myCenterObject, PositionRef_Lantern1)
+		;Position the light inside the lantern.
+		myLanternLight_Pos[2] = myLanternLight_Pos[2] + 7.0
 	endif
 	if PositionRef_StaticClutter1
 		myStaticClutter1_Pos = GetRelativePosition(myCenterObject, PositionRef_StaticClutter1)
@@ -569,11 +571,15 @@ function SetRelativePositions()
 			myLanternUnlit2_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Lantern2)
 			myLanternLit2_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Lantern2)
 			myLanternLight2_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Lantern2)
+			;Position the light inside the lantern.
+			myLanternLight2_Pos[2] = myLanternLight2_Pos[2] + 7.0
 		endif
 		if Extended.PositionRef_Lantern3
 			myLanternUnlit3_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Lantern2)
 			myLanternLit3_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Lantern2)
 			myLanternLight3_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Lantern2)
+			;Position the light inside the lantern.
+			myLanternLight3_Pos[2] = myLanternLight3_Pos[2] + 7.0
 		endif
 		if Extended.PositionRef_ActivatorClutter1
 			myActivatorClutter1_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_ActivatorClutter1)
@@ -818,7 +824,9 @@ function Placement()
 		endif
 	endif
 
-	self.MoveTo(myBedRoll)
+	if self.GetDistance(myBedRoll) > 1.0
+		self.MoveTo(myBedRoll)
+	endif
 endFunction
 
 function GenerateDebugReport()

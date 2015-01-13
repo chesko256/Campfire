@@ -99,6 +99,7 @@ function UpdateTentUseState(ObjectReference akTent)
 		CleanUpTent(akTent)
 	elseif !(PlayerRef.GetSitState() == 2 || PlayerRef.GetSitState() == 3) && !TentObject.bGettingUp
 		;Player getting up from sitting
+		debug.trace("[Campfire] I am " + PlayerRef.GetDistance(TentObject.myExitFront) + " from myExitFront " + TentObject.myExitFront)
 		if TentObject.myExitFront && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
 			PlayerRef.SplineTranslateToRef(TentObject.myExitFront, 1.0, 65.0)
 		endif
@@ -178,7 +179,7 @@ function ShowSitMenu(ObjectReference akTent)
 		else
 			if TentObject.myTentExterior.IsDisabled()
 				_DE_TentSeeThru.SetValue(1)
-				TryToEnableRef(TentObject.myTentExterior)
+				TryToEnableRef(TentObject.myTentExterior, true)
 			else
 				_DE_TentSeeThru.SetValue(2)
 				TryToDisableRef(TentObject.myTentExterior, true)
@@ -236,7 +237,7 @@ function ShowLayMenu(ObjectReference akTent)
 		else
 			if TentObject.myTentExterior.IsDisabled()
 				_DE_TentSeeThru.SetValue(1)
-				TryToEnableRef(TentObject.myTentExterior)
+				TryToEnableRef(TentObject.myTentExterior, true)
 			else
 				_DE_TentSeeThru.SetValue(2)
 				TryToDisableRef(TentObject.myTentExterior, true)
