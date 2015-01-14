@@ -172,69 +172,69 @@ float[] property myWard_Pos auto hidden
 float[] property mySelf_Pos auto hidden
 
 ;Run-time objects
-ObjectReference property myTent auto hidden
-ObjectReference property myTentExterior auto hidden
-ObjectReference property myNormalTent auto hidden
-ObjectReference property mySnowTent auto hidden
-ObjectReference property myAshTent auto hidden
-ObjectReference property myLanternLit auto hidden
-ObjectReference property myLanternUnlit auto hidden
-ObjectReference property myLanternLight auto hidden
-ObjectReference property myLanternLit2 auto hidden
-ObjectReference property myLanternUnlit2 auto hidden
-ObjectReference property myLanternLight2 auto hidden
-ObjectReference property myLanternLit3 auto hidden
-ObjectReference property myLanternUnlit3 auto hidden
-ObjectReference property myLanternLight3 auto hidden
-ObjectReference property myPlayerMarker_MainWeapon auto hidden
-ObjectReference property myPlayerMarker_OffHandWeapon auto hidden
-ObjectReference property myPlayerMarker_BigWeapon auto hidden
-ObjectReference property myPlayerMarker_Bow auto hidden
-ObjectReference property myPlayerMarker_Helm auto hidden
-ObjectReference property myPlayerMarker_Boots auto hidden
-ObjectReference property myPlayerMarker_Gauntlets auto hidden
-ObjectReference property myPlayerMarker_Cuirass auto hidden
-ObjectReference property myPlayerMarker_Backpack auto hidden
-ObjectReference property myPlayerMarker_Shield auto hidden
-ObjectReference property myPlayerMarker_ShieldInterior auto hidden
-ObjectReference property myFollowerAMarker_MainWeapon auto hidden
-ObjectReference property myFollowerAMarker_OffHandWeapon auto hidden
-ObjectReference property myFollowerAMarker_BigWeapon auto hidden
-ObjectReference property myFollowerAMarker_Bow auto hidden
-ObjectReference property myFollowerAMarker_Shield auto hidden
-ObjectReference property myFollowerBMarker_MainWeapon auto hidden
-ObjectReference property myFollowerBMarker_OffHandWeapon auto hidden
-ObjectReference property myFollowerBMarker_BigWeapon auto hidden
-ObjectReference property myFollowerBMarker_Bow auto hidden
-ObjectReference property myFollowerBMarker_Shield auto hidden
-ObjectReference property myFollowerCMarker_MainWeapon auto hidden
-ObjectReference property myFollowerCMarker_OffHandWeapon auto hidden
-ObjectReference property myFollowerCMarker_BigWeapon auto hidden
-ObjectReference property myFollowerCMarker_Bow auto hidden
-ObjectReference property myFollowerCMarker_Shield auto hidden
-ObjectReference property myClutterStatic1 auto hidden
-ObjectReference property myClutterStatic2 auto hidden
-ObjectReference property myClutterStatic3 auto hidden
-ObjectReference property myClutterStatic4 auto hidden
-ObjectReference property myClutterStatic5 auto hidden
-ObjectReference property myClutterActivator1 auto hidden
-ObjectReference property myClutterActivator2 auto hidden
-ObjectReference property myClutterActivator3 auto hidden
-ObjectReference property myClutterActivator4 auto hidden
-ObjectReference property myClutterActivator5 auto hidden
-ObjectReference property myClutterFurniture1 auto hidden
-ObjectReference property myClutterFurniture2 auto hidden
-ObjectReference property myClutterFurniture3 auto hidden
-ObjectReference property myClutterFurniture4 auto hidden
-ObjectReference property myClutterFurniture5 auto hidden
-ObjectReference property myPlayerSitMarker auto hidden
-ObjectReference property myPlayerLayDownMarker auto hidden
-ObjectReference property myExitFront auto hidden
-ObjectReference property myBedRoll auto hidden
-ObjectReference property mySpareBedRoll1 auto hidden
-ObjectReference property mySpareBedRoll2 auto hidden
-ObjectReference property mySpareBedRoll3 auto hidden
-ObjectReference property myWard auto hidden
+Form property myTent auto hidden
+Form property myTentExterior auto hidden
+Form property myNormalTent auto hidden
+Form property mySnowTent auto hidden
+Form property myAshTent auto hidden
+Form property myLanternLit auto hidden
+Form property myLanternUnlit auto hidden
+Form property myLanternLight auto hidden
+Form property myLanternLit2 auto hidden
+Form property myLanternUnlit2 auto hidden
+Form property myLanternLight2 auto hidden
+Form property myLanternLit3 auto hidden
+Form property myLanternUnlit3 auto hidden
+Form property myLanternLight3 auto hidden
+Form property myPlayerMarker_MainWeapon auto hidden
+Form property myPlayerMarker_OffHandWeapon auto hidden
+Form property myPlayerMarker_BigWeapon auto hidden
+Form property myPlayerMarker_Bow auto hidden
+Form property myPlayerMarker_Helm auto hidden
+Form property myPlayerMarker_Boots auto hidden
+Form property myPlayerMarker_Gauntlets auto hidden
+Form property myPlayerMarker_Cuirass auto hidden
+Form property myPlayerMarker_Backpack auto hidden
+Form property myPlayerMarker_Shield auto hidden
+Form property myPlayerMarker_ShieldInterior auto hidden
+Form property myFollowerAMarker_MainWeapon auto hidden
+Form property myFollowerAMarker_OffHandWeapon auto hidden
+Form property myFollowerAMarker_BigWeapon auto hidden
+Form property myFollowerAMarker_Bow auto hidden
+Form property myFollowerAMarker_Shield auto hidden
+Form property myFollowerBMarker_MainWeapon auto hidden
+Form property myFollowerBMarker_OffHandWeapon auto hidden
+Form property myFollowerBMarker_BigWeapon auto hidden
+Form property myFollowerBMarker_Bow auto hidden
+Form property myFollowerBMarker_Shield auto hidden
+Form property myFollowerCMarker_MainWeapon auto hidden
+Form property myFollowerCMarker_OffHandWeapon auto hidden
+Form property myFollowerCMarker_BigWeapon auto hidden
+Form property myFollowerCMarker_Bow auto hidden
+Form property myFollowerCMarker_Shield auto hidden
+Form property myClutterStatic1 auto hidden
+Form property myClutterStatic2 auto hidden
+Form property myClutterStatic3 auto hidden
+Form property myClutterStatic4 auto hidden
+Form property myClutterStatic5 auto hidden
+Form property myClutterActivator1 auto hidden
+Form property myClutterActivator2 auto hidden
+Form property myClutterActivator3 auto hidden
+Form property myClutterActivator4 auto hidden
+Form property myClutterActivator5 auto hidden
+Form property myClutterFurniture1 auto hidden
+Form property myClutterFurniture2 auto hidden
+Form property myClutterFurniture3 auto hidden
+Form property myClutterFurniture4 auto hidden
+Form property myClutterFurniture5 auto hidden
+Form property myPlayerSitMarker auto hidden
+Form property myPlayerLayDownMarker auto hidden
+Form property myExitFront auto hidden
+Form property myBedRoll auto hidden
+Form property mySpareBedRoll1 auto hidden
+Form property mySpareBedRoll2 auto hidden
+Form property mySpareBedRoll3 auto hidden
+Form property myWard auto hidden
 
 Ammo property myQuiver auto hidden
 Armor property myShield auto hidden
@@ -674,7 +674,7 @@ function SetRelativePositions()
 endFunction
 
 function Placement()
-	CampTentEx Extended = self as CampTentEx
+	;/CampTentEx Extended = self as CampTentEx
 	if TentAsset_ShelterModel && PositionRef_Shelter
 		PlaceTentObject_Tent()
 	endif
@@ -830,9 +830,19 @@ function Placement()
 		endif
 	endif
 
-	if self.GetDistance(myBedRoll) > 20.0
-		self.MoveTo(myBedRoll)
-	endif
+	if self.GetDistance(myBedRoll as ObjectReference) > 20.0
+		self.MoveTo(myBedRoll as ObjectReference)
+	endif/;
+endFunction
+
+function queue_thread(ObjectReference relative_center_object, ObjectReference object_position_reference, \
+						 ObjectReference origin, Form form_to_place, float[] origin_angle, \
+						 float x_local_ang_adjust = 0.0, float y_local_ang_adjust = 0.0, float z_local_ang_adjust = 0.0, \
+						 float z_global_ang_adjust = 0.0, float z_hanging_offset = 0.0, bool inverted_local_y = false, \
+						 bool initially_disabled = false, bool is_propped = false, bool is_hanging = false)
+
+
+	;return future
 endFunction
 
 function QueueThreads()
@@ -1080,53 +1090,53 @@ function GetResults()
 endFunction
 
 function TearDown()
-	TryToDisableAndDeleteRef(myPlayerMarker_MainWeapon)
-	TryToDisableAndDeleteRef(myPlayerMarker_OffHandWeapon)
-	TryToDisableAndDeleteRef(myPlayerMarker_BigWeapon)
-	TryToDisableAndDeleteRef(myPlayerMarker_Bow)
-	TryToDisableAndDeleteRef(myPlayerMarker_Cuirass)
-	TryToDisableAndDeleteRef(myPlayerMarker_Helm)
-	TryToDisableAndDeleteRef(myPlayerMarker_Boots)
-	TryToDisableAndDeleteRef(myPlayerMarker_Gauntlets)
-	TryToDisableAndDeleteRef(myPlayerMarker_Backpack)
-	TryToDisableAndDeleteRef(myPlayerMarker_Shield)
-	TryToDisableAndDeleteRef(myPlayerMarker_ShieldInterior)
-	TryToDisableAndDeleteRef(myClutterStatic1)
-	TryToDisableAndDeleteRef(myClutterStatic2)
-	TryToDisableAndDeleteRef(myClutterStatic3)
-	TryToDisableAndDeleteRef(myClutterStatic4)
-	TryToDisableAndDeleteRef(myClutterStatic5)
-	TryToDisableAndDeleteRef(myClutterActivator1)
-	TryToDisableAndDeleteRef(myClutterActivator2)
-	TryToDisableAndDeleteRef(myClutterActivator3)
-	TryToDisableAndDeleteRef(myClutterActivator4)
-	TryToDisableAndDeleteRef(myClutterActivator5)
-	TryToDisableAndDeleteRef(myClutterFurniture1)
-	TryToDisableAndDeleteRef(myClutterFurniture2)
-	TryToDisableAndDeleteRef(myClutterFurniture3)
-	TryToDisableAndDeleteRef(myClutterFurniture4)
-	TryToDisableAndDeleteRef(myClutterFurniture5)
-	TryToDisableAndDeleteRef(myPlayerSitMarker)
-	TryToDisableAndDeleteRef(myPlayerLayDownMarker)
-	TryToDisableAndDeleteRef(myExitFront)
-	TryToDisableAndDeleteRef(myBedRoll)
-	TryToDisableAndDeleteRef(myWard)
-	TryToDisableAndDeleteRef(myLanternLit)
-	TryToDisableAndDeleteRef(myLanternUnlit)
-	TryToDisableAndDeleteRef(myLanternLight)
-	TryToDisableAndDeleteRef(myLanternLit2)
-	TryToDisableAndDeleteRef(myLanternUnlit2)
-	TryToDisableAndDeleteRef(myLanternLight2)
-	TryToDisableAndDeleteRef(myLanternLit3)
-	TryToDisableAndDeleteRef(myLanternUnlit3)
-	TryToDisableAndDeleteRef(myLanternLight3)
-	TryToDisableAndDeleteRef(mySpareBedRoll1)
-	TryToDisableAndDeleteRef(mySpareBedRoll2)
-	TryToDisableAndDeleteRef(mySpareBedRoll3)
-	TryToDisableAndDeleteRef(mySnowTent)
-	TryToDisableAndDeleteRef(myAshTent)
-	TryToDisableAndDeleteRef(myNormalTent)
-	TryToDisableAndDeleteRef(myTent)
+	TryToDisableAndDeleteRef(myPlayerMarker_MainWeapon as ObjectReference)
+	TryToDisableAndDeleteRef(myPlayerMarker_OffHandWeapon as ObjectReference)
+	TryToDisableAndDeleteRef(myPlayerMarker_BigWeapon as ObjectReference)
+	TryToDisableAndDeleteRef(myPlayerMarker_Bow as ObjectReference)
+	TryToDisableAndDeleteRef(myPlayerMarker_Cuirass as ObjectReference)
+	TryToDisableAndDeleteRef(myPlayerMarker_Helm as ObjectReference)
+	TryToDisableAndDeleteRef(myPlayerMarker_Boots as ObjectReference)
+	TryToDisableAndDeleteRef(myPlayerMarker_Gauntlets as ObjectReference)
+	TryToDisableAndDeleteRef(myPlayerMarker_Backpack as ObjectReference)
+	TryToDisableAndDeleteRef(myPlayerMarker_Shield as ObjectReference)
+	TryToDisableAndDeleteRef(myPlayerMarker_ShieldInterior as ObjectReference)
+	TryToDisableAndDeleteRef(myClutterStatic1 as ObjectReference)
+	TryToDisableAndDeleteRef(myClutterStatic2 as ObjectReference)
+	TryToDisableAndDeleteRef(myClutterStatic3 as ObjectReference)
+	TryToDisableAndDeleteRef(myClutterStatic4 as ObjectReference)
+	TryToDisableAndDeleteRef(myClutterStatic5 as ObjectReference)
+	TryToDisableAndDeleteRef(myClutterActivator1 as ObjectReference)
+	TryToDisableAndDeleteRef(myClutterActivator2 as ObjectReference)
+	TryToDisableAndDeleteRef(myClutterActivator3 as ObjectReference)
+	TryToDisableAndDeleteRef(myClutterActivator4 as ObjectReference)
+	TryToDisableAndDeleteRef(myClutterActivator5 as ObjectReference)
+	TryToDisableAndDeleteRef(myClutterFurniture1 as ObjectReference)
+	TryToDisableAndDeleteRef(myClutterFurniture2 as ObjectReference)
+	TryToDisableAndDeleteRef(myClutterFurniture3 as ObjectReference)
+	TryToDisableAndDeleteRef(myClutterFurniture4 as ObjectReference)
+	TryToDisableAndDeleteRef(myClutterFurniture5 as ObjectReference)
+	TryToDisableAndDeleteRef(myPlayerSitMarker as ObjectReference)
+	TryToDisableAndDeleteRef(myPlayerLayDownMarker as ObjectReference)
+	TryToDisableAndDeleteRef(myExitFront as ObjectReference)
+	TryToDisableAndDeleteRef(myBedRoll as ObjectReference)
+	TryToDisableAndDeleteRef(myWard as ObjectReference)
+	TryToDisableAndDeleteRef(myLanternLit as ObjectReference)
+	TryToDisableAndDeleteRef(myLanternUnlit as ObjectReference)
+	TryToDisableAndDeleteRef(myLanternLight as ObjectReference)
+	TryToDisableAndDeleteRef(myLanternLit2 as ObjectReference)
+	TryToDisableAndDeleteRef(myLanternUnlit2 as ObjectReference)
+	TryToDisableAndDeleteRef(myLanternLight2 as ObjectReference)
+	TryToDisableAndDeleteRef(myLanternLit3 as ObjectReference)
+	TryToDisableAndDeleteRef(myLanternUnlit3 as ObjectReference)
+	TryToDisableAndDeleteRef(myLanternLight3 as ObjectReference)
+	TryToDisableAndDeleteRef(mySpareBedRoll1 as ObjectReference)
+	TryToDisableAndDeleteRef(mySpareBedRoll2 as ObjectReference)
+	TryToDisableAndDeleteRef(mySpareBedRoll3 as ObjectReference)
+	TryToDisableAndDeleteRef(mySnowTent as ObjectReference)
+	TryToDisableAndDeleteRef(myAshTent as ObjectReference)
+	TryToDisableAndDeleteRef(myNormalTent as ObjectReference)
+	TryToDisableAndDeleteRef(myTent as ObjectReference)
 endFunction
 
 function GenerateDebugReport()
@@ -1454,7 +1464,7 @@ endFunction
 
 
 
-function PlaceTentObject_Tent()
+;/function PlaceTentObject_Tent()
 	myTent = PlaceAtMeRelative(self, TentAsset_ShelterModel, myOriginAng, myTent_Pos)
 endFunction
 
@@ -1683,4 +1693,4 @@ endFunction
 
 function PlaceTentObject_Follower3Shield()
 	myFollowerCMarker_Shield = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myFollowerCMarker_Shield_Pos, fXLocalAngAdjust = 90.0, fZLocalAngAdjust = 124.0, abInvertedLocalY = true, abIsPropped = true)
-endFunction
+endFunction/;
