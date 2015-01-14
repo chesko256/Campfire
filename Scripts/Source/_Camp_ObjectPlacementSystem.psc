@@ -6,7 +6,7 @@ import CampUtil
 
 bool property thread_queued = false auto
 bool thread_working = false
-ObjectReference result
+ObjectReference property result auto
 ObjectReference _RelativeCenterObject
 ObjectReference _ObjectPositionReference
 ObjectReference _Origin
@@ -55,13 +55,14 @@ Event OnThreadedPlacementStart()
 		thread_working = true
 		float[] relative_position = new float[6]
 		relative_position = GetRelativePosition(_RelativeCenterObject, _ObjectPositionReference)
+		debug.trace("[Campfire] Thread " + self + "-------------- Relative position " + relative_position)
 		result = PlaceAtMeRelative(_Origin, _FormToPlace, _OriginAngle, relative_position, \
 				_ZGlobalAngAdjust, _XLocalAngAdjust, _YLocalAngAdjust, _ZLocalAngAdjust, \
 				_ZHangingOffset, _InvertedLocalY, _InitiallyDisabled, _IsPropped, _IsHanging)
-
+		debug.trace("[Campfire] Thread " + self + "-------------- Result " + result)
 		clear_thread_vars()
 		thread_working = false
-		debug.trace("[Campfire] Thread " + self + "============================================= JOB'S DONE!")
+		debug.trace("[Campfire] Thread " + self + "============== JOB'S DONE!")
 	else
 		debug.trace("[Campfire] Thread " + self + "got OnThreadedPlacementStart, SLEEPING...")
 	endif
@@ -195,8 +196,11 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
 										   bool abInvertedLocalY = false, bool abInitiallyDisabled = false, bool abIsPropped = false, \
 										   bool abIsHanging = false)
 	
+	debug.trace("[Campfire] Thread " + self + "-------------- PlaceAtMeRelative START")
 	ObjectReference myObject
     ObjectReference myTempMarker = akOrigin.PlaceAtMe(XMarker)
+    debug.trace("[Campfire] Thread " + self + "-------------- PlaceAtMeRelative myObject " + myObject)
+    debug.trace("[Campfire] Thread " + self + "-------------- PlaceAtMeRelative myTempMarker " + myTempMarker)
 	
 	myTempMarker.MoveTo(myTempMarker, fRelativePos[0], fRelativePos[1], fRelativePos[2])
     
@@ -229,12 +233,15 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
 endFunction
 
 ObjectReference function get_result()
+	debug.trace("[Campfire] Thread " + self + " had result request")
 	if thread_working
+		debug.trace("[Campfire] Thread " + self + " Nothing to return yet")
 		return None
 	else
-		ObjectReference r = result
+		debug.trace("[Campfire] Thread " + self + " returning result " + result)
+		ObjectReference rslt = result
 		result = None
 		thread_queued = false
-		return r
+		return rslt
 	endif
 endFunction

@@ -313,6 +313,8 @@ Event OnInit()
 	;Placement()
 	QueueThreads()
 	RaiseEvent_OnThreadedPlacementStart()
+	debug.trace("[Campfire] Resting 10........................................................................................................")
+	utility.wait(10.0)
 	GetResults()
 	StopObjectProfiling()
 
@@ -987,10 +989,14 @@ endFunction
 
 function GetResults()
 	while !myTent
-		myTent = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread01).get_result()
+		debug.trace("[Campfire] --------Polling myTent...")
+		myTent = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread01).result
+		debug.trace("[Campfire] --------myTent = " + myTent)
 	endWhile
 	while !myClutterStatic1
+		debug.trace("[Campfire] --------Polling myClutterStatic1...")
 		myClutterStatic1 = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread02).get_result()
+		debug.trace("[Campfire] --------myClutterStatic1 = " + myClutterStatic1)
 	endWhile
 	;/while !myTent
 		= (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread03).get_result()
