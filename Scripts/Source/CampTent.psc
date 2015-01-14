@@ -304,7 +304,7 @@ Event OnInit()
 	endWhile
 
 	RotateOnStartUp()
-
+	StartObjectProfiling()
 	CreatePositionArrays()
 
 	myOriginAng = GetAngleData(self)
@@ -312,6 +312,7 @@ Event OnInit()
 	SetRelativePositions()
 
 	Placement()
+	StopObjectProfiling()
 
 	;@TODO: Remove
 	GenerateDebugReport()
