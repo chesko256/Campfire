@@ -21,6 +21,8 @@ ReferenceAlias property Follower2 auto
 ReferenceAlias property Follower3 auto
 ReferenceAlias property Dog auto
 
+Quest property CampfireObjectPlacementSystem auto
+
 event OnInit()
 	if !self.IsRunning()
 		self.Start()
@@ -43,6 +45,11 @@ endFunction
 function RegisterForEventsOnLoad()
 	debug.trace("[Campfire] Registering for modevent Campfire_CampfireOnPlaceableObjectUsed.")
 	RegisterForModEvent("Campfire_CampfireOnPlaceableObjectUsed", "CampfireOnPlaceableObjectUsed")
+	RegisterForThreadEvents()
+endFunction
+
+function RegisterForThreadEvents()
+	CampfireObjectPlacementSystem.RegisterForModEvent("Campfire_OnThreadedPlacementStart", "OnThreadedPlacementStart")
 endFunction
 
 Event CampfireOnPlaceableObjectUsed(Form akBaseObject, Form akPlacementIndicator)

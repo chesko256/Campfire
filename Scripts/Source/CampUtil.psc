@@ -164,6 +164,17 @@ bool function RaiseEvent_CampfireOnPlaceableObjectUsed(Form akBaseObject, Form a
 	endif
 endFunction
 
+function RaiseEvent_OnThreadedPlacementStart() global
+	trace("[Campfire] Raising Event: RaiseEvent_OnThreadedPlacementStart()")
+
+	int handle = ModEvent.Create("Campfire_OnThreadedPlacementStart")
+	if handle
+		ModEvent.Send(handle)
+	else
+		;pass
+	endif
+endFunction
+
 ; Functions ==================================================================================
 
 Armor function GetPlayerEquippedHead() global

@@ -51,6 +51,7 @@ endFunction
 
 Event OnThreadedPlacementStart()
 	if thread_queued
+		debug.trace("[Campfire] Thread " + self + "got OnThreadedPlacementStart, WORKING -----------")
 		thread_working = true
 		float[] relative_position = new float[6]
 		relative_position = GetRelativePosition(_RelativeCenterObject, _ObjectPositionReference)
@@ -60,6 +61,9 @@ Event OnThreadedPlacementStart()
 
 		clear_thread_vars()
 		thread_working = false
+		debug.trace("[Campfire] Thread " + self + "============================================= JOB'S DONE!")
+	else
+		debug.trace("[Campfire] Thread " + self + "got OnThreadedPlacementStart, SLEEPING...")
 	endif
 endEvent
 
