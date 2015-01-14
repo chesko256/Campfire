@@ -30,7 +30,7 @@ function queue_placement(ObjectReference relative_center_object, ObjectReference
 						 float z_global_ang_adjust = 0.0, float z_hanging_offset = 0.0, bool inverted_local_y = false, \
 						 bool initially_disabled = false, bool is_propped = false, bool is_hanging = false)
 	
-	_OriginAngle = new float[6]
+	_OriginAngle = new float[3]
 	XMarker = Game.GetFormFromFile(0x0000003B, "Skyrim.esm") as Static
 	_RelativeCenterObject = relative_center_object
 	_ObjectPositionReference = object_position_reference
@@ -51,20 +51,18 @@ endFunction
 
 Event OnThreadedPlacementStart()
 	if thread_queued
+		debug.StartStackProfiling()
 		debug.trace("[Campfire] Thread " + self + "got OnThreadedPlacementStart, WORKING -----------")
 		thread_working = true
 		float[] relative_position = new float[6]
 		relative_position = GetRelativePosition(_RelativeCenterObject, _ObjectPositionReference)
-		debug.trace("[Campfire] Thread " + self + "-------------- Relative position " + relative_position)
 		result = PlaceAtMeRelative(_Origin, _FormToPlace, _OriginAngle, relative_position, \
 				_ZGlobalAngAdjust, _XLocalAngAdjust, _YLocalAngAdjust, _ZLocalAngAdjust, \
 				_ZHangingOffset, _InvertedLocalY, _InitiallyDisabled, _IsPropped, _IsHanging)
-		debug.trace("[Campfire] Thread " + self + "-------------- Result " + result)
 		clear_thread_vars()
 		thread_working = false
 		debug.trace("[Campfire] Thread " + self + "============== JOB'S DONE!")
-	else
-		debug.trace("[Campfire] Thread " + self + "got OnThreadedPlacementStart, SLEEPING...")
+		debug.StopStackProfiling()
 	endif
 endEvent
 
@@ -76,9 +74,6 @@ function clear_thread_vars()
 	_OriginAngle[0] = 0.0
 	_OriginAngle[1] = 0.0
 	_OriginAngle[2] = 0.0
-	_OriginAngle[3] = 0.0
-	_OriginAngle[4] = 0.0
-	_OriginAngle[5] = 0.0
 	_XLocalAngAdjust = 0.0
 	_YLocalAngAdjust = 0.0
 	_ZLocalAngAdjust = 0.0
@@ -196,12 +191,8 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
 										   bool abInvertedLocalY = false, bool abInitiallyDisabled = false, bool abIsPropped = false, \
 										   bool abIsHanging = false)
 	
-	debug.trace("[Campfire] Thread " + self + "-------------- PlaceAtMeRelative START")
 	ObjectReference myObject
     ObjectReference myTempMarker = akOrigin.PlaceAtMe(XMarker)
-    debug.trace("[Campfire] Thread " + self + "-------------- PlaceAtMeRelative myObject " + myObject)
-    debug.trace("[Campfire] Thread " + self + "-------------- PlaceAtMeRelative myTempMarker " + myTempMarker)
-	
 	myTempMarker.MoveTo(myTempMarker, fRelativePos[0], fRelativePos[1], fRelativePos[2])
     
 	float[] myNewPos = new float[3]
