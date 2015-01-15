@@ -176,6 +176,10 @@ Light function GetLanternLight() global
 	return TentAPI._Camp_LanternLight
 endFunction
 
+_Camp_TentObjectFuture function GetFuture(ObjectReference akObjectReference) global
+	return akObjectReference as _Camp_TentObjectFuture
+endFunction
+
 function RaiseTentAPIError() global
 	debug.trace("[Campfire] Fatal Tent API error occurred.")
 endFunction

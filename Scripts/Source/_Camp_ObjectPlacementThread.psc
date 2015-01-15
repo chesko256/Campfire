@@ -25,7 +25,7 @@ bool _IsHanging = false
 ;Passed in externally, to avoid setting a property on many threads.
 Static XMarker
 
-Form function get_async(ObjectReference akFutureAnchor, Activator akFuture, 																		\
+ObjectReference function get_async(Activator akFuture, ObjectReference akFutureAnchor, 																\
 						Static XMarkerStatic, ObjectReference relative_center_object, ObjectReference object_position_reference, 					\
 						ObjectReference origin, Form form_to_place, float[] origin_angle, 															\
 						float x_local_ang_adjust = 0.0, float y_local_ang_adjust = 0.0, float z_local_ang_adjust = 0.0, 							\
