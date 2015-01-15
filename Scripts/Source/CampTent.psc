@@ -236,6 +236,8 @@ Form property mySpareBedRoll2 auto hidden
 Form property mySpareBedRoll3 auto hidden
 Form property myWard auto hidden
 
+;Run-time object 
+
 Ammo property myQuiver auto hidden
 Armor property myShield auto hidden
 Armor property myHelm auto hidden
@@ -311,18 +313,16 @@ endEvent
 
 function Initialize()
 	RotateOnStartUp()
-	StartObjectProfiling()
 	;CreatePositionArrays()
+	StartObjectProfiling()
+	debug.StartScriptProfiling("CampTent")
 	myOriginAng = GetAngleData(self)
 	;SetRelativePositions()
 	;Placement()
-	QueueThreads()
-	RaiseEvent_OnThreadedPlacementStart()
-	debug.trace("[Campfire] Resting 10........................................................................................................")
-	utility.wait(10.0)
-	GetResults()
+	PlacementAsync()
+	GetResultsWaitAll()
 	StopObjectProfiling()
-
+	debug.StopScriptProfiling("CampTent")
 	;@TODO: Remove
 	GenerateDebugReport()
 	initialized = true
@@ -340,526 +340,21 @@ Event OnActivate(ObjectReference akActionRef)
 	ActivateTent(akActionRef, self)
 endEvent
 
-function CreatePositionArrays()
-	if RequiredPositionRef_PlayerBed
-		myBedRoll_Pos = new float[6]
-	endif
-	if RequiredPositionRef_SitFurniture
-		myPlayerSitMarker_Pos = new float[6]
-	endif
-	if RequiredPositionRef_LieDownFurniture
-		myPlayerLayDownMarker_Pos = new float[6]
-	endif
-	if PositionRef_FrontExitMarker
-		myExitFront_Pos = new float[6]
-	endif
-	if PositionRef_Shelter
-		myTent_Pos = new float[6]
-	endif
-	if PositionRef_Ward
-		myWard_Pos = new float[6]
-	endif
-	if PositionRef_Lantern1
-		myLanternUnlit_Pos = new float[6]
-		myLanternLit_Pos = new float[6]
-		myLanternLight_Pos = new float[6]
-	endif
-	if PositionRef_ClutterStatic1
-		myClutterStatic1_Pos = new float[6]
-	endif
-	if PositionRef_ClutterStatic2
-		myClutterStatic2_Pos = new float[6]
-	endif
-	if PositionRef_ClutterStatic3
-		myClutterStatic3_Pos = new float[6]
-	endif
-	if PositionRef_ClutterStatic4
-		myClutterStatic4_Pos = new float[6]
-	endif
-	if PositionRef_ClutterStatic5
-		myClutterStatic5_Pos = new float[6]
-	endif
-	if PositionRef_Player_Backpack
-		myPlayerMarker_Backpack_Pos = new float[6]
-	endif
-	if PositionRef_Player_Shield
-		myPlayerMarker_Shield_Pos = new float[6]
-	endif
-	if PositionRef_Player_ShieldInterior
-		myPlayerMarker_ShieldInterior_Pos = new float[6]
-	endif
-	if PositionRef_Player_WeaponMainHand
-		myPlayerMarker_MainWeapon_Pos = new float[6]
-	endif
-	if PositionRef_Player_WeaponOffHand
-		myPlayerMarker_OffHandWeapon_Pos = new float[6]
-	endif
-	if PositionRef_Player_WeaponTwoHand
-		myPlayerMarker_BigWeapon_Pos = new float[6]
-	endif
-	if PositionRef_Player_WeaponBow
-		myPlayerMarker_Bow_Pos = new float[6]
-	endif
-	if PositionRef_Player_ArmorHelm
-		myPlayerMarker_Helm_Pos = new float[6]
-	endif
-	if PositionRef_Player_ArmorCuirass
-		myPlayerMarker_Cuirass_Pos = new float[6]
-	endif
-	if PositionRef_Player_ArmorGauntlets
-		myPlayerMarker_Gauntlets_Pos = new float[6]
-	endif
-	if PositionRef_Player_ArmorBoots
-		myPlayerMarker_Boots_Pos = new float[6]
-	endif
-
-	;Check extended objects
-	CampTentEx Extended = self as CampTentEx
-	if Extended
-		if Extended.PositionRef_Lantern2
-			myLanternUnlit2_Pos = new float[6]
-			myLanternLit2_Pos = new float[6]
-			myLanternLight2_Pos = new float[6]
-		endif
-		if Extended.PositionRef_Lantern3
-			myLanternUnlit3_Pos = new float[6]
-			myLanternLit3_Pos = new float[6]
-			myLanternLight3_Pos = new float[6]
-		endif
-		if Extended.PositionRef_ClutterActivator1
-			myClutterActivator1_Pos = new float[6]
-		endif
-		if Extended.PositionRef_ClutterActivator2
-			myClutterActivator2_Pos = new float[6]
-		endif
-		if Extended.PositionRef_ClutterActivator3
-			myClutterActivator3_Pos = new float[6]
-		endif
-		if Extended.PositionRef_ClutterActivator4
-			myClutterActivator4_Pos = new float[6]
-		endif
-		if Extended.PositionRef_ClutterActivator5
-			myClutterActivator5_Pos = new float[6]
-		endif
-		if Extended.PositionRef_Follower1_Bed
-			mySpareBedRoll1_Pos = new float[6]
-		endif
-		if Extended.PositionRef_Follower1_Shield
-			myFollowerAMarker_Shield_Pos = new float[6]
-		endif
-		if Extended.PositionRef_Follower1_WeaponMainHand
-			myFollowerAMarker_MainWeapon_Pos = new float[6]
-		endif
-		if Extended.PositionRef_Follower1_WeaponOffHand
-			myFollowerAMarker_OffHandWeapon_Pos = new float[6]
-		endif
-		if Extended.PositionRef_Follower1_WeaponTwoHand
-			myFollowerAMarker_BigWeapon_Pos = new float[6]
-		endif
-		if Extended.PositionRef_Follower1_WeaponBow
-			myFollowerAMarker_Bow_Pos = new float[6]
-		endif
-		if Extended.PositionRef_Follower2_Bed
-			mySpareBedRoll2_Pos = new float[6]
-		endif
-		if Extended.PositionRef_Follower2_Shield
-			myFollowerBMarker_Shield_Pos = new float[6]
-		endif
-		if Extended.PositionRef_Follower2_WeaponMainHand
-			myFollowerBMarker_MainWeapon_Pos = new float[6]
-		endif
-		if Extended.PositionRef_Follower2_WeaponOffHand
-			myFollowerBMarker_OffHandWeapon_Pos = new float[6]
-		endif
-		if Extended.PositionRef_Follower2_WeaponTwoHand
-			myFollowerBMarker_BigWeapon_Pos = new float[6]
-		endif
-		if Extended.PositionRef_Follower2_WeaponBow
-			myFollowerBMarker_Bow_Pos = new float[6]
-		endif
-		if Extended.PositionRef_Follower3_Bed
-			mySpareBedRoll3_Pos = new float[6]
-		endif
-		if Extended.PositionRef_Follower3_Shield
-			myFollowerCMarker_Shield_Pos = new float[6]
-		endif
-		if Extended.PositionRef_Follower3_WeaponMainHand
-			myFollowerCMarker_MainWeapon_Pos = new float[6]
-		endif
-		if Extended.PositionRef_Follower3_WeaponOffHand
-			myFollowerCMarker_OffHandWeapon_Pos = new float[6]
-		endif
-		if Extended.PositionRef_Follower3_WeaponTwoHand
-			myFollowerCMarker_BigWeapon_Pos = new float[6]
-		endif
-		if Extended.PositionRef_Follower3_WeaponBow
-			myFollowerCMarker_Bow_Pos = new float[6]
-		endif
-	endif
-endFunction
-
-function SetRelativePositions()
-	ObjectReference myCenterObject
-	if PositionRef_CenterObjectOverride
-		myCenterObject = PositionRef_CenterObjectOverride
-	else
-		if PositionRef_Shelter
-			myCenterObject = PositionRef_Shelter
-		else
-			myCenterObject = RequiredPositionRef_PlayerBed
-		endif
-	endif
-
-	if RequiredPositionRef_PlayerBed
-		myBedRoll_Pos = GetRelativePosition(myCenterObject, RequiredPositionRef_PlayerBed)
-	endif
-	if RequiredPositionRef_SitFurniture
-		myPlayerSitMarker_Pos = GetRelativePosition(myCenterObject, RequiredPositionRef_SitFurniture)
-	endif
-	if RequiredPositionRef_LieDownFurniture
-		myPlayerLayDownMarker_Pos = GetRelativePosition(myCenterObject, RequiredPositionRef_LieDownFurniture)
-	endif
-	if PositionRef_FrontExitMarker
-		myExitFront_Pos = GetRelativePosition(myCenterObject, PositionRef_FrontExitMarker)
-	endif
-	if PositionRef_Shelter
-		myTent_Pos = GetRelativePosition(myCenterObject, PositionRef_Shelter)
-	endif
-	if PositionRef_Ward
-		myWard_Pos = GetRelativePosition(myCenterObject, PositionRef_Ward)
-	endif
-	if PositionRef_Lantern1
-		myLanternUnlit_Pos = GetRelativePosition(myCenterObject, PositionRef_Lantern1)
-		myLanternLit_Pos = GetRelativePosition(myCenterObject, PositionRef_Lantern1)
-		myLanternLight_Pos = GetRelativePosition(myCenterObject, PositionRef_Lantern1)
-		;Position the light inside the lantern.
-		myLanternLight_Pos[2] = myLanternLight_Pos[2] + 7.0
-	endif
-	if PositionRef_ClutterStatic1
-		myClutterStatic1_Pos = GetRelativePosition(myCenterObject, PositionRef_ClutterStatic1)
-	endif
-	if PositionRef_ClutterStatic2
-		myClutterStatic2_Pos = GetRelativePosition(myCenterObject, PositionRef_ClutterStatic2)
-	endif
-	if PositionRef_ClutterStatic3
-		myClutterStatic3_Pos = GetRelativePosition(myCenterObject, PositionRef_ClutterStatic3)
-	endif
-	if PositionRef_ClutterStatic4
-		myClutterStatic4_Pos = GetRelativePosition(myCenterObject, PositionRef_ClutterStatic4)
-	endif
-	if PositionRef_ClutterStatic5
-		myClutterStatic5_Pos = GetRelativePosition(myCenterObject, PositionRef_ClutterStatic5)
-	endif
-	if PositionRef_Player_Backpack
-		myPlayerMarker_Backpack_Pos = GetRelativePosition(myCenterObject, PositionRef_Player_Backpack)
-	endif
-	if PositionRef_Player_Shield
-		myPlayerMarker_Shield_Pos = GetRelativePosition(myCenterObject, PositionRef_Player_Shield)
-	endif
-	if PositionRef_Player_ShieldInterior
-		myPlayerMarker_ShieldInterior_Pos = GetRelativePosition(myCenterObject, PositionRef_Player_ShieldInterior)
-	endif
-	if PositionRef_Player_WeaponMainHand
-		myPlayerMarker_MainWeapon_Pos = GetRelativePosition(myCenterObject, PositionRef_Player_WeaponMainHand)
-	endif
-	if PositionRef_Player_WeaponOffHand
-		myPlayerMarker_OffHandWeapon_Pos = GetRelativePosition(myCenterObject, PositionRef_Player_WeaponOffHand)
-	endif
-	if PositionRef_Player_WeaponTwoHand
-		myPlayerMarker_BigWeapon_Pos = GetRelativePosition(myCenterObject, PositionRef_Player_WeaponTwoHand)
-	endif
-	if PositionRef_Player_WeaponBow
-		myFollowerCMarker_Bow_Pos = GetRelativePosition(myCenterObject, PositionRef_Player_WeaponBow)
-	endif
-	if PositionRef_Player_ArmorHelm
-		myPlayerMarker_Helm_Pos = GetRelativePosition(myCenterObject, PositionRef_Player_ArmorHelm)
-	endif
-	if PositionRef_Player_ArmorCuirass
-		myPlayerMarker_Cuirass_Pos = GetRelativePosition(myCenterObject, PositionRef_Player_ArmorCuirass)
-	endif
-	if PositionRef_Player_ArmorGauntlets
-		myPlayerMarker_Gauntlets_Pos = GetRelativePosition(myCenterObject, PositionRef_Player_ArmorGauntlets)
-	endif
-	if PositionRef_Player_ArmorBoots
-		myPlayerMarker_Boots_Pos = GetRelativePosition(myCenterObject, PositionRef_Player_ArmorBoots)
-	endif
-
-	;Check extended objects
-	CampTentEx Extended = self as CampTentEx
-	if Extended
-		if Extended.PositionRef_Lantern2
-			myLanternUnlit2_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Lantern2)
-			myLanternLit2_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Lantern2)
-			myLanternLight2_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Lantern2)
-			;Position the light inside the lantern.
-			myLanternLight2_Pos[2] = myLanternLight2_Pos[2] + 7.0
-		endif
-		if Extended.PositionRef_Lantern3
-			myLanternUnlit3_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Lantern2)
-			myLanternLit3_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Lantern2)
-			myLanternLight3_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Lantern2)
-			;Position the light inside the lantern.
-			myLanternLight3_Pos[2] = myLanternLight3_Pos[2] + 7.0
-		endif
-		if Extended.PositionRef_ClutterActivator1
-			myClutterActivator1_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_ClutterActivator1)
-		endif
-		if Extended.PositionRef_ClutterActivator2
-			myClutterActivator2_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_ClutterActivator2)
-		endif
-		if Extended.PositionRef_ClutterActivator3
-			myClutterActivator3_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_ClutterActivator3)
-		endif
-		if Extended.PositionRef_ClutterActivator4
-			myClutterActivator4_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_ClutterActivator4)
-		endif
-		if Extended.PositionRef_ClutterActivator5
-			myClutterActivator5_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_ClutterActivator5)
-		endif
-		if Extended.PositionRef_Follower1_Bed
-			mySpareBedRoll1_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower1_Bed)
-		endif
-		if Extended.PositionRef_Follower1_Shield
-			myFollowerAMarker_Shield_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower1_Shield)
-		endif
-		if Extended.PositionRef_Follower1_WeaponMainHand
-			myFollowerAMarker_MainWeapon_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower1_WeaponMainHand)
-		endif
-		if Extended.PositionRef_Follower1_WeaponOffHand
-			myFollowerAMarker_OffHandWeapon_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower1_WeaponOffHand)
-		endif
-		if Extended.PositionRef_Follower1_WeaponTwoHand
-			myFollowerAMarker_BigWeapon_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower1_WeaponTwoHand)
-		endif
-		if Extended.PositionRef_Follower1_WeaponBow
-			myFollowerAMarker_Bow_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower1_WeaponBow)
-		endif
-		if Extended.PositionRef_Follower2_Bed
-			mySpareBedRoll2_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower2_Bed)
-		endif
-		if Extended.PositionRef_Follower2_Shield
-			myFollowerBMarker_Shield_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower2_Shield)
-		endif
-		if Extended.PositionRef_Follower2_WeaponMainHand
-			myFollowerBMarker_MainWeapon_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower2_WeaponMainHand)
-		endif
-		if Extended.PositionRef_Follower2_WeaponOffHand
-			myFollowerBMarker_OffHandWeapon_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower2_WeaponOffHand)
-		endif
-		if Extended.PositionRef_Follower2_WeaponTwoHand
-			myFollowerBMarker_BigWeapon_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower2_WeaponTwoHand)
-		endif
-		if Extended.PositionRef_Follower2_WeaponBow
-			myFollowerBMarker_Bow_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower2_WeaponBow)
-		endif
-		if Extended.PositionRef_Follower3_Bed
-			mySpareBedRoll3_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower3_Bed)
-		endif
-		if Extended.PositionRef_Follower3_Shield
-			myFollowerCMarker_Shield_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower3_Shield)
-		endif
-		if Extended.PositionRef_Follower3_WeaponMainHand
-			myFollowerCMarker_MainWeapon_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower3_WeaponMainHand)
-		endif
-		if Extended.PositionRef_Follower3_WeaponOffHand
-			myFollowerCMarker_OffHandWeapon_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower3_WeaponOffHand)
-		endif
-		if Extended.PositionRef_Follower3_WeaponTwoHand
-			myFollowerCMarker_BigWeapon_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower3_WeaponTwoHand)
-		endif
-		if Extended.PositionRef_Follower3_WeaponBow
-			myFollowerCMarker_Bow_Pos = GetRelativePosition(myCenterObject, Extended.PositionRef_Follower3_WeaponBow)
-		endif
-	endif
-endFunction
-
-function Placement()
-	;/CampTentEx Extended = self as CampTentEx
-	if TentAsset_ShelterModel && PositionRef_Shelter
-		PlaceTentObject_Tent()
-	endif
-	if myTent && TentAsset_ShelterModelExterior && PositionRef_Shelter
-		PlaceTentObject_NormalTent()
-	endif
-	if myTent && TentAsset_ShelterModelMaterialSnow && PositionRef_Shelter
-		PlaceTentObject_SnowTent()
-	endif
-	if myTent && TentAsset_ShelterModelMaterialAsh && PositionRef_Shelter
-		PlaceTentObject_AshTent()
-	endif
-	TentSystem.ApplySnow(self)
-	PlaceTentObject_Ward()
-	if TentAsset_ClutterStatic1 && PositionRef_ClutterStatic1
-		PlaceTentObject_ClutterStatic1()
-	endif
-	if TentAsset_ClutterStatic2 && PositionRef_ClutterStatic2
-		PlaceTentObject_ClutterStatic2()
-	endif
-	if TentAsset_ClutterStatic3 && PositionRef_ClutterStatic3
-		PlaceTentObject_ClutterStatic3()
-	endif
-	if TentAsset_ClutterStatic4 && PositionRef_ClutterStatic4
-		PlaceTentObject_ClutterStatic4()
-	endif
-	if TentAsset_ClutterStatic5 && PositionRef_ClutterStatic5
-		PlaceTentObject_ClutterStatic5()
-	endif
-	if Extended
-		if !myClutterActivator1 && Extended.TentAsset_ClutterActivator1 && Extended.PositionRef_ClutterActivator1
-			PlaceTentObject_ClutterActivator1(Extended)
-		endif
-		if !myClutterActivator2 && Extended.TentAsset_ClutterActivator2 && Extended.PositionRef_ClutterActivator2
-			PlaceTentObject_ClutterActivator2(Extended)
-		endif
-		if !myClutterActivator3 && Extended.TentAsset_ClutterActivator3 && Extended.PositionRef_ClutterActivator3
-			PlaceTentObject_ClutterActivator3(Extended)
-		endif
-		if !myClutterActivator4 && Extended.TentAsset_ClutterActivator4 && Extended.PositionRef_ClutterActivator4
-			PlaceTentObject_ClutterActivator4(Extended)
-		endif
-		if !myClutterActivator5 && Extended.TentAsset_ClutterActivator5 && Extended.PositionRef_ClutterActivator5
-			PlaceTentObject_ClutterActivator5(Extended)
-		endif
-	endif
-	if PositionRef_Lantern1
-		PlaceTentObject_Lantern1()
-	endif
-	if Extended
-		if Extended.PositionRef_Lantern2
-			PlaceTentObject_Lantern2()
-		endif
-		if Extended.PositionRef_Lantern3
-			PlaceTentObject_Lantern3()
-		endif
-	endif
-	if PositionRef_Player_WeaponMainHand
-		PlaceTentObject_PlayerMainWeapon()
-	endif
-	if PositionRef_Player_WeaponOffHand
-		PlaceTentObject_PlayerOffHandWeapon()
-	endif
-	if PositionRef_Player_WeaponTwoHand
-		PlaceTentObject_PlayerBigWeapon()
-	endif
-	if PositionRef_Player_WeaponBow
-		PlaceTentObject_PlayerBow()
-	endif
-	if PositionRef_Player_ArmorHelm
-		PlaceTentObject_PlayerHelm()
-	endif
-	if PositionRef_Player_ArmorBoots
-		PlaceTentObject_PlayerBoots()
-	endif
-	if PositionRef_Player_ArmorGauntlets
-		PlaceTentObject_PlayerGauntlets()
-	endif
-	if PositionRef_Player_ArmorCuirass
-		PlaceTentObject_PlayerCuirass()
-	endif
-	if PositionRef_Player_Backpack
-		PlaceTentObject_PlayerBackpack()
-	endif
-	if PositionRef_Player_Shield
-		PlaceTentObject_PlayerShield()
-	endif
-	if PositionRef_Player_ShieldInterior
-		PlaceTentObject_PlayerShieldInterior()
-	endif
-	if Extended
-		if Extended.PositionRef_Follower1_WeaponMainHand
-			PlaceTentObject_Follower1MainWeapon()
-		endif
-		if Extended.PositionRef_Follower1_WeaponOffHand
-			PlaceTentObject_Follower1OffHandWeapon()
-		endif
-		if Extended.PositionRef_Follower1_WeaponTwoHand
-			PlaceTentObject_Follower1BigWeapon()
-		endif
-		if Extended.PositionRef_Follower1_WeaponBow
-			PlaceTentObject_Follower1Bow()
-		endif
-		if Extended.PositionRef_Follower1_Shield
-			PlaceTentObject_Follower1Shield()
-		endif
-		if Extended.PositionRef_Follower2_WeaponMainHand
-			PlaceTentObject_Follower2MainWeapon()
-		endif
-		if Extended.PositionRef_Follower2_WeaponOffHand
-			PlaceTentObject_Follower2OffHandWeapon()
-		endif
-		if Extended.PositionRef_Follower2_WeaponTwoHand
-			PlaceTentObject_Follower2BigWeapon()
-		endif
-		if Extended.PositionRef_Follower2_WeaponBow
-			PlaceTentObject_Follower2Bow()
-		endif
-		if Extended.PositionRef_Follower2_Shield
-			PlaceTentObject_Follower2Shield()
-		endif
-		if Extended.PositionRef_Follower3_WeaponMainHand
-			PlaceTentObject_Follower3MainWeapon()
-		endif
-		if Extended.PositionRef_Follower3_WeaponOffHand
-			PlaceTentObject_Follower3OffHandWeapon()
-		endif
-		if Extended.PositionRef_Follower3_WeaponTwoHand
-			PlaceTentObject_Follower3BigWeapon()
-		endif
-		if Extended.PositionRef_Follower3_WeaponBow
-			PlaceTentObject_Follower3Bow()
-		endif
-		if Extended.PositionRef_Follower3_Shield
-			PlaceTentObject_Follower3Shield()
-		endif
-	endif
-	PlaceTentObject_PlayerSitMarker()
-	PlaceTentObject_PlayerLayDownMarker()
-	if PositionRef_FrontExitMarker
-		PlaceTentObject_ExitFront()
-	endif
-	PlaceTentObject_BedRoll()
-	if Extended
-		if Extended.PositionRef_Follower1_Bed
-			PlaceTentObject_SpareBedRoll1()
-		endif
-		if Extended.PositionRef_Follower1_Bed
-			PlaceTentObject_SpareBedRoll2()
-		endif
-		if Extended.PositionRef_Follower1_Bed
-			PlaceTentObject_SpareBedRoll3()
-		endif
-	endif
-
-	if self.GetDistance(myBedRoll as ObjectReference) > 20.0
-		self.MoveTo(myBedRoll as ObjectReference)
-	endif/;
-endFunction
-
-function queue_thread(ObjectReference relative_center_object, ObjectReference object_position_reference, \
-						 ObjectReference origin, Form form_to_place, float[] origin_angle, \
-						 float x_local_ang_adjust = 0.0, float y_local_ang_adjust = 0.0, float z_local_ang_adjust = 0.0, \
-						 float z_global_ang_adjust = 0.0, float z_hanging_offset = 0.0, bool inverted_local_y = false, \
-						 bool initially_disabled = false, bool is_propped = false, bool is_hanging = false)
-
-
-	;return future
-endFunction
-
-function QueueThreads()
+function PlacementAsync()
 	CampTentEx Extended = self as CampTentEx
 	if TentAsset_ShelterModel && PositionRef_Shelter
 		PlaceTentObjectThreaded_Tent()
 	endif
-	if myTent && TentAsset_ShelterModelExterior && PositionRef_Shelter
-		PlaceTentObjectThreaded_NormalTent()
+	if TentAsset_ShelterModelExterior && PositionRef_Shelter
+		;PlaceTentObjectThreaded_NormalTent()
 	endif
-	if myTent && TentAsset_ShelterModelMaterialSnow && PositionRef_Shelter
-		PlaceTentObjectThreaded_SnowTent()
+	if TentAsset_ShelterModelMaterialSnow && PositionRef_Shelter
+		;PlaceTentObjectThreaded_SnowTent()
 	endif
-	if myTent && TentAsset_ShelterModelMaterialAsh && PositionRef_Shelter
-		PlaceTentObjectThreaded_AshTent()
+	if TentAsset_ShelterModelMaterialAsh && PositionRef_Shelter
+		;PlaceTentObjectThreaded_AshTent()
 	endif
-	TentSystem.ApplySnow(self)
+	;TentSystem.ApplySnow(self)
 	PlaceTentObjectThreaded_Ward()
 	if TentAsset_ClutterStatic1 && PositionRef_ClutterStatic1
 		PlaceTentObjectThreaded_ClutterStatic1()
@@ -1007,17 +502,160 @@ function QueueThreads()
 	;endif
 endFunction
 
+function GetResultsWaitAll()
+	
+	While (myTent as _Camp_ObjectPlacementSystem)
+		myTent = (myTent as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myTent)
+	endWhile
+	While (myClutterStatic1 as _Camp_ObjectPlacementSystem)
+		myClutterStatic1 = (myClutterStatic1 as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myClutterStatic1)
+	endWhile
+	While (myPlayerMarker_MainWeapon as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_MainWeapon = (myPlayerMarker_MainWeapon as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myPlayerMarker_MainWeapon)
+	endWhile
+	While (myPlayerMarker_OffHandWeapon as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_OffHandWeapon = (myPlayerMarker_OffHandWeapon as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myPlayerMarker_OffHandWeapon)
+	endWhile
+	While (myPlayerMarker_BigWeapon as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_BigWeapon = (myPlayerMarker_BigWeapon as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myPlayerMarker_BigWeapon)
+	endWhile
+	While (myPlayerMarker_Bow as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_Bow = (myPlayerMarker_Bow as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myPlayerMarker_Bow)
+	endWhile
+	While (myPlayerMarker_Shield as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_Shield = (myPlayerMarker_Shield as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myPlayerMarker_Shield)
+	endWhile
+	While (myPlayerMarker_Cuirass as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_Cuirass = (myPlayerMarker_Cuirass as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myPlayerMarker_Cuirass)
+	endWhile
+	While (myPlayerMarker_Helm as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_Helm = (myPlayerMarker_Helm as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myPlayerMarker_Helm)
+	endWhile
+	While (myPlayerMarker_Boots as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_Boots = (myPlayerMarker_Boots as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myPlayerMarker_Boots)
+	endWhile
+	While (myPlayerMarker_Gauntlets as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_Gauntlets = (myPlayerMarker_Gauntlets as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myPlayerMarker_Gauntlets)
+	endWhile
+	While (myPlayerMarker_Backpack as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_Backpack = (myPlayerMarker_Backpack as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myPlayerMarker_Backpack)
+	endWhile
+	While (myPlayerMarker_ShieldInterior as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_ShieldInterior = (myPlayerMarker_ShieldInterior as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myPlayerMarker_ShieldInterior)
+	endWhile
+	While (myPlayerSitMarker as _Camp_ObjectPlacementSystem)
+		myPlayerSitMarker = (myPlayerSitMarker as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myPlayerSitMarker)
+	endWhile
+	While (myPlayerLayDownMarker as _Camp_ObjectPlacementSystem)
+		myPlayerLayDownMarker = (myPlayerLayDownMarker as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myPlayerLayDownMarker)
+	endWhile
+	While (myExitFront as _Camp_ObjectPlacementSystem)
+		myExitFront = (myExitFront as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myExitFront)
+	endWhile
+	While (myBedRoll as _Camp_ObjectPlacementSystem)
+		myBedRoll = (myBedRoll as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myBedRoll)
+	endWhile
+	While (myWard as _Camp_ObjectPlacementSystem)
+		myWard = (myWard as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myWard)
+	endWhile
+	While (myLanternUnlit as _Camp_ObjectPlacementSystem)
+		myLanternUnlit = (myLanternUnlit as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myLanternUnlit)
+	endWhile
+	While (myLanternLit as _Camp_ObjectPlacementSystem)
+		myLanternLit = (myLanternLit as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myLanternLit)
+	endWhile
+	While (myLanternLight as _Camp_ObjectPlacementSystem)
+		myLanternLight = (myLanternLight as _Camp_ObjectPlacementSystem).get_result_async()
+		debug.trace("[Campfire] @@@@@@@@@@ Result " + myLanternLight)
+	endWhile
+endFunction
+
 function GetResults()
-	while !myTent
-		debug.trace("[Campfire] --------Polling myTent...")
-		myTent = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread01).result
-		debug.trace("[Campfire] --------myTent = " + myTent)
-	endWhile
-	while !myClutterStatic1
-		debug.trace("[Campfire] --------Polling myClutterStatic1...")
-		myClutterStatic1 = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread02).get_result()
-		debug.trace("[Campfire] --------myClutterStatic1 = " + myClutterStatic1)
-	endWhile
+	;debug.trace("[Campfire] Gathering results...")
+	if (myTent as _Camp_ObjectPlacementSystem)
+		myTent = (myTent as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myClutterStatic1 as _Camp_ObjectPlacementSystem)
+		myClutterStatic1 = (myClutterStatic1 as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myPlayerMarker_MainWeapon as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_MainWeapon = (myPlayerMarker_MainWeapon as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myPlayerMarker_OffHandWeapon as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_OffHandWeapon = (myPlayerMarker_OffHandWeapon as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myPlayerMarker_BigWeapon as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_BigWeapon = (myPlayerMarker_BigWeapon as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myPlayerMarker_Bow as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_Bow = (myPlayerMarker_Bow as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myPlayerMarker_Shield as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_Shield = (myPlayerMarker_Shield as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myPlayerMarker_Cuirass as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_Cuirass = (myPlayerMarker_Cuirass as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myPlayerMarker_Helm as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_Helm = (myPlayerMarker_Helm as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myPlayerMarker_Boots as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_Boots = (myPlayerMarker_Boots as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myPlayerMarker_Gauntlets as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_Gauntlets = (myPlayerMarker_Gauntlets as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myPlayerMarker_Backpack as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_Backpack = (myPlayerMarker_Backpack as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myPlayerMarker_ShieldInterior as _Camp_ObjectPlacementSystem)
+		myPlayerMarker_ShieldInterior = (myPlayerMarker_ShieldInterior as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myPlayerSitMarker as _Camp_ObjectPlacementSystem)
+		myPlayerSitMarker = (myPlayerSitMarker as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myPlayerLayDownMarker as _Camp_ObjectPlacementSystem)
+		myPlayerLayDownMarker = (myPlayerLayDownMarker as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myExitFront as _Camp_ObjectPlacementSystem)
+		myExitFront = (myExitFront as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myBedRoll as _Camp_ObjectPlacementSystem)
+		myBedRoll = (myBedRoll as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myWard as _Camp_ObjectPlacementSystem)
+		myWard = (myWard as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myLanternUnlit as _Camp_ObjectPlacementSystem)
+		myLanternUnlit = (myLanternUnlit as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myLanternLit as _Camp_ObjectPlacementSystem)
+		myLanternLit = (myLanternLit as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+	if (myLanternLight as _Camp_ObjectPlacementSystem)
+		myLanternLight = (myLanternLight as _Camp_ObjectPlacementSystem).get_result_async()
+	endif
+
 	;/while !myTent
 		= (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread03).get_result()
 	endWhile
@@ -1062,7 +700,7 @@ function GetResults()
 	endWhile
 	while !myPlayerMarker_ShieldInterior
 		myPlayerMarker_ShieldInterior = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread17).get_result()
-	endWhile/;
+	endWhile
 	while !myPlayerSitMarker
 		myPlayerSitMarker = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread18).get_result()
 	endWhile
@@ -1086,7 +724,7 @@ function GetResults()
 	endWhile
 	while !myLanternLight
 		myLanternLight = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread25).get_result()
-	endWhile
+	endWhile/;
 endFunction
 
 function TearDown()
@@ -1207,11 +845,276 @@ function RotateOnStartUp()
 	self.SetAngle(self.GetAngleX(), self.GetAngleY(), self.GetAngleZ() + Setting_StartUpRotation)
 endFunction
 
+Form function PlaceTentObjectAsync(ObjectReference object_position_reference, ObjectReference origin, Form form_to_place, float[] origin_angle,\
+							  float x_local_ang_adjust = 0.0, float y_local_ang_adjust = 0.0, float z_local_ang_adjust = 0.0, \
+							  float z_global_ang_adjust = 0.0, float z_hanging_offset = 0.0, bool inverted_local_y = false, \
+							  bool initially_disabled = false, bool is_propped = false, bool is_hanging = false)
 
+	
+	ObjectReference myCenterObject
+	if PositionRef_CenterObjectOverride
+		myCenterObject = PositionRef_CenterObjectOverride
+	else
+		if PositionRef_Shelter
+			myCenterObject = PositionRef_Shelter
+		else
+			myCenterObject = RequiredPositionRef_PlayerBed
+		endif
+	endif
 
+	Form future
+	while !future
+		if !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread01).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread01).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread02).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread02).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread03).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread03).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread04).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread04).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread05).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread05).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread06).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread06).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread07).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread07).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread08).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread08).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread09).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread09).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread10).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread10).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread11).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread11).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread12).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread12).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread13).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread13).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread14).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread14).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread15).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread15).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread16).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread16).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread17).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread17).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread18).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread18).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread19).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread19).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread20).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread20).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread21).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread21).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread22).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread22).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread23).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread23).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread24).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread24).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread25).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread25).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread26).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread26).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread27).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread27).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread28).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread28).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread29).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread29).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread30).queued()
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread30).queue_thread(myCenterObject, object_position_reference, \
+																					  	origin, form_to_place, origin_angle, 		 \
+																					  	x_local_ang_adjust, y_local_ang_adjust,    \
+																					  	z_local_ang_adjust, z_global_ang_adjust,   \
+																					  	z_hanging_offset, inverted_local_y,        \
+																					  	initially_disabled, is_propped, is_hanging)
+			;debug.trace("[Campfire] >>>> Arming future " + future)
+		else
+			;Threads are full; get results to release threads.
+			utility.wait(0.1)
+			GetResults()
+		endif
+	endWhile
+
+	return future
+endFunction
 
 function PlaceTentObjectThreaded_Tent()
-	(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread01).queue_placement(PositionRef_Shelter, PositionRef_Shelter, self, TentAsset_ShelterModel, myOriginAng)
+	myTent = PlaceTentObjectAsync(PositionRef_Shelter, self, TentAsset_ShelterModel, myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_NormalTent()
@@ -1227,470 +1130,215 @@ function PlaceTentObjectThreaded_AshTent()
 endFunction
 
 function PlaceTentObjectThreaded_ClutterStatic1()
-	(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread02).queue_placement(PositionRef_Shelter, PositionRef_ClutterStatic1, self, TentAsset_ClutterStatic1, myOriginAng)
+	myClutterStatic1 = PlaceTentObjectAsync(PositionRef_ClutterStatic1, self, TentAsset_ClutterStatic1, myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_ClutterStatic2()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread03).queue_placement(PositionRef_Shelter, PositionRef_ClutterStatic2, self, TentAsset_ClutterStatic2, myOriginAng)
+	myClutterStatic2 = PlaceTentObjectAsync(PositionRef_ClutterStatic2, self, TentAsset_ClutterStatic2, myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_ClutterStatic3()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread04).queue_placement(PositionRef_Shelter, PositionRef_ClutterStatic3, self, TentAsset_ClutterStatic3, myOriginAng)
+	myClutterStatic3 = PlaceTentObjectAsync(PositionRef_ClutterStatic3, self, TentAsset_ClutterStatic3, myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_ClutterStatic4()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread05).queue_placement(PositionRef_Shelter, PositionRef_ClutterStatic4, self, TentAsset_ClutterStatic4, myOriginAng)
+	myClutterStatic4 = PlaceTentObjectAsync(PositionRef_ClutterStatic4, self, TentAsset_ClutterStatic4, myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_ClutterStatic5()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread06).queue_placement(PositionRef_Shelter, PositionRef_ClutterStatic5, self, TentAsset_ClutterStatic5, myOriginAng)
+	myClutterStatic5 = PlaceTentObjectAsync(PositionRef_ClutterStatic5, self, TentAsset_ClutterStatic5, myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_ClutterActivator1(CampTentEx Extended)
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, Extended.TentAsset_ClutterActivator1, myOriginAng)
+	; , self, Extended.TentAsset_ClutterActivator1, myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_ClutterActivator2(CampTentEx Extended)
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, Extended.TentAsset_ClutterActivator2, myOriginAng)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, Extended.TentAsset_ClutterActivator2, myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_ClutterActivator3(CampTentEx Extended)
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, Extended.TentAsset_ClutterActivator3, myOriginAng)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, Extended.TentAsset_ClutterActivator3, myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_ClutterActivator4(CampTentEx Extended)
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, Extended.TentAsset_ClutterActivator4, myOriginAng)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, Extended.TentAsset_ClutterActivator4, myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_ClutterActivator5(CampTentEx Extended)
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, Extended.TentAsset_ClutterActivator5, myOriginAng)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, Extended.TentAsset_ClutterActivator5, myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_ClutterFurniture1(CampTentEx Extended)
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, Extended.TentAsset_ClutterFurniture1, myOriginAng)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, Extended.TentAsset_ClutterFurniture1, myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_ClutterFurniture2(CampTentEx Extended)
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, Extended.TentAsset_ClutterFurniture2, myOriginAng)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, Extended.TentAsset_ClutterFurniture2, myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_ClutterFurniture3(CampTentEx Extended)
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, Extended.TentAsset_ClutterFurniture3, myOriginAng)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, Extended.TentAsset_ClutterFurniture3, myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_ClutterFurniture4(CampTentEx Extended)
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, Extended.TentAsset_ClutterFurniture4, myOriginAng)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, Extended.TentAsset_ClutterFurniture4, myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_ClutterFurniture5(CampTentEx Extended)
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, Extended.TentAsset_ClutterFurniture5, myOriginAng)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, Extended.TentAsset_ClutterFurniture5, myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_PlayerMainWeapon()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread07).queue_placement(PositionRef_Shelter, PositionRef_Player_WeaponMainHand, self, TentSystem.GetXMarker(), myOriginAng)
+	myPlayerMarker_MainWeapon = PlaceTentObjectAsync(PositionRef_Player_WeaponMainHand, self, TentSystem.GetXMarker(), myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_PlayerOffHandWeapon()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread08).queue_placement(PositionRef_Shelter, PositionRef_Player_WeaponOffHand, self, TentSystem.GetXMarker(), myOriginAng)
+	myPlayerMarker_OffHandWeapon = PlaceTentObjectAsync(PositionRef_Player_WeaponOffHand, self, TentSystem.GetXMarker(), myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_PlayerBigWeapon()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread09).queue_placement(PositionRef_Shelter, PositionRef_Player_WeaponTwoHand, self, TentSystem.GetXMarker(), myOriginAng)
+	myPlayerMarker_BigWeapon = PlaceTentObjectAsync(PositionRef_Player_WeaponTwoHand, self, TentSystem.GetXMarker(), myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_PlayerBow()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread10).queue_placement(PositionRef_Shelter, PositionRef_Player_WeaponBow, self, TentSystem.GetXMarker(), myOriginAng)
+	myPlayerMarker_Bow = PlaceTentObjectAsync(PositionRef_Player_WeaponBow, self, TentSystem.GetXMarker(), myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_PlayerShield()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread11).queue_placement(PositionRef_Shelter, PositionRef_Player_Shield, self, TentSystem.GetXMarker(), myOriginAng, x_local_ang_adjust = 90.0, z_local_ang_adjust = 124.0, inverted_local_y = true, is_propped = true)
+	myPlayerMarker_Shield = PlaceTentObjectAsync(PositionRef_Player_Shield, self, TentSystem.GetXMarker(), myOriginAng, x_local_ang_adjust = 90.0, z_local_ang_adjust = 124.0, inverted_local_y = true, is_propped = true)
 endFunction
 
 function PlaceTentObjectThreaded_PlayerCuirass()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread12).queue_placement(PositionRef_Shelter, PositionRef_Player_ArmorCuirass, self, TentSystem.GetXMarker(), myOriginAng)
+	myPlayerMarker_Cuirass= PlaceTentObjectAsync(PositionRef_Player_ArmorCuirass, self, TentSystem.GetXMarker(), myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_PlayerHelm()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread13).queue_placement(PositionRef_Shelter, PositionRef_Player_ArmorHelm, self, TentSystem.GetXMarker(), myOriginAng)
+	myPlayerMarker_Helm = PlaceTentObjectAsync(PositionRef_Player_ArmorHelm, self, TentSystem.GetXMarker(), myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_PlayerBoots()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread14).queue_placement(PositionRef_Shelter, PositionRef_Player_ArmorBoots, self, TentSystem.GetXMarker(), myOriginAng)
+	myPlayerMarker_Boots = PlaceTentObjectAsync(PositionRef_Player_ArmorBoots, self, TentSystem.GetXMarker(), myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_PlayerGauntlets()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread15).queue_placement(PositionRef_Shelter, PositionRef_Player_ArmorGauntlets, self, TentSystem.GetXMarker(), myOriginAng)
+	myPlayerMarker_Gauntlets = PlaceTentObjectAsync(PositionRef_Player_ArmorGauntlets, self, TentSystem.GetXMarker(), myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_PlayerBackpack()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread16).queue_placement(PositionRef_Shelter, PositionRef_Player_Backpack, self, TentSystem.GetXMarker(), myOriginAng)
+	myPlayerMarker_Backpack = PlaceTentObjectAsync(PositionRef_Player_Backpack, self, TentSystem.GetXMarker(), myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_PlayerShieldInterior()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread17).queue_placement(PositionRef_Shelter, PositionRef_Player_ShieldInterior, self, TentSystem.GetXMarker(), myOriginAng)
+	myPlayerMarker_ShieldInterior = PlaceTentObjectAsync(PositionRef_Player_ShieldInterior, self, TentSystem.GetXMarker(), myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_PlayerSitMarker()
-	(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread18).queue_placement(PositionRef_Shelter, RequiredPositionRef_SitFurniture, self, TentSystem.GetSitMarker(), myOriginAng)
+	myPlayerSitMarker = PlaceTentObjectAsync(RequiredPositionRef_SitFurniture, self, TentSystem.GetSitMarker(), myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_PlayerLayDownMarker()
-	(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread19).queue_placement(PositionRef_Shelter, RequiredPositionRef_LieDownFurniture, self, TentSystem.GetLieDownMarker(), myOriginAng, z_local_ang_adjust = 180.0)
+	myPlayerLayDownMarker = PlaceTentObjectAsync(RequiredPositionRef_LieDownFurniture, self, TentSystem.GetLieDownMarker(), myOriginAng, z_local_ang_adjust = 180.0)
 endFunction
 
 function PlaceTentObjectThreaded_ExitFront()
-	(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread20).queue_placement(PositionRef_Shelter, PositionRef_FrontExitMarker, self, TentSystem.GetXMarker(), myOriginAng)
+	myExitFront = PlaceTentObjectAsync(PositionRef_FrontExitMarker, self, TentSystem.GetXMarker(), myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_BedRoll()
-	(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread21).queue_placement(PositionRef_Shelter, RequiredPositionRef_PlayerBed, self, TentSystem.GetPlayerBedroll(), myOriginAng)
+	myBedRoll = PlaceTentObjectAsync(RequiredPositionRef_PlayerBed, self, TentSystem.GetPlayerBedroll(), myOriginAng)
 endFunction
 
 function PlaceTentObjectThreaded_Ward()
-	(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread22).queue_placement(PositionRef_Shelter, PositionRef_Ward, self, TentSystem.GetWard(), myOriginAng, x_local_ang_adjust = -90.0, is_propped = true)
+	myWard = PlaceTentObjectAsync(PositionRef_Ward, self, TentSystem.GetWard(), myOriginAng, x_local_ang_adjust = -90.0, is_propped = true)
 endFunction
 
 function PlaceTentObjectThreaded_Lantern1()
-	(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread23).queue_placement(PositionRef_Shelter, PositionRef_Lantern1, self, TentSystem.GetLantern(bOn = false, bHanging = false), myOriginAng)
-	(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread24).queue_placement(PositionRef_Shelter, PositionRef_Lantern1, self, TentSystem.GetLantern(bOn = true, bHanging = false), myOriginAng, initially_disabled = true)
-	(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread25).queue_placement(PositionRef_Shelter, PositionRef_Lantern1, self, TentSystem.GetLanternLight(), myOriginAng, initially_disabled = true)
+	myLanternUnlit = PlaceTentObjectAsync(PositionRef_Lantern1, self, TentSystem.GetLantern(bOn = false, bHanging = false), myOriginAng)
+	myLanternLit = PlaceTentObjectAsync(PositionRef_Lantern1, self, TentSystem.GetLantern(bOn = true, bHanging = false), myOriginAng, initially_disabled = true)
+	myLanternLight = PlaceTentObjectAsync(PositionRef_Lantern1, self, TentSystem.GetLanternLight(), myOriginAng, initially_disabled = true)
 endFunction
 
 function PlaceTentObjectThreaded_Lantern2()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetLantern(bOn = false, bHanging = false), myOriginAng)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetLantern(bOn = false, bHanging = false), myOriginAng)
 	;myLanternLit2 = PlaceAtMeRelative(self, TentSystem.GetLantern(bOn = true, bHanging = false), myOriginAng, myLanternLit2_Pos, abInitiallyDisabled = true)
 	;myLanternLight2 = PlaceAtMeRelative(self, TentSystem.GetLanternLight(), myOriginAng, myLanternLight2_Pos, abInitiallyDisabled = true)
 endFunction
 
 function PlaceTentObjectThreaded_Lantern3()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetLantern(bOn = false, bHanging = false), myOriginAng, myLanternUnlit3_Pos)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetLantern(bOn = false, bHanging = false), myOriginAng, myLanternUnlit3_Pos)
 	;myLanternLit3 = PlaceAtMeRelative(self, TentSystem.GetLantern(bOn = true, bHanging = false), myOriginAng, myLanternLit3_Pos, abInitiallyDisabled = true)
 	;myLanternLight3 = PlaceAtMeRelative(self, TentSystem.GetLanternLight(), myOriginAng, myLanternLight3_Pos, abInitiallyDisabled = true)
 endFunction
 
 function PlaceTentObjectThreaded_SpareBedRoll1()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetNPCBedroll(), myOriginAng, mySpareBedRoll1_Pos)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetNPCBedroll(), myOriginAng, mySpareBedRoll1_Pos)
 endFunction
 
 function PlaceTentObjectThreaded_SpareBedRoll2()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetNPCBedroll(), myOriginAng, mySpareBedRoll2_Pos)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetNPCBedroll(), myOriginAng, mySpareBedRoll2_Pos)
 endFunction
 
 function PlaceTentObjectThreaded_SpareBedRoll3()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetNPCBedroll(), myOriginAng, mySpareBedRoll3_Pos)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetNPCBedroll(), myOriginAng, mySpareBedRoll3_Pos)
 endFunction
 
 function PlaceTentObjectThreaded_Follower1MainWeapon()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerAMarker_MainWeapon_Pos)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerAMarker_MainWeapon_Pos)
 endFunction
 
 function PlaceTentObjectThreaded_Follower1OffHandWeapon()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerAMarker_OffHandWeapon_Pos)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerAMarker_OffHandWeapon_Pos)
 endFunction
 
 function PlaceTentObjectThreaded_Follower1BigWeapon()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerAMarker_BigWeapon_Pos)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerAMarker_BigWeapon_Pos)
 endFunction
 
 function PlaceTentObjectThreaded_Follower1Bow()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerAMarker_Bow_Pos)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerAMarker_Bow_Pos)
 endFunction
 
 function PlaceTentObjectThreaded_Follower1Shield()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerAMarker_Shield_Pos, fXLocalAngAdjust = 90.0, fZLocalAngAdjust = 124.0, abInvertedLocalY = true, abIsPropped = true)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerAMarker_Shield_Pos, fXLocalAngAdjust = 90.0, fZLocalAngAdjust = 124.0, abInvertedLocalY = true, abIsPropped = true)
 endFunction
 
 function PlaceTentObjectThreaded_Follower2MainWeapon()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerBMarker_MainWeapon_Pos)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerBMarker_MainWeapon_Pos)
 endFunction
 
 function PlaceTentObjectThreaded_Follower2OffHandWeapon()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerBMarker_OffHandWeapon_Pos)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerBMarker_OffHandWeapon_Pos)
 endFunction
 
 function PlaceTentObjectThreaded_Follower2BigWeapon()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerBMarker_BigWeapon_Pos)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerBMarker_BigWeapon_Pos)
 endFunction
 
 function PlaceTentObjectThreaded_Follower2Bow()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerBMarker_Bow_Pos)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerBMarker_Bow_Pos)
 endFunction
 
 function PlaceTentObjectThreaded_Follower2Shield()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerBMarker_Shield_Pos, fXLocalAngAdjust = 90.0, fZLocalAngAdjust = 124.0, abInvertedLocalY = true, abIsPropped = true)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerBMarker_Shield_Pos, fXLocalAngAdjust = 90.0, fZLocalAngAdjust = 124.0, abInvertedLocalY = true, abIsPropped = true)
 endFunction
 
 function PlaceTentObjectThreaded_Follower3MainWeapon()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerCMarker_MainWeapon_Pos)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerCMarker_MainWeapon_Pos)
 endFunction
 
 function PlaceTentObjectThreaded_Follower3OffHandWeapon()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerCMarker_OffHandWeapon_Pos)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerCMarker_OffHandWeapon_Pos)
 endFunction
 
 function PlaceTentObjectThreaded_Follower3BigWeapon()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerCMarker_BigWeapon_Pos)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerCMarker_BigWeapon_Pos)
 endFunction
 
 function PlaceTentObjectThreaded_Follower3Bow()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerCMarker_Bow_Pos)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerCMarker_Bow_Pos)
 endFunction
 
 function PlaceTentObjectThreaded_Follower3Shield()
-	;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerCMarker_Shield_Pos, fXLocalAngAdjust = 90.0, fZLocalAngAdjust = 124.0, abInvertedLocalY = true, abIsPropped = true)
+	;;(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread).queue_placement(PositionRef_Shelter, , self, TentSystem.GetXMarker(), myOriginAng, myFollowerCMarker_Shield_Pos, fXLocalAngAdjust = 90.0, fZLocalAngAdjust = 124.0, abInvertedLocalY = true, abIsPropped = true)
 endFunction
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-;/function PlaceTentObject_Tent()
-	myTent = PlaceAtMeRelative(self, TentAsset_ShelterModel, myOriginAng, myTent_Pos)
-endFunction
-
-function PlaceTentObject_NormalTent()
-	myNormalTent = myTent.PlaceAtMe(TentAsset_ShelterModelExterior, abInitiallyDisabled = true)	
-endFunction
-
-function PlaceTentObject_SnowTent()
-	mySnowTent = myTent.PlaceAtMe(TentAsset_ShelterModelMaterialSnow, abInitiallyDisabled = true)
-endFunction
-
-function PlaceTentObject_AshTent()
-	myAshTent = myTent.PlaceAtMe(TentAsset_ShelterModelMaterialAsh, abInitiallyDisabled = true)
-endFunction
-
-function PlaceTentObject_ClutterStatic1()
-	myClutterStatic1 = PlaceAtMeRelative(self, TentAsset_ClutterStatic1, myOriginAng, myClutterStatic1_Pos)
-endFunction
-
-function PlaceTentObject_ClutterStatic2()
-	myClutterStatic2 = PlaceAtMeRelative(self, TentAsset_ClutterStatic2, myOriginAng, myClutterStatic2_Pos)
-endFunction
-
-function PlaceTentObject_ClutterStatic3()
-	myClutterStatic3 = PlaceAtMeRelative(self, TentAsset_ClutterStatic3, myOriginAng, myClutterStatic3_Pos)
-endFunction
-
-function PlaceTentObject_ClutterStatic4()
-	myClutterStatic4 = PlaceAtMeRelative(self, TentAsset_ClutterStatic4, myOriginAng, myClutterStatic4_Pos)
-endFunction
-
-function PlaceTentObject_ClutterStatic5()
-	myClutterStatic5 = PlaceAtMeRelative(self, TentAsset_ClutterStatic5, myOriginAng, myClutterStatic5_Pos)
-endFunction
-
-function PlaceTentObject_ClutterActivator1(CampTentEx Extended)
-	myClutterActivator1 = PlaceAtMeRelative(self, Extended.TentAsset_ClutterActivator1, myOriginAng, myClutterActivator1_Pos)
-endFunction
-
-function PlaceTentObject_ClutterActivator2(CampTentEx Extended)
-	myClutterActivator2 = PlaceAtMeRelative(self, Extended.TentAsset_ClutterActivator2, myOriginAng, myClutterActivator2_Pos)
-endFunction
-
-function PlaceTentObject_ClutterActivator3(CampTentEx Extended)
-	myClutterActivator3 = PlaceAtMeRelative(self, Extended.TentAsset_ClutterActivator3, myOriginAng, myClutterActivator3_Pos)
-endFunction
-
-function PlaceTentObject_ClutterActivator4(CampTentEx Extended)
-	myClutterActivator4 = PlaceAtMeRelative(self, Extended.TentAsset_ClutterActivator4, myOriginAng, myClutterActivator4_Pos)
-endFunction
-
-function PlaceTentObject_ClutterActivator5(CampTentEx Extended)
-	myClutterActivator5 = PlaceAtMeRelative(self, Extended.TentAsset_ClutterActivator5, myOriginAng, myClutterActivator5_Pos)
-endFunction
-
-function PlaceTentObject_ClutterFurniture1(CampTentEx Extended)
-	myClutterFurniture1 = PlaceAtMeRelative(self, Extended.TentAsset_ClutterFurniture1, myOriginAng, myClutterFurniture1_Pos)
-endFunction
-
-function PlaceTentObject_ClutterFurniture2(CampTentEx Extended)
-	myClutterFurniture2 = PlaceAtMeRelative(self, Extended.TentAsset_ClutterFurniture2, myOriginAng, myClutterFurniture2_Pos)
-endFunction
-
-function PlaceTentObject_ClutterFurniture3(CampTentEx Extended)
-	myClutterFurniture3 = PlaceAtMeRelative(self, Extended.TentAsset_ClutterFurniture3, myOriginAng, myClutterFurniture3_Pos)
-endFunction
-
-function PlaceTentObject_ClutterFurniture4(CampTentEx Extended)
-	myClutterFurniture4 = PlaceAtMeRelative(self, Extended.TentAsset_ClutterFurniture4, myOriginAng, myClutterFurniture4_Pos)
-endFunction
-
-function PlaceTentObject_ClutterFurniture5(CampTentEx Extended)
-	myClutterFurniture5 = PlaceAtMeRelative(self, Extended.TentAsset_ClutterFurniture5, myOriginAng, myClutterFurniture5_Pos)
-endFunction
-
-function PlaceTentObject_PlayerMainWeapon()
-	myPlayerMarker_MainWeapon = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_MainWeapon_Pos)
-endFunction
-
-function PlaceTentObject_PlayerOffHandWeapon()
-	myPlayerMarker_OffHandWeapon = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_OffHandWeapon_Pos)
-endFunction
-
-function PlaceTentObject_PlayerBigWeapon()
-	myPlayerMarker_BigWeapon = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_BigWeapon_Pos)
-endFunction
-
-function PlaceTentObject_PlayerBow()
-	myPlayerMarker_Bow = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_Bow_Pos)
-endFunction
-
-function PlaceTentObject_PlayerShield()
-	myPlayerMarker_Shield = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_Shield_Pos, fXLocalAngAdjust = 90.0, fZLocalAngAdjust = 124.0, abInvertedLocalY = true, abIsPropped = true)
-endFunction
-
-function PlaceTentObject_PlayerCuirass()
-	myPlayerMarker_Cuirass = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_Cuirass_Pos)
-endFunction
-
-function PlaceTentObject_PlayerHelm()
-	myPlayerMarker_Helm = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_Helm_Pos)
-endFunction
-
-function PlaceTentObject_PlayerBoots()
-	myPlayerMarker_Boots = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_Boots_Pos)
-endFunction
-
-function PlaceTentObject_PlayerGauntlets()
-	myPlayerMarker_Gauntlets = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_Gauntlets_Pos)
-endFunction
-
-function PlaceTentObject_PlayerBackpack()
-	myPlayerMarker_Backpack = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_Backpack_Pos)
-endFunction
-
-function PlaceTentObject_PlayerShieldInterior()
-	myPlayerMarker_ShieldInterior = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myPlayerMarker_ShieldInterior_Pos)
-endFunction
-
-function PlaceTentObject_PlayerSitMarker()
-	myPlayerSitMarker = PlaceAtMeRelative(self, TentSystem.GetSitMarker(), myOriginAng, myPlayerSitMarker_Pos)
-endFunction
-
-function PlaceTentObject_PlayerLayDownMarker()
-	myPlayerLayDownMarker = PlaceAtMeRelative(self, TentSystem.GetLieDownMarker(), myOriginAng, myPlayerLayDownMarker_Pos, fZLocalAngAdjust = 180.0)
-endFunction
-
-function PlaceTentObject_ExitFront()
-	myExitFront = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myExitFront_Pos)
-endFunction
-
-function PlaceTentObject_BedRoll()
-	myBedRoll = PlaceAtMeRelative(self, TentSystem.GetPlayerBedroll(), myOriginAng, myBedRoll_Pos)
-endFunction
-
-function PlaceTentObject_Ward()
-	myWard = PlaceAtMeRelative(self, TentSystem.GetWard(), myOriginAng, myWard_Pos, fXLocalAngAdjust = -90.0, abIsPropped = true)
-endFunction
-
-function PlaceTentObject_Lantern1()
-	;Place a lantern on the ground, unlit by default (lit lantern and light initially disabled)
-	myLanternUnlit = PlaceAtMeRelative(self, TentSystem.GetLantern(bOn = false, bHanging = false), myOriginAng, myLanternUnlit_Pos)
-	myLanternLit = PlaceAtMeRelative(self, TentSystem.GetLantern(bOn = true, bHanging = false), myOriginAng, myLanternLit_Pos, abInitiallyDisabled = true)
-	myLanternLight = PlaceAtMeRelative(self, TentSystem.GetLanternLight(), myOriginAng, myLanternLight_Pos, abInitiallyDisabled = true)
-endFunction
-
-function PlaceTentObject_Lantern2()
-	myLanternUnlit2 = PlaceAtMeRelative(self, TentSystem.GetLantern(bOn = false, bHanging = false), myOriginAng, myLanternUnlit2_Pos)
-	myLanternLit2 = PlaceAtMeRelative(self, TentSystem.GetLantern(bOn = true, bHanging = false), myOriginAng, myLanternLit2_Pos, abInitiallyDisabled = true)
-	myLanternLight2 = PlaceAtMeRelative(self, TentSystem.GetLanternLight(), myOriginAng, myLanternLight2_Pos, abInitiallyDisabled = true)
-endFunction
-
-function PlaceTentObject_Lantern3()
-	myLanternUnlit3 = PlaceAtMeRelative(self, TentSystem.GetLantern(bOn = false, bHanging = false), myOriginAng, myLanternUnlit3_Pos)
-	myLanternLit3 = PlaceAtMeRelative(self, TentSystem.GetLantern(bOn = true, bHanging = false), myOriginAng, myLanternLit3_Pos, abInitiallyDisabled = true)
-	myLanternLight3 = PlaceAtMeRelative(self, TentSystem.GetLanternLight(), myOriginAng, myLanternLight3_Pos, abInitiallyDisabled = true)
-endFunction
-
-function PlaceTentObject_SpareBedRoll1()
-	mySpareBedRoll1 = PlaceAtMeRelative(self, TentSystem.GetNPCBedroll(), myOriginAng, mySpareBedRoll1_Pos)
-endFunction
-
-function PlaceTentObject_SpareBedRoll2()
-	mySpareBedRoll2 = PlaceAtMeRelative(self, TentSystem.GetNPCBedroll(), myOriginAng, mySpareBedRoll2_Pos)
-endFunction
-
-function PlaceTentObject_SpareBedRoll3()
-	mySpareBedRoll3 = PlaceAtMeRelative(self, TentSystem.GetNPCBedroll(), myOriginAng, mySpareBedRoll3_Pos)
-endFunction
-
-function PlaceTentObject_Follower1MainWeapon()
-	myFollowerAMarker_MainWeapon = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myFollowerAMarker_MainWeapon_Pos)
-endFunction
-
-function PlaceTentObject_Follower1OffHandWeapon()
-	myFollowerAMarker_OffHandWeapon = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myFollowerAMarker_OffHandWeapon_Pos)
-endFunction
-
-function PlaceTentObject_Follower1BigWeapon()
-	myFollowerAMarker_BigWeapon = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myFollowerAMarker_BigWeapon_Pos)
-endFunction
-
-function PlaceTentObject_Follower1Bow()
-	myFollowerAMarker_Bow = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myFollowerAMarker_Bow_Pos)
-endFunction
-
-function PlaceTentObject_Follower1Shield()
-	myFollowerAMarker_Shield = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myFollowerAMarker_Shield_Pos, fXLocalAngAdjust = 90.0, fZLocalAngAdjust = 124.0, abInvertedLocalY = true, abIsPropped = true)
-endFunction
-
-function PlaceTentObject_Follower2MainWeapon()
-	myFollowerBMarker_MainWeapon = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myFollowerBMarker_MainWeapon_Pos)
-endFunction
-
-function PlaceTentObject_Follower2OffHandWeapon()
-	myFollowerBMarker_OffHandWeapon = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myFollowerBMarker_OffHandWeapon_Pos)
-endFunction
-
-function PlaceTentObject_Follower2BigWeapon()
-	myFollowerBMarker_BigWeapon = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myFollowerBMarker_BigWeapon_Pos)
-endFunction
-
-function PlaceTentObject_Follower2Bow()
-	myFollowerBMarker_Bow = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myFollowerBMarker_Bow_Pos)
-endFunction
-
-function PlaceTentObject_Follower2Shield()
-	myFollowerBMarker_Shield = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myFollowerBMarker_Shield_Pos, fXLocalAngAdjust = 90.0, fZLocalAngAdjust = 124.0, abInvertedLocalY = true, abIsPropped = true)
-endFunction
-
-function PlaceTentObject_Follower3MainWeapon()
-	myFollowerCMarker_MainWeapon = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myFollowerCMarker_MainWeapon_Pos)
-endFunction
-
-function PlaceTentObject_Follower3OffHandWeapon()
-	myFollowerCMarker_OffHandWeapon = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myFollowerCMarker_OffHandWeapon_Pos)
-endFunction
-
-function PlaceTentObject_Follower3BigWeapon()
-	myFollowerCMarker_BigWeapon = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myFollowerCMarker_BigWeapon_Pos)
-endFunction
-
-function PlaceTentObject_Follower3Bow()
-	myFollowerCMarker_Bow = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myFollowerCMarker_Bow_Pos)
-endFunction
-
-function PlaceTentObject_Follower3Shield()
-	myFollowerCMarker_Shield = PlaceAtMeRelative(self, TentSystem.GetXMarker(), myOriginAng, myFollowerCMarker_Shield_Pos, fXLocalAngAdjust = 90.0, fZLocalAngAdjust = 124.0, abInvertedLocalY = true, abIsPropped = true)
-endFunction/;

@@ -45,11 +45,7 @@ endFunction
 function RegisterForEventsOnLoad()
 	debug.trace("[Campfire] Registering for modevent Campfire_CampfireOnPlaceableObjectUsed.")
 	RegisterForModEvent("Campfire_CampfireOnPlaceableObjectUsed", "CampfireOnPlaceableObjectUsed")
-	RegisterForThreadEvents()
-endFunction
-
-function RegisterForThreadEvents()
-	CampfireObjectPlacementSystem.RegisterForModEvent("Campfire_OnThreadedPlacementStart", "OnThreadedPlacementStart")
+	CampfireObjectPlacementSystem.RegisterForModEvent("Campfire_OnThreadedPlacement", "OnThreadedPlacement")
 endFunction
 
 Event CampfireOnPlaceableObjectUsed(Form akBaseObject, Form akPlacementIndicator)
