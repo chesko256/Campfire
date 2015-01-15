@@ -236,7 +236,70 @@ Form property mySpareBedRoll2 auto hidden
 Form property mySpareBedRoll3 auto hidden
 Form property myWard auto hidden
 
-;Run-time object 
+;Futures
+ObjectReference myTentFuture
+ObjectReference myTentExteriorFuture
+ObjectReference myNormalTentFuture
+ObjectReference mySnowTentFuture
+ObjectReference myAshTentFuture
+ObjectReference myLanternLitFuture
+ObjectReference myLanternUnlitFuture
+ObjectReference myLanternLightFuture
+ObjectReference myLanternLit2Future
+ObjectReference myLanternUnlit2Future
+ObjectReference myLanternLight2Future
+ObjectReference myLanternLit3Future
+ObjectReference myLanternUnlit3Future
+ObjectReference myLanternLight3Future
+ObjectReference myPlayerMarker_MainWeaponFuture
+ObjectReference myPlayerMarker_OffHandWeaponFuture
+ObjectReference myPlayerMarker_BigWeaponFuture
+ObjectReference myPlayerMarker_BowFuture
+ObjectReference myPlayerMarker_HelmFuture
+ObjectReference myPlayerMarker_BootsFuture
+ObjectReference myPlayerMarker_GauntletsFuture
+ObjectReference myPlayerMarker_CuirassFuture
+ObjectReference myPlayerMarker_BackpackFuture
+ObjectReference myPlayerMarker_ShieldFuture
+ObjectReference myPlayerMarker_ShieldInteriorFuture
+ObjectReference myFollowerAMarker_MainWeaponFuture
+ObjectReference myFollowerAMarker_OffHandWeaponFuture
+ObjectReference myFollowerAMarker_BigWeaponFuture
+ObjectReference myFollowerAMarker_BowFuture
+ObjectReference myFollowerAMarker_ShieldFuture
+ObjectReference myFollowerBMarker_MainWeaponFuture
+ObjectReference myFollowerBMarker_OffHandWeaponFuture
+ObjectReference myFollowerBMarker_BigWeaponFuture
+ObjectReference myFollowerBMarker_BowFuture
+ObjectReference myFollowerBMarker_ShieldFuture
+ObjectReference myFollowerCMarker_MainWeaponFuture
+ObjectReference myFollowerCMarker_OffHandWeaponFuture
+ObjectReference myFollowerCMarker_BigWeaponFuture
+ObjectReference myFollowerCMarker_BowFuture
+ObjectReference myFollowerCMarker_ShieldFuture
+ObjectReference myClutterStatic1Future
+ObjectReference myClutterStatic2Future
+ObjectReference myClutterStatic3Future
+ObjectReference myClutterStatic4Future
+ObjectReference myClutterStatic5Future
+ObjectReference myClutterActivator1Future
+ObjectReference myClutterActivator2Future
+ObjectReference myClutterActivator3Future
+ObjectReference myClutterActivator4Future
+ObjectReference myClutterActivator5Future
+ObjectReference myClutterFurniture1Future
+ObjectReference myClutterFurniture2Future
+ObjectReference myClutterFurniture3Future
+ObjectReference myClutterFurniture4Future
+ObjectReference myClutterFurniture5Future
+ObjectReference myPlayerSitMarkerFuture
+ObjectReference myPlayerLayDownMarkerFuture
+ObjectReference myExitFrontFuture
+ObjectReference myBedRollFuture
+ObjectReference mySpareBedRoll1Future
+ObjectReference mySpareBedRoll2Future
+ObjectReference mySpareBedRoll3Future
+ObjectReference myWardFuture
 
 Ammo property myQuiver auto hidden
 Armor property myShield auto hidden
@@ -845,7 +908,7 @@ function RotateOnStartUp()
 	self.SetAngle(self.GetAngleX(), self.GetAngleY(), self.GetAngleZ() + Setting_StartUpRotation)
 endFunction
 
-Form function PlaceTentObjectAsync(ObjectReference object_position_reference, ObjectReference origin, Form form_to_place, float[] origin_angle,\
+ObjectReference function PlaceTentObjectAsync(ObjectReference object_position_reference, ObjectReference origin, Form form_to_place, float[] origin_angle,\
 							  float x_local_ang_adjust = 0.0, float y_local_ang_adjust = 0.0, float z_local_ang_adjust = 0.0, \
 							  float z_global_ang_adjust = 0.0, float z_hanging_offset = 0.0, bool inverted_local_y = false, \
 							  bool initially_disabled = false, bool is_propped = false, bool is_hanging = false)
@@ -862,10 +925,10 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 		endif
 	endif
 
-	Form future
+	ObjectReference future
 	while !future
 		if !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread01).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread01).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread01).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -873,7 +936,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread02).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread02).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread02).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -881,7 +944,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread03).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread03).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread03).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -889,7 +952,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread04).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread04).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread04).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -897,7 +960,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread05).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread05).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread05).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -905,7 +968,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread06).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread06).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread06).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -913,7 +976,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread07).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread07).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread07).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -921,7 +984,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread08).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread08).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread08).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -929,7 +992,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread09).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread09).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread09).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -937,7 +1000,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread10).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread10).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread10).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -945,7 +1008,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread11).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread11).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread11).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -953,7 +1016,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread12).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread12).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread12).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -961,7 +1024,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread13).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread13).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread13).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -969,7 +1032,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread14).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread14).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread14).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -977,7 +1040,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread15).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread15).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread15).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -985,7 +1048,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread16).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread16).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread16).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -993,7 +1056,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread17).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread17).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread17).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -1001,7 +1064,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread18).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread18).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread18).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -1009,7 +1072,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread19).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread19).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread19).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -1017,14 +1080,14 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread20).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread20).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread20).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
 																					  	z_hanging_offset, inverted_local_y,        \
 																					  	initially_disabled, is_propped, is_hanging)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread21).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread21).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread21).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -1032,7 +1095,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread22).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread22).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread22).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -1040,7 +1103,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread23).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread23).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread23).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -1048,7 +1111,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread24).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread24).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread24).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -1056,7 +1119,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread25).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread25).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread25).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -1064,7 +1127,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread26).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread26).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread26).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -1072,7 +1135,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread27).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread27).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread27).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -1080,7 +1143,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread28).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread28).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread28).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -1088,7 +1151,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread29).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread29).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread29).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -1096,7 +1159,7 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		elseif !(CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread30).queued()
-			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread30).queue_thread(myCenterObject, object_position_reference, \
+			future = (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread30).get_async(myCenterObject, object_position_reference, \
 																					  	origin, form_to_place, origin_angle, 		 \
 																					  	x_local_ang_adjust, y_local_ang_adjust,    \
 																					  	z_local_ang_adjust, z_global_ang_adjust,   \
@@ -1104,9 +1167,9 @@ Form function PlaceTentObjectAsync(ObjectReference object_position_reference, Ob
 																					  	initially_disabled, is_propped, is_hanging)
 			;debug.trace("[Campfire] >>>> Arming future " + future)
 		else
-			;Threads are full; get results to release threads.
+			;Threads are full; wait and try again.
+			;@TODO: Add timeout
 			utility.wait(0.1)
-			GetResults()
 		endif
 	endWhile
 

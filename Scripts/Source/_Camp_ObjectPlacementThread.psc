@@ -1,13 +1,12 @@
 scriptname _Camp_ObjectPlacementThread extends Quest
-{Responsible for handling object placement calculations and returning an ObjectReference back to the caller.}
+{Object Placement base class. Responsible for handling object placement calculations. Returns a Future back to the caller.}
 
 import math
 import CampUtil
 
 int thread_id = -1
+ObjectReference future
 bool thread_queued = false
-bool thread_working = false
-ObjectReference result
 ObjectReference _RelativeCenterObject
 ObjectReference _ObjectPositionReference
 ObjectReference _Origin
@@ -23,13 +22,15 @@ bool _InitiallyDisabled = false
 bool _IsPropped = false
 bool _IsHanging = false
 
+;Passed in externally, to avoid setting a property on many threads.
 Static XMarker
 
-Form function queue_thread(ObjectReference relative_center_object, ObjectReference object_position_reference, \
-						 ObjectReference origin, Form form_to_place, float[] origin_angle, \
-						 float x_local_ang_adjust = 0.0, float y_local_ang_adjust = 0.0, float z_local_ang_adjust = 0.0, \
-						 float z_global_ang_adjust = 0.0, float z_hanging_offset = 0.0, bool inverted_local_y = false, \
-						 bool initially_disabled = false, bool is_propped = false, bool is_hanging = false)
+Form function get_async(ObjectReference akFutureAnchor, Activator akFuture, 																		\
+						Static XMarkerStatic, ObjectReference relative_center_object, ObjectReference object_position_reference, 					\
+						ObjectReference origin, Form form_to_place, float[] origin_angle, 															\
+						float x_local_ang_adjust = 0.0, float y_local_ang_adjust = 0.0, float z_local_ang_adjust = 0.0, 							\
+						float z_global_ang_adjust = 0.0, float z_hanging_offset = 0.0, bool inverted_local_y = false, 								\
+						bool initially_disabled = false, bool is_propped = false, bool is_hanging = false)
 	
 	thread_queued = true
 	if thread_id == -1
@@ -37,9 +38,7 @@ Form function queue_thread(ObjectReference relative_center_object, ObjectReferen
 		;debug.trace("[Campfire] Thread " + self + " assigned Thread ID " + thread_id)
 	endif
 	_OriginAngle = new float[3]
-	if !XMarker
-		XMarker = Game.GetFormFromFile(0x0000003B, "Skyrim.esm") as Static
-	endif
+	XMarker = XMarkerStatic
 	_RelativeCenterObject = relative_center_object
 	_ObjectPositionReference = object_position_reference
 	_Origin = origin
@@ -53,31 +52,30 @@ Form function queue_thread(ObjectReference relative_center_object, ObjectReferen
 	_InvertedLocalY = inverted_local_y
 	_IsPropped = is_propped
 	_IsHanging = is_hanging
-	;RegisterForModEvent("Campfire_OnThreadedPlacement", "OnThreadedPlacement")
 	RaiseEvent_OnThreadedPlacement(thread_id)
-
-	return self
-
+	future = akFutureAnchor.PlaceAtMe(akFuture)
+	return future
 endFunction
 
 Event OnThreadedPlacement(int aiThreadId)
 	if thread_queued && aiThreadId == thread_id
 		;debug.StartStackProfiling()
 		;debug.trace("[Campfire] Thread " + self + " (TID " + thread_id + ") got OnThreadedPlacement, WORKING -----------")
-		thread_working = true
 		float[] relative_position = new float[6]
 		relative_position = GetRelativePosition(_RelativeCenterObject, _ObjectPositionReference)
-		result = PlaceAtMeRelative(_Origin, _FormToPlace, _OriginAngle, relative_position, \
+		ObjectReference result = PlaceAtMeRelative(_Origin, _FormToPlace, _OriginAngle, relative_position, \
 				_ZGlobalAngAdjust, _XLocalAngAdjust, _YLocalAngAdjust, _ZLocalAngAdjust, \
 				_ZHangingOffset, _InvertedLocalY, _InitiallyDisabled, _IsPropped, _IsHanging)
+		(future as _Camp_TentObjectFuture).result = result
 		clear_thread_vars()
-		thread_working = false
+		thread_queued = false
 		;debug.trace("[Campfire] Thread " + self + " (TID " + thread_id + ") ============== DONE!")
 		;debug.StopStackProfiling()
 	endif
 endEvent
 
 function clear_thread_vars()
+	future = None
 	_RelativeCenterObject = None
 	_ObjectPositionReference = None
 	_Origin = None
@@ -236,51 +234,7 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
     return myObject
 endFunction
 
-bool function queued()
+bool function busy()
 	;Returns True if this thread has been queued and is processing (or has processed) a result. Only unqueued threads are safe to use. This function does not wait.
 	return thread_queued
 endFunction
-
-bool function done()
-	;Returns True if the result has arrived; otherwise, returns False. This function does not wait.
-	return !thread_working
-endFunction
-	
-;/Form function get_result()
-	;Waits if necessary; then returns the result.
-	while thread_working
-	endWhile
-	ObjectReference r = result
-	result = None
-	thread_queued = false
-	return r
-endFunction
-/;
-
-Form function get_result_async()
-	;Returns the result. If not available, returns self.
-	if result
-		ObjectReference r = result
-		result = None
-		thread_queued = false
-		;debug.trace("[Campfire] @@@@@@@@@@@@@@@@@ Thread " + self + " (TID " + thread_id + ") returning requested result: " + r)
-		return r
-	else
-		return self
-	endif
-endFunction
-
-;/ObjectReference function get_result()
-	;debug.trace("[Campfire] Thread " + self + " had result request")
-	if thread_working
-		;debug.trace("[Campfire] Thread " + self + " Nothing to return yet")
-		return None
-	else
-		;debug.trace("[Campfire] Thread " + self + " returning result " + result)
-		ObjectReference rslt = result
-		result = None
-		thread_queued = false
-		return rslt
-	endif
-endFunction
-/;
