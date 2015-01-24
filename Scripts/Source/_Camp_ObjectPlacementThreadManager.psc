@@ -42,7 +42,7 @@ _Camp_ObjectPlacementThread30 thread30
 Event OnInit()
     ;Register for the event that will start all threads
     ;NOTE - This needs to be re-registered once per load! Use an alias and OnPlayerLoadGame() in a real implementation.
-    RegisterForModEvent("_Camp_OnObjectPlacementStart", "OnObjectPlacementStart")
+    RegisterForModEvent("Campfire_OnObjectPlacementStart", "OnObjectPlacementStart")
 
     ;Let's cast our threads to local variables so things are less cluttered in our code
     thread01 = CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread01

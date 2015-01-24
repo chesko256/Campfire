@@ -47,6 +47,7 @@ ObjectReference function get_async(Activator akFuture, ObjectReference akFutureA
 	_ZGlobalAngAdjust = z_global_ang_adjust
 	_ZHangingOffset = z_hanging_offset
 	_InvertedLocalY = inverted_local_y
+	_InitiallyDisabled = initially_disabled
 	_IsPropped = is_propped
 	_IsHanging = is_hanging
 	

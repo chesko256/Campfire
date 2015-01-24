@@ -393,7 +393,8 @@ function Initialize()
 	myOriginAng = GetAngleData(self)
 	;SetRelativePositions()
 	;Placement()
-	PlacementAsync()
+	PlaceObjects()
+	ObjectPlacementSystem.wait_all()
 	GetResults()
 	StopObjectProfiling()
 	debug.StopScriptProfiling("CampTent")
@@ -406,7 +407,7 @@ Event OnActivate(ObjectReference akActionRef)
 	ActivateTent(akActionRef, self)
 endEvent
 
-function PlacementAsync()
+function PlaceObjects()
 	CampTentEx Extended = self as CampTentEx
 
 	if PositionRef_CenterObjectOverride
@@ -423,15 +424,14 @@ function PlacementAsync()
 		PlaceTentObject_Tent()
 	endif
 	if TentAsset_ShelterModelExterior && PositionRef_Shelter
-		;PlaceTentObject_NormalTent()
+		PlaceTentObject_NormalTent()
 	endif
 	if TentAsset_ShelterModelMaterialSnow && PositionRef_Shelter
-		;PlaceTentObject_SnowTent()
+		PlaceTentObject_SnowTent()
 	endif
 	if TentAsset_ShelterModelMaterialAsh && PositionRef_Shelter
-		;PlaceTentObject_AshTent()
+		PlaceTentObject_AshTent()
 	endif
-	;TentSystem.ApplySnow(self)
 	PlaceTentObject_Ward()
 	if TentAsset_ClutterStatic1 && PositionRef_ClutterStatic1
 		PlaceTentObject_ClutterStatic1()
@@ -573,7 +573,6 @@ function PlacementAsync()
 			PlaceTentObject_SpareBedRoll3()
 		endif
 	endif
-	ObjectPlacementSystem.wait_all()
 
 	;if self.GetDistance(myBedRoll) > 20.0
 	;	self.MoveTo(myBedRoll)
@@ -586,7 +585,19 @@ function GetResults()
 	if myTentFuture
 		myTent = GetFuture(myTentFuture).get_result()
 	endif
-	;Other tent exteriors
+	if myTentExteriorFuture
+		myTentExterior = GetFuture(myTentExteriorFuture).get_result()
+	endif
+	if myNormalTentFuture
+		myNormalTent = GetFuture(myNormalTentFuture).get_result()
+	endif
+	if mySnowTentFuture
+		mySnowTent = GetFuture(mySnowTentFuture).get_result()
+	endif
+	if myAshTentFuture
+		myAshTent = GetFuture(myAshTentFuture).get_result()
+	endif
+	TentSystem.ApplySnow(self)
 	if myPlayerMarker_MainWeaponFuture
 		myPlayerMarker_MainWeapon = GetFuture(myPlayerMarker_MainWeaponFuture).get_result()
 	endif
@@ -635,6 +646,51 @@ function GetResults()
 	if myWardFuture
 		myWard = GetFuture(myWardFuture).get_result()
 	endif
+	if myClutterStatic1Future
+		myClutterStatic1 = GetFuture(myClutterStatic1Future).get_result()
+	endif
+	if myClutterStatic2Future
+		myClutterStatic2 = GetFuture(myClutterStatic2Future).get_result()
+	endif
+	if myClutterStatic3Future
+		myClutterStatic3 = GetFuture(myClutterStatic3Future).get_result()
+	endif
+	if myClutterStatic4Future
+		myClutterStatic4 = GetFuture(myClutterStatic4Future).get_result()
+	endif
+	if myClutterStatic5Future
+		myClutterStatic5 = GetFuture(myClutterStatic5Future).get_result()
+	endif
+	if myClutterActivator1Future
+		myClutterActivator1 = GetFuture(myClutterActivator1Future).get_result()
+	endif
+	if myClutterActivator2Future
+		myClutterActivator2 = GetFuture(myClutterActivator2Future).get_result()
+	endif
+	if myClutterActivator3Future
+		myClutterActivator3 = GetFuture(myClutterActivator3Future).get_result()
+	endif
+	if myClutterActivator4Future
+		myClutterActivator4 = GetFuture(myClutterActivator4Future).get_result()
+	endif
+	if myClutterActivator5Future
+		myClutterActivator5 = GetFuture(myClutterActivator5Future).get_result()
+	endif
+	if myClutterFurniture1Future
+		myClutterFurniture1 = GetFuture(myClutterFurniture1Future).get_result()
+	endif
+	if myClutterFurniture2Future
+		myClutterFurniture2 = GetFuture(myClutterFurniture2Future).get_result()
+	endif
+	if myClutterFurniture3Future
+		myClutterFurniture3 = GetFuture(myClutterFurniture3Future).get_result()
+	endif
+	if myClutterFurniture4Future
+		myClutterFurniture4 = GetFuture(myClutterFurniture4Future).get_result()
+	endif
+	if myClutterFurniture5Future
+		myClutterFurniture5 = GetFuture(myClutterFurniture5Future).get_result()
+	endif
 	if myLanternUnlitFuture
 		myLanternUnlit = GetFuture(myLanternUnlitFuture).get_result()
 	endif
@@ -644,6 +700,79 @@ function GetResults()
 	if myLanternLightFuture
 		myLanternLight = GetFuture(myLanternLightFuture).get_result()
 	endif
+	if myLanternUnlit2Future
+		myLanternUnlit2 = GetFuture(myLanternUnlit2Future).get_result()
+	endif
+	if myLanternLit2Future
+		myLanternLit2 = GetFuture(myLanternLit2Future).get_result()
+	endif
+	if myLanternLight2Future
+		myLanternLight2 = GetFuture(myLanternLight2Future).get_result()
+	endif
+	if myLanternUnlit3Future
+		myLanternUnlit3 = GetFuture(myLanternUnlit3Future).get_result()
+	endif
+	if myLanternLit3Future
+		myLanternLit3 = GetFuture(myLanternLit3Future).get_result()
+	endif
+	if myLanternLight3Future
+		myLanternLight3 = GetFuture(myLanternLight3Future).get_result()
+	endif
+	if mySpareBedRoll1Future
+		mySpareBedRoll1 = GetFuture(mySpareBedRoll1Future).get_result()
+	endif
+	if mySpareBedRoll2Future
+		mySpareBedRoll2 = GetFuture(mySpareBedRoll2Future).get_result()
+	endif
+	if mySpareBedRoll3Future
+		mySpareBedRoll3 = GetFuture(mySpareBedRoll3Future).get_result()
+	endif
+	if myFollowerAMarker_MainWeaponFuture
+		myFollowerAMarker_MainWeapon = GetFuture(myFollowerAMarker_MainWeaponFuture).get_result()
+	endif
+	if myFollowerAMarker_OffHandWeaponFuture
+		myFollowerAMarker_OffHandWeapon = GetFuture(myFollowerAMarker_OffHandWeaponFuture).get_result()
+	endif
+	if myFollowerAMarker_BigWeaponFuture
+		myFollowerAMarker_BigWeapon = GetFuture(myFollowerAMarker_BigWeaponFuture).get_result()
+	endif
+	if myFollowerAMarker_BowFuture
+		myFollowerAMarker_Bow = GetFuture(myFollowerAMarker_BowFuture).get_result()
+	endif
+	if myFollowerAMarker_ShieldFuture
+		myFollowerAMarker_Shield = GetFuture(myFollowerAMarker_ShieldFuture).get_result()
+	endif
+	if myFollowerBMarker_MainWeaponFuture
+		myFollowerBMarker_MainWeapon = GetFuture(myFollowerBMarker_MainWeaponFuture).get_result()
+	endif
+	if myFollowerBMarker_OffHandWeaponFuture
+		myFollowerBMarker_OffHandWeapon = GetFuture(myFollowerBMarker_OffHandWeaponFuture).get_result()
+	endif
+	if myFollowerBMarker_BigWeaponFuture
+		myFollowerBMarker_BigWeapon = GetFuture(myFollowerBMarker_BigWeaponFuture).get_result()
+	endif
+	if myFollowerBMarker_BowFuture
+		myFollowerBMarker_Bow = GetFuture(myFollowerBMarker_BowFuture).get_result()
+	endif
+	if myFollowerBMarker_ShieldFuture
+		myFollowerBMarker_Shield = GetFuture(myFollowerBMarker_ShieldFuture).get_result()
+	endif
+	if myFollowerCMarker_MainWeaponFuture
+		myFollowerCMarker_MainWeapon = GetFuture(myFollowerCMarker_MainWeaponFuture).get_result()
+	endif
+	if myFollowerCMarker_OffHandWeaponFuture
+		myFollowerCMarker_OffHandWeapon = GetFuture(myFollowerCMarker_OffHandWeaponFuture).get_result()
+	endif
+	if myFollowerCMarker_BigWeaponFuture
+		myFollowerCMarker_BigWeapon = GetFuture(myFollowerCMarker_BigWeaponFuture).get_result()
+	endif
+	if myFollowerCMarker_BowFuture
+		myFollowerCMarker_Bow = GetFuture(myFollowerCMarker_BowFuture).get_result()
+	endif
+	if myFollowerCMarker_ShieldFuture
+		myFollowerCMarker_Shield = GetFuture(myFollowerCMarker_ShieldFuture).get_result()
+	endif
+
 endFunction
 
 function TearDown()
@@ -694,6 +823,21 @@ function TearDown()
 	TryToDisableAndDeleteRef(myAshTent)
 	TryToDisableAndDeleteRef(myNormalTent)
 	TryToDisableAndDeleteRef(myTent)
+	TryToDisableAndDeleteRef(myFollowerAMarker_MainWeapon)
+	TryToDisableAndDeleteRef(myFollowerAMarker_OffHandWeapon)
+	TryToDisableAndDeleteRef(myFollowerAMarker_BigWeapon)
+	TryToDisableAndDeleteRef(myFollowerAMarker_Bow)
+	TryToDisableAndDeleteRef(myFollowerAMarker_Shield)
+	TryToDisableAndDeleteRef(myFollowerBMarker_MainWeapon)
+	TryToDisableAndDeleteRef(myFollowerBMarker_OffHandWeapon)
+	TryToDisableAndDeleteRef(myFollowerBMarker_BigWeapon)
+	TryToDisableAndDeleteRef(myFollowerBMarker_Bow)
+	TryToDisableAndDeleteRef(myFollowerBMarker_Shield)
+	TryToDisableAndDeleteRef(myFollowerCMarker_MainWeapon)
+	TryToDisableAndDeleteRef(myFollowerCMarker_OffHandWeapon)
+	TryToDisableAndDeleteRef(myFollowerCMarker_BigWeapon)
+	TryToDisableAndDeleteRef(myFollowerCMarker_Bow)
+	TryToDisableAndDeleteRef(myFollowerCMarker_Shield)
 endFunction
 
 function GenerateDebugReport()
@@ -770,15 +914,15 @@ function PlaceTentObject_Tent()
 endFunction
 
 function PlaceTentObject_NormalTent()
-	;FuturemyNormalTent = myTent.PlaceAtMe(TentAsset_ShelterModelExterior, abInitiallyDisabled = true)	
+	myNormalTentFuture = ObjectPlacementSystem.PlaceTentObjectAsync(center_object, PositionRef_Shelter, self, TentAsset_ShelterModelExterior, myOriginAng, initially_disabled = true)	
 endFunction
 
 function PlaceTentObject_SnowTent()
-	;FuturemySnowTent = myTent.PlaceAtMe(TentAsset_ShelterModelMaterialSnow, abInitiallyDisabled = true)
+	mySnowTentFuture = ObjectPlacementSystem.PlaceTentObjectAsync(center_object, PositionRef_Shelter, self, TentAsset_ShelterModelMaterialSnow, myOriginAng, initially_disabled = true)
 endFunction
 
 function PlaceTentObject_AshTent()
-	;FuturemyAshTent = myTent.PlaceAtMe(TentAsset_ShelterModelMaterialAsh, abInitiallyDisabled = true)
+	myAshTentFuture = ObjectPlacementSystem.PlaceTentObjectAsync(center_object, PositionRef_Shelter, self, TentAsset_ShelterModelMaterialAsh, myOriginAng, initially_disabled = true)
 endFunction
 
 function PlaceTentObject_ClutterStatic1()
