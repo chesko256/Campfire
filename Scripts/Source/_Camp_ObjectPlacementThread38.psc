@@ -1,1 +1,0 @@
-scriptname _Camp_ObjectPlacementThread38 extends _Camp_ObjectPlacementSystem
