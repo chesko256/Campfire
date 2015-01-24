@@ -246,6 +246,86 @@ ObjectReference function PlaceTentObjectAsync(ObjectReference center_object, Obj
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
                                         initially_disabled, is_propped, is_hanging)
+        elseif !thread21.queued() && thread_limit >= 21
+            future = thread21.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
+                                        XMarker, center_object, object_position_reference,      \
+                                        origin, form_to_place, origin_angle,                    \
+                                        x_local_ang_adjust, y_local_ang_adjust,                 \
+                                        z_local_ang_adjust, z_global_ang_adjust,                \
+                                        z_hanging_offset, inverted_local_y,                     \
+                                        initially_disabled, is_propped, is_hanging)
+        elseif !thread22.queued() && thread_limit >= 22
+            future = thread22.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
+                                        XMarker, center_object, object_position_reference,      \
+                                        origin, form_to_place, origin_angle,                    \
+                                        x_local_ang_adjust, y_local_ang_adjust,                 \
+                                        z_local_ang_adjust, z_global_ang_adjust,                \
+                                        z_hanging_offset, inverted_local_y,                     \
+                                        initially_disabled, is_propped, is_hanging)
+        elseif !thread23.queued() && thread_limit >= 23
+            future = thread23.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
+                                        XMarker, center_object, object_position_reference,      \
+                                        origin, form_to_place, origin_angle,                    \
+                                        x_local_ang_adjust, y_local_ang_adjust,                 \
+                                        z_local_ang_adjust, z_global_ang_adjust,                \
+                                        z_hanging_offset, inverted_local_y,                     \
+                                        initially_disabled, is_propped, is_hanging)
+        elseif !thread24.queued() && thread_limit >= 24
+            future = thread24.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
+                                        XMarker, center_object, object_position_reference,      \
+                                        origin, form_to_place, origin_angle,                    \
+                                        x_local_ang_adjust, y_local_ang_adjust,                 \
+                                        z_local_ang_adjust, z_global_ang_adjust,                \
+                                        z_hanging_offset, inverted_local_y,                     \
+                                        initially_disabled, is_propped, is_hanging)
+        elseif !thread25.queued() && thread_limit >= 25
+            future = thread25.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
+                                        XMarker, center_object, object_position_reference,      \
+                                        origin, form_to_place, origin_angle,                    \
+                                        x_local_ang_adjust, y_local_ang_adjust,                 \
+                                        z_local_ang_adjust, z_global_ang_adjust,                \
+                                        z_hanging_offset, inverted_local_y,                     \
+                                        initially_disabled, is_propped, is_hanging)
+        elseif !thread26.queued() && thread_limit >= 26
+            future = thread26.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
+                                        XMarker, center_object, object_position_reference,      \
+                                        origin, form_to_place, origin_angle,                    \
+                                        x_local_ang_adjust, y_local_ang_adjust,                 \
+                                        z_local_ang_adjust, z_global_ang_adjust,                \
+                                        z_hanging_offset, inverted_local_y,                     \
+                                        initially_disabled, is_propped, is_hanging)
+        elseif !thread27.queued() && thread_limit >= 27
+            future = thread27.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
+                                        XMarker, center_object, object_position_reference,      \
+                                        origin, form_to_place, origin_angle,                    \
+                                        x_local_ang_adjust, y_local_ang_adjust,                 \
+                                        z_local_ang_adjust, z_global_ang_adjust,                \
+                                        z_hanging_offset, inverted_local_y,                     \
+                                        initially_disabled, is_propped, is_hanging)
+        elseif !thread28.queued() && thread_limit >= 28
+            future = thread28.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
+                                        XMarker, center_object, object_position_reference,      \
+                                        origin, form_to_place, origin_angle,                    \
+                                        x_local_ang_adjust, y_local_ang_adjust,                 \
+                                        z_local_ang_adjust, z_global_ang_adjust,                \
+                                        z_hanging_offset, inverted_local_y,                     \
+                                        initially_disabled, is_propped, is_hanging)
+        elseif !thread29.queued() && thread_limit >= 29
+            future = thread29.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
+                                        XMarker, center_object, object_position_reference,      \
+                                        origin, form_to_place, origin_angle,                    \
+                                        x_local_ang_adjust, y_local_ang_adjust,                 \
+                                        z_local_ang_adjust, z_global_ang_adjust,                \
+                                        z_hanging_offset, inverted_local_y,                     \
+                                        initially_disabled, is_propped, is_hanging)
+        elseif !thread30.queued() && thread_limit >= 30
+            future = thread30.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
+                                        XMarker, center_object, object_position_reference,      \
+                                        origin, form_to_place, origin_angle,                    \
+                                        x_local_ang_adjust, y_local_ang_adjust,                 \
+                                        z_local_ang_adjust, z_global_ang_adjust,                \
+                                        z_hanging_offset, inverted_local_y,                     \
+                                        initially_disabled, is_propped, is_hanging)
 		else
 			;All threads are queued; start all threads, wait, and try again.
             wait_all()
