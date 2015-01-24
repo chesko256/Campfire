@@ -33,10 +33,7 @@ ObjectReference function get_async(Activator akFuture, ObjectReference akFutureA
 						bool initially_disabled = false, bool is_propped = false, bool is_hanging = false)
 	
 	thread_queued = true
-	if thread_id == -1
-		thread_id = GetThreadId()
-		;debug.trace("[Campfire] Thread " + self + " assigned Thread ID " + thread_id)
-	endif
+
 	_OriginAngle = new float[3]
 	XMarker = XMarkerStatic
 	_RelativeCenterObject = relative_center_object
@@ -52,13 +49,13 @@ ObjectReference function get_async(Activator akFuture, ObjectReference akFutureA
 	_InvertedLocalY = inverted_local_y
 	_IsPropped = is_propped
 	_IsHanging = is_hanging
-	RaiseEvent_OnThreadedPlacement(thread_id)
+	
 	future = akFutureAnchor.PlaceAtMe(akFuture)
 	return future
 endFunction
 
-Event OnThreadedPlacement(int aiThreadId)
-	if thread_queued && aiThreadId == thread_id
+Event OnObjectPlacementStart()
+	if thread_queued
 		;debug.StartStackProfiling()
 		;debug.trace("[Campfire] Thread " + self + " (TID " + thread_id + ") got OnThreadedPlacement, WORKING -----------")
 		float[] relative_position = new float[6]
@@ -234,7 +231,23 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
     return myObject
 endFunction
 
-bool function busy()
-	;Returns True if this thread has been queued and is processing (or has processed) a result. Only unqueued threads are safe to use. This function does not wait.
+;Allows the Thread Manager to determine if this thread is available
+bool function queued()
 	return thread_queued
+endFunction
+ 
+;For Thread Manager troubleshooting.
+bool function has_future(ObjectReference akFuture)
+    if akFuture == future
+        return true
+    else
+        return false
+    endif
+endFunction
+ 
+;For Thread Manager troubleshooting.
+bool function force_unlock()
+    clear_thread_vars()
+    thread_queued = false
+    return true
 endFunction

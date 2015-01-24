@@ -164,27 +164,6 @@ bool function RaiseEvent_CampfireOnPlaceableObjectUsed(Form akBaseObject, Form a
 	endif
 endFunction
 
-function RaiseEvent_OnThreadedPlacement(int iThreadId) global
-	;trace("[Campfire] Raising Event: RaiseEvent_OnThreadedPlacement()")
-
-	int handle = ModEvent.Create("Campfire_OnThreadedPlacement")
-	if handle
-		ModEvent.PushInt(handle, iThreadId)
-		ModEvent.Send(handle)
-	else
-		;pass
-	endif
-endFunction
-
-int function GetThreadId() global
-	CampfireAPI Campfire = GetAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return -1
-	endif
-
-	return Campfire.NextThreadId
-endFunction
 
 ; Functions ==================================================================================
 

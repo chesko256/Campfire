@@ -13,11 +13,3 @@ Formlist property _Camp_FurTentsLarge auto
 Formlist property _Camp_LeatherTentsSmall auto
 Formlist property _Camp_LeatherTentsLarge auto
 Formlist property _Camp_ConjuredShelters auto
-
-int next_thread_id = 0
-int property NextThreadId
-	int function get()
-		next_thread_id += 1
-		return next_thread_id
-	endFunction
-endProperty
