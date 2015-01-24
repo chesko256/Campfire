@@ -1,1 +1,1 @@
-scriptname _Camp_ObjectPlacementThread19 extends _Camp_ObjectPlacementSystem
+scriptname _Camp_ObjectPlacementThread19 extends _Camp_ObjectPlacementThread
