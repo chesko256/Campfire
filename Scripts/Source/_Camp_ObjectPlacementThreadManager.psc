@@ -78,13 +78,18 @@ Event OnInit()
 EndEvent
  
 ;The 'public-facing' function that our MagicEffect script will interact with.
-ObjectReference function PlaceTentObjectAsync(ObjectReference center_object, ObjectReference object_position_reference,         \
-                              ObjectReference origin, Form form_to_place, float[] origin_angle,                                 \
+ObjectReference function PlaceTentObjectAsync(ObjectReference tent_object, Form form_to_place,                                  \
+                              ObjectReference object_position_reference,                                                        \
                               float x_local_ang_adjust = 0.0, float y_local_ang_adjust = 0.0, float z_local_ang_adjust = 0.0,   \
                               float z_global_ang_adjust = 0.0, float z_hanging_offset = 0.0, bool inverted_local_y = false,     \
                               bool initially_disabled = false, bool is_propped = false, bool is_hanging = false)
     int i = 0
 	ObjectReference future
+    
+    float[] origin_angle = (tent_object as CampTent).OriginAng
+    ObjectReference center_object = (tent_object as CampTent).CenterObject
+    ObjectReference origin = tent_object
+
 	while !future
 		if !thread01.queued() && thread_limit >= 1
             future = thread01.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \

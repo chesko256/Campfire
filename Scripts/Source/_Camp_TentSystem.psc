@@ -811,7 +811,7 @@ function PackTent(ObjectReference akTent)
 	UnDisplayBackpack_Player(TentObject)	
 	
 	;Delete markers and furniture
-	TentObject.TearDown()
+	TentObject.TakeDown()
 	
 	wait(0.2)
 	PlayerRef.AddItem(TentObject.Required_InventoryItem, abSilent = true)
@@ -836,8 +836,7 @@ function CleanUpTent(ObjectReference akTent)
 	UnDisplayQuiver_Player(TentObject)
 	UnDisplayBackpack_Player(TentObject)
 
-	TryToEnableRef(TentObject.myTentExterior)
-	;myActorRef = none
+	TryToEnableRef(TentObject.myTentExterior, true)
 endFunction
 
 function UnequipUsingDummyWeapon()

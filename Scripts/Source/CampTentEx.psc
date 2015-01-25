@@ -53,6 +53,21 @@ ObjectReference property PositionRef_ClutterActivator4 auto
 ObjectReference property PositionRef_ClutterActivator5 auto
 {Optional: Clutter position reference.}
 
+ObjectReference property PositionRef_ClutterFurniture1 auto
+{Optional: Clutter position reference.}
+
+ObjectReference property PositionRef_ClutterFurniture2 auto
+{Optional: Clutter position reference.}
+
+ObjectReference property PositionRef_ClutterFurniture3 auto
+{Optional: Clutter position reference.}
+
+ObjectReference property PositionRef_ClutterFurniture4 auto
+{Optional: Clutter position reference.}
+
+ObjectReference property PositionRef_ClutterFurniture5 auto
+{Optional: Clutter position reference.}
+
 ObjectReference property PositionRef_Follower1_Bed auto
 {Optional: The first follower's bed furniture position reference.}
 
