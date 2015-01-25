@@ -167,6 +167,16 @@ endFunction
 
 ; Functions ==================================================================================
 
+_Camp_ObjectPlacementThreadManager function GetPlacementSystem() global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+
+	return Campfire.CampfireObjectPlacementSystem as _Camp_ObjectPlacementThreadManager
+endFunction
+
 Armor function GetPlayerEquippedHead() global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none

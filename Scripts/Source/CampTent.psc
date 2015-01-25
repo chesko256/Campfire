@@ -361,11 +361,10 @@ Weapon property myDisplayFollowerCBow auto hidden
 
 bool initialized = false
 float[] property OriginAng auto hidden
-ObjectReference property CenterObject auto
+ObjectReference property CenterObject auto hidden
 bool property bLanternLit = false auto hidden
 bool property bGettingUp = false auto hidden
 
-Quest property CampfireObjectPlacementSystem auto
 _Camp_ObjectPlacementThreadManager ObjectPlacementSystem
 
 Event OnInit()
@@ -384,7 +383,7 @@ Event OnUpdate()
 endEvent
 
 function Initialize()
-	ObjectPlacementSystem = CampfireObjectPlacementSystem as _Camp_ObjectPlacementThreadManager
+	ObjectPlacementSystem = CampUtil.GetPlacementSystem()
 	RotateOnStartUp()
 	OriginAng = GetAngleData(self)
 	PlaceObjects()
@@ -563,10 +562,6 @@ function PlaceObjects()
 		if Extended.PositionRef_Follower1_Bed
 			PlaceTentObject_SpareBedRoll3(Extended)
 		endif
-	endif
-
-	if self.GetDistance(myBedRoll) > 20.0
-		self.MoveTo(myBedRoll)
 	endif
 endFunction
 
@@ -760,6 +755,9 @@ function GetResults()
 	endif
 	if myFollowerCMarker_ShieldFuture
 		myFollowerCMarker_Shield = GetFuture(myFollowerCMarker_ShieldFuture).get_result()
+	endif
+	if self.GetDistance(myBedRoll) > 20.0
+		self.MoveTo(myBedRoll)
 	endif
 endFunction
 
