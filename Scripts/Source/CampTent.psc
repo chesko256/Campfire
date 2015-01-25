@@ -106,6 +106,9 @@ ObjectReference property PositionRef_CenterObjectOverride auto
 Float property Setting_StartUpRotation = 0.0 auto
 {Optional: The amount, in degrees, to rotate the tent on the Z axis on start-up. Helpful if the Shelter asset is not aligned correctly.}
 
+Float property Setting_BedRollScale = 1.0 auto
+{Optional: The scale to render the player's and follower's bed rolls. 1.0 by default.}
+
 ; PRIVATE
 ;Object locations
 float[] property myPlayerMarker_MainWeapon_Pos auto hidden
@@ -556,10 +559,10 @@ function PlaceObjects()
 		if Extended.PositionRef_Follower1_Bed
 			PlaceTentObject_SpareBedRoll1(Extended)
 		endif
-		if Extended.PositionRef_Follower1_Bed
+		if Extended.PositionRef_Follower2_Bed
 			PlaceTentObject_SpareBedRoll2(Extended)
 		endif
-		if Extended.PositionRef_Follower1_Bed
+		if Extended.PositionRef_Follower3_Bed
 			PlaceTentObject_SpareBedRoll3(Extended)
 		endif
 	endif
@@ -623,9 +626,6 @@ function GetResults()
 	endif
 	if myExitFrontFuture
 		myExitFront = GetFuture(myExitFrontFuture).get_result()
-	endif
-	if myBedRollFuture
-		myBedRoll = GetFuture(myBedRollFuture).get_result()
 	endif
 	if myWardFuture
 		myWard = GetFuture(myWardFuture).get_result()
@@ -702,15 +702,6 @@ function GetResults()
 	if myLanternLight3Future
 		myLanternLight3 = GetFuture(myLanternLight3Future).get_result()
 	endif
-	if mySpareBedRoll1Future
-		mySpareBedRoll1 = GetFuture(mySpareBedRoll1Future).get_result()
-	endif
-	if mySpareBedRoll2Future
-		mySpareBedRoll2 = GetFuture(mySpareBedRoll2Future).get_result()
-	endif
-	if mySpareBedRoll3Future
-		mySpareBedRoll3 = GetFuture(mySpareBedRoll3Future).get_result()
-	endif
 	if myFollowerAMarker_MainWeaponFuture
 		myFollowerAMarker_MainWeapon = GetFuture(myFollowerAMarker_MainWeaponFuture).get_result()
 	endif
@@ -756,8 +747,32 @@ function GetResults()
 	if myFollowerCMarker_ShieldFuture
 		myFollowerCMarker_Shield = GetFuture(myFollowerCMarker_ShieldFuture).get_result()
 	endif
-	if self.GetDistance(myBedRoll) > 20.0
-		self.MoveTo(myBedRoll)
+	if myBedRollFuture
+		myBedRoll = GetFuture(myBedRollFuture).get_result()
+		if self.GetDistance(myBedRoll) > 20.0
+			self.MoveTo(myBedRoll)
+		endif
+		if Setting_BedRollScale != 1.0
+			self.SetScale(Setting_BedRollScale)
+		endif
+	endif
+	if mySpareBedRoll1Future
+		mySpareBedRoll1 = GetFuture(mySpareBedRoll1Future).get_result()
+		if Setting_BedRollScale != 1.0
+			mySpareBedRoll1.SetScale(Setting_BedRollScale)
+		endif
+	endif
+	if mySpareBedRoll2Future
+		mySpareBedRoll2 = GetFuture(mySpareBedRoll2Future).get_result()
+		if Setting_BedRollScale != 1.0
+			mySpareBedRoll2.SetScale(Setting_BedRollScale)
+		endif
+	endif
+	if mySpareBedRoll3Future
+		mySpareBedRoll3 = GetFuture(mySpareBedRoll3Future).get_result()
+		if Setting_BedRollScale != 1.0
+			mySpareBedRoll3.SetScale(Setting_BedRollScale)
+		endif
 	endif
 endFunction
 
