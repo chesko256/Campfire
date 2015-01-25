@@ -239,7 +239,6 @@ ObjectReference property myWard auto hidden
 
 ;Futures
 ObjectReference myTentFuture
-ObjectReference myTentExteriorFuture
 ObjectReference myNormalTentFuture
 ObjectReference mySnowTentFuture
 ObjectReference myAshTentFuture
@@ -571,10 +570,6 @@ endFunction
 function GetResults()
 	if myTentFuture
 		myTent = GetFuture(myTentFuture).get_result()
-		TryToEnableRef(myTent, true)
-	endif
-	if myTentExteriorFuture
-		myTentExterior = GetFuture(myTentExteriorFuture).get_result()
 	endif
 	if myNormalTentFuture
 		myNormalTent = GetFuture(myNormalTentFuture).get_result()
@@ -585,7 +580,7 @@ function GetResults()
 	if myAshTentFuture
 		myAshTent = GetFuture(myAshTentFuture).get_result()
 	endif
-	TentSystem.ApplySnow(self)
+	TentSystem.SelectExterior(self)
 	if myPlayerMarker_MainWeaponFuture
 		myPlayerMarker_MainWeapon = GetFuture(myPlayerMarker_MainWeaponFuture).get_result()
 	endif
@@ -627,9 +622,15 @@ function GetResults()
 	endif
 	if myExitFrontFuture
 		myExitFront = GetFuture(myExitFrontFuture).get_result()
+		if !IsRefInInterior(Game.GetPlayer())
+			TryToEnableRef(myExitFront)
+		endif
 	endif
 	if myWardFuture
 		myWard = GetFuture(myWardFuture).get_result()
+		if !IsRefInInterior(Game.GetPlayer())
+			TryToEnableRef(myWard)
+		endif	
 	endif
 	if myClutterStatic1Future
 		myClutterStatic1 = GetFuture(myClutterStatic1Future).get_result()
@@ -1039,7 +1040,7 @@ function PlaceTentObject_PlayerLayDownMarker()
 endFunction
 
 function PlaceTentObject_ExitFront()
-	myExitFrontFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), PositionRef_FrontExitMarker)
+	myExitFrontFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), PositionRef_FrontExitMarker, initially_disabled = true)
 endFunction
 
 function PlaceTentObject_BedRoll()
@@ -1047,7 +1048,7 @@ function PlaceTentObject_BedRoll()
 endFunction
 
 function PlaceTentObject_Ward()
-	myWardFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetWard(), PositionRef_Ward, x_local_ang_adjust = -90.0, is_propped = true)
+	myWardFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetWard(), PositionRef_Ward, x_local_ang_adjust = -90.0, is_propped = true, initially_disabled = true)
 endFunction
 
 function PlaceTentObject_Lantern1()

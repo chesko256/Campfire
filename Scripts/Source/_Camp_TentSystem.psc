@@ -88,7 +88,7 @@ function UpdateTentUseState(ObjectReference akTent)
 		_Camp_FadeDown.Apply()
 		wait(0.5)
 		_Camp_FadeDown.PopTo(_Camp_Black)
-		if TentObject.myExitFront && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
+		if TentObject.myExitFront && TentObject.myExitFront.IsEnabled() && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
 			PlayerRef.MoveTo(TentObject.myExitFront)
 		else
 			;@TODO: Test this
@@ -98,9 +98,8 @@ function UpdateTentUseState(ObjectReference akTent)
 		_Camp_Tent_Combat.Show()
 		CleanUpTent(akTent)
 	elseif !(PlayerRef.GetSitState() == 2 || PlayerRef.GetSitState() == 3) && !TentObject.bGettingUp
-		;Player getting up from sitting
-		debug.trace("[Campfire] I am " + PlayerRef.GetDistance(TentObject.myExitFront) + " from myExitFront " + TentObject.myExitFront)
-		if TentObject.myExitFront && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
+		;Player getting up from sitting or lying down
+		if TentObject.myExitFront && TentObject.myExitFront.IsEnabled() && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
 			PlayerRef.SplineTranslateToRef(TentObject.myExitFront, 1.0, 65.0)
 		endif
 		CleanUpTent(akTent)
@@ -222,7 +221,7 @@ function ShowLayMenu(ObjectReference akTent)
 			wait(0.4)
 			TentObject.myPlayerLayDownMarker.Activate(PlayerRef)				
 			wait(3.5)
-			ApplySnow(akTent)
+			SelectExterior(akTent)
 			_Camp_Black.PopTo(_Camp_FadeUp)
 		else
 			;Something went wrong, make sure that the player's vision is restored!
@@ -383,40 +382,53 @@ function DisplayPlayerTentEquipment(ObjectReference akTent, bool bLimited = fals
 	endif
 endFunction
 
-function ApplySnow(ObjectReference akTent)
-	;@TODO: Rework slightly to account for no myTentExterior object, use the shelter object instead
+function SelectExterior(ObjectReference akTent)
+	if IsRefInInterior(PlayerRef)
+		return
+	endif
+
 	Weather myWeather = Weather.GetCurrentWeather()
+	bool SnowyWeather = myWeather.GetClassification() == 3
 
 	CampTent TentObject = akTent as CampTent
-	bool bShowExterior = false
-	if TentObject.myTentExterior == none
-		bShowExterior = true
+
+	bool snow = false
+	bool ash = false
+	bool separate_exterior = TentObject.myTent && TentObject.myNormalTent
+
+	if SnowyWeather
+		if Compatibility.isDLC2Loaded && myWeather == Compatibility.DLC2AshStorm
+			ash = true
+		else
+			snow = true
+		endif
 	endif
 
-	if myWeather.GetClassification() == 3
-		if Compatibility.isDLC2Loaded
-			if myWeather == Compatibility.DLC2AshStorm
-				TentObject.myTentExterior = TentObject.myAshTent
-			else
-				TentObject.myTentExterior = TentObject.mySnowTent
-			endif
-		else
+	if snow
+		if TentObject.mySnowTent
 			TentObject.myTentExterior = TentObject.mySnowTent
 		endif
-	else
-		if TentObject.myTentExterior == TentObject.mySnowTent || TentObject.myTentExterior == TentObject.myAshTent
-			return
+	elseif ash
+		if TentObject.myAshTent
+			TentObject.myTentExterior = TentObject.myAshTent
 		endif
-		TentObject.myTentExterior = TentObject.myNormalTent
 	endif
 
-	if bShowExterior
-		TryToDisableRef(TentObject.myNormalTent)
-		TryToDisableRef(TentObject.mySnowTent)
-		TryToDisableRef(TentObject.myAshTent)
-		TryToEnableRef(TentObject.myTentExterior, true)
+	if !TentObject.myTentExterior
+		if TentObject.myNormalTent
+			TentObject.myTentExterior = TentObject.myNormalTent
+		elseif TentObject.myTent
+			TentObject.myTentExterior = TentObject.myTent
+		endif
 	endif
 
+	if TentObject.myTentExterior != TentObject.myTent
+		TryToEnableRef(TentObject.myTent, true)
+	endif
+	TryToDisableRef(TentObject.myNormalTent)
+	TryToDisableRef(TentObject.mySnowTent)
+	TryToDisableRef(TentObject.myAshTent)
+	TryToEnableRef(TentObject.myTentExterior, true)
 endFunction
 
 function TryToMakeFollowersUse(ObjectReference akTent)

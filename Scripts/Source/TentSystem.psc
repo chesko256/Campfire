@@ -56,14 +56,14 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
 	return TentAPI.PlaceAtMeRelative(akOrigin, akFormToPlace, fOriginAng, fRelativePos, fZGlobalAngAdjust, fXLocalAngAdjust, fYLocalAngAdjust, fZLocalAngAdjust, fZHangingOffset, abInvertedLocalY, abInitiallyDisabled, abIsPropped, abIsHanging)
 endFunction
 
-function ApplySnow(ObjectReference akTent) global
+function SelectExterior(ObjectReference akTent) global
 	_Camp_TentSystem TentAPI = GetAPI()
 	if TentAPI == none
 		RaiseTentAPIError()
 		return None
 	endif
 
-	TentAPI.ApplySnow(akTent)
+	TentAPI.SelectExterior(akTent)
 endFunction
 
 Static function GetXMarker() global
