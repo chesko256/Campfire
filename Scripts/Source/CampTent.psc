@@ -571,6 +571,7 @@ endFunction
 function GetResults()
 	if myTentFuture
 		myTent = GetFuture(myTentFuture).get_result()
+		TryToEnableRef(myTent, true)
 	endif
 	if myTentExteriorFuture
 		myTentExterior = GetFuture(myTentExteriorFuture).get_result()
@@ -910,7 +911,7 @@ function RotateOnStartUp()
 endFunction
 
 function PlaceTentObject_Tent()
-	myTentFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentAsset_ShelterModel, PositionRef_Shelter)
+	myTentFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentAsset_ShelterModel, PositionRef_Shelter, initially_disabled = true)
 endFunction
 
 function PlaceTentObject_NormalTent()
