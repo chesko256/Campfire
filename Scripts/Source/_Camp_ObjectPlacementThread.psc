@@ -78,9 +78,6 @@ function clear_thread_vars()
 	_ObjectPositionReference = None
 	_Origin = None
 	_FormToPlace = None
-	_OriginAngle[0] = 0.0
-	_OriginAngle[1] = 0.0
-	_OriginAngle[2] = 0.0
 	_XLocalAngAdjust = 0.0
 	_YLocalAngAdjust = 0.0
 	_ZLocalAngAdjust = 0.0
@@ -197,7 +194,7 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
 										   float fYLocalAngAdjust = 0.0, float fZLocalAngAdjust = 0.0, float fZHangingOffset = 0.0, \
 										   bool abInvertedLocalY = false, bool abInitiallyDisabled = false, bool abIsPropped = false, \
 										   bool abIsHanging = false)
-	
+
 	ObjectReference myObject
     ObjectReference myTempMarker = akOrigin.PlaceAtMe(XMarker)
 	myTempMarker.MoveTo(myTempMarker, fRelativePos[0], fRelativePos[1], fRelativePos[2])

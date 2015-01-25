@@ -414,7 +414,7 @@ function ApplySnow(ObjectReference akTent)
 		TryToDisableRef(TentObject.myNormalTent)
 		TryToDisableRef(TentObject.mySnowTent)
 		TryToDisableRef(TentObject.myAshTent)
-		TryToEnableRef(TentObject.myTentExterior)
+		TryToEnableRef(TentObject.myTentExterior, true)
 	endif
 
 endFunction

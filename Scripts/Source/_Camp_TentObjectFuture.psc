@@ -5,7 +5,7 @@ Quest property CampfireObjectPlacementSystem auto
 ObjectReference r
 ObjectReference property result hidden
 	function set(ObjectReference akResult)
-		debug.trace("[CampfireFuture] <<< Value set: " + akResult)
+		;debug.trace("[CampfireFuture] <<< Value set: " + akResult)
 		done = true
 		r = akResult
 	endFunction
@@ -35,7 +35,7 @@ ObjectReference function get_result()
 endFunction
 
 Event OnUpdate()
-	debug.trace("[CampfireFuture] @@@ Done, tearing down...")
+	;debug.trace("[CampfireFuture] @@@ Done, tearing down...")
 	self.Disable()
 	self.Delete()
 endEvent
