@@ -45,6 +45,9 @@
 !Tent*.pex
 !Tent*.psc
 
+#Textures
+!textures/campfire/*
+
 #Ignore working files
 Scripts/Source/_Camp_SkyUIConfigPanelScript - Copy.psc
 

@@ -48,8 +48,9 @@ Spell property _DE_ZTestSpellA auto
 Spell property _DE_ZTestSpellB auto
 Spell property _DE_ZTestSpellC auto
 
-EffectShader property _DE_VisError auto
-EffectShader property _DE_VisWarm auto
+EffectShader property _Camp_VisError auto
+EffectShader property _Camp_VisWarm auto
+EffectShader property _Camp_VisPlacement auto
 
 MiscObject property myInvItem auto hidden
 
@@ -141,19 +142,25 @@ function PerformPlacement(float fDistance, formlist akWarmList = none, float fHe
 		endif
 		
 		if _Camp_Setting_Legality.GetValueInt() == 1 && !Legal.CampingLegal
-			_DE_VisError.Play(self)
+			_Camp_VisWarm.Stop(self)
+			_Camp_VisPlacement.Stop(self)
+			_Camp_VisError.Play(self)
 		else
 			if akWarmList
 				ObjectReference myref = Game.FindClosestReferenceOfAnyTypeInListFromRef(akWarmList, self, fHeatDist)
 				if myref != none && myref.IsEnabled()
-					_DE_VisWarm.Play(self)
+					_Camp_VisError.Stop(self)
+					_Camp_VisPlacement.Stop(self)
+					_Camp_VisWarm.Play(self)
 				else
-					_DE_VisError.Stop(self)
-					_DE_VisWarm.Stop(self)
+					_Camp_VisError.Stop(self)
+					_Camp_VisWarm.Stop(self)
+					_Camp_VisPlacement.Play(self)
 				endif
 			else
-				_DE_VisError.Stop(self)
-				_DE_VisWarm.Stop(self)
+				_Camp_VisError.Stop(self)
+				_Camp_VisWarm.Stop(self)
+				_Camp_VisPlacement.Play(self)
 			endif
 		endif
 		
