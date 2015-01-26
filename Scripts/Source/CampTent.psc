@@ -367,7 +367,7 @@ ObjectReference property CenterObject auto hidden
 bool property bLanternLit = false auto hidden
 bool property bGettingUp = false auto hidden
 
-_Camp_ObjectPlacementThreadManager property ObjectPlacementSystem auto hidden
+_Camp_ObjectPlacementThreadManager property PlacementSystem auto hidden
 
 Event OnInit()
 	while !self.Is3DLoaded()
@@ -385,11 +385,11 @@ Event OnUpdate()
 endEvent
 
 function Initialize()
-	ObjectPlacementSystem = CampUtil.GetPlacementSystem()
+	PlacementSystem = CampUtil.GetPlacementSystem()
 	RotateOnStartUp()
 	OriginAng = GetAngleData(self)
 	PlaceObjects()
-	ObjectPlacementSystem.wait_all()
+	PlacementSystem.wait_all()
 	GetResults()
 	GenerateDebugReport()
 	initialized = true
@@ -912,231 +912,231 @@ function RotateOnStartUp()
 endFunction
 
 function PlaceTentObject_Tent()
-	myTentFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentAsset_ShelterModel, PositionRef_Shelter, initially_disabled = true)
+	myTentFuture = PlacementSystem.PlaceTentObject(self, TentAsset_ShelterModel, PositionRef_Shelter, initially_disabled = true)
 endFunction
 
 function PlaceTentObject_NormalTent()
-	myNormalTentFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentAsset_ShelterModelExterior, PositionRef_Shelter, initially_disabled = true)	
+	myNormalTentFuture = PlacementSystem.PlaceTentObject(self, TentAsset_ShelterModelExterior, PositionRef_Shelter, initially_disabled = true)	
 endFunction
 
 function PlaceTentObject_SnowTent()
-	mySnowTentFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentAsset_ShelterModelMaterialSnow, PositionRef_Shelter, initially_disabled = true)
+	mySnowTentFuture = PlacementSystem.PlaceTentObject(self, TentAsset_ShelterModelMaterialSnow, PositionRef_Shelter, initially_disabled = true)
 endFunction
 
 function PlaceTentObject_AshTent()
-	myAshTentFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentAsset_ShelterModelMaterialAsh, PositionRef_Shelter, initially_disabled = true)
+	myAshTentFuture = PlacementSystem.PlaceTentObject(self, TentAsset_ShelterModelMaterialAsh, PositionRef_Shelter, initially_disabled = true)
 endFunction
 
 function PlaceTentObject_ClutterStatic1()
-	myClutterStatic1Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentAsset_ClutterStatic1, PositionRef_ClutterStatic1)
+	myClutterStatic1Future = PlacementSystem.PlaceTentObject(self, TentAsset_ClutterStatic1, PositionRef_ClutterStatic1)
 endFunction
 
 function PlaceTentObject_ClutterStatic2()
-	myClutterStatic2Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentAsset_ClutterStatic2, PositionRef_ClutterStatic2)
+	myClutterStatic2Future = PlacementSystem.PlaceTentObject(self, TentAsset_ClutterStatic2, PositionRef_ClutterStatic2)
 endFunction
 
 function PlaceTentObject_ClutterStatic3()
-	myClutterStatic3Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentAsset_ClutterStatic3, PositionRef_ClutterStatic3)
+	myClutterStatic3Future = PlacementSystem.PlaceTentObject(self, TentAsset_ClutterStatic3, PositionRef_ClutterStatic3)
 endFunction
 
 function PlaceTentObject_ClutterStatic4()
-	myClutterStatic4Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentAsset_ClutterStatic4, PositionRef_ClutterStatic4)
+	myClutterStatic4Future = PlacementSystem.PlaceTentObject(self, TentAsset_ClutterStatic4, PositionRef_ClutterStatic4)
 endFunction
 
 function PlaceTentObject_ClutterStatic5()
-	myClutterStatic5Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentAsset_ClutterStatic5, PositionRef_ClutterStatic5)
+	myClutterStatic5Future = PlacementSystem.PlaceTentObject(self, TentAsset_ClutterStatic5, PositionRef_ClutterStatic5)
 endFunction
 
 function PlaceTentObject_ClutterActivator1(CampTentEx Extended)
-	myClutterActivator1Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, Extended.TentAsset_ClutterActivator1, Extended.PositionRef_ClutterActivator1)
+	myClutterActivator1Future = PlacementSystem.PlaceTentObject(self, Extended.TentAsset_ClutterActivator1, Extended.PositionRef_ClutterActivator1)
 endFunction
 
 function PlaceTentObject_ClutterActivator2(CampTentEx Extended)
-	myClutterActivator2Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, Extended.TentAsset_ClutterActivator2, Extended.PositionRef_ClutterActivator2)
+	myClutterActivator2Future = PlacementSystem.PlaceTentObject(self, Extended.TentAsset_ClutterActivator2, Extended.PositionRef_ClutterActivator2)
 endFunction
 
 function PlaceTentObject_ClutterActivator3(CampTentEx Extended)
-	myClutterActivator3Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, Extended.TentAsset_ClutterActivator3, Extended.PositionRef_ClutterActivator3)
+	myClutterActivator3Future = PlacementSystem.PlaceTentObject(self, Extended.TentAsset_ClutterActivator3, Extended.PositionRef_ClutterActivator3)
 endFunction
 
 function PlaceTentObject_ClutterActivator4(CampTentEx Extended)
-	myClutterActivator4Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, Extended.TentAsset_ClutterActivator4, Extended.PositionRef_ClutterActivator4)
+	myClutterActivator4Future = PlacementSystem.PlaceTentObject(self, Extended.TentAsset_ClutterActivator4, Extended.PositionRef_ClutterActivator4)
 endFunction
 
 function PlaceTentObject_ClutterActivator5(CampTentEx Extended)
-	myClutterActivator5Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, Extended.TentAsset_ClutterActivator5, Extended.PositionRef_ClutterActivator5)
+	myClutterActivator5Future = PlacementSystem.PlaceTentObject(self, Extended.TentAsset_ClutterActivator5, Extended.PositionRef_ClutterActivator5)
 endFunction
 
 function PlaceTentObject_ClutterFurniture1(CampTentEx Extended)
-	myClutterFurniture1Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, Extended.TentAsset_ClutterFurniture1, Extended.PositionRef_ClutterFurniture1)
+	myClutterFurniture1Future = PlacementSystem.PlaceTentObject(self, Extended.TentAsset_ClutterFurniture1, Extended.PositionRef_ClutterFurniture1)
 endFunction
 
 function PlaceTentObject_ClutterFurniture2(CampTentEx Extended)
-	myClutterFurniture2Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, Extended.TentAsset_ClutterFurniture2, Extended.PositionRef_ClutterFurniture2)
+	myClutterFurniture2Future = PlacementSystem.PlaceTentObject(self, Extended.TentAsset_ClutterFurniture2, Extended.PositionRef_ClutterFurniture2)
 endFunction
 
 function PlaceTentObject_ClutterFurniture3(CampTentEx Extended)
-	myClutterFurniture3Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, Extended.TentAsset_ClutterFurniture3, Extended.PositionRef_ClutterFurniture3)
+	myClutterFurniture3Future = PlacementSystem.PlaceTentObject(self, Extended.TentAsset_ClutterFurniture3, Extended.PositionRef_ClutterFurniture3)
 endFunction
 
 function PlaceTentObject_ClutterFurniture4(CampTentEx Extended)
-	myClutterFurniture4Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, Extended.TentAsset_ClutterFurniture4, Extended.PositionRef_ClutterFurniture4)
+	myClutterFurniture4Future = PlacementSystem.PlaceTentObject(self, Extended.TentAsset_ClutterFurniture4, Extended.PositionRef_ClutterFurniture4)
 endFunction
 
 function PlaceTentObject_ClutterFurniture5(CampTentEx Extended)
-	myClutterFurniture5Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, Extended.TentAsset_ClutterFurniture5, Extended.PositionRef_ClutterFurniture5)
+	myClutterFurniture5Future = PlacementSystem.PlaceTentObject(self, Extended.TentAsset_ClutterFurniture5, Extended.PositionRef_ClutterFurniture5)
 endFunction
 
 function PlaceTentObject_PlayerMainWeapon()
-	myPlayerMarker_MainWeaponFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), PositionRef_Player_WeaponMainHand)
+	myPlayerMarker_MainWeaponFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), PositionRef_Player_WeaponMainHand)
 endFunction
 
 function PlaceTentObject_PlayerOffHandWeapon()
-	myPlayerMarker_OffHandWeaponFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), PositionRef_Player_WeaponOffHand)
+	myPlayerMarker_OffHandWeaponFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), PositionRef_Player_WeaponOffHand)
 endFunction
 
 function PlaceTentObject_PlayerBigWeapon()
-	myPlayerMarker_BigWeaponFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), PositionRef_Player_WeaponTwoHand)
+	myPlayerMarker_BigWeaponFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), PositionRef_Player_WeaponTwoHand)
 endFunction
 
 function PlaceTentObject_PlayerBow()
-	myPlayerMarker_BowFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), PositionRef_Player_WeaponBow)
+	myPlayerMarker_BowFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), PositionRef_Player_WeaponBow)
 endFunction
 
 function PlaceTentObject_PlayerShield()
-	myPlayerMarker_ShieldFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), PositionRef_Player_Shield, x_local_ang_adjust = 90.0, z_local_ang_adjust = 124.0, inverted_local_y = true, is_propped = true)
+	myPlayerMarker_ShieldFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), PositionRef_Player_Shield, x_local_ang_adjust = 90.0, z_local_ang_adjust = 124.0, inverted_local_y = true, is_propped = true)
 endFunction
 
 function PlaceTentObject_PlayerCuirass()
-	myPlayerMarker_CuirassFuture= ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), PositionRef_Player_ArmorCuirass)
+	myPlayerMarker_CuirassFuture= PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), PositionRef_Player_ArmorCuirass)
 endFunction
 
 function PlaceTentObject_PlayerHelm()
-	myPlayerMarker_HelmFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), PositionRef_Player_ArmorHelm)
+	myPlayerMarker_HelmFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), PositionRef_Player_ArmorHelm)
 endFunction
 
 function PlaceTentObject_PlayerBoots()
-	myPlayerMarker_BootsFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), PositionRef_Player_ArmorBoots)
+	myPlayerMarker_BootsFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), PositionRef_Player_ArmorBoots)
 endFunction
 
 function PlaceTentObject_PlayerGauntlets()
-	myPlayerMarker_GauntletsFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), PositionRef_Player_ArmorGauntlets)
+	myPlayerMarker_GauntletsFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), PositionRef_Player_ArmorGauntlets)
 endFunction
 
 function PlaceTentObject_PlayerBackpack()
-	myPlayerMarker_BackpackFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), PositionRef_Player_Backpack)
+	myPlayerMarker_BackpackFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), PositionRef_Player_Backpack)
 endFunction
 
 function PlaceTentObject_PlayerShieldInterior()
-	myPlayerMarker_ShieldInteriorFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), PositionRef_Player_ShieldInterior)
+	myPlayerMarker_ShieldInteriorFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), PositionRef_Player_ShieldInterior)
 endFunction
 
 function PlaceTentObject_PlayerSitMarker()
-	myPlayerSitMarkerFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetSitMarker(), RequiredPositionRef_SitFurniture)
+	myPlayerSitMarkerFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetSitMarker(), RequiredPositionRef_SitFurniture)
 endFunction
 
 function PlaceTentObject_PlayerLayDownMarker()
-	myPlayerLayDownMarkerFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetLieDownMarker(), RequiredPositionRef_LieDownFurniture, z_local_ang_adjust = 180.0)
+	myPlayerLayDownMarkerFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetLieDownMarker(), RequiredPositionRef_LieDownFurniture, z_local_ang_adjust = 180.0)
 endFunction
 
 function PlaceTentObject_ExitFront()
-	myExitFrontFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), PositionRef_FrontExitMarker, initially_disabled = true)
+	myExitFrontFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), PositionRef_FrontExitMarker, initially_disabled = true)
 endFunction
 
 function PlaceTentObject_BedRoll()
-	myBedRollFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetPlayerBedroll(), RequiredPositionRef_PlayerBed)
+	myBedRollFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetPlayerBedroll(), RequiredPositionRef_PlayerBed)
 endFunction
 
 function PlaceTentObject_Ward()
-	myWardFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetWard(), PositionRef_Ward, x_local_ang_adjust = -90.0, is_propped = true, initially_disabled = true)
+	myWardFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetWard(), PositionRef_Ward, x_local_ang_adjust = -90.0, is_propped = true, initially_disabled = true)
 endFunction
 
 function PlaceTentObject_Lantern1()
-	myLanternUnlitFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetLantern(bOn = false, bHanging = false), PositionRef_Lantern1)
-	myLanternLitFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetLantern(bOn = true, bHanging = false), PositionRef_Lantern1, initially_disabled = true)
-	myLanternLightFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetLanternLight(), PositionRef_Lantern1, initially_disabled = true)
+	myLanternUnlitFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetLantern(bOn = false, bHanging = false), PositionRef_Lantern1)
+	myLanternLitFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetLantern(bOn = true, bHanging = false), PositionRef_Lantern1, initially_disabled = true)
+	myLanternLightFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetLanternLight(), PositionRef_Lantern1, initially_disabled = true)
 endFunction
 
 function PlaceTentObject_Lantern2(CampTentEx Extended)
-	myLanternUnlit2Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetLantern(bOn = false, bHanging = false), Extended.PositionRef_Lantern2)
-	myLanternLit2Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetLantern(bOn = true, bHanging = false), Extended.PositionRef_Lantern2, initially_disabled = true)
-	myLanternLight2Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetLanternLight(), Extended.PositionRef_Lantern2, initially_disabled = true)
+	myLanternUnlit2Future = PlacementSystem.PlaceTentObject(self, TentSystem.GetLantern(bOn = false, bHanging = false), Extended.PositionRef_Lantern2)
+	myLanternLit2Future = PlacementSystem.PlaceTentObject(self, TentSystem.GetLantern(bOn = true, bHanging = false), Extended.PositionRef_Lantern2, initially_disabled = true)
+	myLanternLight2Future = PlacementSystem.PlaceTentObject(self, TentSystem.GetLanternLight(), Extended.PositionRef_Lantern2, initially_disabled = true)
 endFunction
 
 function PlaceTentObject_Lantern3(CampTentEx Extended)
-	myLanternUnlit3Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetLantern(bOn = false, bHanging = false), Extended.PositionRef_Lantern3)
-	myLanternLit3Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetLantern(bOn = true, bHanging = false), Extended.PositionRef_Lantern3, initially_disabled = true)
-	myLanternLight3Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetLanternLight(), Extended.PositionRef_Lantern3, initially_disabled = true)
+	myLanternUnlit3Future = PlacementSystem.PlaceTentObject(self, TentSystem.GetLantern(bOn = false, bHanging = false), Extended.PositionRef_Lantern3)
+	myLanternLit3Future = PlacementSystem.PlaceTentObject(self, TentSystem.GetLantern(bOn = true, bHanging = false), Extended.PositionRef_Lantern3, initially_disabled = true)
+	myLanternLight3Future = PlacementSystem.PlaceTentObject(self, TentSystem.GetLanternLight(), Extended.PositionRef_Lantern3, initially_disabled = true)
 endFunction
 
 function PlaceTentObject_SpareBedRoll1(CampTentEx Extended)
-	mySpareBedRoll1Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetNPCBedroll(), Extended.PositionRef_Follower1_Bed)
+	mySpareBedRoll1Future = PlacementSystem.PlaceTentObject(self, TentSystem.GetNPCBedroll(), Extended.PositionRef_Follower1_Bed)
 endFunction
 
 function PlaceTentObject_SpareBedRoll2(CampTentEx Extended)
-	mySpareBedRoll2Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetNPCBedroll(), Extended.PositionRef_Follower2_Bed)
+	mySpareBedRoll2Future = PlacementSystem.PlaceTentObject(self, TentSystem.GetNPCBedroll(), Extended.PositionRef_Follower2_Bed)
 endFunction
 
 function PlaceTentObject_SpareBedRoll3(CampTentEx Extended)
-	mySpareBedRoll3Future = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetNPCBedroll(), Extended.PositionRef_Follower3_Bed)
+	mySpareBedRoll3Future = PlacementSystem.PlaceTentObject(self, TentSystem.GetNPCBedroll(), Extended.PositionRef_Follower3_Bed)
 endFunction
 
 function PlaceTentObject_Follower1MainWeapon(CampTentEx Extended)
-	myFollowerAMarker_MainWeaponFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower1_WeaponMainHand)
+	myFollowerAMarker_MainWeaponFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower1_WeaponMainHand)
 endFunction
 
 function PlaceTentObject_Follower1OffHandWeapon(CampTentEx Extended)
-	myFollowerAMarker_OffHandWeaponFuture= ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower1_WeaponOffHand)
+	myFollowerAMarker_OffHandWeaponFuture= PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower1_WeaponOffHand)
 endFunction
 
 function PlaceTentObject_Follower1BigWeapon(CampTentEx Extended)
-	myFollowerAMarker_BigWeaponFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower1_WeaponTwoHand)
+	myFollowerAMarker_BigWeaponFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower1_WeaponTwoHand)
 endFunction
 
 function PlaceTentObject_Follower1Bow(CampTentEx Extended)
-	myFollowerAMarker_BowFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower1_WeaponBow)
+	myFollowerAMarker_BowFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower1_WeaponBow)
 endFunction
 
 function PlaceTentObject_Follower1Shield(CampTentEx Extended)
-	myFollowerAMarker_ShieldFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower1_Shield)
+	myFollowerAMarker_ShieldFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower1_Shield)
 endFunction
 
 function PlaceTentObject_Follower2MainWeapon(CampTentEx Extended)
-	myFollowerBMarker_MainWeaponFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower2_WeaponMainHand)
+	myFollowerBMarker_MainWeaponFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower2_WeaponMainHand)
 endFunction
 
 function PlaceTentObject_Follower2OffHandWeapon(CampTentEx Extended)
-	myFollowerBMarker_OffHandWeaponFuture= ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower2_WeaponOffHand)
+	myFollowerBMarker_OffHandWeaponFuture= PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower2_WeaponOffHand)
 endFunction
 
 function PlaceTentObject_Follower2BigWeapon(CampTentEx Extended)
-	myFollowerBMarker_BigWeaponFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower2_WeaponTwoHand)
+	myFollowerBMarker_BigWeaponFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower2_WeaponTwoHand)
 endFunction
 
 function PlaceTentObject_Follower2Bow(CampTentEx Extended)
-	myFollowerBMarker_BowFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower2_WeaponBow)
+	myFollowerBMarker_BowFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower2_WeaponBow)
 endFunction
 
 function PlaceTentObject_Follower2Shield(CampTentEx Extended)
-	myFollowerBMarker_ShieldFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower2_Shield)
+	myFollowerBMarker_ShieldFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower2_Shield)
 endFunction
 
 function PlaceTentObject_Follower3MainWeapon(CampTentEx Extended)
-	myFollowerCMarker_MainWeaponFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_WeaponMainHand)
+	myFollowerCMarker_MainWeaponFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_WeaponMainHand)
 endFunction
 
 function PlaceTentObject_Follower3OffHandWeapon(CampTentEx Extended)
-	myFollowerCMarker_OffHandWeaponFuture= ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_WeaponOffHand)
+	myFollowerCMarker_OffHandWeaponFuture= PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_WeaponOffHand)
 endFunction
 
 function PlaceTentObject_Follower3BigWeapon(CampTentEx Extended)
-	myFollowerCMarker_BigWeaponFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_WeaponTwoHand)
+	myFollowerCMarker_BigWeaponFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_WeaponTwoHand)
 endFunction
 
 function PlaceTentObject_Follower3Bow(CampTentEx Extended)
-	myFollowerCMarker_BowFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_WeaponBow)
+	myFollowerCMarker_BowFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_WeaponBow)
 endFunction
 
 function PlaceTentObject_Follower3Shield(CampTentEx Extended)
-	myFollowerCMarker_ShieldFuture = ObjectPlacementSystem.PlaceTentObjectAsync(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_Shield)
+	myFollowerCMarker_ShieldFuture = PlacementSystem.PlaceTentObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_Shield)
 endFunction
