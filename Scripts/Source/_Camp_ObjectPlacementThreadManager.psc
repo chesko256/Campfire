@@ -3,10 +3,9 @@ scriptname _Camp_ObjectPlacementThreadManager extends Quest
 Quest property CampfireObjectPlacementSystem auto
 Activator property _Camp_ObjectPlacementFutureActivator auto
 ObjectReference property _Camp_ObjectPlacementFutureAnchor auto
+GlobalVariable property _Camp_Setting_MaxThreads auto
 
 Static property XMarker auto
-
-int property thread_limit = 10 auto hidden
 
 _Camp_ObjectPlacementThread01 thread01
 _Camp_ObjectPlacementThread02 thread02
@@ -89,6 +88,8 @@ ObjectReference function PlaceTentObject(ObjectReference tent_object, Form form_
     float[] origin_angle = (tent_object as CampTent).OriginAng
     ObjectReference center_object = (tent_object as CampTent).CenterObject
     ObjectReference origin = tent_object
+
+    int thread_limit = _Camp_Setting_MaxThreads.GetValueInt()
 
 	while !future
 		if !thread01.queued() && thread_limit >= 1
