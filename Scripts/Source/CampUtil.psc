@@ -391,7 +391,16 @@ ObjectReference function PlaceAndWaitFor3DLoaded(ObjectReference akOrigin, Form 
 	return None
 endFunction
 
-;@TODO: bool function LegalForPlayerToPlaceObject()
+bool function IsLegalToCampHere() global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return False
+	endif
+
+	return Campfire.Legal.GetCampingLegal()
+endFunction
+
 ;@TODO: int function IsPlayerUnderShelter()
 
 int function GetCurrentTentType() global

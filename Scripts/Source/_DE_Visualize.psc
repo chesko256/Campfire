@@ -16,7 +16,7 @@ import debug
 
 Actor property PlayerRef auto
 
-_DE_GetCampingLegal property Legal auto
+_Camp_LegalAreaCheck property Legal auto
 
 form property myPlacedItem auto hidden
 form property myPlacementRequirement auto hidden

@@ -9,7 +9,7 @@ GlobalVariable property _DE_Setting_SimplePlacement auto
 Activator property _DE_Campfire_Simple auto
 ObjectReference property _DE_XMarker_Placement auto
 ObjectReference property _DE_Anchor auto
-_DE_GetCampingLegal property Legal auto
+_Camp_LegalAreaCheck property Legal auto
 message property _DE_PlacedObjectIllegalLocationNotice auto
 message property _DE_Placement_InUse auto
 

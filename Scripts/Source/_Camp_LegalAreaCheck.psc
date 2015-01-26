@@ -1,14 +1,14 @@
-scriptname _DE_GetCampingLegal extends ReferenceAlias
+scriptname _Camp_LegalAreaCheck extends ReferenceAlias
 
 import debug
 
-bool property CampingLegal auto
+bool property CampingLegal auto hidden
 
 Actor property PlayerRef auto
 
 FormList property _DE_CampingRestrictedWorldspaces auto
 
-Quest property _Camp_CompatibilityQuest auto
+Quest property _Camp_MainQuest auto
 _Camp_Compatibility property Compatibility auto
 GlobalVariable property _DE_IsCampingLegal auto
 ObjectReference property DragonBridgeLocationCenterMarkerREF auto
@@ -71,7 +71,8 @@ endFunction
 
 bool function GetCampingLegal()
 
-	if _Camp_CompatibilityQuest.IsRunning() && Compatibility.isDLC2Loaded
+	;@TODO: Necessary to check IsRunning?
+	if _Camp_MainQuest.IsRunning() && Compatibility.isDLC2Loaded
 		if DLC2RavenRockCenterMarker == none
 			DLC2RavenRockCenterMarker = Game.GetFormFromFile(0x020295EA, "Dragonborn.esm") as ObjectReference
 		endif
@@ -117,7 +118,8 @@ bool function GetCampingLegal()
 		return false
 	elseif PlayerRef.GetDistance(WinterholdCollegeCenterMarker) < 4000.0
 		return false
-	elseif _Camp_CompatibilityQuest.IsRunning() && Compatibility.isDLC2Loaded && PlayerRef.GetDistance(DLC2RavenRockCenterMarker) < 4100.0	;RavenRock center marker 
+	;@TODO: Necessary to check IsRunning?
+	elseif _Camp_MainQuest.IsRunning() && Compatibility.isDLC2Loaded && PlayerRef.GetDistance(DLC2RavenRockCenterMarker) < 4100.0	;RavenRock center marker 
 		return false
 	else
 		if _DE_CampingRestrictedWorldspaces.HasForm(PlayerRef.GetWorldspace())
