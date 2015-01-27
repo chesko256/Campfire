@@ -2,9 +2,6 @@ scriptname CampPlaceableObject extends _Camp_PlaceableObjectBase
 
 import CampUtil
 
-Float property Setting_StartUpRotation = 0.0 auto
-{Optional: The amount, in degrees, to rotate the object on the Z axis on start-up.}
-
 ; PRIVATE
 ;Run-time objects
 ObjectReference property myExtraStatic1 auto hidden
@@ -46,30 +43,6 @@ ObjectReference property myExtraLight1Future auto hidden
 ObjectReference property myExtraLight2Future auto hidden
 ObjectReference property myExtraLight3Future auto hidden
 
-Event OnInit()
-	while !self.Is3DLoaded()
-	endWhile
-	;We need to get out of OnInit() quickly, so member functions on this object can be called.
-	RegisterForSingleUpdate(0.1)
-endEvent
-
-Event OnUpdate()
-	if !initialized
-		Initialize()
-		return
-	endif
-endEvent
-
-function Initialize()
-	PlacementSystem = CampUtil.GetPlacementSystem()
-	RotateOnStartUp()
-	OriginAng = GetAngleData(self)
-	PlaceObjects()
-	PlacementSystem.wait_all()
-	GetResults()
-	initialized = true
-endFunction
-
 Event OnActivate(ObjectReference akActionRef)
 	;Use / Pick Up / Cancel
 EndEvent
@@ -78,6 +51,11 @@ function PlaceObjects()
 	CampPlaceableObjectEx Extended = self as CampPlaceableObjectEx
 	
 	if Extended
+		if Extended.PositionRef_CenterObjectOverride
+			CenterObject = Extended.PositionRef_CenterObjectOverride
+		else
+			CenterObject = None
+		endif
 		if Extended.Asset_ExtraStatic1 && Extended.PositionRef_ExtraStatic1
 			PlaceObject_ExtraStatic1(Extended)
 		endif

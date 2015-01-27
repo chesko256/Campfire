@@ -1,5 +1,7 @@
 scriptname CampPlaceableObjectEx extends CampPlaceableObject
 
+ObjectReference property PositionRef_CenterObjectOverride auto
+{Optional: Set this to specify a different object as the one which all other objects "orbit" when rotated. Uses this object if left blank.}
 Static property Asset_ExtraStatic1 auto
 {Optional: A static to place near this object.}
 Static property Asset_ExtraStatic2 auto

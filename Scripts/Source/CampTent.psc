@@ -104,9 +104,6 @@ ObjectReference property PositionRef_Player_ArmorBoots auto
 ObjectReference property PositionRef_CenterObjectOverride auto
 {Optional: Set this to specify a different object as the one which all other tent objects "orbit" when rotated. Uses the Shelter or Player Bed if left blank.}
 
-Float property Setting_StartUpRotation = 0.0 auto
-{Optional: The amount, in degrees, to rotate the tent on the Z axis on start-up. Helpful if the Shelter asset is not aligned correctly.}
-
 Float property Setting_BedRollScale = 1.0 auto
 {Optional: The scale to render the player's and follower's bed rolls. 1.0 by default.}
 
@@ -303,29 +300,8 @@ Weapon property myDisplayFollowerCBow auto hidden
 bool property bLanternLit = false auto hidden
 bool property bGettingUp = false auto hidden
 
-Event OnInit()
-	while !self.Is3DLoaded()
-	endWhile
-	;We need to get out of OnInit() quickly, so member functions on this object can be called.
-	RegisterForSingleUpdate(0.1)
-endEvent
-
-Event OnUpdate()
-	if !initialized
-		Initialize()
-		return
-	endif
+function OnUpdateContinue()
 	UpdateTentUseState(self)
-endEvent
-
-function Initialize()
-	PlacementSystem = CampUtil.GetPlacementSystem()
-	RotateOnStartUp()
-	OriginAng = GetAngleData(self)
-	PlaceObjects()
-	PlacementSystem.wait_all()
-	GetResults()
-	initialized = true
 endFunction
 
 Event OnActivate(ObjectReference akActionRef)
@@ -853,10 +829,6 @@ function GenerateDebugReport()
 	debug.trace("[Campfire] mySpareBedRoll3: " + mySpareBedRoll3)
 	debug.trace("[Campfire] myWard: " + myWard)
 	debug.trace("[Campfire] ======================================================================")
-endFunction
-
-function RotateOnStartUp()
-	self.SetAngle(self.GetAngleX(), self.GetAngleY(), self.GetAngleZ() + Setting_StartUpRotation)
 endFunction
 
 function PlaceObject_Tent()

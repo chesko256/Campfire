@@ -36,7 +36,11 @@ ObjectReference function get_async(Activator akFuture, ObjectReference akFutureA
 
 	_OriginAngle = new float[3]
 	XMarker = XMarkerStatic
-	_RelativeCenterObject = relative_center_object
+	if relative_center_object
+		_RelativeCenterObject = relative_center_object
+	else
+		_RelativeCenterObject = origin
+	endif
 	_ObjectPositionReference = object_position_reference
 	_Origin = origin
 	_FormToPlace = form_to_place
