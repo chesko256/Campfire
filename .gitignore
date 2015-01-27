@@ -45,6 +45,10 @@
 !Tent*.pex
 !Tent*.psc
 
+#Robodoc
+!robodoc.exe
+!robodoc.rc
+
 #Textures
 !textures/campfire/*
 

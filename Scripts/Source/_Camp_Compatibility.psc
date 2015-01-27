@@ -1,6 +1,6 @@
 Scriptname _Camp_Compatibility extends ReferenceAlias
 
-; #SUMMARY# =====================================================================================================================
+;#SUMMARY# =====================================================================================================================
 ; Name ...................: _Camp_Compatibility
 ; Attached To (EditorID)..: 
 ; Description ............: Checks for presence of other mods for compatibility purposes, and sets flags as appropriate.
@@ -148,11 +148,22 @@ Event OnPlayerLoadGame()
 	RegisterForEventsOnLoad()
 endEvent
 
+;****f* _Camp_Compatibility/RunStartupCheck
+;/* FUNCTION
+*   Runs all required startup routines.
+* SYNOPSIS
+*/;
 function RunStartupCheck()
+	;/*
+	* INPUTS
+	*   None
+	* SOURCE
+	*/;
 	VanillaGameLoadUp()
 	RegisterForControlsOnLoad()
 	RegisterForEventsOnLoad()
 	Campfire.CheckFollowerPolling()
+	;****
 	
 	;debug.notification("[Frostfall]Compatibility startup check...")
 	trace("============================================[Campfire: Warning Start]=============================================")
