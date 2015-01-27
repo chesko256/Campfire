@@ -288,6 +288,14 @@ bool function IsRefInInterior(ObjectReference akObject) global
 	endif
 endFunction
 
+float[] function GetAngleData(ObjectReference akObjectReference) global
+	float[] myReturnArray = new float[3]
+    myReturnArray[0] = akObjectReference.GetAngleX()
+    myReturnArray[1] = akObjectReference.GetAngleY()
+    myReturnArray[2] = akObjectReference.GetAngleZ()
+	return myReturnArray
+endFunction
+
 bool function PlayerCanPlaceObjects() global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none

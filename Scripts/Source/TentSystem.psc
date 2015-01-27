@@ -26,36 +26,6 @@ function ActivateTent(ObjectReference akActionRef, ObjectReference akTent) globa
 	TentAPI.ActivateTent(akActionRef, akTent)
 endFunction
 
-float[] function GetAngleData(ObjectReference akObjectReference) global
-	_Camp_TentSystem TentAPI = GetAPI()
-	if TentAPI == none
-		RaiseTentAPIError()
-		return None
-	endif
-
-	return TentAPI.GetAngleData(akObjectReference)
-endFunction
-
-float[] function GetRelativePosition(ObjectReference akOrigin, ObjectReference akObjectReference) global
-	_Camp_TentSystem TentAPI = GetAPI()
-	if TentAPI == none
-		RaiseTentAPIError()
-		return None
-	endif
-
-	return TentAPI.GetRelativePosition(akOrigin, akObjectReference)
-endFunction
-
-ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akFormToPlace, float[] fOriginAng, float[] fRelativePos, float fZGlobalAngAdjust = 0.0, float fXLocalAngAdjust = 0.0, float fYLocalAngAdjust = 0.0, float fZLocalAngAdjust = 0.0, float fZHangingOffset = 0.0, bool abInvertedLocalY = false, bool abInitiallyDisabled = false, bool abIsPropped = false, bool abIsHanging = false) global
-	_Camp_TentSystem TentAPI = GetAPI()
-	if TentAPI == none
-		RaiseTentAPIError()
-		return None
-	endif
-
-	return TentAPI.PlaceAtMeRelative(akOrigin, akFormToPlace, fOriginAng, fRelativePos, fZGlobalAngAdjust, fXLocalAngAdjust, fYLocalAngAdjust, fZLocalAngAdjust, fZHangingOffset, abInvertedLocalY, abInitiallyDisabled, abIsPropped, abIsHanging)
-endFunction
-
 function SelectExterior(ObjectReference akTent) global
 	_Camp_TentSystem TentAPI = GetAPI()
 	if TentAPI == none
@@ -174,10 +144,6 @@ Light function GetLanternLight() global
 	endif
 
 	return TentAPI._Camp_LanternLight
-endFunction
-
-_Camp_TentObjectFuture function GetFuture(ObjectReference akObjectReference) global
-	return akObjectReference as _Camp_TentObjectFuture
 endFunction
 
 function RaiseTentAPIError() global

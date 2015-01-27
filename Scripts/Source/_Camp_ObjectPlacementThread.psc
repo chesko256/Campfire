@@ -64,7 +64,7 @@ Event OnObjectPlacementStart()
 		ObjectReference result = PlaceAtMeRelative(_Origin, _FormToPlace, _OriginAngle, relative_position, \
 				_ZGlobalAngAdjust, _XLocalAngAdjust, _YLocalAngAdjust, _ZLocalAngAdjust, \
 				_ZHangingOffset, _InvertedLocalY, _InitiallyDisabled, _IsPropped, _IsHanging)
-		(future as _Camp_TentObjectFuture).result = result
+		(future as _Camp_ObjectFuture).result = result
 		clear_thread_vars()
 		thread_queued = false
 		;debug.trace("[Campfire] Thread " + self + " (TID " + thread_id + ") ============== DONE!")
@@ -167,14 +167,6 @@ float[] function GetPosXYZRotateAroundRef(ObjectReference akOrigin, ObjectRefere
 	fNewPos[1] = fNewY
 	fNewPos[2] = fNewZ
 	return fNewPos 
-endFunction
-
-float[] function GetAngleData(ObjectReference akObjectReference)
-	float[] myReturnArray = new float[3]
-    myReturnArray[0] = akObjectReference.GetAngleX()
-    myReturnArray[1] = akObjectReference.GetAngleY()
-    myReturnArray[2] = akObjectReference.GetAngleZ()
-	return myReturnArray
 endFunction
 
 float[] function GetRelativePosition(ObjectReference akOrigin, ObjectReference akObject)

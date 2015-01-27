@@ -76,8 +76,7 @@ Event OnInit()
     thread30 = CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread30
 EndEvent
  
-;The 'public-facing' function that our MagicEffect script will interact with.
-ObjectReference function PlaceTentObject(ObjectReference tent_object, Form form_to_place,                                  \
+ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to_place,                                  \
                               ObjectReference object_position_reference,                                                        \
                               float x_local_ang_adjust = 0.0, float y_local_ang_adjust = 0.0, float z_local_ang_adjust = 0.0,   \
                               float z_global_ang_adjust = 0.0, float z_hanging_offset = 0.0, bool inverted_local_y = false,     \
@@ -85,9 +84,9 @@ ObjectReference function PlaceTentObject(ObjectReference tent_object, Form form_
     int i = 0
 	ObjectReference future
 
-    float[] origin_angle = (tent_object as CampTent).OriginAng
-    ObjectReference center_object = (tent_object as CampTent).CenterObject
-    ObjectReference origin = tent_object
+    float[] origin_angle = (origin_object as _Camp_PlaceableObjectBase).OriginAng
+    ObjectReference center_object = (origin_object as _Camp_PlaceableObjectBase).CenterObject
+    ObjectReference origin = origin_object
 
     int thread_limit = _Camp_Setting_MaxThreads.GetValueInt()
 

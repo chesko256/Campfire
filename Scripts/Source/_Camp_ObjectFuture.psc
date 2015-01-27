@@ -1,4 +1,4 @@
-scriptname _Camp_TentObjectFuture extends ObjectReference
+scriptname _Camp_ObjectFuture extends ObjectReference
 
 Quest property CampfireObjectPlacementSystem auto
 
