@@ -300,7 +300,7 @@ Weapon property myDisplayFollowerCBow auto hidden
 bool property bLanternLit = false auto hidden
 bool property bGettingUp = false auto hidden
 
-function OnUpdateContinue()
+function Update()
 	UpdateTentUseState(self)
 endFunction
 
@@ -308,6 +308,7 @@ Event OnActivate(ObjectReference akActionRef)
 	ActivateTent(akActionRef, self)
 endEvent
 
+;@Override _Camp_PlaceableObjectBase
 function PlaceObjects()
 	CampTentEx Extended = self as CampTentEx
 
@@ -491,6 +492,7 @@ function PlaceObjects()
 	endif
 endFunction
 
+;@Override _Camp_PlaceableObjectBase
 function GetResults()
 	if myTentFuture
 		myTent = GetFuture(myTentFuture).get_result()

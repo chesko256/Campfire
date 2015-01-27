@@ -44,6 +44,7 @@ ObjectReference property myExtraLight2Future auto hidden
 ObjectReference property myExtraLight3Future auto hidden
 
 Event OnActivate(ObjectReference akActionRef)
+	;if self.getbaseobject as Furniture, blockactivation
 	;Use / Pick Up / Cancel
 EndEvent
 

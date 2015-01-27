@@ -31,7 +31,7 @@ Event OnUpdate()
 		Initialize()
 		return
 	endif
-	OnUpdateContinue()
+	Update()
 endEvent
 
 function Initialize()
@@ -48,7 +48,7 @@ function RotateOnStartUp()
 	self.SetAngle(self.GetAngleX(), self.GetAngleY(), self.GetAngleZ() + Setting_StartUpRotation)
 endFunction
 
-function OnUpdateContinue()
+function Update()
 	;pass
 endFunction
 
