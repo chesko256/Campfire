@@ -1,0 +1,4 @@
+The `CampUtil` script is the primary way most mods should interact with Campfire and contains many helpful functions. To call any of the functions mentioned on this page, download the SDK and in your script include the line:
+<pre>import CampUtil</pre>
+Alternatively, you can call `CampUtil.FunctionName()` without importing CampUtil.
+

@@ -47,6 +47,8 @@
 
 #Documentation
 !Scripts/Source/doc/*
+!Scripts/Source/doc/headers/*
+!Scripts/Source/doc/output/*
 !campwiki
 
 #Textures

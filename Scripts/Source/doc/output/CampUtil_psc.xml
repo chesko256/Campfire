@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" 
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<article lang="en">
+<articleinfo>
+  <title>API Reference</title>
+</articleinfo>
+<section>
+<title>
+CampUtil/GetPlayerEquippedAmmo</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Gets the player's currently equipped ammo.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Ammo function GetPlayerEquippedAmmo() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The player's currently equipped ammo.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+Armor PlayerArrows = GetPlayerEquippedAmmo()
+</literallayout>
+</section>
+<section>
+<title>
+CampUtil/GetPlayerEquippedBackpack</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Gets the player's currently equipped backpack.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Armor function GetPlayerEquippedBackpack() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The player's currently equipped backpack.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+Armor PlayerBackpack = GetPlayerEquippedBackpack()
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+       An Armor item is considered to be a backpack if it is in the _Camp_Backpacks FormList.
+</para>
+</section>
+<section>
+<title>
+CampUtil/GetPlayerEquippedBody</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Gets the player's currently equipped body armor.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Armor function GetPlayerEquippedBody() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The player's currently equipped body armor.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+Armor PlayerArmor = GetPlayerEquippedBody()
+</literallayout>
+</section>
+<section>
+<title>
+CampUtil/GetPlayerEquippedFeet</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Gets the player's currently equipped foot armor.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Armor function GetPlayerEquippedFeet() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The player's currently equipped foot armor.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+Armor PlayerBoots = GetPlayerEquippedFeet()
+</literallayout>
+</section>
+<section>
+<title>
+CampUtil/GetPlayerEquippedHands</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Gets the player's currently equipped hand armor.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Armor function GetPlayerEquippedHands() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The player's currently equipped hand armor.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+Armor PlayerGauntlets = GetPlayerEquippedHands()
+</literallayout>
+</section>
+<section>
+<title>
+CampUtil/GetPlayerEquippedHead</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Gets the player's currently equipped head armor.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Armor function GetPlayerEquippedHead() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The player's currently equipped head armor.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+Armor PlayerHelm = GetPlayerEquippedHead()
+</literallayout>
+</section>
+<section>
+<title>
+CampUtil/IsPlaceableObject</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Whether or not the Form is a Placeable Object.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsPlaceableObject(Form akBaseObject) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> akBaseObject: The base object to check.
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if the Form is a Placeable Object, false otherwise.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+if IsPlaceableObject()
+        debug.trace("The item is a placeable object.")
+endif
+</literallayout>
+</section>
+<section>
+<title>
+CampUtil/IsPlayerPlacingObject</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Whether or not the player is currently placing a Placeable Object (tent, etc).
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsPlayerPlacingObject() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if the player is currently placing a Placeable Object, false otherwise.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+if IsPlayerPlacingObject()
+        debug.trace("The player is placing an object right now!")
+endif
+</literallayout>
+</section>
+<section>
+<title>
+CampUtil/IsRefInInterior</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Whether or not the reference is in an interior cell, or a cell that "looks like" an interior.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsRefInInterior(ObjectReference akReference) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> akReference: The object reference to check.
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if the reference is in an interior or "interior-like" cell, false otherwise.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Is the box in an interior?
+if IsRefInInterior(Box)
+        Debug.Trace("Box is inside!")
+endif
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ The standard IsInInterior() function can only return whether or not the current cell 
+ is marked as an Interior. There are numerous worldspaces (such as AlftandWorld, 
+ Blackreach, BlindCliffCaveWorld, etc) that look and act like interiors, but are set 
+ as external worldspaces. This can cause IsInInterior() to return undesirable results.
+ This function takes these known base game (and DLC) worldspaces into account when
+ evaluating the object reference's location.
+</para>
+</section>
+<section>
+<title>
+CampUtil/LegalToCampHere</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Whether or not the player's current location is considered a legal camping area.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function LegalToCampHere(bool abIgnoreSetting = false) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> abIgnoreSetting: Whether or not to ignore Campfire's "Camping Illegal in Settled Areas" setting. If true, returns the legality of the player's current position regardless of the setting.
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if player's location is a legal camping area; false otherwise.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+if !LegalToCampHere()
+        debug.trace("We can't stop here. This is bat country.")
+endif
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ In Campfire, it is illegal for the player to place Placeable Objects inside houses, other owned buildings (inns, taverns), and within range of / inside settled areas like towns and cities.
+</para>
+</section>
+<section>
+<title>
+CampUtil/PlayerCanPlaceObjects</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Whether or not the player can currently place Placeable Objects (tents, etc).
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function PlayerCanPlaceObjects(bool abShowMessage = true) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> abShowMessage: Whether to show an informative message detailing why the player can't place a Placeable Object right now if returning false.
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if the player can currently place Placeable Objects, false otherwise.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+        if PlayerCanPlaceObjects()
+                debug.trace("The player can place objects!")
+        endif
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ Reasons that this function might return false are:
+</para>
+<itemizedlist><listitem><para> The player is already trying to place something.
+</para></listitem><listitem><para> The player is swimming.
+</para></listitem><listitem><para> The player is mounted.
+</para></listitem><listitem><para> The player is sleeping.
+</para></listitem><listitem><para> The player is sitting down.
+</para></listitem><listitem><para> The player is using another object (crafting bench, etc).
+</para></listitem><listitem><para> The player is currently transformed into a Vampire Lord or Werewolf.
+</para></listitem></itemizedlist><para>
+</para>
+</section>
+</article>
