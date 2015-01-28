@@ -1,10 +1,42 @@
 header markers:
-  ;****
+  ;/********
 remark markers:
   *
 end markers:
-  ;****
+  ;********
 remark begin markers:
   ;/*
 remark end markers:
   */;
+options:
+  --src ../
+  --doc ./output
+  --dbxml
+  --multidoc
+  --no_subdirectories
+  --nodesc
+  --nogeneratedwith
+  --nopre
+accept files:
+  CampUtil.psc
+items:
+  DESCRIPTION
+  SYNTAX
+  PARAMETERS
+  RETURN VALUE
+  EXAMPLES
+  NOTES
+  SEE ALSO
+source items:
+  SYNTAX
+  EXAMPLES
+headertypes:
+	e 	"Events"	robo_events
+keywords:
+	if
+	endif
+	while
+	event
+	function
+	global
+	return

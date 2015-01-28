@@ -3,8 +3,29 @@ scriptname CampUtil hidden
 import math
 import debug
 
-;@TODO: Change to .esm
+;/********f* CampUtil/GetAPI
+* DESCRIPTION
+* Gets the CampfireAPI script so that its member functions can be called.
+* Generally not used; use CampUtil member functions to interact with the Campfire API instead.
+*
+* SYNTAX
+*/;
 CampfireAPI function GetAPI() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The CampfireAPI script instance.
+*
+* EXAMPLES
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+;*********/;
+	;@TODO: Change to .esm check
 	return (Game.GetFormFromFile(0x00024095, "Campfire.esp") as Quest) as CampfireAPI
 endFunction
 
@@ -177,7 +198,23 @@ _Camp_ObjectPlacementThreadManager function GetPlacementSystem() global
 	return Campfire.CampfireObjectPlacementSystem as _Camp_ObjectPlacementThreadManager
 endFunction
 
+;/********f* CampUtil/GetPlayerEquippedHead
+* DESCRIPTION
+* Gets the player's currently equipped head armor.
+*
+* SYNTAX
+*/;
 Armor function GetPlayerEquippedHead() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The player's currently equipped head armor.
+*
+* EXAMPLES
+	Armor PlayerHelm = GetPlayerEquippedHead()
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -187,7 +224,23 @@ Armor function GetPlayerEquippedHead() global
 	return Campfire.CampData.CurrentHead
 endFunction
 
+;/********f* CampUtil/GetPlayerEquippedBody
+* DESCRIPTION
+* Gets the player's currently equipped body armor.
+*
+* SYNTAX
+*/;
 Armor function GetPlayerEquippedBody() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+*The player's currently equipped body armor.
+*
+* EXAMPLES
+	Armor PlayerArmor = GetPlayerEquippedBody()
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -197,7 +250,23 @@ Armor function GetPlayerEquippedBody() global
 	return Campfire.CampData.CurrentBody
 endFunction
 
+;/********f* CampUtil/GetPlayerEquippedHands
+* DESCRIPTION
+* Gets the player's currently equipped hand armor.
+*
+* SYNTAX
+*/;
 Armor function GetPlayerEquippedHands() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The player's currently equipped hand armor.
+*
+* EXAMPLES
+	Armor PlayerGauntlets = GetPlayerEquippedHands()
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -207,7 +276,23 @@ Armor function GetPlayerEquippedHands() global
 	return Campfire.CampData.CurrentHands
 endFunction
 
+;/********f* CampUtil/GetPlayerEquippedFeet
+* DESCRIPTION
+* Gets the player's currently equipped foot armor.
+*
+* SYNTAX
+*/;
 Armor function GetPlayerEquippedFeet() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The player's currently equipped foot armor.
+*
+* EXAMPLES
+	Armor PlayerBoots = GetPlayerEquippedFeet()
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -217,7 +302,25 @@ Armor function GetPlayerEquippedFeet() global
 	return Campfire.CampData.CurrentFeet
 endFunction
 
+;/********f* CampUtil/GetPlayerEquippedBackpack
+* DESCRIPTION
+* Gets the player's currently equipped backpack.
+*
+* SYNTAX
+*/;
 Armor function GetPlayerEquippedBackpack() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The player's currently equipped backpack.
+*
+* EXAMPLES
+	Armor PlayerBackpack = GetPlayerEquippedBackpack()
+* NOTES
+*	An Armor item is considered to be a backpack if it is in the _Camp_Backpacks FormList.
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -227,7 +330,23 @@ Armor function GetPlayerEquippedBackpack() global
 	return Campfire.CampData.CurrentBackpack
 endFunction
 
+;/********f* CampUtil/GetPlayerEquippedAmmo
+* DESCRIPTION
+* Gets the player's currently equipped ammo.
+*
+* SYNTAX
+*/;
 Ammo function GetPlayerEquippedAmmo() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The player's currently equipped ammo.
+*
+* EXAMPLES
+	Armor PlayerArrows = GetPlayerEquippedAmmo()
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -237,50 +356,43 @@ Ammo function GetPlayerEquippedAmmo() global
 	return Campfire.CampData.CurrentAmmo
 endFunction
 
-bool function IsRefInInterior(ObjectReference akObject) global
-	;===========
-	;Syntax
-	;===========
-	;	bool Function IsRefInInterior(ObjectReference akObject)
-	;
-	;===========
-	;Parameters
-	;===========
-	;	akObject: The object reference to check.
-	;
-	;===========
-	;Return Value
-	;===========
-	;	Returns true if the object is in an interior cell, taking into account special worldspaces.
-	;
-	;===========
-	;Examples
-	;===========
-	;	;Is the box in an interior?
-	;	if IsRefInInterior(Box)
-	;		Debug.Trace("Box is inside!")
-	;	endif
-	;
-	;===========
-	;Notes
-	;===========
-	;	* The standard IsInInterior() function can only return whether or not the current cell 
-	;	  is marked as an Interior. There are numerous worldspaces (such as AlftandWorld, 
-	;	  Blackreach, BlindCliffCaveWorld, etc) that look and act like interiors, but are set 
-	;	  as external worldspaces. This can cause IsInInterior() to return undesirable results.
-	;	  This function takes these known base game (and DLC) worldspaces into account when
-	;	  evaluating the object reference's location.
-
+;/********f* CampUtil/IsRefInInterior
+* DESCRIPTION
+* Whether or not the reference is in an interior cell, or a cell that "looks like" an interior.
+*
+* SYNTAX
+*/;
+bool function IsRefInInterior(ObjectReference akReference) global
+;/*
+* PARAMETERS
+* * akReference: The object reference to check.
+*
+* RETURN VALUE
+* True if the reference is in an interior or "interior-like" cell, false otherwise.
+*
+* EXAMPLES
+	;Is the box in an interior?
+	if IsRefInInterior(Box)
+		Debug.Trace("Box is inside!")
+	endif
+* NOTES
+* The standard IsInInterior() function can only return whether or not the current cell 
+* is marked as an Interior. There are numerous worldspaces (such as AlftandWorld, 
+* Blackreach, BlindCliffCaveWorld, etc) that look and act like interiors, but are set 
+* as external worldspaces. This can cause IsInInterior() to return undesirable results.
+* This function takes these known base game (and DLC) worldspaces into account when
+* evaluating the object reference's location.
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
 		return False
 	endif
 
-	if akObject.IsInInterior()
+	if akReference.IsInInterior()
 		return True
 	else
-		if Campfire._Camp_WorldspacesInteriors.HasForm(akObject.GetWorldSpace())
+		if Campfire._Camp_WorldspacesInteriors.HasForm(akReference.GetWorldSpace())
 			return True
 		else
 			return False
@@ -296,7 +408,35 @@ float[] function GetAngleData(ObjectReference akObjectReference) global
 	return myReturnArray
 endFunction
 
-bool function PlayerCanPlaceObjects() global
+;/********f* CampUtil/PlayerCanPlaceObjects
+* DESCRIPTION
+* Whether or not the player can currently place Placeable Objects (tents, etc).
+*
+* SYNTAX
+*/;
+bool function PlayerCanPlaceObjects(bool abShowMessage = true) global
+;/*
+* PARAMETERS
+* * abShowMessage: Whether to show an informative message detailing why the player can't place a Placeable Object right now if returning false.
+*
+* RETURN VALUE
+* True if the player can currently place Placeable Objects, false otherwise.
+*
+* EXAMPLES
+	if PlayerCanPlaceObjects()
+		debug.trace("The player can place objects!")
+	endif
+* NOTES
+* Reasons that this function might return false are:
+* * The player is already trying to place something.
+* * The player is swimming.
+* * The player is mounted.
+* * The player is sleeping.
+* * The player is sitting down.
+* * The player is using another object (crafting bench, etc).
+* * The player is currently transformed into a Vampire Lord or Werewolf.
+;*********/;
+	;@TODO: Check Vampire Lord, Werewolf
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -305,30 +445,59 @@ bool function PlayerCanPlaceObjects() global
 
 	;Don't check combat; this can happen too often.
 	if IsPlayerPlacingObject()
-		;_DE_Placement_InUse.Show()
-		notification("[Debug]You are already trying to place something.")
+		if abShowMessage
+			;_DE_Placement_InUse.Show()
+			notification("[Debug]You are already trying to place something.")
+		endif
+		return false
 	elseif Campfire.PlayerRef.IsSwimming()
-		;_DE_Placement_Swimming.Show()	;@TODO: Rename
-		notification("[Debug]You can't use this while swimming.")
-		return False
+		if abShowMessage
+			;_DE_Placement_Swimming.Show()	;@TODO: Rename
+			notification("[Debug]You can't use this while swimming.")
+		endif
+		return false
 	elseif Campfire.PlayerRef.IsOnMount()
-		;@TODO: Provide error
-		notification("[Debug]You can't use this while mounted.")
-		return False
+		if abShowMessage
+			;@TODO: Provide error
+			notification("[Debug]You can't use this while mounted.")
+		endif
+		return false
 	elseif Campfire.PlayerRef.GetSleepState() != 0
-		;@TODO: Error
-		notification("[Debug]You can't use this while lying down.")
-		return False
+		if abShowMessage
+			;@TODO: Error
+			notification("[Debug]You can't use this while lying down.")
+		endif
+		return false
 	elseif Campfire.PlayerRef.GetSitState() != 0
-		;@TODO: Error
-		notification("[Debug]You can't use this while using something else.")
-		return False
+		if abShowMessage
+			;@TODO: Error
+			notification("[Debug]You can't use this while using something else.")
+		endif
+		return false
 	else
-		return True
+		return true
 	endif
 endFunction
 
+;/********f* CampUtil/IsPlayerPlacingObject
+* DESCRIPTION
+* Whether or not the player is currently placing a Placeable Object (tent, etc).
+*
+* SYNTAX
+*/;
 bool function IsPlayerPlacingObject() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* True if the player is currently placing a Placeable Object, false otherwise.
+*
+* EXAMPLES
+	if IsPlayerPlacingObject()
+		debug.trace("The player is placing an object right now!")
+	endif
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -342,7 +511,25 @@ bool function IsPlayerPlacingObject() global
 	endif
 endFunction
 
+;/********f* CampUtil/IsPlaceableObject
+* DESCRIPTION
+* Whether or not the Form is a Placeable Object.
+*
+* SYNTAX
+*/;
 bool function IsPlaceableObject(Form akBaseObject) global
+;/*
+* PARAMETERS
+* * akBaseObject: The base object to check.
+*
+* RETURN VALUE
+* True if the Form is a Placeable Object, false otherwise.
+*
+* EXAMPLES
+	if IsPlaceableObject()
+		debug.trace("The item is a placeable object.")
+	endif
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -399,7 +586,28 @@ ObjectReference function PlaceAndWaitFor3DLoaded(ObjectReference akOrigin, Form 
 	return None
 endFunction
 
-bool function IsLegalToCampHere() global
+;/********f* CampUtil/LegalToCampHere
+* DESCRIPTION
+* Whether or not the player's current location is considered a legal camping area.
+*
+* SYNTAX
+*/;
+bool function LegalToCampHere(bool abIgnoreSetting = false) global
+;/*
+* PARAMETERS
+* * abIgnoreSetting: Whether or not to ignore Campfire's "Camping Illegal in Settled Areas" setting. If true, returns the legality of the player's current position regardless of the setting.
+*
+* RETURN VALUE
+* True if player's location is a legal camping area; false otherwise.
+*
+* EXAMPLES
+  if !LegalToCampHere()
+    debug.trace("We can't stop here. This is bat country.")
+  endif
+* NOTES
+* In Campfire, it is illegal for the player to place Placeable Objects inside houses, other owned buildings (inns, taverns), and within range of / inside settled areas like towns and cities.
+;*********/;
+	;@TODO: Support abIgnoreSetting
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -411,6 +619,7 @@ endFunction
 
 ;@TODO: int function IsPlayerUnderShelter()
 
+;@TODO: Finalize and document
 int function GetCurrentTentType() global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
