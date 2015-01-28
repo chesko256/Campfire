@@ -1,0 +1,3 @@
+[submodule "campwiki"]
+	path = campwiki
+	url = https://github.com/chesko256/Campfire.wiki.git
