@@ -148,17 +148,7 @@ Event OnPlayerLoadGame()
 	RegisterForEventsOnLoad()
 endEvent
 
-;****f* _Camp_Compatibility/RunStartupCheck
-;/* FUNCTION
-*   Runs all required startup routines.
-* SYNOPSIS
-*/;
 function RunStartupCheck()
-	;/*
-	* INPUTS
-	*   None
-	* SOURCE
-	*/;
 	VanillaGameLoadUp()
 	RegisterForControlsOnLoad()
 	RegisterForEventsOnLoad()

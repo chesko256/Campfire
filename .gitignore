@@ -47,6 +47,7 @@
 
 #Documentation
 !Scripts/Source/doc/*
+!campwiki/*
 
 #Textures
 !textures/campfire/*
