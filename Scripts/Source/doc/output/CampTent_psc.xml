@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" 
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<article lang="en">
+<articleinfo>
+  <title>API Reference</title>
+</articleinfo>
+<section>
+<title>
+CampTent/RequiredPositionRef_PlayerBed</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Required: The player's bed roll (main interactible) position reference. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+ObjectReference property RequiredPositionRef_PlayerBed auto
+</literallayout>
+</section>
+</article>

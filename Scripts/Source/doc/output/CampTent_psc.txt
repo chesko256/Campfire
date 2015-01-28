@@ -1,0 +1,9 @@
+### CampTent/RequiredPositionRef\_PlayerBed
+
+**DESCRIPTION.**
+
+Required: The player's bed roll (main interactible) position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property RequiredPositionRef_PlayerBed auto

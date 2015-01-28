@@ -2,6 +2,7 @@ header markers:
   ;/********
 remark markers:
   *
+  {
 end markers:
   ;********
 remark begin markers:
@@ -19,6 +20,7 @@ options:
   --nopre
 accept files:
   CampUtil.psc
+  CampTent.psc
 items:
   DESCRIPTION
   SYNTAX
@@ -30,8 +32,17 @@ items:
 source items:
   SYNTAX
   EXAMPLES
+item order:
+  DESCRIPTION
+  SYNTAX
+  PARAMETERS
+  RETURN VALUE
+  EXAMPLES
+  NOTES
+  SEE ALSO
 headertypes:
 	e 	"Events"	robo_events
+  p   "Properties"  robo_properties
 keywords:
 	if
 	endif

@@ -4,14 +4,21 @@ import CampUtil
 import TentSystem
 
 ; REQUIRED PROPERTIES
+
+;/********p* CampTent/RequiredPositionRef_PlayerBed
+* SYNTAX
+*/;
 ObjectReference property RequiredPositionRef_PlayerBed auto
-{REQUIRED: The player's bed roll (main interactible) position reference.}
+;/* 
+* DESCRIPTION
+{ Required: The player's bed roll (main interactible) position reference. }
+;*********/;
 
 ObjectReference property RequiredPositionRef_SitFurniture auto
-{REQUIRED: The player's sitting furniture position reference.}
+{Required: The player's sitting furniture position reference.}
 
 ObjectReference property RequiredPositionRef_LieDownFurniture auto
-{REQUIRED: The player's lying down furniture position reference.}
+{Required: The player's lying down furniture position reference.}
 
 ; OPTIONAL PROPERTIES
 Static property TentAsset_ShelterModel auto
