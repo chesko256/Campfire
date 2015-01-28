@@ -3,28 +3,7 @@ scriptname CampUtil hidden
 import math
 import debug
 
-;/********f* CampUtil/GetAPI
-* DESCRIPTION
-* Gets the CampfireAPI script so that its member functions can be called.
-* Generally not used; use CampUtil member functions to interact with the Campfire API instead.
-*
-* SYNTAX
-*/;
 CampfireAPI function GetAPI() global
-;/*
-* PARAMETERS
-* None
-*
-* RETURN VALUE
-* The CampfireAPI script instance.
-*
-* EXAMPLES
-	CampfireAPI Campfire = GetAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return None
-	endif
-;*********/;
 	;@TODO: Change to .esm check
 	return (Game.GetFormFromFile(0x00024095, "Campfire.esp") as Quest) as CampfireAPI
 endFunction
@@ -213,7 +192,7 @@ Armor function GetPlayerEquippedHead() global
 * The player's currently equipped head armor.
 *
 * EXAMPLES
-	Armor PlayerHelm = GetPlayerEquippedHead()
+Armor PlayerHelm = GetPlayerEquippedHead()
 ;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
@@ -236,10 +215,10 @@ Armor function GetPlayerEquippedBody() global
 * None
 *
 * RETURN VALUE
-*The player's currently equipped body armor.
+* The player's currently equipped body armor.
 *
 * EXAMPLES
-	Armor PlayerArmor = GetPlayerEquippedBody()
+Armor PlayerArmor = GetPlayerEquippedBody()
 ;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
@@ -265,7 +244,7 @@ Armor function GetPlayerEquippedHands() global
 * The player's currently equipped hand armor.
 *
 * EXAMPLES
-	Armor PlayerGauntlets = GetPlayerEquippedHands()
+Armor PlayerGauntlets = GetPlayerEquippedHands()
 ;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
@@ -291,7 +270,7 @@ Armor function GetPlayerEquippedFeet() global
 * The player's currently equipped foot armor.
 *
 * EXAMPLES
-	Armor PlayerBoots = GetPlayerEquippedFeet()
+Armor PlayerBoots = GetPlayerEquippedFeet()
 ;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
@@ -317,7 +296,7 @@ Armor function GetPlayerEquippedBackpack() global
 * The player's currently equipped backpack.
 *
 * EXAMPLES
-	Armor PlayerBackpack = GetPlayerEquippedBackpack()
+Armor PlayerBackpack = GetPlayerEquippedBackpack()
 * NOTES
 *	An Armor item is considered to be a backpack if it is in the _Camp_Backpacks FormList.
 ;*********/;
@@ -345,7 +324,7 @@ Ammo function GetPlayerEquippedAmmo() global
 * The player's currently equipped ammo.
 *
 * EXAMPLES
-	Armor PlayerArrows = GetPlayerEquippedAmmo()
+Armor PlayerArrows = GetPlayerEquippedAmmo()
 ;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
@@ -371,10 +350,10 @@ bool function IsRefInInterior(ObjectReference akReference) global
 * True if the reference is in an interior or "interior-like" cell, false otherwise.
 *
 * EXAMPLES
-	;Is the box in an interior?
-	if IsRefInInterior(Box)
-		Debug.Trace("Box is inside!")
-	endif
+;Is the box in an interior?
+if IsRefInInterior(Box)
+	Debug.Trace("Box is inside!")
+endif
 * NOTES
 * The standard IsInInterior() function can only return whether or not the current cell 
 * is marked as an Interior. There are numerous worldspaces (such as AlftandWorld, 
@@ -494,9 +473,9 @@ bool function IsPlayerPlacingObject() global
 * True if the player is currently placing a Placeable Object, false otherwise.
 *
 * EXAMPLES
-	if IsPlayerPlacingObject()
-		debug.trace("The player is placing an object right now!")
-	endif
+if IsPlayerPlacingObject()
+	debug.trace("The player is placing an object right now!")
+endif
 ;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
@@ -526,9 +505,9 @@ bool function IsPlaceableObject(Form akBaseObject) global
 * True if the Form is a Placeable Object, false otherwise.
 *
 * EXAMPLES
-	if IsPlaceableObject()
-		debug.trace("The item is a placeable object.")
-	endif
+if IsPlaceableObject()
+	debug.trace("The item is a placeable object.")
+endif
 ;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
@@ -601,9 +580,9 @@ bool function LegalToCampHere(bool abIgnoreSetting = false) global
 * True if player's location is a legal camping area; false otherwise.
 *
 * EXAMPLES
-  if !LegalToCampHere()
-    debug.trace("We can't stop here. This is bat country.")
-  endif
+if !LegalToCampHere()
+	debug.trace("We can't stop here. This is bat country.")
+endif
 * NOTES
 * In Campfire, it is illegal for the player to place Placeable Objects inside houses, other owned buildings (inns, taverns), and within range of / inside settled areas like towns and cities.
 ;*********/;
