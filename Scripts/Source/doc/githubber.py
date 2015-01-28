@@ -147,6 +147,8 @@ with open(str(sys.argv[2]), "w") as myfile:
 		myfile.write(line)
 	for line in member_toc:
 		myfile.write(line)
+	myfile.write('\n')
+	myfile.write('***\n')
 	for line in property_body:
 		myfile.write(line)
 	for line in global_body:
