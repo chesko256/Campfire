@@ -19,6 +19,7 @@ options:
   --nogeneratedwith
   --nopre
   --nosort
+  --sectionnameonly
 accept files:
   CampUtil.psc
   CampTent.psc

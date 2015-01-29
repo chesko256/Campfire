@@ -2,6 +2,14 @@
 * SCRIPTNAME
 */;
 scriptname CampTent extends _Camp_PlaceableObjectBase
+;/*
+* OVERVIEW
+* This script controls all tent behavior. The intended use of this script is to be attached to an
+* Activator which will serve as the player's bed roll. Attaching this script and filling out 
+* properties in the Creation Kit is how new tents are created; please see the tutorials for more 
+* information. Only 3 properties are required in order for the tent to function; see below.
+* This script supports creating a tent with a single bed roll, a lantern, clutter, and more. 
+* See CampTentEx for even more capability.
 ;*********/;
 
 import CampUtil
