@@ -257,6 +257,7 @@ def main(file_to_parse, child=False):
 					continue
 				else:
 					if not child:
+						line = line.replace("\\", "")
 						header.append(line)
 
 	entry = list()

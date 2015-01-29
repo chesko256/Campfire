@@ -6,3 +6,4 @@ pandoc.exe "./output/CampTentEx_psc.xml" -f docbook -t markdown_github -o "./out
 python githubber.py "CampUtil_psc.txt" "../../../campwiki/CampUtil-API-Reference.md"
 python githubber.py "CampTent_psc.txt" "../../../campwiki/CampTent-Script.md"
 python githubber.py "CampTentEx_psc.txt" "../../../campwiki/CampTentEx-Script.md"
+pause
