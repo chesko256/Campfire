@@ -7,14 +7,28 @@
 </articleinfo>
 <section>
 <title>
-CampUtil/GetPlayerEquippedAmmo</title>
+Form/CampUtil</title>
+<formalpara><title>SCRIPTNAME</title><para></para></formalpara>
+<literallayout class="monospaced">
+scriptname CampUtil hidden
+</literallayout>
+<formalpara><title>OVERVIEW</title><para></para></formalpara>
+<para>
+ The `CampUtil` script is the primary way most mods should interact with Campfire and contains many helpful functions. To call any of the following functions, download the SDK and in your script include the line:
+ &lt;pre&gt;import CampUtil&lt;/pre&gt;
+ Alternatively, you can call `CampUtil.FunctionName()` without importing CampUtil.
+</para>
+</section>
+<section>
+<title>
+CampUtil/GetPlayerEquippedHead</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Gets the player's currently equipped ammo.
+ Gets the player's currently equipped head armor.
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-Ammo function GetPlayerEquippedAmmo() global
+Armor function GetPlayerEquippedHead() global
 </literallayout>
 <formalpara><title>PARAMETERS</title><para></para></formalpara>
 <para>
@@ -22,11 +36,83 @@ Ammo function GetPlayerEquippedAmmo() global
 </para>
 <formalpara><title>RETURN VALUE</title><para></para></formalpara>
 <para>
- The player's currently equipped ammo.
+ The player's currently equipped head armor.
 </para>
 <formalpara><title>EXAMPLES</title><para></para></formalpara>
 <literallayout class="monospaced">
-Armor PlayerArrows = GetPlayerEquippedAmmo()
+Armor PlayerHelm = GetPlayerEquippedHead()
+</literallayout>
+</section>
+<section>
+<title>
+CampUtil/GetPlayerEquippedBody</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Gets the player's currently equipped body armor.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Armor function GetPlayerEquippedBody() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The player's currently equipped body armor.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+Armor PlayerArmor = GetPlayerEquippedBody()
+</literallayout>
+</section>
+<section>
+<title>
+CampUtil/GetPlayerEquippedHands</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Gets the player's currently equipped hand armor.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Armor function GetPlayerEquippedHands() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The player's currently equipped hand armor.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+Armor PlayerGauntlets = GetPlayerEquippedHands()
+</literallayout>
+</section>
+<section>
+<title>
+CampUtil/GetPlayerEquippedFeet</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Gets the player's currently equipped foot armor.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Armor function GetPlayerEquippedFeet() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The player's currently equipped foot armor.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+Armor PlayerBoots = GetPlayerEquippedFeet()
 </literallayout>
 </section>
 <section>
@@ -59,14 +145,14 @@ Armor PlayerBackpack = GetPlayerEquippedBackpack()
 </section>
 <section>
 <title>
-CampUtil/GetPlayerEquippedBody</title>
+CampUtil/GetPlayerEquippedAmmo</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Gets the player's currently equipped body armor.
+ Gets the player's currently equipped ammo.
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-Armor function GetPlayerEquippedBody() global
+Ammo function GetPlayerEquippedAmmo() global
 </literallayout>
 <formalpara><title>PARAMETERS</title><para></para></formalpara>
 <para>
@@ -74,135 +160,11 @@ Armor function GetPlayerEquippedBody() global
 </para>
 <formalpara><title>RETURN VALUE</title><para></para></formalpara>
 <para>
- The player's currently equipped body armor.
+ The player's currently equipped ammo.
 </para>
 <formalpara><title>EXAMPLES</title><para></para></formalpara>
 <literallayout class="monospaced">
-Armor PlayerArmor = GetPlayerEquippedBody()
-</literallayout>
-</section>
-<section>
-<title>
-CampUtil/GetPlayerEquippedFeet</title>
-<formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Gets the player's currently equipped foot armor.
-</para>
-<formalpara><title>SYNTAX</title><para></para></formalpara>
-<literallayout class="monospaced">
-Armor function GetPlayerEquippedFeet() global
-</literallayout>
-<formalpara><title>PARAMETERS</title><para></para></formalpara>
-<para>
- None
-</para>
-<formalpara><title>RETURN VALUE</title><para></para></formalpara>
-<para>
- The player's currently equipped foot armor.
-</para>
-<formalpara><title>EXAMPLES</title><para></para></formalpara>
-<literallayout class="monospaced">
-Armor PlayerBoots = GetPlayerEquippedFeet()
-</literallayout>
-</section>
-<section>
-<title>
-CampUtil/GetPlayerEquippedHands</title>
-<formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Gets the player's currently equipped hand armor.
-</para>
-<formalpara><title>SYNTAX</title><para></para></formalpara>
-<literallayout class="monospaced">
-Armor function GetPlayerEquippedHands() global
-</literallayout>
-<formalpara><title>PARAMETERS</title><para></para></formalpara>
-<para>
- None
-</para>
-<formalpara><title>RETURN VALUE</title><para></para></formalpara>
-<para>
- The player's currently equipped hand armor.
-</para>
-<formalpara><title>EXAMPLES</title><para></para></formalpara>
-<literallayout class="monospaced">
-Armor PlayerGauntlets = GetPlayerEquippedHands()
-</literallayout>
-</section>
-<section>
-<title>
-CampUtil/GetPlayerEquippedHead</title>
-<formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Gets the player's currently equipped head armor.
-</para>
-<formalpara><title>SYNTAX</title><para></para></formalpara>
-<literallayout class="monospaced">
-Armor function GetPlayerEquippedHead() global
-</literallayout>
-<formalpara><title>PARAMETERS</title><para></para></formalpara>
-<para>
- None
-</para>
-<formalpara><title>RETURN VALUE</title><para></para></formalpara>
-<para>
- The player's currently equipped head armor.
-</para>
-<formalpara><title>EXAMPLES</title><para></para></formalpara>
-<literallayout class="monospaced">
-Armor PlayerHelm = GetPlayerEquippedHead()
-</literallayout>
-</section>
-<section>
-<title>
-CampUtil/IsPlaceableObject</title>
-<formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Whether or not the Form is a Placeable Object.
-</para>
-<formalpara><title>SYNTAX</title><para></para></formalpara>
-<literallayout class="monospaced">
-bool function IsPlaceableObject(Form akBaseObject) global
-</literallayout>
-<formalpara><title>PARAMETERS</title><para></para></formalpara>
-<itemizedlist><listitem><para> akBaseObject: The base object to check.
-</para></listitem></itemizedlist><para>
-</para>
-<formalpara><title>RETURN VALUE</title><para></para></formalpara>
-<para>
- True if the Form is a Placeable Object, false otherwise.
-</para>
-<formalpara><title>EXAMPLES</title><para></para></formalpara>
-<literallayout class="monospaced">
-if IsPlaceableObject()
-        debug.trace("The item is a placeable object.")
-endif
-</literallayout>
-</section>
-<section>
-<title>
-CampUtil/IsPlayerPlacingObject</title>
-<formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Whether or not the player is currently placing a Placeable Object (tent, etc).
-</para>
-<formalpara><title>SYNTAX</title><para></para></formalpara>
-<literallayout class="monospaced">
-bool function IsPlayerPlacingObject() global
-</literallayout>
-<formalpara><title>PARAMETERS</title><para></para></formalpara>
-<para>
- None
-</para>
-<formalpara><title>RETURN VALUE</title><para></para></formalpara>
-<para>
- True if the player is currently placing a Placeable Object, false otherwise.
-</para>
-<formalpara><title>EXAMPLES</title><para></para></formalpara>
-<literallayout class="monospaced">
-if IsPlayerPlacingObject()
-        debug.trace("The player is placing an object right now!")
-endif
+Armor PlayerArrows = GetPlayerEquippedAmmo()
 </literallayout>
 </section>
 <section>
@@ -243,36 +205,6 @@ endif
 </section>
 <section>
 <title>
-CampUtil/LegalToCampHere</title>
-<formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Whether or not the player's current location is considered a legal camping area.
-</para>
-<formalpara><title>SYNTAX</title><para></para></formalpara>
-<literallayout class="monospaced">
-bool function LegalToCampHere(bool abIgnoreSetting = false) global
-</literallayout>
-<formalpara><title>PARAMETERS</title><para></para></formalpara>
-<itemizedlist><listitem><para> abIgnoreSetting: Whether or not to ignore Campfire's "Camping Illegal in Settled Areas" setting. If true, returns the legality of the player's current position regardless of the setting.
-</para></listitem></itemizedlist><para>
-</para>
-<formalpara><title>RETURN VALUE</title><para></para></formalpara>
-<para>
- True if player's location is a legal camping area; false otherwise.
-</para>
-<formalpara><title>EXAMPLES</title><para></para></formalpara>
-<literallayout class="monospaced">
-if !LegalToCampHere()
-        debug.trace("We can't stop here. This is bat country.")
-endif
-</literallayout>
-<formalpara><title>NOTES</title><para></para></formalpara>
-<para>
- In Campfire, it is illegal for the player to place Placeable Objects inside houses, other owned buildings (inns, taverns), and within range of / inside settled areas like towns and cities.
-</para>
-</section>
-<section>
-<title>
 CampUtil/PlayerCanPlaceObjects</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
@@ -308,6 +240,88 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true) global
 </para></listitem><listitem><para> The player is using another object (crafting bench, etc).
 </para></listitem><listitem><para> The player is currently transformed into a Vampire Lord or Werewolf.
 </para></listitem></itemizedlist><para>
+</para>
+</section>
+<section>
+<title>
+CampUtil/IsPlayerPlacingObject</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Whether or not the player is currently placing a Placeable Object (tent, etc).
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsPlayerPlacingObject() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if the player is currently placing a Placeable Object, false otherwise.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+if IsPlayerPlacingObject()
+        debug.trace("The player is placing an object right now!")
+endif
+</literallayout>
+</section>
+<section>
+<title>
+CampUtil/IsPlaceableObject</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Whether or not the Form is a Placeable Object.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsPlaceableObject(Form akBaseObject) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> akBaseObject: The base object to check.
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if the Form is a Placeable Object, false otherwise.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+if IsPlaceableObject()
+        debug.trace("The item is a placeable object.")
+endif
+</literallayout>
+</section>
+<section>
+<title>
+CampUtil/LegalToCampHere</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Whether or not the player's current location is considered a legal camping area.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function LegalToCampHere(bool abIgnoreSetting = false) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> abIgnoreSetting: Whether or not to ignore Campfire's "Camping Illegal in Settled Areas" setting. If true, returns the legality of the player's current position regardless of the setting.
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if player's location is a legal camping area; false otherwise.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+if !LegalToCampHere()
+        debug.trace("We can't stop here. This is bat country.")
+endif
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ In Campfire, it is illegal for the player to place Placeable Objects inside houses, other owned buildings (inns, taverns), and within range of / inside settled areas like towns and cities.
 </para>
 </section>
 </article>

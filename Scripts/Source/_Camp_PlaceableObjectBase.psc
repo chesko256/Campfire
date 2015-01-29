@@ -3,12 +3,26 @@ scriptname _Camp_PlaceableObjectBase extends ObjectReference
 import CampUtil
 
 ; REQUIRED PROPERTIES
+
+;/********p* CampTent/Required_InventoryItem
+* SYNTAX
+*/;
 MiscObject property Required_InventoryItem auto
-{REQUIRED: The item the player obtains when picking up this object.}
+;/*
+* DESCRIPTION
+{ Required: The item the player obtains when picking up this object. }
+;*********/;
 
 ; OPTIONAL PROPERTIES
+
+;/********p* CampTent/Setting_StartUpRotation
+* SYNTAX
+*/;
 Float property Setting_StartUpRotation = 0.0 auto
-{Optional: The amount, in degrees, to rotate on the Z axis on start-up.}
+;/*
+* DESCRIPTION
+{ Optional: The amount, in degrees, to rotate on the Z axis on start-up. }
+;*********/;
 
 ; PRIVATE
 _Camp_ObjectPlacementThreadManager property PlacementSystem auto hidden

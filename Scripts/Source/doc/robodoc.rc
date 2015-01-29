@@ -18,10 +18,15 @@ options:
   --nodesc
   --nogeneratedwith
   --nopre
+  --nosort
 accept files:
   CampUtil.psc
   CampTent.psc
+  CampTentEx.psc
+  _Camp_PlaceableObjectBase.psc
 items:
+  SCRIPTNAME
+  OVERVIEW
   DESCRIPTION
   SYNTAX
   PARAMETERS
@@ -30,9 +35,12 @@ items:
   NOTES
   SEE ALSO
 source items:
+  SCRIPTNAME
   SYNTAX
   EXAMPLES
 item order:
+  SCRIPTNAME
+  OVERVIEW
   DESCRIPTION
   SYNTAX
   PARAMETERS
@@ -43,11 +51,4 @@ item order:
 headertypes:
 	e 	"Events"	robo_events
   p   "Properties"  robo_properties
-keywords:
-	if
-	endif
-	while
-	event
-	function
-	global
-	return
+  s 	"Script Names"	robo_scriptname

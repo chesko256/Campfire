@@ -1,0 +1,19 @@
+### CampTent/Required\_InventoryItem
+
+**DESCRIPTION.**
+
+Required: The item the player obtains when picking up this object. }
+
+**SYNTAX.**
+
+    MiscObject property Required_InventoryItem auto
+
+### CampTent/Setting\_StartUpRotation
+
+**DESCRIPTION.**
+
+Optional: The amount, in degrees, to rotate on the Z axis on start-up. }
+
+**SYNTAX.**
+
+    Float property Setting_StartUpRotation = 0.0 auto

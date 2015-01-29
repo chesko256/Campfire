@@ -1,3 +1,19 @@
+### \_Camp\_PlaceableObjectBase/CampTent
+
+**SCRIPTNAME.**
+
+    scriptname CampTent extends _Camp_PlaceableObjectBase
+
+### CampTent/Setting\_BedRollScale
+
+**DESCRIPTION.**
+
+Optional: The scale to render the player's and follower's bed rolls. 1.0 by default. }
+
+**SYNTAX.**
+
+    Float property Setting_BedRollScale = 1.0 auto
+
 ### CampTent/RequiredPositionRef\_PlayerBed
 
 **DESCRIPTION.**
@@ -7,3 +23,323 @@ Required: The player's bed roll (main interactible) position reference. }
 **SYNTAX.**
 
     ObjectReference property RequiredPositionRef_PlayerBed auto
+
+### CampTent/RequiredPositionRef\_SitFurniture
+
+**DESCRIPTION.**
+
+Required: The player's sitting furniture position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property RequiredPositionRef_SitFurniture auto
+
+### CampTent/RequiredPositionRef\_LieDownFurniture
+
+**DESCRIPTION.**
+
+Required: The player's lying down furniture position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property RequiredPositionRef_LieDownFurniture auto
+
+### CampTent/TentAsset\_ShelterModel
+
+**DESCRIPTION.**
+
+Optional: The tent static object. }
+
+**SYNTAX.**
+
+    Static property TentAsset_ShelterModel auto
+
+### CampTent/TentAsset\_ShelterModelExterior
+
+**DESCRIPTION.**
+
+Optional: The tent static object exterior (for use with Toggle View feature). }
+
+**SYNTAX.**
+
+    Static property TentAsset_ShelterModelExterior auto
+
+### CampTent/TentAsset\_ShelterModelMaterialSnow
+
+**DESCRIPTION.**
+
+Optional: The tent (ShelterModel or ShelterModelExterior) with snow directional shader applied. }
+
+**SYNTAX.**
+
+    Static property TentAsset_ShelterModelMaterialSnow auto
+
+### CampTent/TentAsset\_ShelterModelMaterialAsh
+
+**DESCRIPTION.**
+
+Optional: The tent (ShelterModel or ShelterModelExterior) with ash directional shader applied (use \_Camp\_AshMaterialSolstheim1P\_2 instead of a direct dependency on Dragonborn.esm) }
+
+**SYNTAX.**
+
+    Static property TentAsset_ShelterModelMaterialAsh auto
+
+### CampTent/TentAsset\_ClutterStatic1
+
+**DESCRIPTION.**
+
+Optional: A static to place in or around the tent. }
+
+**SYNTAX.**
+
+    Static property TentAsset_ClutterStatic1 auto
+
+### CampTent/TentAsset\_ClutterStatic2
+
+**DESCRIPTION.**
+
+Optional: A static to place in or around the tent. }
+
+**SYNTAX.**
+
+    Static property TentAsset_ClutterStatic2 auto
+
+### CampTent/TentAsset\_ClutterStatic3
+
+**DESCRIPTION.**
+
+Optional: A static to place in or around the tent. }
+
+**SYNTAX.**
+
+    Static property TentAsset_ClutterStatic3 auto
+
+### CampTent/TentAsset\_ClutterStatic4
+
+**DESCRIPTION.**
+
+Optional: A static to place in or around the tent. }
+
+**SYNTAX.**
+
+    Static property TentAsset_ClutterStatic4 auto
+
+### CampTent/TentAsset\_ClutterStatic5
+
+**DESCRIPTION.**
+
+Optional: A static to place in or around the tent. }
+
+**SYNTAX.**
+
+    Static property TentAsset_ClutterStatic5 auto
+
+### CampTent/PositionRef\_FrontExitMarker
+
+**DESCRIPTION.**
+
+Optional: Position reference of marker to move the player to when exiting a small tent. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_FrontExitMarker auto
+
+### CampTent/PositionRef\_Shelter
+
+**DESCRIPTION.**
+
+Optional: The shelter (tent, structure) position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_Shelter auto
+
+### CampTent/PositionRef\_Ward
+
+**DESCRIPTION.**
+
+Optional: The ward position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_Ward auto
+
+### CampTent/PositionRef\_Lantern1
+
+**DESCRIPTION.**
+
+Optional: The first lantern's position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_Lantern1 auto
+
+### CampTent/PositionRef\_ClutterStatic1
+
+**DESCRIPTION.**
+
+Optional: Clutter position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ClutterStatic1 auto
+
+### CampTent/PositionRef\_ClutterStatic2
+
+**DESCRIPTION.**
+
+Optional: Clutter position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ClutterStatic2 auto
+
+### CampTent/PositionRef\_ClutterStatic3
+
+**DESCRIPTION.**
+
+Optional: Clutter position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ClutterStatic3 auto
+
+### CampTent/PositionRef\_ClutterStatic4
+
+**DESCRIPTION.**
+
+Optional: Clutter position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ClutterStatic4 auto
+
+### CampTent/PositionRef\_ClutterStatic5
+
+**DESCRIPTION.**
+
+Optional: Clutter position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ClutterStatic5 auto
+
+### CampTent/PositionRef\_Player\_Backpack
+
+**DESCRIPTION.**
+
+Optional: Position reference of player's backpack. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_Player_Backpack auto
+
+### CampTent/PositionRef\_Player\_Shield
+
+**DESCRIPTION.**
+
+Optional: Position reference of player's shield. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_Player_Shield auto
+
+### CampTent/PositionRef\_Player\_ShieldInterior
+
+**DESCRIPTION.**
+
+Optional: Position reference of player's shield when in an interior (usually lying flat). }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_Player_ShieldInterior auto
+
+### CampTent/PositionRef\_Player\_WeaponMainHand
+
+**DESCRIPTION.**
+
+Optional: Position reference of player's main hand weapon. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_Player_WeaponMainHand auto
+
+### CampTent/PositionRef\_Player\_WeaponOffHand
+
+**DESCRIPTION.**
+
+Optional: Position reference of player's off hand weapon. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_Player_WeaponOffHand auto
+
+### CampTent/PositionRef\_Player\_WeaponTwoHand
+
+**DESCRIPTION.**
+
+Optional: Position reference of player's two-handed weapon. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_Player_WeaponTwoHand auto
+
+### CampTent/PositionRef\_Player\_WeaponBow
+
+**DESCRIPTION.**
+
+Optional: Position reference of player's bow. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_Player_WeaponBow auto
+
+### CampTent/PositionRef\_Player\_ArmorHelm
+
+**DESCRIPTION.**
+
+Optional: Position reference of player's head gear. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_Player_ArmorHelm auto
+
+### CampTent/PositionRef\_Player\_ArmorCuirass
+
+**DESCRIPTION.**
+
+Optional: Position reference of player's body gear. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_Player_ArmorCuirass auto
+
+### CampTent/PositionRef\_Player\_ArmorGauntlets
+
+**DESCRIPTION.**
+
+Optional: Position reference of player's hand gear. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_Player_ArmorGauntlets auto
+
+### CampTent/PositionRef\_Player\_ArmorBoots
+
+**DESCRIPTION.**
+
+Optional: Position reference of player's foot gear. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_Player_ArmorBoots auto
+
+### CampTent/PositionRef\_CenterObjectOverride
+
+**DESCRIPTION.**
+
+Optional: Set this to specify a different object as the one which all other tent objects "orbit" when rotated. Uses the Shelter or Player Bed if left blank. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_CenterObjectOverride auto

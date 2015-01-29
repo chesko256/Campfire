@@ -1,12 +1,22 @@
-### CampUtil/GetPlayerEquippedAmmo
+### Form/CampUtil
+
+**SCRIPTNAME.**
+
+    scriptname CampUtil hidden
+
+**OVERVIEW.**
+
+The \`CampUtil\` script is the primary way most mods should interact with Campfire and contains many helpful functions. To call any of the following functions, download the SDK and in your script include the line: \<pre\>import CampUtil\</pre\> Alternatively, you can call \`CampUtil.FunctionName()\` without importing CampUtil.
+
+### CampUtil/GetPlayerEquippedHead
 
 **DESCRIPTION.**
 
-Gets the player's currently equipped ammo.
+Gets the player's currently equipped head armor.
 
 **SYNTAX.**
 
-    Ammo function GetPlayerEquippedAmmo() global
+    Armor function GetPlayerEquippedHead() global
 
 **PARAMETERS.**
 
@@ -14,11 +24,77 @@ None
 
 **RETURN VALUE.**
 
-The player's currently equipped ammo.
+The player's currently equipped head armor.
 
 **EXAMPLES.**
 
-    Armor PlayerArrows = GetPlayerEquippedAmmo()
+    Armor PlayerHelm = GetPlayerEquippedHead()
+
+### CampUtil/GetPlayerEquippedBody
+
+**DESCRIPTION.**
+
+Gets the player's currently equipped body armor.
+
+**SYNTAX.**
+
+    Armor function GetPlayerEquippedBody() global
+
+**PARAMETERS.**
+
+None
+
+**RETURN VALUE.**
+
+The player's currently equipped body armor.
+
+**EXAMPLES.**
+
+    Armor PlayerArmor = GetPlayerEquippedBody()
+
+### CampUtil/GetPlayerEquippedHands
+
+**DESCRIPTION.**
+
+Gets the player's currently equipped hand armor.
+
+**SYNTAX.**
+
+    Armor function GetPlayerEquippedHands() global
+
+**PARAMETERS.**
+
+None
+
+**RETURN VALUE.**
+
+The player's currently equipped hand armor.
+
+**EXAMPLES.**
+
+    Armor PlayerGauntlets = GetPlayerEquippedHands()
+
+### CampUtil/GetPlayerEquippedFeet
+
+**DESCRIPTION.**
+
+Gets the player's currently equipped foot armor.
+
+**SYNTAX.**
+
+    Armor function GetPlayerEquippedFeet() global
+
+**PARAMETERS.**
+
+None
+
+**RETURN VALUE.**
+
+The player's currently equipped foot armor.
+
+**EXAMPLES.**
+
+    Armor PlayerBoots = GetPlayerEquippedFeet()
 
 ### CampUtil/GetPlayerEquippedBackpack
 
@@ -46,15 +122,15 @@ The player's currently equipped backpack.
 
 An Armor item is considered to be a backpack if it is in the \_Camp\_Backpacks FormList.
 
-### CampUtil/GetPlayerEquippedBody
+### CampUtil/GetPlayerEquippedAmmo
 
 **DESCRIPTION.**
 
-Gets the player's currently equipped body armor.
+Gets the player's currently equipped ammo.
 
 **SYNTAX.**
 
-    Armor function GetPlayerEquippedBody() global
+    Ammo function GetPlayerEquippedAmmo() global
 
 **PARAMETERS.**
 
@@ -62,125 +138,11 @@ None
 
 **RETURN VALUE.**
 
-The player's currently equipped body armor.
+The player's currently equipped ammo.
 
 **EXAMPLES.**
 
-    Armor PlayerArmor = GetPlayerEquippedBody()
-
-### CampUtil/GetPlayerEquippedFeet
-
-**DESCRIPTION.**
-
-Gets the player's currently equipped foot armor.
-
-**SYNTAX.**
-
-    Armor function GetPlayerEquippedFeet() global
-
-**PARAMETERS.**
-
-None
-
-**RETURN VALUE.**
-
-The player's currently equipped foot armor.
-
-**EXAMPLES.**
-
-    Armor PlayerBoots = GetPlayerEquippedFeet()
-
-### CampUtil/GetPlayerEquippedHands
-
-**DESCRIPTION.**
-
-Gets the player's currently equipped hand armor.
-
-**SYNTAX.**
-
-    Armor function GetPlayerEquippedHands() global
-
-**PARAMETERS.**
-
-None
-
-**RETURN VALUE.**
-
-The player's currently equipped hand armor.
-
-**EXAMPLES.**
-
-    Armor PlayerGauntlets = GetPlayerEquippedHands()
-
-### CampUtil/GetPlayerEquippedHead
-
-**DESCRIPTION.**
-
-Gets the player's currently equipped head armor.
-
-**SYNTAX.**
-
-    Armor function GetPlayerEquippedHead() global
-
-**PARAMETERS.**
-
-None
-
-**RETURN VALUE.**
-
-The player's currently equipped head armor.
-
-**EXAMPLES.**
-
-    Armor PlayerHelm = GetPlayerEquippedHead()
-
-### CampUtil/IsPlaceableObject
-
-**DESCRIPTION.**
-
-Whether or not the Form is a Placeable Object.
-
-**SYNTAX.**
-
-    bool function IsPlaceableObject(Form akBaseObject) global
-
-**PARAMETERS.**
-
--   akBaseObject: The base object to check.
-
-**RETURN VALUE.**
-
-True if the Form is a Placeable Object, false otherwise.
-
-**EXAMPLES.**
-
-    if IsPlaceableObject()
-            debug.trace("The item is a placeable object.")
-    endif
-
-### CampUtil/IsPlayerPlacingObject
-
-**DESCRIPTION.**
-
-Whether or not the player is currently placing a Placeable Object (tent, etc).
-
-**SYNTAX.**
-
-    bool function IsPlayerPlacingObject() global
-
-**PARAMETERS.**
-
-None
-
-**RETURN VALUE.**
-
-True if the player is currently placing a Placeable Object, false otherwise.
-
-**EXAMPLES.**
-
-    if IsPlayerPlacingObject()
-            debug.trace("The player is placing an object right now!")
-    endif
+    Armor PlayerArrows = GetPlayerEquippedAmmo()
 
 ### CampUtil/IsRefInInterior
 
@@ -210,34 +172,6 @@ True if the reference is in an interior or "interior-like" cell, false otherwise
 **NOTES.**
 
 The standard IsInInterior() function can only return whether or not the current cell is marked as an Interior. There are numerous worldspaces (such as AlftandWorld, Blackreach, BlindCliffCaveWorld, etc) that look and act like interiors, but are set as external worldspaces. This can cause IsInInterior() to return undesirable results. This function takes these known base game (and DLC) worldspaces into account when evaluating the object reference's location.
-
-### CampUtil/LegalToCampHere
-
-**DESCRIPTION.**
-
-Whether or not the player's current location is considered a legal camping area.
-
-**SYNTAX.**
-
-    bool function LegalToCampHere(bool abIgnoreSetting = false) global
-
-**PARAMETERS.**
-
--   abIgnoreSetting: Whether or not to ignore Campfire's "Camping Illegal in Settled Areas" setting. If true, returns the legality of the player's current position regardless of the setting.
-
-**RETURN VALUE.**
-
-True if player's location is a legal camping area; false otherwise.
-
-**EXAMPLES.**
-
-    if !LegalToCampHere()
-            debug.trace("We can't stop here. This is bat country.")
-    endif
-
-**NOTES.**
-
-In Campfire, it is illegal for the player to place Placeable Objects inside houses, other owned buildings (inns, taverns), and within range of / inside settled areas like towns and cities.
 
 ### CampUtil/PlayerCanPlaceObjects
 
@@ -281,4 +215,78 @@ Reasons that this function might return false are:
 
 -   The player is currently transformed into a Vampire Lord or Werewolf.
 
+### CampUtil/IsPlayerPlacingObject
 
+**DESCRIPTION.**
+
+Whether or not the player is currently placing a Placeable Object (tent, etc).
+
+**SYNTAX.**
+
+    bool function IsPlayerPlacingObject() global
+
+**PARAMETERS.**
+
+None
+
+**RETURN VALUE.**
+
+True if the player is currently placing a Placeable Object, false otherwise.
+
+**EXAMPLES.**
+
+    if IsPlayerPlacingObject()
+            debug.trace("The player is placing an object right now!")
+    endif
+
+### CampUtil/IsPlaceableObject
+
+**DESCRIPTION.**
+
+Whether or not the Form is a Placeable Object.
+
+**SYNTAX.**
+
+    bool function IsPlaceableObject(Form akBaseObject) global
+
+**PARAMETERS.**
+
+-   akBaseObject: The base object to check.
+
+**RETURN VALUE.**
+
+True if the Form is a Placeable Object, false otherwise.
+
+**EXAMPLES.**
+
+    if IsPlaceableObject()
+            debug.trace("The item is a placeable object.")
+    endif
+
+### CampUtil/LegalToCampHere
+
+**DESCRIPTION.**
+
+Whether or not the player's current location is considered a legal camping area.
+
+**SYNTAX.**
+
+    bool function LegalToCampHere(bool abIgnoreSetting = false) global
+
+**PARAMETERS.**
+
+-   abIgnoreSetting: Whether or not to ignore Campfire's "Camping Illegal in Settled Areas" setting. If true, returns the legality of the player's current position regardless of the setting.
+
+**RETURN VALUE.**
+
+True if player's location is a legal camping area; false otherwise.
+
+**EXAMPLES.**
+
+    if !LegalToCampHere()
+            debug.trace("We can't stop here. This is bat country.")
+    endif
+
+**NOTES.**
+
+In Campfire, it is illegal for the player to place Placeable Objects inside houses, other owned buildings (inns, taverns), and within range of / inside settled areas like towns and cities.

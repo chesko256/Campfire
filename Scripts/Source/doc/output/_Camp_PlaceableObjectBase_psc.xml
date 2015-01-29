@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" 
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<article lang="en">
+<articleinfo>
+  <title>API Reference</title>
+</articleinfo>
+<section>
+<title>
+CampTent/Required_InventoryItem</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Required: The item the player obtains when picking up this object. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+MiscObject property Required_InventoryItem auto
+</literallayout>
+</section>
+<section>
+<title>
+CampTent/Setting_StartUpRotation</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Optional: The amount, in degrees, to rotate on the Z axis on start-up. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Float property Setting_StartUpRotation = 0.0 auto
+</literallayout>
+</section>
+</article>
