@@ -2,6 +2,10 @@
 * SCRIPTNAME
 */;
 scriptname CampPlaceableMiscItem extends ObjectReference
+;/*
+* OVERVIEW
+* Attach this script to a Misc Item that represents the inventory item of a Placeable Object.
+;*********/;
 
 import math
 import CampUtil

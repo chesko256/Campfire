@@ -7,6 +7,18 @@
 </articleinfo>
 <section>
 <title>
+ObjectReference/CampPlaceableMiscItem</title>
+<formalpara><title>SCRIPTNAME</title><para></para></formalpara>
+<literallayout class="monospaced">
+scriptname CampPlaceableMiscItem extends ObjectReference
+</literallayout>
+<formalpara><title>OVERVIEW</title><para></para></formalpara>
+<para>
+ Attach this script to a Misc Item that represents the inventory item of a Placeable Object.
+</para>
+</section>
+<section>
+<title>
 CampPlaceableMiscItem/Required_placement_indicator</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
