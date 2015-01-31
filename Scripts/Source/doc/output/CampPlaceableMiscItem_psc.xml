@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" 
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<article lang="en">
+<articleinfo>
+  <title>API Reference</title>
+</articleinfo>
+<section>
+<title>
+CampPlaceableMiscItem/Required_placement_indicator</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Required: The object that will indicate to the player where to place this item. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Activator property Required_placement_indicator auto
+</literallayout>
+</section>
+<section>
+<title>
+CampPlaceableMiscItem/Required_this_item</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Required: Fill this property with the Misc Item this script is attached to. (Can't be "learned" by the script at runtime.) }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+MiscObject property Required_this_item auto
+</literallayout>
+</section>
+<section>
+<title>
+CampPlaceableMiscItem/z_position_offset</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Adjust far up or down from the indicated position to place this item. Use if placed item is always above or below placement indicator position. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+float property z_position_offset auto
+</literallayout>
+</section>
+<section>
+<title>
+CampPlaceableMiscItem/z_angle_offset</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Adjust Z angle (compass rotation) of placed item. Use if placed item is at a different angle than the placement indicator. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+float property z_angle_offset auto
+</literallayout>
+</section>
+<section>
+<title>
+CampPlaceableMiscItem/consumable_ingredient</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Optional: An ingredient that is needed and consumed when using / placing this item. Fill only the ingredient or the misc item property. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Ingredient property consumable_ingredient auto
+</literallayout>
+</section>
+<section>
+<title>
+CampPlaceableMiscItem/consumable_misc_item</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Optional: A misc item that is needed and consumed when using / placing this item. Fill only the ingredient or the misc item property. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+MiscObject property consumable_misc_item auto
+</literallayout>
+</section>
+<section>
+<title>
+CampPlaceableMiscItem/consumable_cost</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Optional: How many of the ingredients or misc items that will be consumed when this item is used / placed. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+int property consumable_cost auto
+</literallayout>
+</section>
+<section>
+<title>
+CampPlaceableMiscItem/necessary_perk</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Optional: A perk required to use / place this item. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Perk property necessary_perk auto
+</literallayout>
+</section>
+</article>

@@ -1,0 +1,79 @@
+### CampPlaceableMiscItem/Required\_placement\_indicator
+
+**DESCRIPTION.**
+
+Required: The object that will indicate to the player where to place this item. }
+
+**SYNTAX.**
+
+    Activator property Required_placement_indicator auto
+
+### CampPlaceableMiscItem/Required\_this\_item
+
+**DESCRIPTION.**
+
+Required: Fill this property with the Misc Item this script is attached to. (Can't be "learned" by the script at runtime.) }
+
+**SYNTAX.**
+
+    MiscObject property Required_this_item auto
+
+### CampPlaceableMiscItem/z\_position\_offset
+
+**DESCRIPTION.**
+
+Adjust far up or down from the indicated position to place this item. Use if placed item is always above or below placement indicator position. }
+
+**SYNTAX.**
+
+    float property z_position_offset auto
+
+### CampPlaceableMiscItem/z\_angle\_offset
+
+**DESCRIPTION.**
+
+Adjust Z angle (compass rotation) of placed item. Use if placed item is at a different angle than the placement indicator. }
+
+**SYNTAX.**
+
+    float property z_angle_offset auto
+
+### CampPlaceableMiscItem/consumable\_ingredient
+
+**DESCRIPTION.**
+
+Optional: An ingredient that is needed and consumed when using / placing this item. Fill only the ingredient or the misc item property. }
+
+**SYNTAX.**
+
+    Ingredient property consumable_ingredient auto
+
+### CampPlaceableMiscItem/consumable\_misc\_item
+
+**DESCRIPTION.**
+
+Optional: A misc item that is needed and consumed when using / placing this item. Fill only the ingredient or the misc item property. }
+
+**SYNTAX.**
+
+    MiscObject property consumable_misc_item auto
+
+### CampPlaceableMiscItem/consumable\_cost
+
+**DESCRIPTION.**
+
+Optional: How many of the ingredients or misc items that will be consumed when this item is used / placed. }
+
+**SYNTAX.**
+
+    int property consumable_cost auto
+
+### CampPlaceableMiscItem/necessary\_perk
+
+**DESCRIPTION.**
+
+Optional: A perk required to use / place this item. }
+
+**SYNTAX.**
+
+    Perk property necessary_perk auto

@@ -27,6 +27,7 @@ accept files:
   _Camp_PlaceableObjectBase.psc
   CampPlaceableObject.psc
   CampPlaceableObjectEx.psc
+  CampPlaceableMiscItem.psc
 items:
   SCRIPTNAME
   OVERVIEW

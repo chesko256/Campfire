@@ -14,7 +14,7 @@ scriptname CampPlaceableObject extends _Camp_PlaceableObjectBase
 </literallayout>
 <formalpara><title>OVERVIEW</title><para></para></formalpara>
 <para>
- The `CampPlaceableObject` script is for creating simple, single-object Placeable Objects. It can be
+ The `CampPlaceableObject` script is for creating simple Placeable Objects. It can be
  attached to an Activator or Furniture.
 </para>
 </section>
