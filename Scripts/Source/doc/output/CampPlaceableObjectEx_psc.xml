@@ -7,497 +7,460 @@
 </articleinfo>
 <section>
 <title>
-CampTent/CampTentEx</title>
+_Camp_PlaceableObjectBase/CampPlaceableObject</title>
 <formalpara><title>SCRIPTNAME</title><para></para></formalpara>
 <literallayout class="monospaced">
-scriptname CampTentEx extends <link linkend="robo53">CampTent</link>
+scriptname CampPlaceableObjectEx extends CampPlaceableObject
 </literallayout>
 <formalpara><title>OVERVIEW</title><para></para></formalpara>
 <para>
- This script is an expanded version of <link linkend="robo53">CampTent</link>, and includes a larger number of optional properties 
- in order to create more elaborate tents. CampTentEx includes support for up to 3 follower bed rolls,
- 2 additional lanterns, new clutter options, and more. As with <link linkend="robo53">CampTent</link>, only the PlayerBed, 
- SitFurniture, and LieDownFurniture Position References are required for the tent to work.
+ The `CampPlaceableObjectEx` script an expanded version of `CampPlaceableObject`, for creating
+ more elaborate multi-part placeable objects (such as a barrel with a lantern and a chair). Can be
+ attached to an Activator or Furniture object that serves as the main interactible.
 </para>
 </section>
 <section>
 <title>
-CampTentEx/TentAsset_ClutterActivator1</title>
+CampPlaceableObject/Asset_ExtraStatic1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: An activator to place in or around the tent. }
+ Optional: A static to place near this object. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-Activator property TentAsset_ClutterActivator1 auto
+Static property Asset_ExtraStatic1 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/TentAsset_ClutterActivator2</title>
+CampPlaceableObjectEx/Asset_ExtraStatic2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: An activator to place in or around the tent. }
+ Optional: A static to place near this object. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-Activator property TentAsset_ClutterActivator2 auto
+Static property Asset_ExtraStatic2 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/TentAsset_ClutterActivator3</title>
+CampPlaceableObjectEx/Asset_ExtraStatic3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: An activator to place in or around the tent. }
+ Optional: A static to place near this object. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-Activator property TentAsset_ClutterActivator3 auto
+Static property Asset_ExtraStatic3 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/TentAsset_ClutterActivator4</title>
+CampPlaceableObjectEx/Asset_ExtraStatic4</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: An activator to place in or around the tent. }
+ Optional: A static to place near this object. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-Activator property TentAsset_ClutterActivator4 auto
+Static property Asset_ExtraStatic4 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/TentAsset_ClutterActivator5</title>
+CampPlaceableObjectEx/Asset_ExtraStatic5</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: An activator to place in or around the tent. }
+ Optional: A static to place near this object. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-Activator property TentAsset_ClutterActivator5 auto
+Static property Asset_ExtraStatic5 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/TentAsset_ClutterFurniture1</title>
+CampPlaceableObjectEx/Asset_ExtraActivator1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: A furniture object to place in or around the tent. }
+ Optional: An activator to place near this object. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-Furniture property TentAsset_ClutterFurniture1 auto
+Activator property Asset_ExtraActivator1 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/TentAsset_ClutterFurniture2</title>
+CampPlaceableObjectEx/Asset_ExtraActivator2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: A furniture object to place in or around the tent. }
+ Optional: An activator to place near this object. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-Furniture property TentAsset_ClutterFurniture2 auto
+Activator property Asset_ExtraActivator2 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/TentAsset_ClutterFurniture3</title>
+CampPlaceableObjectEx/Asset_ExtraActivator3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: A furniture object to place in or around the tent. }
+ Optional: An activator to place near this object. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-Furniture property TentAsset_ClutterFurniture3 auto
+Activator property Asset_ExtraActivator3 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/TentAsset_ClutterFurniture4</title>
+CampPlaceableObjectEx/Asset_ExtraActivator4</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: A furniture object to place in or around the tent. }
+ Optional: An activator to place near this object. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-Furniture property TentAsset_ClutterFurniture4 auto
+Activator property Asset_ExtraActivator4 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/TentAsset_ClutterFurniture5</title>
+CampPlaceableObjectEx/Asset_ExtraActivator5</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: A furniture object to place in or around the tent. }
+ Optional: An activator to place near this object. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-Furniture property TentAsset_ClutterFurniture5 auto
+Activator property Asset_ExtraActivator5 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_Lantern2</title>
+CampPlaceableObjectEx/Asset_ExtraFurniture1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: The second lantern's position reference. }
+ Optional: A piece of furniture to place near this object. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_Lantern2 auto
+Furniture property Asset_ExtraFurniture1 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_Lantern3</title>
+CampPlaceableObjectEx/Asset_ExtraFurniture2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: The third lantern's position reference. }
+ Optional: A piece of furniture to place near this object. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_Lantern3 auto
+Furniture property Asset_ExtraFurniture2 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_ClutterActivator1</title>
+CampPlaceableObjectEx/Asset_ExtraFurniture3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: Clutter position reference. }
+ Optional: A piece of furniture to place near this object. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_ClutterActivator1 auto
+Furniture property Asset_ExtraFurniture3 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_ClutterActivator2</title>
+CampPlaceableObjectEx/Asset_ExtraFurniture4</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: Clutter position reference. }
+ Optional: A piece of furniture to place near this object. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_ClutterActivator2 auto
+Furniture property Asset_ExtraFurniture4 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_ClutterActivator3</title>
+CampPlaceableObjectEx/Asset_ExtraFurniture5</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: Clutter position reference. }
+ Optional: A piece of furniture to place near this object. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_ClutterActivator3 auto
+Furniture property Asset_ExtraFurniture5 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_ClutterActivator4</title>
+CampPlaceableObjectEx/Asset_ExtraLight1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: Clutter position reference. }
+ Optional: A light source to place near this object. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_ClutterActivator4 auto
+Light property Asset_ExtraLight1 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_ClutterActivator5</title>
+CampPlaceableObjectEx/Asset_ExtraLight2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: Clutter position reference. }
+ Optional: A light source to place near this object. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_ClutterActivator5 auto
+Light property Asset_ExtraLight2 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_ClutterFurniture1</title>
+CampPlaceableObjectEx/Asset_ExtraLight3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: Clutter position reference. }
+ Optional: A light source to place near this object. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_ClutterFurniture1 auto
+Light property Asset_ExtraLight3 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_ClutterFurniture2</title>
+CampPlaceableObjectEx/PositionRef_ExtraStatic1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: Clutter position reference. }
+ Optional: Extra Static object position reference. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_ClutterFurniture2 auto
+ObjectReference property PositionRef_ExtraStatic1 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_ClutterFurniture3</title>
+CampPlaceableObjectEx/PositionRef_ExtraStatic2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: Clutter position reference. }
+ Optional: Extra Static object position reference. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_ClutterFurniture3 auto
+ObjectReference property PositionRef_ExtraStatic2 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_ClutterFurniture4</title>
+CampPlaceableObjectEx/PositionRef_ExtraStatic3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: Clutter position reference. }
+ Optional: Extra Static object position reference. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_ClutterFurniture4 auto
+ObjectReference property PositionRef_ExtraStatic3 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_ClutterFurniture5</title>
+CampPlaceableObjectEx/PositionRef_ExtraStatic4</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: Clutter position reference. }
+ Optional: Extra Static object position reference. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_ClutterFurniture5 auto
+ObjectReference property PositionRef_ExtraStatic4 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_Follower1_Bed</title>
+CampPlaceableObjectEx/PositionRef_ExtraStatic5</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: The first follower's bed furniture position reference. }
+ Optional: Extra Static object position reference. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_Follower1_Bed auto
+ObjectReference property PositionRef_ExtraStatic5 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_Follower1_Shield</title>
+CampPlaceableObjectEx/PositionRef_ExtraActivator1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: The first follower's shield position reference. }
+ Optional: Extra Activator object position reference. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_Follower1_Shield auto
+ObjectReference property PositionRef_ExtraActivator1 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_Follower1_WeaponMainHand</title>
+CampPlaceableObjectEx/PositionRef_ExtraActivator2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: The first follower's main hand weapon position reference. }
+ Optional: Extra Activator object position reference. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_Follower1_WeaponMainHand auto
+ObjectReference property PositionRef_ExtraActivator2 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_Follower1_WeaponOffHand</title>
+CampPlaceableObjectEx/PositionRef_ExtraActivator3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: The first follower's off hand weapon position reference. }
+ Optional: Extra Activator object position reference. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_Follower1_WeaponOffHand auto
+ObjectReference property PositionRef_ExtraActivator3 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_Follower1_WeaponTwoHand</title>
+CampPlaceableObjectEx/PositionRef_ExtraActivator4</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: The first follower's two-handed weapon position reference. }
+ Optional: Extra Activator object position reference. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_Follower1_WeaponTwoHand auto
+ObjectReference property PositionRef_ExtraActivator4 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_Follower1_WeaponBow</title>
+CampPlaceableObjectEx/PositionRef_ExtraActivator5</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: The first follower's bow position reference. }
+ Optional: Extra Activator object position reference. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_Follower1_WeaponBow auto
+ObjectReference property PositionRef_ExtraActivator5 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_Follower2_Bed</title>
+CampPlaceableObjectEx/PositionRef_ExtraFurniture1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: The second follower's bed furniture position reference. }
+ Optional: Extra Furniture object position reference. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_Follower2_Bed auto
+ObjectReference property PositionRef_ExtraFurniture1 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_Follower2_Shield</title>
+CampPlaceableObjectEx/PositionRef_ExtraFurniture2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: The second follower's shield position reference. }
+ Optional: Extra Furniture object position reference. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_Follower2_Shield auto
+ObjectReference property PositionRef_ExtraFurniture2 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_Follower2_WeaponMainHand</title>
+CampPlaceableObjectEx/PositionRef_ExtraFurniture3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: The second follower's main hand weapon position reference. }
+ Optional: Extra Furniture object position reference. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_Follower2_WeaponMainHand auto
+ObjectReference property PositionRef_ExtraFurniture3 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_Follower2_WeaponOffHand</title>
+CampPlaceableObjectEx/PositionRef_ExtraFurniture4</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: The second follower's off hand weapon position reference. }
+ Optional: Extra Furniture object position reference. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_Follower2_WeaponOffHand auto
+ObjectReference property PositionRef_ExtraFurniture4 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_Follower2_WeaponTwoHand</title>
+CampPlaceableObjectEx/PositionRef_ExtraFurniture5</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: The second follower's two-handed weapon position reference. }
+ Optional: Extra Furniture object position reference. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_Follower2_WeaponTwoHand auto
+ObjectReference property PositionRef_ExtraFurniture5 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_Follower2_WeaponBow</title>
+CampPlaceableObjectEx/PositionRef_ExtraLight1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: The second follower's bow position reference. }
+ Optional: Extra Light object position reference. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_Follower2_WeaponBow auto
+ObjectReference property PositionRef_ExtraLight1 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_Follower3_Bed</title>
+CampPlaceableObjectEx/PositionRef_ExtraLight2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: The third follower's bed furniture position reference. }
+ Optional: Extra Light object position reference. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_Follower3_Bed auto
+ObjectReference property PositionRef_ExtraLight2 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_Follower3_Shield</title>
+CampPlaceableObjectEx/PositionRef_ExtraLight3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: The third follower's shield position reference. }
+ Optional: Extra Light object position reference. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_Follower3_Shield auto
+ObjectReference property PositionRef_ExtraLight3 auto
 </literallayout>
 </section>
 <section>
 <title>
-CampTentEx/PositionRef_Follower3_WeaponMainHand</title>
+CampPlaceableObjectEx/PositionRef_CenterObjectOverride</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: The third follower's main hand weapon position reference. }
+ Optional: Set this to specify a different object as the one which all other objects "orbit" when rotated. Uses this object if left blank. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_Follower3_WeaponMainHand auto
-</literallayout>
-</section>
-<section>
-<title>
-CampTentEx/PositionRef_Follower3_WeaponOffHand</title>
-<formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The third follower's off hand weapon position reference. }
-</para>
-<formalpara><title>SYNTAX</title><para></para></formalpara>
-<literallayout class="monospaced">
-ObjectReference property PositionRef_Follower3_WeaponOffHand auto
-</literallayout>
-</section>
-<section>
-<title>
-CampTentEx/PositionRef_Follower3_WeaponTwoHand</title>
-<formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The third follower's two-handed weapon position reference. }
-</para>
-<formalpara><title>SYNTAX</title><para></para></formalpara>
-<literallayout class="monospaced">
-ObjectReference property PositionRef_Follower3_WeaponTwoHand auto
-</literallayout>
-</section>
-<section>
-<title>
-CampTentEx/PositionRef_Follower3_WeaponBow</title>
-<formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The third follower's bow position reference. }
-</para>
-<formalpara><title>SYNTAX</title><para></para></formalpara>
-<literallayout class="monospaced">
-ObjectReference property PositionRef_Follower3_WeaponBow auto
+ObjectReference property PositionRef_CenterObjectOverride auto
 </literallayout>
 </section>
 </article>

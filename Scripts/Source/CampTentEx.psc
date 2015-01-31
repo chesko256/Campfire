@@ -12,7 +12,7 @@ scriptname CampTentEx extends CampTent
 
 ; OPTIONAL PROPERTIES
 
-;/********p* CampTent/TentAsset_ClutterActivator1
+;/********p* CampTentEx/TentAsset_ClutterActivator1
 * SYNTAX
 */;
 Activator property TentAsset_ClutterActivator1 auto

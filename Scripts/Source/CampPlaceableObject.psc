@@ -1,4 +1,12 @@
+;/********s* _Camp_PlaceableObjectBase/CampPlaceableObject
+* SCRIPTNAME
+*/;
 scriptname CampPlaceableObject extends _Camp_PlaceableObjectBase
+;/*
+* OVERVIEW
+* The `CampPlaceableObject` script is for creating simple Placeable Objects. It can be
+* attached to an Activator or Furniture.
+;*********/;
 
 import CampUtil
 

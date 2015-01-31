@@ -25,6 +25,8 @@ accept files:
   CampTent.psc
   CampTentEx.psc
   _Camp_PlaceableObjectBase.psc
+  CampPlaceableObject.psc
+  CampPlaceableObjectEx.psc
 items:
   SCRIPTNAME
   OVERVIEW

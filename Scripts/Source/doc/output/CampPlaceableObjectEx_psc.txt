@@ -1,0 +1,379 @@
+### \_Camp\_PlaceableObjectBase/CampPlaceableObject
+
+**SCRIPTNAME.**
+
+    scriptname CampPlaceableObjectEx extends CampPlaceableObject
+
+**OVERVIEW.**
+
+The \`CampPlaceableObjectEx\` script an expanded version of \`CampPlaceableObject\`, for creating more elaborate multi-part placeable objects (such as a barrel with a lantern and a chair). Can be attached to an Activator or Furniture object that serves as the main interactible.
+
+### CampPlaceableObject/Asset\_ExtraStatic1
+
+**DESCRIPTION.**
+
+Optional: A static to place near this object. }
+
+**SYNTAX.**
+
+    Static property Asset_ExtraStatic1 auto
+
+### CampPlaceableObjectEx/Asset\_ExtraStatic2
+
+**DESCRIPTION.**
+
+Optional: A static to place near this object. }
+
+**SYNTAX.**
+
+    Static property Asset_ExtraStatic2 auto
+
+### CampPlaceableObjectEx/Asset\_ExtraStatic3
+
+**DESCRIPTION.**
+
+Optional: A static to place near this object. }
+
+**SYNTAX.**
+
+    Static property Asset_ExtraStatic3 auto
+
+### CampPlaceableObjectEx/Asset\_ExtraStatic4
+
+**DESCRIPTION.**
+
+Optional: A static to place near this object. }
+
+**SYNTAX.**
+
+    Static property Asset_ExtraStatic4 auto
+
+### CampPlaceableObjectEx/Asset\_ExtraStatic5
+
+**DESCRIPTION.**
+
+Optional: A static to place near this object. }
+
+**SYNTAX.**
+
+    Static property Asset_ExtraStatic5 auto
+
+### CampPlaceableObjectEx/Asset\_ExtraActivator1
+
+**DESCRIPTION.**
+
+Optional: An activator to place near this object. }
+
+**SYNTAX.**
+
+    Activator property Asset_ExtraActivator1 auto
+
+### CampPlaceableObjectEx/Asset\_ExtraActivator2
+
+**DESCRIPTION.**
+
+Optional: An activator to place near this object. }
+
+**SYNTAX.**
+
+    Activator property Asset_ExtraActivator2 auto
+
+### CampPlaceableObjectEx/Asset\_ExtraActivator3
+
+**DESCRIPTION.**
+
+Optional: An activator to place near this object. }
+
+**SYNTAX.**
+
+    Activator property Asset_ExtraActivator3 auto
+
+### CampPlaceableObjectEx/Asset\_ExtraActivator4
+
+**DESCRIPTION.**
+
+Optional: An activator to place near this object. }
+
+**SYNTAX.**
+
+    Activator property Asset_ExtraActivator4 auto
+
+### CampPlaceableObjectEx/Asset\_ExtraActivator5
+
+**DESCRIPTION.**
+
+Optional: An activator to place near this object. }
+
+**SYNTAX.**
+
+    Activator property Asset_ExtraActivator5 auto
+
+### CampPlaceableObjectEx/Asset\_ExtraFurniture1
+
+**DESCRIPTION.**
+
+Optional: A piece of furniture to place near this object. }
+
+**SYNTAX.**
+
+    Furniture property Asset_ExtraFurniture1 auto
+
+### CampPlaceableObjectEx/Asset\_ExtraFurniture2
+
+**DESCRIPTION.**
+
+Optional: A piece of furniture to place near this object. }
+
+**SYNTAX.**
+
+    Furniture property Asset_ExtraFurniture2 auto
+
+### CampPlaceableObjectEx/Asset\_ExtraFurniture3
+
+**DESCRIPTION.**
+
+Optional: A piece of furniture to place near this object. }
+
+**SYNTAX.**
+
+    Furniture property Asset_ExtraFurniture3 auto
+
+### CampPlaceableObjectEx/Asset\_ExtraFurniture4
+
+**DESCRIPTION.**
+
+Optional: A piece of furniture to place near this object. }
+
+**SYNTAX.**
+
+    Furniture property Asset_ExtraFurniture4 auto
+
+### CampPlaceableObjectEx/Asset\_ExtraFurniture5
+
+**DESCRIPTION.**
+
+Optional: A piece of furniture to place near this object. }
+
+**SYNTAX.**
+
+    Furniture property Asset_ExtraFurniture5 auto
+
+### CampPlaceableObjectEx/Asset\_ExtraLight1
+
+**DESCRIPTION.**
+
+Optional: A light source to place near this object. }
+
+**SYNTAX.**
+
+    Light property Asset_ExtraLight1 auto
+
+### CampPlaceableObjectEx/Asset\_ExtraLight2
+
+**DESCRIPTION.**
+
+Optional: A light source to place near this object. }
+
+**SYNTAX.**
+
+    Light property Asset_ExtraLight2 auto
+
+### CampPlaceableObjectEx/Asset\_ExtraLight3
+
+**DESCRIPTION.**
+
+Optional: A light source to place near this object. }
+
+**SYNTAX.**
+
+    Light property Asset_ExtraLight3 auto
+
+### CampPlaceableObjectEx/PositionRef\_ExtraStatic1
+
+**DESCRIPTION.**
+
+Optional: Extra Static object position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ExtraStatic1 auto
+
+### CampPlaceableObjectEx/PositionRef\_ExtraStatic2
+
+**DESCRIPTION.**
+
+Optional: Extra Static object position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ExtraStatic2 auto
+
+### CampPlaceableObjectEx/PositionRef\_ExtraStatic3
+
+**DESCRIPTION.**
+
+Optional: Extra Static object position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ExtraStatic3 auto
+
+### CampPlaceableObjectEx/PositionRef\_ExtraStatic4
+
+**DESCRIPTION.**
+
+Optional: Extra Static object position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ExtraStatic4 auto
+
+### CampPlaceableObjectEx/PositionRef\_ExtraStatic5
+
+**DESCRIPTION.**
+
+Optional: Extra Static object position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ExtraStatic5 auto
+
+### CampPlaceableObjectEx/PositionRef\_ExtraActivator1
+
+**DESCRIPTION.**
+
+Optional: Extra Activator object position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ExtraActivator1 auto
+
+### CampPlaceableObjectEx/PositionRef\_ExtraActivator2
+
+**DESCRIPTION.**
+
+Optional: Extra Activator object position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ExtraActivator2 auto
+
+### CampPlaceableObjectEx/PositionRef\_ExtraActivator3
+
+**DESCRIPTION.**
+
+Optional: Extra Activator object position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ExtraActivator3 auto
+
+### CampPlaceableObjectEx/PositionRef\_ExtraActivator4
+
+**DESCRIPTION.**
+
+Optional: Extra Activator object position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ExtraActivator4 auto
+
+### CampPlaceableObjectEx/PositionRef\_ExtraActivator5
+
+**DESCRIPTION.**
+
+Optional: Extra Activator object position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ExtraActivator5 auto
+
+### CampPlaceableObjectEx/PositionRef\_ExtraFurniture1
+
+**DESCRIPTION.**
+
+Optional: Extra Furniture object position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ExtraFurniture1 auto
+
+### CampPlaceableObjectEx/PositionRef\_ExtraFurniture2
+
+**DESCRIPTION.**
+
+Optional: Extra Furniture object position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ExtraFurniture2 auto
+
+### CampPlaceableObjectEx/PositionRef\_ExtraFurniture3
+
+**DESCRIPTION.**
+
+Optional: Extra Furniture object position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ExtraFurniture3 auto
+
+### CampPlaceableObjectEx/PositionRef\_ExtraFurniture4
+
+**DESCRIPTION.**
+
+Optional: Extra Furniture object position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ExtraFurniture4 auto
+
+### CampPlaceableObjectEx/PositionRef\_ExtraFurniture5
+
+**DESCRIPTION.**
+
+Optional: Extra Furniture object position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ExtraFurniture5 auto
+
+### CampPlaceableObjectEx/PositionRef\_ExtraLight1
+
+**DESCRIPTION.**
+
+Optional: Extra Light object position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ExtraLight1 auto
+
+### CampPlaceableObjectEx/PositionRef\_ExtraLight2
+
+**DESCRIPTION.**
+
+Optional: Extra Light object position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ExtraLight2 auto
+
+### CampPlaceableObjectEx/PositionRef\_ExtraLight3
+
+**DESCRIPTION.**
+
+Optional: Extra Light object position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_ExtraLight3 auto
+
+### CampPlaceableObjectEx/PositionRef\_CenterObjectOverride
+
+**DESCRIPTION.**
+
+Optional: Set this to specify a different object as the one which all other objects "orbit" when rotated. Uses this object if left blank. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_CenterObjectOverride auto
