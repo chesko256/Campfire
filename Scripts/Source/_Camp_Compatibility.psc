@@ -85,6 +85,8 @@ formlist property _DE_ModWaterSkins auto 					;List of waterskins from other mod
 formlist property _DE_LightableCampfires auto 				;List of small unlit campfires
 formlist property _DE_LightableCampfiresAll auto 			;List of all unlit campfires
 formlist property _DE_DeadwoodList auto
+formlist property _Camp_HeatSources auto
+formlist property _Camp_SmallFires auto
 
 ;#DLC / Mod Worldspaces============================================================
 Worldspace property DLC2WS auto hidden						;Solstheim
@@ -379,6 +381,35 @@ function RunStartupCheck()
 
 	if isDLC2Loaded
 		
+		;Heat sources
+		form DLC02HeatForm01 = Game.GetFormFromFile(0x02018616, "Dragonborn.esm")		;Campfire01LandBurning_SnowRocks
+		form DLC02HeatForm02 = Game.GetFormFromFile(0x02018619, "Dragonborn.esm")		;Campfire01LandBurning_LDirtSnowPath
+		form DLC02HeatForm03 = Game.GetFormFromFile(0x0201A56A, "Dragonborn.esm")		;DLC2FXFlamingRockDebris
+		form DLC02HeatForm04 = Game.GetFormFromFile(0x0201A56B, "Dragonborn.esm")		;DLC2FXFlamingRockDebrisSmall
+		form DLC02HeatForm05 = Game.GetFormFromFile(0x020289E8, "Dragonborn.esm")		;Campfire01LandBurning_Ash
+		form DLC02HeatForm06 = Game.GetFormFromFile(0x0202C0B0, "Dragonborn.esm")		;Campfire01LandBurningDirtPath01
+		form DLC02HeatForm07 = Game.GetFormFromFile(0x0203CF6E, "Dragonborn.esm")		;DLC2CraftingBlacksmithForge
+		form DLC02HeatForm08 = Game.GetFormFromFile(0x0202B074, "Dragonborn.esm")		;DLC2CraftingBlacksmithSkaalForge
+		if !(_Camp_HeatSources.HasForm(DLC02HeatForm01))
+			_Camp_HeatSources.AddForm(DLC02HeatForm01)
+			_Camp_HeatSources.AddForm(DLC02HeatForm02)
+			_Camp_HeatSources.AddForm(DLC02HeatForm03)
+			_Camp_HeatSources.AddForm(DLC02HeatForm04)
+			_Camp_HeatSources.AddForm(DLC02HeatForm05)
+			_Camp_HeatSources.AddForm(DLC02HeatForm06)
+			_Camp_HeatSources.AddForm(DLC02HeatForm07)
+			_Camp_HeatSources.AddForm(DLC02HeatForm08)
+		endif
+		;@TODO: Do I need this FormList?
+		if !(_Camp_SmallFires.HasForm(DLC02HeatForm01))
+			_Camp_SmallFires.AddForm(DLC02HeatForm01)
+			_Camp_SmallFires.AddForm(DLC02HeatForm02)
+			_Camp_SmallFires.AddForm(DLC02HeatForm03)
+			_Camp_SmallFires.AddForm(DLC02HeatForm04)
+			_Camp_SmallFires.AddForm(DLC02HeatForm05)
+			_Camp_SmallFires.AddForm(DLC02HeatForm06)
+		endif
+
 		;Add new unlit campfires
 		form _DE_CampfireForm01 = Game.GetFormFromFile(0x0202C0B1, "Dragonborn.esm")	;Campfire01LandOffDirtPath01
 		form _DE_CampfireForm02 = Game.GetFormFromFile(0x02028A8D, "Dragonborn.esm")	;Campfire01LandOffAsh
@@ -470,7 +501,6 @@ function RunStartupCheck()
 		DLC2AshStorm = Game.GetFormFromFile(0x02032336, "Dragonborn.esm") as Weather
 		
 		;Worldspaces
-		
 		form DLC02WS02 = Game.GetFormFromFile(0x02000800, "Dragonborn.esm")			;Solstheim
 		if !DLC2WS
 			DLC2WS = DLC02WS02 as Worldspace

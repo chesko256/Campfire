@@ -1,0 +1,1 @@
+~F7::Run makedocs.bat
