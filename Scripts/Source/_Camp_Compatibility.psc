@@ -85,8 +85,12 @@ formlist property _DE_ModWaterSkins auto 					;List of waterskins from other mod
 formlist property _DE_LightableCampfires auto 				;List of small unlit campfires
 formlist property _DE_LightableCampfiresAll auto 			;List of all unlit campfires
 formlist property _DE_DeadwoodList auto
-formlist property _Camp_HeatSources auto
-formlist property _Camp_SmallFires auto
+formlist property _Camp_HeatSources_All auto
+formlist property _Camp_HeatSources_Fire auto
+formlist property _Camp_HeatSources_Fire_Small auto
+formlist property _Camp_HeatSources_Fire_Medium auto
+formlist property _Camp_HeatSources_Fire_Large auto
+formlist property _Camp_HeatSources_Other auto
 
 ;#DLC / Mod Worldspaces============================================================
 Worldspace property DLC2WS auto hidden						;Solstheim
@@ -390,24 +394,35 @@ function RunStartupCheck()
 		form DLC02HeatForm06 = Game.GetFormFromFile(0x0202C0B0, "Dragonborn.esm")		;Campfire01LandBurningDirtPath01
 		form DLC02HeatForm07 = Game.GetFormFromFile(0x0203CF6E, "Dragonborn.esm")		;DLC2CraftingBlacksmithForge
 		form DLC02HeatForm08 = Game.GetFormFromFile(0x0202B074, "Dragonborn.esm")		;DLC2CraftingBlacksmithSkaalForge
-		if !(_Camp_HeatSources.HasForm(DLC02HeatForm01))
-			_Camp_HeatSources.AddForm(DLC02HeatForm01)
-			_Camp_HeatSources.AddForm(DLC02HeatForm02)
-			_Camp_HeatSources.AddForm(DLC02HeatForm03)
-			_Camp_HeatSources.AddForm(DLC02HeatForm04)
-			_Camp_HeatSources.AddForm(DLC02HeatForm05)
-			_Camp_HeatSources.AddForm(DLC02HeatForm06)
-			_Camp_HeatSources.AddForm(DLC02HeatForm07)
-			_Camp_HeatSources.AddForm(DLC02HeatForm08)
+		;@TODO: Does anyone use the Small formlist? Purpose?
+
+		if !(_Camp_HeatSources_All.HasForm(DLC02HeatForm01))
+			_Camp_HeatSources_All.AddForm(DLC02HeatForm01)
+			_Camp_HeatSources_All.AddForm(DLC02HeatForm02)
+			_Camp_HeatSources_All.AddForm(DLC02HeatForm03)
+			_Camp_HeatSources_All.AddForm(DLC02HeatForm04)
+			_Camp_HeatSources_All.AddForm(DLC02HeatForm05)
+			_Camp_HeatSources_All.AddForm(DLC02HeatForm06)
+			_Camp_HeatSources_All.AddForm(DLC02HeatForm07)
+			_Camp_HeatSources_All.AddForm(DLC02HeatForm08)
 		endif
-		;@TODO: Do I need this FormList?
-		if !(_Camp_SmallFires.HasForm(DLC02HeatForm01))
-			_Camp_SmallFires.AddForm(DLC02HeatForm01)
-			_Camp_SmallFires.AddForm(DLC02HeatForm02)
-			_Camp_SmallFires.AddForm(DLC02HeatForm03)
-			_Camp_SmallFires.AddForm(DLC02HeatForm04)
-			_Camp_SmallFires.AddForm(DLC02HeatForm05)
-			_Camp_SmallFires.AddForm(DLC02HeatForm06)
+		if !(_Camp_HeatSources_Fire.HasForm(DLC02HeatForm01))
+			_Camp_HeatSources_Fire.AddForm(DLC02HeatForm01)
+			_Camp_HeatSources_Fire.AddForm(DLC02HeatForm02)
+			_Camp_HeatSources_Fire.AddForm(DLC02HeatForm03)
+			_Camp_HeatSources_Fire.AddForm(DLC02HeatForm04)
+			_Camp_HeatSources_Fire.AddForm(DLC02HeatForm05)
+			_Camp_HeatSources_Fire.AddForm(DLC02HeatForm06)
+			_Camp_HeatSources_Fire.AddForm(DLC02HeatForm07)
+			_Camp_HeatSources_Fire.AddForm(DLC02HeatForm08)
+		endif
+		if !(_Camp_HeatSources_Fire_Medium.HasForm(DLC02HeatForm01))
+			_Camp_HeatSources_Fire_Medium.AddForm(DLC02HeatForm01)
+			_Camp_HeatSources_Fire_Medium.AddForm(DLC02HeatForm02)
+			_Camp_HeatSources_Fire_Medium.AddForm(DLC02HeatForm03)
+			_Camp_HeatSources_Fire_Medium.AddForm(DLC02HeatForm04)
+			_Camp_HeatSources_Fire_Medium.AddForm(DLC02HeatForm05)
+			_Camp_HeatSources_Fire_Medium.AddForm(DLC02HeatForm06)
 		endif
 
 		;Add new unlit campfires
