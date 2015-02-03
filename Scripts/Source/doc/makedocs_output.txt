@@ -1,0 +1,28 @@
+
+E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>robodoc.exe
+
+E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>pandoc.exe "./output/CampUtil_psc.xml" -f docbook -t markdown_github -o "./output/CampUtil_psc.txt" --base-header-level=3 
+
+E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>pandoc.exe "./output/_Camp_PlaceableObjectBase_psc.xml" -f docbook -t markdown_github -o "./output/_Camp_PlaceableObjectBase_psc.txt" --base-header-level=3 
+
+E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>pandoc.exe "./output/CampTent_psc.xml" -f docbook -t markdown_github -o "./output/CampTent_psc.txt" --base-header-level=3 
+
+E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>pandoc.exe "./output/CampTentEx_psc.xml" -f docbook -t markdown_github -o "./output/CampTentEx_psc.txt" --base-header-level=3 
+
+E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>pandoc.exe "./output/CampPlaceableObject_psc.xml" -f docbook -t markdown_github -o "./output/CampPlaceableObject_psc.txt" --base-header-level=3 
+
+E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>pandoc.exe "./output/CampPlaceableObjectEx_psc.xml" -f docbook -t markdown_github -o "./output/CampPlaceableObjectEx_psc.txt" --base-header-level=3 
+
+E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>pandoc.exe "./output/CampPlaceableMiscItem_psc.xml" -f docbook -t markdown_github -o "./output/CampPlaceableMiscItem_psc.txt" --base-header-level=3 
+
+E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>python githubber.py "CampUtil_psc.txt" "../../../campwiki/CampUtil-API-Reference.md" 
+
+E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>python githubber.py "CampTent_psc.txt" "../../../campwiki/CampTent-Script.md" 
+
+E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>python githubber.py "CampTentEx_psc.txt" "../../../campwiki/CampTentEx-Script.md" 
+
+E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>python githubber.py "CampPlaceableObject_psc.txt" "../../../campwiki/CampPlaceableObject-Script.md" 
+
+E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>python githubber.py "CampPlaceableObjectEx_psc.txt" "../../../campwiki/CampPlaceableObjectEx-Script.md" 
+
+E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>python githubber.py "CampPlaceableMiscItem_psc.txt" "../../../campwiki/CampPlaceableMiscItem-Script.md" 

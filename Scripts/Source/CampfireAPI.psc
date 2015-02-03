@@ -5,7 +5,7 @@ CampfireData property CampData auto
 _Camp_LegalAreaCheck property Legal auto
 Actor property PlayerRef auto
 Formlist property _Camp_WorldspacesInteriors auto
-Keyword property isPlaceableItem auto
+Keyword property isCampfirePlaceableObject auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 Quest property CampfireObjectPlacementSystem auto
 

@@ -6,15 +6,6 @@ import debug
 
 _Camp_ObjectPlacementThreadManager property PlacementSystem auto hidden
 
-;/********p* CampTent/Required_InventoryItem
-* SYNTAX
-*/;
-MiscObject property Required_InventoryItem auto
-;/*
-* DESCRIPTION
-{ Required: The item the player used to start this indicator. }
-;*********/;
-
 form property myPlacedItem auto hidden
 
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
@@ -34,8 +25,6 @@ message property _DE_CampVisIllegal auto
 message property _DE_Help_Visualize auto
 message property _DE_Placement_Cancelled auto
 message property _DE_Placement_Cancelled_CollisionBug auto
-
-MiscObject property myInvItem auto hidden
 
 float fLastUpdateTime
 float fUpdateSpeed = 0.5

@@ -1,10 +1,10 @@
-;/********s* _Camp_PlaceableObjectBase/CampPlaceableObject
+;/********s* CampPlaceableObject/CampPlaceableObjectEx
 * SCRIPTNAME
 */;
 scriptname CampPlaceableObjectEx extends CampPlaceableObject
 ;/*
 * OVERVIEW
-* The `CampPlaceableObjectEx` script an expanded version of `CampPlaceableObject`, for creating
+* The `CampPlaceableObjectEx` script is an expanded version of CampPlaceableObject, for creating
 * more elaborate multi-part placeable objects (such as a barrel with a lantern and a chair). Can be
 * attached to an Activator or Furniture object that serves as the main interactible.
 ;*********/;

@@ -7,14 +7,14 @@
 </articleinfo>
 <section>
 <title>
-_Camp_PlaceableObjectBase/CampPlaceableObject</title>
+CampPlaceableObject/CampPlaceableObjectEx</title>
 <formalpara><title>SCRIPTNAME</title><para></para></formalpara>
 <literallayout class="monospaced">
-scriptname CampPlaceableObjectEx extends CampPlaceableObject
+scriptname CampPlaceableObjectEx extends <link linkend="robo126">CampPlaceableObject</link>
 </literallayout>
 <formalpara><title>OVERVIEW</title><para></para></formalpara>
 <para>
- The `CampPlaceableObjectEx` script an expanded version of `CampPlaceableObject`, for creating
+ The `CampPlaceableObjectEx` script is an expanded version of <link linkend="robo126">CampPlaceableObject</link>, for creating
  more elaborate multi-part placeable objects (such as a barrel with a lantern and a chair). Can be
  attached to an Activator or Furniture object that serves as the main interactible.
 </para>

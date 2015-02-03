@@ -363,7 +363,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
 	return future
 endFunction
 
-bool function PerformPlacement()
+;/bool function PerformPlacement()
     ;@TODO: Drop IsInCombat, check for OnHit event instead
     if !PlayerCanPlaceObjects()
         StopPlacement()
@@ -445,7 +445,6 @@ bool function PerformPlacement()
 endFunction
 
 ObjectReference function UpdatePlacementIndicator(ObjectReference akIndicator, float afDistance, float afHeightOffset = 1.0, float afRotationOffset = 0.0, bool abSnapToTerrain = true)
-    ;@TODO: Define 3 static futures
     float[] center_point = new float[2]
     center_point = GetOffsets(PlayerRef, afDistance)
 
@@ -523,7 +522,7 @@ ObjectReference function UpdatePlacementIndicator(ObjectReference akIndicator, f
         _Camp_VisError.Play(akIndicator)
     endif
 
-endFunction
+endFunction/;
 
 function wait_all()
     RaiseEvent_OnObjectPlacementStart()
@@ -637,6 +636,10 @@ function RaiseEvent_OnObjectPlacementStart()
     endif
 endFunction
 
+;@TODO: Register on start-up
+Event OnPlaceableObjectEquipped()
+
+EndEvent
 
 float[] function GetOffsets(Actor akSource, Float afDistance = 100.0, float afOffset = 0.0)
     Float A = akSource.GetAngleZ() + afOffset

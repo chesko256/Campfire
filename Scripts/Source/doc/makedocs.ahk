@@ -1,1 +1,1 @@
-~F7::Run makedocs.bat
+~F7::Run makedocs.lnk

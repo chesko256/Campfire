@@ -533,7 +533,7 @@ endif
 		return False
 	endif
 	
-	if akBaseObject.HasKeyword(Campfire.isPlaceableItem)
+	if akBaseObject.HasKeyword(Campfire.isCampfirePlaceableObject)
 		return True
 	else
 		return False
