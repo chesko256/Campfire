@@ -47,13 +47,6 @@ function RegisterForEventsOnLoad()
 	RegisterForModEvent("Campfire_CampfireOnPlaceableObjectUsed", "CampfireOnPlaceableObjectUsed")
 endFunction
 
-Event CampfireOnPlaceableObjectUsed(Form akBaseObject, Form akPlacementIndicator)
-	debug.trace("[Campfire] Caught CampfireOnPlaceableObjectUsed event: akBaseObject " + akBaseObject + ", akObjectToPlace " + akPlacementIndicator)
-	ExitMenus()
-	PlayerRef.PlaceAtMe(akPlacementIndicator as Activator)
-	PlayerRef.RemoveItem(akBaseObject, 1, true)
-endEvent
-
 function RegisterForControlsOnLoad()
 	debug.trace("[Campfire] Registering for control!")
 	RegisterForControl("Jump")

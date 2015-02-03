@@ -12,12 +12,18 @@ GlobalVariable property _Camp_Setting_MaxThreads auto
 ;Placement Indicator
 _Camp_LegalAreaCheck property Legal auto
 Actor property PlayerRef auto
+GlobalVariable property _Camp_CurrentlyPlacingObject auto
+GlobalVariable property _Camp_HelpDone_PlacementError auto
+GlobalVariable property _Camp_Setting_SimplePlacement auto
+ObjectReference property _Camp_Anchor auto
 ObjectReference property _Camp_IndicatorFutureRefA auto
 ObjectReference property _Camp_IndicatorFutureRefB auto
 ObjectReference property _Camp_IndicatorFutureRefC auto
 ObjectReference property _Camp_IndicatorTriggerRef auto
 EffectShader property _Camp_VisPlacement auto
 EffectShader property _Camp_VisError auto
+Message property _Camp_Placement_Cancelled auto
+Message property _Camp_Placement_Cancelled_CollisionBug auto
 
 ;Misc
 Static property XMarker auto
@@ -363,55 +369,70 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
 	return future
 endFunction
 
-;/bool function PerformPlacement()
+function StartPlacement(ObjectReference akReference)
+    ;#Help Text=========================
+    ;bool bShowHelp = _DE_HelpDone_Visualize.GetValueInt() == 1 && _DE_Setting_Help.GetValueInt() == 2
+    ;if bShowHelp
+    ;   _DE_Help_Visualize.Show()
+    ;   _DE_HelpDone_Visualize.SetValue(2)
+    ;endif
+    ;#Help Text=========================
+    akReference.SetAngle(0.0, 0.0, 0.0)
+    _Camp_CurrentlyPlacingObject.SetValue(2)
+    _Camp_IndicatorTriggerRef.MoveTo(PlayerRef)
+endFunction
+
+function StopPlacement()
+    _Camp_IndicatorTriggerRef.MoveTo(_Camp_Anchor)
+    ;_DE_ZTestShooterREFA.MoveTo(_DE_Anchor)
+    ;_DE_ZTestReceiverREFA.MoveTo(_DE_Anchor)
+endFunction
+
+bool function PerformPlacement()
     ;@TODO: Drop IsInCombat, check for OnHit event instead
     if !PlayerCanPlaceObjects()
         StopPlacement()
-        GiveBackItem()
-        _DE_Placement_Cancelled.Show()
+        _Camp_Placement_Cancelled.Show()
         _Camp_CurrentlyPlacingObject.SetValue(1)
         return false
     endif
     
     ;Scenario: The catastrophic placement error was encountered.
-    if _Camp_CurrentlyPlacingObject.GetValueInt() == 3 && _DE_HelpDone_PlacementError.GetValue() == 1
+    if _Camp_CurrentlyPlacingObject.GetValueInt() == 3 && _Camp_HelpDone_PlacementError.GetValue() == 1
         StopPlacement()
-        GiveBackItem()
-        if _DE_HelpDone_PlacementError.GetValue() == 1
-            int i = _DE_Placement_Cancelled_CollisionBug.Show()
+        if _Camp_HelpDone_PlacementError.GetValue() == 1
+            int i = _Camp_Placement_Cancelled_CollisionBug.Show()
             if i == 0
                 ;Yes
-                _DE_Setting_SimplePlacement.SetValue(2)
+                _Camp_Setting_SimplePlacement.SetValue(2)
             elseif i == 1
                 ;No
             elseif i == 2
                 ;No - Don't Ask Again
-                _DE_HelpDone_PlacementError.SetValue(2)
+                _Camp_HelpDone_PlacementError.SetValue(2)
             endif
         endif
-        _DE_Placement_Cancelled.Show()
+        _Camp_Placement_Cancelled.Show()
         _Camp_CurrentlyPlacingObject.SetValue(1)
-        return
+        return false
 
     ;Scenario: Legitimately placing object
     elseif _Camp_CurrentlyPlacingObject.GetValueInt() == 2
-    
-        
-        
-        RegisterForSingleUpdate(fUpdateSpeed)
+        UpdatePlacementIndicator()
+        return true
 
     ;Scenario: Player activated the placement indicator
     else
-        if _Camp_Setting_Legality.GetValueInt() == 1 && !Legal.CampingLegal
+        if !LegalToCampHere()
             int ibutton = _DE_CampVisIllegal.Show()
             if ibutton == 0
                 StopPlacement()
-                GiveBackItem()
                 _Camp_CurrentlyPlacingObject.SetValue(1)
-                _DE_Placement_Cancelled.Show()
+                _Camp_Placement_Cancelled.Show()
+                return false
             elseif ibutton == 1     ;Back
                 _Camp_CurrentlyPlacingObject.SetValue(2)
-                RegisterForSingleUpdate(fUpdateSpeed)
+                return true
             endif
         else
             int ibutton = myVisPrompt.Show()
@@ -421,7 +442,7 @@ endFunction
                         PlayerRef.RemoveItem(myPlacementRequirement, 1)
                     else
                         StopPlacement()
-                        GiveBackItem()
+                        
                         myRequirementErrorMsg.Show()
                         return
                     endif
@@ -434,8 +455,8 @@ endFunction
                 StopPlacement()
             elseif ibutton == 1     ;Exit Placement
                 StopPlacement()
-                GiveBackItem()
-                _DE_Placement_Cancelled.Show()
+                
+                _Camp_Placement_Cancelled.Show()
             elseif ibutton == 2     ;Back
                 _Camp_CurrentlyPlacingObject.SetValue(2)
                 RegisterForSingleUpdate(fUpdateSpeed)
@@ -522,7 +543,61 @@ ObjectReference function UpdatePlacementIndicator(ObjectReference akIndicator, f
         _Camp_VisError.Play(akIndicator)
     endif
 
-endFunction/;
+endFunction
+
+;@TODO: Register for this
+Event CampfireOnPlaceableObjectUsed(Form akPlacementIndicator, Form akIngredient, Form akMiscItem, Int aiCost, Form akPerk)
+    if PlayerCanPlaceObjects()
+
+        Activator placement_indicator
+        Ingredient req_ingredient
+        MiscObject req_miscitem
+        int cost
+        Perk req_perk
+        
+        if akIngredient
+            req_ingredient = akIngredient as Ingredient
+        endif
+        if akMiscItem
+            req_miscitem = akMiscItem as MiscObject
+        endif
+        if akPerk
+            req_perk = akPerk as Perk
+        endif
+
+        if req_perk
+            if !PlayerRef.HasPerk(req_perk)
+                ;stringbuilder error with translation support
+                return
+            endif
+        endif
+
+        if req_ingredient && cost > 0
+            if !(PlayerRef.GetItemCount(req_ingredient) >= cost)
+                ;stringbuilder error with translation support
+                return
+            endif
+        elseif req_miscitem && cost > 0
+            if !(PlayerRef.GetItemCount(req_miscitem) >= cost)
+                ;stringbuilder error with translation support
+                return
+            endif
+        endif
+
+
+        ExitMenus()
+        ;@TODO: block inventory menu
+        ObjectReference ref = PlayerRef.PlaceAtMe(akPlacementIndicator as Activator)
+        CampPlacementIndicator indicator = ref as CampPlacementIndicator
+        if req_ingredient
+            indicator.required_ingredient = req_ingredient
+            indicator.cost = cost
+        elseif req_miscitem
+            indicator.required_miscitem = req_miscitem
+            indicator.cost = cost
+        endif
+    endif
+endEvent
 
 function wait_all()
     RaiseEvent_OnObjectPlacementStart()
@@ -635,11 +710,6 @@ function RaiseEvent_OnObjectPlacementStart()
         ;pass
     endif
 endFunction
-
-;@TODO: Register on start-up
-Event OnPlaceableObjectEquipped()
-
-EndEvent
 
 float[] function GetOffsets(Actor akSource, Float afDistance = 100.0, float afOffset = 0.0)
     Float A = akSource.GetAngleZ() + afOffset

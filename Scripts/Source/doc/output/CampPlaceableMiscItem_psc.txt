@@ -18,26 +18,6 @@ Required: The object that will indicate to the player where to place this item. 
 
     Activator property Required_placement_indicator auto
 
-### CampPlaceableMiscItem/Required\_this\_item
-
-**DESCRIPTION.**
-
-Required: Fill this property with the Misc Item this script is attached to. (Can't be "learned" by the script at runtime.) }
-
-**SYNTAX.**
-
-    MiscObject property Required_this_item auto
-
-### CampPlaceableMiscItem/z\_position\_offset
-
-**DESCRIPTION.**
-
-Adjust far up or down from the indicated position to place this item. Use if placed item is always above or below placement indicator position. }
-
-**SYNTAX.**
-
-    float property z_position_offset auto
-
 ### CampPlaceableMiscItem/z\_angle\_offset
 
 **DESCRIPTION.**

@@ -19,24 +19,6 @@ Activator property Required_placement_indicator auto
 { Required: The object that will indicate to the player where to place this item. }
 ;*********/;
 
-;/********p* CampPlaceableMiscItem/Required_this_item
-* SYNTAX
-*/;
-MiscObject property Required_this_item auto
-;/*
-* DESCRIPTION
-{ Required: Fill this property with the Misc Item this script is attached to. (Can't be "learned" by the script at runtime.) }
-;********/;
-
-;/********p* CampPlaceableMiscItem/z_position_offset
-* SYNTAX
-*/;
-float property z_position_offset auto
-;/*
-* DESCRIPTION
-{ Adjust far up or down from the indicated position to place this item. Use if placed item is always above or below placement indicator position. }
-;********/;
-
 ;/********p* CampPlaceableMiscItem/z_angle_offset
 * SYNTAX
 */;
@@ -84,6 +66,14 @@ Perk property necessary_perk auto
 
 Event OnEquipped(Actor akActor)
 	if akActor == Game.GetPlayer()
-		RaiseEvent_CampfireOnPlaceableObjectUsed(Required_this_item, Required_placement_indicator as Form)
+		int handle = ModEvent.Create("Campfire_CampfireOnPlaceableObjectUsed")
+		if handle
+			ModEvent.PushForm(handle, Required_placement_indicator as Form)
+			ModEvent.PushForm(handle, consumable_ingredient as Form)
+			ModEvent.PushForm(handle, consumable_misc_item as Form)
+			ModEvent.PushInt(handle, consumable_cost)
+			ModEvent.PushForm(handle, necessary_perk as Form)
+			ModEvent.Send(handle)
+		endif
 	endif
 endEvent

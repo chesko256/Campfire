@@ -31,30 +31,6 @@ Activator property Required_placement_indicator auto
 </section>
 <section>
 <title>
-CampPlaceableMiscItem/Required_this_item</title>
-<formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Required: Fill this property with the Misc Item this script is attached to. (Can't be "learned" by the script at runtime.) }
-</para>
-<formalpara><title>SYNTAX</title><para></para></formalpara>
-<literallayout class="monospaced">
-MiscObject property Required_this_item auto
-</literallayout>
-</section>
-<section>
-<title>
-CampPlaceableMiscItem/z_position_offset</title>
-<formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Adjust far up or down from the indicated position to place this item. Use if placed item is always above or below placement indicator position. }
-</para>
-<formalpara><title>SYNTAX</title><para></para></formalpara>
-<literallayout class="monospaced">
-float property z_position_offset auto
-</literallayout>
-</section>
-<section>
-<title>
 CampPlaceableMiscItem/z_angle_offset</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
