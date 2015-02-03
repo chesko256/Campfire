@@ -201,6 +201,8 @@ True if the player can currently place Placeable Objects, false otherwise.
 
 Reasons that this function might return false are:
 
+-   The player is being attacked.
+
 -   The player is already trying to place something.
 
 -   The player is swimming.

@@ -389,11 +389,19 @@ endif
 endFunction
 
 float[] function GetAngleData(ObjectReference akObjectReference) global
-	float[] myReturnArray = new float[3]
-    myReturnArray[0] = akObjectReference.GetAngleX()
-    myReturnArray[1] = akObjectReference.GetAngleY()
-    myReturnArray[2] = akObjectReference.GetAngleZ()
-	return myReturnArray
+	float[] angle_data = new float[3]
+    angle_data[0] = akObjectReference.GetAngleX()
+    angle_data[1] = akObjectReference.GetAngleY()
+    angle_data[2] = akObjectReference.GetAngleZ()
+	return angle_data
+endFunction
+
+float[] function GetPositionData(ObjectReference akObjectReference) global
+	float[] position_data = new float[3]
+	position_data[0] = akObjectReference.GetPositionX()
+	position_data[1] = akObjectReference.GetPositionY()
+	position_data[2] = akObjectReference.GetPositionZ()
+	return position_data
 endFunction
 
 ;/********f* CampUtil/PlayerCanPlaceObjects
@@ -416,6 +424,7 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true) global
 	endif
 * NOTES
 * Reasons that this function might return false are:
+* * The player is being attacked.
 * * The player is already trying to place something.
 * * The player is swimming.
 * * The player is mounted.
@@ -431,7 +440,7 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true) global
 		return False
 	endif
 
-	;Don't check combat; this can happen too often.
+	;@TODO: Check being attacked
 	if IsPlayerPlacingObject()
 		if abShowMessage
 			;_DE_Placement_InUse.Show()

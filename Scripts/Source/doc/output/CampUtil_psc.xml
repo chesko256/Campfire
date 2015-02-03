@@ -232,7 +232,8 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true) global
 <para>
  Reasons that this function might return false are:
 </para>
-<itemizedlist><listitem><para> The player is already trying to place something.
+<itemizedlist><listitem><para> The player is being attacked.
+</para></listitem><listitem><para> The player is already trying to place something.
 </para></listitem><listitem><para> The player is swimming.
 </para></listitem><listitem><para> The player is mounted.
 </para></listitem><listitem><para> The player is sleeping.

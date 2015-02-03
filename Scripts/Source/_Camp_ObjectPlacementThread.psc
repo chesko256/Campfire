@@ -4,7 +4,6 @@ scriptname _Camp_ObjectPlacementThread extends Quest
 import math
 import CampUtil
 
-int thread_id = -1
 ObjectReference future
 bool thread_queued = false
 ObjectReference _RelativeCenterObject
@@ -61,8 +60,6 @@ endFunction
 
 Event OnObjectPlacementStart()
 	if thread_queued
-		;debug.StartStackProfiling()
-		;debug.trace("[Campfire] Thread " + self + " (TID " + thread_id + ") got OnThreadedPlacement, WORKING -----------")
 		float[] relative_position = new float[6]
 		relative_position = GetRelativePosition(_RelativeCenterObject, _ObjectPositionReference)
 		ObjectReference result = PlaceAtMeRelative(_Origin, _FormToPlace, _OriginAngle, relative_position, \
@@ -71,8 +68,6 @@ Event OnObjectPlacementStart()
 		(future as _Camp_ObjectFuture).result = result
 		clear_thread_vars()
 		thread_queued = false
-		;debug.trace("[Campfire] Thread " + self + " (TID " + thread_id + ") ============== DONE!")
-		;debug.StopStackProfiling()
 	endif
 endEvent
 

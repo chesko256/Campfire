@@ -1,0 +1,1 @@
+scriptname _Camp_ObjectPlacementIndicatorThread03 extends _Camp_ObjectPlacementIndicatorThread

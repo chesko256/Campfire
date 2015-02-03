@@ -1,4 +1,4 @@
-scriptname _DE_Visualize_Campsite_Trigger extends ObjectReference
+scriptname _Camp_IndicatorTrigger extends ObjectReference
 
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 
