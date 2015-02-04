@@ -518,7 +518,7 @@ function UpdateIndicatorPosition(ObjectReference akIndicator, float afDistance, 
            !(_Camp_IndicatorFutureRefB as _Camp_IndicatorFuture).done() || \
            !(_Camp_IndicatorFutureRefC as _Camp_IndicatorFuture).done()
             i += 1
-            Utility.wait(0.1)
+            Utility.wait(0.01)
             if i >= 50
                 ;Our threads became locked up. Clear and resume, possibly throw an error.
                 i = 0

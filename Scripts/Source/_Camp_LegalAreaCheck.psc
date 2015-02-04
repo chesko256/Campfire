@@ -72,6 +72,7 @@ function GetCampingLegalStop()
 endFunction
 
 bool function GetCampingLegal()
+	return true
 	;@TODO: Necessary to check IsRunning?
 	if _Camp_MainQuest.IsRunning() && Compatibility.isDLC2Loaded
 		if DLC2RavenRockCenterMarker == none
