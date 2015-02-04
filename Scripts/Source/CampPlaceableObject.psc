@@ -1,18 +1,6 @@
-;/********s* _Camp_PlaceableObjectBase/CampPlaceableObject
-* SCRIPTNAME
-*/;
 scriptname CampPlaceableObject extends _Camp_PlaceableObjectBase
-;/*
-* OVERVIEW
-* The `CampPlaceableObject` script is for creating simple Placeable Objects. It can be
-* attached to an Activator or Furniture.
-;*********/;
 
 import CampUtil
-; @TODO: MOVE TO UTILITY SCRIPT
-Message property _Camp_PlaceableObjectSelect auto
-Message property _Camp_PlaceableObjectDestroyConfirm auto
-
 
 ; PRIVATE
 ;Run-time objects
@@ -61,50 +49,10 @@ Event OnInit()
 	self.BlockActivation()
 EndEvent
 
-State Activated
-	Event OnActivate(ObjectReference akActionRef)
-		utility.wait(0.1)
-	EndEvent
-endState
-
 Event OnActivate(ObjectReference akActionRef)
-	GoToState("Activated")
-	if akActionRef == Game.GetPlayer()
-		ObjectInteraction(akActionRef)
-	else
-		UseObject(akActionRef)
-	endif
-	GoToState("")
+	;Do default behavior, override if necessary.
+	;Use / Pick Up / Cancel
 EndEvent
-
-function ObjectInteraction(ObjectReference akActionRef)
-	int i = _Camp_PlaceableObjectSelect.Show()
-	if i == 0
-		UseObject(akActionRef)
-	elseif i == 1
-		TearDownObject()
-	elseif i == 2
-		DestroyObjectConfirm(akActionRef)
-	elseif i == 3
-		;exit
-	endif
-endFunction
-
-function UseObject(ObjectReference akActionRef)
-	self.BlockActivation(false)
-	self.Activate(akActionRef)
-	utility.wait(0.1)
-	self.BlockActivation(true)
-endFunction
-
-function DestroyObjectConfirm(ObjectReference akActionRef)
-	int i = _Camp_PlaceableObjectDestroyConfirm.Show()
-	if i == 0
-		TearDownObject(true)
-	else
-		ObjectInteraction(akActionRef)
-	endif
-endFunction
 
 function PlaceObjects()
 	CampPlaceableObjectEx Extended = self as CampPlaceableObjectEx
@@ -286,72 +234,4 @@ function PlaceObject_ExtraLight2(CampPlaceableObjectEx Extended)
 endFunction
 function PlaceObject_ExtraLight3(CampPlaceableObjectEx Extended)
 	myExtraLight3Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraLight3, Extended.PositionRef_ExtraLight3)
-endFunction
-
-function TearDownObject(bool destroy = false)
-	if destroy
-		;play vfx, sfx
-	endif
-
-	if myExtraStatic1
-		TryToDisableAndDeleteRef(myExtraStatic1)
-	endif
-	if myExtraStatic2
-		TryToDisableAndDeleteRef(myExtraStatic2)
-	endif
-	if myExtraStatic3
-		TryToDisableAndDeleteRef(myExtraStatic3)
-	endif
-	if myExtraStatic4
-		TryToDisableAndDeleteRef(myExtraStatic4)
-	endif
-	if myExtraStatic5
-		TryToDisableAndDeleteRef(myExtraStatic5)
-	endif
-	if myExtraActivator1
-		TryToDisableAndDeleteRef(myExtraActivator1)
-	endif
-	if myExtraActivator2
-		TryToDisableAndDeleteRef(myExtraActivator2)
-	endif
-	if myExtraActivator3
-		TryToDisableAndDeleteRef(myExtraActivator3)
-	endif
-	if myExtraActivator4
-		TryToDisableAndDeleteRef(myExtraActivator4)
-	endif
-	if myExtraActivator5
-		TryToDisableAndDeleteRef(myExtraActivator5)
-	endif
-	if myExtraFurniture1
-		TryToDisableAndDeleteRef(myExtraFurniture1)
-	endif
-	if myExtraFurniture2
-		TryToDisableAndDeleteRef(myExtraFurniture2)
-	endif
-	if myExtraFurniture3
-		TryToDisableAndDeleteRef(myExtraFurniture3)
-	endif
-	if myExtraFurniture4
-		TryToDisableAndDeleteRef(myExtraFurniture4)
-	endif
-	if myExtraFurniture5
-		TryToDisableAndDeleteRef(myExtraFurniture5)
-	endif
-	if myExtraLight1
-		TryToDisableAndDeleteRef(myExtraLight1)
-	endif
-	if myExtraLight2
-		TryToDisableAndDeleteRef(myExtraLight2)
-	endif
-	if myExtraLight3
-		TryToDisableAndDeleteRef(myExtraLight3)
-	endif
-
-	if !destroy
-		Game.GetPlayer().AddItem(Required_InventoryItem, 1, true)
-	endif
-
-	self.Disable()
-	self.Delete()
 endFunction

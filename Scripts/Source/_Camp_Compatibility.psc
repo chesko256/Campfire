@@ -16,7 +16,8 @@ import debug
 actor property PlayerRef auto
 ;#Scripts======================================================================
 _Camp_SkyUIConfigPanelScript property CampConfig Auto 			;SkyUI Configuration script
-_Camp_Main property Campfire auto 								;Main Script
+_Camp_LegalAreaCheck property Legal Auto 						;Camping Legality script
+_Camp_Main property Campfire auto 								;Main script
 
 ;#Official DLC=================================================================
 bool property isDLC1Loaded auto	hidden						;Dawnguard
@@ -515,6 +516,10 @@ function RunStartupCheck()
 		;Weather
 		DLC2AshStorm = Game.GetFormFromFile(0x02032336, "Dragonborn.esm") as Weather
 		
+		if Legal.DLC2RavenRockCenterMarker == none
+			Legal.DLC2RavenRockCenterMarker = Game.GetFormFromFile(0x020295EA, "Dragonborn.esm") as ObjectReference
+		endif
+
 		;Worldspaces
 		form DLC02WS02 = Game.GetFormFromFile(0x02000800, "Dragonborn.esm")			;Solstheim
 		if !DLC2WS
