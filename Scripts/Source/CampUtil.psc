@@ -395,11 +395,12 @@ endFunction
 *
 * SYNTAX
 */;
-bool function PlayerCanPlaceObjects(bool abShowMessage = true) global
+bool function PlayerCanPlaceObjects(bool abShowMessage = true, bool abPlayerBusyCheck = true) global
 ;/*
 * PARAMETERS
 * * abShowMessage: Whether to show an informative message detailing why the player can't place a Placeable Object right now if returning false.
-*
+* * abPlayerBusyCheck: Whether or not to check if the player is already placing an object.
+* 
 * RETURN VALUE
 * True if the player can currently place Placeable Objects, false otherwise.
 *
@@ -426,7 +427,7 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true) global
 	endif
 
 	;@TODO: Check being attacked
-	if IsPlayerPlacingObject()
+	if abPlayerBusyCheck && IsPlayerPlacingObject()
 		if abShowMessage
 			;_DE_Placement_InUse.Show()
 			notification("[Debug]You are already trying to place something.")

@@ -212,10 +212,11 @@ CampUtil/PlayerCanPlaceObjects</title>
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-bool function PlayerCanPlaceObjects(bool abShowMessage = true) global
+bool function PlayerCanPlaceObjects(bool abShowMessage = true, bool abPlayerBusyCheck = true) global
 </literallayout>
 <formalpara><title>PARAMETERS</title><para></para></formalpara>
 <itemizedlist><listitem><para> abShowMessage: Whether to show an informative message detailing why the player can't place a Placeable Object right now if returning false.
+</para></listitem><listitem><para> abPlayerBusyCheck: Whether or not to check if the player is already placing an object.
 </para></listitem></itemizedlist><para>
 </para>
 <formalpara><title>RETURN VALUE</title><para></para></formalpara>

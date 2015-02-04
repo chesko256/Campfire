@@ -22,9 +22,10 @@ float function get_result()
 		i += 1
 		utility.wait(0.1)
 	endWhile 
-        if i >= 100
-            ;Our thread probably encountered an error and is locked up; we need to unlock it.
-            (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThreadManager).TryToUnlockThread(self as ObjectReference)
-        endif
+    if i >= 100
+        ;Our thread probably encountered an error and is locked up; we need to unlock it.
+        (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThreadManager).TryToUnlockThread(self as ObjectReference)
+    endif
+    done = false
 	return r
 endFunction

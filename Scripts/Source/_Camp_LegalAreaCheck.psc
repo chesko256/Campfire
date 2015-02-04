@@ -47,6 +47,83 @@ Keyword property LocTypeJail auto
 bool bIsRunning = false
 Location myLoc
 
+ObjectReference[] CenterMarkers
+ObjectReference nearest
+
+Event OnCellChange()
+	;Precompute nearest marker
+	float nearest_distance
+
+	if _Camp_MainQuest.IsRunning() && Compatibility.isDLC2Loaded
+		if DLC2RavenRockCenterMarker == none
+			DLC2RavenRockCenterMarker = Game.GetFormFromFile(0x020295EA, "Dragonborn.esm") as ObjectReference
+		endif
+	endif
+
+	nearest = CenterMarkerDawnstar
+	nearest_distance = PlayerRef.GetDistance(CenterMarkerDawnstar)
+
+	if PlayerRef.GetDistance(CenterMarkerWhiterun) < nearest_distance
+		nearest = CenterMarkerWhiterun
+	endif
+	if PlayerRef.GetDistance(CenterMarkerHelgen) < nearest_distance
+		nearest = CenterMarkerHelgen
+	endif
+	if PlayerRef.GetDistance(CenterMarkerFalkreath) < nearest_distance
+		nearest = CenterMarkerFalkreath
+	endif
+	if PlayerRef.GetDistance(CenterMarkerKarthwasten) < nearest_distance
+		nearest = CenterMarkerKarthwasten
+	endif
+	if PlayerRef.GetDistance(CenterMarkerIvarstead) < nearest_distance
+		nearest = CenterMarkerIvarstead
+	endif
+	if PlayerRef.GetDistance(CenterMarkerRorikstead) < nearest_distance
+		nearest = CenterMarkerRorikstead
+	endif
+	if PlayerRef.GetDistance(CenterMarkerShorsStone) < nearest_distance
+		nearest = CenterMarkerShorsStone
+	endif
+	if PlayerRef.GetDistance(CenterMarkerWinterhold) < nearest_distance
+		nearest = CenterMarkerWinterhold
+	endif
+	if PlayerRef.GetDistance(CenterMarkerMorthal) < nearest_distance
+		nearest = CenterMarkerMorthal
+	endif
+	if PlayerRef.GetDistance(CenterMarkerSolitudeSawmill) < nearest_distance
+		nearest = CenterMarkerSolitudeSawmill
+	endif
+	if PlayerRef.GetDistance(RiverwoodLocationCenterMarker) < nearest_distance
+		nearest = RiverwoodLocationCenterMarker
+	endif
+	if PlayerRef.GetDistance(KynesgroveLocationCenterMarkerREF) < nearest_distance
+		nearest = KynesgroveLocationCenterMarkerREF
+	endif
+	if PlayerRef.GetDistance(_DE_MarkarthCenterMarker) < nearest_distance
+		nearest = _DE_MarkarthCenterMarker
+	endif
+	if PlayerRef.GetDistance(CenterMarkerRfiten) < nearest_distance
+		nearest = CenterMarkerRfiten
+	endif
+	if PlayerRef.GetDistance(WindhelmLocationCenterMarkerREF) < nearest_distance
+		nearest = WindhelmLocationCenterMarkerREF
+	endif
+	if PlayerRef.GetDistance(SolitudeCenterMarker) < nearest_distance
+		nearest = SolitudeCenterMarker
+	endif
+	if PlayerRef.GetDistance(CWSiegeDefendTrigger1Whiterun) < nearest_distance
+		nearest = CWSiegeDefendTrigger1Whiterun
+	endif
+	if PlayerRef.GetDistance(WinterholdCollegeCenterMarker) < nearest_distance
+		nearest = WinterholdCollegeCenterMarker
+	endif
+	if PlayerRef.GetDistance(DLC2RavenRockCenterMarker) < nearest_distance
+		nearest = DLC2RavenRockCenterMarker
+	endif
+
+	debug.trace("[Campfire] Nearest is " + nearest)
+endEvent
+
 Event OnLocationChange(Location akOldLoc, Location akNewLoc)
 	myLoc = akNewLoc
 endEvent
@@ -70,7 +147,6 @@ function GetCampingLegalStop()
 endFunction
 
 bool function GetCampingLegal()
-
 	;@TODO: Necessary to check IsRunning?
 	if _Camp_MainQuest.IsRunning() && Compatibility.isDLC2Loaded
 		if DLC2RavenRockCenterMarker == none
@@ -78,48 +154,48 @@ bool function GetCampingLegal()
 		endif
 	endif
 
-	if PlayerRef.GetDistance(DragonBridgeLocationCenterMarkerREF) < 3200.0
+	if nearest == DragonBridgeLocationCenterMarkerREF && PlayerRef.GetDistance(DragonBridgeLocationCenterMarkerREF) < 3200.0
 		return false
-	elseif PlayerRef.GetDistance(CenterMarkerDawnstar) < 8400.0
+	elseif nearest == CenterMarkerDawnstar && PlayerRef.GetDistance(CenterMarkerDawnstar) < 8400.0
 		return false
-	elseif PlayerRef.GetDistance(CenterMarkerWhiterun) < 5600.0
+	elseif nearest == CenterMarkerWhiterun && PlayerRef.GetDistance(CenterMarkerWhiterun) < 5600.0
 		return false
-	elseif PlayerRef.GetDistance(CenterMarkerHelgen) < 4200.0
+	elseif nearest == CenterMarkerHelgen && PlayerRef.GetDistance(CenterMarkerHelgen) < 4200.0
 		return false
-	elseif PlayerRef.GetDistance(CenterMarkerFalkreath) < 4000.0
+	elseif nearest == CenterMarkerFalkreath && PlayerRef.GetDistance(CenterMarkerFalkreath) < 4000.0
 		return false
-	elseif PlayerRef.GetDistance(CenterMarkerKarthwasten) < 4000.0
+	elseif nearest == CenterMarkerKarthwasten && PlayerRef.GetDistance(CenterMarkerKarthwasten) < 4000.0
 		return false
-	elseif PlayerRef.GetDistance(CenterMarkerIvarstead) < 5200.0
+	elseif nearest == CenterMarkerIvarstead && PlayerRef.GetDistance(CenterMarkerIvarstead) < 5200.0
 		return false
-	elseif PlayerRef.GetDistance(CenterMarkerRorikstead) < 3000.0
+	elseif nearest == CenterMarkerRorikstead && PlayerRef.GetDistance(CenterMarkerRorikstead) < 3000.0
 		return false
-	elseif PlayerRef.GetDistance(CenterMarkerShorsStone) < 2000.0
+	elseif nearest == CenterMarkerShorsStone && PlayerRef.GetDistance(CenterMarkerShorsStone) < 2000.0
 		return false
-	elseif PlayerRef.GetDistance(CenterMarkerWinterhold) < 3000.0
+	elseif nearest == CenterMarkerWinterhold && PlayerRef.GetDistance(CenterMarkerWinterhold) < 3000.0
 		return false
-	elseif PlayerRef.GetDistance(CenterMarkerMorthal) < 5500.0
+	elseif nearest == CenterMarkerMorthal && PlayerRef.GetDistance(CenterMarkerMorthal) < 5500.0
 		return false
-	elseif PlayerRef.GetDistance(CenterMarkerSolitudeSawmill) < 1200.0
+	elseif nearest == CenterMarkerSolitudeSawmill && PlayerRef.GetDistance(CenterMarkerSolitudeSawmill) < 1200.0
 		return false
-	elseif PlayerRef.GetDistance(RiverwoodLocationCenterMarker) < 3700.0
+	elseif nearest == RiverwoodLocationCenterMarker && PlayerRef.GetDistance(RiverwoodLocationCenterMarker) < 3700.0
 		return false
-	elseif PlayerRef.GetDistance(KynesgroveLocationCenterMarkerREF) < 5000.0
+	elseif nearest == KynesgroveLocationCenterMarkerREF && PlayerRef.GetDistance(KynesgroveLocationCenterMarkerREF) < 5000.0
 		return false
-	elseif PlayerRef.GetDistance(_DE_MarkarthCenterMarker) < 6000.0
+	elseif nearest == _DE_MarkarthCenterMarker && PlayerRef.GetDistance(_DE_MarkarthCenterMarker) < 6000.0
 		return false
-	elseif PlayerRef.GetDistance(CenterMarkerRfiten) < 6000.0
+	elseif nearest == CenterMarkerRfiten && PlayerRef.GetDistance(CenterMarkerRfiten) < 6000.0
 		return false
-	elseif PlayerRef.GetDistance(WindhelmLocationCenterMarkerREF) < 8000.0
+	elseif nearest == WindhelmLocationCenterMarkerREF && PlayerRef.GetDistance(WindhelmLocationCenterMarkerREF) < 8000.0
 		return false
-	elseif PlayerRef.GetDistance(SolitudeCenterMarker) < 11000.0
+	elseif nearest == SolitudeCenterMarker && PlayerRef.GetDistance(SolitudeCenterMarker) < 11000.0
 		return false
-	elseif PlayerRef.GetDistance(CWSiegeDefendTrigger1Whiterun) < 5600.0
+	elseif nearest == CWSiegeDefendTrigger1Whiterun && PlayerRef.GetDistance(CWSiegeDefendTrigger1Whiterun) < 5600.0
 		return false
-	elseif PlayerRef.GetDistance(WinterholdCollegeCenterMarker) < 4000.0
+	elseif nearest == WinterholdCollegeCenterMarker && PlayerRef.GetDistance(WinterholdCollegeCenterMarker) < 4000.0
 		return false
 	;@TODO: Necessary to check IsRunning?
-	elseif _Camp_MainQuest.IsRunning() && Compatibility.isDLC2Loaded && PlayerRef.GetDistance(DLC2RavenRockCenterMarker) < 4100.0	;RavenRock center marker 
+	elseif Compatibility.isDLC2Loaded && nearest == DLC2RavenRockCenterMarker && PlayerRef.GetDistance(DLC2RavenRockCenterMarker) < 4100.0	;RavenRock center marker 
 		return false
 	else
 		if _DE_CampingRestrictedWorldspaces.HasForm(PlayerRef.GetWorldspace())

@@ -20,10 +20,18 @@ ObjectReference property _Camp_IndicatorFutureRefA auto
 ObjectReference property _Camp_IndicatorFutureRefB auto
 ObjectReference property _Camp_IndicatorFutureRefC auto
 ObjectReference property _Camp_IndicatorTriggerRef auto
+ObjectReference property _Camp_ZTestShooterREF_A auto
+ObjectReference property _Camp_ZTestShooterREF_B auto
+ObjectReference property _Camp_ZTestShooterREF_C auto
+ObjectReference property _Camp_ZTestReceiverREF_A auto
+ObjectReference property _Camp_ZTestReceiverREF_B auto
+ObjectReference property _Camp_ZTestReceiverREF_C auto
 EffectShader property _Camp_VisPlacement auto
 EffectShader property _Camp_VisError auto
 Message property _Camp_Placement_Cancelled auto
 Message property _Camp_Placement_Cancelled_CollisionBug auto
+Message property _Camp_PlacementIllegal auto
+Message property _Camp_IndicatorSelect auto
 
 ;Misc
 Static property XMarker auto
@@ -67,6 +75,8 @@ Event OnInit()
     ;Register for the event that will start all threads
     ;NOTE - This needs to be re-registered once per load! Use an alias and OnPlayerLoadGame() in a real implementation.
     RegisterForModEvent("Campfire_OnObjectPlacementStart", "OnObjectPlacementStart")
+    RegisterForModEvent("Campfire_OnIndicatorUpdateStart", "OnIndicatorUpdateStart")
+    RegisterForModEvent("Campfire_OnPlaceableObjectUsed", "OnPlaceableObjectUsed")
 
     ;Let's cast our threads to local variables so things are less cluttered in our code
     thread01 = CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread01
@@ -369,7 +379,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
 	return future
 endFunction
 
-function StartPlacement(ObjectReference akReference)
+function StartPlacement(ObjectReference akIndicator)
     ;#Help Text=========================
     ;bool bShowHelp = _DE_HelpDone_Visualize.GetValueInt() == 1 && _DE_Setting_Help.GetValueInt() == 2
     ;if bShowHelp
@@ -377,22 +387,34 @@ function StartPlacement(ObjectReference akReference)
     ;   _DE_HelpDone_Visualize.SetValue(2)
     ;endif
     ;#Help Text=========================
-    akReference.SetAngle(0.0, 0.0, 0.0)
+    akIndicator.SetAngle(0.0, 0.0, 0.0)
     _Camp_CurrentlyPlacingObject.SetValue(2)
     _Camp_IndicatorTriggerRef.MoveTo(PlayerRef)
+    ;@TODO: Block inventory menu access
 endFunction
 
 function StopPlacement()
     _Camp_IndicatorTriggerRef.MoveTo(_Camp_Anchor)
-    ;_DE_ZTestShooterREFA.MoveTo(_DE_Anchor)
-    ;_DE_ZTestReceiverREFA.MoveTo(_DE_Anchor)
+    _Camp_ZTestShooterREF_A.MoveTo(_Camp_Anchor)
+    _Camp_ZTestShooterREF_B.MoveTo(_Camp_Anchor)
+    _Camp_ZTestShooterREF_C.MoveTo(_Camp_Anchor)
+    _Camp_ZTestReceiverREF_A.MoveTo(_Camp_Anchor)
+    _Camp_ZTestReceiverREF_B.MoveTo(_Camp_Anchor)
+    _Camp_ZTestReceiverREF_C.MoveTo(_Camp_Anchor)
+    ;@TODO: Restore Inventory menu access
 endFunction
 
-bool function PerformPlacement()
+bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  \
+                              MiscObject akInventoryItem,                       \
+                              Float afDistance, Float afHeightOffset,           \
+                              Float afRotationOffset, Bool abSnapToTerrain,     \
+                              Ingredient akIngredient, MiscObject akMiscItem,   \
+                              int aiCost)
+    debug.StartStackProfiling()
     ;@TODO: Drop IsInCombat, check for OnHit event instead
-    if !PlayerCanPlaceObjects()
+    if !PlayerCanPlaceObjects(abPlayerBusyCheck = false)
         StopPlacement()
-        _Camp_Placement_Cancelled.Show()
+        ;_Camp_Placement_Cancelled.Show()
         _Camp_CurrentlyPlacingObject.SetValue(1)
         return false
     endif
@@ -408,7 +430,7 @@ bool function PerformPlacement()
             elseif i == 1
                 ;No
             elseif i == 2
-                ;No - Don't Ask Again
+                ;@TODO: No - Don't Ask Again
                 _Camp_HelpDone_PlacementError.SetValue(2)
             endif
         endif
@@ -418,13 +440,22 @@ bool function PerformPlacement()
 
     ;Scenario: Legitimately placing object
     elseif _Camp_CurrentlyPlacingObject.GetValueInt() == 2
-        UpdatePlacementIndicator()
+        UpdateIndicatorPosition(akIndicator, afDistance, afHeightOffset, afRotationOffset, abSnapToTerrain)
+        ;@TODO: Handle "heat link" feature
+        ;Update placement indicator shader
+        if LegalToCampHere()
+            _Camp_VisError.Stop(akIndicator)
+            _Camp_VisPlacement.Play(akIndicator)
+        else
+            _Camp_VisPlacement.Stop(akIndicator)
+            _Camp_VisError.Play(akIndicator)
+        endif
         return true
 
     ;Scenario: Player activated the placement indicator
     else
         if !LegalToCampHere()
-            int ibutton = _DE_CampVisIllegal.Show()
+            int ibutton = _Camp_PlacementIllegal.Show()
             if ibutton == 0
                 StopPlacement()
                 _Camp_CurrentlyPlacingObject.SetValue(1)
@@ -435,43 +466,50 @@ bool function PerformPlacement()
                 return true
             endif
         else
-            int ibutton = myVisPrompt.Show()
+            int ibutton = _Camp_IndicatorSelect.Show()
             if ibutton == 0
-                if myPlacementRequirement
-                    if PlayerRef.GetItemCount(myPlacementRequirement) > 0
-                        PlayerRef.RemoveItem(myPlacementRequirement, 1)
+                if akIngredient && aiCost > 0
+                    if PlayerRef.GetItemCount(akIngredient) >= aiCost
+                        PlayerRef.RemoveItem(akIngredient, aiCost)
                     else
                         StopPlacement()
-                        
-                        myRequirementErrorMsg.Show()
-                        return
+                        return false
+                    endif
+                elseif akMiscItem && aiCost > 0
+                    if PlayerRef.GetItemCount(akMiscItem) >= aiCost
+                        PlayerRef.RemoveItem(akMiscItem, aiCost)
+                    else
+                        StopPlacement()
+                        return false
                     endif
                 endif
-                self.Disable()
-                _Camp_IndicatorTriggerRef.MoveTo(_DE_Anchor)
-                ObjectReference myObjectRef = self.PlaceAtMe(myPlacedItem, abInitiallyDisabled = false)
-                ;myObjectRef.SetAngle(self.GetAngleX(), self.GetAngleY(), self.GetAngleZ())
-                myObjectRef.Enable()
+
+                akIndicator.Disable()
+                akIndicator.PlaceAtMe(akFormToPlace)
+                PlayerRef.RemoveItem(akInventoryItem, 1, true)
                 StopPlacement()
+                return false
             elseif ibutton == 1     ;Exit Placement
                 StopPlacement()
-                
                 _Camp_Placement_Cancelled.Show()
+                return false
             elseif ibutton == 2     ;Back
                 _Camp_CurrentlyPlacingObject.SetValue(2)
-                RegisterForSingleUpdate(fUpdateSpeed)
+                return true
             endif
         endif
-    endif   
+    endif
+    debug.StopStackProfiling()
 endFunction
 
-ObjectReference function UpdatePlacementIndicator(ObjectReference akIndicator, float afDistance, float afHeightOffset = 1.0, float afRotationOffset = 0.0, bool abSnapToTerrain = true)
+function UpdateIndicatorPosition(ObjectReference akIndicator, float afDistance, float afHeightOffset = 1.0, float afRotationOffset = 0.0, bool abSnapToTerrain = true)
     float[] center_point = new float[2]
     center_point = GetOffsets(PlayerRef, afDistance)
 
     PlacementIndicatorThread1.get_async(center_point[0], center_point[1], 0.0, -43.3)
     PlacementIndicatorThread2.get_async(center_point[0], center_point[1], -50.0, 43.3)
     PlacementIndicatorThread3.get_async(center_point[0], center_point[1], 50.0, 43.3)
+    RaiseEvent_OnIndicatorUpdateStart()
 
     bool waiting = true
     int i = 0
@@ -484,7 +522,7 @@ ObjectReference function UpdatePlacementIndicator(ObjectReference akIndicator, f
             if i >= 50
                 ;Our threads became locked up. Clear and resume, possibly throw an error.
                 i = 0
-                return None
+                return
             endif
         else
             waiting = false
@@ -498,18 +536,18 @@ ObjectReference function UpdatePlacementIndicator(ObjectReference akIndicator, f
     float a = (_Camp_IndicatorFutureRefA as _Camp_IndicatorFuture).get_result()
     float b = (_Camp_IndicatorFutureRefB as _Camp_IndicatorFuture).get_result()
     float c = (_Camp_IndicatorFutureRefC as _Camp_IndicatorFuture).get_result()
-    
+
     player_position = GetPositionData(PlayerRef)
     snap_data = GetTerrainRotation(a, b, c)
-
-    While !akIndicator.Is3DLoaded()
-        Utility.Wait(0.1)
-    endWhile
 
     ;Clamp height difference between player and indicator to 300 units
     if abs(player_position[2] - snap_data[2]) > 300.0
         snap_data[2] = player_position[2]
     endif
+
+    While !akIndicator.Is3DLoaded()
+        Utility.Wait(0.1)
+    endWhile
 
     if abSnapToTerrain
         akIndicator.TranslateTo(player_position[0] + center_point[0],     \
@@ -532,21 +570,10 @@ ObjectReference function UpdatePlacementIndicator(ObjectReference akIndicator, f
     if _Camp_IndicatorTriggerRef.GetPositionX() != player_position[0] || _Camp_IndicatorTriggerRef.GetPositionY() != player_position[1]
         _Camp_IndicatorTriggerRef.MoveTo(PlayerRef)
     endif
-
-    ;@TODO: Handle "heat link" feature
-    ;Update placement indicator shader
-    if LegalToCampHere()
-        _Camp_VisError.Stop(akIndicator)
-        _Camp_VisPlacement.Play(akIndicator)
-    else
-        _Camp_VisPlacement.Stop(akIndicator)
-        _Camp_VisError.Play(akIndicator)
-    endif
-
 endFunction
 
 ;@TODO: Register for this
-Event CampfireOnPlaceableObjectUsed(Form akPlacementIndicator, Form akIngredient, Form akMiscItem, Int aiCost, Form akPerk)
+Event OnPlaceableObjectUsed(Form akPlacementIndicator, Form akIngredient, Form akMiscItem, Int aiCost, Form akPerk)
     if PlayerCanPlaceObjects()
 
         Activator placement_indicator
@@ -598,6 +625,15 @@ Event CampfireOnPlaceableObjectUsed(Form akPlacementIndicator, Form akIngredient
         endif
     endif
 endEvent
+
+function RaiseEvent_OnIndicatorUpdateStart()
+    int handle = ModEvent.Create("Campfire_OnIndicatorUpdateStart")
+    if handle
+        ModEvent.Send(handle)
+    else
+        ;pass
+    endif
+endFunction
 
 function wait_all()
     RaiseEvent_OnObjectPlacementStart()
@@ -701,8 +737,6 @@ function TryToUnlockThread(ObjectReference akFuture)
 endFunction
 
 function RaiseEvent_OnObjectPlacementStart()
-    ;trace("[Campfire] Raising Event: RaiseEvent_OnThreadedPlacement()")
-
     int handle = ModEvent.Create("Campfire_OnObjectPlacementStart")
     if handle
         ModEvent.Send(handle)

@@ -7,7 +7,6 @@ scriptname CampPlaceableMiscItem extends ObjectReference
 * Attach this script to a Misc Item that represents the inventory item of a Placeable Object.
 ;*********/;
 
-import math
 import CampUtil
 
 ;/********p* CampPlaceableMiscItem/Required_placement_indicator
@@ -65,15 +64,17 @@ Perk property necessary_perk auto
 ;********/;
 
 Event OnEquipped(Actor akActor)
-	if akActor == Game.GetPlayer()
-		int handle = ModEvent.Create("Campfire_CampfireOnPlaceableObjectUsed")
-		if handle
-			ModEvent.PushForm(handle, Required_placement_indicator as Form)
-			ModEvent.PushForm(handle, consumable_ingredient as Form)
-			ModEvent.PushForm(handle, consumable_misc_item as Form)
-			ModEvent.PushInt(handle, consumable_cost)
-			ModEvent.PushForm(handle, necessary_perk as Form)
-			ModEvent.Send(handle)
+	if PlayerCanPlaceObjects()
+		if akActor == Game.GetPlayer()
+			int handle = ModEvent.Create("Campfire_OnPlaceableObjectUsed")
+			if handle
+				ModEvent.PushForm(handle, Required_placement_indicator as Form)
+				ModEvent.PushForm(handle, consumable_ingredient as Form)
+				ModEvent.PushForm(handle, consumable_misc_item as Form)
+				ModEvent.PushInt(handle, consumable_cost)
+				ModEvent.PushForm(handle, necessary_perk as Form)
+				ModEvent.Send(handle)
+			endif
 		endif
 	endif
 endEvent
