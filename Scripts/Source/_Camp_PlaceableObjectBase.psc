@@ -58,6 +58,21 @@ function Initialize()
 	initialized = true
 endFunction
 
+Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
+	debug.trace("[Campfire] I was hit by " + akAggressor + " with " + akSource + " (" + akProjectile + ")")
+	;if material wood...
+		;blah
+	;elif material stone...
+		;blah
+	;elif an arrow...
+		;ignore
+	;elif a fire spell...
+		;burn
+	;else
+		;fall through to wood
+	;endif
+EndEvent
+
 function RotateOnStartUp()
 	self.SetAngle(self.GetAngleX(), self.GetAngleY(), self.GetAngleZ() + Setting_StartUpRotation)
 endFunction

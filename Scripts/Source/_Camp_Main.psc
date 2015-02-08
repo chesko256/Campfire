@@ -21,7 +21,8 @@ ReferenceAlias property Follower2 auto
 ReferenceAlias property Follower3 auto
 ReferenceAlias property Dog auto
 
-ReferenceAlias property _Camp_Guard auto
+Quest property _Camp_CampingCrimeTracking auto
+ReferenceAlias property Guard auto
 
 Quest property CampfireObjectPlacementSystem auto
 
@@ -29,22 +30,25 @@ event OnInit()
 	if !self.IsRunning()
 		self.Start()
 	endif
+	if !_Camp_CampingCrimeTracking.IsRunning()
+		_Camp_CampingCrimeTracking.Start()
+	endif
 
 	PlayerAlias.ForceRefTo(PlayerRef)
 	Compatibility.RunStartupCheck()
 
 	PlayerRef.AddSpell(_DE_SurvivalSkillsCombo_Spell, false)		;Survival Skills (multi-select)
 	utility.wait(1.0)
-	debug.trace("[Campfire] Guard alias set to " + _Camp_Guard)
-	debug.trace("[Campfire] Guard alias set to " + _Camp_Guard)
-	debug.trace("[Campfire] Guard alias set to " + _Camp_Guard)
-	debug.trace("[Campfire] Guard alias set to " + _Camp_Guard)
-	debug.trace("[Campfire] Guard alias set to " + _Camp_Guard)
-	debug.trace("[Campfire] Guard alias set to " + _Camp_Guard)
-	debug.trace("[Campfire] Guard alias set to " + _Camp_Guard)
-	debug.trace("[Campfire] Guard alias set to " + _Camp_Guard)
-	debug.trace("[Campfire] Guard alias set to " + _Camp_Guard)
-	debug.trace("[Campfire] Guard alias set to " + _Camp_Guard)
+	debug.trace("[Campfire] Guard alias set to " + Guard)
+	debug.trace("[Campfire] Guard alias set to " + Guard)
+	debug.trace("[Campfire] Guard alias set to " + Guard)
+	debug.trace("[Campfire] Guard alias set to " + Guard)
+	debug.trace("[Campfire] Guard alias set to " + Guard)
+	debug.trace("[Campfire] Guard alias set to " + Guard)
+	debug.trace("[Campfire] Guard alias set to " + Guard)
+	debug.trace("[Campfire] Guard alias set to " + Guard)
+	debug.trace("[Campfire] Guard alias set to " + Guard)
+	debug.trace("[Campfire] Guard alias set to " + Guard)
 endEvent
 
 function CheckFollowerPolling()
