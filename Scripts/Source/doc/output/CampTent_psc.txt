@@ -138,6 +138,16 @@ Optional: A static to place in or around the tent. }
 
     Static property TentAsset_ClutterStatic5 auto
 
+### CampTent/TentAsset\_ShelterDestructionCollider
+
+**DESCRIPTION.**
+
+Optional: Activator that passes its OnHit data to this object. Used to allow hitting the shelter object to destroy the tent. }
+
+**SYNTAX.**
+
+    Activator property TentAsset_ShelterDestructionCollider auto
+
 ### CampTent/PositionRef\_FrontExitMarker
 
 **DESCRIPTION.**

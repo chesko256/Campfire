@@ -135,6 +135,15 @@ Static property TentAsset_ClutterStatic5 auto
 { Optional: A static to place in or around the tent. }
 ;*********/;
 
+;/********p* CampTent/TentAsset_ShelterDestructionCollider
+* SYNTAX
+*/;
+Activator property TentAsset_ShelterDestructionCollider auto
+;/*
+* DESCRIPTION
+{ Optional: Activator that passes its OnHit data to this object. Used to allow hitting the shelter object to destroy the tent. }
+;*********/;
+
 ;/********p* CampTent/PositionRef_FrontExitMarker
 * SYNTAX
 */;
@@ -389,6 +398,7 @@ ObjectReference property mySpareBedRoll1 auto hidden
 ObjectReference property mySpareBedRoll2 auto hidden
 ObjectReference property mySpareBedRoll3 auto hidden
 ObjectReference property myWard auto hidden
+ObjectReference property myShelterCollider auto hidden
 
 ;Futures
 ObjectReference property myTentFuture auto hidden
@@ -453,6 +463,7 @@ ObjectReference property mySpareBedRoll1Future auto hidden
 ObjectReference property mySpareBedRoll2Future auto hidden
 ObjectReference property mySpareBedRoll3Future auto hidden
 ObjectReference property myWardFuture auto hidden
+ObjectReference property myShelterColliderFuture auto hidden
 
 Ammo property myQuiver auto hidden
 Armor property myShield auto hidden
@@ -541,6 +552,9 @@ function PlaceObjects()
 
 	if TentAsset_ShelterModel && PositionRef_Shelter
 		PlaceObject_Tent()
+	endif
+	if TentAsset_ShelterDestructionCollider && PositionRef_Shelter
+		PlaceObject_ShelterCollider()
 	endif
 	if TentAsset_ShelterModelExterior && PositionRef_Shelter
 		PlaceObject_NormalTent()
@@ -713,6 +727,12 @@ endFunction
 function GetResults()
 	if myTentFuture
 		myTent = GetFuture(myTentFuture).get_result()
+	endif
+	if myShelterColliderFuture
+		myShelterCollider = GetFuture(myShelterColliderFuture).get_result()
+		if myShelterCollider
+			(myShelterCollider as CampTentShelterCollider).ParentTent = self
+		endif
 	endif
 	if myNormalTentFuture
 		myNormalTent = GetFuture(myNormalTentFuture).get_result()
@@ -969,6 +989,7 @@ function TakeDown()
 	TryToDisableAndDeleteRef(myAshTent)
 	TryToDisableAndDeleteRef(myNormalTent)
 	TryToDisableAndDeleteRef(myTent)
+	TryToDisableAndDeleteRef(myShelterCollider)
 	TryToDisableAndDeleteRef(myFollowerAMarker_MainWeapon)
 	TryToDisableAndDeleteRef(myFollowerAMarker_OffHandWeapon)
 	TryToDisableAndDeleteRef(myFollowerAMarker_BigWeapon)
@@ -1052,6 +1073,10 @@ endFunction
 
 function PlaceObject_Tent()
 	myTentFuture = PlacementSystem.PlaceObject(self, TentAsset_ShelterModel, PositionRef_Shelter, initially_disabled = true)
+endFunction
+
+function PlaceObject_ShelterCollider()
+	myShelterColliderFuture = PlacementSystem.PlaceObject(self, TentAsset_ShelterDestructionCollider, PositionRef_Shelter, initially_disabled = true)
 endFunction
 
 function PlaceObject_NormalTent()

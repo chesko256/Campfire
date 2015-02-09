@@ -59,7 +59,11 @@ function Initialize()
 endFunction
 
 Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
-	debug.trace("[Campfire] I was hit by " + akAggressor + " with " + akSource + " (" + akProjectile + ")")
+	ProcessOnHit(akAggressor, akSource, akProjectile, abBashAttack)
+EndEvent
+
+function ProcessOnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abBashAttack)
+	debug.trace("[Campfire] I was hit by " + akAggressor + " with " + akSource + " (" + akProjectile + "), bashing: " + abBashAttack)
 	;if material wood...
 		;blah
 	;elif material stone...
@@ -71,7 +75,7 @@ Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile,
 	;else
 		;fall through to wood
 	;endif
-EndEvent
+endFunction
 
 function RotateOnStartUp()
 	self.SetAngle(self.GetAngleX(), self.GetAngleY(), self.GetAngleZ() + Setting_StartUpRotation)

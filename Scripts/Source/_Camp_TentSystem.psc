@@ -297,6 +297,7 @@ function PlayerSit(ObjectReference akTent)
 		;	DisplayPlayerTentEquipment(true)
 		;endif
 	endif
+	TryToDisableRef(TentObject.myShelterCollider)
 	if _DE_TentSeeThru.GetValueInt() == 2
 		TryToDisableRef(TentObject.myTentExterior, true)
 	endif
@@ -344,6 +345,7 @@ function PlayerLieDown(ObjectReference akTent)
 		;	DisplayPlayerTentEquipment(true)
 		;endif
 	endif
+	TryToDisableRef(TentObject.myShelterCollider)
 	if _DE_TentSeeThru.GetValueInt() == 2
 		TryToDisableRef(TentObject.myTentExterior, true)
 	endif
@@ -425,6 +427,8 @@ function SelectExterior(ObjectReference akTent)
 	if TentObject.myTentExterior != TentObject.myTent
 		TryToEnableRef(TentObject.myTent, true)
 	endif
+	TryToEnableRef(TentObject.myShelterCollider)
+	
 	TryToDisableRef(TentObject.myNormalTent)
 	TryToDisableRef(TentObject.mySnowTent)
 	TryToDisableRef(TentObject.myAshTent)
@@ -703,6 +707,7 @@ function CleanUpTent(ObjectReference akTent)
 	UnDisplayQuiver_Player(TentObject)
 	UnDisplayBackpack_Player(TentObject)
 
+	TryToEnableRef(TentObject.myShelterCollider)
 	TryToEnableRef(TentObject.myTentExterior, true)
 endFunction
 
