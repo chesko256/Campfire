@@ -6,6 +6,7 @@ _Camp_LegalAreaCheck property Legal auto
 Actor property PlayerRef auto
 Formlist property _Camp_WorldspacesInteriors auto
 Keyword property isCampfirePlaceableObject auto
+Keyword property MagicDamageFire auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 Quest property CampfireObjectPlacementSystem auto
 

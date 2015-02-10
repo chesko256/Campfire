@@ -62,19 +62,23 @@ Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile,
 	ProcessOnHit(akAggressor, akSource, akProjectile, abBashAttack)
 EndEvent
 
+Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
+	ProcessMagicEffect(akCaster, akEffect)
+EndEvent
+
 function ProcessOnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abBashAttack)
 	debug.trace("[Campfire] I was hit by " + akAggressor + " with " + akSource + " (" + akProjectile + "), bashing: " + abBashAttack)
-	;if material wood...
-		;blah
-	;elif material stone...
-		;blah
-	;elif an arrow...
-		;ignore
-	;elif a fire spell...
-		;burn
-	;else
-		;fall through to wood
-	;endif
+	if akSource as Weapon && !akProjectile
+		debug.trace("[Campfire] Melee attack hit!")
+	elseif akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11
+		debug.trace("[Campfire] Torch bash!")
+	endif
+endFunction
+
+function ProcessMagicEffect(ObjectReference akCaster, MagicEffect akEffect)
+	if akEffect.HasKeyword(CampUtil.GetMagicDamageFireKeyword())
+		debug.trace("[Campfire] Fire damage!")
+	endif
 endFunction
 
 function RotateOnStartUp()

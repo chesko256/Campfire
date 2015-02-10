@@ -637,6 +637,16 @@ int function GetCurrentTentType() global
 	return TentType
 endFunction
 
+Keyword function GetMagicDamageFireKeyword() global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+
+	return Campfire.MagicDamageFire
+endFunction
+
 function ExitMenus() global
 	Game.DisablePlayerControls()
 	Game.EnablePlayerControls()
