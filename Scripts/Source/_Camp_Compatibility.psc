@@ -18,6 +18,7 @@ actor property PlayerRef auto
 _Camp_SkyUIConfigPanelScript property CampConfig Auto 			;SkyUI Configuration script
 _Camp_LegalAreaCheck property Legal Auto 						;Camping Legality script
 _Camp_Main property Campfire auto 								;Main script
+_Camp_TentSystem property TentSystemScript auto 				;Tent System (Quest) Script
 
 ;#Official DLC=================================================================
 bool property isDLC1Loaded auto	hidden						;Dawnguard
@@ -576,6 +577,7 @@ function VanillaGameLoadUp()
 	if bAddedSpellBooks == false
 		AddSpellBooks()
 	endif
+	TentSystemScript.BFXFireVol01 = Game.GetFormFromFile(0x00013B40, "Skyrim.esm")
 endFunction
 
 

@@ -15,6 +15,8 @@ E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>pan
 
 E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>pandoc.exe "./output/CampPlaceableMiscItem_psc.xml" -f docbook -t markdown_github -o "./output/CampPlaceableMiscItem_psc.txt" --base-header-level=3 
 
+E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>pandoc.exe "./output/CampPlacementIndicator_psc.xml" -f docbook -t markdown_github -o "./output/CampPlacementIndicator_psc.txt" --base-header-level=3 
+
 E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>python githubber.py "CampUtil_psc.txt" "../../../campwiki/CampUtil-API-Reference.md" 
 
 E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>python githubber.py "CampTent_psc.txt" "../../../campwiki/CampTent-Script.md" 
@@ -26,3 +28,5 @@ E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>pyt
 E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>python githubber.py "CampPlaceableObjectEx_psc.txt" "../../../campwiki/CampPlaceableObjectEx-Script.md" 
 
 E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>python githubber.py "CampPlaceableMiscItem_psc.txt" "../../../campwiki/CampPlaceableMiscItem-Script.md" 
+
+E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>python githubber.py "CampPlacementIndicator_psc.txt" "../../../campwiki/CampPlacementIndicator-Script.md" 

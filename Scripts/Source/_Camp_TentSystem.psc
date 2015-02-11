@@ -74,6 +74,8 @@ ImageSpaceModifier property _Camp_FadeUp auto
 ImageSpaceModifier property _Camp_Black auto
 Sound property ITMGenericArmorUp auto
 Weapon property _Camp_DummyWeapon auto
+Form property BFXFireVol01 auto
+
 ;@TODO: Remove
 ;furniture property _Camp_Bedroll_NPC_FL auto
 ;furniture property _Camp_Bedroll_NPC_FR auto

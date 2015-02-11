@@ -2,22 +2,71 @@ Scriptname CampPlacementIndicator extends ObjectReference
 
 import CampUtil
 
+;@TODO: Move somewhere else
 _Camp_ObjectPlacementThreadManager property PlacementSystem auto hidden
 
+;/********p* CampPlacementIndicator/Required_furniture_to_place
+* SYNTAX
+*/;
 Furniture property Required_furniture_to_place auto
+;/*
+* DESCRIPTION
 { Required: The Furniture object to place with this indicator. Fill only the furniture or the activator, not both. }
+;*********/;
+
+;/********p* CampPlacementIndicator/Required_activator_to_place
+* SYNTAX
+*/;
 Activator property Required_activator_to_place auto
+;/*
+* DESCRIPTION
 { Required: The Activator object to place with this indicator. Fill only the furniture or the activator, not both. }
+;*********/;
+
+;/********p* CampPlacementIndicator/Required_inventory_item
+* SYNTAX
+*/;
 MiscObject property Required_inventory_item auto
+;/*
+* DESCRIPTION
 { Required: The Misc Item that starts this placement indicator. }
+;*********/;
+
+;/********p* CampPlacementIndicator/height_adjustment
+* SYNTAX
+*/;
 float property height_adjustment = 1.0 auto
+;/*
+* DESCRIPTION
 { (Default: 1.0) How much to adjust the placement indicator up or down. Useful if indicator is always above or below the ground. }
+;*********/;
+
+;/********p* CampPlacementIndicator/z_angle_adjustment
+* SYNTAX
+*/;
 float property z_angle_adjustment = 0.0 auto
+;/*
+* DESCRIPTION
 { (Default: 0.0) How much to adjust the placement indicator's z angle (compass rotation). Useful if indicator is always facing the wrong way. }
+;*********/;
+
+;/********p* CampPlacementIndicator/snap_to_terrain
+* SYNTAX
+*/;
 Bool property snap_to_terrain = true auto
+;/*
+* DESCRIPTION
 { (Default: True) Whether this object should rotate according to the slope of the terrain. Results in a more natural position. }
-Float property indicator_distance = 400.0 auto
-{ (Default: 400.0) The distance from the player to render the indicator. }
+;*********/;
+
+;/********p* CampPlacementIndicator/indicator_distance
+* SYNTAX
+*/;
+Float property indicator_distance = 300.0 auto
+;/*
+* DESCRIPTION
+{ (Default: 300.0) The distance from the player to render the indicator. }
+;*********/;
 
 ingredient property required_ingredient auto hidden
 miscobject property required_miscitem auto hidden

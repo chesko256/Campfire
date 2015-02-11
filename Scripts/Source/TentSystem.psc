@@ -146,6 +146,16 @@ Light function GetLanternLight() global
 	return TentAPI._Camp_LanternLight
 endFunction
 
+Form function GetFireVolume() global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+
+	return TentAPI.BFXFireVol01
+endFunction
+
 function RaiseTentAPIError() global
 	debug.trace("[Campfire] Fatal Tent API error occurred.")
 endFunction

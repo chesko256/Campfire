@@ -9,7 +9,7 @@ message property _Camp_CookingPotError auto
 
 Event OnCellAttach()
 	enable_update = true
-	RegisterForSingleUpdate(3)
+	;RegisterForSingleUpdate(3)
 endEvent
 
 Event OnCellDetach()
@@ -18,7 +18,8 @@ EndEvent
 
 ;myExtraActivator1 = _Camp_CookingPot_Steam
 Event OnUpdate()
-	ObjectReference heat = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_HeatSources_Fire, self, 300.0)
+	;@TODO: Rework into 'heat link' system
+	;/ObjectReference heat = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_HeatSources_Fire, self, 300.0)
 	if heat != none && heat.IsEnabled()
 		TryToEnableRef(myExtraActivator1, true)
 	else
@@ -27,6 +28,7 @@ Event OnUpdate()
 	if enable_update
 		RegisterForSingleUpdate(3)
 	endif
+	/;
 endEvent
 
 ;Overrides CampPlaceableObject
@@ -41,7 +43,7 @@ function UseObject(ObjectReference akActionRef)
 	endif
 endFunction
 
-;Overrides CampPlaceableObject
+;@Overrides CampPlaceableObject
 function PlaceObject_ExtraActivator1(CampPlaceableObjectEx Extended)
 	myExtraActivator1Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraActivator1, Extended.PositionRef_ExtraActivator1, initially_disabled = true)
 endFunction

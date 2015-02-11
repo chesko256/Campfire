@@ -1,0 +1,69 @@
+### CampPlacementIndicator/Required\_furniture\_to\_place
+
+**DESCRIPTION.**
+
+Required: The Furniture object to place with this indicator. Fill only the furniture or the activator, not both. }
+
+**SYNTAX.**
+
+    Furniture property Required_furniture_to_place auto
+
+### CampPlacementIndicator/Required\_activator\_to\_place
+
+**DESCRIPTION.**
+
+Required: The Activator object to place with this indicator. Fill only the furniture or the activator, not both. }
+
+**SYNTAX.**
+
+    Activator property Required_activator_to_place auto
+
+### CampPlacementIndicator/Required\_inventory\_item
+
+**DESCRIPTION.**
+
+Required: The Misc Item that starts this placement indicator. }
+
+**SYNTAX.**
+
+    MiscObject property Required_inventory_item auto
+
+### CampPlacementIndicator/height\_adjustment
+
+**DESCRIPTION.**
+
+(Default: 1.0) How much to adjust the placement indicator up or down. Useful if indicator is always above or below the ground. }
+
+**SYNTAX.**
+
+    float property height_adjustment = 1.0 auto
+
+### CampPlacementIndicator/z\_angle\_adjustment
+
+**DESCRIPTION.**
+
+(Default: 0.0) How much to adjust the placement indicator's z angle (compass rotation). Useful if indicator is always facing the wrong way. }
+
+**SYNTAX.**
+
+    float property z_angle_adjustment = 0.0 auto
+
+### CampPlacementIndicator/snap\_to\_terrain
+
+**DESCRIPTION.**
+
+(Default: True) Whether this object should rotate according to the slope of the terrain. Results in a more natural position. }
+
+**SYNTAX.**
+
+    Bool property snap_to_terrain = true auto
+
+### CampPlacementIndicator/indicator\_distance
+
+**DESCRIPTION.**
+
+(Default: 300.0) The distance from the player to render the indicator. }
+
+**SYNTAX.**
+
+    Float property indicator_distance = 300.0 auto

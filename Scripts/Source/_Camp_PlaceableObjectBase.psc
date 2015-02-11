@@ -1,6 +1,7 @@
 scriptname _Camp_PlaceableObjectBase extends ObjectReference
 
 import CampUtil
+import TentSystem
 
 ; REQUIRED PROPERTIES
 
@@ -32,6 +33,10 @@ bool property initialized = false auto hidden
 float[] property OriginAng auto hidden
 
 ObjectReference property CenterObject auto hidden
+
+bool block_spell_hits = false
+int fire_stage = 0
+int damage_stage = 0
 
 Event OnInit()
 	while !self.Is3DLoaded()
@@ -76,8 +81,14 @@ function ProcessOnHit(ObjectReference akAggressor, Form akSource, Projectile akP
 endFunction
 
 function ProcessMagicEffect(ObjectReference akCaster, MagicEffect akEffect)
-	if akEffect.HasKeyword(CampUtil.GetMagicDamageFireKeyword())
-		debug.trace("[Campfire] Fire damage!")
+	if block_spell_hits == false
+		if akEffect.HasKeyword(CampUtil.GetMagicDamageFireKeyword())
+			block_spell_hits = true
+			fire_stage += 1
+			debug.trace("[Campfire] Fire damage! Stage " + fire_stage)
+			utility.wait(0.6)
+			block_spell_hits = false
+		endif
 	endif
 endFunction
 
