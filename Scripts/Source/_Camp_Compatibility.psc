@@ -15,10 +15,10 @@ import debug
 ;#PROPERTIES=====================================================================================================================
 actor property PlayerRef auto
 ;#Scripts======================================================================
-_Camp_SkyUIConfigPanelScript property CampConfig Auto 			;SkyUI Configuration script
-_Camp_LegalAreaCheck property Legal Auto 						;Camping Legality script
-_Camp_Main property Campfire auto 								;Main script
-_Camp_TentSystem property TentSystemScript auto 				;Tent System (Quest) Script
+_Camp_SkyUIConfigPanelScript property CampConfig Auto 				;SkyUI Configuration script
+_Camp_LegalAreaCheck property Legal Auto 							;Camping Legality script
+_Camp_Main property Campfire auto 									;Main script
+_Camp_ObjectPlacementThreadManager property PlacementSystem auto 	;Placement System Script
 
 ;#Official DLC=================================================================
 bool property isDLC1Loaded auto	hidden						;Dawnguard
@@ -577,7 +577,9 @@ function VanillaGameLoadUp()
 	if bAddedSpellBooks == false
 		AddSpellBooks()
 	endif
-	TentSystemScript.BFXFireVol01 = Game.GetFormFromFile(0x00013B40, "Skyrim.esm")
+
+	PlacementSystem.SmallFire = Game.GetFormFromFile(0x00013B40, "Skyrim.esm")
+	PlacementSystem.LargeFire = Game.GetFormFromFile(0x000D61B6, "Skyrim.esm")
 endFunction
 
 

@@ -538,6 +538,7 @@ endEvent
 
 ;@Override _Camp_PlaceableObjectBase
 function PlaceObjects()
+	parent.PlaceObjects()
 	CampTentEx Extended = self as CampTentEx
 
 	if PositionRef_CenterObjectOverride
@@ -725,6 +726,7 @@ endFunction
 
 ;@Override _Camp_PlaceableObjectBase
 function GetResults()
+	parent.GetResults()
 	if myTentFuture
 		myTent = GetFuture(myTentFuture).get_result()
 	endif
@@ -942,6 +944,7 @@ function GetResults()
 endFunction
 
 function TakeDown()
+	parent.TakeDown()
 	TryToDisableAndDeleteRef(myPlayerMarker_MainWeapon)
 	TryToDisableAndDeleteRef(myPlayerMarker_OffHandWeapon)
 	TryToDisableAndDeleteRef(myPlayerMarker_BigWeapon)

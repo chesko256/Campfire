@@ -56,7 +56,7 @@ EndEvent
 
 function PlaceObjects()
 	CampPlaceableObjectEx Extended = self as CampPlaceableObjectEx
-	
+
 	if Extended
 		if Extended.PositionRef_CenterObjectOverride
 			CenterObject = Extended.PositionRef_CenterObjectOverride
@@ -121,6 +121,7 @@ function PlaceObjects()
 endFunction
 
 function GetResults()
+	parent.GetResults()
 	if myExtraStatic1Future
 		myExtraStatic1 = GetFuture(myExtraStatic1Future).get_result()
 	endif

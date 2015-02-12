@@ -9,6 +9,10 @@ Activator property _Camp_ObjectPlacementFutureActivator auto
 ObjectReference property _Camp_ObjectPlacementFutureAnchor auto
 GlobalVariable property _Camp_Setting_MaxThreads auto
 
+;Fire
+Form property SmallFire auto hidden
+Form property LargeFire auto hidden
+
 ;Placement Indicator
 _Camp_LegalAreaCheck property Legal auto
 Actor property PlayerRef auto
@@ -115,10 +119,11 @@ Event OnInit()
     PlacementIndicatorThread3 = CampfireObjectPlacementSystem as _Camp_ObjectPlacementIndicatorThread03
 EndEvent
  
-ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to_place,                                  \
+ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to_place,                                         \
                               ObjectReference object_position_reference,                                                        \
                               float x_local_ang_adjust = 0.0, float y_local_ang_adjust = 0.0, float z_local_ang_adjust = 0.0,   \
                               float z_global_ang_adjust = 0.0, float z_hanging_offset = 0.0, bool inverted_local_y = false,     \
+                              float x_pos_offset = 0.0, float y_pos_offset = 0.0,                                               \
                               bool initially_disabled = false, bool is_propped = false, bool is_hanging = false)
     int i = 0
 	ObjectReference future
@@ -137,6 +142,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
 		elseif !thread02.queued() && thread_limit >= 2
 			future = thread02.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -145,6 +151,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread03.queued() && thread_limit >= 3
             future = thread03.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -153,6 +160,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread04.queued() && thread_limit >= 4
             future = thread04.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -161,6 +169,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread05.queued() && thread_limit >= 5
             future = thread05.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -169,6 +178,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread06.queued() && thread_limit >= 6
             future = thread06.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -177,6 +187,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread07.queued() && thread_limit >= 7
             future = thread07.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -185,6 +196,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread08.queued() && thread_limit >= 8
             future = thread08.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -193,6 +205,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
 		elseif !thread09.queued() && thread_limit >= 9
             future = thread09.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -201,6 +214,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
 		elseif !thread10.queued() && thread_limit >= 10
             future = thread10.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -209,6 +223,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread11.queued() && thread_limit >= 11
             future = thread11.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -217,6 +232,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread12.queued() && thread_limit >= 12
             future = thread12.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -225,6 +241,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread13.queued() && thread_limit >= 13
             future = thread13.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -233,6 +250,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread14.queued() && thread_limit >= 14
             future = thread14.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -241,6 +259,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread15.queued() && thread_limit >= 15
             future = thread15.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -249,6 +268,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread16.queued() && thread_limit >= 16
             future = thread16.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -257,6 +277,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread17.queued() && thread_limit >= 17
             future = thread17.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -265,6 +286,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread18.queued() && thread_limit >= 18
             future = thread18.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -273,6 +295,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread19.queued() && thread_limit >= 19
             future = thread19.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -281,6 +304,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread20.queued() && thread_limit >= 20
             future = thread20.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -289,6 +313,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread21.queued() && thread_limit >= 21
             future = thread21.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -297,6 +322,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread22.queued() && thread_limit >= 22
             future = thread22.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -305,6 +331,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread23.queued() && thread_limit >= 23
             future = thread23.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -313,6 +340,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread24.queued() && thread_limit >= 24
             future = thread24.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -321,6 +349,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread25.queued() && thread_limit >= 25
             future = thread25.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -329,6 +358,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread26.queued() && thread_limit >= 26
             future = thread26.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -337,6 +367,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread27.queued() && thread_limit >= 27
             future = thread27.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -345,6 +376,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread28.queued() && thread_limit >= 28
             future = thread28.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -353,6 +385,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread29.queued() && thread_limit >= 29
             future = thread29.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -361,6 +394,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread30.queued() && thread_limit >= 30
             future = thread30.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -369,6 +403,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_local_ang_adjust, y_local_ang_adjust,                 \
                                         z_local_ang_adjust, z_global_ang_adjust,                \
                                         z_hanging_offset, inverted_local_y,                     \
+                                        x_pos_offset, y_pos_offset,                             \
                                         initially_disabled, is_propped, is_hanging)
 		else
 			;All threads are queued; start all threads, wait, and try again.
@@ -402,6 +437,10 @@ function StopPlacement()
     _Camp_ZTestReceiverREF_B.MoveTo(_Camp_Anchor)
     _Camp_ZTestReceiverREF_C.MoveTo(_Camp_Anchor)
     ;@TODO: Restore Inventory menu access
+endFunction
+
+ObjectReference function PlaceFireMarker(ObjectReference origin_object, bool big_fire = false)
+
 endFunction
 
 bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  \

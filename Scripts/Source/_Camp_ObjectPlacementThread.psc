@@ -17,6 +17,8 @@ float _ZLocalAngAdjust = 0.0
 float _ZGlobalAngAdjust = 0.0
 float _ZHangingOffset = 0.0
 bool _InvertedLocalY = false
+float _XPosOffset = 0.0
+float _YPosOffset = 0.0
 bool _InitiallyDisabled = false
 bool _IsPropped = false
 bool _IsHanging = false
@@ -29,6 +31,7 @@ ObjectReference function get_async(Activator akFuture, ObjectReference akFutureA
 						ObjectReference origin, Form form_to_place, float[] origin_angle, 															\
 						float x_local_ang_adjust = 0.0, float y_local_ang_adjust = 0.0, float z_local_ang_adjust = 0.0, 							\
 						float z_global_ang_adjust = 0.0, float z_hanging_offset = 0.0, bool inverted_local_y = false, 								\
+						float x_pos_offset = 0.0, float y_pos_offset = 0.0,																			\
 						bool initially_disabled = false, bool is_propped = false, bool is_hanging = false)
 	
 	thread_queued = true
@@ -50,6 +53,8 @@ ObjectReference function get_async(Activator akFuture, ObjectReference akFutureA
 	_ZGlobalAngAdjust = z_global_ang_adjust
 	_ZHangingOffset = z_hanging_offset
 	_InvertedLocalY = inverted_local_y
+	_XPosOffset = x_pos_offset
+	_YPosOffset = y_pos_offset
 	_InitiallyDisabled = initially_disabled
 	_IsPropped = is_propped
 	_IsHanging = is_hanging
@@ -64,7 +69,7 @@ Event OnObjectPlacementStart()
 		relative_position = GetRelativePosition(_RelativeCenterObject, _ObjectPositionReference)
 		ObjectReference result = PlaceAtMeRelative(_Origin, _FormToPlace, _OriginAngle, relative_position, \
 				_ZGlobalAngAdjust, _XLocalAngAdjust, _YLocalAngAdjust, _ZLocalAngAdjust, \
-				_ZHangingOffset, _InvertedLocalY, _InitiallyDisabled, _IsPropped, _IsHanging)
+				_ZHangingOffset, _InvertedLocalY, _XPosOffset, _YPosOffset, _InitiallyDisabled, _IsPropped, _IsHanging)
 		(future as _Camp_ObjectFuture).result = result
 		clear_thread_vars()
 		thread_queued = false
@@ -83,12 +88,14 @@ function clear_thread_vars()
 	_ZGlobalAngAdjust = 0.0
 	_ZHangingOffset = 0.0
 	_InvertedLocalY = false
+	_XPosOffset = 0.0
+	_YPosOffset = 0.0
 	_InitiallyDisabled = false
 	_IsPropped = false
 	_IsHanging = false
 endFunction
 
-float[] function GetPosXYZRotateAroundRef(ObjectReference akOrigin, ObjectReference akObject, float fAngleX, float fAngleY, float fAngleZ)
+float[] function GetPosXYZRotateAroundRef(ObjectReference akOrigin, ObjectReference akObject, float fXOffset, float fYOffset, float fAngleX, float fAngleY, float fAngleZ)
 
 	;-----------\
 	;Description \ 
@@ -126,8 +133,8 @@ float[] function GetPosXYZRotateAroundRef(ObjectReference akOrigin, ObjectRefere
 	float myOriginPosY = akOrigin.GetPositionY()
 	float myOriginPosZ = akOrigin.GetPositionZ()
 	
-	float fInitialX = akObject.GetPositionX() - myOriginPosX
-	float fInitialY = akObject.GetPositionY() - myOriginPosY
+	float fInitialX = (akObject.GetPositionX() + fXOffset) - myOriginPosX
+	float fInitialY = (akObject.GetPositionY() + fYOffset) - myOriginPosY
 	float fInitialZ = akObject.GetPositionZ() - myOriginPosZ
 	
 	float fNewX
@@ -183,15 +190,15 @@ endFunction
 ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akFormToPlace, float[] fOriginAng, \
 										   float[] fRelativePos, float fZGlobalAngAdjust = 0.0, float fXLocalAngAdjust = 0.0,  \
 										   float fYLocalAngAdjust = 0.0, float fZLocalAngAdjust = 0.0, float fZHangingOffset = 0.0, \
-										   bool abInvertedLocalY = false, bool abInitiallyDisabled = false, bool abIsPropped = false, \
-										   bool abIsHanging = false)
+										   bool abInvertedLocalY = false, float afXPosOffset = 0.0, float afYPosOffset = 0.0,		\
+										   bool abInitiallyDisabled = false, bool abIsPropped = false, bool abIsHanging = false)
 
 	ObjectReference myObject
     ObjectReference myTempMarker = akOrigin.PlaceAtMe(XMarker)
 	myTempMarker.MoveTo(myTempMarker, fRelativePos[0], fRelativePos[1], fRelativePos[2])
     
 	float[] myNewPos = new float[3]
-    myNewPos = GetPosXYZRotateAroundRef(akOrigin, myTempMarker, fOriginAng[0], fOriginAng[1], fOriginAng[2] + fZGlobalAngAdjust)
+    myNewPos = GetPosXYZRotateAroundRef(akOrigin, myTempMarker, afXPosOffset, afYPosOffset, fOriginAng[0], fOriginAng[1], fOriginAng[2] + fZGlobalAngAdjust)
     myTempMarker.MoveTo(akOrigin, myNewPos[0], myNewPos[1], myNewPos[2])
 	
 	if abIsPropped
