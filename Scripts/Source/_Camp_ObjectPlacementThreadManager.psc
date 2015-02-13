@@ -11,7 +11,7 @@ GlobalVariable property _Camp_Setting_MaxThreads auto
 
 ;Fire
 Form property SmallFire auto hidden
-Form property LargeFire auto hidden
+Activator property _Camp_LargeFire auto
 
 ;Placement Indicator
 _Camp_LegalAreaCheck property Legal auto

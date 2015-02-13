@@ -726,7 +726,6 @@ endFunction
 
 ;@Override _Camp_PlaceableObjectBase
 function GetResults()
-	parent.GetResults()
 	if myTentFuture
 		myTent = GetFuture(myTentFuture).get_result()
 	endif
@@ -746,6 +745,39 @@ function GetResults()
 		myAshTent = GetFuture(myAshTentFuture).get_result()
 	endif
 	TentSystem.SelectExterior(self)
+
+	if myFire1Future
+		myFire1 = GetFuture(myFire1Future).get_result()
+	endif
+	if myFire2Future
+		myFire2 = GetFuture(myFire2Future).get_result()
+	endif
+	if myFire3Future
+		myFire3 = GetFuture(myFire3Future).get_result()
+	endif
+	if myFire4Future
+		myFire4 = GetFuture(myFire4Future).get_result()
+	endif
+	if myBigFireFuture
+		myBigFire = GetFuture(myBigFireFuture).get_result()
+		float xs
+		float ys
+		if PositionRef_Shelter
+			xs = PositionRef_Shelter.GetWidth()
+			ys = PositionRef_Shelter.GetLength()
+		else
+			xs = self.GetWidth()
+			ys = self.GetLength()
+		endif
+		float size
+		if xs > ys
+			size = xs
+		else
+			size = ys
+		endif
+		myBigFire.SetScale(size / 708)
+	endif
+
 	if myPlayerMarker_MainWeaponFuture
 		myPlayerMarker_MainWeapon = GetFuture(myPlayerMarker_MainWeaponFuture).get_result()
 	endif
@@ -1092,6 +1124,24 @@ endFunction
 
 function PlaceObject_AshTent()
 	myAshTentFuture = PlacementSystem.PlaceObject(self, TentAsset_ShelterModelMaterialAsh, PositionRef_Shelter, initially_disabled = true)
+endFunction
+
+;@Overrides _Camp_PlaceableObjectBase
+function PlaceObject_FireMarkers()
+	float xr
+	float yr
+	if PositionRef_Shelter
+		xr = (PositionRef_Shelter.GetWidth() / 2)
+		yr = (PositionRef_Shelter.GetLength() / 2)
+	else
+		xr = (self.GetWidth() / 2)
+		yr = (self.GetLength() / 2)
+	endif
+	myFire1Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
+	myFire2Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
+	myFire3Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
+	myFire4Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
+	myBigFireFuture = PlacementSystem.PlaceObject(self, PlacementSystem._Camp_LargeFire, self, initially_disabled = true)
 endFunction
 
 function PlaceObject_ClutterStatic1()

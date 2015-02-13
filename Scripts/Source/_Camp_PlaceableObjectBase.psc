@@ -194,7 +194,7 @@ function GetResults()
 		else
 			size = ys
 		endif
-		myBigFire.SetScale(size / 788)
+		myBigFire.SetScale(size / 708)
 	endif
 endFunction
 
@@ -214,7 +214,7 @@ function PlaceObject_FireMarkers()
 	myFire2Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire3Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire4Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
-	myBigFireFuture = PlacementSystem.PlaceObject(self, PlacementSystem.LargeFire, self, initially_disabled = true)
+	myBigFireFuture = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true)
 endFunction
 
 _Camp_ObjectFuture function GetFuture(ObjectReference akObjectReference)

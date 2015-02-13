@@ -579,7 +579,7 @@ function VanillaGameLoadUp()
 	endif
 
 	PlacementSystem.SmallFire = Game.GetFormFromFile(0x00013B40, "Skyrim.esm")
-	PlacementSystem.LargeFire = Game.GetFormFromFile(0x000D61B6, "Skyrim.esm")
+	;PlacementSystem.LargeFire = Game.GetFormFromFile(0x000D61B6, "Skyrim.esm")
 endFunction
 
 
