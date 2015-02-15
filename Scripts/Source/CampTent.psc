@@ -758,8 +758,11 @@ function GetResults()
 	if myFire4Future
 		myFire4 = GetFuture(myFire4Future).get_result()
 	endif
-	if myBigFireFuture
-		myBigFire = GetFuture(myBigFireFuture).get_result()
+	if myFire5Future
+		myFire5 = GetFuture(myFire5Future).get_result()
+	endif
+	if mySmokeFuture
+		mySmoke = GetFuture(mySmokeFuture).get_result()
 		float xs
 		float ys
 		if PositionRef_Shelter
@@ -775,7 +778,7 @@ function GetResults()
 		else
 			size = ys
 		endif
-		myBigFire.SetScale(size / 708)
+		mySmoke.SetScale(size / 900)
 	endif
 
 	if myPlayerMarker_MainWeaponFuture
@@ -1134,14 +1137,15 @@ function PlaceObject_FireMarkers()
 		xr = (PositionRef_Shelter.GetWidth() / 2)
 		yr = (PositionRef_Shelter.GetLength() / 2)
 	else
-		xr = (self.GetWidth() / 2)
-		yr = (self.GetLength() / 2)
+		xr = (self.GetWidth() / 2) * 0.8
+		yr = (self.GetLength() / 2) * 0.8
 	endif
 	myFire1Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire2Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire3Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire4Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
-	myBigFireFuture = PlacementSystem.PlaceObject(self, PlacementSystem._Camp_LargeFire, self, initially_disabled = true)
+	myFire5Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true)
+	mySmokeFuture = PlacementSystem.PlaceObject(self, PlacementSystem._Camp_LargeFireSmoke, self, initially_disabled = true, is_hanging = True, z_hanging_offset = 20.0, x_pos_offset = 25.0)
 endFunction
 
 function PlaceObject_ClutterStatic1()
@@ -1357,3 +1361,36 @@ endFunction
 function PlaceObject_Follower3Shield(CampTentEx Extended)
 	myFollowerCMarker_ShieldFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_Shield)
 endFunction
+
+state BurningDown
+	function BurnDown()
+		TryToPlayShader(self)
+		TryToPlayShader(myClutterStatic1)
+		TryToPlayShader(myClutterStatic2)
+		TryToPlayShader(myClutterStatic3)
+		TryToPlayShader(myClutterStatic4)
+		TryToPlayShader(myClutterStatic5)
+		TryToPlayShader(myClutterActivator1)
+		TryToPlayShader(myClutterActivator2)
+		TryToPlayShader(myClutterActivator3)
+		TryToPlayShader(myClutterActivator4)
+		TryToPlayShader(myClutterActivator5)
+		TryToPlayShader(myClutterFurniture1)
+		TryToPlayShader(myClutterFurniture2)
+		TryToPlayShader(myClutterFurniture3)
+		TryToPlayShader(myClutterFurniture4)
+		TryToPlayShader(myClutterFurniture5)
+		TryToPlayShader(myWard)
+		TryToPlayShader(myLanternUnlit3)
+		TryToPlayShader(mySpareBedRoll1)
+		TryToPlayShader(mySpareBedRoll2)
+		TryToPlayShader(mySpareBedRoll3)
+		TryToPlayShader(mySnowTent)
+		TryToPlayShader(myAshTent)
+		TryToPlayShader(myNormalTent)
+		TryToPlayShader(myTent)
+		utility.wait(5.0)
+		TakeDown()
+		TryToDisableAndDeleteRef(self)
+	endFunction
+endState

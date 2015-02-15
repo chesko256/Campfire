@@ -34,12 +34,14 @@ ObjectReference property myFire1 auto hidden
 ObjectReference property myFire2 auto hidden
 ObjectReference property myFire3 auto hidden
 ObjectReference property myFire4 auto hidden
-ObjectReference property myBigFire auto hidden
+ObjectReference property myFire5 auto hidden
+ObjectReference property mySmoke auto hidden
 ObjectReference property myFire1Future auto hidden
 ObjectReference property myFire2Future auto hidden
 ObjectReference property myFire3Future auto hidden
 ObjectReference property myFire4Future auto hidden
-ObjectReference property myBigFireFuture auto hidden
+ObjectReference property myFire5Future auto hidden
+ObjectReference property mySmokeFuture auto hidden
 
 bool block_spell_hits = false
 int fire_stage = 0
@@ -125,37 +127,44 @@ function UpdateFireState()
 		TryToEnableRef(myFire2)
 		TryToEnableRef(myFire3)
 		TryToEnableRef(myFire4)
-		TryToEnableRef(myBigFire)
+		TryToEnableRef(myFire5)
+		TryToEnableRef(mySmoke)
+		GoToState("BurningDown")
 	elseif fire_stage == 4
 		TryToEnableRef(myFire1)
 		TryToEnableRef(myFire2)
 		TryToEnableRef(myFire3)
 		TryToEnableRef(myFire4)
-		TryToDisableRef(myBigFire)
+		TryToDisableRef(myFire5)
+		TryToDisableRef(mySmoke)
 	elseif fire_stage == 3
 		TryToEnableRef(myFire1)
 		TryToEnableRef(myFire2)
 		TryToEnableRef(myFire3)
 		TryToDisableRef(myFire4)
-		TryToDisableRef(myBigFire)
+		TryToDisableRef(myFire5)
+		TryToDisableRef(mySmoke)
 	elseif fire_stage == 2
 		TryToEnableRef(myFire1)
 		TryToEnableRef(myFire2)
 		TryToDisableRef(myFire3)
 		TryToDisableRef(myFire4)
-		TryToDisableRef(myBigFire)
+		TryToDisableRef(myFire5)
+		TryToDisableRef(mySmoke)
 	elseif fire_stage == 1
 		TryToEnableRef(myFire1)
 		TryToDisableRef(myFire2)
 		TryToDisableRef(myFire3)
 		TryToDisableRef(myFire4)
-		TryToDisableRef(myBigFire)
+		TryToDisableRef(myFire5)
+		TryToDisableRef(mySmoke)
 	else
 		TryToDisableRef(myFire1)
 		TryToDisableRef(myFire2)
 		TryToDisableRef(myFire3)
 		TryToDisableRef(myFire4)
-		TryToDisableRef(myBigFire)
+		TryToDisableRef(myFire5)
+		TryToDisableRef(mySmoke)
 	endif
 endFunction
 
@@ -184,8 +193,11 @@ function GetResults()
 	if myFire4Future
 		myFire4 = GetFuture(myFire4Future).get_result()
 	endif
-	if myBigFireFuture
-		myBigFire = GetFuture(myBigFireFuture).get_result()
+	if myFire5Future
+		myFire5 = GetFuture(myFire5Future).get_result()
+	endif
+	if mySmokeFuture
+		mySmoke = GetFuture(mySmokeFuture).get_result()
 		float xs = self.GetWidth()
 		float ys = self.GetLength()
 		float size
@@ -194,7 +206,7 @@ function GetResults()
 		else
 			size = ys
 		endif
-		myBigFire.SetScale(size / 708)
+		mySmoke.SetScale(size / 900)
 	endif
 endFunction
 
@@ -203,20 +215,48 @@ function TakeDown()
 	TryToDisableAndDeleteRef(myFire2)
 	TryToDisableAndDeleteRef(myFire3)
 	TryToDisableAndDeleteRef(myFire4)
-	TryToDisableAndDeleteRef(myBigFire)
+	TryToDisableAndDeleteRef(myFire5)
+	TryToDisableAndDeleteRef(mySmoke)
 endFunction
 
 function PlaceObject_FireMarkers()
-	float xr = (self.GetWidth() / 2)
-	float yr = (self.GetLength() / 2)
+	float xr = (self.GetWidth() / 2) * 0.8
+	float yr = (self.GetLength() / 2) * 0.8
 
 	myFire1Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire2Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire3Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire4Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
-	myBigFireFuture = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true)
+	myFire5Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true)
+	mySmokeFuture = PlacementSystem.PlaceObject(self, PlacementSystem._Camp_LargeFireSmoke, self, initially_disabled = true, is_hanging = True, z_hanging_offset = 20.0, x_pos_offset = 25.0)
 endFunction
 
 _Camp_ObjectFuture function GetFuture(ObjectReference akObjectReference)
 	return akObjectReference as _Camp_ObjectFuture
+endFunction
+
+State BurningDown
+	Event OnBeginState()
+		RegisterForSingleUpdate(8.0)
+	EndEvent
+	Event OnUpdate()
+		BurnDown()
+	endEvent
+	Event OnActivate(ObjectReference akActionRef)
+		debug.trace("[Campfire] Can't use something while it's burning down!")
+	EndEvent
+	function BurnDown()
+		debug.trace("[Campfire] Burning down!")
+		;@Override
+	endFunction
+endState
+
+function BurnDown()
+	debug.trace("[Campfire] Not burning down, do nothing.")
+endFunction
+
+function TryToPlayShader(ObjectReference akObjectReference)
+	if akObjectReference && akObjectReference.Is3DLoaded()
+		PlacementSystem._Camp_BurnEffect.Play(akObjectReference)
+	endif
 endFunction

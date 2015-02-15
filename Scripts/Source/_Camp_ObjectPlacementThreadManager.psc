@@ -11,7 +11,7 @@ GlobalVariable property _Camp_Setting_MaxThreads auto
 
 ;Fire
 Form property SmallFire auto hidden
-Activator property _Camp_LargeFire auto
+Activator property _Camp_LargeFireSmoke auto
 
 ;Placement Indicator
 _Camp_LegalAreaCheck property Legal auto
@@ -32,6 +32,7 @@ ObjectReference property _Camp_ZTestReceiverREF_B auto
 ObjectReference property _Camp_ZTestReceiverREF_C auto
 EffectShader property _Camp_VisPlacement auto
 EffectShader property _Camp_VisError auto
+EffectShader property _Camp_BurnEffect auto
 Message property _Camp_Placement_Cancelled auto
 Message property _Camp_Placement_Cancelled_CollisionBug auto
 Message property _Camp_PlacementIllegal auto
