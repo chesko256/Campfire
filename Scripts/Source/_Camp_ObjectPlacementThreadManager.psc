@@ -33,6 +33,9 @@ ObjectReference property _Camp_ZTestReceiverREF_C auto
 EffectShader property _Camp_VisPlacement auto
 EffectShader property _Camp_VisError auto
 EffectShader property _Camp_BurnEffect auto
+Sound property OBJCWBarricadeDestroyed auto
+Explosion property _Camp_LargeCollapse auto
+Explosion property _Camp_CollapseFireball auto
 Message property _Camp_Placement_Cancelled auto
 Message property _Camp_Placement_Cancelled_CollisionBug auto
 Message property _Camp_PlacementIllegal auto

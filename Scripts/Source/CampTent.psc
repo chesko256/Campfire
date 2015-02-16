@@ -1137,15 +1137,15 @@ function PlaceObject_FireMarkers()
 		xr = (PositionRef_Shelter.GetWidth() / 2)
 		yr = (PositionRef_Shelter.GetLength() / 2)
 	else
-		xr = (self.GetWidth() / 2) * 0.8
-		yr = (self.GetLength() / 2) * 0.8
+		xr = (self.GetWidth() / 2) * 0.7
+		yr = (self.GetLength() / 2) * 0.7
 	endif
 	myFire1Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire2Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire3Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire4Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire5Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true)
-	mySmokeFuture = PlacementSystem.PlaceObject(self, PlacementSystem._Camp_LargeFireSmoke, self, initially_disabled = true, is_hanging = True, z_hanging_offset = 20.0, x_pos_offset = 25.0)
+	mySmokeFuture = PlacementSystem.PlaceObject(self, PlacementSystem._Camp_LargeFireSmoke, self, initially_disabled = true, is_hanging = True, z_hanging_offset = 25.0, x_pos_offset = 35.0)
 endFunction
 
 function PlaceObject_ClutterStatic1()
@@ -1364,6 +1364,10 @@ endFunction
 
 state BurningDown
 	function BurnDown()
+		ObjectReference myBigFire = self.PlaceAtMe(Game.GetFormFromFile(0x000D61B6, "Skyrim.esm"), abInitiallyDisabled = true)
+		utility.wait(0.1)
+		myBigFire.SetMotionType(myBigFire.Motion_Fixed)
+		myBigFire.Enable()
 		TryToPlayShader(self)
 		TryToPlayShader(myClutterStatic1)
 		TryToPlayShader(myClutterStatic2)
@@ -1381,7 +1385,6 @@ state BurningDown
 		TryToPlayShader(myClutterFurniture4)
 		TryToPlayShader(myClutterFurniture5)
 		TryToPlayShader(myWard)
-		TryToPlayShader(myLanternUnlit3)
 		TryToPlayShader(mySpareBedRoll1)
 		TryToPlayShader(mySpareBedRoll2)
 		TryToPlayShader(mySpareBedRoll3)
@@ -1389,8 +1392,17 @@ state BurningDown
 		TryToPlayShader(myAshTent)
 		TryToPlayShader(myNormalTent)
 		TryToPlayShader(myTent)
-		utility.wait(5.0)
+		utility.wait(9.0)
+		;PlacementSystem.OBJCWBarricadeDestroyed.Play(self)
+		utility.wait(1.0)
+		self.PlaceAtMe(PlacementSystem._Camp_LargeCollapse)
+		utility.wait(0.5)
+		self.PlaceAtMe(PlacementSystem._Camp_CollapseFireball)
 		TakeDown()
+		utility.wait(3.5)
+		self.Disable()
+		;PlacementSystem.OBJCWBarricadeDestroyed.Play(self)
+		utility.wait(11.0)
 		TryToDisableAndDeleteRef(self)
 	endFunction
 endState
