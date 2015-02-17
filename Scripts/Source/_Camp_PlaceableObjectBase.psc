@@ -1,5 +1,6 @@
 scriptname _Camp_PlaceableObjectBase extends ObjectReference
 
+import _CampInternal
 import CampUtil
 import TentSystem
 
@@ -35,16 +36,18 @@ ObjectReference property myFire2 auto hidden
 ObjectReference property myFire3 auto hidden
 ObjectReference property myFire4 auto hidden
 ObjectReference property myFire5 auto hidden
+ObjectReference property myFire6 auto hidden
 ObjectReference property mySmoke auto hidden
 ObjectReference property myFire1Future auto hidden
 ObjectReference property myFire2Future auto hidden
 ObjectReference property myFire3Future auto hidden
 ObjectReference property myFire4Future auto hidden
 ObjectReference property myFire5Future auto hidden
+ObjectReference property myFire6Future auto hidden
 ObjectReference property mySmokeFuture auto hidden
 
 bool block_spell_hits = false
-int fire_stage = 0
+int fire_level = 0
 int damage_stage = 0
 
 Event OnInit()
@@ -81,90 +84,115 @@ Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
 EndEvent
 
 function ProcessOnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abBashAttack)
-	debug.trace("[Campfire] I was hit by " + akAggressor + " with " + akSource + " (" + akProjectile + "), bashing: " + abBashAttack)
+	;debug.trace("[Campfire] I was hit by " + akAggressor + " with " + akSource + " (" + akProjectile + "), bashing: " + abBashAttack)
 	if akSource as Weapon && !akProjectile
-		debug.trace("[Campfire] Melee attack hit!")
+		;debug.trace("[Campfire] Melee attack hit!")
 	elseif akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11
-		debug.trace("[Campfire] Torch bash!")
+		;debug.trace("[Campfire] Torch bash!")
 	endif
 endFunction
 
 function ProcessMagicEffect(ObjectReference akCaster, MagicEffect akEffect)
 	if block_spell_hits == false
-		if akEffect.HasKeyword(CampUtil.GetMagicDamageFireKeyword())
+		if akEffect.HasKeyword(_CampInternal.GetMagicDamageFireKeyword())
 			block_spell_hits = true
 			IncreaseFireLevel()
-			debug.trace("[Campfire] Fire damage! Stage " + fire_stage)
-			utility.wait(0.6)
+			utility.wait(0.5)
 			block_spell_hits = false
-		;elseif akEffect.HasKeyword(CampUtil.GetMagicDamageFrostKeyword())
-		;	block_spell_hits = true
-		;	DecreaseFireLevel()
-		;	debug.trace("[Campfire] Frost damage! Stage " + fire_stage)
-		;	utility.wait(0.6)
-		;	block_spell_hits = false
+		elseif akEffect.HasKeyword(_CampInternal.GetMagicDamageFrostKeyword())
+			block_spell_hits = true
+			DecreaseFireLevel()
+			utility.wait(0.5)
+			block_spell_hits = false
 		endif
 	endif
 endFunction
 
 function IncreaseFireLevel()
-	if fire_stage < 5
-		fire_stage += 1
+	if fire_level < 8
+		fire_level += 1
 	endif
+	debug.trace("[Campfire] Fire level increased to " + fire_level)
 	UpdateFireState()
 endFunction
 
 function DecreaseFireLevel()
-	if fire_stage > 0
-		fire_stage -= 1
+	if fire_level > 0 && fire_level < 8
+		fire_level -= 1
 	endif
+	debug.trace("[Campfire] Fire level decreased to " + fire_level)
 	UpdateFireState()
 endFunction
 
 function UpdateFireState()
-	if fire_stage >= 5
+	if fire_level >= 8
+		GoToState("BurningDown")
+	elseif fire_level == 7
 		TryToEnableRef(myFire1)
 		TryToEnableRef(myFire2)
 		TryToEnableRef(myFire3)
 		TryToEnableRef(myFire4)
 		TryToEnableRef(myFire5)
+		TryToEnableRef(myFire6)
+		TryToEnableRef(mySmoke, true)
+	elseif fire_level == 6
+		TryToEnableRef(myFire1)
+		TryToEnableRef(myFire2)
+		TryToEnableRef(myFire3)
+		TryToEnableRef(myFire4)
+		TryToEnableRef(myFire5)
+		TryToEnableRef(myFire6)
 		TryToEnableRef(mySmoke)
-		GoToState("BurningDown")
-	elseif fire_stage == 4
+	elseif fire_level == 5
+		TryToEnableRef(myFire1)
+		TryToEnableRef(myFire2)
+		TryToEnableRef(myFire3)
+		TryToEnableRef(myFire4)
+		TryToEnableRef(myFire5)
+		TryToDisableRef(myFire6)
+		TryToEnableRef(mySmoke)
+	elseif fire_level == 4
 		TryToEnableRef(myFire1)
 		TryToEnableRef(myFire2)
 		TryToEnableRef(myFire3)
 		TryToEnableRef(myFire4)
 		TryToDisableRef(myFire5)
+		TryToDisableRef(myFire6)
 		TryToDisableRef(mySmoke)
-	elseif fire_stage == 3
+	elseif fire_level == 3
 		TryToEnableRef(myFire1)
 		TryToEnableRef(myFire2)
 		TryToEnableRef(myFire3)
 		TryToDisableRef(myFire4)
 		TryToDisableRef(myFire5)
+		TryToDisableRef(myFire6)
 		TryToDisableRef(mySmoke)
-	elseif fire_stage == 2
+	elseif fire_level == 2
 		TryToEnableRef(myFire1)
 		TryToEnableRef(myFire2)
 		TryToDisableRef(myFire3)
 		TryToDisableRef(myFire4)
 		TryToDisableRef(myFire5)
+		TryToDisableRef(myFire6)
 		TryToDisableRef(mySmoke)
-	elseif fire_stage == 1
+	elseif fire_level == 1
 		TryToEnableRef(myFire1)
 		TryToDisableRef(myFire2)
 		TryToDisableRef(myFire3)
 		TryToDisableRef(myFire4)
 		TryToDisableRef(myFire5)
+		TryToDisableRef(myFire6)
 		TryToDisableRef(mySmoke)
+		GoToState("OnFire")
 	else
 		TryToDisableRef(myFire1)
 		TryToDisableRef(myFire2)
 		TryToDisableRef(myFire3)
 		TryToDisableRef(myFire4)
 		TryToDisableRef(myFire5)
+		TryToDisableRef(myFire6)
 		TryToDisableRef(mySmoke)
+		GoToState("")
 	endif
 endFunction
 
@@ -196,6 +224,9 @@ function GetResults()
 	if myFire5Future
 		myFire5 = GetFuture(myFire5Future).get_result()
 	endif
+	if myFire6Future
+		myFire6 = GetFuture(myFire6Future).get_result()
+	endif
 	if mySmokeFuture
 		mySmoke = GetFuture(mySmokeFuture).get_result()
 		float xs = self.GetWidth()
@@ -216,6 +247,7 @@ function TakeDown()
 	TryToDisableAndDeleteRef(myFire3)
 	TryToDisableAndDeleteRef(myFire4)
 	TryToDisableAndDeleteRef(myFire5)
+	TryToDisableAndDeleteRef(myFire6)
 	TryToDisableAndDeleteRef(mySmoke)
 endFunction
 
@@ -227,21 +259,36 @@ function PlaceObject_FireMarkers()
 	myFire2Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire3Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire4Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
-	myFire5Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true)
-	mySmokeFuture = PlacementSystem.PlaceObject(self, PlacementSystem._Camp_LargeFireSmoke, self, initially_disabled = true, is_hanging = True, z_hanging_offset = 20.0, x_pos_offset = 25.0)
+	myFire5Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
+	myFire6Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
+	mySmokeFuture = PlacementSystem.PlaceObject(self, PlacementSystem._Camp_LargeFireSmoke, self, initially_disabled = true, is_hanging = True, z_hanging_offset = 10.0)
 endFunction
 
 _Camp_ObjectFuture function GetFuture(ObjectReference akObjectReference)
 	return akObjectReference as _Camp_ObjectFuture
 endFunction
 
+State OnFire
+	Event OnBeginState()
+		RegisterForSingleUpdate(3)
+	endEvent
+	Event OnUpdate()
+		if fire_level > 0
+			IncreaseFireLevel()
+			if fire_level < 8
+				RegisterForSingleUpdate(3)
+			endif
+		endif
+	endEvent
+endState
+
 State BurningDown
 	Event OnBeginState()
-		RegisterForSingleUpdate(8.0)
+		RegisterForSingleUpdate(8)
 	EndEvent
 	Event OnUpdate()
 		BurnDown()
-	endEvent
+	EndEvent
 	Event OnActivate(ObjectReference akActionRef)
 		debug.trace("[Campfire] Can't use something while it's burning down!")
 	EndEvent

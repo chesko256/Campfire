@@ -2,6 +2,7 @@ scriptname _Camp_ObjectPlacementThread extends Quest
 {Object Placement base class. Responsible for handling object placement calculations. Returns a Future back to the caller.}
 
 import math
+import _CampInternal
 import CampUtil
 
 ObjectReference future

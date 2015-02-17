@@ -11,6 +11,7 @@ GlobalVariable property _Camp_Setting_MaxThreads auto
 
 ;Fire
 Form property SmallFire auto hidden
+Activator property _Camp_LargeFire auto
 Activator property _Camp_LargeFireSmoke auto
 
 ;Placement Indicator

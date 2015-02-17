@@ -4,6 +4,7 @@ scriptname _Camp_TentSystem extends Quest
 import math
 import utility
 import debug
+import _CampInternal
 import CampUtil
 
 ;Scripts

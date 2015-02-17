@@ -12,6 +12,7 @@ scriptname CampTent extends _Camp_PlaceableObjectBase
 * more capability.
 ;*********/;
 
+import _CampInternal
 import CampUtil
 import TentSystem
 
@@ -761,6 +762,9 @@ function GetResults()
 	if myFire5Future
 		myFire5 = GetFuture(myFire5Future).get_result()
 	endif
+	if myFire6Future
+		myFire6 = GetFuture(myFire6Future).get_result()
+	endif
 	if mySmokeFuture
 		mySmoke = GetFuture(mySmokeFuture).get_result()
 		float xs
@@ -1134,18 +1138,19 @@ function PlaceObject_FireMarkers()
 	float xr
 	float yr
 	if PositionRef_Shelter
-		xr = (PositionRef_Shelter.GetWidth() / 2)
-		yr = (PositionRef_Shelter.GetLength() / 2)
+		xr = (PositionRef_Shelter.GetWidth() / 2) * 0.7
+		yr = (PositionRef_Shelter.GetLength() / 2) * 0.7
 	else
-		xr = (self.GetWidth() / 2) * 0.7
-		yr = (self.GetLength() / 2) * 0.7
+		xr = (self.GetWidth() / 2)
+		yr = (self.GetLength() / 2)
 	endif
 	myFire1Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire2Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire3Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire4Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
-	myFire5Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true)
-	mySmokeFuture = PlacementSystem.PlaceObject(self, PlacementSystem._Camp_LargeFireSmoke, self, initially_disabled = true, is_hanging = True, z_hanging_offset = 25.0, x_pos_offset = 35.0)
+	myFire5Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
+	myFire6Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
+	mySmokeFuture = PlacementSystem.PlaceObject(self, PlacementSystem._Camp_LargeFireSmoke, self, initially_disabled = true, is_hanging = True, z_hanging_offset = 10.0)
 endFunction
 
 function PlaceObject_ClutterStatic1()
@@ -1364,10 +1369,30 @@ endFunction
 
 state BurningDown
 	function BurnDown()
-		ObjectReference myBigFire = self.PlaceAtMe(Game.GetFormFromFile(0x000D61B6, "Skyrim.esm"), abInitiallyDisabled = true)
-		utility.wait(0.1)
-		myBigFire.SetMotionType(myBigFire.Motion_Fixed)
-		myBigFire.Enable()
+		ObjectReference myBigFire
+		if myTent
+			myBigFire = myTent.PlaceAtMe(PlacementSystem._Camp_LargeFire, abInitiallyDisabled = true)
+		else
+			myBigFire = self.PlaceAtMe(PlacementSystem._Camp_LargeFire, abInitiallyDisabled = true)
+		endif
+		float xs
+		float ys
+		if PositionRef_Shelter
+			xs = PositionRef_Shelter.GetWidth()
+			ys = PositionRef_Shelter.GetLength()
+		else
+			xs = self.GetWidth()
+			ys = self.GetLength()
+		endif
+		float size
+		if xs > ys
+			size = xs
+		else
+			size = ys
+		endif
+		myBigFire.SetScale(size / 750)
+		myBigFire.Enable(true)
+		mySmoke.Disable(true)
 		TryToPlayShader(self)
 		TryToPlayShader(myClutterStatic1)
 		TryToPlayShader(myClutterStatic2)
@@ -1392,17 +1417,13 @@ state BurningDown
 		TryToPlayShader(myAshTent)
 		TryToPlayShader(myNormalTent)
 		TryToPlayShader(myTent)
-		utility.wait(9.0)
-		;PlacementSystem.OBJCWBarricadeDestroyed.Play(self)
-		utility.wait(1.0)
-		self.PlaceAtMe(PlacementSystem._Camp_LargeCollapse)
-		utility.wait(0.5)
+		utility.wait(10.5)
 		self.PlaceAtMe(PlacementSystem._Camp_CollapseFireball)
 		TakeDown()
 		utility.wait(3.5)
 		self.Disable()
-		;PlacementSystem.OBJCWBarricadeDestroyed.Play(self)
-		utility.wait(11.0)
+		self.PlaceAtMe(Game.GetFormFromFile(0x00088109, "Skyrim.esm"))
+		utility.wait(7.0)
 		TryToDisableAndDeleteRef(self)
 	endFunction
 endState
