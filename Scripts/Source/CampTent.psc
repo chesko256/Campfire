@@ -1418,11 +1418,25 @@ state BurningDown
 		TryToPlayShader(myNormalTent)
 		TryToPlayShader(myTent)
 		utility.wait(10.5)
-		self.PlaceAtMe(PlacementSystem._Camp_CollapseFireball)
+		if myTent
+			ObjectReference rubble = PlaceAndWaitFor3DLoaded(myTent, PlacementSystem._Camp_ObjectRubbleFire)
+			rubble.SetScale(0.8)
+			rubble.MoveTo(rubble, afZOffset = -48.0)
+			myTent.PlaceAtMe(PlacementSystem._Camp_CollapseFireball)
+		else
+			ObjectReference rubble = PlaceAndWaitFor3DLoaded(self, PlacementSystem._Camp_ObjectRubbleFire)
+			rubble.SetScale(0.8)
+			rubble.MoveTo(rubble, afZOffset = -48.0)
+			self.PlaceAtMe(PlacementSystem._Camp_CollapseFireball)
+		endif
 		TakeDown()
 		utility.wait(3.5)
 		self.Disable()
-		self.PlaceAtMe(Game.GetFormFromFile(0x00088109, "Skyrim.esm"))
+		if myTent
+			myTent.PlaceAtMe(PlacementSystem.FallingDustExplosion01)
+		else
+			self.PlaceAtMe(PlacementSystem.FallingDustExplosion01)
+		endif
 		utility.wait(7.0)
 		TryToDisableAndDeleteRef(self)
 	endFunction

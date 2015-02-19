@@ -13,6 +13,10 @@ GlobalVariable property _Camp_Setting_MaxThreads auto
 Form property SmallFire auto hidden
 Activator property _Camp_LargeFire auto
 Activator property _Camp_LargeFireSmoke auto
+Activator property _Camp_ObjectRubbleFire auto
+Explosion property _Camp_CollapseFireball auto
+Explosion property FallingDustExplosion01 auto
+EffectShader property _Camp_BurnEffect auto
 
 ;Placement Indicator
 _Camp_LegalAreaCheck property Legal auto
@@ -33,10 +37,6 @@ ObjectReference property _Camp_ZTestReceiverREF_B auto
 ObjectReference property _Camp_ZTestReceiverREF_C auto
 EffectShader property _Camp_VisPlacement auto
 EffectShader property _Camp_VisError auto
-EffectShader property _Camp_BurnEffect auto
-Sound property OBJCWBarricadeDestroyed auto
-Explosion property _Camp_LargeCollapse auto
-Explosion property _Camp_CollapseFireball auto
 Message property _Camp_Placement_Cancelled auto
 Message property _Camp_Placement_Cancelled_CollisionBug auto
 Message property _Camp_PlacementIllegal auto

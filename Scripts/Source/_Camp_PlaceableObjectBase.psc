@@ -65,6 +65,10 @@ Event OnUpdate()
 	Update()
 endEvent
 
+function Update()
+	;pass
+endFunction
+
 function Initialize()
 	PlacementSystem = CampUtil.GetPlacementSystem()
 	RotateOnStartUp()
@@ -75,133 +79,8 @@ function Initialize()
 	initialized = true
 endFunction
 
-Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
-	ProcessOnHit(akAggressor, akSource, akProjectile, abBashAttack)
-EndEvent
-
-Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
-	ProcessMagicEffect(akCaster, akEffect)
-EndEvent
-
-function ProcessOnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abBashAttack)
-	;debug.trace("[Campfire] I was hit by " + akAggressor + " with " + akSource + " (" + akProjectile + "), bashing: " + abBashAttack)
-	if akSource as Weapon && !akProjectile
-		;debug.trace("[Campfire] Melee attack hit!")
-	elseif akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11
-		;debug.trace("[Campfire] Torch bash!")
-	endif
-endFunction
-
-function ProcessMagicEffect(ObjectReference akCaster, MagicEffect akEffect)
-	if block_spell_hits == false
-		if akEffect.HasKeyword(_CampInternal.GetMagicDamageFireKeyword())
-			block_spell_hits = true
-			IncreaseFireLevel()
-			utility.wait(0.5)
-			block_spell_hits = false
-		elseif akEffect.HasKeyword(_CampInternal.GetMagicDamageFrostKeyword())
-			block_spell_hits = true
-			DecreaseFireLevel()
-			utility.wait(0.5)
-			block_spell_hits = false
-		endif
-	endif
-endFunction
-
-function IncreaseFireLevel()
-	if fire_level < 8
-		fire_level += 1
-	endif
-	debug.trace("[Campfire] Fire level increased to " + fire_level)
-	UpdateFireState()
-endFunction
-
-function DecreaseFireLevel()
-	if fire_level > 0 && fire_level < 8
-		fire_level -= 1
-	endif
-	debug.trace("[Campfire] Fire level decreased to " + fire_level)
-	UpdateFireState()
-endFunction
-
-function UpdateFireState()
-	if fire_level >= 8
-		GoToState("BurningDown")
-	elseif fire_level == 7
-		TryToEnableRef(myFire1)
-		TryToEnableRef(myFire2)
-		TryToEnableRef(myFire3)
-		TryToEnableRef(myFire4)
-		TryToEnableRef(myFire5)
-		TryToEnableRef(myFire6)
-		TryToEnableRef(mySmoke, true)
-	elseif fire_level == 6
-		TryToEnableRef(myFire1)
-		TryToEnableRef(myFire2)
-		TryToEnableRef(myFire3)
-		TryToEnableRef(myFire4)
-		TryToEnableRef(myFire5)
-		TryToEnableRef(myFire6)
-		TryToEnableRef(mySmoke)
-	elseif fire_level == 5
-		TryToEnableRef(myFire1)
-		TryToEnableRef(myFire2)
-		TryToEnableRef(myFire3)
-		TryToEnableRef(myFire4)
-		TryToEnableRef(myFire5)
-		TryToDisableRef(myFire6)
-		TryToEnableRef(mySmoke)
-	elseif fire_level == 4
-		TryToEnableRef(myFire1)
-		TryToEnableRef(myFire2)
-		TryToEnableRef(myFire3)
-		TryToEnableRef(myFire4)
-		TryToDisableRef(myFire5)
-		TryToDisableRef(myFire6)
-		TryToDisableRef(mySmoke)
-	elseif fire_level == 3
-		TryToEnableRef(myFire1)
-		TryToEnableRef(myFire2)
-		TryToEnableRef(myFire3)
-		TryToDisableRef(myFire4)
-		TryToDisableRef(myFire5)
-		TryToDisableRef(myFire6)
-		TryToDisableRef(mySmoke)
-	elseif fire_level == 2
-		TryToEnableRef(myFire1)
-		TryToEnableRef(myFire2)
-		TryToDisableRef(myFire3)
-		TryToDisableRef(myFire4)
-		TryToDisableRef(myFire5)
-		TryToDisableRef(myFire6)
-		TryToDisableRef(mySmoke)
-	elseif fire_level == 1
-		TryToEnableRef(myFire1)
-		TryToDisableRef(myFire2)
-		TryToDisableRef(myFire3)
-		TryToDisableRef(myFire4)
-		TryToDisableRef(myFire5)
-		TryToDisableRef(myFire6)
-		TryToDisableRef(mySmoke)
-		GoToState("OnFire")
-	else
-		TryToDisableRef(myFire1)
-		TryToDisableRef(myFire2)
-		TryToDisableRef(myFire3)
-		TryToDisableRef(myFire4)
-		TryToDisableRef(myFire5)
-		TryToDisableRef(myFire6)
-		TryToDisableRef(mySmoke)
-		GoToState("")
-	endif
-endFunction
-
 function RotateOnStartUp()
 	self.SetAngle(self.GetAngleX(), self.GetAngleY(), self.GetAngleZ() + Setting_StartUpRotation)
-endFunction
-
-function Update()
-	;pass
 endFunction
 
 function PlaceObjects()
@@ -268,6 +147,134 @@ _Camp_ObjectFuture function GetFuture(ObjectReference akObjectReference)
 	return akObjectReference as _Camp_ObjectFuture
 endFunction
 
+Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
+	ProcessOnHit(akAggressor, akSource, akProjectile, abBashAttack)
+EndEvent
+
+Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
+	ProcessMagicEffect(akCaster, akEffect)
+EndEvent
+
+function ProcessOnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abBashAttack)
+	;debug.trace("[Campfire] I was hit by " + akAggressor + " with " + akSource + " (" + akProjectile + "), bashing: " + abBashAttack)
+	if akSource as Weapon && !akProjectile
+		;debug.trace("[Campfire] Melee attack hit!")
+	elseif akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11
+		;debug.trace("[Campfire] Torch bash!")
+	endif
+endFunction
+
+function ProcessMagicEffect(ObjectReference akCaster, MagicEffect akEffect)
+	if block_spell_hits == false
+		block_spell_hits = true
+		if akEffect.HasKeyword(_CampInternal.GetMagicDamageFireKeyword())
+			IncreaseFireLevel()
+			utility.wait(0.5)
+		elseif akEffect.HasKeyword(_CampInternal.GetMagicDamageFrostKeyword())
+			DecreaseFireLevel()
+			utility.wait(0.5)
+		endif
+		block_spell_hits = false
+	endif
+endFunction
+
+function IncreaseFireLevel()
+	if fire_level < 9
+		fire_level += 1
+	endif
+	debug.trace("[Campfire] Fire level increased to " + fire_level)
+	UpdateFireState()
+endFunction
+
+function DecreaseFireLevel()
+	if fire_level > 0 && fire_level < 9
+		fire_level -= 1
+	endif
+	debug.trace("[Campfire] Fire level decreased to " + fire_level)
+	UpdateFireState()
+endFunction
+
+function UpdateFireState()
+	if fire_level >= 9
+		GoToState("BurningDown")
+	elseif fire_level == 8
+		TryToEnableRef(myFire1)
+		TryToEnableRef(myFire2)
+		TryToEnableRef(myFire3)
+		TryToEnableRef(myFire4)
+		TryToEnableRef(myFire5)
+		TryToEnableRef(myFire6)
+		TryToEnableRef(mySmoke, true)
+	elseif fire_level == 7
+		TryToEnableRef(myFire1)
+		TryToEnableRef(myFire2)
+		TryToEnableRef(myFire3)
+		TryToEnableRef(myFire4)
+		TryToEnableRef(myFire5)
+		TryToEnableRef(myFire6)
+		TryToEnableRef(mySmoke, true)
+	elseif fire_level == 6
+		TryToEnableRef(myFire1)
+		TryToEnableRef(myFire2)
+		TryToEnableRef(myFire3)
+		TryToEnableRef(myFire4)
+		TryToEnableRef(myFire5)
+		TryToEnableRef(myFire6)
+		TryToEnableRef(mySmoke)
+	elseif fire_level == 5
+		TryToEnableRef(myFire1)
+		TryToEnableRef(myFire2)
+		TryToEnableRef(myFire3)
+		TryToEnableRef(myFire4)
+		TryToEnableRef(myFire5)
+		TryToDisableRef(myFire6)
+		TryToEnableRef(mySmoke)
+	elseif fire_level == 4
+		TryToEnableRef(myFire1)
+		TryToEnableRef(myFire2)
+		TryToEnableRef(myFire3)
+		TryToEnableRef(myFire4)
+		TryToDisableRef(myFire5)
+		TryToDisableRef(myFire6)
+		TryToDisableRef(mySmoke)
+	elseif fire_level == 3
+		TryToEnableRef(myFire1)
+		TryToEnableRef(myFire2)
+		TryToEnableRef(myFire3)
+		TryToDisableRef(myFire4)
+		TryToDisableRef(myFire5)
+		TryToDisableRef(myFire6)
+		TryToDisableRef(mySmoke)
+	elseif fire_level == 2
+		TryToEnableRef(myFire1)
+		TryToEnableRef(myFire2)
+		TryToDisableRef(myFire3)
+		TryToDisableRef(myFire4)
+		TryToDisableRef(myFire5)
+		TryToDisableRef(myFire6)
+		TryToDisableRef(mySmoke)
+	elseif fire_level == 1
+		TryToEnableRef(myFire1)
+		TryToDisableRef(myFire2)
+		TryToDisableRef(myFire3)
+		TryToDisableRef(myFire4)
+		TryToDisableRef(myFire5)
+		TryToDisableRef(myFire6)
+		TryToDisableRef(mySmoke)
+		GoToState("OnFire")
+	else
+		TryToDisableRef(myFire1)
+		TryToDisableRef(myFire2)
+		TryToDisableRef(myFire3)
+		TryToDisableRef(myFire4)
+		TryToDisableRef(myFire5)
+		TryToDisableRef(myFire6)
+		TryToDisableRef(mySmoke)
+		UnregisterForUpdate()
+		GoToState("")
+	endif
+endFunction
+
 State OnFire
 	Event OnBeginState()
 		RegisterForSingleUpdate(3)
@@ -277,16 +284,21 @@ State OnFire
 			IncreaseFireLevel()
 			if fire_level < 8
 				RegisterForSingleUpdate(3)
+			elseif fire_level == 8
+				RegisterForSingleUpdate(8)
 			endif
 		endif
 	endEvent
+	Event OnActivate(ObjectReference akActionRef)
+		debug.trace("[Campfire] Can't use something while it's on fire!")
+	EndEvent
 endState
 
 State BurningDown
-	Event OnBeginState()
-		RegisterForSingleUpdate(8)
-	EndEvent
 	Event OnUpdate()
+		;pass
+	endEvent
+	Event OnBeginState()
 		BurnDown()
 	EndEvent
 	Event OnActivate(ObjectReference akActionRef)
