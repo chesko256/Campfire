@@ -43,12 +43,6 @@ ObjectReference property myExtraLight1Future auto hidden
 ObjectReference property myExtraLight2Future auto hidden
 ObjectReference property myExtraLight3Future auto hidden
 
-Event OnInit()
-	while !self.Is3DLoaded()
-	endWhile
-	self.BlockActivation()
-EndEvent
-
 Event OnActivate(ObjectReference akActionRef)
 	;Do default behavior, override if necessary.
 	;Use / Pick Up / Cancel
