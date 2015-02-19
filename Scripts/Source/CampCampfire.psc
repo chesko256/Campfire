@@ -379,6 +379,10 @@ function ProcessMagicEffect(ObjectReference akCaster, MagicEffect akEffect)
 
 endFunction
 
+function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight)
+
+endFunction
+
 State Lit
 
 endState
