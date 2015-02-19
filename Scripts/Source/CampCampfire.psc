@@ -1,29 +1,197 @@
+;/********s* _Camp_PlaceableObjectBase/CampCampfire
+* SCRIPTNAME
+*/;
 scriptname CampCampfire extends _Camp_PlaceableObjectBase
+;/*
+* OVERVIEW
+* Attach this script to a Furniture object that will become a campfire. Works like other
+* placeable objects, but contains logic specific to campfires.
+;*********/;
 
 import _CampInternal
 
+; OPTIONAL PROPERTIES
+
+;/********p* CampCampfire/FireAsset_SitFurniture1
+* SYNTAX
+*/;
 furniture property FireAsset_SitFurniture1 auto
+;/*
+* DESCRIPTION
+{ Optional: An optional furniture to sit on. }
+;*********/;
+
+;/********p* CampCampfire/FireAsset_SitFurniture2
+* SYNTAX
+*/;
 furniture property FireAsset_SitFurniture2 auto
+;/*
+* DESCRIPTION
+{ Optional: An optional furniture to sit on. }
+;*********/;
+
+;/********p* CampCampfire/FireAsset_SitFurniture3
+* SYNTAX
+*/;
 furniture property FireAsset_SitFurniture3 auto
+;/*
+* DESCRIPTION
+{ Optional: An optional furniture to sit on. }
+;*********/;
+
+;/********p* CampCampfire/FireAsset_SitFurniture4
+* SYNTAX
+*/;
 furniture property FireAsset_SitFurniture4 auto
+;/*
+* DESCRIPTION
+{ Optional: An optional furniture to sit on. }
+;*********/;
 
+;/********p* CampCampfire/FireAsset_ClutterStatic1
+* SYNTAX
+*/;
 static property FireAsset_ClutterStatic1 auto
-static property FireAsset_ClutterStatic2 auto
-Activator property FireAsset_ClutterActivator1 auto
-Activator property FireAsset_ClutterActivator2 auto
-Furniture property FireAsset_ClutterFurniture1 auto
-Furniture property FireAsset_ClutterFurniture2 auto
+;/*
+* DESCRIPTION
+{ Optional: A static to place in or around the fire. }
+;*********/;
 
+;/********p* CampCampfire/FireAsset_ClutterStatic2
+* SYNTAX
+*/;
+static property FireAsset_ClutterStatic2 auto
+;/*
+* DESCRIPTION
+{ Optional: A static to place in or around the fire. }
+;*********/;
+
+;/********p* CampCampfire/FireAsset_ClutterActivator1
+* SYNTAX
+*/;
+Activator property FireAsset_ClutterActivator1 auto
+;/*
+* DESCRIPTION
+{ Optional: An activator to place in or around the fire. }
+;*********/;
+
+;/********p* CampCampfire/FireAsset_ClutterActivator2
+* SYNTAX
+*/;
+Activator property FireAsset_ClutterActivator2 auto
+;/*
+* DESCRIPTION
+{ Optional: An activator to place in or around the fire. }
+;*********/;
+
+;/********p* CampCampfire/FireAsset_ClutterFurniture1
+* SYNTAX
+*/;
+Furniture property FireAsset_ClutterFurniture1 auto
+;/*
+* DESCRIPTION
+{ Optional: A furniture to place in or around the fire. }
+;*********/;
+
+;/********p* CampCampfire/FireAsset_ClutterFurniture2
+* SYNTAX
+*/;
+Furniture property FireAsset_ClutterFurniture2 auto
+;/*
+* DESCRIPTION
+{ Optional: A furniture to place in or around the fire. }
+;*********/;
+
+;/********p* CampCampfire/PositionRef_SitFurniture1
+* SYNTAX
+*/;
 ObjectReference property PositionRef_SitFurniture1 auto
+;/*
+* DESCRIPTION
+{ Optional: Position reference of the sit furniture. }
+;*********/;
+
+;/********p* CampCampfire/PositionRef_SitFurniture2
+* SYNTAX
+*/;
 ObjectReference property PositionRef_SitFurniture2 auto
+;/*
+* DESCRIPTION
+{ Optional: Position reference of the sit furniture. }
+;*********/;
+
+;/********p* CampCampfire/PositionRef_SitFurniture3
+* SYNTAX
+*/;
 ObjectReference property PositionRef_SitFurniture3 auto
+;/*
+* DESCRIPTION
+{ Optional: Position reference of the sit furniture. }
+;*********/;
+
+;/********p* CampCampfire/PositionRef_SitFurniture4
+* SYNTAX
+*/;
 ObjectReference property PositionRef_SitFurniture4 auto
+;/*
+* DESCRIPTION
+{ Optional: Position reference of the sit furniture. }
+;*********/;
+
+;/********p* CampCampfire/PositionRef_ClutterStatic1
+* SYNTAX
+*/;
 ObjectReference property PositionRef_ClutterStatic1 auto
+;/*
+* DESCRIPTION
+{ Optional: Position reference of the clutter static. }
+;*********/;
+
+;/********p* CampCampfire/PositionRef_ClutterStatic2
+* SYNTAX
+*/;
 ObjectReference property PositionRef_ClutterStatic2 auto
+;/*
+* DESCRIPTION
+{ Optional: Position reference of the clutter static. }
+;*********/;
+
+;/********p* CampCampfire/PositionRef_ClutterActivator1
+* SYNTAX
+*/;
 ObjectReference property PositionRef_ClutterActivator1 auto
+;/*
+* DESCRIPTION
+{ Optional: Position reference of the clutter activator. }
+;*********/;
+
+;/********p* CampCampfire/PositionRef_ClutterActivator2
+* SYNTAX
+*/;
 ObjectReference property PositionRef_ClutterActivator2 auto
+;/*
+* DESCRIPTION
+{ Optional: Position reference of the clutter activator. }
+;*********/;
+
+;/********p* CampCampfire/PositionRef_ClutterFurniture1
+* SYNTAX
+*/;
 ObjectReference property PositionRef_ClutterFurniture1 auto
+;/*
+* DESCRIPTION
+{ Optional: Position reference of the clutter furniture. }
+;*********/;
+
+;/********p* CampCampfire/PositionRef_ClutterFurniture2
+* SYNTAX
+*/;
 ObjectReference property PositionRef_ClutterFurniture2 auto
+;/*
+* DESCRIPTION
+{ Optional: Position reference of the clutter furniture. }
+;*********/;
+
 
 ; PRIVATE
 ;Run-time objects
