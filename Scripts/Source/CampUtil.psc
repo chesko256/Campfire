@@ -557,7 +557,7 @@ endif
 	return Campfire.Legal.GetCampingLegal()
 endFunction
 
-ObjectReference function GetLastUsedCampfire()
+ObjectReference function GetLastUsedCampfire() global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
