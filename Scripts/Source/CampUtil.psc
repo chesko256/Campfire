@@ -557,6 +557,16 @@ endif
 	return Campfire.Legal.GetCampingLegal()
 endFunction
 
+ObjectReference function GetLastUsedCampfire()
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+
+	return Campfire.LastUsedCampfire
+endFunction
+
 ;@TODO: int function IsPlayerUnderShelter()
 
 ;@TODO: Finalize and document

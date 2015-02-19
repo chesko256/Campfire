@@ -8,6 +8,7 @@ Formlist property _Camp_WorldspacesInteriors auto
 Keyword property isCampfirePlaceableObject auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 Quest property CampfireObjectPlacementSystem auto
+ObjectReference property LastUsedCampfire auto
 
 Formlist property _Camp_TentActivators auto
 Formlist property _Camp_FurTentsSmall auto
