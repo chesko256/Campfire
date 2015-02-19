@@ -5,6 +5,11 @@ _CampfireInternalAPI function GetAPI() global
 	return (Game.GetFormFromFile(0x00024095, "Campfire.esp") as Quest) as _CampfireInternalAPI
 endFunction
 
+CampfireAPI function GetPublicAPI() global
+	;@TODO: Change to .esm check
+	return (Game.GetFormFromFile(0x00024095, "Campfire.esp") as Quest) as CampfireAPI
+endFunction
+
 Keyword function GetMagicDamageFireKeyword() global
 	_CampfireInternalAPI Campfire = GetAPI()
 	if Campfire == none
@@ -66,6 +71,16 @@ ObjectReference function PlaceAndWaitFor3DLoaded(ObjectReference akOrigin, Form 
 		endif
 	endWhile
 	return None
+endFunction
+
+function SetLastUsedCampfire(ObjectReference akCampfire) global
+	CampfireAPI Campfire = GetPublicAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return
+	endif
+
+	Campfire.LastUsedCampfire = akCampfire
 endFunction
 
 function RaiseCampAPIError() global

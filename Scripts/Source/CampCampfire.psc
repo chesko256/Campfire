@@ -192,7 +192,6 @@ ObjectReference property PositionRef_ClutterFurniture2 auto
 { Optional: Position reference of the clutter furniture. }
 ;*********/;
 
-
 ; PRIVATE
 ;Run-time objects
 ObjectReference property myGroundArt auto hidden
@@ -223,6 +222,7 @@ ObjectReference property myClutterFurniture1Future auto hidden
 ObjectReference property myClutterFurniture2Future auto hidden
 
 Event OnActivate(ObjectReference akActionRef)
+    SetLastUsedCampfire(self)
     ;Bring up campfire crafting menu
 endEvent
 
