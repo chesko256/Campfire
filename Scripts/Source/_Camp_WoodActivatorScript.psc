@@ -8,7 +8,7 @@ Actor property PlayerRef auto
 Furniture property _Camp_WoodChopKneelMarker auto
 Idle property IdleWipeBrow auto
 Idle property IdleStop_Loose auto
-Idle property CombatIdleWeaponCheck auto
+Idle property IdleStudy auto
 Spell property _Camp_ChoppingAxeDisplay auto
 Imagespacemodifier property _Camp_FadeDown auto
 Imagespacemodifier property _Camp_Black auto
@@ -31,23 +31,24 @@ Event OnActivate(ObjectReference akActionRef)
 		endif
 
 		Game.DisablePlayerControls()
-		PlayerRef.AddSpell(_Camp_ChoppingAxeDisplay, false)
 		wait(0.2)
 		;ObjectReference f = PlaceAndWaitFor3DLoaded(PlayerRef, _Camp_WoodChopKneelMarker)
 		;f.Activate(PlayerRef)
-		PlayerRef.PlayIdle(CombatIdleWeaponCheck)
-		WaitUntilSitState(3)
-		_Camp_FadeDown.Apply()
+		PlayerRef.PlayIdle(IdleStudy)
 		wait(0.5)
-		_Camp_FadeDown.PopTo(_Camp_Black)
+		;_Camp_FadeDown.Apply()
+		wait(0.5)
+		;_Camp_FadeDown.PopTo(_Camp_Black)
+		;PlayerRef.PlayIdle(IdleStop_Loose)
 		_Camp_ChopWoodSM.Play(PlayerRef)
 		wait(1.5)
+		PlayerRef.AddSpell(_Camp_ChoppingAxeDisplay, false)
 		_Camp_ChopWoodSM.Play(PlayerRef)
 		wait(1.5)
 		_Camp_ChopWoodSM.Play(PlayerRef)
 		wait(1.5)
 		debug.notification("Turn tree into logs (smack smack smack)...")
-		_Camp_Black.PopTo(_Camp_FadeUp)
+		;_Camp_Black.PopTo(_Camp_FadeUp)
 		;f.Activate(PlayerRef)
 		wait(0.5)
 		PlayerRef.PlayIdle(IdleWipeBrow)
