@@ -15,6 +15,14 @@ Imagespacemodifier property _Camp_FadeUp auto
 FormList property woodChoppingAxes auto
 Message property WoodChoppingFailureMessage auto
 Sound property _Camp_ChopWoodSM auto
+ObjectReference property _Camp_WoodHarvestAnchor auto
+
+ObjectReference property my_wood_ref auto hidden
+
+Event OnInit()
+	;@TODO: Register once per game load
+	RegisterForModEvent("Campfire_WoodActivatorReset", "WoodActivatorReset")
+EndEvent
 
 Event OnActivate(ObjectReference akActionRef)
 	if akActionRef == PlayerRef
@@ -67,3 +75,8 @@ function WaitUntilSitState(int SitState)
 		i += 1
 	endWhile
 endFunction
+
+Event WoodActivatorReset()
+	my_wood_ref = None
+	self.MoveTo(_Camp_WoodHarvestAnchor)
+endEvent
