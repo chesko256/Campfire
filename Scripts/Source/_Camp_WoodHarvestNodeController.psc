@@ -44,6 +44,9 @@ function Setup(int _remaining_yields, float _tinder_yield_chance, 		\
 	current_activator = _current_activator
 	my_wood_ref = _my_wood_ref
 	my_mushroom_ref = GetMushroom()
+
+	RegisterForSingleUpdateGameTime(120)
+	RegisterForModEvent("Campfire_WoodHarvestNodeReset", "WoodHarvestNodeReset")
 endFunction
 
 
@@ -145,7 +148,16 @@ function ShowDepleteMessage()
 	endif
 endFunction
 
+Event WoodHarvestNodeReset()
+	debug.trace("[Campfire] " + self + " received master reset signal for wood harvest node, reverting...")
+	NodeReset()
+endEvent
+
 Event OnUpdateGameTime()
+	NodeReset()
+EndEvent
+
+function NodeReset()
 	debug.trace("[Campfire] Wood Harvest Node Controller resetting object.")
 	if my_wood_ref && my_wood_ref.IsDisabled()
 		my_wood_ref.Enable()
@@ -155,4 +167,4 @@ Event OnUpdateGameTime()
 	endif
 	self.Disable()
 	self.Delete()
-EndEvent
+endFunction
