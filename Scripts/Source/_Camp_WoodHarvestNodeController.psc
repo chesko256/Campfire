@@ -165,6 +165,7 @@ function NodeReset()
 			my_mushroom_ref.Enable()
 		endif
 	endif
+	UnregisterForUpdateGameTime()
 	self.Disable()
 	self.Delete()
 endFunction
