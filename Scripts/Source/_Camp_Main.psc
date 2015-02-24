@@ -30,15 +30,16 @@ event OnInit()
 	if !self.IsRunning()
 		self.Start()
 	endif
-	if !_Camp_CampingCrimeTracking.IsRunning()
-		_Camp_CampingCrimeTracking.Start()
-	endif
+	;if !_Camp_CampingCrimeTracking.IsRunning()
+	;	_Camp_CampingCrimeTracking.Start()
+	;endif
 
 	PlayerAlias.ForceRefTo(PlayerRef)
 	Compatibility.RunStartupCheck()
 
 	PlayerRef.AddSpell(_DE_SurvivalSkillsCombo_Spell, false)		;Survival Skills (multi-select)
 	utility.wait(1.0)
+	;/debug.trace("[Campfire] Guard alias set to " + Guard)
 	debug.trace("[Campfire] Guard alias set to " + Guard)
 	debug.trace("[Campfire] Guard alias set to " + Guard)
 	debug.trace("[Campfire] Guard alias set to " + Guard)
@@ -48,8 +49,20 @@ event OnInit()
 	debug.trace("[Campfire] Guard alias set to " + Guard)
 	debug.trace("[Campfire] Guard alias set to " + Guard)
 	debug.trace("[Campfire] Guard alias set to " + Guard)
-	debug.trace("[Campfire] Guard alias set to " + Guard)
+	/;
+
+	debug.trace("[Campfire] Waiting 45 seconds before reverting all nodes...")
+	utility.wait(45.0)
+	debug.trace("[Campfire] Reverting all nodes.")
+	RaiseEvent_WoodHarvestNodeReset()
 endEvent
+
+function RaiseEvent_WoodHarvestNodeReset()
+	int handle = ModEvent.Create("Campfire_WoodHarvestNodeReset")
+	if handle
+		ModEvent.Send(handle)
+	endif
+endFunction
 
 function CheckFollowerPolling()
 	;Calling on game start-up. Set update loop and begin polling for followers if necessary.
