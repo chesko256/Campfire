@@ -73,12 +73,12 @@ function MoveActivatorIfActiveNode(ObjectReference akActivator, ObjectReference 
 endFunction
 
 function Handle_AspenStump(ObjectReference akReference)
-	remaining_yields = 1
+	remaining_yields = 3
 	tinder_yield_chance = 0.05
 	min_yield_branch = 0
 	max_yield_branch = 0
-	min_yield_deadwood = 6
-	max_yield_deadwood = 10
+	min_yield_deadwood = 1
+	max_yield_deadwood = 3
 	is_stump = true
 	disable_on_depleted = true
 
@@ -87,12 +87,12 @@ function Handle_AspenStump(ObjectReference akReference)
 endFunction
 
 function Handle_AspenLog(ObjectReference akReference)
-	remaining_yields = 1
+	remaining_yields = 3
 	tinder_yield_chance = 0.1
-	min_yield_branch = 3
-	max_yield_branch = 6
-	min_yield_deadwood = 8
-	max_yield_deadwood = 12
+	min_yield_branch = 0
+	max_yield_branch = 2
+	min_yield_deadwood = 2
+	max_yield_deadwood = 4
 	is_stump = false
 	disable_on_depleted = true
 
@@ -100,12 +100,12 @@ function Handle_AspenLog(ObjectReference akReference)
 endFunction
 
 function Handle_SmallPineLog(ObjectReference akReference)
-	remaining_yields = 1
+	remaining_yields = 3
 	tinder_yield_chance = 0.1
-	min_yield_branch = 3
-	max_yield_branch = 5
-	min_yield_deadwood = 3
-	max_yield_deadwood = 6
+	min_yield_branch = 0
+	max_yield_branch = 2
+	min_yield_deadwood = 2
+	max_yield_deadwood = 4
 	is_stump = false
 	disable_on_depleted = true
 
@@ -114,12 +114,12 @@ function Handle_SmallPineLog(ObjectReference akReference)
 endFunction
 
 function Handle_SmallPineStump(ObjectReference akReference)
-	remaining_yields = 1
+	remaining_yields = 3
 	tinder_yield_chance = 0.05
 	min_yield_branch = 0
 	max_yield_branch = 0
-	min_yield_deadwood = 3
-	max_yield_deadwood = 5
+	min_yield_deadwood = 1
+	max_yield_deadwood = 3
 	is_stump = true
 	disable_on_depleted = true
 
