@@ -25,6 +25,7 @@ int max_yield_branch
 int min_yield_deadwood
 int max_yield_deadwood
 bool is_stump
+bool should_stand
 bool disable_on_depleted
 
 Event OnInit()
@@ -32,7 +33,7 @@ Event OnInit()
 	Form woodform
 	if woodref
 		woodform = woodref.GetBaseObject()
-		debug.trace("[Campfire] Alias " + self + " assigned new reference " + woodref)
+		;debug.trace("[Campfire] Alias " + self + " assigned new reference " + woodref)
 
 		if _Camp_HarvestableWood_AspenStumps.HasForm(woodform)
 			Handle_AspenStump(woodref)
@@ -80,6 +81,7 @@ function Handle_AspenStump(ObjectReference akReference)
 	min_yield_deadwood = 1
 	max_yield_deadwood = 3
 	is_stump = true
+	should_stand = true
 	disable_on_depleted = true
 
 	;@TODO: -4 Y Adj
@@ -94,6 +96,7 @@ function Handle_AspenLog(ObjectReference akReference)
 	min_yield_deadwood = 2
 	max_yield_deadwood = 4
 	is_stump = false
+	should_stand = false
 	disable_on_depleted = true
 
 	MoveActivatorIfActiveNode(required_activator_aspen_log, akReference)
@@ -107,6 +110,7 @@ function Handle_SmallPineLog(ObjectReference akReference)
 	min_yield_deadwood = 2
 	max_yield_deadwood = 4
 	is_stump = false
+	should_stand = false
 	disable_on_depleted = true
 
 	;@TODO: -20 Z Adj
@@ -121,13 +125,13 @@ function Handle_SmallPineStump(ObjectReference akReference)
 	min_yield_deadwood = 1
 	max_yield_deadwood = 3
 	is_stump = true
+	should_stand = false
 	disable_on_depleted = true
 
 	MoveActivatorIfActiveNode(required_activator_small_pine_stump, akReference)
 endFunction
 
 Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
-	debug.trace("[Campfire] Wood harvesting node hit!")
 	if akAggressor == PlayerRef && woodChoppingAxes.HasForm(akSource)
 		ControllerInterface_HitWithAxe()
 	endif
@@ -183,11 +187,15 @@ _Camp_WoodHarvestNodeController function GetNodeController()
 	_Camp_WoodHarvestNodeController my_controller = None
 	if !my_node
 		my_node = PlaceAndWaitFor3DLoaded(self.GetRef(), _Camp_WoodHarvestNode)
-		my_controller = my_node as _Camp_WoodHarvestNodeController
-		my_controller.Setup(remaining_yields, tinder_yield_chance, min_yield_branch, max_yield_branch, 	\
-							min_yield_deadwood, max_yield_deadwood, is_stump, disable_on_depleted, 		\
+		if my_node
+			my_controller = my_node as _Camp_WoodHarvestNodeController
+			my_controller.Setup(remaining_yields, tinder_yield_chance, min_yield_branch, max_yield_branch, 	\
+							min_yield_deadwood, max_yield_deadwood, is_stump, should_stand, disable_on_depleted, 		\
 							my_activator, woodref)
-		return my_controller
+			return my_controller
+		else
+			return None
+		endif
 	else
 		my_controller = my_node as _Camp_WoodHarvestNodeController
 		my_controller.current_activator = my_activator

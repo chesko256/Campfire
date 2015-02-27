@@ -9,7 +9,6 @@ CampfireData property CampData auto
 
 Formlist property _DE_EquipExceptions auto
 Formlist property _DE_Backpacks auto
-
 keyword property ArmorCuirass auto
 keyword property ArmorGauntlets auto
 keyword property ArmorHelmet auto
@@ -19,11 +18,17 @@ keyword property ClothingHands auto
 keyword property ClothingHead auto
 keyword property ClothingFeet auto
 
+Actor property PlayerRef auto
+Spell property _Camp_WoodHarvestingStamina auto
 Armor property ClothesMGRobesArchmage1Hooded auto
+Weapon property _Camp_WoodHarvestingAnimAxe auto
 
 Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
-	;First, check exceptions
-	if _DE_EquipExceptions.HasForm(akBaseObject)
+	;First, check if this is the wood harvesting axe
+	if akBaseObject == _Camp_WoodHarvestingAnimAxe
+		HandleWoodHarvestingAxe()
+	;next, check exceptions
+	elseif _DE_EquipExceptions.HasForm(akBaseObject)
 		return
 	elseif !(GetUsesMainBodySlot(akBaseObject))
 		return
@@ -35,7 +40,9 @@ endEvent
 Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 	bool bEventRaised = false
 
-	if akBaseObject as Armor
+	if akBaseObject == _Camp_WoodHarvestingAnimAxe
+		HandleWoodHarvestingAxe(true)
+	elseif akBaseObject as Armor
 
 		if _DE_EquipExceptions.HasForm(akBaseObject)
 			return
@@ -242,5 +249,13 @@ bool function GetUsesMainBodySlot(Form akBaseObject)
 		endif
 	else
 		return false
+	endif
+endFunction
+
+function HandleWoodHarvestingAxe(bool abUnequipped = false)
+	if !abUnequipped
+		PlayerRef.AddSpell(_Camp_WoodHarvestingStamina, false)
+	else
+		PlayerRef.RemoveSpell(_Camp_WoodHarvestingStamina)
 	endif
 endFunction
