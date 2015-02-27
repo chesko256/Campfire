@@ -51,10 +51,10 @@ event OnInit()
 	debug.trace("[Campfire] Guard alias set to " + Guard)
 	/;
 
-	debug.trace("[Campfire] Waiting 45 seconds before reverting all nodes...")
-	utility.wait(45.0)
-	debug.trace("[Campfire] Reverting all nodes.")
-	RaiseEvent_WoodHarvestNodeReset()
+	;debug.trace("[Campfire] Waiting 45 seconds before reverting all nodes...")
+	;utility.wait(45.0)
+	;debug.trace("[Campfire] Reverting all nodes.")
+	;RaiseEvent_WoodHarvestNodeReset()
 endEvent
 
 function RaiseEvent_WoodHarvestNodeReset()

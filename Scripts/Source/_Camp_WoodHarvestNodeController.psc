@@ -3,19 +3,20 @@ scriptname _Camp_WoodHarvestNodeController extends ObjectReference
 import Utility
 import math
 
+float RESET_TIME = 72.0
+
 MiscObject property _Camp_Tinder auto
 MiscObject property _Camp_DeadwoodBranch auto
 MiscObject property _Camp_DeadwoodLog auto
 Quest property _Camp_MainQuest auto
-Imagespacemodifier property _Camp_FadeDown auto
-Imagespacemodifier property _Camp_Black auto
-Imagespacemodifier property _Camp_FadeUp auto
 Sound property _Camp_ChopWoodSM auto
 Actor property PlayerRef auto
+Spell property _Camp_WoodHarvestingStamina auto
 FormList property _Camp_HarvestableWood_Mushrooms auto
 Weapon property _Camp_WoodHarvestingAnimAxe auto
 ObjectReference property my_wood_ref auto hidden
-ObjectReference property my_mushroom_ref auto hidden
+ObjectReference property my_mushroom_ref1 auto hidden
+ObjectReference property my_mushroom_ref2 auto hidden
 ObjectReference property current_activator auto hidden
 ObjectReference property _Camp_WoodHarvestAttackTarget auto
 ObjectReference property _Camp_WoodHarvestAnchor auto
@@ -27,13 +28,16 @@ int property max_yield_branch auto hidden
 int property min_yield_deadwood auto hidden
 int property max_yield_deadwood auto hidden
 bool property is_stump auto hidden
+bool property should_stand auto hidden
 bool property disable_on_depleted auto hidden
+bool eligible_for_deletion = false
 
 ;Animation state vars
 float stamina_rate
 float stamina
 bool was_first_person
 bool was_sneaking
+bool was_weapons_drawn
 bool exit_on_next_hit
 weapon main_weapon
 weapon offhand_weapon
@@ -41,9 +45,11 @@ weapon offhand_weapon
 function Setup(int _remaining_yields, float _tinder_yield_chance, 		\
 			   int _min_yield_branch, int _max_yield_branch,	 		\
 			   int _min_yield_deadwood, int _max_yield_deadwood, 		\
-			   bool _is_stump, bool _disable_on_depleted,				\
+			   bool _is_stump, bool _should_stand, 						\
+			   bool _disable_on_depleted,								\
 			   ObjectReference _current_activator, ObjectReference _my_wood_ref)
 
+	debug.trace("[Campfire] Setting up new wood harvesting node " + self)
 	remaining_yields = _remaining_yields
 	tinder_yield_chance = _tinder_yield_chance
 	min_yield_branch = _min_yield_branch
@@ -51,38 +57,54 @@ function Setup(int _remaining_yields, float _tinder_yield_chance, 		\
 	min_yield_deadwood = _min_yield_deadwood
 	max_yield_deadwood = _max_yield_deadwood
 	is_stump = _is_stump
+	should_stand = _should_stand
 	disable_on_depleted = _disable_on_depleted
 	current_activator = _current_activator
 	my_wood_ref = _my_wood_ref
-	my_mushroom_ref = GetMushroom()
+	GetMushrooms()
 
-	RegisterForSingleUpdateGameTime(120)
+	RegisterForSingleUpdateGameTime(RESET_TIME) ;@TODO: 120.0
 	RegisterForModEvent("Campfire_WoodHarvestNodeReset", "WoodHarvestNodeReset")
 endFunction
 
-
-ObjectReference function GetMushroom()
-	ObjectReference mushroom = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_HarvestableWood_Mushrooms, self, 200.0)
-	return mushroom
+function GetMushrooms()
+	my_mushroom_ref1 = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_HarvestableWood_Mushrooms, self, 5.0)
+	if my_mushroom_ref1
+		int i = 0
+		while !my_mushroom_ref2 && i < 3
+			ObjectReference found_mushroom = Game.FindRandomReferenceOfAnyTypeInListFromRef(_Camp_HarvestableWood_Mushrooms, self, 5.0)
+			if found_mushroom && found_mushroom != my_mushroom_ref1
+				my_mushroom_ref2 = found_mushroom
+				debug.trace("[Campfire] Mushroom 2: " + my_mushroom_ref2)
+			endif
+			i += 1
+		endWhile
+	endif
 endFunction
 
 function ActivatedWithAxe()
+	exit_on_next_hit = False
 	;Register for necessary animation and control events.
 	RegisterForAnimationEvent(PlayerRef, "HitFrame")
+	RegisterForModEvent("Campfire_PlayerHit", "PlayerHit")
 	RegisterForControl("Move")
+	RegisterForControl("Forward")
+	RegisterForControl("Back")
+	RegisterForControl("Strafe Left")
+	RegisterForControl("Strafe Right")
+
+	;Register for update for emergency bail-out
+	RegisterForSingleUpdate(15.0)
 
 	was_first_person = False
 	if PlayerRef.GetAnimationVariableBool("IsFirstPerson")
 		was_first_person = True
 		Game.ForceThirdPerson()
 	endif
-	
-	Game.DisablePlayerControls()
-
-	main_weapon = GetCurrentWeapon()
-	offhand_weapon = GetCurrentWeapon(true)
-	PlayerRef.AddItem(_Camp_WoodHarvestingAnimAxe, abSilent = true)
-	PlayerRef.EquipItem(_Camp_WoodHarvestingAnimAxe, abSilent = true)
+	was_weapons_drawn = False
+	if PlayerRef.IsWeaponDrawn()
+		was_weapons_drawn = true
+	endif
 
 	float[] offset = GetGlobalOffset(PlayerRef, 100.0)
 	_Camp_WoodHarvestAttackTarget.MoveTo(PlayerRef, offset[0], offset[1])
@@ -91,24 +113,50 @@ function ActivatedWithAxe()
 		utility.wait(0.1)
 		i += 1
 	endWhile
-	
-	;Sneak if not sneaking
+
 	was_sneaking = False
-	if !PlayerRef.IsSneaking()
-		PlayerRef.StartSneaking()
-	else
+	if PlayerRef.IsSneaking()
 		was_sneaking = True
 	endif
 
+	;Should I stand or crouch?
+	;Due to timing issues, it can be difficult to get the player to do what we want.
+	;So, we need to loop and check the state until we definitely have the result we want.
+	if should_stand
+		if PlayerRef.IsSneaking()
+			i = 0
+			while PlayerRef.IsSneaking() && i < 50
+				PlayerRef.StartSneaking()
+				utility.wait(0.1)
+				i += 1
+			endWhile
+		endif
+	else
+		if !PlayerRef.IsSneaking()
+			i = 0
+			while !PlayerRef.IsSneaking() && i < 50
+				PlayerRef.StartSneaking()
+				utility.wait(0.1)
+				i += 1
+			endWhile
+		endif
+	endif
+	utility.wait(0.1)
+	
 	Game.SetPlayerAIDriven()
 	Game.SetHudCartMode(true)
 
-	;Set the player's StaminaRate and Stamina to 0 so that they cannot power attack.
-	stamina_rate = PlayerRef.GetAV("StaminaRate")
-	stamina = PlayerRef.GetAV("Stamina")
-	PlayerRef.SetAV("StaminaRate", 0.0)
-	PlayerRef.SetAV("Stamina", 0.0)
-	utility.wait(0.1)
+	main_weapon = GetCurrentWeapon()
+	offhand_weapon = GetCurrentWeapon(true)
+	PlayerRef.AddItem(_Camp_WoodHarvestingAnimAxe, abSilent = true)
+	PlayerRef.EquipItem(_Camp_WoodHarvestingAnimAxe, abSilent = true)
+
+	;Wait for the stamina spell to take effect.
+	i = 0
+	while (!PlayerRef.HasSpell(_Camp_WoodHarvestingStamina) || PlayerRef.GetAV("Stamina") > 0.0) && i < 50
+		utility.wait(0.1)
+		i += 1
+	endWhile
 
 	;Set the flag to start the package
 	(_Camp_MainQuest as _Camp_ConditionValues).IsChoppingWoodEnvironment = true
@@ -122,15 +170,19 @@ Event OnAnimationEvent(ObjectReference akSource, string asEventName)
 EndEvent
 
 Event OnControlDown(string control)
-	if control == "Move"
+	if control == "Move" || control == "Forward" || control == "Back" || control == "Strafe Left" || control == "Strafe Right"
+		debug.trace("[Campfire] Exiting after next hit.")
 		exit_on_next_hit = true
 	endif
 EndEvent
 
+Event PlayerHit(Form akAggressor, Form akSource, Form akProjectile)
+	exit_on_next_hit = true
+endEvent
+
 function ProcessActivatedHit()
 	_Camp_ChopWoodSM.Play(PlayerRef)
 	YieldResources()
-	remaining_yields -= 1
 	if remaining_yields <= 0 || exit_on_next_hit
 		ExitActivatedChopping()
 	endif
@@ -138,7 +190,13 @@ endFunction
 
 function ExitActivatedChopping()
 	UnregisterForAnimationEvent(PlayerRef, "HitFrame")
+	UnregisterForModEvent("Campfire_PlayerHit")
 	UnregisterForControl("Move")
+	UnregisterForControl("Forward")
+	UnregisterForControl("Back")
+	UnregisterForControl("Strafe Left")
+	UnregisterForControl("Strafe Right")
+	UnregisterForUpdate()
 	exit_on_next_hit = false
 
 	Game.SetPlayerAIDriven(false)
@@ -146,6 +204,12 @@ function ExitActivatedChopping()
 	_Camp_WoodHarvestAttackTarget.MoveTo(_Camp_WoodHarvestAnchor)
 
 	;Re-equip the player's weapons and restore control.
+	PlayerRef.SheatheWeapon()
+	int i = 0
+	while PlayerRef.IsWeaponDrawn() && i < 50
+		utility.wait(0.1)
+		i += 1
+	endWhile
 	if main_weapon
 		PlayerRef.EquipItem(main_weapon, abSilent = True)
 	endif
@@ -154,19 +218,21 @@ function ExitActivatedChopping()
 	endif
 	PlayerRef.RemoveItem(_Camp_WoodHarvestingAnimAxe, PlayerRef.GetItemCount(_Camp_WoodHarvestingAnimAxe), true)
 	
-	;Restore stamina values.
-	PlayerRef.SetAV("StaminaRate", stamina_rate)
-	PlayerRef.SetAV("Stamina", stamina)
-
-	;Exit sneaking if sneaking, if they weren't sneaking
+	;Set the player's stand / sneak state to what it was before
 	if PlayerRef.IsSneaking() && !was_sneaking
-		PlayerRef.StartSneaking()
-		;Sometimes requires 2 attempts
-		if PlayerRef.IsSneaking()
+		i = 0
+		While PlayerRef.IsSneaking() && i < 50
 			PlayerRef.StartSneaking()
-		endif
+			utility.wait(0.1)
+			i += 1
+		endwhile
 	endif
-	Game.EnablePlayerControls()
+
+	;Draw their weapons if they once had them drawn
+	if was_weapons_drawn
+		PlayerRef.DrawWeapon()
+	endif
+
 	Game.SetHudCartMode(false)
 	if was_first_person
 		Game.ForceFirstPerson()
@@ -189,33 +255,9 @@ Weapon function GetCurrentWeapon(bool abOffHand = false)
 	return the_weapon
 endFunction
 
-;/wait(0.2)
-	_Camp_FadeDown.Apply()
-	wait(0.5)
-	_Camp_FadeDown.PopTo(_Camp_Black)
-	PlayerRef.PlayIdle(IdleStop_Loose)
-	_Camp_ChopWoodSM.Play(PlayerRef)
-	wait(1.5)
-	PlayerRef.AddSpell(_Camp_ChoppingAxeDisplay, false)
-	_Camp_ChopWoodSM.Play(PlayerRef)
-	wait(1.5)
-	_Camp_ChopWoodSM.Play(PlayerRef)
-	wait(1.5)
-	_Camp_Black.PopTo(_Camp_FadeUp)
-	YieldResources()
-	wait(0.5)
-	PlayerRef.PlayIdle(IdleWipeBrow)
-	wait(2.2)
-	PlayerRef.PlayIdle(IdleStop_Loose)
-	wait(0.5)
-	Game.EnablePlayerControls()
-	PlayerRef.RemoveSpell(_Camp_ChoppingAxeDisplay)		
-	if was_first_person
-		Game.ForceFirstPerson()
-	endif/;
-
 function HitWithAxe()
 	hit_count += 1
+	debug.trace("[Campfire] Hit with axe! Hit count " + hit_count)
 	if hit_count >= 3
 		hit_count = 0
 		_Camp_ChopWoodSM.Play(PlayerRef)
@@ -248,12 +290,15 @@ function YieldResources()
 				(current_activator as _Camp_WoodActivatorScript).GoHome()
 			endif
 			if disable_on_depleted && my_wood_ref
-				my_wood_ref.DisableNoWait(true)
-				if my_mushroom_ref
-					my_mushroom_ref.DisableNoWait(true)
+				if my_mushroom_ref1
+					my_mushroom_ref1.DisableNoWait()
 				endif
+				if my_mushroom_ref2
+					my_mushroom_ref2.DisableNoWait()
+				endif
+				my_wood_ref.DisableNoWait(true)
 			endif
-			RegisterForSingleUpdateGameTime(120)
+			RegisterForSingleUpdateGameTime(RESET_TIME)
 		endif
 	endif
 endFunction
@@ -261,37 +306,66 @@ endFunction
 function ShowDepleteMessage()
 	if is_stump
 		if disable_on_depleted
-			debug.notification("You successfully harvest the stump.")
+			;debug.notification("You successfully harvest the stump.")
 		else
-			debug.notification("This stump is depleted of useful material.")
+			debug.notification("This stump is depleted of useful materials.")
 		endif
 	else
 		if disable_on_depleted
-			debug.notification("You successfully harvest the log.")
+			;debug.notification("You successfully harvest the log.")
 		else
-			debug.notification("This log is depleted of useful material.")
+			debug.notification("This log is depleted of useful materials.")
 		endif
 	endif
 endFunction
 
 Event WoodHarvestNodeReset()
-	debug.trace("[Campfire] " + self + " received master reset signal for wood harvest node, reverting...")
-	NodeReset()
+	debug.trace("[Campfire] " + self + " received global reset signal for wood harvest node, reverting...")
+	GlobalNodeReset()
+endEvent
+
+Event OnUpdate()
+	debug.trace("[Campfire] Harvest Node OnUpdate")
+	if (_Camp_MainQuest as _Camp_ConditionValues).IsChoppingWoodEnvironment == true
+		debug.trace("[Campfire] We got hung at some point; bail out.")
+		ExitActivatedChopping()
+	endif
 endEvent
 
 Event OnUpdateGameTime()
-	NodeReset()
+	debug.trace("[Campfire] Node resetting after prescribed game time.")
+	eligible_for_deletion = true
+	if !self.Is3DLoaded()
+		NodeReset()
+	else
+		debug.trace("[Campfire] Still attached; waiting for unload.")
+	endif
+EndEvent
+
+function GlobalNodeReset()
+	debug.trace("[Campfire] (Global) Wood Harvest Node Controller resetting object.")
+	RegisterForSingleUpdateGameTime(0.0)
+endFunction
+
+Event OnCellDetach()
+	debug.trace("[Campfire] Detached from cell, checking deletion eligibility...")
+	if eligible_for_deletion
+		NodeReset()
+	endif
 EndEvent
 
 function NodeReset()
 	debug.trace("[Campfire] Wood Harvest Node Controller resetting object.")
+	UnregisterForModEvent("Campfire_WoodHarvestNodeReset")
 	if my_wood_ref && my_wood_ref.IsDisabled()
-		my_wood_ref.Enable()
-		if my_mushroom_ref
-			my_mushroom_ref.Enable()
+		my_wood_ref.EnableNoWait()
+		if my_mushroom_ref1
+			my_mushroom_ref1.EnableNoWait()
+		endif
+		if my_mushroom_ref2
+			my_mushroom_ref2.EnableNoWait()
 		endif
 	endif
-	UnregisterForUpdateGameTime()
 	self.Disable()
 	self.Delete()
 endFunction

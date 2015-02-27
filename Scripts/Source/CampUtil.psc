@@ -430,7 +430,7 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true, bool abPlayerBusy
 	if abPlayerBusyCheck && IsPlayerPlacingObject()
 		if abShowMessage
 			;_DE_Placement_InUse.Show()
-			notification("[Debug]You are already trying to place something.")
+			notification("[Debug]You can't use this while placing something else.")
 		endif
 		return false
 	elseif Campfire.PlayerRef.IsSwimming()

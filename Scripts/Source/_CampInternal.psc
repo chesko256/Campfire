@@ -57,7 +57,13 @@ ObjectReference function PlaceAndWaitFor3DLoaded(ObjectReference akOrigin, Form 
 	;Prevents infinite loop if object never loads. 
 	;Optionally set bDisableInteraction to True to make this object behave like a static (disable Havok physics) and disable activation.
 	;@TODO: Profile this
-	ObjectReference myObject = akOrigin.PlaceAtMe(FormToPlace, Count, ForcePersist, false)
+	ObjectReference myObject
+	if akOrigin
+		myObject = akOrigin.PlaceAtMe(FormToPlace, Count, ForcePersist, false)
+	else
+		return None
+	endif
+
 	int iTryCount = 0
 	while iTryCount < 200
 		if !myObject.Is3DLoaded()
