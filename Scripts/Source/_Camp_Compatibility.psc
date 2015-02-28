@@ -580,6 +580,11 @@ function VanillaGameLoadUp()
 
 	PlacementSystem.SmallFire = Game.GetFormFromFile(0x00013B40, "Skyrim.esm")
 	;PlacementSystem.LargeFire = Game.GetFormFromFile(0x000D61B6, "Skyrim.esm")
+
+	Tree aspen4 = Game.GetFormFromFile(0x0005FADA, "Skyrim.esm") as Tree
+	Ingredient test = Game.GetFormFromFile(0x000516C8, "Skyrim") as Ingredient
+	aspen4.SetIngredient(test)
+	aspen4.SetName("Fallen Branches")
 endFunction
 
 
