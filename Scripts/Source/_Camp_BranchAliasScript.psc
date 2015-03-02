@@ -1,18 +1,21 @@
 scriptname _Camp_BranchAliasScript extends ReferenceAlias
 
-import math
 import _CampInternal
 
-Activator property _Camp_TreeHarvestNode auto
-Actor property PlayerRef auto
-ObjectReference property required_activator_branch auto
-ObjectReference property my_activator auto hidden
-ObjectReference property woodref auto hidden
+FormList property _Camp_HarvestableBranchActivators auto
+Static property CoastDriftWood01 auto
+Static property CoastDriftWood02 auto
+Static property CoastDriftWood03 auto
+Static property TreeReachBranchPile01 auto
+Static property TreeReachBranchPile02 auto
+Activator property _Camp_BranchHarvestNode1 auto
+Activator property _Camp_BranchHarvestNode2 auto
+Activator property _Camp_BranchHarvestNode3 auto
+Activator property _Camp_BranchHarvestNode4 auto
+Activator property _Camp_BranchHarvestNode5 auto
 
-float tinder_yield_chance
-int min_yield_branch
-int max_yield_branch
-bool disable_on_depleted
+Actor property PlayerRef auto
+ObjectReference property woodref auto hidden
 
 Event OnInit()
 	woodref = self.GetRef()
@@ -20,83 +23,32 @@ Event OnInit()
 	if woodref
 		woodform = woodref.GetBaseObject()
 		debug.trace("[Campfire] Branch Alias " + self + " assigned new reference " + woodref)
-
-		;No need to check _Camp_HarvestableBranches
-		Handle_Branch(woodref)
+		Handle_Branch(woodform, woodref)
 	endif
 EndEvent
 
-function MoveActivatorIfActiveNode(ObjectReference akActivator, ObjectReference akTarget)
-	_Camp_BranchTreeHarvestNodeController my_controller = GetNearestNodeController()
-	if !my_controller || (my_controller && !IsDepletedNodeController(my_controller))
-		my_activator = akActivator
-		if my_controller
-			my_controller.current_activator = my_activator
-		endif
-		(my_activator as _Camp_BranchActivatorScript).my_wood_alias = self
-		my_activator.MoveTo(akTarget)
+function Handle_Branch(Form akBaseObject, ObjectReference akReference)
+	if akBaseObject == CoastDriftWood01
+		PlaceNodeController(_Camp_BranchHarvestNode1, akReference)
+	elseif akBaseObject == CoastDriftWood02
+		PlaceNodeController(_Camp_BranchHarvestNode2, akReference)
+	elseif akBaseObject == CoastDriftWood03
+		PlaceNodeController(_Camp_BranchHarvestNode3, akReference)
+	elseif akBaseObject == TreeReachBranchPile01
+		PlaceNodeController(_Camp_BranchHarvestNode4, akReference)
+	elseif akBaseObject == TreeReachBranchPile02
+		PlaceNodeController(_Camp_BranchHarvestNode5, akReference)
 	endif
 endFunction
 
-function Handle_Branch(ObjectReference akReference)
-	tinder_yield_chance = 0.0
-	min_yield_branch = 1
-	max_yield_branch = 1
-	disable_on_depleted = true
-	
-	MoveActivatorIfActiveNode(required_activator_branch, akReference)
-endFunction
-
-function Activated()
-	ControllerInterface_Activated()
-endFunction
-
-function ControllerInterface_Activated()
-	_Camp_BranchTreeHarvestNodeController my_controller = GetNodeController()
-	if my_controller
-		my_controller.YieldResources()
-	endif
-endFunction
-
-_Camp_BranchTreeHarvestNodeController function GetNearestNodeController()
-	ObjectReference my_node = Game.FindClosestReferenceOfTypeFromRef(_Camp_TreeHarvestNode, self.GetRef(), 1.0)
-	_Camp_BranchTreeHarvestNodeController my_controller = None
-	if my_node
-		my_controller = my_node as _Camp_BranchTreeHarvestNodeController
-		if my_controller
-			return my_controller
-		else
-			return None
-		endif
-	else
-		return None
-	endif
-endFunction
-
-bool function IsDepletedNodeController(_Camp_BranchTreeHarvestNodeController my_controller)
-	if my_controller.harvested
-		return true
-	else
-		return false
-	endif
-endFunction
-
-_Camp_BranchTreeHarvestNodeController function GetNodeController()
-	ObjectReference my_node = Game.FindClosestReferenceOfTypeFromRef(_Camp_TreeHarvestNode, self.GetRef(), 1.0)
-	_Camp_BranchTreeHarvestNodeController my_controller = None
+function PlaceNodeController(Activator akNodeController, ObjectReference akReference)
+	ObjectReference my_node = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_HarvestableBranchActivators, akReference, 1.0)
+	_Camp_BranchHarvestNodeController my_controller = None
 	if !my_node
-		my_node = PlaceAndWaitFor3DLoaded(self.GetRef(), _Camp_TreeHarvestNode)
+		my_node = PlaceAndWaitFor3DLoaded(akReference, akNodeController)
 		if my_node
-			my_controller = my_node as _Camp_BranchTreeHarvestNodeController
-			my_controller.Setup(tinder_yield_chance, min_yield_branch, max_yield_branch, 	\
-							disable_on_depleted, my_activator, woodref)
-			return my_controller
-		else
-			return None
+			my_controller = my_node as _Camp_BranchHarvestNodeController
+			my_controller.Setup(woodref)
 		endif
-	else
-		my_controller = my_node as _Camp_BranchTreeHarvestNodeController
-		my_controller.current_activator = my_activator
-		return my_controller
 	endif
 endFunction
