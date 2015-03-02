@@ -33,8 +33,6 @@ bool property disable_on_depleted auto hidden
 bool eligible_for_deletion = false
 
 ;Animation state vars
-float stamina_rate
-float stamina
 bool was_first_person
 bool was_sneaking
 bool was_weapons_drawn
@@ -63,7 +61,7 @@ function Setup(int _remaining_yields, float _tinder_yield_chance, 		\
 	my_wood_ref = _my_wood_ref
 	GetMushrooms()
 
-	RegisterForSingleUpdateGameTime(RESET_TIME) ;@TODO: 120.0
+	RegisterForSingleUpdateGameTime(RESET_TIME)
 	RegisterForModEvent("Campfire_WoodHarvestNodeReset", "WoodHarvestNodeReset")
 endFunction
 

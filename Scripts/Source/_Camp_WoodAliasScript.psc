@@ -9,12 +9,14 @@ ObjectReference property required_activator_aspen_stump auto
 ObjectReference property required_activator_aspen_log auto
 ObjectReference property required_activator_small_pine_log auto
 ObjectReference property required_activator_small_pine_stump auto
+ObjectReference property required_activator_dead_tree auto
 ObjectReference property my_activator auto hidden
 ObjectReference property woodref auto hidden
 FormList property _Camp_HarvestableWood_AspenStumps auto
 FormList property _Camp_HarvestableWood_AspenLogs auto
 FormList property _Camp_HarvestableWood_SmallPineLogs auto
 FormList property _Camp_HarvestableWood_SmallPineStumps auto
+FormList property _Camp_HarvestableWood_DeadTrees auto
 FormList property woodChoppingAxes auto
 Message property WoodChoppingFailureMessage auto
 
@@ -33,7 +35,7 @@ Event OnInit()
 	Form woodform
 	if woodref
 		woodform = woodref.GetBaseObject()
-		;debug.trace("[Campfire] Alias " + self + " assigned new reference " + woodref)
+		;debug.trace("[Campfire] Log / Stump Alias " + self + " assigned new reference " + woodref)
 
 		if _Camp_HarvestableWood_AspenStumps.HasForm(woodform)
 			Handle_AspenStump(woodref)
@@ -43,6 +45,8 @@ Event OnInit()
 			Handle_SmallPineLog(woodref)
 		elseif _Camp_HarvestableWood_SmallPineStumps.HasForm(woodform)
 			Handle_SmallPineStump(woodref)
+		elseif _Camp_HarvestableWood_DeadTrees.HasForm(woodform)
+			Handle_DeadTree(woodref)
 		endif
 	endif
 EndEvent
@@ -77,7 +81,7 @@ function Handle_AspenStump(ObjectReference akReference)
 	remaining_yields = 3
 	tinder_yield_chance = 0.05
 	min_yield_branch = 0
-	max_yield_branch = 0
+	max_yield_branch = 1
 	min_yield_deadwood = 1
 	max_yield_deadwood = 3
 	is_stump = true
@@ -92,7 +96,7 @@ function Handle_AspenLog(ObjectReference akReference)
 	remaining_yields = 3
 	tinder_yield_chance = 0.1
 	min_yield_branch = 0
-	max_yield_branch = 2
+	max_yield_branch = 1
 	min_yield_deadwood = 2
 	max_yield_deadwood = 4
 	is_stump = false
@@ -129,6 +133,20 @@ function Handle_SmallPineStump(ObjectReference akReference)
 	disable_on_depleted = true
 
 	MoveActivatorIfActiveNode(required_activator_small_pine_stump, akReference)
+endFunction
+
+function Handle_DeadTree(ObjectReference akReference)
+	remaining_yields = 3
+	tinder_yield_chance = 0.05
+	min_yield_branch = 0
+	max_yield_branch = 0
+	min_yield_deadwood = 1
+	max_yield_deadwood = 2
+	is_stump = true
+	should_stand = true
+	disable_on_depleted = true
+
+	MoveActivatorIfActiveNode(required_activator_dead_tree, akReference)
 endFunction
 
 Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
