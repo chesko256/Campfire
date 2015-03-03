@@ -40,6 +40,8 @@ bool exit_on_next_hit
 weapon main_weapon
 weapon offhand_weapon
 
+;@TODO: Handle reset, being visible but not activatable and depleted, etc.
+
 Event OnActivate(ObjectReference akActionRef)
 	if akActionRef == PlayerRef
 		if PlayerRef.GetItemCount(woodChoppingAxes) == 0
