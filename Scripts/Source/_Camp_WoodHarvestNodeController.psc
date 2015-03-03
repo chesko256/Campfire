@@ -40,6 +40,23 @@ bool exit_on_next_hit
 weapon main_weapon
 weapon offhand_weapon
 
+Event OnActivate(ObjectReference akActionRef)
+	if akActionRef == PlayerRef
+		if PlayerRef.GetItemCount(woodChoppingAxes) == 0
+			WoodChoppingFailureMessage.Show()
+			return
+		endif
+
+		ActivatedWithAxe()
+	endif
+endEvent
+
+Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
+	if akAggressor == PlayerRef && woodChoppingAxes.HasForm(akSource)
+		HitWithAxe()
+	endif
+EndEvent
+
 function Setup(int _remaining_yields, float _tinder_yield_chance, 		\
 			   int _min_yield_branch, int _max_yield_branch,	 		\
 			   int _min_yield_deadwood, int _max_yield_deadwood, 		\

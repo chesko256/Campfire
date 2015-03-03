@@ -5,11 +5,9 @@ import _CampInternal
 
 Activator property _Camp_WoodHarvestNode auto
 Actor property PlayerRef auto
-ObjectReference property required_activator_aspen_stump auto
-ObjectReference property required_activator_aspen_log auto
-ObjectReference property required_activator_small_pine_log auto
-ObjectReference property required_activator_small_pine_stump auto
-ObjectReference property required_activator_dead_tree auto
+
+;Activators go here
+
 ObjectReference property my_activator auto hidden
 ObjectReference property woodref auto hidden
 FormList property _Camp_HarvestableWood_AspenStumps auto
@@ -147,34 +145,6 @@ function Handle_DeadTree(ObjectReference akReference)
 	disable_on_depleted = true
 
 	MoveActivatorIfActiveNode(required_activator_dead_tree, akReference)
-endFunction
-
-Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
-	if akAggressor == PlayerRef && woodChoppingAxes.HasForm(akSource)
-		ControllerInterface_HitWithAxe()
-	endif
-EndEvent
-
-function Activated()
-	if PlayerRef.GetItemCount(woodChoppingAxes) == 0
-		WoodChoppingFailureMessage.Show()
-		return
-	endif
-	ControllerInterface_ActivatedWithAxe()
-endFunction
-
-function ControllerInterface_HitWithAxe()
-	_Camp_WoodHarvestNodeController my_controller = GetNodeController()
-	if my_controller
-		my_controller.HitWithAxe()
-	endif
-endFunction
-
-function ControllerInterface_ActivatedWithAxe()
-	_Camp_WoodHarvestNodeController my_controller = GetNodeController()
-	if my_controller
-		my_controller.ActivatedWithAxe()
-	endif
 endFunction
 
 _Camp_WoodHarvestNodeController function GetNearestNodeController()
