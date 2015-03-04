@@ -3,6 +3,7 @@ Scriptname _Camp_WoodAliasScript extends ReferenceAlias
 import math
 import _CampInternal
 
+_Camp_Compatibility property Compatibility auto
 Activator property _Camp_WoodHarvestNode auto
 Actor property PlayerRef auto
 
@@ -36,6 +37,7 @@ Static property TreePineForestUprootedStump01Heavy_SN auto
 Static property TreeTundraDriftWood02 auto
 Static property TreeTundraDriftWood02Sulfur auto
 Static property TreePineForestUprooted01 auto
+Tree property TreeReachTreeStump01 auto hidden
 
 Activator property _Camp_TreeAspenLog01_Act auto
 Activator property _Camp_TreePineForestLog01_Act auto
@@ -67,6 +69,7 @@ Activator property _Camp_TreePineForestUprootedStump01Heavy_SN_Act auto
 Activator property _Camp_TreeTundraDriftWood02_Act auto
 Activator property _Camp_TreeTundraDriftWood02Sulfur_Act auto
 Activator property _Camp_TreePineForestUprooted01_Act auto
+ Activator property _Camp_TreeReachTreeStump01_Act auto
 
 ObjectReference property woodref auto hidden
 FormList property _Camp_HarvestableWoodActivators auto
@@ -76,12 +79,14 @@ FormList property woodChoppingAxes auto
 Message property WoodChoppingFailureMessage auto
 
 Event OnInit()
+	;Assign Tree form at runtime
+	TreeReachTreeStump01 = Compatibility.TreeReachTreeStump01
+
 	woodref = self.GetRef()
 	Form woodform
 	if woodref
 		woodform = woodref.GetBaseObject()
 		;debug.trace("[Campfire] Log / Stump Alias " + self + " assigned new reference " + woodref)
-
 		if _Camp_HarvestableWood_Stumps.HasForm(woodform)
 			HandleStumps(woodform, woodref)
 		elseif _Camp_HarvestableWood_Logs.HasForm(woodform)
@@ -152,6 +157,9 @@ function HandleStumps(Form akBaseObject, ObjectReference akReference)
 	elseif akBaseObject == TreeTundraDriftWood02Sulfur
 		PlaceNodeController(_Camp_TreeTundraDriftWood02Sulfur_Act, akReference, \
 							3, 0.05, 0, 0, 1, 2, false, true, true)
+	elseif akBaseObject == TreeReachTreeStump01
+		PlaceNodeController(_Camp_TreeReachTreeStump01_Act, akReference, \
+							3, 0.05, 0, 0, 1, 2, true, false, false)
 	endif
 endFunction
 

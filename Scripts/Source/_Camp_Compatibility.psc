@@ -94,6 +94,9 @@ formlist property _Camp_HeatSources_Fire_Medium auto
 formlist property _Camp_HeatSources_Fire_Large auto
 formlist property _Camp_HeatSources_Other auto
 
+;#Trees============================================================================
+Tree property TreeReachTreeStump01 auto hidden
+
 ;#DLC / Mod Worldspaces============================================================
 Worldspace property DLC2WS auto hidden						;Solstheim
 
@@ -581,10 +584,7 @@ function VanillaGameLoadUp()
 	PlacementSystem.SmallFire = Game.GetFormFromFile(0x00013B40, "Skyrim.esm")
 	;PlacementSystem.LargeFire = Game.GetFormFromFile(0x000D61B6, "Skyrim.esm")
 
-	Tree aspen4 = Game.GetFormFromFile(0x0005FADA, "Skyrim.esm") as Tree
-	Ingredient test = Game.GetFormFromFile(0x000516C8, "Skyrim") as Ingredient
-	aspen4.SetIngredient(test)
-	aspen4.SetName("Fallen Branches")
+	TreeReachTreeStump01 = Game.GetFormFromFile(0x000B8A75, "Skyrim.esm") as Tree
 endFunction
 
 
