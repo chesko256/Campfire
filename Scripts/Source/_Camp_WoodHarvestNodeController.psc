@@ -7,6 +7,7 @@ bool property use_ref_model = false auto
 {Should this wood harvest node use the static's model? (Requires activator model with only collision)}
 
 float RESET_TIME = 72.0
+int MAX_YIELDS
 
 MiscObject property _Camp_Tinder auto
 MiscObject property _Camp_DeadwoodBranch auto
@@ -74,8 +75,9 @@ function Setup(int _remaining_yields, float _tinder_yield_chance, 		\
 			   bool _is_stump, bool _should_stand, 						\
 			   bool _disable_on_depleted, ObjectReference _my_wood_ref)
 
-	debug.trace("[Campfire] Setting up new wood harvesting node " + self)
+	;debug.trace("[Campfire] Setting up new wood harvesting node " + self)
 	remaining_yields = _remaining_yields
+	MAX_YIELDS = _remaining_yields
 	tinder_yield_chance = _tinder_yield_chance
 	min_yield_branch = _min_yield_branch
 	max_yield_branch = _max_yield_branch
@@ -89,6 +91,9 @@ function Setup(int _remaining_yields, float _tinder_yield_chance, 		\
 
 	if !use_ref_model
 		my_wood_ref.DisableNoWait()
+	else
+		;Move upwards slightly so that the collider can be activated
+		self.MoveTo(self, afZOffset = 0.50)
 	endif
 
 	RegisterForSingleUpdateGameTime(RESET_TIME)
@@ -103,7 +108,7 @@ function GetMushrooms()
 			ObjectReference found_mushroom = Game.FindRandomReferenceOfAnyTypeInListFromRef(_Camp_HarvestableWood_Mushrooms, self, 5.0)
 			if found_mushroom && found_mushroom != my_mushroom_ref1
 				my_mushroom_ref2 = found_mushroom
-				debug.trace("[Campfire] Mushroom 2: " + my_mushroom_ref2)
+				;debug.trace("[Campfire] Mushroom 2: " + my_mushroom_ref2)
 			endif
 			i += 1
 		endWhile
@@ -150,7 +155,7 @@ function ActivatedWithAxe()
 	;Should I stand or crouch?
 	;Due to timing issues, it can be difficult to get the player to do what we want.
 	;So, we need to loop and check the state until we definitely have the result we want.
-	if should_stand
+	if should_stand && !IsWoodLyingDown()
 		if PlayerRef.IsSneaking()
 			i = 0
 			while PlayerRef.IsSneaking() && i < 50
@@ -267,6 +272,16 @@ function ExitActivatedChopping()
 	endif
 endFunction
 
+bool function IsWoodLyingDown()
+	if (my_wood_ref.GetAngleX() <= 20.0 || my_wood_ref.GetAngleX() >= 340.0) && \
+	   (my_wood_ref.GetAngleY() <= 20.0 || my_wood_ref.GetAngleY() >= 340.0)
+
+		return false
+	else
+		return true
+	endif
+endFunction
+
 Weapon function GetCurrentWeapon(bool abOffHand = false)
 	Weapon the_weapon
 	if !abOffHand
@@ -378,8 +393,8 @@ function GlobalNodeReset()
 endFunction
 
 Event OnCellDetach()
-	debug.trace("[Campfire] Detached from cell, checking deletion eligibility...")
-	if eligible_for_deletion || remaining_yields >= 3
+	;debug.trace("[Campfire] Detached from cell, checking deletion eligibility...")
+	if eligible_for_deletion || remaining_yields >= MAX_YIELDS
 		NodeReset()
 	endif
 EndEvent

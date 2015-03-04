@@ -22,7 +22,7 @@ Event OnInit()
 	Form woodform
 	if woodref
 		woodform = woodref.GetBaseObject()
-		debug.trace("[Campfire] Branch Alias " + self + " assigned new reference " + woodref)
+		;debug.trace("[Campfire] Branch Alias " + self + " assigned new reference " + woodref)
 		Handle_Branch(woodform, woodref)
 	endif
 EndEvent

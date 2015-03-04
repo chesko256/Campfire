@@ -35,6 +35,7 @@ Static property TreePineForestUprootedStump01_ice auto
 Static property TreePineForestUprootedStump01Heavy_SN auto
 Static property TreeTundraDriftWood02 auto
 Static property TreeTundraDriftWood02Sulfur auto
+Static property TreePineForestUprooted01 auto
 
 Activator property _Camp_TreeAspenLog01_Act auto
 Activator property _Camp_TreePineForestLog01_Act auto
@@ -65,6 +66,7 @@ Activator property _Camp_TreePineForestUprootedStump01_ice_Act auto
 Activator property _Camp_TreePineForestUprootedStump01Heavy_SN_Act auto
 Activator property _Camp_TreeTundraDriftWood02_Act auto
 Activator property _Camp_TreeTundraDriftWood02Sulfur_Act auto
+Activator property _Camp_TreePineForestUprooted01_Act auto
 
 ObjectReference property woodref auto hidden
 FormList property _Camp_HarvestableWoodActivators auto
@@ -78,7 +80,7 @@ Event OnInit()
 	Form woodform
 	if woodref
 		woodform = woodref.GetBaseObject()
-		debug.trace("[Campfire] Log / Stump Alias " + self + " assigned new reference " + woodref)
+		;debug.trace("[Campfire] Log / Stump Alias " + self + " assigned new reference " + woodref)
 
 		if _Camp_HarvestableWood_Stumps.HasForm(woodform)
 			HandleStumps(woodform, woodref)
@@ -200,6 +202,9 @@ function HandleLogs(Form akBaseObject, ObjectReference akReference)
 	elseif akBaseObject == TreePineForestLogSm01_HeavySN
 		PlaceNodeController(_Camp_TreePineForestLogSm01_HeavySN_Act, akReference, \
 							3, 0.1, 0, 1, 1, 2, false, false, true)
+	elseif akBaseObject == TreePineForestUprooted01
+		PlaceNodeController(_Camp_TreePineForestUprooted01_Act, akReference, \
+							3, 0.1, 0, 2, 2, 3, false, false, false)
 	endif
 endFunction
 

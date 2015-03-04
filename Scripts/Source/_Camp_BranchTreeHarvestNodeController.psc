@@ -20,7 +20,7 @@ function Setup(float _tinder_yield_chance, 								\
 			   bool _disable_on_depleted,								\
 			   ObjectReference _current_activator, ObjectReference _my_wood_ref)
 
-	debug.trace("[Campfire] Setting up new branch / tree harvesting node " + self)
+	;debug.trace("[Campfire] Setting up new branch / tree harvesting node " + self)
 	tinder_yield_chance = _tinder_yield_chance
 	min_yield_branch = _min_yield_branch
 	max_yield_branch = _max_yield_branch
@@ -54,40 +54,35 @@ function YieldResources()
 
 		;Stagger updates every 21 - 27 hours to avoid hammering the system all at once
 		float _reset_time = RESET_TIME - RandomInt(-3, 3)
-		debug.trace("[Campfire] Tree respawning in " + _reset_time + " hours")
+		;debug.trace("[Campfire] Tree respawning in " + _reset_time + " hours")
 		RegisterForSingleUpdateGameTime(_reset_time)
 	endif
 endFunction
 
 Event WoodHarvestNodeReset()
 	debug.trace("[Campfire] " + self + " received global reset signal for wood harvest node, reverting...")
-	GlobalNodeReset()
+	RegisterForSingleUpdateGameTime(0.0)
 endEvent
 
 Event OnUpdateGameTime()
-	debug.trace("[Campfire] Node resetting after prescribed game time.")
+	;debug.trace("[Campfire] Node resetting after prescribed game time.")
 	eligible_for_deletion = true
 	if !self.Is3DLoaded()
 		NodeReset()
 	else
-		debug.trace("[Campfire] Still attached; waiting for unload.")
+		;debug.trace("[Campfire] Still attached; waiting for unload.")
 	endif
 EndEvent
 
-function GlobalNodeReset()
-	debug.trace("[Campfire] (Global) Wood Harvest Node Controller resetting object.")
-	RegisterForSingleUpdateGameTime(0.0)
-endFunction
-
 Event OnCellDetach()
-	debug.trace("[Campfire] Detached from cell, checking deletion eligibility...")
-	if eligible_for_deletion
+	;debug.trace("[Campfire] Detached from cell, checking deletion eligibility...")
+	if eligible_for_deletion || !harvested
 		NodeReset()
 	endif
 EndEvent
 
 function NodeReset()
-	debug.trace("[Campfire] Wood Harvest Node Controller resetting object.")
+	debug.trace("[Campfire] Tree Harvest Node Controller resetting object.")
 	UnregisterForModEvent("Campfire_WoodHarvestNodeReset")
 	if my_wood_ref && my_wood_ref.IsDisabled()
 		my_wood_ref.EnableNoWait()
