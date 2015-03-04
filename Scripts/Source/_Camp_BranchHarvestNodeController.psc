@@ -49,7 +49,7 @@ EndEvent
 
 Event OnCellDetach()
 	debug.trace("[Campfire] Detached from cell, checking deletion eligibility...")
-	if eligible_for_deletion
+	if eligible_for_deletion || !harvested
 		NodeReset()
 	endif
 EndEvent

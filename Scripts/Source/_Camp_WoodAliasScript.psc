@@ -203,14 +203,6 @@ function HandleLogs(Form akBaseObject, ObjectReference akReference)
 	endif
 endFunction
 
-bool function IsDepletedNodeController(_Camp_WoodHarvestNodeController my_controller)
-	if my_controller.remaining_yields <= 0
-		return true
-	else
-		return false
-	endif
-endFunction
-
 function PlaceNodeController(Activator akActivator, ObjectReference woodref,										\
 											int remaining_yields, float tinder_yield_chance, 						\
 											int min_yield_branch, int max_yield_branch, 							\

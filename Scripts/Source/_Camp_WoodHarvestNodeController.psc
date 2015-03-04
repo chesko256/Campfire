@@ -3,6 +3,9 @@ scriptname _Camp_WoodHarvestNodeController extends ObjectReference
 import Utility
 import math
 
+bool property use_ref_model = false auto
+{Should this wood harvest node use the static's model? (Requires activator model with only collision)}
+
 float RESET_TIME = 72.0
 
 MiscObject property _Camp_Tinder auto
@@ -50,6 +53,10 @@ Event OnActivate(ObjectReference akActionRef)
 			WoodChoppingFailureMessage.Show()
 			return
 		endif
+		if remaining_yields <= 0
+			ShowDepleteMessage()
+			return
+		endif
 
 		ActivatedWithAxe()
 	endif
@@ -79,6 +86,10 @@ function Setup(int _remaining_yields, float _tinder_yield_chance, 		\
 	disable_on_depleted = _disable_on_depleted
 	my_wood_ref = _my_wood_ref
 	GetMushrooms()
+
+	if !use_ref_model
+		my_wood_ref.DisableNoWait()
+	endif
 
 	RegisterForSingleUpdateGameTime(RESET_TIME)
 	RegisterForModEvent("Campfire_WoodHarvestNodeReset", "WoodHarvestNodeReset")
@@ -303,7 +314,6 @@ function YieldResources()
 		if remaining_yields <= 0
 			ShowDepleteMessage()
 			
-			;Disable stuff?
 			if disable_on_depleted && my_wood_ref
 				if my_mushroom_ref1
 					my_mushroom_ref1.DisableNoWait()
@@ -311,7 +321,12 @@ function YieldResources()
 				if my_mushroom_ref2
 					my_mushroom_ref2.DisableNoWait()
 				endif
-				my_wood_ref.DisableNoWait(true)
+				if use_ref_model
+					self.DisableNoWait()
+					my_wood_ref.DisableNoWait(true)
+				else
+					self.DisableNoWait(true)
+				endif
 			endif
 			RegisterForSingleUpdateGameTime(RESET_TIME)
 		endif
@@ -364,7 +379,7 @@ endFunction
 
 Event OnCellDetach()
 	debug.trace("[Campfire] Detached from cell, checking deletion eligibility...")
-	if eligible_for_deletion
+	if eligible_for_deletion || remaining_yields >= 3
 		NodeReset()
 	endif
 EndEvent
