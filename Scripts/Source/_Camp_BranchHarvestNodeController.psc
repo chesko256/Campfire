@@ -2,7 +2,8 @@ scriptname _Camp_BranchHarvestNodeController extends ObjectReference
 
 import Utility
 
-float property RESET_TIME = 24.0 auto hidden
+float RESET_TIME = 24.0
+float BACKOFF_TIME
 MiscObject property _Camp_DeadwoodBranch auto
 Actor property PlayerRef auto
 ObjectReference property my_wood_ref auto hidden
@@ -12,7 +13,13 @@ bool eligible_for_deletion = false
 function Setup(ObjectReference _my_wood_ref)
 	;debug.trace("[Campfire] Setting up new branch harvesting node " + self)
 	my_wood_ref = _my_wood_ref
-	my_wood_ref.DisableNoWait()
+
+	;Store a random back-off value for use during reset
+	BACKOFF_TIME = RandomFloat(0.0, 3.0)
+	if !my_wood_ref.GetEnableParent()
+		my_wood_ref.DisableNoWait()
+	endif
+	
 	RegisterForModEvent("Campfire_WoodHarvestNodeReset", "WoodHarvestNodeReset")
 	float _reset_time = RESET_TIME - RandomInt(-3, 3)
 	;debug.trace("[Campfire] Tree respawning in " + _reset_time + " hours")
@@ -55,6 +62,7 @@ Event OnCellDetach()
 EndEvent
 
 function NodeReset()
+	utility.wait(BACKOFF_TIME)
 	debug.trace("[Campfire] Branch Harvest Node Controller resetting object.")
 	UnregisterForModEvent("Campfire_WoodHarvestNodeReset")
 	if my_wood_ref && my_wood_ref.IsDisabled()

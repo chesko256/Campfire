@@ -2,7 +2,8 @@ scriptname _Camp_BranchTreeHarvestNodeController extends ObjectReference
 
 import Utility
 
-float property RESET_TIME auto
+float RESET_TIME = 24.0
+float BACKOFF_TIME
 MiscObject property _Camp_Tinder auto
 MiscObject property _Camp_DeadwoodBranch auto
 Actor property PlayerRef auto
@@ -27,6 +28,9 @@ function Setup(float _tinder_yield_chance, 								\
 	disable_on_depleted = _disable_on_depleted
 	current_activator = _current_activator
 	my_wood_ref = _my_wood_ref
+
+	;Store a random back-off value for use during reset
+	BACKOFF_TIME = RandomFloat(0.0, 2.0)
 
 	RegisterForModEvent("Campfire_WoodHarvestNodeReset", "WoodHarvestNodeReset")
 endFunction
@@ -82,6 +86,7 @@ Event OnCellDetach()
 EndEvent
 
 function NodeReset()
+	utility.wait(BACKOFF_TIME)
 	debug.trace("[Campfire] Tree Harvest Node Controller resetting object.")
 	UnregisterForModEvent("Campfire_WoodHarvestNodeReset")
 	if my_wood_ref && my_wood_ref.IsDisabled()
