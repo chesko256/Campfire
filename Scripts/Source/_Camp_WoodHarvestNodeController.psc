@@ -7,6 +7,7 @@ bool property use_ref_model = false auto
 {Should this wood harvest node use the static's model? (Requires activator model with only collision)}
 
 float RESET_TIME = 72.0
+float BACKOFF_TIME
 int MAX_YIELDS
 
 MiscObject property _Camp_Tinder auto
@@ -45,8 +46,6 @@ bool was_weapons_drawn
 bool exit_on_next_hit
 weapon main_weapon
 weapon offhand_weapon
-
-;@TODO: Handle reset, being visible but not activatable and depleted, etc.
 
 Event OnActivate(ObjectReference akActionRef)
 	if akActionRef == PlayerRef
@@ -89,7 +88,10 @@ function Setup(int _remaining_yields, float _tinder_yield_chance, 		\
 	my_wood_ref = _my_wood_ref
 	GetMushrooms()
 
-	if !use_ref_model
+	;Store a random back-off value for use during reset
+	BACKOFF_TIME = RandomFloat(0.0, 3.0)
+
+	if !use_ref_model && !my_wood_ref.GetEnableParent()
 		my_wood_ref.DisableNoWait()
 	else
 		;Move upwards slightly so that the collider can be activated
@@ -338,7 +340,9 @@ function YieldResources()
 				endif
 				if use_ref_model
 					self.DisableNoWait()
-					my_wood_ref.DisableNoWait(true)
+					if !my_wood_ref.GetEnableParent()
+						my_wood_ref.DisableNoWait(true)
+					endif
 				else
 					self.DisableNoWait(true)
 				endif
@@ -366,7 +370,7 @@ endFunction
 
 Event WoodHarvestNodeReset()
 	debug.trace("[Campfire] " + self + " received global reset signal for wood harvest node, reverting...")
-	GlobalNodeReset()
+	RegisterForSingleUpdateGameTime(0.0)
 endEvent
 
 Event OnUpdate()
@@ -387,11 +391,6 @@ Event OnUpdateGameTime()
 	endif
 EndEvent
 
-function GlobalNodeReset()
-	debug.trace("[Campfire] (Global) Wood Harvest Node Controller resetting object.")
-	RegisterForSingleUpdateGameTime(0.0)
-endFunction
-
 Event OnCellDetach()
 	;debug.trace("[Campfire] Detached from cell, checking deletion eligibility...")
 	if eligible_for_deletion || remaining_yields >= MAX_YIELDS
@@ -400,6 +399,7 @@ Event OnCellDetach()
 EndEvent
 
 function NodeReset()
+	utility.wait(BACKOFF_TIME)
 	debug.trace("[Campfire] Wood Harvest Node Controller resetting object.")
 	UnregisterForModEvent("Campfire_WoodHarvestNodeReset")
 	if my_wood_ref && my_wood_ref.IsDisabled()
