@@ -20,6 +20,8 @@ ObjectReference property my_mushroom_ref2 auto hidden
 ObjectReference property current_activator auto hidden
 ObjectReference property _Camp_WoodHarvestAttackTarget auto
 ObjectReference property _Camp_WoodHarvestAnchor auto
+FormList property woodChoppingAxes auto
+message property WoodChoppingFailureMessage auto
 int property remaining_yields auto hidden
 float property tinder_yield_chance auto hidden
 int property hit_count auto hidden
@@ -63,8 +65,7 @@ function Setup(int _remaining_yields, float _tinder_yield_chance, 		\
 			   int _min_yield_branch, int _max_yield_branch,	 		\
 			   int _min_yield_deadwood, int _max_yield_deadwood, 		\
 			   bool _is_stump, bool _should_stand, 						\
-			   bool _disable_on_depleted,								\
-			   ObjectReference _current_activator, ObjectReference _my_wood_ref)
+			   bool _disable_on_depleted, ObjectReference _my_wood_ref)
 
 	debug.trace("[Campfire] Setting up new wood harvesting node " + self)
 	remaining_yields = _remaining_yields
@@ -76,7 +77,6 @@ function Setup(int _remaining_yields, float _tinder_yield_chance, 		\
 	is_stump = _is_stump
 	should_stand = _should_stand
 	disable_on_depleted = _disable_on_depleted
-	current_activator = _current_activator
 	my_wood_ref = _my_wood_ref
 	GetMushrooms()
 
@@ -303,9 +303,7 @@ function YieldResources()
 		if remaining_yields <= 0
 			ShowDepleteMessage()
 			
-			if current_activator
-				(current_activator as _Camp_WoodActivatorScript).GoHome()
-			endif
+			;Disable stuff?
 			if disable_on_depleted && my_wood_ref
 				if my_mushroom_ref1
 					my_mushroom_ref1.DisableNoWait()
