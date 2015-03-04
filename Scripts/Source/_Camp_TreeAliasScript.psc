@@ -23,7 +23,7 @@ Event OnInit()
 	Form woodform
 	if woodref
 		woodform = woodref.GetBaseObject()
-		debug.trace("[Campfire] Tree Alias " + self + " assigned new reference " + woodref)
+		;debug.trace("[Campfire] Tree Alias " + self + " assigned new reference " + woodref)
 
 		if _Camp_HarvestableBranchTrees_Small.HasForm(woodform)
 			if _Camp_HarvestableBranchTrees_Snow.HasForm(woodform)
