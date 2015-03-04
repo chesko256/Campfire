@@ -4,7 +4,7 @@ import math
 
 GlobalVariable property _Camp_Setting_DynamicWoodHarvesting auto
 ObjectReference property _Camp_WoodHarvestAnchor auto
-FormList property _Camp_WoodHarvestActivatorRefs auto
+FormList property _Camp_WoodHarvestActivators auto
 Actor property PlayerRef auto
 bool looking_at_node = false
 float prev_x
@@ -46,7 +46,7 @@ Event OnUpdate()
 EndEvent
 
 Event OnCrosshairRefChange(ObjectReference ref)
-	if ref && _Camp_WoodHarvestActivatorRefs.HasForm(ref.GetBaseObject())
+	if ref && _Camp_WoodHarvestActivators.HasForm(ref.GetBaseObject())
 		looking_at_node = true
 	else
 		looking_at_node = false
