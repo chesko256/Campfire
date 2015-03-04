@@ -67,11 +67,9 @@ Activator property _Camp_TreeTundraDriftWood02_Act auto
 Activator property _Camp_TreeTundraDriftWood02Sulfur_Act auto
 
 ObjectReference property woodref auto hidden
-FormList property _Camp_HarvestableWood_AspenStumps auto
-FormList property _Camp_HarvestableWood_AspenLogs auto
-FormList property _Camp_HarvestableWood_SmallPineLogs auto
-FormList property _Camp_HarvestableWood_SmallPineStumps auto
-FormList property _Camp_HarvestableWood_DeadTrees auto
+FormList property _Camp_HarvestableWoodActivators auto
+FormList property _Camp_HarvestableWood_Stumps auto
+FormList property _Camp_HarvestableWood_Logs auto
 FormList property woodChoppingAxes auto
 Message property WoodChoppingFailureMessage auto
 
@@ -164,7 +162,7 @@ function HandleLogs(Form akBaseObject, ObjectReference akReference)
 	max_yield_deadwood
 	is_stump
 	should_stand
-	disable_on_depleted /;
+	disable_on_depleted/;
 
 	if akBaseObject == TreeAspenLog01
 		PlaceNodeController(_Camp_TreeAspenLog01_Act, akReference, \
@@ -226,7 +224,7 @@ function PlaceNodeController(Activator akActivator, ObjectReference woodref,				
 			my_controller = my_node as _Camp_WoodHarvestNodeController
 			my_controller.Setup(remaining_yields, tinder_yield_chance, min_yield_branch, max_yield_branch, 	\
 							min_yield_deadwood, max_yield_deadwood, is_stump, should_stand, disable_on_depleted, 		\
-							my_activator, woodref)
+							woodref)
 		endif
 	endif
 endFunction
