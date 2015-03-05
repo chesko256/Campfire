@@ -9,6 +9,7 @@ bool property use_ref_model = false auto
 float RESET_TIME = 72.0
 float BACKOFF_TIME
 int MAX_YIELDS
+bool eligible_for_reset = false
 
 MiscObject property _Camp_Tinder auto
 MiscObject property _Camp_DeadwoodBranch auto
@@ -37,7 +38,6 @@ int property max_yield_deadwood auto hidden
 bool property is_stump auto hidden
 bool property should_stand auto hidden
 bool property disable_on_depleted auto hidden
-bool eligible_for_deletion = false
 
 ;Animation state vars
 bool was_first_person
@@ -384,7 +384,7 @@ function ShowDepleteMessage()
 endFunction
 
 Event WoodHarvestNodeReset()
-	debug.trace("[Campfire] " + self + " received global reset signal for wood harvest node, reverting...")
+	debug.trace("[Campfire] Wood node " + self + " received global reset signal, reverting...")
 	RegisterForSingleUpdateGameTime(0.0)
 endEvent
 
@@ -398,7 +398,7 @@ endEvent
 
 Event OnCellDetach()
 	;debug.trace("[Campfire] Detached from cell, checking deletion eligibility...")
-	if remaining_yields >= MAX_YIELDS
+	if eligible_for_reset || remaining_yields >= MAX_YIELDS
 		utility.wait(BACKOFF_TIME)
 		RegisterForSingleUpdateGameTime(0.0)
 	endif
@@ -406,18 +406,12 @@ EndEvent
 
 Event OnUpdateGameTime()
 	;debug.trace("[Campfire] Node resetting after prescribed game time.")
-	if !PlayerRef.HasLOS(self)
+	eligible_for_reset = true
+	if !self.GetParentCell().IsAttached()
 		utility.wait(BACKOFF_TIME)
 		NodeReset()
-	else
-		RegisterForSingleLOSLost(PlayerRef, self)
 	endif
 EndEvent
-
-Event OnLostLOS(Actor akViewer, ObjectReference akTarget)
-	utility.wait(BACKOFF_TIME)
-	NodeReset()
-endEvent
 
 function NodeReset()
 	;debug.trace("[Campfire] Wood Harvest Node Controller resetting object.")
