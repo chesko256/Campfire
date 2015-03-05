@@ -11,7 +11,7 @@ float prev_x
 float prev_y
 
 Event OnInit()
-	RegisterForSingleUpdate(5)
+	RegisterForSingleUpdate(7)
 	RegisterForCrosshairRef()
 EndEvent
 

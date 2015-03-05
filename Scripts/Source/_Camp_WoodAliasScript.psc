@@ -86,7 +86,7 @@ Event OnInit()
 	Form woodform
 	if woodref
 		woodform = woodref.GetBaseObject()
-		;debug.trace("[Campfire] Log / Stump Alias " + self + " assigned new reference " + woodref)
+		debug.trace("[Campfire] Log / Stump Alias " + self + " assigned new reference " + woodref)
 		if _Camp_HarvestableWood_Stumps.HasForm(woodform)
 			HandleStumps(woodform, woodref)
 		elseif _Camp_HarvestableWood_Logs.HasForm(woodform)
@@ -126,22 +126,22 @@ function HandleStumps(Form akBaseObject, ObjectReference akReference)
 							3, 0.05, 0, 0, 1, 1, true, false, true)
 	elseif akBaseObject == TreePineForestStump01
 		PlaceNodeController(_Camp_TreePineForestStump01_Act, akReference, \
-							3, 0.05, 0, 0, 1, 2, true, false, false)
+							3, 0.05, 0, 0, 1, 2, true, true, false)
 	elseif akBaseObject == TreePineForestStump01_ice
 		PlaceNodeController(_Camp_TreePineForestStump01_ice_Act, akReference, \
-							3, 0.05, 0, 0, 1, 2, true, false, false)
+							3, 0.05, 0, 0, 1, 2, true, true, false)
 	elseif akBaseObject == TreePineForestStump01Blank
 		PlaceNodeController(_Camp_TreePineForestStump01Blank_Act, akReference, \
-							3, 0.05, 0, 0, 1, 2, true, false, false)
+							3, 0.05, 0, 0, 1, 2, true, true, false)
 	elseif akBaseObject == TreePineForestStump01Snow
 		PlaceNodeController(_Camp_TreePineForestStump01Snow_Act, akReference, \
-							3, 0.05, 0, 0, 1, 2, true, false, false)
+							3, 0.05, 0, 0, 1, 2, true, true, false)
 	elseif akBaseObject == TreePineForestStump02A
 		PlaceNodeController(_Camp_TreePineForestStump02A_Act, akReference, \
-							3, 0.05, 0, 0, 1, 1, true, false, false)
+							3, 0.05, 0, 0, 1, 1, true, true, false)
 	elseif akBaseObject == TreePineForestStump02B
 		PlaceNodeController(_Camp_TreePineForestStump02B_Act, akReference, \
-							3, 0.05, 0, 0, 1, 1, true, false, false)
+							3, 0.05, 0, 0, 1, 1, true, true, false)
 	elseif akBaseObject == TreePineForestUprootedStump01
 		PlaceNodeController(_Camp_TreePineForestUprootedStump01_Act, akReference, \
 							3, 0.05, 0, 0, 1, 2, true, false, false)
@@ -224,12 +224,16 @@ function PlaceNodeController(Activator akActivator, ObjectReference woodref,				
 	ObjectReference my_node = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_HarvestableWoodActivators, woodref, 1.0)
 	_Camp_WoodHarvestNodeController my_controller = None
 	if !my_node
-		my_node = PlaceAndWaitFor3DLoaded(woodref, akActivator)
+		my_node = woodref.PlaceAtMe(akActivator, abInitiallyDisabled = True)
 		if my_node
+			my_node.SetScale(woodref.GetScale())
+			my_node.Enable()
 			my_controller = my_node as _Camp_WoodHarvestNodeController
 			my_controller.Setup(remaining_yields, tinder_yield_chance, min_yield_branch, max_yield_branch, 	\
 							min_yield_deadwood, max_yield_deadwood, is_stump, should_stand, disable_on_depleted, 		\
 							woodref)
 		endif
+	else
+		;debug.trace("[Campfire] my_node " + my_node + " for ref " + woodref + " already exists.")
 	endif
 endFunction

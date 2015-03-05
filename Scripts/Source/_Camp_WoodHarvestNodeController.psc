@@ -57,7 +57,9 @@ Event OnActivate(ObjectReference akActionRef)
 			ShowDepleteMessage()
 			return
 		endif
-
+		if PlayerRef.IsSwimming()
+			return
+		endif
 		ActivatedWithAxe()
 	endif
 endEvent
@@ -74,7 +76,7 @@ function Setup(int _remaining_yields, float _tinder_yield_chance, 		\
 			   bool _is_stump, bool _should_stand, 						\
 			   bool _disable_on_depleted, ObjectReference _my_wood_ref)
 
-	;debug.trace("[Campfire] Setting up new wood harvesting node " + self)
+	debug.trace("[Campfire] Setting up new wood harvesting node " + self)
 	remaining_yields = _remaining_yields
 	MAX_YIELDS = _remaining_yields
 	tinder_yield_chance = _tinder_yield_chance
@@ -94,6 +96,10 @@ function Setup(int _remaining_yields, float _tinder_yield_chance, 		\
 	if !use_ref_model && !my_wood_ref.GetEnableParent()
 		my_wood_ref.DisableNoWait()
 	else
+		debug.trace("[Campfire] Woodref " + my_wood_ref + " has enable parent " + my_wood_ref.GetEnableParent() + " or use_ref_model = " + use_ref_model)
+	endif
+
+	if use_ref_model
 		;Move upwards slightly so that the collider can be activated
 		self.MoveTo(self, afZOffset = 0.50)
 	endif
@@ -127,6 +133,7 @@ function ActivatedWithAxe()
 	RegisterForControl("Back")
 	RegisterForControl("Strafe Left")
 	RegisterForControl("Strafe Right")
+	RegisterForMenu("Dialogue Menu")
 
 	;Register for update for emergency bail-out
 	RegisterForSingleUpdate(15.0)
@@ -206,10 +213,17 @@ EndEvent
 
 Event OnControlDown(string control)
 	if control == "Move" || control == "Forward" || control == "Back" || control == "Strafe Left" || control == "Strafe Right"
-		debug.trace("[Campfire] Exiting after next hit.")
+		;Player pressed move to exit.
 		exit_on_next_hit = true
 	endif
 EndEvent
+
+Event OnMenuOpen(String MenuName)
+	if MenuName == "Dialogue Menu"
+		;Someone force-greeted us.
+		exit_on_next_hit = true
+	endif
+endEvent
 
 Event PlayerHit(Form akAggressor, Form akSource, Form akProjectile)
 	exit_on_next_hit = true
@@ -231,6 +245,7 @@ function ExitActivatedChopping()
 	UnregisterForControl("Back")
 	UnregisterForControl("Strafe Left")
 	UnregisterForControl("Strafe Right")
+	UnregisterForMenu("Dialogue Menu")
 	UnregisterForUpdate()
 	exit_on_next_hit = false
 
@@ -302,7 +317,7 @@ endFunction
 
 function HitWithAxe()
 	hit_count += 1
-	debug.trace("[Campfire] Hit with axe! Hit count " + hit_count)
+	;debug.trace("[Campfire] Hit with axe! Hit count " + hit_count)
 	if hit_count >= 3
 		hit_count = 0
 		_Camp_ChopWoodSM.Play(PlayerRef)
@@ -381,26 +396,31 @@ Event OnUpdate()
 	endif
 endEvent
 
-Event OnUpdateGameTime()
-	debug.trace("[Campfire] Node resetting after prescribed game time.")
-	eligible_for_deletion = true
-	if !self.Is3DLoaded()
-		NodeReset()
-	else
-		debug.trace("[Campfire] Still attached; waiting for unload.")
-	endif
-EndEvent
-
 Event OnCellDetach()
 	;debug.trace("[Campfire] Detached from cell, checking deletion eligibility...")
-	if eligible_for_deletion || remaining_yields >= MAX_YIELDS
-		NodeReset()
+	if remaining_yields >= MAX_YIELDS
+		utility.wait(BACKOFF_TIME)
+		RegisterForSingleUpdateGameTime(0.0)
 	endif
 EndEvent
 
-function NodeReset()
+Event OnUpdateGameTime()
+	;debug.trace("[Campfire] Node resetting after prescribed game time.")
+	if !PlayerRef.HasLOS(self)
+		utility.wait(BACKOFF_TIME)
+		NodeReset()
+	else
+		RegisterForSingleLOSLost(PlayerRef, self)
+	endif
+EndEvent
+
+Event OnLostLOS(Actor akViewer, ObjectReference akTarget)
 	utility.wait(BACKOFF_TIME)
-	debug.trace("[Campfire] Wood Harvest Node Controller resetting object.")
+	NodeReset()
+endEvent
+
+function NodeReset()
+	;debug.trace("[Campfire] Wood Harvest Node Controller resetting object.")
 	UnregisterForModEvent("Campfire_WoodHarvestNodeReset")
 	if my_wood_ref && my_wood_ref.IsDisabled()
 		my_wood_ref.EnableNoWait()
