@@ -42,6 +42,7 @@ function PlaceNodeController(Container akNodeController, ObjectReference akRefer
 	if !my_node
 		my_node = akReference.PlaceAtMe(akNodeController, abInitiallyDisabled = true)
 		if my_node
+			debug.trace("[Campfire] Placed woodpile node " + my_node)
 			my_controller = my_node as _Camp_WoodpileNodeController
 			my_controller.Setup(woodref)
 		endif
