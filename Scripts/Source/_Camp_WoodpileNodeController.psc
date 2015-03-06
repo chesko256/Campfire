@@ -11,13 +11,65 @@ Actor property PlayerRef auto
 ObjectReference property my_wood_ref auto hidden
 bool property harvested = false auto hidden
 
+Formlist property _Camp_FirewoodPiles auto
+Formlist property _Camp_FirewoodPileNodes auto
+FormList property _Camp_FirewoodPiles_Small auto
+FormList property _Camp_FirewoodPiles_Medium auto
+FormList property _Camp_FirewoodPiles_Large auto
+FormList property _Camp_FirewoodPiles_Huge auto
+
+Container property _Camp_WoodHarvestFirewoodPile_Small auto
+Container property _Camp_WoodHarvestFirewoodPile_Medium auto
+Container property _Camp_WoodHarvestFirewoodPile_Large auto
+Container property _Camp_WoodHarvestFirewoodPile_Huge auto
+
 function Setup(ObjectReference _my_wood_ref)
+	; Use a recursive method to seek out nearby woodpiles and spread.
+	; Some areas have high concentrations of woodpiles, and 5 aliases
+	; is not enough.
+	int i = 0
+	while i < 3
+		SearchForNearbyWoodpiles()
+		i += 1
+	endWhile
+
 	my_wood_ref = _my_wood_ref
 	RegisterForSingleUpdate(0.1)
 endFunction
 
+function SearchForNearbyWoodpiles()
+	ObjectReference woodref = Game.FindRandomReferenceOfAnyTypeInListFromRef(_Camp_FirewoodPiles, self, 1000.0)
+	if woodref
+		Form woodform = woodref.GetBaseObject()
+		;debug.trace("[Campfire] Woodpile Alias " + self + " assigned new reference " + woodref)
+		
+		if _Camp_FirewoodPiles_Small.HasForm(woodform)
+			PlaceNodeController(_Camp_WoodHarvestFirewoodPile_Small, woodref)
+		elseif _Camp_FirewoodPiles_Medium.HasForm(woodform)
+			PlaceNodeController(_Camp_WoodHarvestFirewoodPile_Medium, woodref)
+		elseif _Camp_FirewoodPiles_Large.HasForm(woodform)
+			PlaceNodeController(_Camp_WoodHarvestFirewoodPile_Large, woodref)
+		elseif _Camp_FirewoodPiles_Huge.HasForm(woodform)
+			PlaceNodeController(_Camp_WoodHarvestFirewoodPile_Huge, woodref)
+		endif
+	endif
+endFunction
+
+function PlaceNodeController(Container akNodeController, ObjectReference akReference)
+	ObjectReference my_node = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_FirewoodPileNodes, akReference, 1.0)
+	_Camp_WoodpileNodeController my_controller = None
+	if !my_node
+		my_node = akReference.PlaceAtMe(akNodeController, abInitiallyDisabled = true)
+		debug.trace("[Campfire] Recursively placed woodpile node " + my_node)
+		if my_node
+			my_controller = my_node as _Camp_WoodpileNodeController
+			my_controller.Setup(akReference)
+		endif
+	endif
+endFunction
+
 Event OnUpdate()
-	debug.trace("[Campfire] Setting up new woodpile harvesting node " + self)
+	;debug.trace("[Campfire] Setting up new woodpile harvesting node " + self)
 
 	;Store a random back-off value for use during reset
 	BACKOFF_TIME = RandomFloat(0.0, 3.0)
