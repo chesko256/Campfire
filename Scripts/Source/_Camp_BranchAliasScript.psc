@@ -45,7 +45,6 @@ function PlaceNodeController(Activator akNodeController, ObjectReference akRefer
 	ObjectReference my_node = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_HarvestableBranchActivators, akReference, 1.0)
 	_Camp_BranchHarvestNodeController my_controller = None
 	if !my_node
-		;my_node = PlaceAndWaitFor3DLoaded(akReference, akNodeController)
 		my_node = akReference.PlaceAtMe(akNodeController, abInitiallyDisabled = true)
 		if my_node
 			my_node.SetScale(akReference.GetScale())

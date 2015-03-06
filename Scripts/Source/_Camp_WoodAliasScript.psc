@@ -86,7 +86,7 @@ Event OnInit()
 	Form woodform
 	if woodref
 		woodform = woodref.GetBaseObject()
-		debug.trace("[Campfire] Log / Stump Alias " + self + " assigned new reference " + woodref)
+		;debug.trace("[Campfire] Log / Stump Alias " + self + " assigned new reference " + woodref)
 		if _Camp_HarvestableWood_Stumps.HasForm(woodform)
 			HandleStumps(woodform, woodref)
 		elseif _Camp_HarvestableWood_Logs.HasForm(woodform)
