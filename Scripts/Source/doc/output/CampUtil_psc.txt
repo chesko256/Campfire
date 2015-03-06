@@ -294,3 +294,28 @@ True if player's location is a legal camping area; false otherwise.
 **NOTES.**
 
 In Campfire, it is illegal for the player to place Placeable Objects inside houses, other owned buildings (inns, taverns), and within range of / inside settled areas like towns and cities.
+
+### CampUtil/GetAreaCampingFaction
+
+**DESCRIPTION.**
+
+Returns the faction that dictates camping legality in this area.
+
+**SYNTAX.**
+
+    Faction function GetAreaCampingFaction(ObjectReference akCenter) global
+
+**PARAMETERS.**
+
+akCenter: The object whose surroundings to check.
+
+**RETURN VALUE.**
+
+If akCenter is in an illegal camping area, returns the faction responsible for making it illegal, else, returns None.
+
+**EXAMPLES.**
+
+    Faction property MyCoolFaction auto
+    if GetAreaCampingFaction() == MyCoolFaction
+            debug.trace("MyCoolFaction are a bunch of facists for not letting me camp here!")
+    endif

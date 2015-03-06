@@ -40,7 +40,7 @@ Event OnActivate(ObjectReference akActionRef)
 EndEvent
 
 Event WoodHarvestNodeReset()
-	debug.trace("[Campfire] Branch node " + self + " received global reset signal, reverting...")
+	;debug.trace("[Campfire] Branch node " + self + " received global reset signal, reverting...")
 	RegisterForSingleUpdateGameTime(0.0)
 endEvent
 
@@ -55,7 +55,7 @@ EndEvent
 Event OnUpdateGameTime()
 	;debug.trace("[Campfire] Branch node resetting after prescribed game time.")
 	eligible_for_reset = true
-	if !self.GetParentCell().IsAttached()
+	if !self.GetParentCell() || !self.GetParentCell().IsAttached()
 		utility.wait(BACKOFF_TIME)
 		NodeReset()
 	endif

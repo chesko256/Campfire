@@ -557,6 +557,36 @@ endif
 	return Campfire.Legal.GetCampingLegal()
 endFunction
 
+;/********f* CampUtil/GetAreaCampingFaction
+* DESCRIPTION
+* Returns the faction that dictates camping legality in this area.
+*
+* SYNTAX
+*/;
+Faction function GetAreaCampingFaction(ObjectReference akCenter) global
+;/*
+* PARAMETERS
+* akCenter: The object whose surroundings to check.
+*
+* RETURN VALUE
+* If akCenter is in an illegal camping area, returns the faction responsible for making it illegal, else, returns None.
+*
+* EXAMPLES
+Faction property MyCoolFaction auto
+if GetAreaCampingFaction() == MyCoolFaction
+	debug.trace("MyCoolFaction are a bunch of facists for not letting me camp here!")
+endif
+;*********/;
+	;@TODO: Support abIgnoreSetting
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+
+	return Campfire.Legal.GetAreaCampingFaction(akCenter)
+endFunction
+
 ObjectReference function GetLastUsedCampfire() global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none

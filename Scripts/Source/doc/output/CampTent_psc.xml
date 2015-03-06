@@ -18,7 +18,7 @@ scriptname CampTent extends _Camp_PlaceableObjectBase
  the player's bed roll. Attaching this script and filling out properties in the Creation Kit is 
  how new tents are created; please see the tutorials for more information. Only 3 properties 
  are required in order for the tent to function, with the rest optional. This script supports 
- creating a tent with a single bed roll, a lantern, clutter, and more. See <link linkend="robo12">CampTentEx</link> for even 
+ creating a tent with a single bed roll, a lantern, clutter, and more. See <link linkend="robo13">CampTentEx</link> for even 
  more capability.
 </para>
 </section>

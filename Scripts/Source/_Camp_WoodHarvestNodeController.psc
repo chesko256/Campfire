@@ -76,7 +76,7 @@ function Setup(int _remaining_yields, float _tinder_yield_chance, 		\
 			   bool _is_stump, bool _should_stand, 						\
 			   bool _disable_on_depleted, ObjectReference _my_wood_ref)
 
-	debug.trace("[Campfire] Setting up new wood harvesting node " + self)
+	;debug.trace("[Campfire] Setting up new wood harvesting node " + self)
 	remaining_yields = _remaining_yields
 	MAX_YIELDS = _remaining_yields
 	tinder_yield_chance = _tinder_yield_chance
@@ -96,7 +96,7 @@ function Setup(int _remaining_yields, float _tinder_yield_chance, 		\
 	if !use_ref_model && !my_wood_ref.GetEnableParent()
 		my_wood_ref.DisableNoWait()
 	else
-		debug.trace("[Campfire] Woodref " + my_wood_ref + " has enable parent " + my_wood_ref.GetEnableParent() + " or use_ref_model = " + use_ref_model)
+		;debug.trace("[Campfire] Woodref " + my_wood_ref + " has enable parent " + my_wood_ref.GetEnableParent() + " or use_ref_model = " + use_ref_model)
 	endif
 
 	if use_ref_model
@@ -104,8 +104,10 @@ function Setup(int _remaining_yields, float _tinder_yield_chance, 		\
 		self.MoveTo(self, afZOffset = 0.50)
 	endif
 
-	RegisterForSingleUpdateGameTime(RESET_TIME)
 	RegisterForModEvent("Campfire_WoodHarvestNodeReset", "WoodHarvestNodeReset")
+	float _reset_time = RESET_TIME - RandomInt(-3, 3)
+	;debug.trace("[Campfire] Woodpile respawning in " + _reset_time + " hours")
+	RegisterForSingleUpdateGameTime(_reset_time)
 endFunction
 
 function GetMushrooms()
@@ -290,9 +292,16 @@ function ExitActivatedChopping()
 endFunction
 
 bool function IsWoodLyingDown()
-	if (my_wood_ref.GetAngleX() <= 20.0 || my_wood_ref.GetAngleX() >= 340.0) && \
-	   (my_wood_ref.GetAngleY() <= 20.0 || my_wood_ref.GetAngleY() >= 340.0)
-
+	float wood_x = my_wood_ref.GetAngleX()
+	float wood_y = my_wood_ref.GetAngleY()
+	if wood_x < 0.0
+		wood_x += 360.0
+	endif
+	if wood_y < 0.0
+		wood_y += 360.0
+	endif
+	if (wood_x <= 20.0 || wood_x >= 340.0) && \
+	   (wood_y <= 20.0 || wood_y >= 340.0)
 		return false
 	else
 		return true
@@ -362,7 +371,9 @@ function YieldResources()
 					self.DisableNoWait(true)
 				endif
 			endif
-			RegisterForSingleUpdateGameTime(RESET_TIME)
+			float _reset_time = RESET_TIME - RandomInt(-3, 3)
+			;debug.trace("[Campfire] Woodpile respawning in " + _reset_time + " hours")
+			RegisterForSingleUpdateGameTime(_reset_time)
 		endif
 	endif
 endFunction
@@ -389,9 +400,9 @@ Event WoodHarvestNodeReset()
 endEvent
 
 Event OnUpdate()
-	debug.trace("[Campfire] Harvest Node OnUpdate")
+	;debug.trace("[Campfire] Harvest Node OnUpdate")
 	if (_Camp_MainQuest as _Camp_ConditionValues).IsChoppingWoodEnvironment == true
-		debug.trace("[Campfire] We got hung at some point; bail out.")
+		;debug.trace("[Campfire] We got hung at some point; bail out.")
 		ExitActivatedChopping()
 	endif
 endEvent
@@ -407,7 +418,7 @@ EndEvent
 Event OnUpdateGameTime()
 	;debug.trace("[Campfire] Node resetting after prescribed game time.")
 	eligible_for_reset = true
-	if !self.GetParentCell().IsAttached()
+	if !self.GetParentCell() || !self.GetParentCell().IsAttached()
 		utility.wait(BACKOFF_TIME)
 		NodeReset()
 	endif

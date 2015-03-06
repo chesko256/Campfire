@@ -14,7 +14,7 @@ float property tinder_yield_chance auto hidden
 int property min_yield_branch auto hidden
 int property max_yield_branch auto hidden
 bool property disable_on_depleted auto hidden
-bool eligible_for_deletion = false
+bool eligible_for_reset = false
 
 function Setup(float _tinder_yield_chance, 								\
 			   int _min_yield_branch, int _max_yield_branch,	 		\
@@ -30,7 +30,7 @@ function Setup(float _tinder_yield_chance, 								\
 	my_wood_ref = _my_wood_ref
 
 	;Store a random back-off value for use during reset
-	BACKOFF_TIME = RandomFloat(0.0, 2.0)
+	BACKOFF_TIME = RandomFloat(0.0, 3.0)
 
 	RegisterForModEvent("Campfire_WoodHarvestNodeReset", "WoodHarvestNodeReset")
 endFunction
@@ -68,26 +68,27 @@ Event WoodHarvestNodeReset()
 	RegisterForSingleUpdateGameTime(0.0)
 endEvent
 
+Event OnCellDetach()
+	;debug.trace("[Campfire] Detached from cell, checking deletion eligibility...")
+	if eligible_for_reset || !harvested
+		utility.wait(BACKOFF_TIME)
+		RegisterForSingleUpdateGameTime(0.0)
+	endif
+EndEvent
+
 Event OnUpdateGameTime()
 	;debug.trace("[Campfire] Node resetting after prescribed game time.")
-	eligible_for_deletion = true
-	if !self.Is3DLoaded()
+	eligible_for_reset = true
+	if !self.GetParentCell() || !self.GetParentCell().IsAttached()
+		utility.wait(BACKOFF_TIME)
 		NodeReset()
 	else
 		;debug.trace("[Campfire] Still attached; waiting for unload.")
 	endif
 EndEvent
 
-Event OnCellDetach()
-	;debug.trace("[Campfire] Detached from cell, checking deletion eligibility...")
-	if eligible_for_deletion || !harvested
-		NodeReset()
-	endif
-EndEvent
-
 function NodeReset()
-	utility.wait(BACKOFF_TIME)
-	debug.trace("[Campfire] Tree Harvest Node Controller resetting object.")
+	;debug.trace("[Campfire] Tree Harvest Node Controller resetting object.")
 	UnregisterForModEvent("Campfire_WoodHarvestNodeReset")
 	if my_wood_ref && my_wood_ref.IsDisabled()
 		my_wood_ref.EnableNoWait()
