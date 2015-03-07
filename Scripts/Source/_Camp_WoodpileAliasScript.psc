@@ -25,23 +25,26 @@ Event OnInit()
 		;debug.trace("[Campfire] Woodpile Alias " + self + " assigned new reference " + woodref)
 		
 		if _Camp_FirewoodPiles_Small.HasForm(woodform)
-			PlaceNodeController(_Camp_WoodHarvestFirewoodPile_Small, woodref)
+			PlaceNodeController(_Camp_WoodHarvestFirewoodPile_Small, woodref, 0.8)
 		elseif _Camp_FirewoodPiles_Medium.HasForm(woodform)
 			PlaceNodeController(_Camp_WoodHarvestFirewoodPile_Medium, woodref)
 		elseif _Camp_FirewoodPiles_Large.HasForm(woodform)
 			PlaceNodeController(_Camp_WoodHarvestFirewoodPile_Large, woodref)
 		elseif _Camp_FirewoodPiles_Huge.HasForm(woodform)
-			PlaceNodeController(_Camp_WoodHarvestFirewoodPile_Huge, woodref)
+			PlaceNodeController(_Camp_WoodHarvestFirewoodPile_Huge, woodref, 1.6)
 		endif
 	endif
 EndEvent
 
-function PlaceNodeController(Container akNodeController, ObjectReference akReference)
+function PlaceNodeController(Container akNodeController, ObjectReference akReference, float afScaleOverride = 1.0)
 	ObjectReference my_node = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_FirewoodPileNodes, akReference, 1.0)
 	_Camp_WoodpileNodeController my_controller = None
 	if !my_node
 		my_node = akReference.PlaceAtMe(akNodeController, abInitiallyDisabled = true)
 		if my_node
+			if afScaleOverride != 1.0
+				my_node.SetScale(afScaleOverride)
+			endif
 			debug.trace("[Campfire] Placed woodpile node " + my_node)
 			my_controller = my_node as _Camp_WoodpileNodeController
 			my_controller.Setup(woodref)

@@ -428,12 +428,12 @@ function NodeReset()
 	;debug.trace("[Campfire] Wood Harvest Node Controller resetting object.")
 	UnregisterForModEvent("Campfire_WoodHarvestNodeReset")
 	if my_wood_ref && my_wood_ref.IsDisabled()
-		my_wood_ref.EnableNoWait()
+		my_wood_ref.Enable()
 		if my_mushroom_ref1
-			my_mushroom_ref1.EnableNoWait()
+			my_mushroom_ref1.Enable()
 		endif
 		if my_mushroom_ref2
-			my_mushroom_ref2.EnableNoWait()
+			my_mushroom_ref2.Enable()
 		endif
 	endif
 	self.Disable()

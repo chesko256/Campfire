@@ -91,7 +91,7 @@ function NodeReset()
 	;debug.trace("[Campfire] Tree Harvest Node Controller resetting object.")
 	UnregisterForModEvent("Campfire_WoodHarvestNodeReset")
 	if my_wood_ref && my_wood_ref.IsDisabled()
-		my_wood_ref.EnableNoWait()
+		my_wood_ref.Enable()
 	endif
 	self.Disable()
 	self.Delete()
