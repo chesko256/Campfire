@@ -4,7 +4,6 @@ import math
 import _CampInternal
 
 _Camp_Compatibility property Compatibility auto
-Activator property _Camp_WoodHarvestNode auto
 Actor property PlayerRef auto
 
 Static property TreeAspenLog01 auto
@@ -19,6 +18,9 @@ Static property TreePineForestLog02Heavy_SN auto
 Static property TreePineForestLog02Light_SN auto
 Static property TreePineForestLogSm01 auto
 Static property TreePineForestLogSm01_HeavySN auto
+Static property TreePineForestHollow01 auto
+Static property TreePineForestHollow01Snow auto
+Static property TreePineForestHollow01Sulfur auto
 Static property TreeAspenStump01 auto
 Static property TreePineForestCutStump01 auto
 Static property TreePineForestCutStump01Heavy_SN auto
@@ -39,37 +41,21 @@ Static property TreeTundraDriftWood02Sulfur auto
 Static property TreePineForestUprooted01 auto
 Tree property TreeReachTreeStump01 auto hidden
 
-Activator property _Camp_TreeAspenLog01_Act auto
-Activator property _Camp_TreePineForestLog01_Act auto
-Activator property _Camp_TreePineForestLog01Blank_Act auto
-Activator property _Camp_TreePineForestLog01BlankSulfur_Act auto
-Activator property _Camp_TreePineForestLog01Heavy_SN_Act auto
-Activator property _Camp_TreePineForestLog02_Act auto
-Activator property _Camp_TreePineForestLog02_ice_Act auto
-Activator property _Camp_TreePineForestLog02Blank_Act auto
-Activator property _Camp_TreePineForestLog02Heavy_SN_Act auto
-Activator property _Camp_TreePineForestLog02Light_SN_Act auto
-Activator property _Camp_TreePineForestLogSm01_Act auto
-Activator property _Camp_TreePineForestLogSm01_HeavySN_Act auto
-Activator property _Camp_TreeAspenStump01_Act auto
-Activator property _Camp_TreePineForestCutStump01_Act auto
-Activator property _Camp_TreePineForestCutStump01Heavy_SN_Act auto
-Activator property _Camp_TreePineForestCutStump02_Act auto
-Activator property _Camp_TreePineForestCutStump02_HeavySN_Act auto
-Activator property _Camp_TreePineForestCutStump02_LightSN_Act auto
-Activator property _Camp_TreePineForestStump01_Act auto
-Activator property _Camp_TreePineForestStump01_ice_Act auto
-Activator property _Camp_TreePineForestStump01Blank_Act auto
-Activator property _Camp_TreePineForestStump01Snow_Act auto
-Activator property _Camp_TreePineForestStump02A_Act auto
-Activator property _Camp_TreePineForestStump02B_Act auto
-Activator property _Camp_TreePineForestUprootedStump01_Act auto
-Activator property _Camp_TreePineForestUprootedStump01_ice_Act auto
-Activator property _Camp_TreePineForestUprootedStump01Heavy_SN_Act auto
-Activator property _Camp_TreeTundraDriftWood02_Act auto
-Activator property _Camp_TreeTundraDriftWood02Sulfur_Act auto
-Activator property _Camp_TreePineForestUprooted01_Act auto
- Activator property _Camp_TreeReachTreeStump01_Act auto
+Activator property _Camp_TreeAspenLog01_Node auto
+Activator property _Camp_TreePineForestLog01_Node auto
+Activator property _Camp_TreePineForestLog02_Node auto
+Activator property _Camp_TreePineForestLogSm01_Node auto
+Activator property _Camp_TreeAspenStump01_Node auto
+Activator property _Camp_TreePineForestCutStump01_Node auto
+Activator property _Camp_TreePineForestCutStump02_Node auto
+Activator property _Camp_TreePineForestStump01_Node auto
+Activator property _Camp_TreePineForestStump02A_Node auto
+Activator property _Camp_TreePineForestStump02B_Node auto
+Activator property _Camp_TreePineForestUprootedStump01_Node auto
+Activator property _Camp_TreeTundraDriftWood02_Node auto
+Activator property _Camp_TreePineForestUprooted01_Node auto
+Activator property _Camp_TreePineForestHollow01_Node auto
+Activator property _Camp_TreeReachTreeStump01_Node auto
 
 ObjectReference property woodref auto hidden
 FormList property _Camp_HarvestableWoodActivators auto
@@ -107,58 +93,48 @@ function HandleStumps(Form akBaseObject, ObjectReference akReference)
 	disable_on_depleted /;
 
 	if akBaseObject == TreeAspenStump01
-		PlaceNodeController(_Camp_TreeAspenStump01_Act, akReference, \
+		PlaceNodeController(_Camp_TreeAspenStump01_Node, akReference, \
 							3, 0.05, 0, 1, 1, 2, true, true, true)
-	elseif akBaseObject == TreePineForestCutStump01
-		PlaceNodeController(_Camp_TreePineForestCutStump01_Act, akReference, \
+
+	elseif akBaseObject == TreePineForestCutStump01 ||						\
+		   akBaseObject == TreePineForestCutStump01Heavy_SN
+		PlaceNodeController(_Camp_TreePineForestCutStump01_Node, akReference, \
 							3, 0.05, 0, 0, 1, 2, true, false, false)
-	elseif akBaseObject == TreePineForestCutStump01Heavy_SN
-		PlaceNodeController(_Camp_TreePineForestCutStump01Heavy_SN_Act, akReference, \
-							3, 0.05, 0, 0, 1, 2, true, false, false)
-	elseif akBaseObject == TreePineForestCutStump02
-		PlaceNodeController(_Camp_TreePineForestCutStump02_Act, akReference, \
+
+	elseif akBaseObject == TreePineForestCutStump02 || 						\
+		   akBaseObject == TreePineForestCutStump02_HeavySN || 				\
+		   akBaseObject == TreePineForestCutStump02_LightSN
+		PlaceNodeController(_Camp_TreePineForestCutStump02_Node, akReference, \
 							3, 0.05, 0, 0, 1, 1, true, false, true)
-	elseif akBaseObject == TreePineForestCutStump02_HeavySN
-		PlaceNodeController(_Camp_TreePineForestCutStump02_HeavySN_Act, akReference, \
-							3, 0.05, 0, 0, 1, 1, true, false, true)
-	elseif akBaseObject == TreePineForestCutStump02_LightSN
-		PlaceNodeController(_Camp_TreePineForestCutStump02_LightSN_Act, akReference, \
-							3, 0.05, 0, 0, 1, 1, true, false, true)
-	elseif akBaseObject == TreePineForestStump01
-		PlaceNodeController(_Camp_TreePineForestStump01_Act, akReference, \
+	
+	elseif akBaseObject == TreePineForestStump01 ||							\
+		   akBaseObject == TreePineForestStump01_ice ||						\
+		   akBaseObject == TreePineForestStump01Blank ||					\
+		   akBaseObject == TreePineForestStump01Snow
+		PlaceNodeController(_Camp_TreePineForestStump01_Node, akReference, \
 							3, 0.05, 0, 0, 1, 2, true, true, false)
-	elseif akBaseObject == TreePineForestStump01_ice
-		PlaceNodeController(_Camp_TreePineForestStump01_ice_Act, akReference, \
-							3, 0.05, 0, 0, 1, 2, true, true, false)
-	elseif akBaseObject == TreePineForestStump01Blank
-		PlaceNodeController(_Camp_TreePineForestStump01Blank_Act, akReference, \
-							3, 0.05, 0, 0, 1, 2, true, true, false)
-	elseif akBaseObject == TreePineForestStump01Snow
-		PlaceNodeController(_Camp_TreePineForestStump01Snow_Act, akReference, \
-							3, 0.05, 0, 0, 1, 2, true, true, false)
+
 	elseif akBaseObject == TreePineForestStump02A
-		PlaceNodeController(_Camp_TreePineForestStump02A_Act, akReference, \
+		PlaceNodeController(_Camp_TreePineForestStump02A_Node, akReference, \
 							3, 0.05, 0, 0, 1, 1, true, true, false)
+
 	elseif akBaseObject == TreePineForestStump02B
-		PlaceNodeController(_Camp_TreePineForestStump02B_Act, akReference, \
+		PlaceNodeController(_Camp_TreePineForestStump02B_Node, akReference, \
 							3, 0.05, 0, 0, 1, 1, true, true, false)
-	elseif akBaseObject == TreePineForestUprootedStump01
-		PlaceNodeController(_Camp_TreePineForestUprootedStump01_Act, akReference, \
+
+	elseif akBaseObject == TreePineForestUprootedStump01 ||					\
+		   akBaseObject == TreePineForestUprootedStump01_ice ||				\
+		   akBaseObject == TreePineForestUprootedStump01Heavy_SN
+		PlaceNodeController(_Camp_TreePineForestUprootedStump01_Node, akReference, \
 							3, 0.05, 0, 0, 1, 2, true, false, false)
-	elseif akBaseObject == TreePineForestUprootedStump01_ice
-		PlaceNodeController(_Camp_TreePineForestUprootedStump01_ice_Act, akReference, \
-							3, 0.05, 0, 0, 1, 1, true, false, false)
-	elseif akBaseObject == TreePineForestUprootedStump01Heavy_SN
-		PlaceNodeController(_Camp_TreePineForestUprootedStump01Heavy_SN_Act, akReference, \
-							3, 0.05, 0, 0, 1, 1, true, false, false)
-	elseif akBaseObject == TreeTundraDriftWood02
-		PlaceNodeController(_Camp_TreeTundraDriftWood02_Act, akReference, \
+	
+	elseif akBaseObject == TreeTundraDriftWood02 ||							\
+		   akBaseObject == TreeTundraDriftWood02Sulfur
+		PlaceNodeController(_Camp_TreeTundraDriftWood02_Node, akReference, \
 							3, 0.05, 0, 0, 1, 2, false, true, true)
-	elseif akBaseObject == TreeTundraDriftWood02Sulfur
-		PlaceNodeController(_Camp_TreeTundraDriftWood02Sulfur_Act, akReference, \
-							3, 0.05, 0, 0, 1, 2, false, true, true)
+	
 	elseif akBaseObject == TreeReachTreeStump01
-		PlaceNodeController(_Camp_TreeReachTreeStump01_Act, akReference, \
+		PlaceNodeController(_Camp_TreeReachTreeStump01_Node, akReference, \
 							3, 0.05, 0, 0, 1, 2, true, false, false)
 	endif
 endFunction
@@ -175,43 +151,37 @@ function HandleLogs(Form akBaseObject, ObjectReference akReference)
 	disable_on_depleted/;
 
 	if akBaseObject == TreeAspenLog01
-		PlaceNodeController(_Camp_TreeAspenLog01_Act, akReference, \
+		PlaceNodeController(_Camp_TreeAspenLog01_Node, akReference, 	\
 							3, 0.1, 0, 1, 1, 2, false, false, true)
-	elseif akBaseObject == TreePineForestLog01
-		PlaceNodeController(_Camp_TreePineForestLog01_Act, akReference, \
+
+	elseif akBaseObject == TreePineForestLog01 ||						\
+		   akBaseObject == TreePineForestLog01Blank ||					\ 
+		   akBaseObject == TreePineForestLog01BlankSulfur ||			\
+		   akBaseObject == TreePineForestLog01Heavy_SN
+		PlaceNodeController(_Camp_TreePineForestLog01_Node, akReference, \
 							3, 0.1, 0, 1, 1, 2, false, false, false)
-	elseif akBaseObject == TreePineForestLog01Blank
-		PlaceNodeController(_Camp_TreePineForestLog01Blank_Act, akReference, \
+	
+	elseif akBaseObject == TreePineForestLog02 ||						\
+		   akBaseObject == TreePineForestLog02_ice ||					\
+		   akBaseObject == TreePineForestLog02Blank ||					\
+		   akBaseObject == TreePineForestLog02Heavy_SN ||				\
+		   akBaseObject == TreePineForestLog02Light_SN
+		PlaceNodeController(_Camp_TreePineForestLog02_Node, akReference, \
 							3, 0.1, 0, 1, 1, 2, false, false, false)
-	elseif akBaseObject == TreePineForestLog01BlankSulfur
-		PlaceNodeController(_Camp_TreePineForestLog01BlankSulfur_Act, akReference, \
-							3, 0.1, 0, 1, 1, 2, false, false, false)
-	elseif akBaseObject == TreePineForestLog01Heavy_SN
-		PlaceNodeController(_Camp_TreePineForestLog01Heavy_SN_Act, akReference, \
-							3, 0.1, 0, 1, 1, 2, false, false, false)
-	elseif akBaseObject == TreePineForestLog02
-		PlaceNodeController(_Camp_TreePineForestLog02_Act, akReference, \
-							3, 0.1, 0, 1, 1, 2, false, false, false)
-	elseif akBaseObject == TreePineForestLog02_ice
-		PlaceNodeController(_Camp_TreePineForestLog02_ice_Act, akReference, \
-							3, 0.1, 0, 1, 1, 2, false, false, false)
-	elseif akBaseObject == TreePineForestLog02Blank
-		PlaceNodeController(_Camp_TreePineForestLog02Blank_Act, akReference, \
-							3, 0.1, 0, 1, 1, 2, false, false, false)
-	elseif akBaseObject == TreePineForestLog02Heavy_SN
-		PlaceNodeController(_Camp_TreePineForestLog02Heavy_SN_Act, akReference, \
-							3, 0.1, 0, 1, 1, 2, false, false, false)
-	elseif akBaseObject == TreePineForestLog02Light_SN
-		PlaceNodeController(_Camp_TreePineForestLog02Light_SN_Act, akReference, \
-							3, 0.1, 0, 1, 1, 2, false, false, false)
-	elseif akBaseObject == TreePineForestLogSm01
-		PlaceNodeController(_Camp_TreePineForestLogSm01_Act, akReference, \
+
+	elseif akBaseObject == TreePineForestLogSm01 ||						\
+		   akBaseObject == TreePineForestLogSm01_HeavySN
+		PlaceNodeController(_Camp_TreePineForestLogSm01_Node, akReference, \
 							3, 0.1, 0, 1, 1, 2, false, false, true)
-	elseif akBaseObject == TreePineForestLogSm01_HeavySN
-		PlaceNodeController(_Camp_TreePineForestLogSm01_HeavySN_Act, akReference, \
-							3, 0.1, 0, 1, 1, 2, false, false, true)
+	
 	elseif akBaseObject == TreePineForestUprooted01
-		PlaceNodeController(_Camp_TreePineForestUprooted01_Act, akReference, \
+		PlaceNodeController(_Camp_TreePineForestUprooted01_Node, akReference, \
+							3, 0.1, 0, 2, 2, 3, false, false, false)
+
+	elseif akBaseObject == TreePineForestHollow01 ||					\
+		   akBaseObject == TreePineForestHollow01Snow ||				\
+	       akBaseObject == TreePineForestHollow01Sulfur
+	    PlaceNodeController(_Camp_TreePineForestHollow01_Node, akReference, \
 							3, 0.1, 0, 2, 2, 3, false, false, false)
 	endif
 endFunction

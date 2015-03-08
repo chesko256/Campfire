@@ -45,7 +45,7 @@ function PlaceNodeController(Container akNodeController, ObjectReference akRefer
 			if afScaleOverride != 1.0
 				my_node.SetScale(afScaleOverride)
 			endif
-			debug.trace("[Campfire] Placed woodpile node " + my_node)
+			;debug.trace("[Campfire] Placed woodpile node " + my_node)
 			my_controller = my_node as _Camp_WoodpileNodeController
 			my_controller.Setup(woodref)
 		endif

@@ -3,9 +3,6 @@ scriptname _Camp_WoodHarvestNodeController extends ObjectReference
 import Utility
 import math
 
-bool property use_ref_model = false auto
-{Should this wood harvest node use the static's model? (Requires activator model with only collision)}
-
 float RESET_TIME = 72.0
 float BACKOFF_TIME
 int MAX_YIELDS
@@ -23,11 +20,12 @@ Weapon property _Camp_WoodHarvestingAnimAxe auto
 ObjectReference property my_wood_ref auto hidden
 ObjectReference property my_mushroom_ref1 auto hidden
 ObjectReference property my_mushroom_ref2 auto hidden
-ObjectReference property current_activator auto hidden
 ObjectReference property _Camp_WoodHarvestAttackTarget auto
 ObjectReference property _Camp_WoodHarvestAnchor auto
 FormList property woodChoppingAxes auto
 message property WoodChoppingFailureMessage auto
+message property _Camp_WoodHarvestDepleteNode_Stump auto
+message property _Camp_WoodHarvestDepleteNode_Log auto
 int property remaining_yields auto hidden
 float property tinder_yield_chance auto hidden
 int property hit_count auto hidden
@@ -93,16 +91,8 @@ function Setup(int _remaining_yields, float _tinder_yield_chance, 		\
 	;Store a random back-off value for use during reset
 	BACKOFF_TIME = RandomFloat(0.0, 3.0)
 
-	if !use_ref_model && !my_wood_ref.GetEnableParent()
-		my_wood_ref.DisableNoWait()
-	else
-		;debug.trace("[Campfire] Woodref " + my_wood_ref + " has enable parent " + my_wood_ref.GetEnableParent() + " or use_ref_model = " + use_ref_model)
-	endif
-
-	if use_ref_model
-		;Move upwards slightly so that the collider can be activated
-		self.MoveTo(self, afZOffset = 0.50)
-	endif
+	;Move upwards slightly so that the collider can be activated
+	self.MoveTo(self, afZOffset = 0.50)
 
 	RegisterForModEvent("Campfire_WoodHarvestNodeReset", "WoodHarvestNodeReset")
 	float _reset_time = RESET_TIME - RandomInt(-3, 3)
@@ -362,13 +352,10 @@ function YieldResources()
 				if my_mushroom_ref2
 					my_mushroom_ref2.DisableNoWait()
 				endif
-				if use_ref_model
-					self.DisableNoWait()
-					if !my_wood_ref.GetEnableParent()
-						my_wood_ref.DisableNoWait(true)
-					endif
-				else
-					self.DisableNoWait(true)
+				
+				self.DisableNoWait()
+				if !my_wood_ref.GetEnableParent()
+					my_wood_ref.DisableNoWait(true)
 				endif
 			endif
 			float _reset_time = RESET_TIME - RandomInt(-3, 3)
@@ -380,16 +367,14 @@ endFunction
 
 function ShowDepleteMessage()
 	if is_stump
-		if disable_on_depleted
-			;debug.notification("You successfully harvest the stump.")
-		else
-			debug.notification("This stump is depleted of useful materials.")
+		if !disable_on_depleted
+			;debug.notification("This stump is depleted of useful materials.")
+			_Camp_WoodHarvestDepleteNode_Stump.Show()
 		endif
 	else
-		if disable_on_depleted
-			;debug.notification("You successfully harvest the log.")
-		else
-			debug.notification("This log is depleted of useful materials.")
+		if !disable_on_depleted
+			;debug.notification("This log is depleted of useful materials.")
+			_Camp_WoodHarvestDepleteNode_Log.Show()
 		endif
 	endif
 endFunction
