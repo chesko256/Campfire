@@ -47,7 +47,7 @@ function PlaceNodeController(Activator akNodeController, ObjectReference akRefer
 	if !my_node
 		my_node = akReference.PlaceAtMe(akNodeController, abInitiallyDisabled = true)
 		if my_node
-			debug.trace("[Campfire] Placed branch node " + my_node)
+			;debug.trace("[Campfire] Placed branch node " + my_node)
 			my_node.SetScale(akReference.GetScale())
 			my_node.Enable()
 			my_controller = my_node as _Camp_BranchHarvestNodeController
