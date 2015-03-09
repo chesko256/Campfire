@@ -57,6 +57,11 @@ EndEvent
 endFunction
 /;
 
+
+;debug
+spell property Firebolt auto
+Activator property _Camp_ZTestReceiver auto
+;debug
 function Handle_Tree(ObjectReference akReference, bool snow)
 	float tinder_yield_chance
 	int min_yield_branch
@@ -72,7 +77,14 @@ function Handle_Tree(ObjectReference akReference, bool snow)
 		max_yield_branch = 3
 	endif
 
-	PlaceNodeController(_Camp_HarvestBranchTree_Node, akReference, tinder_yield_chance, min_yield_branch, max_yield_branch)
+	;/ObjectReference tr = self.getref().PlaceAtMe(_Camp_ZTestReceiver)
+	tr.MoveTo(tr, afZOffset = -1000.0)
+	while 1
+		utility.wait(1)
+		Firebolt.Cast(self.GetRef(), tr)
+	endWhile
+	;PlaceNodeController(_Camp_HarvestBranchTree_Node, akReference, tinder_yield_chance, min_yield_branch, max_yield_branch)
+	/;
 endFunction
 
 ;/function Handle_SmallTree(ObjectReference akReference, bool snow)
@@ -172,9 +184,9 @@ function PlaceNodeController(Activator akActivator, ObjectReference woodref,				
 		my_node = woodref.PlaceAtMe(akActivator, abInitiallyDisabled = True)
 		if my_node
 			debug.trace("[Campfire] (Depth 0) Placed tree branch node " + my_node)
-			float tree_scale = woodref.GetScale()
-			float my_scale = (tree_scale * 0.65)
-			my_node.SetScale(my_scale)
+			;float tree_scale = woodref.GetScale()
+			;float my_scale = (tree_scale * 0.55)
+			;my_node.SetScale()
 			my_node.Enable()
 			my_controller = my_node as _Camp_BranchTreeHarvestNodeController
 			my_controller.Setup(tinder_yield_chance, min_yield_branch, max_yield_branch, woodref, 0)
