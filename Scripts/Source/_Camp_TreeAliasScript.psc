@@ -11,80 +11,25 @@ Actor property PlayerRef auto
 ;ObjectReference property my_activator auto hidden
 ObjectReference property woodref auto hidden
 Formlist property _Camp_HarvestableBranchTrees auto
-Formlist property _Camp_HarvestableBranchTrees_Med auto
-Formlist property _Camp_HarvestableBranchTrees_Small auto
-Formlist property _Camp_HarvestableBranchTrees_Snow auto
 
 Event OnInit()
 	woodref = self.GetRef()
-	Form woodform
-	if woodref
-		woodform = woodref.GetBaseObject()
+	if woodref && !(Game.FindClosestReferenceOfTypeFromRef(_Camp_HarvestBranchTree_Node, woodref, 800.0))
 		;debug.trace("[Campfire] Tree Alias " + self + " assigned new reference " + woodref)
-
-		;/if _Camp_HarvestableBranchTrees_Small.HasForm(woodform)
-			if _Camp_HarvestableBranchTrees_Snow.HasForm(woodform)
-				Handle_SmallTree(woodref, true)
-			else
-				Handle_SmallTree(woodref, false)
-			endif
-		elseif _Camp_HarvestableBranchTrees_Med.HasForm(woodform)
-			if _Camp_HarvestableBranchTrees_Snow.HasForm(woodform)
-				Handle_MedTree(woodref, true)
-			else
-				Handle_MedTree(woodref, false)
-			endif
-		endif
-		/;
-		if _Camp_HarvestableBranchTrees_Snow.HasForm(woodform)
-			Handle_Tree(woodref, true)
-		else
-			Handle_Tree(woodref, false)
-		endif
+		Handle_Tree(woodref)
 	endif
 EndEvent
 
-;/function MoveActivatorIfActiveNode(ObjectReference akActivator, ObjectReference akTarget)
-	_Camp_BranchTreeHarvestNodeController my_controller = GetNearestNodeController()
-	if !my_controller || (my_controller && !IsDepletedNodeController(my_controller))
-		my_activator = akActivator
-		if my_controller
-			my_controller.current_activator = my_activator
-		endif
-		(my_activator as _Camp_TreeActivatorScript).my_wood_alias = self
-		my_activator.MoveTo(akTarget)
-	endif
-endFunction
-/;
-
-
 ;debug
-spell property Firebolt auto
+spell property _Camp_BranchZTestSpell auto
 Activator property _Camp_ZTestReceiver auto
 ;debug
-function Handle_Tree(ObjectReference akReference, bool snow)
-	float tinder_yield_chance
-	int min_yield_branch
-	int max_yield_branch
-
-	if snow
-		tinder_yield_chance = 0.05
-		min_yield_branch = 1
-		max_yield_branch = 2
-	else
-		tinder_yield_chance = 0.10
-		min_yield_branch = 1
-		max_yield_branch = 3
-	endif
-
-	;/ObjectReference tr = self.getref().PlaceAtMe(_Camp_ZTestReceiver)
-	tr.MoveTo(tr, afZOffset = -1000.0)
-	while 1
-		utility.wait(1)
-		Firebolt.Cast(self.GetRef(), tr)
-	endWhile
+function Handle_Tree(ObjectReference akReference)
+	ObjectReference tr = self.getref().PlaceAtMe(_Camp_ZTestReceiver)
+	debug.trace("[Campfire] Firing...")
+	tr.MoveTo(tr, afZOffset = -2000.0)
+	_Camp_BranchZTestSpell.Cast(self.GetRef(), tr)
 	;PlaceNodeController(_Camp_HarvestBranchTree_Node, akReference, tinder_yield_chance, min_yield_branch, max_yield_branch)
-	/;
 endFunction
 
 ;/function Handle_SmallTree(ObjectReference akReference, bool snow)
@@ -175,7 +120,7 @@ _Camp_BranchTreeHarvestNodeController function GetNodeController()
 endFunction
 /;
 
-function PlaceNodeController(Activator akActivator, ObjectReference woodref,										\
+;/function PlaceNodeController(Activator akActivator, ObjectReference woodref,										\
 											float tinder_yield_chance, 												\
 											int min_yield_branch, int max_yield_branch)
 	ObjectReference my_node = Game.FindClosestReferenceOfTypeFromRef(_Camp_HarvestBranchTree_Node, woodref, 1.0)
@@ -195,3 +140,4 @@ function PlaceNodeController(Activator akActivator, ObjectReference woodref,				
 		;debug.trace("[Campfire] my_node " + my_node + " for ref " + woodref + " already exists.")
 	endif
 endFunction
+/;

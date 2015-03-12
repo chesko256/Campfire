@@ -6,12 +6,13 @@ float RESET_TIME = 24.0
 float BACKOFF_TIME
 int RECURSIVE_SEARCH_COUNT = 5
 float RECURSIVE_SEARCH_DISTANCE = 1000.0
-int RECURSIVE_MAX_DEPTH = 5
 MiscObject property _Camp_Tinder auto
 MiscObject property _Camp_DeadwoodBranch auto
 Activator property _Camp_HarvestBranchTree_Node auto
+Activator property _Camp_ZTestReceiver auto
+Spell property _Camp_BranchZTestSpell auto
 Actor property PlayerRef auto
-ObjectReference property my_wood_ref auto hidden
+;ObjectReference property my_wood_ref auto hidden
 FormList property _Camp_HarvestableBranchTrees auto
 FormList property _Camp_HarvestableBranchTrees_Snow auto
 ;ObjectReference property current_activator auto hidden
@@ -24,8 +25,7 @@ bool eligible_for_reset = false
 int current_recursion_depth = 0
 
 function Setup(float _tinder_yield_chance, 								\
-			   int _min_yield_branch, int _max_yield_branch,	 		\
-			   ObjectReference _my_wood_ref, int _current_recursion_depth)
+			   int _min_yield_branch, int _max_yield_branch)
 
 	;debug.trace("[Campfire] Setting up new branch / tree harvesting node " + self)
 	tinder_yield_chance = _tinder_yield_chance
@@ -33,8 +33,8 @@ function Setup(float _tinder_yield_chance, 								\
 	max_yield_branch = _max_yield_branch
 	;disable_on_depleted = _disable_on_depleted
 	;current_activator = _current_activator
-	my_wood_ref = _my_wood_ref
-	current_recursion_depth = _current_recursion_depth
+	;my_wood_ref = _my_wood_ref
+	;current_recursion_depth = _current_recursion_depth
 	RegisterForSingleUpdate(0.1)
 endFunction
 
@@ -42,12 +42,11 @@ Event OnUpdate()
 	current_recursion_depth += 1
 	; Use a recursive method to seek out nearby trees and spread.
 	int i = 0
-	if current_recursion_depth < RECURSIVE_MAX_DEPTH
-		while i < RECURSIVE_SEARCH_COUNT
-			SearchForNearbyTrees()
-			i += 1
-		endWhile
-	endif
+	;/while i < RECURSIVE_SEARCH_COUNT
+		SearchForNearbyTrees()
+		i += 1
+	endWhile
+	/;
 
 	;Store a random back-off value for use during reset
 	BACKOFF_TIME = RandomFloat(0.0, 3.0)
@@ -55,31 +54,40 @@ Event OnUpdate()
 	RegisterForModEvent("Campfire_WoodHarvestNodeReset", "WoodHarvestNodeReset")
 EndEvent
 
-function SearchForNearbyTrees()
+;/function SearchForNearbyTrees()
 	ObjectReference woodref = Game.FindRandomReferenceOfAnyTypeInListFromRef(_Camp_HarvestableBranchTrees, self, RECURSIVE_SEARCH_DISTANCE)
-	if woodref
-		Form woodform = woodref.GetBaseObject()
+	if woodref && self.GetDistance(woodref) > 300.0
 		;debug.trace("[Campfire] Woodpile Alias " + self + " assigned new reference " + woodref)
 		
-		if _Camp_HarvestableBranchTrees_Snow.HasForm(woodform)
+		;;;if _Camp_HarvestableBranchTrees_Snow.HasForm(woodform)
 			Handle_Tree(woodref, true)
 		else
 			Handle_Tree(woodref, false)
 		endif
+		
+		Handle_Tree(woodref)
+		;;;
 	endif
 endFunction
+/;
 
-function Handle_Tree(ObjectReference akReference, bool snow)
-	if snow
+
+function Handle_Tree(ObjectReference akReference)
+	;/if snow
 		PlaceNodeController(_Camp_HarvestBranchTree_Node, akReference, 0.05, 1, 2)
 	else
 		PlaceNodeController(_Camp_HarvestBranchTree_Node, akReference, 0.10, 1, 3)
 	endif
+	/;
+	ObjectReference tr = akReference.PlaceAtMe(_Camp_ZTestReceiver)
+	tr.MoveTo(tr, afZOffset = -2000.0)
+	debug.trace("[Campfire] Firing...")
+	_Camp_BranchZTestSpell.Cast(akReference, tr)
 endFunction
 
 	
 
-function PlaceNodeController(Activator akActivator, ObjectReference woodref,										\
+;/function PlaceNodeController(Activator akActivator, ObjectReference woodref,										\
 											float tinder_yield_chance, 												\
 											int min_yield_branch, int max_yield_branch)
 	ObjectReference my_node = Game.FindClosestReferenceOfTypeFromRef(_Camp_HarvestBranchTree_Node, woodref, 1.0)
@@ -97,6 +105,7 @@ function PlaceNodeController(Activator akActivator, ObjectReference woodref,				
 		endif
 	endif
 endFunction
+/;
 
 Event OnActivate(ObjectReference akActionRef)
 	YieldResources(akActionRef)
@@ -159,9 +168,9 @@ EndEvent
 function NodeReset()
 	;debug.trace("[Campfire] Tree Harvest Node Controller resetting object.")
 	UnregisterForModEvent("Campfire_WoodHarvestNodeReset")
-	if my_wood_ref && my_wood_ref.IsDisabled()
-		my_wood_ref.Enable()
-	endif
+	;if my_wood_ref && my_wood_ref.IsDisabled()
+	;	my_wood_ref.Enable()
+	;endif
 	self.Disable()
 	self.Delete()
 endFunction
