@@ -6,7 +6,7 @@ import TentSystem
 
 ; REQUIRED PROPERTIES
 
-;/********p* CampTent/Required_InventoryItem
+;/********p* _Camp_PlaceableObjectBase/Required_InventoryItem
 * SYNTAX
 */;
 MiscObject property Required_InventoryItem auto
@@ -17,13 +17,22 @@ MiscObject property Required_InventoryItem auto
 
 ; OPTIONAL PROPERTIES
 
-;/********p* CampTent/Setting_StartUpRotation
+;/********p* _Camp_PlaceableObjectBase/Setting_StartUpRotation
 * SYNTAX
 */;
 Float property Setting_StartUpRotation = 0.0 auto
 ;/*
 * DESCRIPTION
 { Optional: The amount, in degrees, to rotate on the Z axis on start-up. }
+;*********/;
+
+;/********p* _Camp_PlaceableObjectBase/Setting_Flammable
+* SYNTAX
+*/;
+bool property Setting_Flammable = False auto
+;/*
+* DESCRIPTION
+{ Optional: Whether or not this object can be destroyed by fire. }
 ;*********/;
 
 ; PRIVATE
@@ -148,19 +157,21 @@ _Camp_ObjectFuture function GetFuture(ObjectReference akObjectReference)
 endFunction
 
 Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
-	ProcessOnHit(akAggressor, akSource, akProjectile, abBashAttack)
+	if Setting_Flammable
+		ProcessOnHit(akAggressor, akSource, akProjectile, abBashAttack)
+	endif
 EndEvent
 
 Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
-	ProcessMagicEffect(akCaster, akEffect)
+	if Setting_Flammable
+		ProcessMagicEffect(akCaster, akEffect)
+	endif
 EndEvent
 
 function ProcessOnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abBashAttack)
-	;debug.trace("[Campfire] I was hit by " + akAggressor + " with " + akSource + " (" + akProjectile + "), bashing: " + abBashAttack)
-	if akSource as Weapon && !akProjectile
-		;debug.trace("[Campfire] Melee attack hit!")
-	elseif akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11
+	if akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11
 		;debug.trace("[Campfire] Torch bash!")
+		IncreaseFireLevel()
 	endif
 endFunction
 

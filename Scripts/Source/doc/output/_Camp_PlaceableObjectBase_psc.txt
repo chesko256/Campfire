@@ -1,4 +1,4 @@
-### CampTent/Required\_InventoryItem
+### \_Camp\_PlaceableObjectBase/Required\_InventoryItem
 
 **DESCRIPTION.**
 
@@ -8,7 +8,7 @@ Required: The item the player obtains when picking up this object. }
 
     MiscObject property Required_InventoryItem auto
 
-### CampTent/Setting\_StartUpRotation
+### \_Camp\_PlaceableObjectBase/Setting\_StartUpRotation
 
 **DESCRIPTION.**
 
@@ -17,3 +17,13 @@ Optional: The amount, in degrees, to rotate on the Z axis on start-up. }
 **SYNTAX.**
 
     Float property Setting_StartUpRotation = 0.0 auto
+
+### \_Camp\_PlaceableObjectBase/Setting\_Flammable
+
+**DESCRIPTION.**
+
+Optional: Whether or not this object can be destroyed by fire. }
+
+**SYNTAX.**
+
+    bool property Setting_Flammable = False auto
