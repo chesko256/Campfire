@@ -2,7 +2,7 @@ scriptname _Camp_BranchTreeHarvestNodeController extends ObjectReference
 
 import Utility
 
-float RESET_TIME = 24.0
+float RESET_TIME = 12.0
 float BACKOFF_TIME
 MiscObject property _Camp_Tinder auto
 MiscObject property _Camp_DeadwoodBranch auto

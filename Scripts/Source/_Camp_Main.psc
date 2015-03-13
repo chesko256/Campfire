@@ -5,7 +5,8 @@ import CampUtil
 Actor property PlayerRef auto
 ReferenceAlias property PlayerAlias auto
 _Camp_Compatibility property Compatibility auto
-spell property _DE_SurvivalSkillsCombo_Spell auto
+;spell property _DE_SurvivalSkillsCombo_Spell auto
+spell property _Camp_CampfireSpell auto
 
 formlist property _Camp_TentActivators auto
 
@@ -37,7 +38,8 @@ event OnInit()
 	PlayerAlias.ForceRefTo(PlayerRef)
 	Compatibility.RunStartupCheck()
 
-	PlayerRef.AddSpell(_DE_SurvivalSkillsCombo_Spell, false)		;Survival Skills (multi-select)
+	;PlayerRef.AddSpell(_DE_SurvivalSkillsCombo_Spell, false)		;Survival Skills (multi-select)
+	PlayerRef.AddSpell(_Camp_CampfireSpell, false)					;Survival Skills: Build Campfire
 	utility.wait(1.0)
 	;/debug.trace("[Campfire] Guard alias set to " + Guard)
 	debug.trace("[Campfire] Guard alias set to " + Guard)

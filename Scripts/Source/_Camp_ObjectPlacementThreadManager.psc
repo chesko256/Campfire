@@ -530,7 +530,9 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
 
                 akIndicator.Disable()
                 akIndicator.PlaceAtMe(akFormToPlace)
-                PlayerRef.RemoveItem(akInventoryItem, 1, true)
+                if akInventoryItem
+                    PlayerRef.RemoveItem(akInventoryItem, 1, true)
+                endif
                 StopPlacement()
                 return false
             elseif ibutton == 1     ;Exit Placement

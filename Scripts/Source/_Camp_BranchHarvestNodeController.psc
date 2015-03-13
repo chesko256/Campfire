@@ -2,7 +2,7 @@ scriptname _Camp_BranchHarvestNodeController extends ObjectReference
 
 import Utility
 
-float RESET_TIME = 24.0
+float RESET_TIME = 12.0
 float BACKOFF_TIME
 int RECURSIVE_SEARCH_COUNT = 5
 float RECURSIVE_SEARCH_DISTANCE = 1000.0
