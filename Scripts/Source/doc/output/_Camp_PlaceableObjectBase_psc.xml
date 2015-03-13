@@ -7,7 +7,7 @@
 </articleinfo>
 <section>
 <title>
-CampTent/Required_InventoryItem</title>
+_Camp_PlaceableObjectBase/Required_InventoryItem</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Required: The item the player obtains when picking up this object. }
@@ -19,7 +19,7 @@ MiscObject property Required_InventoryItem auto
 </section>
 <section>
 <title>
-CampTent/Setting_StartUpRotation</title>
+_Camp_PlaceableObjectBase/Setting_StartUpRotation</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Optional: The amount, in degrees, to rotate on the Z axis on start-up. }
@@ -27,6 +27,18 @@ CampTent/Setting_StartUpRotation</title>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Float property Setting_StartUpRotation = 0.0 auto
+</literallayout>
+</section>
+<section>
+<title>
+_Camp_PlaceableObjectBase/Setting_Flammable</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Optional: Whether or not this object can be destroyed by fire. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool property Setting_Flammable = False auto
 </literallayout>
 </section>
 </article>
