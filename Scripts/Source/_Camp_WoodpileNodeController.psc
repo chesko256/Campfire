@@ -3,7 +3,7 @@ scriptname _Camp_WoodpileNodeController extends ObjectReference
 import Utility
 import CampUtil
 
-float RESET_TIME = 24.0 ;168.0
+float RESET_TIME = 168.0
 float BACKOFF_TIME
 int RECURSIVE_SEARCH_COUNT = 5
 float RECURSIVE_SEARCH_DISTANCE = 1000.0

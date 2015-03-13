@@ -329,6 +329,7 @@ function TakeDown()
     TryToDisableAndDeleteRef(myClutterActivator2)
     TryToDisableAndDeleteRef(myClutterFurniture1)
     TryToDisableAndDeleteRef(myClutterFurniture2)
+    TryToDisableAndDeleteRef(self)
 endFunction
 
 function PlaceObject_SitFurniture1()
