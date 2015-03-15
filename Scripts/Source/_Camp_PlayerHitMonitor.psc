@@ -13,3 +13,5 @@ function RaiseEvent_PlayerHit(Form akAggressor, Form akSource, Form akProjectile
 		ModEvent.Send(handle)
 	endif
 endFunction
+
+;@TODO: Wood harvesting needs direct hit notification to node
