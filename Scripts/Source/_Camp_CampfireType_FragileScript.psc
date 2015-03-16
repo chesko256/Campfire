@@ -13,7 +13,7 @@ Activator property _Camp_Fuel_Fragile_BooksLit auto
 Activator property _Camp_Fuel_Fragile_BranchesUnlit auto
 Activator property _Camp_Fuel_Fragile_BooksUnlit auto
 Light property _Camp_Campfire_Light_2 auto
-MiscObject property this_item auto
+Book property this_item auto
 Actor property PlayerRef auto
 
 Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)

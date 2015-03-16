@@ -505,6 +505,8 @@ function SitDown()
     endif
 endFunction
 
+;Add a stage for just lit but no ash, then turn on ash after 15 in-game minutes
+
 function LightFire()
     debug.trace("[Campfire] LightFire")
     myFuelUnlit.DisableNoWait()
@@ -522,6 +524,7 @@ function BurnToEmbers()
     myFuelLit.DisableNoWait(true)
     myLight.DisableNoWait(true)
     myEmbers.EnableNoWait()
+    myAshes.EnableNoWait()
     last_update_registration_time = Utility.GetCurrentGameTime()
     RegisterForSingleUpdateGameTime(remaining_time - ASH_DURATION)
     campfire_stage = 2
