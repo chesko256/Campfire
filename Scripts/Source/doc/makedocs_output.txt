@@ -20,6 +20,10 @@ E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>pan
 E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>python githubber.py "CampUtil_psc.txt" "../../../campwiki/CampUtil-API-Reference.md" 
 
 E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>python githubber.py "CampTent_psc.txt" "../../../campwiki/CampTent-Script.md" 
+Traceback (most recent call last):
+  File "githubber.py", line 313, in <module>
+    with open(str(sys.argv[2]), "w") as myfile:
+IOError: [Errno 22] invalid mode ('w') or filename: '../../../campwiki/CampTent-Script.md'
 
 E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>python githubber.py "CampTentEx_psc.txt" "../../../campwiki/CampTentEx-Script.md" 
 
@@ -30,3 +34,7 @@ E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>pyt
 E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>python githubber.py "CampPlaceableMiscItem_psc.txt" "../../../campwiki/CampPlaceableMiscItem-Script.md" 
 
 E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>python githubber.py "CampPlacementIndicator_psc.txt" "../../../campwiki/CampPlacementIndicator-Script.md" 
+Traceback (most recent call last):
+  File "githubber.py", line 313, in <module>
+    with open(str(sys.argv[2]), "w") as myfile:
+IOError: [Errno 22] invalid mode ('w') or filename: '../../../campwiki/CampPlacementIndicator-Script.md'
