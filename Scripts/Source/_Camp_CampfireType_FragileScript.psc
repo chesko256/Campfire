@@ -15,12 +15,14 @@ Activator property _Camp_Fuel_Fragile_BooksUnlit auto
 Light property _Camp_Campfire_Light_2 auto
 Book property this_item auto
 Actor property PlayerRef auto
+GlobalVariable property _Camp_LastUsedCampfireSize auto
 
 Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)
 	if akNewContainer == PlayerRef
 		ObjectReference f = Game.FindClosestReferenceOfTypeFromRef(_Camp_Campfire, PlayerRef, 500.0)
 		if f
-			f.Activate(PlayerRef)
+			(f as CampCampfire).campfire_size = 1
+			_Camp_LastUsedCampfireSize.SetValueInt(1)
 			if isWood
 				(f as CampCampfire).SetFuel(_Camp_Fuel_Fragile_BranchesLit, 	\
 											_Camp_Fuel_Fragile_BranchesUnlit, \

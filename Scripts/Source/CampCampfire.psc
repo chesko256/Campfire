@@ -218,6 +218,8 @@ Static property _Camp_CampfireCookPotSnapMarker auto
 Message property _Camp_Campfire_Menu auto
 Message property _Camp_Campfire_SitError auto
 Actor property PlayerRef auto
+GlobalVariable property _Camp_LastUsedCampfireSize auto
+GlobalVariable property _Camp_LastUsedCampfireStage auto
 
 ;Run-time objects
 ;ObjectReference property myGroundArt auto hidden
@@ -263,7 +265,8 @@ int ASH_DURATION = 24
 bool adding_fuel = false
 bool eligible_for_deletion = false
 
-int campfire_stage = 0                  ;0 = empty, 1 = ashes, 2 = embers, 3 = burning, 4 = unlit fuel
+int property campfire_stage = 0 auto hidden                 ;0 = empty or ash, 1 = embers, 2 = burning, 3 = unlit fuel
+int property campfire_size = 0 auto hidden                  ;0 = not built, 1 = fragile, 2 = flickering, 3 = crackling, 4 = roaring
 float last_update_registration_time     ;when this campfire last registered
 int burn_duration                       ;how long this campfire will burn (set by fuel)
 float remaining_time                    ;total time this campfire will last
@@ -275,6 +278,8 @@ endFunction
 
 Event OnActivate(ObjectReference akActionRef)
     SetLastUsedCampfire(self)
+    _Camp_LastUsedCampfireSize.SetValueInt(campfire_size)
+    _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
 
     if !adding_fuel
         int i = _Camp_Campfire_Menu.Show()
@@ -476,11 +481,15 @@ function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int 
     myFuelLit = self.PlaceAtMe(akFuelLit, abInitiallyDisabled = true)
     myLight = self.PlaceAtMe(akLight, abInitiallyDisabled = true)
     myLight.MoveTo(myLight, afZOffset = 100.0)
-    campfire_stage = 4
+    campfire_stage = 3
 
-    ;@TODO: If manual lighting, blah blah...
+    ;@TODO: If manual lighting,
+        ;
+        ;
     ;else,
-    LightFire()
+        LightFire()
+        _Camp_LastUsedCampfireStage.SetValueInt(2)
+    ;endif
 endFunction
 
 function SitDown()
