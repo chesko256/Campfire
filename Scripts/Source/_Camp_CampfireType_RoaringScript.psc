@@ -22,7 +22,7 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
         ObjectReference f = Game.FindClosestReferenceOfTypeFromRef(_Camp_Campfire, PlayerRef, 500.0)
         if f
             (f as CampCampfire).campfire_size = 4
-            _Camp_LastUsedCampfireSize.SetValueInt(1)
+            _Camp_LastUsedCampfireSize.SetValueInt(4)
             if isDeadwood
                 (f as CampCampfire).SetFuel(_Camp_Fuel_Roaring_DeadwoodLit,       \
                                             _Camp_Fuel_Roaring_DeadwoodUnlit,     \

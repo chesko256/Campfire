@@ -477,6 +477,13 @@ endFunction
 function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int aiBurnDuration)
     debug.trace("[Campfire] Fuel set: " + akFuelLit + "," + akFuelUnlit + "," + akLight)
     burn_duration = aiBurnDuration
+    
+    ;If there is pre-existing fuel, get rid of it
+    TryToDisableAndDeleteRef(myFuelUnlit)
+    TryToDisableAndDeleteRef(myFuelLit)
+    TryToDisableAndDeleteRef(myLight)
+
+    ;Place the new fuel
     myFuelUnlit = self.PlaceAtMe(akFuelUnlit, abInitiallyDisabled = true)
     myFuelLit = self.PlaceAtMe(akFuelLit, abInitiallyDisabled = true)
     myLight = self.PlaceAtMe(akLight, abInitiallyDisabled = true)
@@ -488,7 +495,8 @@ function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int 
         ;
     ;else,
         LightFire()
-        _Camp_LastUsedCampfireStage.SetValueInt(2)
+        campfire_stage = 2
+        _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
     ;endif
 endFunction
 
