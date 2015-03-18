@@ -14,7 +14,7 @@ function MenuHandler_Toggle(Message akMessageOn, Message akMessageOff, GlobalVar
             ;return
         endif
     elseif akSetting.GetValueInt() == 1
-        int i = akMessageOn.Show()
+        int i = akMessageOff.Show()
         if i == 0
             akSetting.SetValueInt(2)
             MenuHandler_Toggle(akMessageOn, akMessageOff, akSetting)
