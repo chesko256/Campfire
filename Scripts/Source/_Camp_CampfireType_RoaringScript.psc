@@ -2,7 +2,7 @@ Scriptname _Camp_CampfireType_RoaringScript extends ObjectReference
 
 import CampUtil
 
-int burn_duration = 6
+int burn_duration = 12
 
 bool property isDeadwood = false auto
 bool property isFirewood = false auto

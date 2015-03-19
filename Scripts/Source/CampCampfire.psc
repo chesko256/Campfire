@@ -214,20 +214,23 @@ ObjectReference property PositionRef_CookPotSnapMarker auto
 ;Common objects
 Activator property _Camp_Campfire_Embers auto
 Activator property _Camp_Campfire_Ashes auto
+Activator property _Camp_Campfire_Steam auto
 Static property _Camp_CampfireCookPotSnapMarker auto
+Sound property FXFireOut auto
 Message property _Camp_Campfire_Menu auto
 Message property _Camp_Campfire_SitError auto
 Actor property PlayerRef auto
 GlobalVariable property _Camp_LastUsedCampfireSize auto
 GlobalVariable property _Camp_LastUsedCampfireStage auto
+GlobalVariable property _Camp_Setting_ManualFireLighting auto
 
 ;Run-time objects
-;ObjectReference property myGroundArt auto hidden
 ObjectReference property myFuelLit auto hidden
 ObjectReference property myFuelUnlit auto hidden
 ObjectReference property myEmbers auto hidden
 ObjectReference property myAshes auto hidden
 ObjectReference property myLight auto hidden
+ObjectReference property mySteam auto hidden
 ObjectReference property myClutterStatic1 auto hidden
 ObjectReference property myClutterStatic2 auto hidden
 ObjectReference property myClutterActivator1 auto hidden
@@ -241,12 +244,12 @@ ObjectReference property mySitFurniture4 auto hidden
 ObjectReference property myCookPotSnapMarker auto hidden
 
 ;Futures
-;ObjectReference property myGroundArtFuture auto hidden
 ObjectReference property myFuelLitFuture auto hidden
 ObjectReference property myFuelUnlitFuture auto hidden
 ObjectReference property myEmbersFuture auto hidden
 ObjectReference property myAshesFuture auto hidden
 ObjectReference property myLightFuture auto hidden
+ObjectReference property mySteamFuture auto hidden
 ObjectReference property myClutterStatic1Future auto hidden
 ObjectReference property myClutterStatic2Future auto hidden
 ObjectReference property myClutterActivator1Future auto hidden
@@ -259,21 +262,25 @@ ObjectReference property mySitFurniture3Future auto hidden
 ObjectReference property mySitFurniture4Future auto hidden
 ObjectReference property myCookPotSnapMarkerFuture auto hidden
 
-int EMBERS_DURATION = 2
+int EMBERS_DURATION = 4
 int ASH_DURATION = 24
 
 bool adding_fuel = false
 bool eligible_for_deletion = false
 
-int property campfire_stage = 0 auto hidden                 ;0 = empty or ash, 1 = embers, 2 = burning, 3 = unlit fuel
-int property campfire_size = 0 auto hidden                  ;0 = not built, 1 = fragile, 2 = flickering, 3 = crackling, 4 = roaring
-float last_update_registration_time     ;when this campfire last registered
-int burn_duration                       ;how long this campfire will burn (set by fuel)
-float remaining_time                    ;total time this campfire will last
+int property campfire_stage = 0 auto hidden     ;0 = empty or ash, 1 = embers, 2 = burning, 3 = unlit fuel
+int property campfire_size = 0 auto hidden      ;0 = not built, 1 = fragile, 2 = flickering, 3 = crackling, 4 = roaring
+float last_update_registration_time             ;when this campfire last registered
+int burn_duration                               ;how long this campfire will burn (set by fuel)
+float remaining_time                            ;total time this campfire will last
 
 function Initialize()
     self.BlockActivation()
     parent.Initialize()
+    last_update_registration_time = Utility.GetCurrentGameTime()
+    remaining_time = ASH_DURATION
+    RegisterForSingleUpdateGameTime(remaining_time)
+    debug.trace("[Campfire] Registered for update in " + remaining_time + " hours.")
 endFunction
 
 Event OnActivate(ObjectReference akActionRef)
@@ -345,16 +352,16 @@ function PlaceObjects()
     endif
 
     ;Required
-    ;PlaceObject_myGroundArt()
+    PlaceObject_mySteam()
     PlaceObject_myEmbers()
     PlaceObject_myAshes()
     PlaceObject_myCookPotSnapMarker()
 endFunction
 
 function GetResults()
-    ;if myGroundArtFuture
-    ;    myGroundArt = GetFuture(myGroundArtFuture).get_result()
-    ;endif
+    if mySteamFuture
+        mySteam = GetFuture(mySteamFuture).get_result()
+    endif
     if myFuelLitFuture
         myFuelLit = GetFuture(myFuelLitFuture).get_result()
     endif
@@ -403,7 +410,7 @@ function GetResults()
 endFunction
 
 function TakeDown()
-    ;TryToDisableAndDeleteRef(myGroundArt)
+    TryToDisableAndDeleteRef(mySteam)
     TryToDisableAndDeleteRef(myFuelLit)
     TryToDisableAndDeleteRef(myFuelUnlit)
     TryToDisableAndDeleteRef(myEmbers)
@@ -453,9 +460,9 @@ endFunction
 function PlaceObject_ClutterFurniture2()
     myClutterFurniture2Future = PlacementSystem.PlaceObject(self, FireAsset_ClutterFurniture2, PositionRef_ClutterFurniture2)
 endFunction
-;function PlaceObject_myGroundArt()
-;    myGroundArt = PlacementSystem.PlaceObject(self, FireAsset_GroundArt, PositionRef_GroundArt)
-;endFunction
+function PlaceObject_mySteam()
+    mySteamFuture = PlacementSystem.PlaceObject(self, _Camp_Campfire_Steam, RequiredPositionRef_CampfireBase, initially_disabled=true)
+endFunction
 function PlaceObject_myEmbers()
     myEmbersFuture = PlacementSystem.PlaceObject(self, _Camp_Campfire_Embers, RequiredPositionRef_CampfireBase, initially_disabled=true)
 endFunction
@@ -466,13 +473,26 @@ function PlaceObject_myCookPotSnapMarker()
     myCookPotSnapMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_CampfireCookPotSnapMarker, PositionRef_CookPotSnapMarker)
 endFunction
 
-function ProcessOnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abBashAttack)
+Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
+    if akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11
+        ;debug.trace("[Campfire] Torch bash!")
+        if campfire_size > 0 && campfire_stage == 3 && _Camp_Setting_ManualFireLighting.GetValueInt() == 2
+            LightFire()
+        endif
+    endif
+EndEvent
 
-endFunction
-
-function ProcessMagicEffect(ObjectReference akCaster, MagicEffect akEffect)
-
-endFunction
+Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
+    if akEffect.HasKeyword(GetMagicDamageFireKeyword())
+        if campfire_size > 0 && campfire_stage == 3
+            LightFire()
+        endif
+    elseif akEffect.HasKeyword(GetMagicDamageFrostKeyword())
+        if campfire_size > 0 && campfire_stage == 2
+            PutOutFire()
+        endif
+    endif
+EndEvent
 
 function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int aiBurnDuration)
     debug.trace("[Campfire] Fuel set: " + akFuelLit + "," + akFuelUnlit + "," + akLight)
@@ -490,14 +510,13 @@ function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int 
     myLight.MoveTo(myLight, afZOffset = 100.0)
     campfire_stage = 3
 
-    ;@TODO: If manual lighting,
-        ;
-        ;
-    ;else,
-        LightFire()
-        campfire_stage = 2
+    if _Camp_Setting_ManualFireLighting.GetValueInt() == 2
+        PlaceFuel()
         _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
-    ;endif
+    else
+        LightFire()
+        _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
+    endif
 endFunction
 
 function SitDown()
@@ -522,6 +541,19 @@ function SitDown()
     endif
 endFunction
 
+function PlaceFuel()
+    debug.trace("[Campfire] PlaceFuel")
+    myFuelUnlit.EnableNoWait()
+    myFuelLit.DisableNoWait()
+    myLight.DisableNoWait()
+    myEmbers.DisableNoWait()
+    RegisterForSingleUpdateGameTime(ASH_DURATION)
+    last_update_registration_time = Utility.GetCurrentGameTime()
+    remaining_time = ASH_DURATION
+    debug.trace("[Campfire] Registered for update in " + ASH_DURATION + " hours.")
+    campfire_stage = 3
+endFunction
+
 function LightFire()
     debug.trace("[Campfire] LightFire")
     myFuelUnlit.DisableNoWait()
@@ -532,7 +564,25 @@ function LightFire()
     RegisterForSingleUpdateGameTime(burn_duration)
     last_update_registration_time = Utility.GetCurrentGameTime()
     remaining_time = burn_duration + EMBERS_DURATION + ASH_DURATION
+    debug.trace("[Campfire] Registered for update in " + burn_duration + " hours.")
+    campfire_stage = 2
+endFunction
+
+function PutOutFire()
+    debug.trace("[Campfire] PutOutFire")
+    myFuelUnlit.EnableNoWait()
+    myFuelLit.DisableNoWait()
+    myLight.DisableNoWait()
+    RegisterForSingleUpdateGameTime(ASH_DURATION)
+    last_update_registration_time = Utility.GetCurrentGameTime()
+    remaining_time = ASH_DURATION
+    debug.trace("[Campfire] Registered for update in " + remaining_time + " hours.")
     campfire_stage = 3
+
+    FXFireOut.Play(self)
+    mySteam.Enable()
+    utility.wait(2)
+    mySteam.Disable(true)
 endFunction
 
 function BurnToEmbers()
@@ -544,7 +594,9 @@ function BurnToEmbers()
     myAshes.EnableNoWait()
     last_update_registration_time = Utility.GetCurrentGameTime()
     RegisterForSingleUpdateGameTime(remaining_time - ASH_DURATION)
-    campfire_stage = 2
+    debug.trace("[Campfire] Registered for update in " + (remaining_time - ASH_DURATION) + " hours.")
+    campfire_stage = 1
+    campfire_size = 0
 endFunction
 
 function BurnToAshes()
@@ -556,7 +608,9 @@ function BurnToAshes()
     myAshes.EnableNoWait()
     last_update_registration_time = Utility.GetCurrentGameTime()
     RegisterForSingleUpdateGameTime(remaining_time)
-    campfire_stage = 1
+    debug.trace("[Campfire] Registered for update in " + remaining_time + " hours.")
+    campfire_stage = 0
+    campfire_size = 0
 endFunction
 
 Event OnUpdateGameTime()
