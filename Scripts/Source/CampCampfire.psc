@@ -223,6 +223,7 @@ Actor property PlayerRef auto
 GlobalVariable property _Camp_LastUsedCampfireSize auto
 GlobalVariable property _Camp_LastUsedCampfireStage auto
 GlobalVariable property _Camp_Setting_ManualFireLighting auto
+MiscObject property _Camp_CampfireItem_GoodWeather auto
 
 ;Run-time objects
 ObjectReference property myFuelLit auto hidden
@@ -265,7 +266,7 @@ ObjectReference property myCookPotSnapMarkerFuture auto hidden
 int EMBERS_DURATION = 4
 int ASH_DURATION = 24
 
-bool adding_fuel = false
+bool in_use = false
 bool eligible_for_deletion = false
 
 int property campfire_stage = 0 auto hidden     ;0 = empty or ash, 1 = embers, 2 = burning, 3 = unlit fuel
@@ -288,17 +289,39 @@ Event OnActivate(ObjectReference akActionRef)
     _Camp_LastUsedCampfireSize.SetValueInt(campfire_size)
     _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
 
-    if !adding_fuel
+    if !in_use
         int i = _Camp_Campfire_Menu.Show()
         if i == 0
-            adding_fuel = true
+            in_use = true
             self.BlockActivation(false)
             self.Activate(PlayerRef)
+
+            ;Wait until the player is "using" the object, or enough time passes.
+            int j = 0
+            while !self.IsFurnitureInUse() && j < 50
+                utility.wait(0.1)
+                j += 1
+            endWhile
+
+            ;Do they need the Clear Weather item?
+            int inwc = Weather.GetCurrentWeather().GetClassification()
+            int outwc = Weather.GetOutgoingWeather().GetClassification()
+            float trans = Weather.GetCurrentWeatherTransition()
+            if (inwc <= 1 && trans >= 0.5) || (trans < 0.5 && outwc <= 1)
+                PlayerRef.AddItem(_Camp_CampfireItem_GoodWeather, 1, true)
+            endif
+
+            ;Wait until they finish.
             while self.IsFurnitureInUse()
                 utility.wait(0.1)
             endWhile
+
+            int count = PlayerRef.GetItemCount(_Camp_CampfireItem_GoodWeather)
+            PlayerRef.RemoveItem(_Camp_CampfireItem_GoodWeather, count, true)
+
+            ;Return to the previous state.
             self.BlockActivation()
-            adding_fuel = false
+            in_use = false
         elseif i == 1
             ;Sit
             SitDown()
@@ -476,7 +499,7 @@ endFunction
 Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
     if akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11
         ;debug.trace("[Campfire] Torch bash!")
-        if campfire_size > 0 && campfire_stage == 3 && _Camp_Setting_ManualFireLighting.GetValueInt() == 2
+        if campfire_size > 0 && campfire_stage == 3
             LightFire()
         endif
     endif
