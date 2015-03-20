@@ -9,5 +9,5 @@ Event OnInit()
 	my_node.SetAngle(0.0, 0.0, utility.randomfloat(0.0, 359.0))
 	my_node.SetScale(0.4)
 	my_node.EnableNoWait(true)
-	(my_node as _Camp_BranchTreeHarvestNodeController).Setup(0.05, 1, 1)
+	(my_node as _Camp_BranchTreeHarvestNodeController).Setup(0.05, 1, 0.25)
 endEvent
