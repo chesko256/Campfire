@@ -13,17 +13,17 @@ Actor property PlayerRef auto
 FormList property _Camp_HarvestableBranchTrees auto
 bool property harvested = false auto hidden
 float property tinder_yield_chance auto hidden
-int property min_yield_branch auto hidden
-int property max_yield_branch auto hidden
+int property yield_branch auto hidden
+float property bonus_chance auto hidden
 bool eligible_for_reset = false
 
 function Setup(float _tinder_yield_chance, 								\
-			   int _min_yield_branch, int _max_yield_branch)
+			   int _yield_branch, float _bonus_chance)
 
 	;debug.trace("[Campfire] Setting up new branch / tree harvesting node " + self)
 	tinder_yield_chance = _tinder_yield_chance
-	min_yield_branch = _min_yield_branch
-	max_yield_branch = _max_yield_branch
+	yield_branch = _yield_branch
+	bonus_chance = _bonus_chance
 	
 	;Store a random back-off value for use during reset
 	BACKOFF_TIME = RandomFloat(0.0, 3.0)
@@ -47,15 +47,19 @@ function YieldResources(ObjectReference akActionRef)
 	if !harvested
 		harvested = true
 
-		int branch_count = RandomInt(min_yield_branch, max_yield_branch)
-		float tinder_roll = RandomFloat(0.01, 1.0)
+		int branch_count = yield_branch
+		float bonus_roll = RandomFloat(0.01, 1.0)
+		if bonus_roll <= bonus_chance
+			branch_count += 1
+		endif
+		;float tinder_roll = RandomFloat(0.01, 1.0)
 
 		if branch_count > 0
 			akActionRef.AddItem(_Camp_DeadwoodBranch, branch_count)
 		endif
-		if tinder_roll <= tinder_yield_chance
-			akActionRef.AddItem(_Camp_Tinder)
-		endif
+		;if tinder_roll <= tinder_yield_chance
+		;	akActionRef.AddItem(_Camp_Tinder)
+		;endif
 
 		self.DisableNoWait()
 

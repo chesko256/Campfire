@@ -341,7 +341,7 @@ function YieldResources()
 
 		int branch_count = RandomInt(min_yield_branch, max_yield_branch)
 		int deadwood_count = RandomInt(min_yield_deadwood, max_yield_deadwood)
-		float tinder_roll = RandomFloat(0.1, 1.0)
+		;float tinder_roll = RandomFloat(0.1, 1.0)
 
 		if branch_count > 0
 			PlayerRef.AddItem(_Camp_DeadwoodBranch, branch_count)
@@ -349,9 +349,9 @@ function YieldResources()
 		if deadwood_count > 0
 			PlayerRef.AddItem(_Camp_DeadwoodLog, deadwood_count)
 		endif
-		if tinder_roll <= tinder_yield_chance
-			PlayerRef.AddItem(_Camp_Tinder)
-		endif
+		;if tinder_roll <= tinder_yield_chance
+		;	PlayerRef.AddItem(_Camp_Tinder)
+		;endif
 
 		if remaining_yields <= 0
 			ShowDepleteMessage()

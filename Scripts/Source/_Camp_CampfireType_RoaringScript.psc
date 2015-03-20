@@ -16,6 +16,8 @@ Light property _Camp_Campfire_Light_5 auto
 Book property this_item auto
 Actor property PlayerRef auto
 GlobalVariable property _Camp_LastUsedCampfireSize auto
+Spell property _Camp_InspiredSpell2 auto
+Message property _Camp_Inspired2Message auto
 
 Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)
     if akNewContainer == PlayerRef
@@ -34,5 +36,9 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
             endif
         endif
         PlayerRef.RemoveItem(this_item, 1, true)
+
+        ;Set the inspired spell
+        PlayerRef.AddSpell(_Camp_InspiredSpell2, false)
+        _Camp_Inspired2Message.Show()
     endif
 endEvent
