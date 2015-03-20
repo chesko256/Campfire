@@ -304,10 +304,20 @@ Event OnActivate(ObjectReference akActionRef)
             endWhile
 
             ;Do they need the Clear Weather item?
-            int inwc = Weather.GetCurrentWeather().GetClassification()
-            int outwc = Weather.GetOutgoingWeather().GetClassification()
+            Weather inc_weather = Weather.GetCurrentWeather()
+            Weather out_weather = Weather.GetOutgoingWeather()
+            
+            int inc_weatherclass = 0
+            int out_weatherclass = 0
+            if inc_weather
+                inc_weatherclass = inc_weather.GetClassification()
+            endif
+            if out_weather
+                out_weatherclass = out_weather.GetClassification()
+            endif
+
             float trans = Weather.GetCurrentWeatherTransition()
-            if (inwc <= 1 && trans >= 0.5) || (trans < 0.5 && outwc <= 1)
+            if (inc_weatherclass <= 1 && trans >= 0.5) || (trans < 0.5 && out_weatherclass <= 1)
                 PlayerRef.AddItem(_Camp_CampfireItem_GoodWeather, 1, true)
             endif
 
