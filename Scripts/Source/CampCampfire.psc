@@ -551,12 +551,16 @@ function SitDown()
     mySitMarkers = SelectionSort(mySitMarkers)
 
     if !(mySitMarkers[0].IsFurnitureInUse())
+        Game.ForceThirdPerson()
         mySitMarkers[0].Activate(PlayerRef)
     elseif !(mySitMarkers[1].IsFurnitureInUse())
+        Game.ForceThirdPerson()
         mySitMarkers[1].Activate(PlayerRef)
     elseif !(mySitMarkers[2].IsFurnitureInUse())
+        Game.ForceThirdPerson()
         mySitMarkers[2].Activate(PlayerRef)
     elseif !(mySitMarkers[3].IsFurnitureInUse())
+        Game.ForceThirdPerson()
         mySitMarkers[3].Activate(PlayerRef)
     else
         ;There is nowhere to sit.
