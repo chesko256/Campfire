@@ -2,8 +2,7 @@ Scriptname _Camp_SkyUIConfigPanelScript extends SKI_ConfigBase
 
 ; External scripts
 _Camp_Compatibility property Compatibility auto
-GlobalVariable property _DE_Setting_Lighting auto
-GlobalVariable property _Camp_HelpDone_TentActivate auto
+GlobalVariable property _Camp_Setting_ManualFireLighting auto
 GlobalVariable property _Camp_Setting_CampingArmorTakeOff auto
 GlobalVariable property _Camp_Setting_TakeOff_Helm auto
 GlobalVariable property _Camp_Setting_TakeOff_Cuirass auto
@@ -16,17 +15,19 @@ GlobalVariable property _Camp_Setting_TakeOff_Ammo auto
 GlobalVariable property _Camp_Setting_TrackFollowers auto
 GlobalVariable property _Camp_Setting_MaxThreads auto
 GlobalVariable property _Camp_Setting_EquipTentOutfit auto
-GlobalVariable property _DE_Setting_WoodCinematic auto
 GlobalVariable property _Camp_Setting_Legality auto
+GlobalVariable property _Camp_Setting_AdvancedPlacement auto
 GlobalVariable property _DE_HelpDone_Visualize auto
 GlobalVariable property _DE_HelpDone_PlacementError auto
-GlobalVariable property _DE_Setting_Help auto
-GlobalVariable property _Camp_Setting_AdvancedPlacement auto
+GlobalVariable property _Camp_HelpDone_TentActivate auto
+GlobalVariable property _Camp_Setting_Tutorials auto
 GlobalVariable property _DE_SKSEVersion auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 GlobalVariable property _Camp_HotkeyCreateItem auto
 GlobalVariable property _Camp_HotkeyBuildCampfire auto
 GlobalVariable property _Camp_HotkeyHarvestWood auto
+
+Actor property PlayerRef auto
 Spell property _Camp_CreateItemSpell auto
 Spell property _Camp_CampfireSpell auto
 Spell property _Camp_HarvestWoodSpell auto
@@ -38,9 +39,9 @@ bool bPresetChange = false
 string[] TroubleshootingList
 int TroubleshootingIndex = 0
 
+int Gameplay_SettingCampingLegalityToggle_OID
 int Gameplay_SettingCampingArmorTentsText_OID
 int Gameplay_SettingCampingFireLightingText_OID
-int Gameplay_SettingCampingPlacementVisualizationText_OID
 
 int Gameplay_SettingCampingPlaceHelm_OID
 int Gameplay_SettingCampingPlaceCuirass_OID
@@ -51,24 +52,25 @@ int Gameplay_SettingCampingPlaceWeapons_OID
 int Gameplay_SettingCampingPlaceShield_OID
 int Gameplay_SettingCampingPlaceAmmo_OID
 
-int Advanced_SettingTrackFollowers_OID
-int Advanced_SettingMaxThreads_OID
-
-int Visuals_SettingWoodCinematicToggle_OID
-int Gameplay_SettingCampingLegalityToggle_OID
 int Gameplay_HotkeyCreateItem_OID
 int Gameplay_HotkeyBuildCampfire_OID
 int Gameplay_HotkeyHarvestWood_OID
 
-int Help_TroubleshootingMenu_OID
+int Advanced_SettingAdvancedPlacement_OID
+int Advanced_SettingMaxThreads_OID
+int Advanced_SettingTrackFollowers_OID
+
 int Help_TutorialsToggle_OID
 int Help_TutorialsResetText_OID
+int Help_TroubleshootingMenu_OID
 int Guide_Topic1
 int Guide_Topic2
 int Guide_Topic3
 int Guide_Topic4
 
-;#EndRegion
+float DEFAULT_THREADS = 20.0
+float MIN_THREADS = 0.0
+float MAX_THREADS = 30.0
 
 Event OnConfigInit()
 	
@@ -81,7 +83,6 @@ Event OnConfigInit()
 	TroubleshootingList[0] = "$CampfireTroubleshooting0"
 	TroubleshootingList[1] = "$CampfireTroubleshooting1"
 
-	;Frostfall.FrostfallDebug(0, "Initialized the SkyUI Mod Config Menu.")
 	debug.trace("[CAMPFIRE] Initialized the SkyUI Mod Config Menu.")
 	
 endEvent
@@ -101,7 +102,7 @@ function PageReset_Gameplay()
 		Gameplay_SettingCampingArmorTentsText_OID = AddToggleOption("$CampfireGameplaySettingCampingRemoveGear", false)
 	endif
 	
-	if _DE_Setting_Lighting.GetValueInt() == 2
+	if _Camp_Setting_ManualFireLighting.GetValueInt() == 2
 		Gameplay_SettingCampingFireLightingText_OID = AddToggleOption("$CampfireGameplaySettingCampingLightingMode", true)
 	else
 		Gameplay_SettingCampingFireLightingText_OID = AddToggleOption("$CampfireGameplaySettingCampingLightingMode", false)
@@ -115,7 +116,7 @@ function PageReset_Gameplay()
 
 	AddEmptyOption()
 	
-	AddHeaderOption("$CampfireVisualsHeaderHotkeys")
+	AddHeaderOption("$CampfireGameplayHeaderHotkeys")
 	Gameplay_HotkeyCreateItem_OID = AddKeyMapOption("$CampfireGameplayHotkeyCreateItem", _Camp_HotkeyCreateItem.GetValueInt())
 	Gameplay_HotkeyBuildCampfire_OID = AddKeyMapOption("$CampfireGameplayHotkeyBuildCampfire", _Camp_HotkeyBuildCampfire.GetValueInt())
 	Gameplay_HotkeyHarvestWood_OID = AddKeyMapOption("$CampfireGameplayHotkeyHarvestWood", _Camp_HotkeyHarvestWood.GetValueInt())
@@ -185,9 +186,9 @@ function PageReset_Advanced()
 	AddHeaderOption("$CampfireAdvancedHeaderPlacement")
 	
 	if _Camp_Setting_AdvancedPlacement.GetValueInt() == 2
-		Gameplay_SettingCampingPlacementVisualizationText_OID = AddToggleOption("$CampfireGameplaySettingCampingPlacementMode", true)
+		Advanced_SettingAdvancedPlacement_OID = AddToggleOption("$CampfireAdvancedSettingAdvancedPlacement", true)
 	else
-		Gameplay_SettingCampingPlacementVisualizationText_OID = AddToggleOption("$CampfireGameplaySettingCampingPlacementMode", false)
+		Advanced_SettingAdvancedPlacement_OID = AddToggleOption("$CampfireAdvancedSettingAdvancedPlacement", false)
 	endif
 	Advanced_SettingMaxThreads_OID = AddSliderOption("$CampfireAdvancedSettingMaxThreads", _Camp_Setting_MaxThreads.GetValueInt(), "{0}")
 	
@@ -203,7 +204,7 @@ endFunction
 function PageReset_Help()
 	SetCursorFillMode(TOP_TO_BOTTOM)
 	AddHeaderOption("$CampfireHelpHeaderTutorials")
-	if _DE_Setting_Help.GetValueInt() == 2
+	if _Camp_Setting_Tutorials.GetValueInt() == 2
 		Help_TutorialsToggle_OID = AddToggleOption("$CampfireHelpSettingTutorialsShow", true)
 	else
 		Help_TutorialsToggle_OID = AddToggleOption("$CampfireHelpSettingTutorialsShow", false)
@@ -212,14 +213,14 @@ function PageReset_Help()
 	AddEmptyOption()
 	AddHeaderOption("$CampfireHelpHeaderTroubleshooting")
 
-	Help_TroubleshootingMenu_OID = AddMenuOption("$CampfireHelpTroubleshootingSelectProblem", TroubleshootingList[TroubleshootingIndex]) ;ZZZ
+	Help_TroubleshootingMenu_OID = AddMenuOption("$CampfireHelpTroubleshootingSelectProblem", TroubleshootingList[TroubleshootingIndex])
 	
 	SetCursorPosition(1) ; Move cursor to top right position
-	AddHeaderOption("$CampfireGuideHeaderCamping")
-	Guide_Topic1 = AddTextOption("$CampfireGuideCampingTopic1", "")
-	Guide_Topic2 = AddTextOption("$CampfireGuideCampingTopic2", "")
-	Guide_Topic3 = AddTextOption("$CampfireGuideCampingTopic3", "")
-	Guide_Topic4 = AddTextOption("$CampfireGuideGearTopic1", "")
+	AddHeaderOption("$CampfireGuideHeader")
+	Guide_Topic1 = AddTextOption("$CampfireGuideTopic1", "")
+	Guide_Topic2 = AddTextOption("$CampfireGuideTopic2", "")
+	Guide_Topic3 = AddTextOption("$CampfireGuideTopic3", "")
+	Guide_Topic4 = AddTextOption("$CampfireGuideTopic4", "")
 endFunction
 
 event OnPageReset(string page)
@@ -241,24 +242,11 @@ endEvent
 event OnOptionHighlight(int option)
 	if option == Gameplay_SettingCampingArmorTentsText_OID
 		SetInfoText("$CampfireOptionHighlightSettingCampingArmorTentsText")
-	elseif option == Gameplay_SettingCampingPlacementVisualizationText_OID
-		SetInfoText("$CampfireOptionHighlightPlacementMode")
 	elseif option == Gameplay_SettingCampingFireLightingText_OID
 		SetInfoText("$CampfireOptionHighlightSettingCampingFireLightingText")
 	elseif option == Gameplay_SettingCampingLegalityToggle_OID
 		SetInfoText("$CampfireOptionHighlightSettingLegality")
-	elseif option == Help_TutorialsToggle_OID
-		SetInfoText("$CampfireOptionHighlightSettingTutorials")
-	elseif option == Advanced_SettingMaxThreads_OID
-		SetInfoText("$CampfireOptionHighlightSettingMaxThreads")
-	elseif option == Advanced_SettingTrackFollowers_OID
-		SetInfoText("$CampfireOptionHighlightSettingTrackFollowers")
-	elseif option == Gameplay_HotkeyCreateItem_OID
-		SetInfoText("$CampfireOptionHighlightHKCreateItem")
-	elseif option == Gameplay_HotkeyBuildCampfire_OID
-		SetInfoText("$CampfireOptionHighlightHKBuildCampfire")
-	elseif option == Gameplay_HotkeyHarvestWood_OID
-		SetInfoText("$CampfireOptionHighlightHKHarvestWood")
+
 	elseif option == Gameplay_SettingCampingPlaceHelm_OID
 		SetInfoText("$CampfireOptionHighlightShowHelm")
 	elseif option == Gameplay_SettingCampingPlaceCuirass_OID
@@ -275,6 +263,23 @@ event OnOptionHighlight(int option)
 		SetInfoText("$CampfireOptionHighlightShowShield")
 	elseif option == Gameplay_SettingCampingPlaceAmmo_OID
 		SetInfoText("$CampfireOptionHighlightShowAmmo")
+
+	elseif option == Gameplay_HotkeyCreateItem_OID
+		SetInfoText("$CampfireOptionHighlightHKCreateItem")
+	elseif option == Gameplay_HotkeyBuildCampfire_OID
+		SetInfoText("$CampfireOptionHighlightHKBuildCampfire")
+	elseif option == Gameplay_HotkeyHarvestWood_OID
+		SetInfoText("$CampfireOptionHighlightHKHarvestWood")
+
+	elseif option == Advanced_SettingAdvancedPlacement_OID
+		SetInfoText("$CampfireOptionHighlightAdvancedPlacement")
+	elseif option == Advanced_SettingMaxThreads_OID
+		SetInfoText("$CampfireOptionHighlightSettingMaxThreads")
+	elseif option == Advanced_SettingTrackFollowers_OID
+		SetInfoText("$CampfireOptionHighlightSettingTrackFollowers")
+
+	elseif option == Help_TutorialsToggle_OID
+		SetInfoText("$CampfireOptionHighlightSettingTutorials")
 	endif
 endEvent
 
@@ -289,28 +294,12 @@ event OnOptionSelect(int option)
 			SetToggleOptionValue(Gameplay_SettingCampingArmorTentsText_OID, true)
 			ForcePageReset()
 		endif
-	elseif option == Gameplay_SettingCampingPlacementVisualizationText_OID
-		if _Camp_Setting_AdvancedPlacement.GetValueInt() == 2
-			_Camp_Setting_AdvancedPlacement.SetValueInt(1)
-			SetToggleOptionValue(Gameplay_SettingCampingPlacementVisualizationText_OID, false)
-		else
-			_Camp_Setting_AdvancedPlacement.SetValueInt(2)
-			SetToggleOptionValue(Gameplay_SettingCampingPlacementVisualizationText_OID, true)
-		endif
-	elseif option == Advanced_SettingTrackFollowers_OID
-		if _Camp_Setting_TrackFollowers.GetValueInt() == 2
-			_Camp_Setting_TrackFollowers.SetValueInt(1)
-			SetToggleOptionValue(Advanced_SettingTrackFollowers_OID, false)
-		else
-			_Camp_Setting_TrackFollowers.SetValueInt(2)
-			SetToggleOptionValue(Advanced_SettingTrackFollowers_OID, true)
-		endif
 	elseif option == Gameplay_SettingCampingFireLightingText_OID
-		if _DE_Setting_Lighting.GetValueInt() == 2
-			_DE_Setting_Lighting.SetValueInt(1)
+		if _Camp_Setting_ManualFireLighting.GetValueInt() == 2
+			_Camp_Setting_ManualFireLighting.SetValueInt(1)
 			SetToggleOptionValue(Gameplay_SettingCampingFireLightingText_OID, false)
 		else
-			_DE_Setting_Lighting.SetValueInt(2)
+			_Camp_Setting_ManualFireLighting.SetValueInt(2)
 			SetToggleOptionValue(Gameplay_SettingCampingFireLightingText_OID, true)
 		endif
 	elseif option == Gameplay_SettingCampingLegalityToggle_OID
@@ -385,16 +374,30 @@ event OnOptionSelect(int option)
 			_Camp_Setting_TakeOff_Backpack.SetValueInt(2)
 			SetToggleOptionValue(Gameplay_SettingCampingPlaceBackpack_OID, true)
 		endif
+	elseif option == Advanced_SettingAdvancedPlacement_OID
+		if _Camp_Setting_AdvancedPlacement.GetValueInt() == 2
+			_Camp_Setting_AdvancedPlacement.SetValueInt(1)
+			SetToggleOptionValue(Advanced_SettingAdvancedPlacement_OID, false)
+		else
+			_Camp_Setting_AdvancedPlacement.SetValueInt(2)
+			SetToggleOptionValue(Advanced_SettingAdvancedPlacement_OID, true)
+		endif
+	elseif option == Advanced_SettingTrackFollowers_OID
+		if _Camp_Setting_TrackFollowers.GetValueInt() == 2
+			_Camp_Setting_TrackFollowers.SetValueInt(1)
+			SetToggleOptionValue(Advanced_SettingTrackFollowers_OID, false)
+		else
+			_Camp_Setting_TrackFollowers.SetValueInt(2)
+			SetToggleOptionValue(Advanced_SettingTrackFollowers_OID, true)
+		endif
 	endif
-	;#EndRegion
-	
-	;#Region Help Page
+
 	if option == Help_TutorialsToggle_OID
-		if _DE_Setting_Help.GetValueInt() == 2
-			_DE_Setting_Help.SetValueInt(1)
+		if _Camp_Setting_Tutorials.GetValueInt() == 2
+			_Camp_Setting_Tutorials.SetValueInt(1)
 			SetToggleOptionValue(Help_TutorialsToggle_OID, false)
 		else
-			_DE_Setting_Help.SetValueInt(2)
+			_Camp_Setting_Tutorials.SetValueInt(2)
 			SetToggleOptionValue(Help_TutorialsToggle_OID, true)
 		endif
 	elseif option == Help_TutorialsResetText_OID
@@ -405,9 +408,7 @@ event OnOptionSelect(int option)
 			_DE_HelpDone_PlacementError.SetValueInt(1)
 		endif
 	endif
-	;#EndRegion
-	
-	;#Region Guide Page
+
 	if option == Guide_Topic1
 		ShowGuideTopic1()
 	elseif option == Guide_Topic2
@@ -417,19 +418,55 @@ event OnOptionSelect(int option)
 	elseif option == Guide_Topic4
 		ShowGuideTopic4()
 	endif
-	;#EndRegion
 endEvent
 
 event OnOptionDefault(int option)
 	if option == Gameplay_SettingCampingArmorTentsText_OID
 		_Camp_Setting_CampingArmorTakeOff.SetValue(2)
 		SetToggleOptionValue(Gameplay_SettingCampingArmorTentsText_OID, true)
+		ForcePageReset()
 	elseif option == Gameplay_SettingCampingFireLightingText_OID
-		_DE_Setting_Lighting.SetValue(1)
-		SetTextOptionValue(Gameplay_SettingCampingFireLightingText_OID, "$CampfireAutomatic")
+		_Camp_Setting_ManualFireLighting.SetValue(1)
+		SetToggleOptionValue(Gameplay_SettingCampingFireLightingText_OID, false)
 	elseif option == Gameplay_SettingCampingLegalityToggle_OID
 		_Camp_Setting_Legality.SetValueInt(2)
 		SetToggleOptionValue(Gameplay_SettingCampingLegalityToggle_OID, true)
+	elseif option == Gameplay_SettingCampingPlaceCuirass_OID
+		_Camp_Setting_TakeOff_Cuirass.SetValueInt(1)
+		SetToggleOptionValue(Gameplay_SettingCampingPlaceCuirass_OID, false)
+	elseif option == Gameplay_SettingCampingPlaceHelm_OID
+		_Camp_Setting_TakeOff_Helm.SetValueInt(2)
+		SetToggleOptionValue(Gameplay_SettingCampingPlaceHelm_OID, true)
+	elseif option == Gameplay_SettingCampingPlaceGauntlets_OID
+		_Camp_Setting_TakeOff_Gauntlets.SetValueInt(2)
+		SetToggleOptionValue(Gameplay_SettingCampingPlaceGauntlets_OID, true)
+	elseif option == Gameplay_SettingCampingPlaceBoots_OID
+		_Camp_Setting_TakeOff_Boots.SetValueInt(2)
+		SetToggleOptionValue(Gameplay_SettingCampingPlaceBoots_OID, true)
+	elseif option == Gameplay_SettingCampingPlaceShield_OID
+		_Camp_Setting_TakeOff_Shield.SetValueInt(2)
+		SetToggleOptionValue(Gameplay_SettingCampingPlaceShield_OID, true)
+	elseif option == Gameplay_SettingCampingPlaceWeapons_OID
+		_Camp_Setting_TakeOff_Weapons.SetValueInt(2)
+		SetToggleOptionValue(Gameplay_SettingCampingPlaceWeapons_OID, true)
+	elseif option == Gameplay_SettingCampingPlaceAmmo_OID
+		_Camp_Setting_TakeOff_Ammo.SetValueInt(2)
+		SetToggleOptionValue(Gameplay_SettingCampingPlaceAmmo_OID, true)
+	elseif option == Gameplay_SettingCampingPlaceBackpack_OID
+		_Camp_Setting_TakeOff_Backpack.SetValueInt(2)
+		SetToggleOptionValue(Gameplay_SettingCampingPlaceBackpack_OID, true)
+	elseif option == Advanced_SettingAdvancedPlacement_OID
+		_Camp_Setting_AdvancedPlacement.SetValueInt(2)
+		SetToggleOptionValue(Advanced_SettingAdvancedPlacement_OID, true)
+	elseif option == Advanced_SettingMaxThreads_OID
+		_Camp_Setting_MaxThreads.SetValueInt(DEFAULT_THREADS as Int)
+		SetSliderOptionValue(Advanced_SettingMaxThreads_OID, DEFAULT_THREADS, "{0}")
+	elseif option == Advanced_SettingTrackFollowers_OID
+		_Camp_Setting_TrackFollowers.SetValueInt(2)
+		SetToggleOptionValue(Advanced_SettingTrackFollowers_OID, true)
+	elseif option == Help_TutorialsToggle_OID
+		_Camp_Setting_Tutorials.SetValueInt(2)
+		SetToggleOptionValue(Help_TutorialsToggle_OID, true)
 	endif
 	if option == Gameplay_HotkeyCreateItem_OID
 		UnregisterForKey(_Camp_HotkeyCreateItem.GetValueInt())
@@ -473,8 +510,8 @@ endEvent
 event OnOptionSliderOpen(int option)
 	if option == Advanced_SettingMaxThreads_OID
 		SetSliderDialogStartValue(_Camp_Setting_MaxThreads.GetValueInt())
-		SetSliderDialogDefaultValue(20.0)
-		SetSliderDialogRange(0.0, 30.0)
+		SetSliderDialogDefaultValue(DEFAULT_THREADS)
+		SetSliderDialogRange(MIN_THREADS, MAX_THREADS)
 		SetSliderDialogInterval(1.0)
 	endif
 endEvent
@@ -542,16 +579,15 @@ event OnOptionKeyMapChange(int option, int keyCode, string conflictControl, stri
 endEvent
 
 Event OnKeyDown(int KeyCode)
-	;debug.trace("[Frostfall] iHotkeyWeathersense = " + iHotkeyWeathersense)
 	if UI.IsMenuOpen("Console") || UI.IsMenuOpen("Book Menu") || UI.IsMenuOpen("BarterMenu") || UI.IsMenuOpen("ContainerMenu") || UI.IsMenuOpen("CraftingMenu") || UI.IsMenuOpen("Dialogue Menu") || UI.IsMenuOpen("FavoritesMenu") || UI.IsMenuOpen("InventoryMenu") || UI.IsMenuOpen("Journal Menu") || UI.IsMenuOpen("Lockpicking Menu") || UI.IsMenuOpen("MagicMenu") || UI.IsMenuOpen("MapMenu") || UI.IsMenuOpen("MessageBoxMenu") || UI.IsMenuOpen("Sleep/Wait Menu") || UI.IsMenuOpen("StatsMenu")
 		return
 	endif
 	if KeyCode == _Camp_HotkeyCreateItem.GetValueInt()
-		_Camp_CreateItemSpell.Cast(Game.GetPlayer())
+		_Camp_CreateItemSpell.Cast(PlayerRef)
 	elseif KeyCode == _Camp_HotkeyBuildCampfire.GetValueInt()
-		_Camp_CampfireSpell.Cast(Game.GetPlayer())
+		_Camp_CampfireSpell.Cast(PlayerRef)
 	elseif KeyCode == _Camp_HotkeyHarvestWood.GetValueInt()
-		_Camp_HarvestWoodSpell.Cast(Game.GetPlayer())
+		_Camp_HarvestWoodSpell.Cast(PlayerRef)
 	endif
 endEvent
 	
@@ -567,22 +603,19 @@ string function GetCustomControl(int keyCode)
 	endIf
 endFunction
 
-;#Region Help Topics
 function ShowGuideTopic1()
-	ShowMessage("$CampfireGuideCampingTopic1Text", false)
+	ShowMessage("$CampfireGuideTopic1Text", false)
 endfunction
 function ShowGuideTopic2()
-	ShowMessage("$CampfireGuideCampingTopic2Text", false)
+	ShowMessage("$CampfireGuideTopic2Text", false)
 endfunction
 function ShowGuideTopic3()
-	ShowMessage("$CampfireGuideCampingTopic3Text", false)
+	ShowMessage("$CampfireGuideTopic3Text", false)
 endfunction
 function ShowGuideTopic4()
-	ShowMessage("$CampfireGuideGearTopic1Text", false)
+	ShowMessage("$CampfireGuideTopic4Text", false)
 endfunction
-;#EndRegion
 
-;#Region Troubleshooters
 function TroubleshootingPlacement()
 	utility.wait(1)
 	_Camp_CurrentlyPlacingObject.SetValue(1)
