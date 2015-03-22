@@ -55,13 +55,6 @@ event OnInit()
 	;RaiseEvent_WoodHarvestNodeReset()
 endEvent
 
-function RaiseEvent_WoodHarvestNodeReset()
-	int handle = ModEvent.Create("Campfire_WoodHarvestNodeReset")
-	if handle
-		ModEvent.Send(handle)
-	endif
-endFunction
-
 function CheckFollowerPolling()
 	;Calling on game start-up. Set update loop and begin polling for followers if necessary.
 	if _Camp_Setting_FollowerPolling.GetValueInt() != 0
