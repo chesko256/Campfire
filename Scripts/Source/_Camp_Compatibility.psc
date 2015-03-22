@@ -146,20 +146,29 @@ ConstructibleObject property _DE_RecipeTanningLeatherValeDeerHideDLC1 auto
 ConstructibleObject property _DE_RecipeTanningLeatherValeSabreCatHideDLC1 auto
 
 spell property _DE_SurvivalSkillsCombo_Spell auto
-spell property _DE_Configuration_Spell auto
+Spell property _Camp_LegacyConfig_Spell auto
 formlist property woodChoppingAxes auto
 formlist property _DE_Axes auto
 Weather property DLC2AshStorm auto hidden
 bool bAddedSpellBooks = false
 
 Event OnPlayerLoadGame()
-	RunStartupCheck()
+	RunCompatibility()
+	AddStartupSpells()
 	RegisterForKeysOnLoad()
 	RegisterForControlsOnLoad()
 	RegisterForEventsOnLoad()
 endEvent
 
 function RunStartupCheck()
+	if isSKYUILoaded
+		PlayerRef.RemoveSpell(_Camp_LegacyConfig_Spell)
+	else
+		PlayerRef.AddSpell(_Camp_LegacyConfig_Spell, false)
+	endif
+endFunction
+
+function RunCompatibility()
 	VanillaGameLoadUp()
 	RegisterForControlsOnLoad()
 	RegisterForEventsOnLoad()
@@ -570,10 +579,7 @@ function RunStartupCheck()
 	
 	;if _DE_Setting_SystemMsg.GetValueInt() == 2
 	;	_DE_CompatibilityFinished.Show()
-	;endif
-	
-	AddStartupSpells()
-	
+	;endif	
 endFunction
 
 function VanillaGameLoadUp()
@@ -592,9 +598,9 @@ function AddStartupSpells()							;Approved 2.0
 	PlayerRef.AddSpell(_DE_SurvivalSkillsCombo_Spell, false)		;Survival Skills (multi-select)
 	
 	if isSKYUILoaded
-		PlayerRef.RemoveSpell(_DE_Configuration_Spell)
+		PlayerRef.RemoveSpell(_Camp_LegacyConfig_Spell)
 	else
-		PlayerRef.AddSpell(_DE_Configuration_Spell, false)
+		PlayerRef.AddSpell(_Camp_LegacyConfig_Spell, false)
 	endif
 endFunction
 
