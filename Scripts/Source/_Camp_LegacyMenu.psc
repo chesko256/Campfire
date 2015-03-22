@@ -39,6 +39,7 @@ Message property _Camp_legacyconfig_displaytutorials_on auto
 Message property _Camp_legacyconfig_displaytutorials_off auto
 Message property _Camp_legacyconfig_helpstuckplacement auto
 Message property _Camp_legacyconfig_tutorialreset auto
+Message property _Camp_TroubleshootingConfirmMsg auto
 
 ;Globals
 GlobalVariable property _Camp_Setting_CampingArmorTakeOff auto
@@ -56,6 +57,7 @@ GlobalVariable property _Camp_Setting_AdvancedPlacement auto
 GlobalVariable property _Camp_Setting_MaxThreads auto
 GlobalVariable property _Camp_Setting_TrackFollowers auto
 GlobalVariable property _Camp_Setting_Tutorials auto
+GlobalVariable property _Camp_CurrentlyPlacingObject auto
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
     if akCaster == Game.GetPlayer()
@@ -182,7 +184,8 @@ function menu_troubleshooting()
 endFunction
 
 function Troubleshooting_StuckPlacement()
-    ;Fix issue
+    _Camp_CurrentlyPlacingObject.SetValue(1)
+    _Camp_TroubleshootingConfirmMsg.Show()
 endFunction
 
 function reset_tutorials()

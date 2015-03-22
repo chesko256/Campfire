@@ -138,6 +138,9 @@ GlobalVariable property _DE_SKSEVersion auto
 GlobalVariable property _DE_DLC1Loaded auto
 GlobalVariable property _DE_HFLoaded auto
 GlobalVariable property _DE_SKYRELoaded auto
+GlobalVariable property _Camp_HotkeyCreateItem auto
+GlobalVariable property _Camp_HotkeyBuildCampfire auto
+GlobalVariable property _Camp_HotkeyHarvestWood auto
 
 ConstructibleObject property _DE_RecipeSuppliesRockHF auto
 ConstructibleObject property _DE_RecipeLeatherValeDeerHideDLC1 auto
@@ -145,7 +148,10 @@ ConstructibleObject property _DE_RecipeLeatherValeSabreCatHideDLC1 auto
 ConstructibleObject property _DE_RecipeTanningLeatherValeDeerHideDLC1 auto
 ConstructibleObject property _DE_RecipeTanningLeatherValeSabreCatHideDLC1 auto
 
-spell property _DE_SurvivalSkillsCombo_Spell auto
+Spell property _Camp_CreateItemSpell auto
+Spell property _Camp_CampfireSpell auto
+Spell property _Camp_HarvestWoodSpell auto
+
 Spell property _Camp_LegacyConfig_Spell auto
 formlist property woodChoppingAxes auto
 formlist property _DE_Axes auto
@@ -154,19 +160,10 @@ bool bAddedSpellBooks = false
 
 Event OnPlayerLoadGame()
 	RunCompatibility()
-	AddStartupSpells()
 	RegisterForKeysOnLoad()
 	RegisterForControlsOnLoad()
 	RegisterForEventsOnLoad()
 endEvent
-
-function RunStartupCheck()
-	if isSKYUILoaded
-		PlayerRef.RemoveSpell(_Camp_LegacyConfig_Spell)
-	else
-		PlayerRef.AddSpell(_Camp_LegacyConfig_Spell, false)
-	endif
-endFunction
 
 function RunCompatibility()
 	VanillaGameLoadUp()
@@ -580,6 +577,8 @@ function RunCompatibility()
 	;if _DE_Setting_SystemMsg.GetValueInt() == 2
 	;	_DE_CompatibilityFinished.Show()
 	;endif	
+
+	AddStartupSpells()
 endFunction
 
 function VanillaGameLoadUp()
@@ -595,12 +594,38 @@ endFunction
 
 
 function AddStartupSpells()							;Approved 2.0
-	PlayerRef.AddSpell(_DE_SurvivalSkillsCombo_Spell, false)		;Survival Skills (multi-select)
-	
 	if isSKYUILoaded
 		PlayerRef.RemoveSpell(_Camp_LegacyConfig_Spell)
 	else
 		PlayerRef.AddSpell(_Camp_LegacyConfig_Spell, false)
+	endif
+
+	if isSKYUILoaded
+		debug.trace("[Campfire] SkyUI loaded...")
+		if _Camp_HotkeyCreateItem.GetValueInt() != 0
+			debug.trace("[Campfire] Hotkey has value, removing......")
+			PlayerRef.RemoveSpell(_Camp_CreateItemSpell)
+		else
+			debug.trace("[Campfire] Hotkey has NO value, adding......")
+			PlayerRef.AddSpell(_Camp_CreateItemSpell, false)
+		endif
+		if _Camp_HotkeyBuildCampfire.GetValueInt() != 0
+			PlayerRef.RemoveSpell(_Camp_CampfireSpell)
+		else
+			PlayerRef.AddSpell(_Camp_CampfireSpell, false)
+		endif
+		if _Camp_HotkeyHarvestWood.GetValueInt() != 0
+			PlayerRef.RemoveSpell(_Camp_HarvestWoodSpell)
+		else
+			PlayerRef.AddSpell(_Camp_HarvestWoodSpell, false)
+		endif
+	else
+		PlayerRef.AddSpell(_Camp_CreateItemSpell, false)
+		PlayerRef.AddSpell(_Camp_CampfireSpell, false)
+		PlayerRef.AddSpell(_Camp_HarvestWoodSpell, false)
+		_Camp_HotkeyCreateItem.SetValueInt(0)
+		_Camp_HotkeyBuildCampfire.SetValueInt(0)
+		_Camp_HotkeyHarvestWood.SetValueInt(0)
 	endif
 endFunction
 
