@@ -13,7 +13,6 @@ Scriptname _Camp_SkyUIConfigPanelScript extends SKI_ConfigBase
 ; External scripts
 _Camp_Compatibility property Compatibility auto
 GlobalVariable property _DE_Setting_Lighting auto
-GlobalVariable property _DE_Setting_Tent auto
 GlobalVariable property _Camp_HelpDone_TentActivate auto
 GlobalVariable property _DE_Setting_CampingArmorTakeOff auto
 
