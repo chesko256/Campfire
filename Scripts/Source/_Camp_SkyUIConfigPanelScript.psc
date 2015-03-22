@@ -32,7 +32,7 @@ GlobalVariable property _Camp_Setting_Legality auto
 GlobalVariable property _DE_HelpDone_Visualize auto
 GlobalVariable property _DE_HelpDone_PlacementError auto
 GlobalVariable property _DE_Setting_Help auto
-GlobalVariable property _DE_Setting_SimplePlacement auto
+GlobalVariable property _DE_Setting_AdvancedPlacement auto
 GlobalVariable property _DE_Setting_Animation auto
 GlobalVariable property _DE_SKSEVersion auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
@@ -113,7 +113,7 @@ function PageReset_Gameplay()																			;TRANSLATED
 		Gameplay_SettingCampingArmorTentsText_OID = AddToggleOption("$CampfireGameplaySettingCampingRemoveGear", false)
 	endif
 	
-	if _DE_Setting_SimplePlacement.GetValueInt() == 2
+	if _DE_Setting_AdvancedPlacement.GetValueInt() == 2
 		Gameplay_SettingCampingPlacementVisualizationText_OID = AddToggleOption("$CampfireGameplaySettingCampingPlacementMode", false)
 	else
 		Gameplay_SettingCampingPlacementVisualizationText_OID = AddToggleOption("$CampfireGameplaySettingCampingPlacementMode", true)
@@ -283,12 +283,12 @@ event OnOptionSelect(int option)																		;TRANSLATED
 			SetToggleOptionValue(Gameplay_SettingCampingArmorTentsText_OID, true)
 		endif
 	elseif option == Gameplay_SettingCampingPlacementVisualizationText_OID
-		if _DE_Setting_SimplePlacement.GetValueInt() == 2
-			_DE_Setting_SimplePlacement.SetValueInt(1)
-			SetToggleOptionValue(Gameplay_SettingCampingPlacementVisualizationText_OID, true)
-		else
-			_DE_Setting_SimplePlacement.SetValueInt(2)
+		if _DE_Setting_AdvancedPlacement.GetValueInt() == 2
+			_DE_Setting_AdvancedPlacement.SetValueInt(1)
 			SetToggleOptionValue(Gameplay_SettingCampingPlacementVisualizationText_OID, false)
+		else
+			_DE_Setting_AdvancedPlacement.SetValueInt(2)
+			SetToggleOptionValue(Gameplay_SettingCampingPlacementVisualizationText_OID, true)
 		endif
 	elseif option == Gameplay_SettingCampingFireLightingText_OID
 		if _DE_Setting_Lighting.GetValueInt() == 1

@@ -38,6 +38,7 @@ Message property _Camp_legacyconfig_detectfollowers_off auto
 Message property _Camp_legacyconfig_displaytutorials_on auto
 Message property _Camp_legacyconfig_displaytutorials_off auto
 Message property _Camp_legacyconfig_helpstuckplacement auto
+Message property _Camp_legacyconfig_tutorialreset auto
 
 ;Globals
 GlobalVariable property _Camp_Setting_CampingArmorTakeOff auto
@@ -185,7 +186,7 @@ function Troubleshooting_StuckPlacement()
 endFunction
 
 function reset_tutorials()
-    ;Reset tutorials
+    _Camp_legacyconfig_tutorialreset.Show()
 endFunction
 
 ;Format: On/Off, Back
@@ -217,7 +218,8 @@ bool function MenuHandler_Toggle_Tutorials(Message akMessageOn, Message akMessag
         int i = akMessageOn.Show()
         if i == 0
             akSetting.SetValueInt(1)
-            MenuHandler_Toggle_Tutorials(akMessageOn, akMessageOff, akSetting)
+            bool b = MenuHandler_Toggle_Tutorials(akMessageOn, akMessageOff, akSetting)
+            return b
         elseif i == 1
             return true
         elseif i == 2
@@ -227,7 +229,8 @@ bool function MenuHandler_Toggle_Tutorials(Message akMessageOn, Message akMessag
         int i = akMessageOff.Show()
         if i == 0
             akSetting.SetValueInt(2)
-            MenuHandler_Toggle_Tutorials(akMessageOn, akMessageOff, akSetting)
+            bool b = MenuHandler_Toggle_Tutorials(akMessageOn, akMessageOff, akSetting)
+            return b
         elseif i == 1
             return true
         elseif i == 2
@@ -248,7 +251,7 @@ endFunction
 
 ;Format: Down, Up, Back
 function MenuHandler_UpDown(Message akMessage, GlobalVariable akSetting, float afMin, float afMax, float afStepSize)
-    int i = akMessage.Show()
+    int i = akMessage.Show(akSetting.GetValueInt())
     if i == 0
         ;Down
         if akSetting.GetValue() > afMin
@@ -256,6 +259,8 @@ function MenuHandler_UpDown(Message akMessage, GlobalVariable akSetting, float a
             if akSetting.GetValue() < afMin
                 akSetting.SetValue(afMin)
             endif
+            MenuHandler_UpDown(akMessage, akSetting, afMin, afMax, afStepSize)
+        else
             MenuHandler_UpDown(akMessage, akSetting, afMin, afMax, afStepSize)
         endif
     elseif i == 1
@@ -265,6 +270,8 @@ function MenuHandler_UpDown(Message akMessage, GlobalVariable akSetting, float a
             if akSetting.GetValue() > afMax
                 akSetting.SetValue(afMax)
             endif
+            MenuHandler_UpDown(akMessage, akSetting, afMin, afMax, afStepSize)
+        else
             MenuHandler_UpDown(akMessage, akSetting, afMin, afMax, afStepSize)
         endif
     else

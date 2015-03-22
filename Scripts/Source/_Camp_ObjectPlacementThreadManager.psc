@@ -23,7 +23,7 @@ _Camp_LegalAreaCheck property Legal auto
 Actor property PlayerRef auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 GlobalVariable property _Camp_HelpDone_PlacementError auto
-GlobalVariable property _Camp_Setting_SimplePlacement auto
+GlobalVariable property _Camp_Setting_AdvancedPlacement auto
 ObjectReference property _Camp_Anchor auto
 ObjectReference property _Camp_IndicatorFutureRefA auto
 ObjectReference property _Camp_IndicatorFutureRefB auto
@@ -470,12 +470,12 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
             int i = _Camp_Placement_Cancelled_CollisionBug.Show()
             if i == 0
                 ;Yes
-                _Camp_Setting_SimplePlacement.SetValue(2)
+                _Camp_Setting_AdvancedPlacement.SetValue(1)
             elseif i == 1
                 ;No
             elseif i == 2
                 ;@TODO: No - Don't Ask Again
-                _Camp_HelpDone_PlacementError.SetValue(2)
+                _Camp_HelpDone_PlacementError.SetValue(1)
             endif
         endif
         _Camp_Placement_Cancelled.Show()
