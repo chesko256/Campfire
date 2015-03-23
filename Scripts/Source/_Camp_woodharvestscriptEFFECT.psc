@@ -1,4 +1,4 @@
-scriptname _DE_WoodHarvestScriptEFFECT extends ActiveMagicEffect
+scriptname _Camp_WoodHarvestScriptEFFECT extends ActiveMagicEffect
 
 ; #SUMMARY# =====================================================================================================================
 ; Name ...................: _DE_WoodHarvestScriptEFFECT
@@ -37,7 +37,7 @@ MiscObject property Deadwood01 auto
 MiscObject property _DE_Rock auto
 MiscObject property _DE_RockFrag auto
 objectreference property _DE_XMarker_WoodHarvestEndRef2 auto			;I may not need this
-objectreference property _DE_Anchor auto
+objectreference property _Camp_Anchor auto
 package property _DE_PlayerHarvestWoodPathing2 auto
 int property myFirewoodCount auto
 objectreference property myWoodFurnStartRef auto
@@ -568,7 +568,7 @@ function HarvestWoodEnd()
 	if myWoodFurnEndRef
 		myWoodFurnEndRef.Activate(pPlayer)
 	endif
-	_DE_XMarker_WoodHarvestEndRef2.MoveTo(_DE_Anchor)
+	_DE_XMarker_WoodHarvestEndRef2.MoveTo(_Camp_Anchor)
 	Game.EnablePlayerControls()
 	
 endFunction
