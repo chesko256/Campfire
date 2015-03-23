@@ -470,17 +470,14 @@ function RunCompatibility()
 			_DE_Trees.AddForm(DLC02TreeForm21)
 			_DE_Trees.AddForm(DLC02TreeForm22)
 			_DE_Trees.AddForm(DLC02TreeForm23)
-		endif
-
-		if !(_DE_DeadwoodList.HasForm(DLC02TreeForm24))
-			_DE_DeadwoodList.AddForm(DLC02TreeForm24)
-			_DE_DeadwoodList.AddForm(DLC02TreeForm25)
-			_DE_DeadwoodList.AddForm(DLC02TreeForm26)
-			_DE_DeadwoodList.AddForm(DLC02TreeForm27)
-			_DE_DeadwoodList.AddForm(DLC02TreeForm28)
-			_DE_DeadwoodList.AddForm(DLC02TreeForm29)
-			_DE_DeadwoodList.AddForm(DLC02TreeForm30)
-			_DE_DeadwoodList.AddForm(DLC02TreeForm31)
+			_DE_Trees.AddForm(DLC02TreeForm24)
+			_DE_Trees.AddForm(DLC02TreeForm25)
+			_DE_Trees.AddForm(DLC02TreeForm26)
+			_DE_Trees.AddForm(DLC02TreeForm27)
+			_DE_Trees.AddForm(DLC02TreeForm28)
+			_DE_Trees.AddForm(DLC02TreeForm29)
+			_DE_Trees.AddForm(DLC02TreeForm30)
+			_DE_Trees.AddForm(DLC02TreeForm31)
 		endif
 		
 		;Weather

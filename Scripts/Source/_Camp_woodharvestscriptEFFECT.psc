@@ -46,6 +46,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 	endif
 
 	if Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_Trees, PlayerRef, 3000.0) != none
+		;@TODO: Add confirm message
 		if PlayerRef.GetItemCount(woodChoppingAxes) > 0
 			HarvestWood()
 		else
@@ -91,7 +92,7 @@ function HarvestWoodNoAxe()
 endFunction
 
 function GiveDeadwoodLogs()
-	int myHarvest = RandomInt(5, 10)
+	int myHarvest = RandomInt(4, 8)
 
 	if _Camp_FollowerCount.GetValueInt() > 0
 		myHarvest += 2
@@ -102,7 +103,7 @@ function GiveDeadwoodLogs()
 endFunction
 
 function GiveDeadwoodBranches()
-	int myHarvest = RandomInt(4, 8)
+	int myHarvest = RandomInt(3, 7)
 
 	if _Camp_FollowerCount.GetValueInt() > 0
 		myHarvest += RandomInt(2, 4)
