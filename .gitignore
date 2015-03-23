@@ -44,6 +44,8 @@
 !Camp*.psc
 !Tent*.pex
 !Tent*.psc
+!_Frost*.pex
+!_Frost*.psc
 
 #Documentation
 !Scripts/Source/doc/*
