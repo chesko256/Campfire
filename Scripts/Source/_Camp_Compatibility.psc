@@ -30,7 +30,6 @@ bool property isSKSELoaded auto hidden						;SKSE
 bool property isSKYUILoaded auto hidden						;SkyUI 3.4+
 bool property isLSLoaded auto hidden						;Last Seed
 bool property isSKYRELoaded auto hidden						;Skyrim Redone
-bool property isKNAPLoaded auto hidden						;Knapsack Add-on
 bool property isIMCNLoaded auto hidden						;Imp's More Complex Needs
 bool property isRNDLoaded auto hidden			 			;Realistic Needs and Diseases
 
@@ -111,26 +110,6 @@ Perk property Forestry_Rank1 auto hidden
 Perk property Forestry_Rank2 auto hidden
 Perk property Forestry_Rank3 auto hidden
 
-;#Knapsack Enhanced Travel Axe=====================================================
-
-weapon property _DE_TravelAxe01_0 auto hidden
-weapon property _DE_TravelAxe01_1 auto hidden
-weapon property _DE_TravelAxe01_2 auto hidden
-weapon property _DE_TravelAxe01_3 auto hidden
-weapon property _DE_TravelAxe01_4 auto hidden
-weapon property _DE_TravelAxe01_5 auto hidden
-weapon property _DE_TravelAxe01_6 auto hidden
-weapon property _DE_TravelAxe01_7 auto hidden
-weapon property _DE_TravelAxe01_8 auto hidden
-weapon property _DE_TravelAxe01_9 auto hidden
-weapon property _DE_TravelAxe01_10 auto hidden
-weapon property _DE_TravelAxe01_11 auto hidden
-weapon property _DE_TravelAxe01_12 auto hidden
-weapon property _DE_TravelAxe01_13 auto hidden
-weapon property _DE_TravelAxe01_14 auto hidden
-weapon property _DE_TravelAxe auto hidden
-MiscObject property _DE_TravelAxeBroken auto hidden
-
 ;#Misc=============================================================================
 message property _DE_CompatibilityFinished auto
 Perk property _DE_DummyPerk auto
@@ -154,7 +133,6 @@ Spell property _Camp_HarvestWoodSpell auto
 
 Spell property _Camp_LegacyConfig_Spell auto
 formlist property woodChoppingAxes auto
-formlist property _DE_Axes auto
 Weather property DLC2AshStorm auto hidden
 bool bAddedSpellBooks = false
 
@@ -321,32 +299,14 @@ function RunCompatibility()
 	endif
 
 	if isLSLoaded
-		isLSLoaded = Game.GetFormFromFile(0x02000D63, "Chesko_LastSeed.esp")
+		isLSLoaded = Game.GetFormFromFile(0x02000D63, "LastSeed.esp")
 		if !isLSLoaded
 			;Last Seed was removed since the last save.
 		endif
 	else
-		isLSLoaded = Game.GetFormFromFile(0x02000D63, "Chesko_LastSeed.esp")
+		isLSLoaded = Game.GetFormFromFile(0x02000D63, "LastSeed.esp")
 		if isLSLoaded
 			;Last Seed was just added.
-		endif
-	endif
-	
-	if isKNAPLoaded
-		isKNAPLoaded = Game.GetFormFromFile(0x03000D78, "KnapsackEnhanced.esp")
-		if !isKNAPLoaded
-			;Knapsack Enhanced was removed since the last save.
-			KNAPUnload()
-		else
-			KNAPLoadUp()
-		endif
-	else
-		isKNAPLoaded = Game.GetFormFromFile(0x03000D78, "KnapsackEnhanced.esp")
-		if isKNAPLoaded
-			;Knapsack Enhanced was just added.
-			KNAPLoadUp()
-		else
-			KNAPUnload()
 		endif
 	endif
 	
@@ -660,86 +620,6 @@ function SKYREUnload()
 	Forestry_Rank1 = _DE_DummyPerk
 	Forestry_Rank2 = _DE_DummyPerk
 	Forestry_Rank3 = _DE_DummyPerk
-endFunction
-
-function KNAPLoadUp()
-
-	_DE_TravelAxe01_0 = Game.GetFormFromFile(0x03000D62, "KnapsackEnhanced.esp") as Weapon			;_DE_TravelAxe01_0
-	_DE_TravelAxe01_1 = Game.GetFormFromFile(0x03000D64, "KnapsackEnhanced.esp") as Weapon			;_DE_TravelAxe01_1
-	_DE_TravelAxe01_2 = Game.GetFormFromFile(0x03000D69, "KnapsackEnhanced.esp") as Weapon			;_DE_TravelAxe01_2
-	_DE_TravelAxe01_3 = Game.GetFormFromFile(0x03000D6A, "KnapsackEnhanced.esp") as Weapon			;_DE_TravelAxe01_3
-	_DE_TravelAxe01_4 = Game.GetFormFromFile(0x03000D6B, "KnapsackEnhanced.esp") as Weapon			;_DE_TravelAxe01_4
-	_DE_TravelAxe01_5 = Game.GetFormFromFile(0x03000D6C, "KnapsackEnhanced.esp") as Weapon			;_DE_TravelAxe01_5
-	_DE_TravelAxe01_6 = Game.GetFormFromFile(0x03000D6D, "KnapsackEnhanced.esp") as Weapon			;_DE_TravelAxe01_6
-	_DE_TravelAxe01_7 = Game.GetFormFromFile(0x03000D6E, "KnapsackEnhanced.esp") as Weapon			;_DE_TravelAxe01_7
-	_DE_TravelAxe01_8 = Game.GetFormFromFile(0x03000D6F, "KnapsackEnhanced.esp") as Weapon			;_DE_TravelAxe01_8
-	_DE_TravelAxe01_9 = Game.GetFormFromFile(0x03000D70, "KnapsackEnhanced.esp") as Weapon			;_DE_TravelAxe01_9
-	_DE_TravelAxe01_10 = Game.GetFormFromFile(0x03000D71, "KnapsackEnhanced.esp") as Weapon			;_DE_TravelAxe01_10
-	_DE_TravelAxe01_11 = Game.GetFormFromFile(0x03000D72, "KnapsackEnhanced.esp") as Weapon			;_DE_TravelAxe01_11
-	_DE_TravelAxe01_12 = Game.GetFormFromFile(0x03000D73, "KnapsackEnhanced.esp") as Weapon			;_DE_TravelAxe01_12
-	_DE_TravelAxe01_13 = Game.GetFormFromFile(0x03000D74, "KnapsackEnhanced.esp") as Weapon			;_DE_TravelAxe01_13
-	_DE_TravelAxe01_14 = Game.GetFormFromFile(0x03000D75, "KnapsackEnhanced.esp") as Weapon			;_DE_TravelAxe01_14
-	_DE_TravelAxe = Game.GetFormFromFile(0x03000D78, "KnapsackEnhanced.esp") as Weapon				;_DE_TravelAxe
-	_DE_TravelAxeBroken = Game.GetFormFromFile(0x03000D7E, "KnapsackEnhanced.esp") as MiscObject	;_DE_TravelAxeBroken
-	
-	if !woodChoppingAxes.HasForm(_DE_TravelAxe)
-		woodChoppingAxes.AddForm(_DE_TravelAxe01_0)
-		woodChoppingAxes.AddForm(_DE_TravelAxe01_1)
-		woodChoppingAxes.AddForm(_DE_TravelAxe01_2)
-		woodChoppingAxes.AddForm(_DE_TravelAxe01_3)
-		woodChoppingAxes.AddForm(_DE_TravelAxe01_4)
-		woodChoppingAxes.AddForm(_DE_TravelAxe01_5)
-		woodChoppingAxes.AddForm(_DE_TravelAxe01_6)
-		woodChoppingAxes.AddForm(_DE_TravelAxe01_7)
-		woodChoppingAxes.AddForm(_DE_TravelAxe01_8)
-		woodChoppingAxes.AddForm(_DE_TravelAxe01_9)
-		woodChoppingAxes.AddForm(_DE_TravelAxe01_10)
-		woodChoppingAxes.AddForm(_DE_TravelAxe01_11)
-		woodChoppingAxes.AddForm(_DE_TravelAxe01_12)
-		woodChoppingAxes.AddForm(_DE_TravelAxe01_13)
-		woodChoppingAxes.AddForm(_DE_TravelAxe01_14)
-		woodChoppingAxes.AddForm(_DE_TravelAxe)
-	endif
-	
-	if !_DE_Axes.HasForm(_DE_TravelAxe)
-		_DE_Axes.AddForm(_DE_TravelAxe01_0)
-		_DE_Axes.AddForm(_DE_TravelAxe01_1)
-		_DE_Axes.AddForm(_DE_TravelAxe01_2)
-		_DE_Axes.AddForm(_DE_TravelAxe01_3)
-		_DE_Axes.AddForm(_DE_TravelAxe01_4)
-		_DE_Axes.AddForm(_DE_TravelAxe01_5)
-		_DE_Axes.AddForm(_DE_TravelAxe01_6)
-		_DE_Axes.AddForm(_DE_TravelAxe01_7)
-		_DE_Axes.AddForm(_DE_TravelAxe01_8)
-		_DE_Axes.AddForm(_DE_TravelAxe01_9)
-		_DE_Axes.AddForm(_DE_TravelAxe01_10)
-		_DE_Axes.AddForm(_DE_TravelAxe01_11)
-		_DE_Axes.AddForm(_DE_TravelAxe01_12)
-		_DE_Axes.AddForm(_DE_TravelAxe01_13)
-		_DE_Axes.AddForm(_DE_TravelAxe01_14)
-		_DE_Axes.AddForm(_DE_TravelAxe)
-	endif
-	
-endFunction
-
-function KNAPUnload()
-	_DE_TravelAxe01_0 = none
-	_DE_TravelAxe01_1 = none
-	_DE_TravelAxe01_2 = none
-	_DE_TravelAxe01_3 = none
-	_DE_TravelAxe01_4 = none
-	_DE_TravelAxe01_5 = none
-	_DE_TravelAxe01_6 = none
-	_DE_TravelAxe01_7 = none
-	_DE_TravelAxe01_8 = none
-	_DE_TravelAxe01_9 = none
-	_DE_TravelAxe01_10 = none
-	_DE_TravelAxe01_11 = none
-	_DE_TravelAxe01_12 = none
-	_DE_TravelAxe01_13 = none
-	_DE_TravelAxe01_14 = none
-	_DE_TravelAxe = none
-	_DE_TravelAxeBroken = none
 endFunction
 
 function AddSpellBooks()

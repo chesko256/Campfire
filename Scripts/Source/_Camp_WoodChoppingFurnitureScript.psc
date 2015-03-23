@@ -1,7 +1,7 @@
-scriptname _DE_WoodChoppingFurnitureScript extends ObjectReference
+scriptname _Camp_WoodChoppingFurnitureScript extends ObjectReference
 
 Quest property _Camp_MainQuest auto
-FormList property _DE_Axes auto
+FormList property woodChoppingAxes auto
 Actor property PlayerRef auto
 
 weapon EquippedWeapon
@@ -18,7 +18,7 @@ Event OnUpdate()
 	if self.IsFurnitureInUse()
 		;debug.trace("[Frostfall] I am in use by the player!")
 		(_Camp_MainQuest as _Camp_ConditionValues).IsChoppingWood = true
-		if _DE_Axes.HasForm(PlayerRef.GetEquippedWeapon())
+		if woodChoppingAxes.HasForm(PlayerRef.GetEquippedWeapon())
 			EquippedWeapon = PlayerRef.GetEquippedWeapon()
 			PlayerRef.UnequipItem(EquippedWeapon as Form, abSilent = true)
 		endif
