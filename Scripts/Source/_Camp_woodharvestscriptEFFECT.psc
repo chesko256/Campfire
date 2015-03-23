@@ -7,6 +7,8 @@ import math
 _Camp_Compatibility property Compatibility auto
 
 Actor property PlayerRef auto
+message property _Camp_WoodHarvestConfirmMsg auto
+message property _Camp_WoodHarvestNoAxeConfirmMsg auto
 message property _Camp_WoodHarvestErrorCombat auto
 message property _Camp_WoodHarvestErrorNoTrees auto
 message property _Camp_WoodHarvestErrorTooCold auto
@@ -27,7 +29,7 @@ globalvariable property GameHour auto
 ;globalvariable property _DE_ExposurePoints auto
 ;globalvariable property _DE_CurrentTemp auto
 globalvariable property _Camp_FollowerCount auto
-Sound property NPCHumanWoodChop auto
+Sound property _Camp_ChopWoodSM auto
 
 ;Axes
 Weapon property _DE_StoneWarAxe auto
@@ -46,11 +48,16 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 	endif
 
 	if Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_Trees, PlayerRef, 3000.0) != none
-		;@TODO: Add confirm message
 		if PlayerRef.GetItemCount(woodChoppingAxes) > 0
-			HarvestWood()
+			int i = _Camp_WoodHarvestConfirmMsg.Show()
+			if i == 0
+				HarvestWood()
+			endif
 		else
-			HarvestWoodNoAxe()
+			int i = _Camp_WoodHarvestNoAxeConfirmMsg.Show()
+			if i == 0
+				HarvestWoodNoAxe()
+			endif
 		endif
 	else
 		_Camp_WoodHarvestErrorNoTrees.Show()
@@ -58,7 +65,6 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 endEvent
 
 function HarvestWood()
-	;fade to black
 	_Camp_FadeDown.Apply()
 	Wait(1)
 	_Camp_FadeDown.PopTo(_Camp_Black)
@@ -66,9 +72,11 @@ function HarvestWood()
 
 	Game.EnablePlayerControls()
 	
-	NPCHumanWoodChop.Play(PlayerRef)
+	_Camp_ChopWoodSM.Play(PlayerRef)
 	wait(1)
-	NPCHumanWoodChop.Play(PlayerRef)
+	_Camp_ChopWoodSM.Play(PlayerRef)
+	wait(1)
+	_Camp_ChopWoodSM.Play(PlayerRef)
 	wait(1)
 	_Camp_Black.PopTo(_Camp_FadeUp)
 
@@ -77,7 +85,6 @@ function HarvestWood()
 endFunction
 
 function HarvestWoodNoAxe()
-	;fade to black
 	_Camp_FadeDown.Apply()
 	Wait(1)
 	_Camp_FadeDown.PopTo(_Camp_Black)
