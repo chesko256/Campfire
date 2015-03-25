@@ -373,6 +373,64 @@ endif
 	endif
 endFunction
 
+Actor function GetTrackedFollower(int aiIndex) global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+	if aiIndex == 1
+		return Campfire.Follower1.GetActorRef()
+	elseif aiIndex == 2
+		return Campfire.Follower2.GetActorRef()
+	elseif aiIndex == 3
+		return Campfire.Follower3.GetActorRef()
+	else
+		return None
+	endif
+endFunction
+
+Actor function GetTrackedAnimal()
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+	return Campfire.Animal.GetActorRef()
+endFunction
+
+int function GetTrackedFollowerCount() global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return -1
+	endif
+	int i = 0
+	if Campfire.Follower1.GetActorRef()
+		i += 1
+	endif
+	if Campfire.Follower2.GetActorRef()
+		i += 1
+	endif
+	if Campfire.Follower3.GetActorRef()
+		i += 1
+	endif
+	return i
+endFunction
+
+int function GetTrackedAnimalCount() global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return -1
+	endif
+	int i = 0
+	if Campfire.Animal.GetActorRef()
+		i += 1
+	endif
+	return i
+endFunction
+
 float[] function GetAngleData(ObjectReference akObjectReference) global
 	float[] angle_data = new float[3]
     angle_data[0] = akObjectReference.GetAngleX()
