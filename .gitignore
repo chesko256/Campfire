@@ -47,6 +47,22 @@
 !_Frost*.pex
 !_Frost*.psc
 
+#Brawl Bug Patch Scripts
+!BladesSparringScript.pex
+!C00TrainerScript.pex
+!C00VilkasScript.pex
+!CompanionsSingleCombatantScript.pex
+!DGIntimidateAliasScript.pex
+!DGIntimidatePlayerScript.pex
+!MS11CalixtoScript.pex
+!BladesSparringScript.psc
+!C00TrainerScript.psc
+!C00VilkasScript.psc
+!CompanionsSingleCombatantScript.psc
+!DGIntimidateAliasScript.psc
+!DGIntimidatePlayerScript.psc
+!MS11CalixtoScript.psc
+
 #Documentation
 !Scripts/Source/doc/*
 !Scripts/Source/doc/headers/*
