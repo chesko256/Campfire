@@ -44,9 +44,6 @@ Message property _Camp_Tent_Combat auto
 Message property _DE_Combat_Error auto
 Message property _Camp_Help_TentActivate auto
 Message property _DE_TentSeeThruError auto
-ReferenceAlias property StaticFollower1 auto
-ReferenceAlias property StaticFollower2 auto
-ReferenceAlias property StaticFollower3 auto
 ObjectReference property _DE_Anchor auto
 Light property _Camp_LanternLight auto
 Static property XMarker auto
