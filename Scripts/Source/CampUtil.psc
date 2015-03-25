@@ -390,13 +390,21 @@ Actor function GetTrackedFollower(int aiIndex) global
 	endif
 endFunction
 
-Actor function GetTrackedAnimal()
+bool function IsTrackedFollower(Actor akActor) global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
 		return None
 	endif
-	return Campfire.Animal.GetActorRef()
+	if akActor == Campfire.Follower1.GetActorRef()
+		return true
+	elseif akActor == Campfire.Follower2.GetActorRef()
+		return true
+	elseif akActor == Campfire.Follower3.GetActorRef()
+		return true
+	else
+		return false
+	endif
 endFunction
 
 int function GetTrackedFollowerCount() global
@@ -416,6 +424,28 @@ int function GetTrackedFollowerCount() global
 		i += 1
 	endif
 	return i
+endFunction
+
+Actor function GetTrackedAnimal()
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+	return Campfire.Animal.GetActorRef()
+endFunction
+
+bool function IsTrackedAnimal(Actor akActor) global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+	if akActor == Campfire.Animal.GetActorRef()
+		return true
+	else
+		return false
+	endif
 endFunction
 
 int function GetTrackedAnimalCount() global

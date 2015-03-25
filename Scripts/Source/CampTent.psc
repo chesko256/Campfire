@@ -508,23 +508,23 @@ Weapon property myFollowerCOffHandWeapon auto hidden
 Weapon property myFollowerCBigWeapon auto hidden
 Weapon property myFollowerCBow auto hidden
 
-Armor property myDisplayFollowerAShield auto hidden
-Weapon property myDisplayFollowerAMainWeapon auto hidden
-Weapon property myDisplayFollowerAOffHandWeapon auto hidden
-Weapon property myDisplayFollowerABigWeapon auto hidden
-Weapon property myDisplayFollowerABow auto hidden
+ObjectReference property myDisplayFollowerAShield auto hidden
+ObjectReference property myDisplayFollowerAMainWeapon auto hidden
+ObjectReference property myDisplayFollowerAOffHandWeapon auto hidden
+ObjectReference property myDisplayFollowerABigWeapon auto hidden
+ObjectReference property myDisplayFollowerABow auto hidden
 
-Armor property myDisplayFollowerBShield auto hidden
-Weapon property myDisplayFollowerBMainWeapon auto hidden
-Weapon property myDisplayFollowerBOffHandWeapon auto hidden
-Weapon property myDisplayFollowerBBigWeapon auto hidden
-Weapon property myDisplayFollowerBBow auto hidden
+ObjectReference property myDisplayFollowerBShield auto hidden
+ObjectReference property myDisplayFollowerBMainWeapon auto hidden
+ObjectReference property myDisplayFollowerBOffHandWeapon auto hidden
+ObjectReference property myDisplayFollowerBBigWeapon auto hidden
+ObjectReference property myDisplayFollowerBBow auto hidden
 
-Armor property myDisplayFollowerCShield auto hidden
-Weapon property myDisplayFollowerCMainWeapon auto hidden
-Weapon property myDisplayFollowerCOffHandWeapon auto hidden
-Weapon property myDisplayFollowerCBigWeapon auto hidden
-Weapon property myDisplayFollowerCBow auto hidden
+ObjectReference property myDisplayFollowerCShield auto hidden
+ObjectReference property myDisplayFollowerCMainWeapon auto hidden
+ObjectReference property myDisplayFollowerCOffHandWeapon auto hidden
+ObjectReference property myDisplayFollowerCBigWeapon auto hidden
+ObjectReference property myDisplayFollowerCBow auto hidden
 
 bool property bLanternLit = false auto hidden
 bool property bGettingUp = false auto hidden
@@ -1365,6 +1365,19 @@ endFunction
 
 function PlaceObject_Follower3Shield(CampTentEx Extended)
 	myFollowerCMarker_ShieldFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_Shield)
+endFunction
+
+function SetFollowerDisplayMainWeapon(int aiBedrollIndex)
+	TentSystem.SetFollowerDisplayMainWeapon(aiBedrollIndex)
+endFunction
+function SetFollowerDisplayOffHandWeapon(int aiBedrollIndex)
+	TentSystem.SetFollowerDisplayOffHandWeapon(aiBedrollIndex)
+endFunction
+function SetFollowerDisplayBigWeapon(int aiBedrollIndex)
+	TentSystem.SetFollowerDisplayBigWeapon(aiBedrollIndex)
+endFunction
+function SetFollowerDisplayBowWeapon(int aiBedrollIndex)
+	TentSystem.SetFollowerDisplayBowWeapon(aiBedrollIndex)
 endFunction
 
 state BurningDown

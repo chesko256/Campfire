@@ -74,10 +74,6 @@ Sound property ITMGenericArmorUp auto
 Weapon property _Camp_DummyWeapon auto
 Form property BFXFireVol01 auto
 
-;@TODO: Remove
-;furniture property _Camp_Bedroll_NPC_FL auto
-;furniture property _Camp_Bedroll_NPC_FR auto
-
 ;@From OnUpdate on CampTent / CampTentEx
 function UpdateTentUseState(ObjectReference akTent)
 	;@TODO: Might need to reintroduce some idea of myActor in order to maintain async state
