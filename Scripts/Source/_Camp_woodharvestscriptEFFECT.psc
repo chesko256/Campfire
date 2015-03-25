@@ -3,6 +3,7 @@ scriptname _Camp_WoodHarvestScriptEFFECT extends ActiveMagicEffect
 import debug
 import utility
 import math
+import CampUtil
 
 _Camp_Compatibility property Compatibility auto
 
@@ -28,7 +29,6 @@ globalvariable property TimeScale auto
 globalvariable property GameHour auto
 ;globalvariable property _DE_ExposurePoints auto
 ;globalvariable property _DE_CurrentTemp auto
-globalvariable property _Camp_FollowerCount auto
 Sound property _Camp_ChopWoodSM auto
 
 ;Axes
@@ -101,7 +101,7 @@ endFunction
 function GiveDeadwoodLogs()
 	int myHarvest = RandomInt(4, 8)
 
-	if _Camp_FollowerCount.GetValueInt() > 0
+	if GetTrackedFollowerCount() > 0
 		myHarvest += 2
 	endif
 	
@@ -112,7 +112,7 @@ endFunction
 function GiveDeadwoodBranches()
 	int myHarvest = RandomInt(3, 7)
 
-	if _Camp_FollowerCount.GetValueInt() > 0
+	if GetTrackedFollowerCount() > 0
 		myHarvest += RandomInt(2, 4)
 	endif
 	
