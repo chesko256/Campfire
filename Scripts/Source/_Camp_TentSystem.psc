@@ -16,7 +16,6 @@ import CampUtil
 _Camp_Compatibility property Compatibility auto
 pDBEntranceQuestScript property DBEntranceQuestScript auto
 Quest property DBEntranceQuest auto
-;@TODO: Remove
 Actor property PlayerRef auto
 Armor property _Camp_WalkingStickShield auto
 GlobalVariable property _DE_Setting_CampingArmorTakeOff auto
@@ -31,7 +30,7 @@ GlobalVariable property _Camp_Setting_TakeOff_Ammo auto
 ;GlobalVariable property _DE_CurrentTemp auto
 ;GlobalVariable property _DE_ExposurePoints auto
 GlobalVariable property _Camp_HelpDone_TentActivate auto
-GlobalVariable property _Camp_Setting_Help auto
+GlobalVariable property _Camp_Setting_Tutorials auto
 GlobalVariable property _DE_TentSeeThru auto
 GlobalVariable property _DE_FollowersUseBedrollAI auto
 Message property _DE_CampTent_Placed_ACT_Menu auto
@@ -93,12 +92,16 @@ function UpdateTentUseState(ObjectReference akTent)
 		_Camp_Black.PopTo(_Camp_FadeUp)
 		_Camp_Tent_Combat.Show()
 		CleanUpTent(akTent)
+		;Stop follower functionality
+		self.Stop()
 	elseif !(PlayerRef.GetSitState() == 2 || PlayerRef.GetSitState() == 3) && !TentObject.bGettingUp
 		;Player getting up from sitting or lying down
 		if TentObject.myExitFront && TentObject.myExitFront.IsEnabled() && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
 			PlayerRef.SplineTranslateToRef(TentObject.myExitFront, 1.0, 65.0)
 		endif
 		CleanUpTent(akTent)
+		;Stop follower functionality
+		self.Stop()
 	else
 		TentObject.RegisterForSingleUpdate(0.5)
 	endif
@@ -122,7 +125,7 @@ endFunction
 function ShowMainMenu(ObjectReference akTent)
 	int i = _DE_CampTent_Placed_ACT_Menu.Show()
 	if i == 0										;Sit
-		if _Camp_Setting_Help.GetValueInt() == 2 && _Camp_HelpDone_TentActivate.GetValueInt() == 1
+		if _Camp_Setting_Tutorials.GetValueInt() == 2 && _Camp_HelpDone_TentActivate.GetValueInt() == 1
 			;@TODO: Move to Frostfall
 			;_DE_Help_Tents.Show()
 			Message.ResetHelpMessage("Activate")
@@ -131,7 +134,7 @@ function ShowMainMenu(ObjectReference akTent)
 		endif
 		PlayerSit(akTent)
 	elseif i == 1									;Lie Down
-		if _Camp_Setting_Help.GetValueInt() == 2 && _Camp_HelpDone_TentActivate.GetValueInt() == 1
+		if _Camp_Setting_Tutorials.GetValueInt() == 2 && _Camp_HelpDone_TentActivate.GetValueInt() == 1
 			;@TODO: Move to Frostfall
 			;_DE_Help_Tents.Show()
 			Message.ResetHelpMessage("Activate")
@@ -297,6 +300,9 @@ function PlayerSit(ObjectReference akTent)
 	if _DE_TentSeeThru.GetValueInt() == 2
 		TryToDisableRef(TentObject.myTentExterior, true)
 	endif
+
+	;Start the quest so that the aliases fill and follower packages run.
+	self.Start()
 	Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
 	TentObject.RegisterForSingleUpdate(0.5)
 endFunction
@@ -345,6 +351,9 @@ function PlayerLieDown(ObjectReference akTent)
 	if _DE_TentSeeThru.GetValueInt() == 2
 		TryToDisableRef(TentObject.myTentExterior, true)
 	endif
+
+	;Start the quest so that the aliases fill and follower packages run.
+	self.Start()
 	Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
 	TentObject.RegisterForSingleUpdate(0.5)
 	
@@ -541,10 +550,6 @@ function DisplayWeapon_Follower(CampTent TentObject)
 	;TentObject.myFollowerAMarker
 endFunction
 
-function UnDisplayWeapon_Follower()
-
-endFunction
-
 function DisplayCuirass_Player(CampTent TentObject)
 	TentObject.myCuirass = GetPlayerEquippedBody()
 	if TentObject.myCuirass
@@ -635,6 +640,262 @@ function UnDisplayBackpack_Player(CampTent TentObject)
 	TryToDisableAndDeleteRef(TentObject.myDisplayBackpack)
 endFunction
 
+Weapon function GetFollowerMainWeapon(CampTent akTentObject, int aiFollowerBedrollIndex)
+	if aiFollowerBedrollIndex == 1
+		return akTentObject.myFollowerAMainWeapon
+	elseif aiFollowerBedrollIndex == 2
+		return akTentObject.myFollowerBMainWeapon
+	elseif aiFollowerBedrollIndex == 3
+		return akTentObject.myFollowerCMainWeapon
+	endif
+endFunction
+Weapon function GetFollowerOffHandWeapon(CampTent akTentObject, int aiFollowerBedrollIndex)
+	if aiFollowerBedrollIndex == 1
+		return akTentObject.myFollowerAOffHandWeapon
+	elseif aiFollowerBedrollIndex == 2
+		return akTentObject.myFollowerBOffHandWeapon
+	elseif aiFollowerBedrollIndex == 3
+		return akTentObject.myFollowerCOffHandWeapon
+	endif
+endFunction
+Weapon function GetFollowerBigWeapon(CampTent akTentObject, int aiFollowerBedrollIndex)
+	if aiFollowerBedrollIndex == 1
+		return akTentObject.myFollowerABigWeapon
+	elseif aiFollowerBedrollIndex == 2
+		return akTentObject.myFollowerBBigWeapon
+	elseif aiFollowerBedrollIndex == 3
+		return akTentObject.myFollowerCBigWeapon
+	endif
+endFunction
+Weapon function GetFollowerBowWeapon(CampTent akTentObject, int aiFollowerBedrollIndex)
+	if aiFollowerBedrollIndex == 1
+		return akTentObject.myFollowerABow
+	elseif aiFollowerBedrollIndex == 2
+		return akTentObject.myFollowerBBow
+	elseif aiFollowerBedrollIndex == 3
+		return akTentObject.myFollowerCBow
+	endif
+endFunction
+Armor function GetFollowerShield(CampTent akTentObject, int aiFollowerBedrollIndex)
+	if aiFollowerBedrollIndex == 1
+		return akTentObject.myFollowerAShield
+	elseif aiFollowerBedrollIndex == 2
+		return akTentObject.myFollowerBShield
+	elseif aiFollowerBedrollIndex == 3
+		return akTentObject.myFollowerCShield
+	endif
+endFunction
+function SetFollowerMainWeapon(CampTent akTentObject, int aiFollowerBedrollIndex, Weapon akWeapon)
+	if aiFollowerBedrollIndex == 1
+		akTentObject.myFollowerAMainWeapon = akWeapon
+	elseif aiFollowerBedrollIndex == 2
+		akTentObject.myFollowerBMainWeapon = akWeapon
+	elseif aiFollowerBedrollIndex == 3
+		akTentObject.myFollowerCMainWeapon = akWeapon
+	endif
+endFunction
+function SetFollowerOffHandWeapon(CampTent akTentObject, int aiFollowerBedrollIndex, Weapon akWeapon)
+	if aiFollowerBedrollIndex == 1
+		akTentObject.myFollowerAOffHandWeapon = akWeapon
+	elseif aiFollowerBedrollIndex == 2
+		akTentObject.myFollowerBOffHandWeapon = akWeapon
+	elseif aiFollowerBedrollIndex == 3
+		akTentObject.myFollowerCOffHandWeapon = akWeapon
+	endif
+endFunction
+function SetFollowerBigWeapon(CampTent akTentObject, int aiFollowerBedrollIndex, Weapon akWeapon)
+	if aiFollowerBedrollIndex == 1
+		akTentObject.myFollowerABigWeapon = akWeapon
+	elseif aiFollowerBedrollIndex == 2
+		akTentObject.myFollowerBBigWeapon = akWeapon
+	elseif aiFollowerBedrollIndex == 3
+		akTentObject.myFollowerCBigWeapon = akWeapon
+	endif
+endFunction
+function SetFollowerBowWeapon(CampTent akTentObject, int aiFollowerBedrollIndex, Weapon akWeapon)
+	if aiFollowerBedrollIndex == 1
+		akTentObject.myFollowerABow = akWeapon
+	elseif aiFollowerBedrollIndex == 2
+		akTentObject.myFollowerBBow = akWeapon
+	elseif aiFollowerBedrollIndex == 3
+		akTentObject.myFollowerCBow = akWeapon
+	endif
+endFunction
+function SetFollowerShield(CampTent akTentObject, int aiFollowerBedrollIndex, Armor akShield)
+	if aiFollowerBedrollIndex == 1
+		akTentObject.myFollowerAShield = akShield
+	elseif aiFollowerBedrollIndex == 2
+		akTentObject.myFollowerBShield = akShield
+	elseif aiFollowerBedrollIndex == 3
+		akTentObject.myFollowerCShield = akShield
+	endif
+endFunction
+function SetFollowerDisplayMainWeapon(CampTent akTentObject, int aiFollowerBedrollIndex)
+	if aiFollowerBedrollIndex == 1
+		if akTentObject.myFollowerAMainWeapon
+			akTentObject.myDisplayFollowerAMainWeapon = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerAMarker_MainWeapon, akTentObject.myFollowerAMainWeapon, bDisableInteraction = true)
+		endif
+	elseif aiFollowerBedrollIndex == 2
+		if akTentObject.myFollowerBMainWeapon
+			akTentObject.myDisplayFollowerBMainWeapon = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerBMarker_MainWeapon, akTentObject.myFollowerBMainWeapon, bDisableInteraction = true)
+		endif
+	elseif aiFollowerBedrollIndex == 3
+		if akTentObject.myFollowerCMainWeapon
+			akTentObject.myDisplayFollowerCMainWeapon = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerCMarker_MainWeapon, akTentObject.myFollowerCMainWeapon, bDisableInteraction = true)
+		endif
+	endif
+endFunction
+function SetFollowerDisplayOffHandWeapon(CampTent akTentObject, int aiFollowerBedrollIndex)
+	if aiFollowerBedrollIndex == 1
+		if akTentObject.myFollowerAOffHandWeapon
+			akTentObject.myDisplayFollowerAOffHandWeapon = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerAMarker_OffHandWeapon, akTentObject.myFollowerAOffHandWeapon, bDisableInteraction = true)
+		endif
+	elseif aiFollowerBedrollIndex == 2
+		if akTentObject.myFollowerBOffHandWeapon
+			akTentObject.myDisplayFollowerBOffHandWeapon = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerBMarker_OffHandWeapon, akTentObject.myFollowerBOffHandWeapon, bDisableInteraction = true)
+		endif
+	elseif aiFollowerBedrollIndex == 3
+		if akTentObject.myFollowerCOffHandWeapon
+			akTentObject.myDisplayFollowerCOffHandWeapon = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerCMarker_OffHandWeapon, akTentObject.myFollowerCOffHandWeapon, bDisableInteraction = true)
+		endif
+	endif
+endFunction
+function SetFollowerDisplayBigWeapon(CampTent akTentObject, int aiFollowerBedrollIndex)
+	if aiFollowerBedrollIndex == 1
+		if akTentObject.myFollowerABigWeapon
+			akTentObject.myDisplayFollowerABigWeapon = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerAMarker_BigWeapon, akTentObject.myFollowerABigWeapon, bDisableInteraction = true)
+		endif
+	elseif aiFollowerBedrollIndex == 2
+		if akTentObject.myFollowerBBigWeapon
+			akTentObject.myDisplayFollowerBBigWeapon = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerBMarker_BigWeapon, akTentObject.myFollowerBBigWeapon, bDisableInteraction = true)
+		endif
+	elseif aiFollowerBedrollIndex == 3
+		if akTentObject.myFollowerCBigWeapon
+			akTentObject.myDisplayFollowerCBigWeapon = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerCMarker_BigWeapon, akTentObject.myFollowerCBigWeapon, bDisableInteraction = true)
+		endif
+	endif
+endFunction
+function SetFollowerDisplayBowWeapon(CampTent akTentObject, int aiFollowerBedrollIndex)
+	if aiFollowerBedrollIndex == 1
+		if akTentObject.myFollowerABow
+			akTentObject.myDisplayFollowerABow = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerAMarker_Bow, akTentObject.myFollowerABow, bDisableInteraction = true)
+		endif
+	elseif aiFollowerBedrollIndex == 2
+		if akTentObject.myFollowerBBow
+			akTentObject.myDisplayFollowerBBow = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerBMarker_Bow, akTentObject.myFollowerBBow, bDisableInteraction = true)
+		endif
+	elseif aiFollowerBedrollIndex == 3
+		if akTentObject.myFollowerCBow
+			akTentObject.myDisplayFollowerCBow = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerCMarker_Bow, akTentObject.myFollowerCBow, bDisableInteraction = true)
+		endif
+	endif
+endFunction
+function SetFollowerDisplayShield(CampTent akTentObject, int aiFollowerBedrollIndex)
+	if aiFollowerBedrollIndex == 1
+		if akTentObject.myFollowerAShield
+			akTentObject.myDisplayFollowerAShield = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerAMarker_Shield, akTentObject.myFollowerAShield, bDisableInteraction = true)
+		endif
+	elseif aiFollowerBedrollIndex == 2
+		if akTentObject.myFollowerBShield
+			akTentObject.myDisplayFollowerBShield = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerBMarker_Shield, akTentObject.myFollowerBShield, bDisableInteraction = true)
+		endif
+	elseif aiFollowerBedrollIndex == 3
+		if akTentObject.myFollowerCShield
+			akTentObject.myDisplayFollowerCShield = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerCMarker_Shield, akTentObject.myFollowerCShield, bDisableInteraction = true)
+		endif
+	endif
+endFunction
+function UnDisplayFollowerMainWeapon(CampTent akTentObject, int aiFollowerBedrollIndex, Actor akActor)
+	if aiFollowerBedrollIndex == 1
+		if akTentObject.myFollowerAMainWeapon
+			akActor.EquipItem(akTentObject.myFollowerAMainWeapon, abSilent = true)
+		endif
+		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerAMainWeapon)	
+	elseif aiFollowerBedrollIndex == 2
+		if akTentObject.myFollowerBMainWeapon
+			akActor.EquipItem(akTentObject.myFollowerBMainWeapon, abSilent = true)
+		endif
+		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerBMainWeapon)
+	elseif aiFollowerBedrollIndex == 3
+		if akTentObject.myFollowerCMainWeapon
+			akActor.EquipItem(akTentObject.myFollowerCMainWeapon, abSilent = true)
+		endif
+		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerCMainWeapon)
+	endif
+endFunction
+function UnDisplayFollowerOffHandWeapon(CampTent akTentObject, int aiFollowerBedrollIndex, Actor akActor)
+	if aiFollowerBedrollIndex == 1
+		if akTentObject.myFollowerAOffHandWeapon
+			akActor.EquipItem(akTentObject.myFollowerAOffHandWeapon, abSilent = true)
+		endif
+		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerAOffHandWeapon)	
+	elseif aiFollowerBedrollIndex == 2
+		if akTentObject.myFollowerBOffHandWeapon
+			akActor.EquipItem(akTentObject.myFollowerBOffHandWeapon, abSilent = true)
+		endif
+		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerBOffHandWeapon)
+	elseif aiFollowerBedrollIndex == 3
+		if akTentObject.myFollowerCOffHandWeapon
+			akActor.EquipItem(akTentObject.myFollowerCOffHandWeapon, abSilent = true)
+		endif
+		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerCOffHandWeapon)
+	endif
+endFunction
+function UnDisplayFollowerBigWeapon(CampTent akTentObject, int aiFollowerBedrollIndex, Actor akActor)
+	if aiFollowerBedrollIndex == 1
+		if akTentObject.myFollowerABigWeapon
+			akActor.EquipItem(akTentObject.myFollowerABigWeapon, abSilent = true)
+		endif
+		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerABigWeapon)	
+	elseif aiFollowerBedrollIndex == 2
+		if akTentObject.myFollowerBBigWeapon
+			akActor.EquipItem(akTentObject.myFollowerBBigWeapon, abSilent = true)
+		endif
+		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerBBigWeapon)
+	elseif aiFollowerBedrollIndex == 3
+		if akTentObject.myFollowerCBigWeapon
+			akActor.EquipItem(akTentObject.myFollowerCBigWeapon, abSilent = true)
+		endif
+		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerCBigWeapon)
+	endif
+endFunction
+function UnDisplayFollowerBowWeapon(CampTent akTentObject, int aiFollowerBedrollIndex, Actor akActor)
+	if aiFollowerBedrollIndex == 1
+		if akTentObject.myFollowerABow
+			akActor.EquipItem(akTentObject.myFollowerABow, abSilent = true)
+		endif
+		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerABow)	
+	elseif aiFollowerBedrollIndex == 2
+		if akTentObject.myFollowerBBow
+			akActor.EquipItem(akTentObject.myFollowerBBow, abSilent = true)
+		endif
+		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerBBow)
+	elseif aiFollowerBedrollIndex == 3
+		if akTentObject.myFollowerCBow
+			akActor.EquipItem(akTentObject.myFollowerCBow, abSilent = true)
+		endif
+		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerCBow)
+	endif
+endFunction
+function UnDisplayFollowerShield(CampTent akTentObject, int aiFollowerBedrollIndex, Actor akActor)
+	if aiFollowerBedrollIndex == 1
+		if akTentObject.myFollowerAShield
+			akActor.EquipItem(akTentObject.myFollowerAShield, abSilent = true)
+		endif
+		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerAShield)	
+	elseif aiFollowerBedrollIndex == 2
+		if akTentObject.myFollowerBShield
+			akActor.EquipItem(akTentObject.myFollowerBShield, abSilent = true)
+		endif
+		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerBShield)
+	elseif aiFollowerBedrollIndex == 3
+		if akTentObject.myFollowerCShield
+			akActor.EquipItem(akTentObject.myFollowerCShield, abSilent = true)
+		endif
+		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerCShield)
+	endif
+endFunction
+
 function PackTent(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
 	;Are any of the bed rolls in use?
@@ -702,6 +963,16 @@ function CleanUpTent(ObjectReference akTent)
 	UnDisplayHelm_Player(TentObject)
 	UnDisplayQuiver_Player(TentObject)
 	UnDisplayBackpack_Player(TentObject)
+
+	if TentObject.mySpareBedRoll1
+		(TentObject.mySpareBedRoll1 as _Camp_CampTentNPCBedrollScript).CleanUp()
+	endif
+	if TentObject.mySpareBedRoll2
+		(TentObject.mySpareBedRoll2 as _Camp_CampTentNPCBedrollScript).CleanUp()
+	endif
+	if TentObject.mySpareBedRoll3
+		(TentObject.mySpareBedRoll3 as _Camp_CampTentNPCBedrollScript).CleanUp()
+	endif
 
 	TryToEnableRef(TentObject.myShelterCollider)
 	TryToEnableRef(TentObject.myTentExterior, true)

@@ -967,18 +967,21 @@ function GetResults()
 		if Setting_BedRollScale != 1.0
 			mySpareBedRoll1.SetScale(Setting_BedRollScale)
 		endif
+        (mySpareBedRoll1 as _Camp_CampTentNPCBedrollScript).Setup(self as CampTent, 1)
 	endif
 	if mySpareBedRoll2Future
 		mySpareBedRoll2 = GetFuture(mySpareBedRoll2Future).get_result()
 		if Setting_BedRollScale != 1.0
 			mySpareBedRoll2.SetScale(Setting_BedRollScale)
 		endif
+        (mySpareBedRoll2 as _Camp_CampTentNPCBedrollScript).Setup(self as CampTent, 2)
 	endif
 	if mySpareBedRoll3Future
 		mySpareBedRoll3 = GetFuture(mySpareBedRoll3Future).get_result()
 		if Setting_BedRollScale != 1.0
 			mySpareBedRoll3.SetScale(Setting_BedRollScale)
 		endif
+        (mySpareBedRoll3 as _Camp_CampTentNPCBedrollScript).Setup(self as CampTent, 3)
 	endif
 endFunction
 
@@ -1365,19 +1368,6 @@ endFunction
 
 function PlaceObject_Follower3Shield(CampTentEx Extended)
 	myFollowerCMarker_ShieldFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_Shield)
-endFunction
-
-function SetFollowerDisplayMainWeapon(int aiBedrollIndex)
-	TentSystem.SetFollowerDisplayMainWeapon(aiBedrollIndex)
-endFunction
-function SetFollowerDisplayOffHandWeapon(int aiBedrollIndex)
-	TentSystem.SetFollowerDisplayOffHandWeapon(aiBedrollIndex)
-endFunction
-function SetFollowerDisplayBigWeapon(int aiBedrollIndex)
-	TentSystem.SetFollowerDisplayBigWeapon(aiBedrollIndex)
-endFunction
-function SetFollowerDisplayBowWeapon(int aiBedrollIndex)
-	TentSystem.SetFollowerDisplayBowWeapon(aiBedrollIndex)
 endFunction
 
 state BurningDown

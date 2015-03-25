@@ -114,6 +114,167 @@ Furniture function GetNPCBedroll(bool bLeft = false, bool bRight = false) global
 	endif
 endFunction
 
+Weapon function GetFollowerMainWeapon(CampTent akTentObject, int aiFollowerBedrollIndex) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+	Weapon wpn = TentAPI.GetFollowerMainWeapon(akTentObject, aiFollowerBedrollIndex)
+	return wpn
+endFunction
+Weapon function GetFollowerOffHandWeapon(CampTent akTentObject, int aiFollowerBedrollIndex) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+	Weapon wpn = TentAPI.GetFollowerOffHandWeapon(akTentObject, aiFollowerBedrollIndex)
+	return wpn
+endFunction
+Weapon function GetFollowerBigWeapon(CampTent akTentObject, int aiFollowerBedrollIndex) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+	Weapon wpn = TentAPI.GetFollowerBigWeapon(akTentObject, aiFollowerBedrollIndex)
+	return wpn
+endFunction
+Weapon function GetFollowerBowWeapon(CampTent akTentObject, int aiFollowerBedrollIndex) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+	Weapon wpn = TentAPI.GetFollowerBowWeapon(akTentObject, aiFollowerBedrollIndex)
+	return wpn
+endFunction
+Armor function GetFollowerShield(CampTent akTentObject, int aiFollowerBedrollIndex) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+	Armor shld = TentAPI.GetFollowerShield(akTentObject, aiFollowerBedrollIndex)
+	return shld
+endFunction
+function SetFollowerMainWeapon(CampTent akTentObject, int aiFollowerBedrollIndex, Weapon akWeapon) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+	TentAPI.SetFollowerMainWeapon(akTentObject, aiFollowerBedrollIndex, akWeapon)
+endFunction
+function SetFollowerOffHandWeapon(CampTent akTentObject, int aiFollowerBedrollIndex, Weapon akWeapon) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+	TentAPI.SetFollowerOffHandWeapon(akTentObject, aiFollowerBedrollIndex, akWeapon)
+endFunction
+function SetFollowerBigWeapon(CampTent akTentObject, int aiFollowerBedrollIndex, Weapon akWeapon) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+	TentAPI.SetFollowerBigWeapon(akTentObject, aiFollowerBedrollIndex, akWeapon)
+endFunction
+function SetFollowerBowWeapon(CampTent akTentObject, int aiFollowerBedrollIndex, Weapon akWeapon) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+	TentAPI.SetFollowerBowWeapon(akTentObject, aiFollowerBedrollIndex, akWeapon)
+endFunction
+function SetFollowerShield(CampTent akTentObject, int aiFollowerBedrollIndex, Armor akShield) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+	TentAPI.SetFollowerShield(akTentObject, aiFollowerBedrollIndex, akShield)
+endFunction
+function SetFollowerDisplayMainWeapon(CampTent akTentObject, int aiBedrollIndex) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+	TentAPI.SetFollowerDisplayMainWeapon(akTentObject, aiBedrollIndex)
+endFunction
+function SetFollowerDisplayOffHandWeapon(CampTent akTentObject, int aiBedrollIndex) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+	TentAPI.SetFollowerDisplayOffHandWeapon(akTentObject, aiBedrollIndex)
+endFunction
+function SetFollowerDisplayBigWeapon(CampTent akTentObject, int aiBedrollIndex) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+	TentAPI.SetFollowerDisplayBigWeapon(akTentObject, aiBedrollIndex)
+endFunction
+function SetFollowerDisplayBowWeapon(CampTent akTentObject, int aiBedrollIndex) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+	TentAPI.SetFollowerDisplayBowWeapon(akTentObject, aiBedrollIndex)
+endFunction
+function SetFollowerDisplayShield(CampTent akTentObject, int aiBedrollIndex) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+	TentAPI.SetFollowerDisplayShield(akTentObject, aiBedrollIndex)
+endFunction
+function UnDisplayFollowerMainWeapon(CampTent akTentObject, int aiBedrollIndex, Actor akActor) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		return None
+	endif
+	TentAPI.UnDisplayFollowerMainWeapon(akTentObject, aiBedrollIndex, akActor)
+endFunction
+function UnDisplayFollowerOffHandWeapon(CampTent akTentObject, int aiBedrollIndex, Actor akActor) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		return None
+	endif
+	TentAPI.UnDisplayFollowerOffHandWeapon(akTentObject, aiBedrollIndex, akActor)
+endFunction
+function UnDisplayFollowerBigWeapon(CampTent akTentObject, int aiBedrollIndex, Actor akActor) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		return None
+	endif
+	TentAPI.UnDisplayFollowerBigWeapon(akTentObject, aiBedrollIndex, akActor)
+endFunction
+function UnDisplayFollowerBowWeapon(CampTent akTentObject, int aiBedrollIndex, Actor akActor) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		return None
+	endif
+	TentAPI.UnDisplayFollowerBowWeapon(akTentObject, aiBedrollIndex, akActor)
+endFunction
+function UnDisplayFollowerShield(CampTent akTentObject, int aiBedrollIndex, Actor akActor) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		return None
+	endif
+	TentAPI.UnDisplayFollowerShield(akTentObject, aiBedrollIndex, akActor)
+endFunction
+
 Static function GetLantern(bool bOn = false, bool bHanging = false) global
 	_Camp_TentSystem TentAPI = GetAPI()
 	if TentAPI == none
