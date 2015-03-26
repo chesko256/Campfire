@@ -139,6 +139,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
 
     int thread_limit = _Camp_Setting_MaxThreads.GetValueInt()
 
+    debug.trace("[Campfire====] Queuing placement of " + form_to_place)
 	while !future
 		if !thread01.queued() && thread_limit >= 1
             future = thread01.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
@@ -412,6 +413,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         initially_disabled, is_propped, is_hanging)
 		else
 			;All threads are queued; start all threads, wait, and try again.
+            debug.trace("[Campfire] STARTING ALL THREADS.")
             wait_all()
 		endif
 	endWhile
