@@ -13,6 +13,7 @@ CampTent property TentObject auto hidden
 int property FollowerBedrollIndex = 0 auto hidden
 
 Actor my_actor
+bool in_use = false
 
 function Setup(CampTent tent_object, int bedroll_index)
 	TentObject = tent_object
@@ -24,17 +25,22 @@ Event OnInit()
 endEvent
 
 Event OnActivate(ObjectReference akActionRef)
-	if (akActionRef as Actor) == PlayerRef
-		_Camp_Tent_FollowerBedroll.Show()
-	elseif IsTrackedFollower(akActionRef as Actor)
-		self.BlockActivation(false)
-		utility.wait(0.2)
-		my_actor = akActionRef as Actor
-		self.Activate(my_actor)
-		DisplayGear(my_actor)
-		utility.wait(0.5)
-		self.BlockActivation()
-		RegisterForSingleUpdate(1)
+	if !in_use
+		debug.trace("[Campfire] Activated by " + akActionRef)
+		if (akActionRef as Actor) == PlayerRef
+			_Camp_Tent_FollowerBedroll.Show()
+		elseif IsTrackedFollower(akActionRef as Actor)
+			in_use = true
+			self.BlockActivation(false)
+			utility.wait(0.2)
+			my_actor = akActionRef as Actor
+			debug.trace("[Campfire] OnActivate my_actor " + my_actor)
+			self.Activate(my_actor)
+			DisplayGear(my_actor)
+			utility.wait(0.5)
+			self.BlockActivation()
+			RegisterForSingleUpdate(1)
+		endif
 	endif
 endEvent
 
@@ -43,6 +49,7 @@ event OnUpdate()
 		RegisterForSingleUpdate(1)
 	else
 		UnDisplayGear()
+		in_use = false
 	endif
 endEvent
 
@@ -84,12 +91,15 @@ function DisplayGear(Actor akActor)
 endFunction
 
 function UnDisplayGear()
-	TentSystem.UnDisplayFollowerMainWeapon(TentObject, FollowerBedrollIndex, my_actor)
-	TentSystem.UnDisplayFollowerOffHandWeapon(TentObject, FollowerBedrollIndex, my_actor)
-	TentSystem.UnDisplayFollowerBigWeapon(TentObject, FollowerBedrollIndex, my_actor)
-	TentSystem.UnDisplayFollowerBowWeapon(TentObject, FollowerBedrollIndex, my_actor)
-	TentSystem.UnDisplayFollowerShield(TentObject, FollowerBedrollIndex, my_actor)
-	my_actor = none
+	if my_actor
+		debug.trace("[Campfire] UnDisplayGear my_actor " + my_actor)
+		TentSystem.UnDisplayFollowerMainWeapon(TentObject, FollowerBedrollIndex, my_actor)
+		TentSystem.UnDisplayFollowerOffHandWeapon(TentObject, FollowerBedrollIndex, my_actor)
+		TentSystem.UnDisplayFollowerBigWeapon(TentObject, FollowerBedrollIndex, my_actor)
+		TentSystem.UnDisplayFollowerBowWeapon(TentObject, FollowerBedrollIndex, my_actor)
+		TentSystem.UnDisplayFollowerShield(TentObject, FollowerBedrollIndex, my_actor)
+		my_actor = none
+	endif
 endFunction
 
 function CleanUp()

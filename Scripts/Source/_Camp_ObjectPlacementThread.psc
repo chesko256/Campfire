@@ -20,6 +20,7 @@ float _ZHangingOffset = 0.0
 bool _InvertedLocalY = false
 float _XPosOffset = 0.0
 float _YPosOffset = 0.0
+float _ZPosOffset = 0.0
 bool _InitiallyDisabled = false
 bool _IsPropped = false
 bool _IsHanging = false
@@ -32,7 +33,7 @@ ObjectReference function get_async(Activator akFuture, ObjectReference akFutureA
 						ObjectReference origin, Form form_to_place, float[] origin_angle, 															\
 						float x_local_ang_adjust = 0.0, float y_local_ang_adjust = 0.0, float z_local_ang_adjust = 0.0, 							\
 						float z_global_ang_adjust = 0.0, float z_hanging_offset = 0.0, bool inverted_local_y = false, 								\
-						float x_pos_offset = 0.0, float y_pos_offset = 0.0,																			\
+						float x_pos_offset = 0.0, float y_pos_offset = 0.0,	float z_pos_offset,														\
 						bool initially_disabled = false, bool is_propped = false, bool is_hanging = false)
 	
 	thread_queued = true
@@ -56,6 +57,7 @@ ObjectReference function get_async(Activator akFuture, ObjectReference akFutureA
 	_InvertedLocalY = inverted_local_y
 	_XPosOffset = x_pos_offset
 	_YPosOffset = y_pos_offset
+	_ZPosOffset = z_pos_offset
 	_InitiallyDisabled = initially_disabled
 	_IsPropped = is_propped
 	_IsHanging = is_hanging
@@ -70,7 +72,7 @@ Event OnObjectPlacementStart()
 		relative_position = GetRelativePosition(_RelativeCenterObject, _ObjectPositionReference)
 		ObjectReference result = PlaceAtMeRelative(_Origin, _FormToPlace, _OriginAngle, relative_position, \
 				_ZGlobalAngAdjust, _XLocalAngAdjust, _YLocalAngAdjust, _ZLocalAngAdjust, \
-				_ZHangingOffset, _InvertedLocalY, _XPosOffset, _YPosOffset, _InitiallyDisabled, _IsPropped, _IsHanging)
+				_ZHangingOffset, _InvertedLocalY, _XPosOffset, _YPosOffset, _ZPosOffset, _InitiallyDisabled, _IsPropped, _IsHanging)
 		(future as _Camp_ObjectFuture).result = result
 		clear_thread_vars()
 		thread_queued = false
@@ -91,6 +93,7 @@ function clear_thread_vars()
 	_InvertedLocalY = false
 	_XPosOffset = 0.0
 	_YPosOffset = 0.0
+	_ZPosOffset = 0.0
 	_InitiallyDisabled = false
 	_IsPropped = false
 	_IsHanging = false
@@ -191,7 +194,7 @@ endFunction
 ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akFormToPlace, float[] fOriginAng, \
 										   float[] fRelativePos, float fZGlobalAngAdjust = 0.0, float fXLocalAngAdjust = 0.0,  \
 										   float fYLocalAngAdjust = 0.0, float fZLocalAngAdjust = 0.0, float fZHangingOffset = 0.0, \
-										   bool abInvertedLocalY = false, float afXPosOffset = 0.0, float afYPosOffset = 0.0,		\
+										   bool abInvertedLocalY = false, float afXPosOffset = 0.0, float afYPosOffset = 0.0, float afZPosOffset = 0.0,	\
 										   bool abInitiallyDisabled = false, bool abIsPropped = false, bool abIsHanging = false)
 
 	ObjectReference myObject
@@ -212,6 +215,7 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
 		myTempMarker.MoveTo(myTempMarker, afZOffset = fZHangingOffset)
 		myTempMarker.SetAngle(0.0, 0.0, myTempMarker.GetAngleZ() + fRelativePos[5] + fZLocalAngAdjust)
 	else
+		myTempMarker.MoveTo(myTempMarker, afZOffset = afZPosOffset)
 		myTempMarker.SetAngle(myTempMarker.GetAngleX() + fRelativePos[3] + fXLocalAngAdjust, \
 							  myTempMarker.GetAngleY() + fRelativePos[4] + fYLocalAngAdjust, \
 							  myTempMarker.GetAngleZ() + fRelativePos[5] + fZLocalAngAdjust)

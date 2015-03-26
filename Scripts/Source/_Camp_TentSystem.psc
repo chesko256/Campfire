@@ -32,7 +32,6 @@ GlobalVariable property _Camp_Setting_TakeOff_Ammo auto
 GlobalVariable property _Camp_HelpDone_TentActivate auto
 GlobalVariable property _Camp_Setting_Tutorials auto
 GlobalVariable property _DE_TentSeeThru auto
-GlobalVariable property _DE_FollowersUseBedrollAI auto
 Message property _DE_CampTent_Placed_ACT_Menu auto
 Message property _DE_CampTent2_SitMenu auto
 Message property _DE_CampTent2_SitMenu_Positive auto
@@ -185,7 +184,7 @@ function ShowSitMenu(ObjectReference akTent)
 		endif
 	elseif i == 2
 		TentObject.myPlayerSitMarker.Activate(PlayerRef)
-		StopFollowerUse(akTent)
+		;StopFollowerUse(akTent)
 	elseif i == 3
 		;do nothing
 	endif
@@ -243,7 +242,7 @@ function ShowLayMenu(ObjectReference akTent)
 		endif
 	elseif i == 3									;Get Up
 		TentObject.myPlayerLayDownMarker.Activate(PlayerRef)
-		StopFollowerUse(akTent)
+		;StopFollowerUse(akTent)
 	elseif i == 3									;Nothing
 		;do nothing
 	endif
@@ -362,29 +361,29 @@ endFunction
 function DisplayPlayerTentEquipment(ObjectReference akTent, bool bLimited = false)
 	CampTent TentObject = akTent as CampTent
 	if bLimited == false
-		if _Camp_Setting_TakeOff_Helm.GetValueInt() == 1
+		if _Camp_Setting_TakeOff_Helm.GetValueInt() == 2
 			DisplayHelm_Player(TentObject)
 		endif
-		if _Camp_Setting_TakeOff_Cuirass.GetValueInt() == 1
+		if _Camp_Setting_TakeOff_Cuirass.GetValueInt() == 2
 			DisplayCuirass_Player(TentObject)
 		endif
-		if _Camp_Setting_TakeOff_Gauntlets.GetValueInt() == 1
+		if _Camp_Setting_TakeOff_Gauntlets.GetValueInt() == 2
 			DisplayGauntlets_Player(TentObject)
 		endif
-		if _Camp_Setting_TakeOff_Boots.GetValueInt() == 1
+		if _Camp_Setting_TakeOff_Boots.GetValueInt() == 2
 			DisplayBoots_Player(TentObject)
 		endif
 	endif
-	if _Camp_Setting_TakeOff_Weapons.GetValueInt() == 1
+	if _Camp_Setting_TakeOff_Weapons.GetValueInt() == 2
 		DisplayWeapons_Player(TentObject)
 	endif
-	if _Camp_Setting_TakeOff_Shield.GetValueInt() == 1
+	if _Camp_Setting_TakeOff_Shield.GetValueInt() == 2
 		DisplayShield_Player(TentObject)
 	endif
-	if _Camp_Setting_TakeOff_Ammo.GetValueInt() == 1
+	if _Camp_Setting_TakeOff_Ammo.GetValueInt() == 2
 		DisplayQuiver_Player(TentObject)
 	endif
-	if _Camp_Setting_TakeOff_Backpack.GetValueInt() == 1
+	if _Camp_Setting_TakeOff_Backpack.GetValueInt() == 2
 		DisplayBackpack_Player(TentObject)
 	endif
 endFunction
@@ -438,24 +437,6 @@ function SelectExterior(ObjectReference akTent)
 	TryToDisableRef(TentObject.mySnowTent)
 	TryToDisableRef(TentObject.myAshTent)
 	TryToEnableRef(TentObject.myTentExterior, true)
-endFunction
-
-function TryToMakeFollowersUse(ObjectReference akTent)
-	;debug.trace("[Frostfall] Trying to make NPC sleep...")
-	;Move bedroll out of range of NPCs, so they won't path here
-	CampTent TentObject = akTent as CampTent
-	(TentObject.myBedRoll as ObjectReference).SetPosition(TentObject.myBedRoll.GetPositionX(), \
-														  TentObject.myBedRoll.GetPositionY(), \
-														  TentObject.myBedRoll.GetPositionZ() + 3000.0)
-	_DE_FollowersUseBedrollAI.SetValueInt(1)
-endFunction
-
-function StopFollowerUse(ObjectReference akTent)
-	;debug.trace("[Frostfall] Trying to make NPC stop sleeping...")
-	;Move bedroll back in range
-	CampTent TentObject = akTent as CampTent
-	(TentObject.myBedRoll as ObjectReference).SetPosition(akTent.GetPositionX(), akTent.GetPositionY(), akTent.GetPositionZ())
-	_DE_FollowersUseBedrollAI.SetValueInt(0)
 endFunction
 
 function DisplayShield_Player(CampTent TentObject)
@@ -937,6 +918,16 @@ function PackTent(ObjectReference akTent)
 	UnDisplayHelm_Player(TentObject)
 	UnDisplayQuiver_Player(TentObject)
 	UnDisplayBackpack_Player(TentObject)	
+
+	if TentObject.mySpareBedRoll1
+		(TentObject.mySpareBedRoll1 as _Camp_CampTentNPCBedrollScript).CleanUp()
+	endif
+	if TentObject.mySpareBedRoll2
+		(TentObject.mySpareBedRoll2 as _Camp_CampTentNPCBedrollScript).CleanUp()
+	endif
+	if TentObject.mySpareBedRoll3
+		(TentObject.mySpareBedRoll3 as _Camp_CampTentNPCBedrollScript).CleanUp()
+	endif
 	
 	;Delete markers and furniture
 	TentObject.TakeDown()
@@ -945,15 +936,12 @@ function PackTent(ObjectReference akTent)
 	PlayerRef.AddItem(TentObject.Required_InventoryItem, abSilent = true)
 	ITMGenericArmorUp.Play(akTent)
 
-	StopFollowerUse(akTent)
-	
 	;Finally, delete myself
 	TryToDisableAndDeleteRef(akTent)
 endFunction
 
 function CleanUpTent(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
-	StopFollowerUse(akTent)
 	Game.EnablePlayerControls()
 	UnDisplayShield_Player(TentObject)
 	UnDisplayWeapons_Player(TentObject)
