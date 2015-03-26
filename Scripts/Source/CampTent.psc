@@ -539,6 +539,7 @@ endEvent
 
 ;@Override _Camp_PlaceableObjectBase
 function PlaceObjects()
+	debug.trace("[Campfire] ****$$$$$$$$$$$$$$****** Calling PlaceObjects")
 	parent.PlaceObjects()
 	CampTentEx Extended = self as CampTentEx
 
@@ -714,6 +715,7 @@ function PlaceObjects()
 	PlaceObject_BedRoll()
 	if Extended
 		if Extended.PositionRef_Follower1_Bed
+			debug.trace("[Campfire=============] Calling PlaceObject_SpareBedRoll1")
 			PlaceObject_SpareBedRoll1(Extended)
 		endif
 		if Extended.PositionRef_Follower2_Bed
@@ -957,11 +959,6 @@ function GetResults()
 		myBedRoll = GetFuture(myBedRollFuture).get_result()
 		self.MoveTo(myBedRoll, afZOffset = -2000.0)
 		debug.trace("[Campfire] my position " + self.GetPositionZ())
-		int i = 0
-		while !self.Is3DLoaded() && i < 50
-			utility.wait(0.1)
-			i += 1
-		endWhile
 		if Setting_BedRollScale != 1.0
 			self.SetScale(Setting_BedRollScale)
 		endif
@@ -969,25 +966,13 @@ function GetResults()
 	endif
 	if mySpareBedRoll1Future
 		mySpareBedRoll1 = GetFuture(mySpareBedRoll1Future).get_result()
-		int i = 0
-		while !mySpareBedRoll1.Is3DLoaded() && i < 50
-			utility.wait(0.1)
-			i += 1
-		endWhile
-		debug.trace("[Campfire] mySpareBedRoll1 scale " + mySpareBedRoll1.GetScale())
 		if Setting_BedRollScale != 1.0
 			mySpareBedRoll1.SetScale(Setting_BedRollScale)
 		endif
-		debug.trace("[Campfire] mySpareBedRoll1 scale " + mySpareBedRoll1.GetScale())
         (mySpareBedRoll1 as _Camp_CampTentNPCBedrollScript).Setup(self as CampTent, 1)
 	endif
 	if mySpareBedRoll2Future
 		mySpareBedRoll2 = GetFuture(mySpareBedRoll2Future).get_result()
-		int i = 0
-		while !mySpareBedRoll2.Is3DLoaded() && i < 50
-			utility.wait(0.1)
-			i += 1
-		endWhile
 		if Setting_BedRollScale != 1.0
 			mySpareBedRoll2.SetScale(Setting_BedRollScale)
 		endif
@@ -995,16 +980,13 @@ function GetResults()
 	endif
 	if mySpareBedRoll3Future
 		mySpareBedRoll3 = GetFuture(mySpareBedRoll3Future).get_result()
-		int i = 0
-		while !mySpareBedRoll3.Is3DLoaded() && i < 50
-			utility.wait(0.1)
-			i += 1
-		endWhile
 		if Setting_BedRollScale != 1.0
 			mySpareBedRoll3.SetScale(Setting_BedRollScale)
 		endif
         (mySpareBedRoll3 as _Camp_CampTentNPCBedrollScript).Setup(self as CampTent, 3)
 	endif
+
+	;GenerateDebugReport()
 endFunction
 
 function TakeDown()
@@ -1321,6 +1303,7 @@ function PlaceObject_Lantern3(CampTentEx Extended)
 endFunction
 
 function PlaceObject_SpareBedRoll1(CampTentEx Extended)
+	debug.trace("[Campfire] Queuing placement of Spare Bed Roll 1")
 	mySpareBedRoll1Future = PlacementSystem.PlaceObject(self, TentSystem.GetNPCBedroll(), Extended.PositionRef_Follower1_Bed)
 endFunction
 

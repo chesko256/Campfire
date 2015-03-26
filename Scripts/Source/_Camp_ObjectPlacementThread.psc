@@ -68,6 +68,7 @@ endFunction
 
 Event OnObjectPlacementStart()
 	if thread_queued
+		debug.trace("[Campfire] Thread " + self + " placing form " + _FormToPlace)
 		float[] relative_position = new float[6]
 		relative_position = GetRelativePosition(_RelativeCenterObject, _ObjectPositionReference)
 		ObjectReference result = PlaceAtMeRelative(_Origin, _FormToPlace, _OriginAngle, relative_position, \

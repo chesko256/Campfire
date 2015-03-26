@@ -82,6 +82,7 @@ function Update()
 endFunction
 
 function Initialize()
+	debug.StartStackProfiling()
 	PlacementSystem = CampUtil.GetPlacementSystem()
 	RotateOnStartUp()
 	OriginAng = GetAngleData(self)
@@ -89,6 +90,7 @@ function Initialize()
 	PlacementSystem.wait_all()
 	GetResults()
 	initialized = true
+	debug.StopStackProfiling()
 endFunction
 
 function RotateOnStartUp()
