@@ -955,22 +955,39 @@ function GetResults()
 	endif
 	if myBedRollFuture
 		myBedRoll = GetFuture(myBedRollFuture).get_result()
-		if self.GetDistance(myBedRoll) > 20.0
-			self.MoveTo(myBedRoll)
-		endif
+		self.MoveTo(myBedRoll, afZOffset = -2000.0)
+		debug.trace("[Campfire] my position " + self.GetPositionZ())
+		int i = 0
+		while !self.Is3DLoaded() && i < 50
+			utility.wait(0.1)
+			i += 1
+		endWhile
 		if Setting_BedRollScale != 1.0
 			self.SetScale(Setting_BedRollScale)
 		endif
+		debug.trace("[Campfire] Bed roll final position " + myBedRoll.GetPositionZ())
 	endif
 	if mySpareBedRoll1Future
 		mySpareBedRoll1 = GetFuture(mySpareBedRoll1Future).get_result()
+		int i = 0
+		while !mySpareBedRoll1.Is3DLoaded() && i < 50
+			utility.wait(0.1)
+			i += 1
+		endWhile
+		debug.trace("[Campfire] mySpareBedRoll1 scale " + mySpareBedRoll1.GetScale())
 		if Setting_BedRollScale != 1.0
 			mySpareBedRoll1.SetScale(Setting_BedRollScale)
 		endif
+		debug.trace("[Campfire] mySpareBedRoll1 scale " + mySpareBedRoll1.GetScale())
         (mySpareBedRoll1 as _Camp_CampTentNPCBedrollScript).Setup(self as CampTent, 1)
 	endif
 	if mySpareBedRoll2Future
 		mySpareBedRoll2 = GetFuture(mySpareBedRoll2Future).get_result()
+		int i = 0
+		while !mySpareBedRoll2.Is3DLoaded() && i < 50
+			utility.wait(0.1)
+			i += 1
+		endWhile
 		if Setting_BedRollScale != 1.0
 			mySpareBedRoll2.SetScale(Setting_BedRollScale)
 		endif
@@ -978,6 +995,11 @@ function GetResults()
 	endif
 	if mySpareBedRoll3Future
 		mySpareBedRoll3 = GetFuture(mySpareBedRoll3Future).get_result()
+		int i = 0
+		while !mySpareBedRoll3.Is3DLoaded() && i < 50
+			utility.wait(0.1)
+			i += 1
+		endWhile
 		if Setting_BedRollScale != 1.0
 			mySpareBedRoll3.SetScale(Setting_BedRollScale)
 		endif
@@ -1273,7 +1295,7 @@ function PlaceObject_ExitFront()
 endFunction
 
 function PlaceObject_BedRoll()
-	myBedRollFuture = PlacementSystem.PlaceObject(self, TentSystem.GetPlayerBedroll(), RequiredPositionRef_PlayerBed)
+	myBedRollFuture = PlacementSystem.PlaceObject(self, TentSystem.GetPlayerBedroll(), RequiredPositionRef_PlayerBed, z_pos_offset = 2000.0)
 endFunction
 
 function PlaceObject_Ward()
