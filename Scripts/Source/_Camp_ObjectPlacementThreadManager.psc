@@ -456,7 +456,6 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
                               Float afRotationOffset, Bool abSnapToTerrain,     \
                               Ingredient akIngredient, MiscObject akMiscItem,   \
                               int aiCost)
-    debug.StartStackProfiling()
     ;@TODO: Drop IsInCombat, check for OnHit event instead
     if !PlayerCanPlaceObjects(abPlayerBusyCheck = false)
         StopPlacement()
@@ -547,7 +546,6 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
             endif
         endif
     endif
-    debug.StopStackProfiling()
 endFunction
 
 function UpdateIndicatorPosition(ObjectReference akIndicator, float afDistance, float afHeightOffset = 1.0, float afRotationOffset = 0.0, bool abSnapToTerrain = true)

@@ -540,7 +540,7 @@ endEvent
 ;@Override _Camp_PlaceableObjectBase
 function PlaceObjects()
 	debug.trace("[Campfire] ****$$$$$$$$$$$$$$****** Calling PlaceObjects")
-	parent.PlaceObjects()
+	;parent.PlaceObjects()
 	CampTentEx Extended = self as CampTentEx
 
 	if PositionRef_CenterObjectOverride
