@@ -48,6 +48,16 @@ Required: The player's lying down furniture position reference. }
 
     ObjectReference property RequiredPositionRef_LieDownFurniture auto
 
+### CampTent/PositionRef\_SpouseLieDownFurniture
+
+**DESCRIPTION.**
+
+Required: The spouse's lying down furniture position reference. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_SpouseLieDownFurniture auto
+
 ### CampTent/TentAsset\_ShelterModel
 
 **DESCRIPTION.**

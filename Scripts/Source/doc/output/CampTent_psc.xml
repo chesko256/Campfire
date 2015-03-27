@@ -72,6 +72,18 @@ ObjectReference property RequiredPositionRef_LieDownFurniture auto
 </section>
 <section>
 <title>
+CampTent/PositionRef_SpouseLieDownFurniture</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Required: The spouse's lying down furniture position reference. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+ObjectReference property PositionRef_SpouseLieDownFurniture auto
+</literallayout>
+</section>
+<section>
+<title>
 CampTent/TentAsset_ShelterModel</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
