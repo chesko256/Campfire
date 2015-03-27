@@ -82,16 +82,14 @@ function Update()
 endFunction
 
 function Initialize()
-	debug.StartStackProfiling()
 	PlacementSystem = CampUtil.GetPlacementSystem()
 	RotateOnStartUp()
 	OriginAng = GetAngleData(self)
-	debug.trace("[Campfire] $$$$$$$$$$$$$$ Calling PlaceObjects() from Initialize")
+	PlaceBaseObjects()
 	PlaceObjects()
 	PlacementSystem.wait_all()
 	GetResults()
 	initialized = true
-	debug.StopStackProfiling()
 endFunction
 
 function RotateOnStartUp()
@@ -99,6 +97,10 @@ function RotateOnStartUp()
 endFunction
 
 function PlaceObjects()
+	;Pass
+endFunction
+
+function PlaceBaseObjects()
 	PlaceObject_FireMarkers()
 endFunction
 

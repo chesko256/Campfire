@@ -539,8 +539,6 @@ endEvent
 
 ;@Override _Camp_PlaceableObjectBase
 function PlaceObjects()
-	debug.trace("[Campfire] ****$$$$$$$$$$$$$$****** Calling PlaceObjects")
-	;parent.PlaceObjects()
 	CampTentEx Extended = self as CampTentEx
 
 	if PositionRef_CenterObjectOverride
@@ -715,7 +713,6 @@ function PlaceObjects()
 	PlaceObject_BedRoll()
 	if Extended
 		if Extended.PositionRef_Follower1_Bed
-			debug.trace("[Campfire=============] Calling PlaceObject_SpareBedRoll1")
 			PlaceObject_SpareBedRoll1(Extended)
 		endif
 		if Extended.PositionRef_Follower2_Bed
@@ -958,11 +955,9 @@ function GetResults()
 	if myBedRollFuture
 		myBedRoll = GetFuture(myBedRollFuture).get_result()
 		self.MoveTo(myBedRoll, afZOffset = -2000.0)
-		debug.trace("[Campfire] my position " + self.GetPositionZ())
 		if Setting_BedRollScale != 1.0
 			self.SetScale(Setting_BedRollScale)
 		endif
-		debug.trace("[Campfire] Bed roll final position " + myBedRoll.GetPositionZ())
 	endif
 	if mySpareBedRoll1Future
 		mySpareBedRoll1 = GetFuture(mySpareBedRoll1Future).get_result()
@@ -1303,7 +1298,6 @@ function PlaceObject_Lantern3(CampTentEx Extended)
 endFunction
 
 function PlaceObject_SpareBedRoll1(CampTentEx Extended)
-	debug.trace("[Campfire] Queuing placement of Spare Bed Roll 1")
 	mySpareBedRoll1Future = PlacementSystem.PlaceObject(self, TentSystem.GetNPCBedroll(), Extended.PositionRef_Follower1_Bed)
 endFunction
 
@@ -1332,7 +1326,7 @@ function PlaceObject_Follower1Bow(CampTentEx Extended)
 endFunction
 
 function PlaceObject_Follower1Shield(CampTentEx Extended)
-	myFollowerAMarker_ShieldFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower1_Shield)
+	myFollowerAMarker_ShieldFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower1_Shield, x_local_ang_adjust = 90.0, z_local_ang_adjust = 124.0, inverted_local_y = true, is_propped = true)
 endFunction
 
 function PlaceObject_Follower2MainWeapon(CampTentEx Extended)
@@ -1352,7 +1346,7 @@ function PlaceObject_Follower2Bow(CampTentEx Extended)
 endFunction
 
 function PlaceObject_Follower2Shield(CampTentEx Extended)
-	myFollowerBMarker_ShieldFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower2_Shield)
+	myFollowerBMarker_ShieldFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower2_Shield, x_local_ang_adjust = 90.0, z_local_ang_adjust = 124.0, inverted_local_y = true, is_propped = true)
 endFunction
 
 function PlaceObject_Follower3MainWeapon(CampTentEx Extended)
@@ -1372,7 +1366,7 @@ function PlaceObject_Follower3Bow(CampTentEx Extended)
 endFunction
 
 function PlaceObject_Follower3Shield(CampTentEx Extended)
-	myFollowerCMarker_ShieldFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_Shield)
+	myFollowerCMarker_ShieldFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_Shield, x_local_ang_adjust = 90.0, z_local_ang_adjust = 124.0, inverted_local_y = true, is_propped = true)
 endFunction
 
 state BurningDown
