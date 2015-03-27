@@ -82,6 +82,16 @@ Furniture function GetLieDownMarker(bool bLeft = false, bool bRight = false) glo
 	endif
 endFunction
 
+Furniture function GetSpouseLieDownMarker() global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+
+	return TentAPI._Camp_Bedroll_SpouseF
+endFunction
+
 Furniture function GetPlayerBedroll(bool bLeft = false, bool bRight = false) global
 	_Camp_TentSystem TentAPI = GetAPI()
 	if TentAPI == none

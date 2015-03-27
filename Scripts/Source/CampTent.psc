@@ -55,6 +55,15 @@ ObjectReference property RequiredPositionRef_LieDownFurniture auto
 ;*********/;
 
 ; OPTIONAL PROPERTIES
+;/********p* CampTent/PositionRef_SpouseLieDownFurniture
+* SYNTAX
+*/;
+ObjectReference property PositionRef_SpouseLieDownFurniture auto
+;/* 
+* DESCRIPTION
+{ Required: The spouse's lying down furniture position reference. }
+;*********/;
+
 ;/********p* CampTent/TentAsset_ShelterModel
 * SYNTAX
 */;
@@ -393,6 +402,7 @@ ObjectReference property myClutterFurniture4 auto hidden
 ObjectReference property myClutterFurniture5 auto hidden
 ObjectReference property myPlayerSitMarker auto hidden
 ObjectReference property myPlayerLayDownMarker auto hidden
+ObjectReference property mySpouseLayDownMarker auto hidden
 ObjectReference property myExitFront auto hidden
 ObjectReference property myBedRoll auto hidden
 ObjectReference property mySpareBedRoll1 auto hidden
@@ -458,6 +468,7 @@ ObjectReference property myClutterFurniture4Future auto hidden
 ObjectReference property myClutterFurniture5Future auto hidden
 ObjectReference property myPlayerSitMarkerFuture auto hidden
 ObjectReference property myPlayerLayDownMarkerFuture auto hidden
+ObjectReference property mySpouseLayDownMarkerFuture auto hidden
 ObjectReference property myExitFrontFuture auto hidden
 ObjectReference property myBedRollFuture auto hidden
 ObjectReference property mySpareBedRoll1Future auto hidden
@@ -707,6 +718,9 @@ function PlaceObjects()
 	endif
 	PlaceObject_PlayerSitMarker()
 	PlaceObject_PlayerLayDownMarker()
+	if PositionRef_SpouseLieDownFurniture
+		PlaceObject_SpouseLayDownMarker()
+	endif
 	if PositionRef_FrontExitMarker
 		PlaceObject_ExitFront()
 	endif
@@ -822,6 +836,9 @@ function GetResults()
 	endif
 	if myPlayerLayDownMarkerFuture
 		myPlayerLayDownMarker = GetFuture(myPlayerLayDownMarkerFuture).get_result()
+	endif
+	if mySpouseLayDownMarkerFuture
+		mySpouseLayDownMarker = GetFuture(mySpouseLayDownMarkerFuture).get_result()
 	endif
 	if myExitFrontFuture
 		myExitFront = GetFuture(myExitFrontFuture).get_result()
@@ -1014,6 +1031,7 @@ function TakeDown()
 	TryToDisableAndDeleteRef(myClutterFurniture5)
 	TryToDisableAndDeleteRef(myPlayerSitMarker)
 	TryToDisableAndDeleteRef(myPlayerLayDownMarker)
+	TryToDisableAndDeleteRef(mySpouseLayDownMarker)
 	TryToDisableAndDeleteRef(myExitFront)
 	TryToDisableAndDeleteRef(myBedRoll)
 	TryToDisableAndDeleteRef(myWard)
@@ -1265,6 +1283,10 @@ endFunction
 
 function PlaceObject_PlayerLayDownMarker()
 	myPlayerLayDownMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetLieDownMarker(), RequiredPositionRef_LieDownFurniture, z_local_ang_adjust = 180.0)
+endFunction
+
+function PlaceObject_SpouseLayDownMarker()
+	mySpouseLayDownMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetSpouseLieDownMarker(), PositionRef_SpouseLieDownFurniture)
 endFunction
 
 function PlaceObject_ExitFront()

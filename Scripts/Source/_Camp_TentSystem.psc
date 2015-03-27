@@ -65,6 +65,7 @@ Furniture property _Camp_Bedroll_ActualR auto
 Furniture property _Camp_Bedroll_NPC_F auto
 Furniture property _Camp_Bedroll_NPC_L auto
 Furniture property _Camp_Bedroll_NPC_R auto
+Furniture property _Camp_Bedroll_SpouseF auto
 ImageSpaceModifier property _Camp_FadeDown auto
 ImageSpaceModifier property _Camp_FadeUp auto
 ImageSpaceModifier property _Camp_Black auto
