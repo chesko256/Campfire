@@ -36,6 +36,18 @@ Float property Setting_BedRollScale = 1.0 auto
 </section>
 <section>
 <title>
+CampTent/Setting_BedRollScale</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Optional: The compass direction adjustment applied to the player's sitting position. 0.0 by default. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Float property Setting_PlayerSitAngle = 0.0 auto
+</literallayout>
+</section>
+<section>
+<title>
 CampTent/RequiredPositionRef_PlayerBed</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>

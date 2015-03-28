@@ -27,6 +27,15 @@ Float property Setting_BedRollScale = 1.0 auto
 { Optional: The scale to render the player's and follower's bed rolls. 1.0 by default. }
 ;*********/;
 
+;/********p* CampTent/Setting_BedRollScale
+* SYNTAX
+*/;
+Float property Setting_PlayerSitAngle = 0.0 auto
+;/*
+* DESCRIPTION
+{ Optional: The compass direction adjustment applied to the player's sitting position. 0.0 by default. }
+;*********/;
+
 ;/********p* CampTent/RequiredPositionRef_PlayerBed
 * SYNTAX
 */;
@@ -1278,15 +1287,15 @@ function PlaceObject_PlayerShieldInterior()
 endFunction
 
 function PlaceObject_PlayerSitMarker()
-	myPlayerSitMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetSitMarker(), RequiredPositionRef_SitFurniture)
+	myPlayerSitMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetSitMarker(), RequiredPositionRef_PlayerBed, x_pos_offset = 2.1647, y_pos_offset = -22.7978, z_pos_offset = 5.1221, z_local_ang_adjust = 180.0 + Setting_PlayerSitAngle)
 endFunction
 
 function PlaceObject_PlayerLayDownMarker()
-	myPlayerLayDownMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetLieDownMarker(), RequiredPositionRef_LieDownFurniture, z_local_ang_adjust = 180.0)
+	myPlayerLayDownMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetLieDownMarker(), RequiredPositionRef_PlayerBed, x_pos_offset = 11.4984, y_pos_offset = -20.0768, z_pos_offset = 2.1221, z_local_ang_adjust = 180.0)
 endFunction
 
 function PlaceObject_SpouseLayDownMarker()
-	mySpouseLayDownMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetSpouseLieDownMarker(), PositionRef_SpouseLieDownFurniture)
+	mySpouseLayDownMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetSpouseLieDownMarker(), RequiredPositionRef_PlayerBed, x_pos_offset = -16.8313, y_pos_offset = -7.3676, z_local_ang_adjust = 5.0)
 endFunction
 
 function PlaceObject_ExitFront()

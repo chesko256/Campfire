@@ -18,6 +18,16 @@ Optional: The scale to render the player's and follower's bed rolls. 1.0 by defa
 
     Float property Setting_BedRollScale = 1.0 auto
 
+### CampTent/Setting\_BedRollScale
+
+**DESCRIPTION.**
+
+Optional: The compass direction adjustment applied to the player's sitting position. 0.0 by default. }
+
+**SYNTAX.**
+
+    Float property Setting_PlayerSitAngle = 0.0 auto
+
 ### CampTent/RequiredPositionRef\_PlayerBed
 
 **DESCRIPTION.**
