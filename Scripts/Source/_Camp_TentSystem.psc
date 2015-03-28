@@ -31,7 +31,8 @@ GlobalVariable property _Camp_Setting_TakeOff_Ammo auto
 ;GlobalVariable property _DE_ExposurePoints auto
 GlobalVariable property _Camp_HelpDone_TentActivate auto
 GlobalVariable property _Camp_Setting_Tutorials auto
-GlobalVariable property _DE_TentSeeThru auto
+GlobalVariable property _Camp_TentSeeThru auto
+GlobalVariable property _Camp_SpouseBedrollAvailable auto
 Message property _DE_CampTent_Placed_ACT_Menu auto
 Message property _DE_CampTent2_SitMenu auto
 Message property _DE_CampTent2_SitMenu_Positive auto
@@ -176,10 +177,10 @@ function ShowSitMenu(ObjectReference akTent)
 			_DE_TentSeeThruError.Show()
 		else
 			if TentObject.myTentExterior.IsDisabled()
-				_DE_TentSeeThru.SetValue(1)
+				_Camp_TentSeeThru.SetValue(1)
 				TryToEnableRef(TentObject.myTentExterior, true)
 			else
-				_DE_TentSeeThru.SetValue(2)
+				_Camp_TentSeeThru.SetValue(2)
 				TryToDisableRef(TentObject.myTentExterior, true)
 			endif
 		endif
@@ -234,10 +235,10 @@ function ShowLayMenu(ObjectReference akTent)
 			_DE_TentSeeThruError.Show()
 		else
 			if TentObject.myTentExterior.IsDisabled()
-				_DE_TentSeeThru.SetValue(1)
+				_Camp_TentSeeThru.SetValue(1)
 				TryToEnableRef(TentObject.myTentExterior, true)
 			else
-				_DE_TentSeeThru.SetValue(2)
+				_Camp_TentSeeThru.SetValue(2)
 				TryToDisableRef(TentObject.myTentExterior, true)
 			endif
 		endif
@@ -297,7 +298,7 @@ function PlayerSit(ObjectReference akTent)
 		;endif
 	endif
 	TryToDisableRef(TentObject.myShelterCollider)
-	if _DE_TentSeeThru.GetValueInt() == 2
+	if _Camp_TentSeeThru.GetValueInt() == 2
 		TryToDisableRef(TentObject.myTentExterior, true)
 	endif
 
@@ -348,8 +349,15 @@ function PlayerLieDown(ObjectReference akTent)
 		;endif
 	endif
 	TryToDisableRef(TentObject.myShelterCollider)
-	if _DE_TentSeeThru.GetValueInt() == 2
+	if _Camp_TentSeeThru.GetValueInt() == 2
 		TryToDisableRef(TentObject.myTentExterior, true)
+	endif
+
+	;Can my spouse use my bed roll?
+	if (akTent as CampTent).PositionRef_SpouseLieDownFurniture
+		_Camp_SpouseBedrollAvailable.SetValueInt(2)
+	else
+		_Camp_SpouseBedrollAvailable.SetValueInt(1)
 	endif
 
 	;Start the quest so that the aliases fill and follower packages run.
