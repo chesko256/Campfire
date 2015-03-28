@@ -60,42 +60,6 @@ ObjectReference property RequiredPositionRef_PlayerBed auto
 </section>
 <section>
 <title>
-CampTent/RequiredPositionRef_SitFurniture</title>
-<formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Required: The player's sitting furniture position reference. }
-</para>
-<formalpara><title>SYNTAX</title><para></para></formalpara>
-<literallayout class="monospaced">
-ObjectReference property RequiredPositionRef_SitFurniture auto
-</literallayout>
-</section>
-<section>
-<title>
-CampTent/RequiredPositionRef_LieDownFurniture</title>
-<formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Required: The player's lying down furniture position reference. }
-</para>
-<formalpara><title>SYNTAX</title><para></para></formalpara>
-<literallayout class="monospaced">
-ObjectReference property RequiredPositionRef_LieDownFurniture auto
-</literallayout>
-</section>
-<section>
-<title>
-CampTent/PositionRef_SpouseLieDownFurniture</title>
-<formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Required: The spouse's lying down furniture position reference. }
-</para>
-<formalpara><title>SYNTAX</title><para></para></formalpara>
-<literallayout class="monospaced">
-ObjectReference property PositionRef_SpouseLieDownFurniture auto
-</literallayout>
-</section>
-<section>
-<title>
 CampTent/TentAsset_ShelterModel</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>

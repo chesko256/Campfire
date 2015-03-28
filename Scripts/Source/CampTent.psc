@@ -45,34 +45,6 @@ ObjectReference property RequiredPositionRef_PlayerBed auto
 { Required: The player's bed roll (main interactible) position reference. }
 ;*********/;
 
-;/********p* CampTent/RequiredPositionRef_SitFurniture
-* SYNTAX
-*/;
-ObjectReference property RequiredPositionRef_SitFurniture auto
-;/* 
-* DESCRIPTION
-{ Required: The player's sitting furniture position reference. }
-;*********/;
-
-;/********p* CampTent/RequiredPositionRef_LieDownFurniture
-* SYNTAX
-*/;
-ObjectReference property RequiredPositionRef_LieDownFurniture auto
-;/* 
-* DESCRIPTION
-{ Required: The player's lying down furniture position reference. }
-;*********/;
-
-; OPTIONAL PROPERTIES
-;/********p* CampTent/PositionRef_SpouseLieDownFurniture
-* SYNTAX
-*/;
-ObjectReference property PositionRef_SpouseLieDownFurniture auto
-;/* 
-* DESCRIPTION
-{ Required: The spouse's lying down furniture position reference. }
-;*********/;
-
 ;/********p* CampTent/TentAsset_ShelterModel
 * SYNTAX
 */;
@@ -727,9 +699,7 @@ function PlaceObjects()
 	endif
 	PlaceObject_PlayerSitMarker()
 	PlaceObject_PlayerLayDownMarker()
-	if PositionRef_SpouseLieDownFurniture
-		PlaceObject_SpouseLayDownMarker()
-	endif
+	PlaceObject_SpouseLayDownMarker()
 	if PositionRef_FrontExitMarker
 		PlaceObject_ExitFront()
 	endif

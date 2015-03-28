@@ -32,7 +32,6 @@ GlobalVariable property _Camp_Setting_TakeOff_Ammo auto
 GlobalVariable property _Camp_HelpDone_TentActivate auto
 GlobalVariable property _Camp_Setting_Tutorials auto
 GlobalVariable property _Camp_TentSeeThru auto
-GlobalVariable property _Camp_SpouseBedrollAvailable auto
 Message property _DE_CampTent_Placed_ACT_Menu auto
 Message property _DE_CampTent2_SitMenu auto
 Message property _DE_CampTent2_SitMenu_Positive auto
@@ -351,13 +350,6 @@ function PlayerLieDown(ObjectReference akTent)
 	TryToDisableRef(TentObject.myShelterCollider)
 	if _Camp_TentSeeThru.GetValueInt() == 2
 		TryToDisableRef(TentObject.myTentExterior, true)
-	endif
-
-	;Can my spouse use my bed roll?
-	if (akTent as CampTent).PositionRef_SpouseLieDownFurniture
-		_Camp_SpouseBedrollAvailable.SetValueInt(2)
-	else
-		_Camp_SpouseBedrollAvailable.SetValueInt(1)
 	endif
 
 	;Start the quest so that the aliases fill and follower packages run.
