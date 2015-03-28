@@ -38,36 +38,6 @@ Required: The player's bed roll (main interactible) position reference. }
 
     ObjectReference property RequiredPositionRef_PlayerBed auto
 
-### CampTent/RequiredPositionRef\_SitFurniture
-
-**DESCRIPTION.**
-
-Required: The player's sitting furniture position reference. }
-
-**SYNTAX.**
-
-    ObjectReference property RequiredPositionRef_SitFurniture auto
-
-### CampTent/RequiredPositionRef\_LieDownFurniture
-
-**DESCRIPTION.**
-
-Required: The player's lying down furniture position reference. }
-
-**SYNTAX.**
-
-    ObjectReference property RequiredPositionRef_LieDownFurniture auto
-
-### CampTent/PositionRef\_SpouseLieDownFurniture
-
-**DESCRIPTION.**
-
-Required: The spouse's lying down furniture position reference. }
-
-**SYNTAX.**
-
-    ObjectReference property PositionRef_SpouseLieDownFurniture auto
-
 ### CampTent/TentAsset\_ShelterModel
 
 **DESCRIPTION.**
