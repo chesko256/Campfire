@@ -56,19 +56,16 @@ Static property _Camp_Tent_BedrollHayNoGround03 auto
 Static property _Camp_TentWard auto
 Keyword property ClothingBody auto
 Keyword property ArmorCuirass auto
-Furniture property _Camp_TentSitMarker auto
-Furniture property _Camp_TentSitMarkerSandbox auto
-Furniture property _Camp_TentLayDownMarker auto
-Furniture property _Camp_Bedroll_ActualF auto
-Furniture property _Camp_Bedroll_NPC_F auto
-Furniture property _Camp_Bedroll_SpouseF auto
-Form property DogLayingDownIdleMarker auto hidden
 ImageSpaceModifier property _Camp_FadeDown auto
 ImageSpaceModifier property _Camp_FadeUp auto
 ImageSpaceModifier property _Camp_Black auto
 Sound property ITMGenericArmorUp auto
 Weapon property _Camp_DummyWeapon auto
 Form property BFXFireVol01 auto
+
+ReferenceAlias property Follower1 auto
+ReferenceAlias property Follower2 auto
+ReferenceAlias property Follower3 auto
 
 ;@From OnUpdate on CampTent / CampTentEx
 function UpdateTentUseState(ObjectReference akTent)
@@ -708,14 +705,17 @@ function SetFollowerDisplayMainWeapon(CampTent akTentObject, int aiFollowerBedro
 	if aiFollowerBedrollIndex == 1
 		if akTentObject.myFollowerAMainWeapon
 			akTentObject.myDisplayFollowerAMainWeapon = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerAMarker_MainWeapon, akTentObject.myFollowerAMainWeapon, bDisableInteraction = true)
+			Follower1.GetActorRef().UnequipItem(akTentObject.myFollowerAMainWeapon, abSilent = true)
 		endif
 	elseif aiFollowerBedrollIndex == 2
 		if akTentObject.myFollowerBMainWeapon
 			akTentObject.myDisplayFollowerBMainWeapon = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerBMarker_MainWeapon, akTentObject.myFollowerBMainWeapon, bDisableInteraction = true)
+			Follower2.GetActorRef().UnequipItem(akTentObject.myFollowerBMainWeapon, abSilent = true)
 		endif
 	elseif aiFollowerBedrollIndex == 3
 		if akTentObject.myFollowerCMainWeapon
 			akTentObject.myDisplayFollowerCMainWeapon = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerCMarker_MainWeapon, akTentObject.myFollowerCMainWeapon, bDisableInteraction = true)
+			Follower3.GetActorRef().UnequipItem(akTentObject.myFollowerCMainWeapon, abSilent = true)
 		endif
 	endif
 endFunction
@@ -723,14 +723,17 @@ function SetFollowerDisplayOffHandWeapon(CampTent akTentObject, int aiFollowerBe
 	if aiFollowerBedrollIndex == 1
 		if akTentObject.myFollowerAOffHandWeapon
 			akTentObject.myDisplayFollowerAOffHandWeapon = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerAMarker_OffHandWeapon, akTentObject.myFollowerAOffHandWeapon, bDisableInteraction = true)
+			Follower1.GetActorRef().UnequipItem(akTentObject.myFollowerAOffHandWeapon, abSilent = true)
 		endif
 	elseif aiFollowerBedrollIndex == 2
 		if akTentObject.myFollowerBOffHandWeapon
 			akTentObject.myDisplayFollowerBOffHandWeapon = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerBMarker_OffHandWeapon, akTentObject.myFollowerBOffHandWeapon, bDisableInteraction = true)
+			Follower2.GetActorRef().UnequipItem(akTentObject.myFollowerBOffHandWeapon, abSilent = true)
 		endif
 	elseif aiFollowerBedrollIndex == 3
 		if akTentObject.myFollowerCOffHandWeapon
 			akTentObject.myDisplayFollowerCOffHandWeapon = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerCMarker_OffHandWeapon, akTentObject.myFollowerCOffHandWeapon, bDisableInteraction = true)
+			Follower3.GetActorRef().UnequipItem(akTentObject.myFollowerCOffHandWeapon, abSilent = true)
 		endif
 	endif
 endFunction
@@ -738,14 +741,17 @@ function SetFollowerDisplayBigWeapon(CampTent akTentObject, int aiFollowerBedrol
 	if aiFollowerBedrollIndex == 1
 		if akTentObject.myFollowerABigWeapon
 			akTentObject.myDisplayFollowerABigWeapon = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerAMarker_BigWeapon, akTentObject.myFollowerABigWeapon, bDisableInteraction = true)
+			Follower1.GetActorRef().UnequipItem(akTentObject.myFollowerABigWeapon, abSilent = true)
 		endif
 	elseif aiFollowerBedrollIndex == 2
 		if akTentObject.myFollowerBBigWeapon
 			akTentObject.myDisplayFollowerBBigWeapon = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerBMarker_BigWeapon, akTentObject.myFollowerBBigWeapon, bDisableInteraction = true)
+			Follower2.GetActorRef().UnequipItem(akTentObject.myFollowerBBigWeapon, abSilent = true)
 		endif
 	elseif aiFollowerBedrollIndex == 3
 		if akTentObject.myFollowerCBigWeapon
 			akTentObject.myDisplayFollowerCBigWeapon = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerCMarker_BigWeapon, akTentObject.myFollowerCBigWeapon, bDisableInteraction = true)
+			Follower3.GetActorRef().UnequipItem(akTentObject.myFollowerCBigWeapon, abSilent = true)
 		endif
 	endif
 endFunction
@@ -753,14 +759,17 @@ function SetFollowerDisplayBowWeapon(CampTent akTentObject, int aiFollowerBedrol
 	if aiFollowerBedrollIndex == 1
 		if akTentObject.myFollowerABow
 			akTentObject.myDisplayFollowerABow = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerAMarker_Bow, akTentObject.myFollowerABow, bDisableInteraction = true)
+			Follower1.GetActorRef().UnequipItem(akTentObject.myFollowerABow, abSilent = true)
 		endif
 	elseif aiFollowerBedrollIndex == 2
 		if akTentObject.myFollowerBBow
 			akTentObject.myDisplayFollowerBBow = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerBMarker_Bow, akTentObject.myFollowerBBow, bDisableInteraction = true)
+			Follower2.GetActorRef().UnequipItem(akTentObject.myFollowerBBow, abSilent = true)
 		endif
 	elseif aiFollowerBedrollIndex == 3
 		if akTentObject.myFollowerCBow
 			akTentObject.myDisplayFollowerCBow = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerCMarker_Bow, akTentObject.myFollowerCBow, bDisableInteraction = true)
+			Follower3.GetActorRef().UnequipItem(akTentObject.myFollowerCBow, abSilent = true)
 		endif
 	endif
 endFunction
@@ -768,14 +777,17 @@ function SetFollowerDisplayShield(CampTent akTentObject, int aiFollowerBedrollIn
 	if aiFollowerBedrollIndex == 1
 		if akTentObject.myFollowerAShield
 			akTentObject.myDisplayFollowerAShield = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerAMarker_Shield, akTentObject.myFollowerAShield, bDisableInteraction = true)
+			Follower1.GetActorRef().UnequipItem(akTentObject.myFollowerAShield, abSilent = true)
 		endif
 	elseif aiFollowerBedrollIndex == 2
 		if akTentObject.myFollowerBShield
 			akTentObject.myDisplayFollowerBShield = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerBMarker_Shield, akTentObject.myFollowerBShield, bDisableInteraction = true)
+			Follower2.GetActorRef().UnequipItem(akTentObject.myFollowerBShield, abSilent = true)
 		endif
 	elseif aiFollowerBedrollIndex == 3
 		if akTentObject.myFollowerCShield
 			akTentObject.myDisplayFollowerCShield = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerCMarker_Shield, akTentObject.myFollowerCShield, bDisableInteraction = true)
+			Follower3.GetActorRef().UnequipItem(akTentObject.myFollowerCShield, abSilent = true)
 		endif
 	endif
 endFunction
@@ -784,15 +796,18 @@ function UnDisplayFollowerMainWeapon(CampTent akTentObject, int aiFollowerBedrol
 		if akTentObject.myFollowerAMainWeapon
 			akActor.EquipItem(akTentObject.myFollowerAMainWeapon, abSilent = true)
 		endif
-		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerAMainWeapon)	
+		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerAMainWeapon)
+		akTentObject.myFollowerAMainWeapon = None
 	elseif aiFollowerBedrollIndex == 2
 		if akTentObject.myFollowerBMainWeapon
 			akActor.EquipItem(akTentObject.myFollowerBMainWeapon, abSilent = true)
+			akTentObject.myFollowerBMainWeapon = None
 		endif
 		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerBMainWeapon)
 	elseif aiFollowerBedrollIndex == 3
 		if akTentObject.myFollowerCMainWeapon
 			akActor.EquipItem(akTentObject.myFollowerCMainWeapon, abSilent = true)
+			akTentObject.myFollowerCMainWeapon = None
 		endif
 		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerCMainWeapon)
 	endif
@@ -801,16 +816,19 @@ function UnDisplayFollowerOffHandWeapon(CampTent akTentObject, int aiFollowerBed
 	if aiFollowerBedrollIndex == 1
 		if akTentObject.myFollowerAOffHandWeapon
 			akActor.EquipItem(akTentObject.myFollowerAOffHandWeapon, abSilent = true)
+			akTentObject.myFollowerAOffHandWeapon = None
 		endif
 		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerAOffHandWeapon)	
 	elseif aiFollowerBedrollIndex == 2
 		if akTentObject.myFollowerBOffHandWeapon
 			akActor.EquipItem(akTentObject.myFollowerBOffHandWeapon, abSilent = true)
+			akTentObject.myFollowerBOffHandWeapon = None
 		endif
 		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerBOffHandWeapon)
 	elseif aiFollowerBedrollIndex == 3
 		if akTentObject.myFollowerCOffHandWeapon
 			akActor.EquipItem(akTentObject.myFollowerCOffHandWeapon, abSilent = true)
+			akTentObject.myFollowerCOffHandWeapon = None
 		endif
 		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerCOffHandWeapon)
 	endif
@@ -819,16 +837,19 @@ function UnDisplayFollowerBigWeapon(CampTent akTentObject, int aiFollowerBedroll
 	if aiFollowerBedrollIndex == 1
 		if akTentObject.myFollowerABigWeapon
 			akActor.EquipItem(akTentObject.myFollowerABigWeapon, abSilent = true)
+			akTentObject.myFollowerABigWeapon = None
 		endif
 		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerABigWeapon)	
 	elseif aiFollowerBedrollIndex == 2
 		if akTentObject.myFollowerBBigWeapon
 			akActor.EquipItem(akTentObject.myFollowerBBigWeapon, abSilent = true)
+			akTentObject.myFollowerBBigWeapon = None
 		endif
 		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerBBigWeapon)
 	elseif aiFollowerBedrollIndex == 3
 		if akTentObject.myFollowerCBigWeapon
 			akActor.EquipItem(akTentObject.myFollowerCBigWeapon, abSilent = true)
+			akTentObject.myFollowerCBigWeapon = None
 		endif
 		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerCBigWeapon)
 	endif
@@ -837,16 +858,19 @@ function UnDisplayFollowerBowWeapon(CampTent akTentObject, int aiFollowerBedroll
 	if aiFollowerBedrollIndex == 1
 		if akTentObject.myFollowerABow
 			akActor.EquipItem(akTentObject.myFollowerABow, abSilent = true)
+			akTentObject.myFollowerABow = None
 		endif
 		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerABow)	
 	elseif aiFollowerBedrollIndex == 2
 		if akTentObject.myFollowerBBow
 			akActor.EquipItem(akTentObject.myFollowerBBow, abSilent = true)
+			akTentObject.myFollowerBBow = None
 		endif
 		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerBBow)
 	elseif aiFollowerBedrollIndex == 3
 		if akTentObject.myFollowerCBow
 			akActor.EquipItem(akTentObject.myFollowerCBow, abSilent = true)
+			akTentObject.myFollowerCBow = None
 		endif
 		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerCBow)
 	endif
@@ -855,16 +879,19 @@ function UnDisplayFollowerShield(CampTent akTentObject, int aiFollowerBedrollInd
 	if aiFollowerBedrollIndex == 1
 		if akTentObject.myFollowerAShield
 			akActor.EquipItem(akTentObject.myFollowerAShield, abSilent = true)
+			akTentObject.myFollowerAShield = None
 		endif
 		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerAShield)	
 	elseif aiFollowerBedrollIndex == 2
 		if akTentObject.myFollowerBShield
 			akActor.EquipItem(akTentObject.myFollowerBShield, abSilent = true)
+			akTentObject.myFollowerBShield = None
 		endif
 		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerBShield)
 	elseif aiFollowerBedrollIndex == 3
 		if akTentObject.myFollowerCShield
 			akActor.EquipItem(akTentObject.myFollowerCShield, abSilent = true)
+			akTentObject.myFollowerCShield = None
 		endif
 		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerCShield)
 	endif
@@ -872,6 +899,9 @@ endFunction
 
 function PackTent(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
+	PlayerRef.AddItem(TentObject.Required_InventoryItem, abSilent = true)
+	ITMGenericArmorUp.Play(akTent)
+
 	;Are any of the bed rolls in use?
 	if TentObject.myBedRoll
 		if TentObject.myBedRoll.IsFurnitureInUse()
@@ -926,8 +956,6 @@ function PackTent(ObjectReference akTent)
 	TentObject.TakeDown()
 	
 	wait(0.2)
-	PlayerRef.AddItem(TentObject.Required_InventoryItem, abSilent = true)
-	ITMGenericArmorUp.Play(akTent)
 
 	;Finally, delete myself
 	TryToDisableAndDeleteRef(akTent)

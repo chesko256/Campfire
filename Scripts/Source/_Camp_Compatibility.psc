@@ -549,8 +549,6 @@ function VanillaGameLoadUp()
 	;PlacementSystem.LargeFire = Game.GetFormFromFile(0x000D61B6, "Skyrim.esm")
 
 	TreeReachTreeStump01 = Game.GetFormFromFile(0x000B8A75, "Skyrim.esm") as Tree
-	;@TODO: Change to ESM
-	TentSys.DogLayingDownIdleMarker = Game.GetFormFromFile(0x02039AF3, "Campfire.esp")
 endFunction
 
 

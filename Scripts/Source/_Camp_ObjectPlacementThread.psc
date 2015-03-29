@@ -70,6 +70,7 @@ Event OnObjectPlacementStart()
 	if thread_queued
 		float[] relative_position = new float[6]
 		relative_position = GetRelativePosition(_RelativeCenterObject, _ObjectPositionReference)
+		debug.trace("[Campfire] position reference " + _ObjectPositionReference)
 		ObjectReference result = PlaceAtMeRelative(_Origin, _FormToPlace, _OriginAngle, relative_position, \
 				_ZGlobalAngAdjust, _XLocalAngAdjust, _YLocalAngAdjust, _ZLocalAngAdjust, \
 				_ZHangingOffset, _InvertedLocalY, _XPosOffset, _YPosOffset, _ZPosOffset, _InitiallyDisabled, _IsPropped, _IsHanging)

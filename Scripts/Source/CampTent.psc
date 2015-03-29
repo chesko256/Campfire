@@ -538,6 +538,18 @@ ObjectReference property myDisplayFollowerCBow auto hidden
 bool property bLanternLit = false auto hidden
 bool property bGettingUp = false auto hidden
 
+; Some frequently used resources need to be declared locally in order to
+; keep TentSystem from becoming overloaded with requests.
+Static XMarker
+Furniture _Camp_Bedroll_ActualF
+Furniture _Camp_Bedroll_NPC_F
+Furniture _Camp_Bedroll_SpouseF
+Furniture _Camp_TentLayDownMarker
+Furniture _Camp_TentSitMarker
+Furniture _Camp_TentSitMarkerSandbox
+Static _Camp_TentWard
+Form DogLayingDownIdleMarker
+
 function Update()
 	UpdateTentUseState(self)
 endFunction
@@ -549,6 +561,27 @@ endEvent
 ;@Override _Camp_PlaceableObjectBase
 function PlaceObjects()
 	CampTentEx Extended = self as CampTentEx
+
+	; Cache shared resources locally
+	; @TODO: Change to Campfire.esm
+	XMarker = Game.GetFormFromFile(0x0000003B, "Skyrim.esm") as Static
+	DogLayingDownIdleMarker = Game.GetFormFromFile(0x0010F801, "Skyrim.esm")
+	;/_Camp_Bedroll_ActualF = Game.GetFormFromFile(0x02007EFA, "Campfire.esm") as Furniture 
+	_Camp_Bedroll_NPC_F = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
+	_Camp_Bedroll_SpouseF = Game.GetFormFromFile(0x0203900D, "Campfire.esm") as Furniture
+	_Camp_TentLayDownMarker = Game.GetFormFromFile(0x02036587, "Campfire.esm") as Furniture
+	_Camp_TentSitMarker = Game.GetFormFromFile(0x02036586, "Campfire.esm") as Furniture
+	_Camp_TentSitMarkerSandbox = Game.GetFormFromFile(0x0203232B, "Campfire.esm") as Furniture
+	_Camp_TentWard = Game.GetFormFromFile(0x0203BE8E, "Campfire.esm") as Static
+	/;
+	_Camp_Bedroll_ActualF = Game.GetFormFromFile(0x02007EFA, "Campfire.esp") as Furniture 
+	_Camp_Bedroll_NPC_F = Game.GetFormFromFile(0x02038CBF, "Campfire.esp") as Furniture
+	_Camp_Bedroll_SpouseF = Game.GetFormFromFile(0x0203900D, "Campfire.esp") as Furniture
+	_Camp_TentLayDownMarker = Game.GetFormFromFile(0x02036587, "Campfire.esp") as Furniture
+	_Camp_TentSitMarker = Game.GetFormFromFile(0x02036586, "Campfire.esp") as Furniture
+	_Camp_TentSitMarkerSandbox = Game.GetFormFromFile(0x0203232B, "Campfire.esp") as Furniture
+	_Camp_TentWard = Game.GetFormFromFile(0x0203BE8E, "Campfire.esp") as Static
+	
 
 	if PositionRef_CenterObjectOverride
 		CenterObject = PositionRef_CenterObjectOverride
@@ -841,6 +874,9 @@ function GetResults()
 	endif
 	if mySpouseLayDownMarkerFuture
 		mySpouseLayDownMarker = GetFuture(mySpouseLayDownMarkerFuture).get_result()
+		if Setting_BedRollScale != 1.0
+			mySpouseLayDownMarker.SetScale(Setting_BedRollScale)
+		endif
 	endif
 	if myAnimalLayDownMarkerFuture
 		myAnimalLayDownMarker = GetFuture(myAnimalLayDownMarkerFuture).get_result()
@@ -1246,75 +1282,75 @@ function PlaceObject_ClutterFurniture5(CampTentEx Extended)
 endFunction
 
 function PlaceObject_PlayerMainWeapon()
-	myPlayerMarker_MainWeaponFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), PositionRef_Player_WeaponMainHand)
+	myPlayerMarker_MainWeaponFuture = PlacementSystem.PlaceObject(self, XMarker, PositionRef_Player_WeaponMainHand)
 endFunction
 
 function PlaceObject_PlayerOffHandWeapon()
-	myPlayerMarker_OffHandWeaponFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), PositionRef_Player_WeaponOffHand)
+	myPlayerMarker_OffHandWeaponFuture = PlacementSystem.PlaceObject(self, XMarker, PositionRef_Player_WeaponOffHand)
 endFunction
 
 function PlaceObject_PlayerBigWeapon()
-	myPlayerMarker_BigWeaponFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), PositionRef_Player_WeaponTwoHand)
+	myPlayerMarker_BigWeaponFuture = PlacementSystem.PlaceObject(self, XMarker, PositionRef_Player_WeaponTwoHand)
 endFunction
 
 function PlaceObject_PlayerBow()
-	myPlayerMarker_BowFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), PositionRef_Player_WeaponBow)
+	myPlayerMarker_BowFuture = PlacementSystem.PlaceObject(self, XMarker, PositionRef_Player_WeaponBow)
 endFunction
 
 function PlaceObject_PlayerShield()
-	myPlayerMarker_ShieldFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), PositionRef_Player_Shield, x_local_ang_adjust = 90.0, z_local_ang_adjust = 124.0, inverted_local_y = true, is_propped = true)
+	myPlayerMarker_ShieldFuture = PlacementSystem.PlaceObject(self, XMarker, PositionRef_Player_Shield, x_local_ang_adjust = 90.0, z_local_ang_adjust = 124.0, inverted_local_y = true, is_propped = true)
 endFunction
 
 function PlaceObject_PlayerCuirass()
-	myPlayerMarker_CuirassFuture= PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), PositionRef_Player_ArmorCuirass)
+	myPlayerMarker_CuirassFuture= PlacementSystem.PlaceObject(self, XMarker, PositionRef_Player_ArmorCuirass)
 endFunction
 
 function PlaceObject_PlayerHelm()
-	myPlayerMarker_HelmFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), PositionRef_Player_ArmorHelm)
+	myPlayerMarker_HelmFuture = PlacementSystem.PlaceObject(self, XMarker, PositionRef_Player_ArmorHelm)
 endFunction
 
 function PlaceObject_PlayerBoots()
-	myPlayerMarker_BootsFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), PositionRef_Player_ArmorBoots)
+	myPlayerMarker_BootsFuture = PlacementSystem.PlaceObject(self, XMarker, PositionRef_Player_ArmorBoots)
 endFunction
 
 function PlaceObject_PlayerGauntlets()
-	myPlayerMarker_GauntletsFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), PositionRef_Player_ArmorGauntlets)
+	myPlayerMarker_GauntletsFuture = PlacementSystem.PlaceObject(self, XMarker, PositionRef_Player_ArmorGauntlets)
 endFunction
 
 function PlaceObject_PlayerBackpack()
-	myPlayerMarker_BackpackFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), PositionRef_Player_Backpack)
+	myPlayerMarker_BackpackFuture = PlacementSystem.PlaceObject(self, XMarker, PositionRef_Player_Backpack)
 endFunction
 
 function PlaceObject_PlayerShieldInterior()
-	myPlayerMarker_ShieldInteriorFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), PositionRef_Player_ShieldInterior)
+	myPlayerMarker_ShieldInteriorFuture = PlacementSystem.PlaceObject(self, XMarker, PositionRef_Player_ShieldInterior)
 endFunction
 
 function PlaceObject_PlayerSitMarker()
-	myPlayerSitMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetSitMarker(), RequiredPositionRef_PlayerBed, x_pos_offset = 12.1647, y_pos_offset = -22.7978, z_pos_offset = 5.1221, z_local_ang_adjust = 180.0 + Setting_PlayerSitAngle)
+	myPlayerSitMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_TentSitMarker, RequiredPositionRef_PlayerBed, x_pos_offset = 12.1647, y_pos_offset = -22.7978, z_pos_offset = 5.1221, z_local_ang_adjust = 180.0 + Setting_PlayerSitAngle)
 endFunction
 
 function PlaceObject_PlayerLayDownMarker()
-	myPlayerLayDownMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetLieDownMarker(), RequiredPositionRef_PlayerBed, x_pos_offset = 11.4984, y_pos_offset = -20.0768, z_pos_offset = 2.1221, z_local_ang_adjust = 180.0)
+	myPlayerLayDownMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_TentLayDownMarker, RequiredPositionRef_PlayerBed, x_pos_offset = 11.4984, y_pos_offset = -20.0768, z_pos_offset = 2.1221, z_local_ang_adjust = 180.0)
 endFunction
 
 function PlaceObject_SpouseLayDownMarker()
-	mySpouseLayDownMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetSpouseLieDownMarker(), RequiredPositionRef_PlayerBed, x_pos_offset = -16.8313, y_pos_offset = -7.3676, z_local_ang_adjust = 5.0)
+	mySpouseLayDownMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_Bedroll_SpouseF, RequiredPositionRef_PlayerBed, x_pos_offset = -16.8313, y_pos_offset = -7.3676, z_local_ang_adjust = 5.0)
 endFunction
 
 function PlaceObject_AnimalLayDownMarker()
-	mySpouseLayDownMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetAnimalLieDownMarker(), PositionRef_AnimalLayDownMarker)
+	mySpouseLayDownMarkerFuture = PlacementSystem.PlaceObject(self, DogLayingDownIdleMarker, PositionRef_AnimalLayDownMarker)
 endFunction
 
 function PlaceObject_ExitFront()
-	myExitFrontFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), PositionRef_FrontExitMarker, initially_disabled = true)
+	myExitFrontFuture = PlacementSystem.PlaceObject(self, XMarker, PositionRef_FrontExitMarker, initially_disabled = true)
 endFunction
 
 function PlaceObject_BedRoll()
-	myBedRollFuture = PlacementSystem.PlaceObject(self, TentSystem.GetPlayerBedroll(), RequiredPositionRef_PlayerBed, z_pos_offset = 2000.0)
+	myBedRollFuture = PlacementSystem.PlaceObject(self, _Camp_Bedroll_ActualF, RequiredPositionRef_PlayerBed, z_pos_offset = 2000.0)
 endFunction
 
 function PlaceObject_Ward()
-	myWardFuture = PlacementSystem.PlaceObject(self, TentSystem.GetWard(), PositionRef_Ward, x_local_ang_adjust = -90.0, is_propped = true, initially_disabled = true)
+	myWardFuture = PlacementSystem.PlaceObject(self, _Camp_TentWard, PositionRef_Ward, x_local_ang_adjust = -90.0, is_propped = true, initially_disabled = true)
 endFunction
 
 function PlaceObject_Lantern1()
@@ -1336,85 +1372,85 @@ function PlaceObject_Lantern3(CampTentEx Extended)
 endFunction
 
 function PlaceObject_SpareBedRoll1(CampTentEx Extended)
-	mySpareBedRoll1Future = PlacementSystem.PlaceObject(self, TentSystem.GetNPCBedroll(), Extended.PositionRef_Follower1_Bed)
+	mySpareBedRoll1Future = PlacementSystem.PlaceObject(self, _Camp_Bedroll_NPC_F, Extended.PositionRef_Follower1_Bed)
 endFunction
 
 function PlaceObject_SpareBedRoll2(CampTentEx Extended)
-	mySpareBedRoll2Future = PlacementSystem.PlaceObject(self, TentSystem.GetNPCBedroll(), Extended.PositionRef_Follower2_Bed)
+	mySpareBedRoll2Future = PlacementSystem.PlaceObject(self, _Camp_Bedroll_NPC_F, Extended.PositionRef_Follower2_Bed)
 endFunction
 
 function PlaceObject_SpareBedRoll3(CampTentEx Extended)
-	mySpareBedRoll3Future = PlacementSystem.PlaceObject(self, TentSystem.GetNPCBedroll(), Extended.PositionRef_Follower3_Bed)
+	mySpareBedRoll3Future = PlacementSystem.PlaceObject(self, _Camp_Bedroll_NPC_F, Extended.PositionRef_Follower3_Bed)
 endFunction
 
 function PlaceObject_SpareBedRoll1SitMarker(CampTentEx Extended)
-	mySpareBedRoll1SitMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetFollowerSitMarker(), Extended.PositionRef_Follower1_Bed, x_pos_offset = 2.1647, y_pos_offset = -22.7978, z_pos_offset = 5.1221, z_local_ang_adjust = 180.0)
+	mySpareBedRoll1SitMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_TentSitMarkerSandbox, Extended.PositionRef_Follower1_Bed, x_pos_offset = 2.1647, y_pos_offset = -22.7978, z_pos_offset = 5.1221, z_local_ang_adjust = 180.0)
 endFunction
 function PlaceObject_SpareBedRoll2SitMarker(CampTentEx Extended)
-	mySpareBedRoll2SitMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetFollowerSitMarker(), Extended.PositionRef_Follower2_Bed, x_pos_offset = 2.1647, y_pos_offset = -22.7978, z_pos_offset = 5.1221, z_local_ang_adjust = 180.0)
+	mySpareBedRoll2SitMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_TentSitMarkerSandbox, Extended.PositionRef_Follower2_Bed, x_pos_offset = 2.1647, y_pos_offset = -22.7978, z_pos_offset = 5.1221, z_local_ang_adjust = 180.0)
 endFunction
 function PlaceObject_SpareBedRoll3SitMarker(CampTentEx Extended)
-	mySpareBedRoll3SitMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetFollowerSitMarker(), Extended.PositionRef_Follower3_Bed, x_pos_offset = 2.1647, y_pos_offset = -22.7978, z_pos_offset = 5.1221, z_local_ang_adjust = 180.0)
+	mySpareBedRoll3SitMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_TentSitMarkerSandbox, Extended.PositionRef_Follower3_Bed, x_pos_offset = 2.1647, y_pos_offset = -22.7978, z_pos_offset = 5.1221, z_local_ang_adjust = 180.0)
 endFunction
 
 function PlaceObject_Follower1MainWeapon(CampTentEx Extended)
-	myFollowerAMarker_MainWeaponFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower1_WeaponMainHand)
+	myFollowerAMarker_MainWeaponFuture = PlacementSystem.PlaceObject(self, XMarker, Extended.PositionRef_Follower1_WeaponMainHand)
 endFunction
 
 function PlaceObject_Follower1OffHandWeapon(CampTentEx Extended)
-	myFollowerAMarker_OffHandWeaponFuture= PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower1_WeaponOffHand)
+	myFollowerAMarker_OffHandWeaponFuture= PlacementSystem.PlaceObject(self, XMarker, Extended.PositionRef_Follower1_WeaponOffHand)
 endFunction
 
 function PlaceObject_Follower1BigWeapon(CampTentEx Extended)
-	myFollowerAMarker_BigWeaponFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower1_WeaponTwoHand)
+	myFollowerAMarker_BigWeaponFuture = PlacementSystem.PlaceObject(self, XMarker, Extended.PositionRef_Follower1_WeaponTwoHand)
 endFunction
 
 function PlaceObject_Follower1Bow(CampTentEx Extended)
-	myFollowerAMarker_BowFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower1_WeaponBow)
+	myFollowerAMarker_BowFuture = PlacementSystem.PlaceObject(self, XMarker, Extended.PositionRef_Follower1_WeaponBow)
 endFunction
 
 function PlaceObject_Follower1Shield(CampTentEx Extended)
-	myFollowerAMarker_ShieldFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower1_Shield, x_local_ang_adjust = 90.0, z_local_ang_adjust = 124.0, inverted_local_y = true, is_propped = true)
+	myFollowerAMarker_ShieldFuture = PlacementSystem.PlaceObject(self, XMarker, Extended.PositionRef_Follower1_Shield, x_local_ang_adjust = 90.0, z_local_ang_adjust = 124.0, inverted_local_y = true, is_propped = true)
 endFunction
 
 function PlaceObject_Follower2MainWeapon(CampTentEx Extended)
-	myFollowerBMarker_MainWeaponFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower2_WeaponMainHand)
+	myFollowerBMarker_MainWeaponFuture = PlacementSystem.PlaceObject(self, XMarker, Extended.PositionRef_Follower2_WeaponMainHand)
 endFunction
 
 function PlaceObject_Follower2OffHandWeapon(CampTentEx Extended)
-	myFollowerBMarker_OffHandWeaponFuture= PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower2_WeaponOffHand)
+	myFollowerBMarker_OffHandWeaponFuture= PlacementSystem.PlaceObject(self, XMarker, Extended.PositionRef_Follower2_WeaponOffHand)
 endFunction
 
 function PlaceObject_Follower2BigWeapon(CampTentEx Extended)
-	myFollowerBMarker_BigWeaponFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower2_WeaponTwoHand)
+	myFollowerBMarker_BigWeaponFuture = PlacementSystem.PlaceObject(self, XMarker, Extended.PositionRef_Follower2_WeaponTwoHand)
 endFunction
 
 function PlaceObject_Follower2Bow(CampTentEx Extended)
-	myFollowerBMarker_BowFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower2_WeaponBow)
+	myFollowerBMarker_BowFuture = PlacementSystem.PlaceObject(self, XMarker, Extended.PositionRef_Follower2_WeaponBow)
 endFunction
 
 function PlaceObject_Follower2Shield(CampTentEx Extended)
-	myFollowerBMarker_ShieldFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower2_Shield, x_local_ang_adjust = 90.0, z_local_ang_adjust = 124.0, inverted_local_y = true, is_propped = true)
+	myFollowerBMarker_ShieldFuture = PlacementSystem.PlaceObject(self, XMarker, Extended.PositionRef_Follower2_Shield, x_local_ang_adjust = 90.0, z_local_ang_adjust = 124.0, inverted_local_y = true, is_propped = true)
 endFunction
 
 function PlaceObject_Follower3MainWeapon(CampTentEx Extended)
-	myFollowerCMarker_MainWeaponFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_WeaponMainHand)
+	myFollowerCMarker_MainWeaponFuture = PlacementSystem.PlaceObject(self, XMarker, Extended.PositionRef_Follower3_WeaponMainHand)
 endFunction
 
 function PlaceObject_Follower3OffHandWeapon(CampTentEx Extended)
-	myFollowerCMarker_OffHandWeaponFuture= PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_WeaponOffHand)
+	myFollowerCMarker_OffHandWeaponFuture= PlacementSystem.PlaceObject(self, XMarker, Extended.PositionRef_Follower3_WeaponOffHand)
 endFunction
 
 function PlaceObject_Follower3BigWeapon(CampTentEx Extended)
-	myFollowerCMarker_BigWeaponFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_WeaponTwoHand)
+	myFollowerCMarker_BigWeaponFuture = PlacementSystem.PlaceObject(self, XMarker, Extended.PositionRef_Follower3_WeaponTwoHand)
 endFunction
 
 function PlaceObject_Follower3Bow(CampTentEx Extended)
-	myFollowerCMarker_BowFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_WeaponBow)
+	myFollowerCMarker_BowFuture = PlacementSystem.PlaceObject(self, XMarker, Extended.PositionRef_Follower3_WeaponBow)
 endFunction
 
 function PlaceObject_Follower3Shield(CampTentEx Extended)
-	myFollowerCMarker_ShieldFuture = PlacementSystem.PlaceObject(self, TentSystem.GetXMarker(), Extended.PositionRef_Follower3_Shield, x_local_ang_adjust = 90.0, z_local_ang_adjust = 124.0, inverted_local_y = true, is_propped = true)
+	myFollowerCMarker_ShieldFuture = PlacementSystem.PlaceObject(self, XMarker, Extended.PositionRef_Follower3_Shield, x_local_ang_adjust = 90.0, z_local_ang_adjust = 124.0, inverted_local_y = true, is_propped = true)
 endFunction
 
 state BurningDown
