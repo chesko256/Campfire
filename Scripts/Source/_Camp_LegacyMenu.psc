@@ -3,6 +3,7 @@ scriptname _Camp_LegacyMenu extends ActiveMagicEffect
 ;Messages
 Message property _Camp_legacyconfig_root auto
 Message property _Camp_legacyconfig_camping auto
+Message property _Camp_legacyconfig_camping2 auto
 Message property _Camp_legacyconfig_tents auto
 Message property _Camp_legacyconfig_tents2 auto
 Message property _Camp_legacyconfig_advanced auto
@@ -30,6 +31,10 @@ Message property _Camp_legacyconfig_showboots_on auto
 Message property _Camp_legacyconfig_showboots_off auto
 Message property _Camp_legacyconfig_removeammo_on auto
 Message property _Camp_legacyconfig_removeammo_off auto
+Message property _Camp_legacyconfig_followersinteract_on auto
+Message property _Camp_legacyconfig_followersinteract_off auto
+Message property _Camp_legacyconfig_followersremovegear_on auto
+Message property _Camp_legacyconfig_followersremovegear_off auto
 Message property _Camp_legacyconfig_advancedplacement_on auto
 Message property _Camp_legacyconfig_advancedplacement_off auto
 Message property _Camp_legacyconfig_placementthreads auto
@@ -53,6 +58,8 @@ GlobalVariable property _Camp_Setting_TakeOff_Gauntlets auto
 GlobalVariable property _Camp_Setting_TakeOff_Helm auto
 GlobalVariable property _Camp_Setting_TakeOff_Boots auto
 GlobalVariable property _Camp_Setting_TakeOff_Ammo auto
+GlobalVariable property _Camp_Setting_FollowersUseCampsite auto
+GlobalVariable property _Camp_Setting_FollowersRemoveGearInTents auto
 GlobalVariable property _Camp_Setting_AdvancedPlacement auto
 GlobalVariable property _Camp_Setting_MaxThreads auto
 GlobalVariable property _Camp_Setting_TrackFollowers auto
@@ -97,10 +104,27 @@ function menu_camping()
         MenuHandler_Toggle(_Camp_legacyconfig_removegeartents_on, _Camp_legacyconfig_removegeartents_off, _Camp_Setting_CampingArmorTakeOff)
         menu_camping()
     elseif i == 1
-        MenuHandler_Toggle(_Camp_legacyconfig_manuallighting_on, _Camp_legacyconfig_manuallighting_off, _Camp_Setting_ManualFireLighting)
+        MenuHandler_Toggle(_Camp_legacyconfig_followersremovegear_on, _Camp_legacyconfig_followersremovegear_off, _Camp_Setting_FollowersRemoveGearInTents)
         menu_camping()
     elseif i == 2
+        MenuHandler_Toggle(_Camp_legacyconfig_followersinteract_on, _Camp_legacyconfig_followersinteract_off, _Camp_Setting_FollowersUseCampsite)
+        menu_camping()
+    elseif i == 3
+        menu_camping2()
+    elseif i == 4
+        menu_root()
+    endif
+endFunction
+
+function menu_camping2()
+    int i = _Camp_legacyconfig_camping2.Show()
+    if i == 0
+        MenuHandler_Toggle(_Camp_legacyconfig_manuallighting_on, _Camp_legacyconfig_manuallighting_off, _Camp_Setting_ManualFireLighting)
+        menu_camping2()
+    elseif i == 1
         MenuHandler_Toggle(_Camp_legacyconfig_campingillegal_on, _Camp_legacyconfig_campingillegal_off, _Camp_Setting_Legality)
+        menu_camping2()
+    elseif i == 2
         menu_camping()
     elseif i == 3
         menu_root()

@@ -13,6 +13,8 @@ GlobalVariable property _Camp_Setting_TakeOff_Weapons auto
 GlobalVariable property _Camp_Setting_TakeOff_Shield auto
 GlobalVariable property _Camp_Setting_TakeOff_Ammo auto
 GlobalVariable property _Camp_Setting_TrackFollowers auto
+GlobalVariable property _Camp_Setting_FollowersUseCampsite auto
+GlobalVariable property _Camp_Setting_FollowersRemoveGearInTents auto
 GlobalVariable property _Camp_Setting_MaxThreads auto
 GlobalVariable property _Camp_Setting_EquipTentOutfit auto
 GlobalVariable property _Camp_Setting_Legality auto
@@ -56,6 +58,9 @@ int Gameplay_SettingCampingPlaceBackpack_OID
 int Gameplay_SettingCampingPlaceWeapons_OID
 int Gameplay_SettingCampingPlaceShield_OID
 int Gameplay_SettingCampingPlaceAmmo_OID
+
+int Gameplay_SettingCampingFollowersInteract_OID
+int Gameplay_SettingCampingFollowersRemoveGear_OID
 
 int Gameplay_HotkeyCreateItem_OID
 int Gameplay_HotkeyBuildCampfire_OID
@@ -183,6 +188,18 @@ function PageReset_Gameplay()
 		Gameplay_SettingCampingPlaceHelm_OID = AddToggleOption("$CampfireGameplaySettingShowHelm", false, OPTION_FLAG_DISABLED)
 		Gameplay_SettingCampingPlaceBoots_OID = AddToggleOption("$CampfireGameplaySettingShowBoots", false, OPTION_FLAG_DISABLED)
 	endif
+
+	AddHeaderOption("$CampfireGameplayHeaderFollowerTentDisplay")
+	if _Camp_Setting_FollowersUseCampsite.GetValueInt() == 2
+		Gameplay_SettingCampingFollowersInteract_OID = AddToggleOption("$CampfireGameplaySettingFollowersInteract", true)
+	else
+		Gameplay_SettingCampingFollowersInteract_OID = AddToggleOption("$CampfireGameplaySettingFollowersInteract", false)
+	endif
+	if _Camp_Setting_FollowersRemoveGearInTents.GetValueInt() == 2
+		Gameplay_SettingCampingFollowersRemoveGear_OID = AddToggleOption("$CampfireGameplaySettingShowFollowerGear", true)
+	else
+		Gameplay_SettingCampingFollowersRemoveGear_OID = AddToggleOption("$CampfireGameplaySettingShowFollowerGear", false)
+	endif
 endFunction
 
 function PageReset_Advanced()
@@ -268,6 +285,11 @@ event OnOptionHighlight(int option)
 		SetInfoText("$CampfireOptionHighlightShowShield")
 	elseif option == Gameplay_SettingCampingPlaceAmmo_OID
 		SetInfoText("$CampfireOptionHighlightShowAmmo")
+
+	elseif option == Gameplay_SettingCampingFollowersInteract_OID
+		SetInfoText("$CampfireOptionHighlightFollowersInteract")
+	elseif option == Gameplay_SettingCampingFollowersRemoveGear_OID
+		SetInfoText("$CampfireOptionHighlightShowFollowerGear")
 
 	elseif option == Gameplay_HotkeyCreateItem_OID
 		SetInfoText("$CampfireOptionHighlightHKCreateItem")
@@ -379,6 +401,22 @@ event OnOptionSelect(int option)
 			_Camp_Setting_TakeOff_Backpack.SetValueInt(2)
 			SetToggleOptionValue(Gameplay_SettingCampingPlaceBackpack_OID, true)
 		endif
+	elseif option == Gameplay_SettingCampingFollowersInteract_OID
+		if _Camp_Setting_FollowersUseCampsite.GetValueInt() == 2
+			_Camp_Setting_FollowersUseCampsite.SetValueInt(1)
+			SetToggleOptionValue(Gameplay_SettingCampingFollowersInteract_OID, false)
+		else
+			_Camp_Setting_FollowersUseCampsite.SetValueInt(2)
+			SetToggleOptionValue(Gameplay_SettingCampingFollowersInteract_OID, true)
+		endif
+	elseif option == Gameplay_SettingCampingFollowersRemoveGear_OID
+		if _Camp_Setting_FollowersRemoveGearInTents.GetValueInt() == 2
+			_Camp_Setting_FollowersRemoveGearInTents.SetValueInt(1)
+			SetToggleOptionValue(Gameplay_SettingCampingFollowersRemoveGear_OID, false)
+		else
+			_Camp_Setting_FollowersRemoveGearInTents.SetValueInt(2)
+			SetToggleOptionValue(Gameplay_SettingCampingFollowersRemoveGear_OID, true)
+		endif
 	elseif option == Advanced_SettingAdvancedPlacement_OID
 		if _Camp_Setting_AdvancedPlacement.GetValueInt() == 2
 			_Camp_Setting_AdvancedPlacement.SetValueInt(1)
@@ -466,6 +504,12 @@ event OnOptionDefault(int option)
 	elseif option == Gameplay_SettingCampingPlaceBackpack_OID
 		_Camp_Setting_TakeOff_Backpack.SetValueInt(2)
 		SetToggleOptionValue(Gameplay_SettingCampingPlaceBackpack_OID, true)
+	elseif option == Gameplay_SettingCampingFollowersInteract_OID
+		_Camp_Setting_FollowersUseCampsite.SetValueInt(2)
+		SetToggleOptionValue(Gameplay_SettingCampingFollowersInteract_OID, true)
+	elseif option == Gameplay_SettingCampingFollowersRemoveGear_OID
+		_Camp_Setting_FollowersRemoveGearInTents.SetValueInt(2)
+		SetToggleOptionValue(Gameplay_SettingCampingFollowersRemoveGear_OID, true)
 	elseif option == Advanced_SettingAdvancedPlacement_OID
 		_Camp_Setting_AdvancedPlacement.SetValueInt(2)
 		SetToggleOptionValue(Advanced_SettingAdvancedPlacement_OID, true)
