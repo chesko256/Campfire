@@ -59,6 +59,16 @@ GlobalVariable property _Camp_Setting_TrackFollowers auto
 GlobalVariable property _Camp_Setting_Tutorials auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 
+;References
+Actor property PlayerRef auto
+ReferenceAlias property Follower1 auto
+ReferenceAlias property Follower2 auto
+ReferenceAlias property Follower3 auto
+ReferenceAlias property Animal auto
+
+;Spells
+Spell property _Camp_FollowerDetectSpell auto
+
 Event OnEffectStart(Actor akTarget, Actor akCaster)
     if akCaster == Game.GetPlayer()
         menu_root()
@@ -150,6 +160,15 @@ function menu_advanced()
         menu_advanced()
     elseif i == 2
         MenuHandler_Toggle(_Camp_legacyconfig_detectfollowers_on, _Camp_legacyconfig_detectfollowers_off, _Camp_Setting_TrackFollowers)
+        if _Camp_Setting_TrackFollowers.GetValueInt() == 2
+            PlayerRef.AddSpell(_Camp_FollowerDetectSpell, false)
+        else
+            PlayerRef.RemoveSpell(_Camp_FollowerDetectSpell)
+            Follower1.Clear()
+            Follower2.Clear()
+            Follower3.Clear()
+            Animal.Clear()
+        endif
         menu_advanced()
     elseif i == 3
         menu_root()

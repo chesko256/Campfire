@@ -59,14 +59,8 @@ Keyword property ArmorCuirass auto
 Furniture property _Camp_TentSitMarker auto
 Furniture property _Camp_TentSitMarkerSandbox auto
 Furniture property _Camp_TentLayDownMarker auto
-Furniture property _Camp_TentLayDownMarkerL auto
-Furniture property _Camp_TentLayDownMarkerR auto
 Furniture property _Camp_Bedroll_ActualF auto
-Furniture property _Camp_Bedroll_ActualL auto
-Furniture property _Camp_Bedroll_ActualR auto
 Furniture property _Camp_Bedroll_NPC_F auto
-Furniture property _Camp_Bedroll_NPC_L auto
-Furniture property _Camp_Bedroll_NPC_R auto
 Furniture property _Camp_Bedroll_SpouseF auto
 ImageSpaceModifier property _Camp_FadeDown auto
 ImageSpaceModifier property _Camp_FadeUp auto
@@ -94,16 +88,12 @@ function UpdateTentUseState(ObjectReference akTent)
 		_Camp_Black.PopTo(_Camp_FadeUp)
 		_Camp_Tent_Combat.Show()
 		CleanUpTent(akTent)
-		;Stop follower functionality
-		self.Stop()
 	elseif !(PlayerRef.GetSitState() == 2 || PlayerRef.GetSitState() == 3) && !TentObject.bGettingUp
 		;Player getting up from sitting or lying down
 		if TentObject.myExitFront && TentObject.myExitFront.IsEnabled() && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
 			PlayerRef.SplineTranslateToRef(TentObject.myExitFront, 1.0, 65.0)
 		endif
 		CleanUpTent(akTent)
-		;Stop follower functionality
-		self.Stop()
 	else
 		TentObject.RegisterForSingleUpdate(0.5)
 	endif
@@ -944,8 +934,12 @@ endFunction
 
 function CleanUpTent(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
+	
+	;Stop follower functionality
 	ConditionVars.IsPlayerSittingInTent = false
 	ConditionVars.IsPlayerLayingInTent = false
+	self.Stop()
+	
 	Game.EnablePlayerControls()
 	UnDisplayShield_Player(TentObject)
 	UnDisplayWeapons_Player(TentObject)

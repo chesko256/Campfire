@@ -3,6 +3,7 @@ scriptname _Camp_Main extends Quest
 import CampUtil
 
 Actor property PlayerRef auto
+Quest property _Camp_FollowerQuest auto
 ReferenceAlias property PlayerAlias auto
 _Camp_Compatibility property Compatibility auto
 
@@ -16,6 +17,9 @@ Quest property CampfireObjectPlacementSystem auto
 event OnInit()
 	if !self.IsRunning()
 		self.Start()
+	endif
+	if !_Camp_FollowerQuest.IsRunning()
+		_Camp_FollowerQuest.Start()
 	endif
 	;if !_Camp_CampingCrimeTracking.IsRunning()
 	;	_Camp_CampingCrimeTracking.Start()

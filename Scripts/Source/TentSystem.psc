@@ -76,20 +76,13 @@ Furniture function GetFollowerSitMarker() global
 	return TentAPI._Camp_TentSitMarkerSandbox
 endFunction
 
-Furniture function GetLieDownMarker(bool bLeft = false, bool bRight = false) global
+Furniture function GetLieDownMarker() global
 	_Camp_TentSystem TentAPI = GetAPI()
 	if TentAPI == none
 		RaiseTentAPIError()
 		return None
 	endif
-
-	if !bLeft && !bRight
-		return TentAPI._Camp_TentLayDownMarker
-	elseif bLeft
-		return TentAPI._Camp_TentLayDownMarkerL
-	elseif bRight
-		return TentAPI._Camp_TentLayDownMarkerR
-	endif
+	return TentAPI._Camp_TentLayDownMarker
 endFunction
 
 Furniture function GetSpouseLieDownMarker() global
@@ -98,24 +91,16 @@ Furniture function GetSpouseLieDownMarker() global
 		RaiseTentAPIError()
 		return None
 	endif
-
 	return TentAPI._Camp_Bedroll_SpouseF
 endFunction
 
-Furniture function GetPlayerBedroll(bool bLeft = false, bool bRight = false) global
+Furniture function GetPlayerBedroll() global
 	_Camp_TentSystem TentAPI = GetAPI()
 	if TentAPI == none
 		RaiseTentAPIError()
 		return None
 	endif
-
-	if !bLeft && !bRight
-		return TentAPI._Camp_Bedroll_ActualF
-	elseif bLeft
-		return TentAPI._Camp_Bedroll_ActualL
-	elseif bRight
-		return TentAPI._Camp_Bedroll_ActualR
-	endif
+	return TentAPI._Camp_Bedroll_ActualF
 endFunction
 
 Furniture function GetNPCBedroll(bool bLeft = false, bool bRight = false) global
@@ -124,14 +109,7 @@ Furniture function GetNPCBedroll(bool bLeft = false, bool bRight = false) global
 		RaiseTentAPIError()
 		return None
 	endif
-
-	if !bLeft && !bRight
-		return TentAPI._Camp_Bedroll_NPC_F
-	elseif bLeft
-		return TentAPI._Camp_Bedroll_NPC_L
-	elseif bRight
-		return TentAPI._Camp_Bedroll_NPC_R
-	endif
+	return TentAPI._Camp_Bedroll_NPC_F
 endFunction
 
 Weapon function GetFollowerMainWeapon(CampTent akTentObject, int aiFollowerBedrollIndex) global
