@@ -389,6 +389,9 @@ ObjectReference property myBedRoll auto hidden
 ObjectReference property mySpareBedRoll1 auto hidden
 ObjectReference property mySpareBedRoll2 auto hidden
 ObjectReference property mySpareBedRoll3 auto hidden
+ObjectReference property mySpareBedRoll1SitMarker auto hidden
+ObjectReference property mySpareBedRoll2SitMarker auto hidden
+ObjectReference property mySpareBedRoll3SitMarker auto hidden
 ObjectReference property myWard auto hidden
 ObjectReference property myShelterCollider auto hidden
 
@@ -455,6 +458,9 @@ ObjectReference property myBedRollFuture auto hidden
 ObjectReference property mySpareBedRoll1Future auto hidden
 ObjectReference property mySpareBedRoll2Future auto hidden
 ObjectReference property mySpareBedRoll3Future auto hidden
+ObjectReference property mySpareBedRoll1SitMarkerFuture auto hidden
+ObjectReference property mySpareBedRoll2SitMarkerFuture auto hidden
+ObjectReference property mySpareBedRoll3SitMarkerFuture auto hidden
 ObjectReference property myWardFuture auto hidden
 ObjectReference property myShelterColliderFuture auto hidden
 
@@ -707,12 +713,15 @@ function PlaceObjects()
 	if Extended
 		if Extended.PositionRef_Follower1_Bed
 			PlaceObject_SpareBedRoll1(Extended)
+			PlaceObject_SpareBedRoll1SitMarker(Extended)
 		endif
 		if Extended.PositionRef_Follower2_Bed
 			PlaceObject_SpareBedRoll2(Extended)
+			PlaceObject_SpareBedRoll2SitMarker(Extended)
 		endif
 		if Extended.PositionRef_Follower3_Bed
 			PlaceObject_SpareBedRoll3(Extended)
+			PlaceObject_SpareBedRoll3SitMarker(Extended)
 		endif
 	endif
 endFunction
@@ -961,6 +970,7 @@ function GetResults()
 			mySpareBedRoll1.SetScale(Setting_BedRollScale)
 		endif
         (mySpareBedRoll1 as _Camp_CampTentNPCBedrollScript).Setup(self as CampTent, 1)
+        mySpareBedRoll1SitMarker = GetFuture(mySpareBedRoll1SitMarkerFuture).get_result()
 	endif
 	if mySpareBedRoll2Future
 		mySpareBedRoll2 = GetFuture(mySpareBedRoll2Future).get_result()
@@ -968,6 +978,7 @@ function GetResults()
 			mySpareBedRoll2.SetScale(Setting_BedRollScale)
 		endif
         (mySpareBedRoll2 as _Camp_CampTentNPCBedrollScript).Setup(self as CampTent, 2)
+        mySpareBedRoll2SitMarker = GetFuture(mySpareBedRoll2SitMarkerFuture).get_result()
 	endif
 	if mySpareBedRoll3Future
 		mySpareBedRoll3 = GetFuture(mySpareBedRoll3Future).get_result()
@@ -975,6 +986,7 @@ function GetResults()
 			mySpareBedRoll3.SetScale(Setting_BedRollScale)
 		endif
         (mySpareBedRoll3 as _Camp_CampTentNPCBedrollScript).Setup(self as CampTent, 3)
+        mySpareBedRoll3SitMarker = GetFuture(mySpareBedRoll3SitMarkerFuture).get_result()
 	endif
 
 	;GenerateDebugReport()
@@ -1026,6 +1038,9 @@ function TakeDown()
 	TryToDisableAndDeleteRef(mySpareBedRoll1)
 	TryToDisableAndDeleteRef(mySpareBedRoll2)
 	TryToDisableAndDeleteRef(mySpareBedRoll3)
+	TryToDisableAndDeleteRef(mySpareBedRoll1SitMarker)
+	TryToDisableAndDeleteRef(mySpareBedRoll2SitMarker)
+	TryToDisableAndDeleteRef(mySpareBedRoll3SitMarker)
 	TryToDisableAndDeleteRef(mySnowTent)
 	TryToDisableAndDeleteRef(myAshTent)
 	TryToDisableAndDeleteRef(myNormalTent)
@@ -1257,7 +1272,7 @@ function PlaceObject_PlayerShieldInterior()
 endFunction
 
 function PlaceObject_PlayerSitMarker()
-	myPlayerSitMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetSitMarker(), RequiredPositionRef_PlayerBed, x_pos_offset = 2.1647, y_pos_offset = -22.7978, z_pos_offset = 5.1221, z_local_ang_adjust = 180.0 + Setting_PlayerSitAngle)
+	myPlayerSitMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetSitMarker(), RequiredPositionRef_PlayerBed, x_pos_offset = 12.1647, y_pos_offset = -22.7978, z_pos_offset = 5.1221, z_local_ang_adjust = 180.0 + Setting_PlayerSitAngle)
 endFunction
 
 function PlaceObject_PlayerLayDownMarker()
@@ -1308,6 +1323,16 @@ endFunction
 
 function PlaceObject_SpareBedRoll3(CampTentEx Extended)
 	mySpareBedRoll3Future = PlacementSystem.PlaceObject(self, TentSystem.GetNPCBedroll(), Extended.PositionRef_Follower3_Bed)
+endFunction
+
+function PlaceObject_SpareBedRoll1SitMarker(CampTentEx Extended)
+	mySpareBedRoll1SitMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetFollowerSitMarker(), Extended.PositionRef_Follower1_Bed, x_pos_offset = 2.1647, y_pos_offset = -22.7978, z_pos_offset = 5.1221, z_local_ang_adjust = 180.0)
+endFunction
+function PlaceObject_SpareBedRoll2SitMarker(CampTentEx Extended)
+	mySpareBedRoll2SitMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetFollowerSitMarker(), Extended.PositionRef_Follower2_Bed, x_pos_offset = 2.1647, y_pos_offset = -22.7978, z_pos_offset = 5.1221, z_local_ang_adjust = 180.0)
+endFunction
+function PlaceObject_SpareBedRoll3SitMarker(CampTentEx Extended)
+	mySpareBedRoll3SitMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetFollowerSitMarker(), Extended.PositionRef_Follower3_Bed, x_pos_offset = 2.1647, y_pos_offset = -22.7978, z_pos_offset = 5.1221, z_local_ang_adjust = 180.0)
 endFunction
 
 function PlaceObject_Follower1MainWeapon(CampTentEx Extended)

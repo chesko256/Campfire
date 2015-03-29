@@ -66,6 +66,16 @@ Furniture function GetSitMarker() global
 	return TentAPI._Camp_TentSitMarker
 endFunction
 
+Furniture function GetFollowerSitMarker() global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+
+	return TentAPI._Camp_TentSitMarkerSandbox
+endFunction
+
 Furniture function GetLieDownMarker(bool bLeft = false, bool bRight = false) global
 	_Camp_TentSystem TentAPI = GetAPI()
 	if TentAPI == none

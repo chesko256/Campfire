@@ -15,6 +15,7 @@ import CampUtil
 ; TO KEEP IN UTIL
 _Camp_Compatibility property Compatibility auto
 pDBEntranceQuestScript property DBEntranceQuestScript auto
+_Camp_ConditionValues property ConditionVars auto
 Quest property DBEntranceQuest auto
 Actor property PlayerRef auto
 Armor property _Camp_WalkingStickShield auto
@@ -56,6 +57,7 @@ Static property _Camp_TentWard auto
 Keyword property ClothingBody auto
 Keyword property ArmorCuirass auto
 Furniture property _Camp_TentSitMarker auto
+Furniture property _Camp_TentSitMarkerSandbox auto
 Furniture property _Camp_TentLayDownMarker auto
 Furniture property _Camp_TentLayDownMarkerL auto
 Furniture property _Camp_TentLayDownMarkerR auto
@@ -286,6 +288,7 @@ function PlayerSit(ObjectReference akTent)
 	;TryToMakeFollowersUse()
 
 	CampTent TentObject = akTent as CampTent
+	ConditionVars.IsPlayerSittingInTent = true
 	Game.ForceThirdPerson()
 	TentObject.myPlayerSitMarker.Activate(PlayerRef)
 	if _DE_Setting_CampingArmorTakeOff.GetValueInt() == 2
@@ -333,9 +336,7 @@ function PlayerLieDown(ObjectReference akTent)
 		endif
 	endif
 
-	;@TODO: Come back to this
-	;TryToMakeFollowersUse()
-
+	ConditionVars.IsPlayerLayingInTent = true
 	Game.ForceThirdPerson()
 	(TentObject.myPlayerLayDownMarker as ObjectReference).Activate(PlayerRef)
 	if _DE_Setting_CampingArmorTakeOff.GetValueInt() == 2
@@ -943,6 +944,8 @@ endFunction
 
 function CleanUpTent(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
+	ConditionVars.IsPlayerSittingInTent = false
+	ConditionVars.IsPlayerLayingInTent = false
 	Game.EnablePlayerControls()
 	UnDisplayShield_Player(TentObject)
 	UnDisplayWeapons_Player(TentObject)
