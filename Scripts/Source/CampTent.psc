@@ -1507,12 +1507,10 @@ state BurningDown
 		if myTent
 			ObjectReference rubble = PlaceAndWaitFor3DLoaded(myTent, PlacementSystem._Camp_ObjectRubbleFire)
 			rubble.SetScale(0.8)
-			rubble.MoveTo(rubble, afZOffset = -48.0)
 			myTent.PlaceAtMe(PlacementSystem._Camp_CollapseFireball)
 		else
 			ObjectReference rubble = PlaceAndWaitFor3DLoaded(self, PlacementSystem._Camp_ObjectRubbleFire)
 			rubble.SetScale(0.8)
-			rubble.MoveTo(rubble, afZOffset = -48.0)
 			self.PlaceAtMe(PlacementSystem._Camp_CollapseFireball)
 		endif
 		TakeDown()

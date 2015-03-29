@@ -7,6 +7,7 @@ import TentSystem
 Actor property PlayerRef auto
 message property _Camp_Tent_FollowerBedroll auto
 Armor property _Camp_WalkingStickShield auto
+GlobalVariable property _Camp_Setting_FollowersRemoveGearInTents auto
 
 ; Set by CampTent at runtime
 CampTent property TentObject auto hidden
@@ -36,7 +37,9 @@ Event OnActivate(ObjectReference akActionRef)
 			my_actor = akActionRef as Actor
 			debug.trace("[Campfire] OnActivate my_actor " + my_actor)
 			self.Activate(my_actor)
-			DisplayGear(my_actor)
+			if _Camp_Setting_FollowersRemoveGearInTents.GetValueInt() == 2
+				DisplayGear(my_actor)
+			endif
 			utility.wait(0.5)
 			self.BlockActivation()
 			RegisterForSingleUpdate(1)
@@ -48,7 +51,9 @@ event OnUpdate()
 	if self.IsFurnitureInUse()
 		RegisterForSingleUpdate(1)
 	else
-		UnDisplayGear()
+		if _Camp_Setting_FollowersRemoveGearInTents.GetValueInt() == 2
+			UnDisplayGear()
+		endif
 		in_use = false
 	endif
 endEvent
