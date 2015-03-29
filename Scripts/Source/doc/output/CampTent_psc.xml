@@ -192,6 +192,18 @@ ObjectReference property PositionRef_FrontExitMarker auto
 </section>
 <section>
 <title>
+CampTent/PositionRef_AnimalLayDownMarker</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Optional: Position reference of marker that animals will lie down at. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+ObjectReference property PositionRef_AnimalLayDownMarker auto
+</literallayout>
+</section>
+<section>
+<title>
 CampTent/PositionRef_Shelter</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>

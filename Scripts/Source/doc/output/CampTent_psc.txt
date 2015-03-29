@@ -148,6 +148,16 @@ Optional: Position reference of marker to move the player to when exiting a smal
 
     ObjectReference property PositionRef_FrontExitMarker auto
 
+### CampTent/PositionRef\_AnimalLayDownMarker
+
+**DESCRIPTION.**
+
+Optional: Position reference of marker that animals will lie down at. }
+
+**SYNTAX.**
+
+    ObjectReference property PositionRef_AnimalLayDownMarker auto
+
 ### CampTent/PositionRef\_Shelter
 
 **DESCRIPTION.**
