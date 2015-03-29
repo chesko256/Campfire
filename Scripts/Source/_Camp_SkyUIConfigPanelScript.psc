@@ -190,15 +190,20 @@ function PageReset_Gameplay()
 	endif
 
 	AddHeaderOption("$CampfireGameplayHeaderFollowerTentDisplay")
-	if _Camp_Setting_FollowersUseCampsite.GetValueInt() == 2
-		Gameplay_SettingCampingFollowersInteract_OID = AddToggleOption("$CampfireGameplaySettingFollowersInteract", true)
+	if _Camp_Setting_TrackFollowers.GetValueInt() == 2
+		if _Camp_Setting_FollowersUseCampsite.GetValueInt() == 2
+			Gameplay_SettingCampingFollowersInteract_OID = AddToggleOption("$CampfireGameplaySettingFollowersInteract", true)
+		else
+			Gameplay_SettingCampingFollowersInteract_OID = AddToggleOption("$CampfireGameplaySettingFollowersInteract", false)
+		endif
+		if _Camp_Setting_FollowersRemoveGearInTents.GetValueInt() == 2
+			Gameplay_SettingCampingFollowersRemoveGear_OID = AddToggleOption("$CampfireGameplaySettingShowFollowerGear", true)
+		else
+			Gameplay_SettingCampingFollowersRemoveGear_OID = AddToggleOption("$CampfireGameplaySettingShowFollowerGear", false)
+		endif
 	else
-		Gameplay_SettingCampingFollowersInteract_OID = AddToggleOption("$CampfireGameplaySettingFollowersInteract", false)
-	endif
-	if _Camp_Setting_FollowersRemoveGearInTents.GetValueInt() == 2
-		Gameplay_SettingCampingFollowersRemoveGear_OID = AddToggleOption("$CampfireGameplaySettingShowFollowerGear", true)
-	else
-		Gameplay_SettingCampingFollowersRemoveGear_OID = AddToggleOption("$CampfireGameplaySettingShowFollowerGear", false)
+		Gameplay_SettingCampingFollowersInteract_OID = AddToggleOption("$CampfireGameplaySettingFollowersInteract", false, OPTION_FLAG_DISABLED)		
+		Gameplay_SettingCampingFollowersRemoveGear_OID = AddToggleOption("$CampfireGameplaySettingShowFollowerGear", false, OPTION_FLAG_DISABLED)
 	endif
 endFunction
 

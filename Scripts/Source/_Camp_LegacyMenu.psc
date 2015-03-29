@@ -221,6 +221,7 @@ function menu_troubleshooting()
         if b
             Troubleshooting_StuckPlacement()
         endif
+        menu_troubleshooting()
     elseif i == 1
         menu_help()
     endif
