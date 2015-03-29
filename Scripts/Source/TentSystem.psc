@@ -94,6 +94,15 @@ Furniture function GetSpouseLieDownMarker() global
 	return TentAPI._Camp_Bedroll_SpouseF
 endFunction
 
+Form function GetAnimalLieDownMarker() global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+	return TentAPI.DogLayingDownIdleMarker
+endFunction
+
 Furniture function GetPlayerBedroll() global
 	_Camp_TentSystem TentAPI = GetAPI()
 	if TentAPI == none

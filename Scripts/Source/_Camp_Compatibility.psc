@@ -19,6 +19,7 @@ _Camp_SkyUIConfigPanelScript property CampConfig Auto 				;SkyUI Configuration s
 _Camp_LegalAreaCheck property Legal Auto 							;Camping Legality script
 _Camp_Main property Campfire auto 									;Main script
 _Camp_ObjectPlacementThreadManager property PlacementSystem auto 	;Placement System Script
+_Camp_TentSystem property TentSys auto
 
 ;#Official DLC=================================================================
 bool property isDLC1Loaded auto	hidden						;Dawnguard
@@ -548,6 +549,8 @@ function VanillaGameLoadUp()
 	;PlacementSystem.LargeFire = Game.GetFormFromFile(0x000D61B6, "Skyrim.esm")
 
 	TreeReachTreeStump01 = Game.GetFormFromFile(0x000B8A75, "Skyrim.esm") as Tree
+	;@TODO: Change to ESM
+	TentSys.DogLayingDownIdleMarker = Game.GetFormFromFile(0x02039AF3, "Campfire.esp")
 endFunction
 
 

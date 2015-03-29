@@ -62,6 +62,7 @@ Furniture property _Camp_TentLayDownMarker auto
 Furniture property _Camp_Bedroll_ActualF auto
 Furniture property _Camp_Bedroll_NPC_F auto
 Furniture property _Camp_Bedroll_SpouseF auto
+Form property DogLayingDownIdleMarker auto hidden
 ImageSpaceModifier property _Camp_FadeDown auto
 ImageSpaceModifier property _Camp_FadeUp auto
 ImageSpaceModifier property _Camp_Black auto

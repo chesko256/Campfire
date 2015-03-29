@@ -144,6 +144,15 @@ ObjectReference property PositionRef_FrontExitMarker auto
 { Optional: Position reference of marker to move the player to when exiting a small tent. }
 ;*********/;
 
+;/********p* CampTent/PositionRef_AnimalLayDownMarker
+* SYNTAX
+*/;
+ObjectReference property PositionRef_AnimalLayDownMarker auto
+;/*
+* DESCRIPTION
+{ Optional: Position reference of marker that animals will lie down at. }
+;*********/;
+
 ;/********p* CampTent/PositionRef_Shelter
 * SYNTAX
 */;
@@ -384,6 +393,7 @@ ObjectReference property myClutterFurniture5 auto hidden
 ObjectReference property myPlayerSitMarker auto hidden
 ObjectReference property myPlayerLayDownMarker auto hidden
 ObjectReference property mySpouseLayDownMarker auto hidden
+ObjectReference property myAnimalLayDownMarker auto hidden
 ObjectReference property myExitFront auto hidden
 ObjectReference property myBedRoll auto hidden
 ObjectReference property mySpareBedRoll1 auto hidden
@@ -453,6 +463,7 @@ ObjectReference property myClutterFurniture5Future auto hidden
 ObjectReference property myPlayerSitMarkerFuture auto hidden
 ObjectReference property myPlayerLayDownMarkerFuture auto hidden
 ObjectReference property mySpouseLayDownMarkerFuture auto hidden
+ObjectReference property myAnimalLayDownMarkerFuture auto hidden
 ObjectReference property myExitFrontFuture auto hidden
 ObjectReference property myBedRollFuture auto hidden
 ObjectReference property mySpareBedRoll1Future auto hidden
@@ -706,6 +717,9 @@ function PlaceObjects()
 	PlaceObject_PlayerSitMarker()
 	PlaceObject_PlayerLayDownMarker()
 	PlaceObject_SpouseLayDownMarker()
+	if PositionRef_AnimalLayDownMarker
+		PlaceObject_AnimalLayDownMarker()
+	endif
 	if PositionRef_FrontExitMarker
 		PlaceObject_ExitFront()
 	endif
@@ -827,6 +841,9 @@ function GetResults()
 	endif
 	if mySpouseLayDownMarkerFuture
 		mySpouseLayDownMarker = GetFuture(mySpouseLayDownMarkerFuture).get_result()
+	endif
+	if myAnimalLayDownMarkerFuture
+		myAnimalLayDownMarker = GetFuture(myAnimalLayDownMarkerFuture).get_result()
 	endif
 	if myExitFrontFuture
 		myExitFront = GetFuture(myExitFrontFuture).get_result()
@@ -1023,6 +1040,7 @@ function TakeDown()
 	TryToDisableAndDeleteRef(myPlayerSitMarker)
 	TryToDisableAndDeleteRef(myPlayerLayDownMarker)
 	TryToDisableAndDeleteRef(mySpouseLayDownMarker)
+	TryToDisableAndDeleteRef(myAnimalLayDownMarker)
 	TryToDisableAndDeleteRef(myExitFront)
 	TryToDisableAndDeleteRef(myBedRoll)
 	TryToDisableAndDeleteRef(myWard)
@@ -1281,6 +1299,10 @@ endFunction
 
 function PlaceObject_SpouseLayDownMarker()
 	mySpouseLayDownMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetSpouseLieDownMarker(), RequiredPositionRef_PlayerBed, x_pos_offset = -16.8313, y_pos_offset = -7.3676, z_local_ang_adjust = 5.0)
+endFunction
+
+function PlaceObject_AnimalLayDownMarker()
+	mySpouseLayDownMarkerFuture = PlacementSystem.PlaceObject(self, TentSystem.GetAnimalLieDownMarker(), PositionRef_AnimalLayDownMarker)
 endFunction
 
 function PlaceObject_ExitFront()
