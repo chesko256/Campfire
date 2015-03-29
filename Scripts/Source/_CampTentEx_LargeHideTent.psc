@@ -4,7 +4,7 @@ import CampUtil
 import TentSystem
 
 ;@Overrides CampTent
-function PlaceTentObject_Lantern3(CampTentEx Extended)
+function PlaceObject_Lantern3(CampTentEx Extended)
 	if !IsRefInInterior(Game.GetPlayer())
 		myLanternUnlit3Future = PlacementSystem.PlaceObject(self, TentSystem.GetLantern(bOn = false, bHanging = true), Extended.PositionRef_Lantern3, z_hanging_offset = -36.4536, is_hanging = true)
 		myLanternLit3Future = PlacementSystem.PlaceObject(self, TentSystem.GetLantern(bOn = true, bHanging = true), Extended.PositionRef_Lantern3, z_hanging_offset = -36.4536, is_hanging = true, initially_disabled = true)
