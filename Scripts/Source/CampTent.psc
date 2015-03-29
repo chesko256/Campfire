@@ -1042,6 +1042,7 @@ function GetResults()
         mySpareBedRoll3SitMarker = GetFuture(mySpareBedRoll3SitMarkerFuture).get_result()
 	endif
 
+	debug.trace("[Campfire] My size is " + myNormalTent.GetLength() + "L, " + myNormalTent.GetWidth() + "W")
 	;GenerateDebugReport()
 endFunction
 
@@ -1504,6 +1505,7 @@ state BurningDown
 		TryToPlayShader(myNormalTent)
 		TryToPlayShader(myTent)
 		utility.wait(10.5)
+		
 		if myTent
 			ObjectReference rubble = PlaceAndWaitFor3DLoaded(myTent, PlacementSystem._Camp_ObjectRubbleFire)
 			rubble.SetScale(0.8)

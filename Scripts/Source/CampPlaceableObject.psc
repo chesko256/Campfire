@@ -1,6 +1,6 @@
 scriptname CampPlaceableObject extends _Camp_PlaceableObjectBase
 
-import CampUtil
+import _CampInternal
 
 ; PRIVATE
 ;Run-time objects
@@ -230,3 +230,47 @@ endFunction
 function PlaceObject_ExtraLight3(CampPlaceableObjectEx Extended)
 	myExtraLight3Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraLight3, Extended.PositionRef_ExtraLight3)
 endFunction
+
+state BurningDown
+	function BurnDown()
+		ObjectReference myBigFire
+		myBigFire = self.PlaceAtMe(PlacementSystem._Camp_LargeFire, abInitiallyDisabled = true)
+		float xs
+		float ys
+		xs = self.GetWidth()
+		ys = self.GetLength()
+		float size
+		if xs > ys
+			size = xs
+		else
+			size = ys
+		endif
+		myBigFire.SetScale(size / 750)
+		myBigFire.Enable(true)
+		mySmoke.Disable(true)
+		TryToPlayShader(self)
+		TryToPlayShader(myExtraStatic1)
+		TryToPlayShader(myExtraStatic2)
+		TryToPlayShader(myExtraStatic3)
+		TryToPlayShader(myExtraStatic4)
+		TryToPlayShader(myExtraStatic5)
+		TryToPlayShader(myExtraActivator1)
+		TryToPlayShader(myExtraActivator2)
+		TryToPlayShader(myExtraActivator3)
+		TryToPlayShader(myExtraActivator4)
+		TryToPlayShader(myExtraActivator5)
+		TryToPlayShader(myExtraFurniture1)
+		TryToPlayShader(myExtraFurniture2)
+		TryToPlayShader(myExtraFurniture3)
+		TryToPlayShader(myExtraFurniture4)
+		TryToPlayShader(myExtraFurniture5)
+		utility.wait(10.5)
+
+		TakeDown()
+		utility.wait(3.5)
+		self.Disable()
+		self.PlaceAtMe(PlacementSystem.FallingDustExplosion01)
+		utility.wait(7.0)
+		TryToDisableAndDeleteRef(self)
+	endFunction
+endState
