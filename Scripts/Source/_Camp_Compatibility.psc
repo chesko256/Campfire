@@ -120,6 +120,7 @@ GlobalVariable property _DE_SKYRELoaded auto
 GlobalVariable property _Camp_HotkeyCreateItem auto
 GlobalVariable property _Camp_HotkeyBuildCampfire auto
 GlobalVariable property _Camp_HotkeyHarvestWood auto
+GlobalVariable property _Camp_Setting_TrackFollowers auto
 
 ConstructibleObject property _DE_RecipeSuppliesRockHF auto
 ConstructibleObject property _DE_RecipeLeatherValeDeerHideDLC1 auto
@@ -132,6 +133,7 @@ Spell property _Camp_CampfireSpell auto
 Spell property _Camp_HarvestWoodSpell auto
 
 Spell property _Camp_LegacyConfig_Spell auto
+Spell property _Camp_FollowerDetectSpell auto
 formlist property woodChoppingAxes auto
 Weather property DLC2AshStorm auto hidden
 bool bAddedSpellBooks = false
@@ -148,8 +150,7 @@ function RunCompatibility()
 	RegisterForControlsOnLoad()
 	RegisterForEventsOnLoad()
 	Campfire.CheckFollowerPolling()
-	;****
-	
+		
 	;debug.notification("[Frostfall]Compatibility startup check...")
 	trace("============================================[Campfire: Warning Start]=============================================")
 	trace("                                                                                                                  ")
@@ -583,6 +584,10 @@ function AddStartupSpells()							;Approved 2.0
 		_Camp_HotkeyCreateItem.SetValueInt(0)
 		_Camp_HotkeyBuildCampfire.SetValueInt(0)
 		_Camp_HotkeyHarvestWood.SetValueInt(0)
+	endif
+
+	if _Camp_Setting_TrackFollowers.GetValueInt() == 2
+		PlayerRef.AddSpell(_Camp_FollowerDetectSpell, false)
 	endif
 endFunction
 

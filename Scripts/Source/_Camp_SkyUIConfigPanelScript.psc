@@ -28,9 +28,14 @@ GlobalVariable property _Camp_HotkeyBuildCampfire auto
 GlobalVariable property _Camp_HotkeyHarvestWood auto
 
 Actor property PlayerRef auto
+ReferenceAlias property Follower1 auto
+ReferenceAlias property Follower2 auto
+ReferenceAlias property Follower3 auto
+ReferenceAlias property Animal auto
 Spell property _Camp_CreateItemSpell auto
 Spell property _Camp_CampfireSpell auto
 Spell property _Camp_HarvestWoodSpell auto
+Spell property _Camp_FollowerDetectSpell auto
 Message property _Camp_TroubleshootingConfirmMsg auto
 
 ; Toggle states
@@ -386,9 +391,15 @@ event OnOptionSelect(int option)
 		if _Camp_Setting_TrackFollowers.GetValueInt() == 2
 			_Camp_Setting_TrackFollowers.SetValueInt(1)
 			SetToggleOptionValue(Advanced_SettingTrackFollowers_OID, false)
+			PlayerRef.RemoveSpell(_Camp_FollowerDetectSpell)
+			Follower1.Clear()
+			Follower2.Clear()
+			Follower3.Clear()
+			Animal.Clear()
 		else
 			_Camp_Setting_TrackFollowers.SetValueInt(2)
 			SetToggleOptionValue(Advanced_SettingTrackFollowers_OID, true)
+			PlayerRef.AddSpell(_Camp_FollowerDetectSpell, false)
 		endif
 	endif
 
