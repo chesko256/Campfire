@@ -434,7 +434,9 @@ function StartPlacement(ObjectReference akIndicator)
     ;#Help Text=========================
     akIndicator.SetAngle(0.0, 0.0, 0.0)
     _Camp_CurrentlyPlacingObject.SetValue(2)
-    _Camp_IndicatorTriggerRef.MoveTo(PlayerRef)
+    if _Camp_Setting_AdvancedPlacement.GetValueInt() == 2
+        _Camp_IndicatorTriggerRef.MoveTo(PlayerRef)
+    endif
     ;@TODO: Block inventory menu access
 endFunction
 
@@ -447,10 +449,6 @@ function StopPlacement()
     _Camp_ZTestReceiverREF_B.MoveTo(_Camp_Anchor)
     _Camp_ZTestReceiverREF_C.MoveTo(_Camp_Anchor)
     ;@TODO: Restore Inventory menu access
-endFunction
-
-ObjectReference function PlaceFireMarker(ObjectReference origin_object, bool big_fire = false)
-
 endFunction
 
 bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  \
@@ -468,7 +466,7 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
     endif
     
     ;Scenario: The catastrophic placement error was encountered.
-    if _Camp_CurrentlyPlacingObject.GetValueInt() == 3 && _Camp_HelpDone_PlacementError.GetValue() == 1
+    if _Camp_CurrentlyPlacingObject.GetValueInt() == 3 && _Camp_HelpDone_PlacementError.GetValueInt() == 1
         StopPlacement()
         if _Camp_HelpDone_PlacementError.GetValue() == 1
             int i = _Camp_Placement_Cancelled_CollisionBug.Show()
@@ -486,8 +484,8 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
         _Camp_CurrentlyPlacingObject.SetValue(1)
         return false
 
-    ;Scenario: Legitimately placing object
-    elseif _Camp_CurrentlyPlacingObject.GetValueInt() == 2
+    ;Scenario: placing object (advanced)
+    elseif _Camp_CurrentlyPlacingObject.GetValueInt() == 2 && _Camp_Setting_AdvancedPlacement.GetValueInt() == 2
         UpdateIndicatorPosition(akIndicator, afDistance, afHeightOffset, afRotationOffset, abSnapToTerrain)
         ;@TODO: Handle "heat link" feature
         ;Update placement indicator shader
@@ -498,6 +496,19 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
             _Camp_VisPlacement.Stop(akIndicator)
             _Camp_VisError.Play(akIndicator)
         endif
+        return true
+    
+    ;Scenario: placing object (simple)
+    elseif _Camp_CurrentlyPlacingObject.GetValueInt() == 2 && _Camp_Setting_AdvancedPlacement.GetValueInt() == 1
+        UpdateIndicatorPositionSimple(akIndicator, afDistance, afHeightOffset, afRotationOffset)
+        if LegalToCampHere()
+            _Camp_VisError.Stop(akIndicator)
+            _Camp_VisPlacement.Play(akIndicator)
+        else
+            _Camp_VisPlacement.Stop(akIndicator)
+            _Camp_VisError.Play(akIndicator)
+        endif
+        _Camp_CurrentlyPlacingObject.SetValueInt(1)
         return true
 
     ;Scenario: Player activated the placement indicator
@@ -544,7 +555,7 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
                 elseif !IllegalItem3.GetRef()
                     IllegalItem3.ForceRefTo(campitem)
                 endif
-                
+
                 return false
             elseif ibutton == 1
                 StopPlacement()
@@ -592,6 +603,25 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
         endif
     endif
 endFunction
+
+function UpdateIndicatorPositionSimple(ObjectReference akIndicator, float afDistance, float afHeightOffset = 1.0, float afRotationOffset = 0.0)
+    float[] center_point = new float[2]
+    center_point = GetOffsets(PlayerRef, afDistance)
+    float[] player_position = new float[3]
+    player_position = GetPositionData(PlayerRef)
+
+    While !akIndicator.Is3DLoaded()
+        Utility.Wait(0.1)
+    endWhile
+
+    akIndicator.TranslateTo(player_position[0] + center_point[0],         \
+                                player_position[1] + center_point[1],     \
+                                player_position[2] + afHeightOffset,      \
+                                0.0, 0.0,                                 \
+                                PlayerRef.GetAngleZ() + afRotationOffset, \
+                                5000.0, 0.0)
+endFunction
+
 
 function UpdateIndicatorPosition(ObjectReference akIndicator, float afDistance, float afHeightOffset = 1.0, float afRotationOffset = 0.0, bool abSnapToTerrain = true)
     float[] center_point = new float[2]
