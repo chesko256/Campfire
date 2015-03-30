@@ -329,6 +329,15 @@ Armor PlayerArrows = GetPlayerEquippedAmmo()
 	return Campfire.CampData.CurrentAmmo
 endFunction
 
+GlobalVariable function GetSettingEquipmentFlammable() global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+	return Campfire._Camp_Setting_EquipmentFlammable
+endFunction
+
 ;/********f* CampUtil/IsRefInInterior
 * DESCRIPTION
 * Whether or not the reference is in an interior cell, or a cell that "looks like" an interior.

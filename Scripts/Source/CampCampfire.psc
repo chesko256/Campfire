@@ -460,6 +460,7 @@ function TakeDown()
     TryToDisableAndDeleteRef(mySitFurniture2)
     TryToDisableAndDeleteRef(mySitFurniture3)
     TryToDisableAndDeleteRef(mySitFurniture4)
+    ClearEquipmentFromCrimeAlias(self)
     TryToDisableAndDeleteRef(self)
 endFunction
 

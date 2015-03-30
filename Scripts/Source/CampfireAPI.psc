@@ -7,6 +7,7 @@ Actor property PlayerRef auto
 Formlist property _Camp_WorldspacesInteriors auto
 Keyword property isCampfirePlaceableObject auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
+GlobalVariable property _Camp_Setting_EquipmentFlammable auto
 Quest property CampfireObjectPlacementSystem auto
 ObjectReference property LastUsedCampfire auto hidden
 ReferenceAlias property Follower1 auto

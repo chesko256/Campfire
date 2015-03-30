@@ -137,6 +137,14 @@ function GetResults()
 	endif
 endFunction
 
+function GuardDestroy()
+	DestroyMyself()
+endFunction
+
+function DestroyMyself()
+	; override
+endFunction
+
 function TakeDown()
 	TryToDisableAndDeleteRef(myFire1)
 	TryToDisableAndDeleteRef(myFire2)
@@ -145,6 +153,7 @@ function TakeDown()
 	TryToDisableAndDeleteRef(myFire5)
 	TryToDisableAndDeleteRef(myFire6)
 	TryToDisableAndDeleteRef(mySmoke)
+	ClearEquipmentFromCrimeAlias(self)
 endFunction
 
 function PlaceObject_FireMarkers()
@@ -165,13 +174,13 @@ _Camp_ObjectFuture function GetFuture(ObjectReference akObjectReference)
 endFunction
 
 Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
-	if Setting_Flammable
+	if CampUtil.GetSettingEquipmentFlammable().GetValueInt() == 2 && Setting_Flammable
 		ProcessOnHit(akAggressor, akSource, akProjectile, abBashAttack)
 	endif
 EndEvent
 
 Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
-	if Setting_Flammable
+	if CampUtil.GetSettingEquipmentFlammable().GetValueInt() == 2 && Setting_Flammable
 		ProcessMagicEffect(akCaster, akEffect)
 	endif
 EndEvent

@@ -2,3 +2,6 @@ scriptname _CampfireInternalAPI extends Quest
 
 Keyword property MagicDamageFire auto
 Keyword property MagicDamageFrost auto
+ReferenceAlias property IllegalItem1 auto
+ReferenceAlias property IllegalItem2 auto
+ReferenceAlias property IllegalItem3 auto
