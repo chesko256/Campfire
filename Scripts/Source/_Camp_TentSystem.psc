@@ -897,6 +897,37 @@ function UnDisplayFollowerShield(CampTent akTentObject, int aiFollowerBedrollInd
 	endif
 endFunction
 
+function DestroyTent(ObjectReference akTent)
+	CampTent TentObject = akTent as CampTent
+
+	UnDisplayShield_Player(TentObject)
+	UnDisplayWeapons_Player(TentObject)
+	UnDisplayCuirass_Player(TentObject)
+	UnDisplayBoots_Player(TentObject)
+	UnDisplayGauntlets_Player(TentObject)
+	UnDisplayHelm_Player(TentObject)
+	UnDisplayQuiver_Player(TentObject)
+	UnDisplayBackpack_Player(TentObject)	
+
+	if TentObject.mySpareBedRoll1
+		(TentObject.mySpareBedRoll1 as _Camp_CampTentNPCBedrollScript).CleanUp()
+	endif
+	if TentObject.mySpareBedRoll2
+		(TentObject.mySpareBedRoll2 as _Camp_CampTentNPCBedrollScript).CleanUp()
+	endif
+	if TentObject.mySpareBedRoll3
+		(TentObject.mySpareBedRoll3 as _Camp_CampTentNPCBedrollScript).CleanUp()
+	endif
+	
+	;Delete markers and furniture
+	TentObject.TakeDown()
+	
+	wait(0.2)
+
+	;Finally, delete myself
+	TryToDisableAndDeleteRef(akTent)
+endFunction
+
 function PackTent(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
 	PlayerRef.AddItem(TentObject.Required_InventoryItem, abSilent = true)

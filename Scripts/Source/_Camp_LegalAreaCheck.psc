@@ -1,5 +1,7 @@
 scriptname _Camp_LegalAreaCheck extends ReferenceAlias
 
+GlobalVariable property _Camp_Setting_Legality auto
+
 Keyword property LocTypeDwelling auto
 Keyword property LocTypeInn auto
 Keyword property LocTypeHouse auto
@@ -72,6 +74,9 @@ ObjectReference property DLC2RavenRockCenterMarker auto hidden
 Faction property DLC2RavenRockGuardFaction auto hidden
 
 bool function GetCampingLegal()
+	if _Camp_Setting_Legality.GetValueInt() == 1
+		return true
+	endif
 	if InIllegalArea || Compatibility.isDLC2Loaded && PlayerRef.GetDistance(DLC2RavenRockCenterMarker) < 4100.0
 		return false
 	else

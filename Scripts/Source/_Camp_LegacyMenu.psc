@@ -15,6 +15,8 @@ Message property _Camp_legacyconfig_manuallighting_on auto
 Message property _Camp_legacyconfig_manuallighting_off auto
 Message property _Camp_legacyconfig_campingillegal_on auto
 Message property _Camp_legacyconfig_campingillegal_off auto
+Message property _Camp_legacyconfig_flammableitems_on auto
+Message property _Camp_legacyconfig_flammableitems_off auto
 Message property _Camp_legacyconfig_showbackpack_on auto
 Message property _Camp_legacyconfig_showbackpack_off auto
 Message property _Camp_legacyconfig_showarmor_on auto
@@ -50,6 +52,7 @@ Message property _Camp_TroubleshootingConfirmMsg auto
 GlobalVariable property _Camp_Setting_CampingArmorTakeOff auto
 GlobalVariable property _Camp_Setting_ManualFireLighting auto
 GlobalVariable property _Camp_Setting_Legality auto
+GlobalVariable property _Camp_Setting_EquipmentFlammable auto
 GlobalVariable property _Camp_Setting_TakeOff_Backpack auto
 GlobalVariable property _Camp_Setting_TakeOff_Cuirass auto
 GlobalVariable property _Camp_Setting_TakeOff_Weapons auto
@@ -125,8 +128,11 @@ function menu_camping2()
         MenuHandler_Toggle(_Camp_legacyconfig_campingillegal_on, _Camp_legacyconfig_campingillegal_off, _Camp_Setting_Legality)
         menu_camping2()
     elseif i == 2
-        menu_camping()
+        MenuHandler_Toggle(_Camp_legacyconfig_flammableitems_on, _Camp_legacyconfig_flammableitems_off, _Camp_Setting_EquipmentFlammable)
+        menu_camping2()
     elseif i == 3
+        menu_camping()
+    elseif i == 4
         menu_root()
     endif
 endFunction

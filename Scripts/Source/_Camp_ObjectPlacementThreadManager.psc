@@ -42,6 +42,12 @@ Message property _Camp_Placement_Cancelled_CollisionBug auto
 Message property _Camp_PlacementIllegal auto
 Message property _Camp_IndicatorSelect auto
 
+;Crime
+Quest property _Camp_CampingCrimeTracking auto
+ReferenceAlias property IllegalItem1 auto
+ReferenceAlias property IllegalItem2 auto
+ReferenceAlias property IllegalItem3 auto
+
 ;Misc
 Static property XMarker auto
 
@@ -499,11 +505,53 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
         if !LegalToCampHere()
             int ibutton = _Camp_PlacementIllegal.Show()
             if ibutton == 0
+                ;Place it anyway
+                if akIngredient && aiCost > 0
+                    if PlayerRef.GetItemCount(akIngredient) >= aiCost
+                        PlayerRef.RemoveItem(akIngredient, aiCost)
+                    else
+                        StopPlacement()
+                        return false
+                    endif
+                elseif akMiscItem && aiCost > 0
+                    if PlayerRef.GetItemCount(akMiscItem) >= aiCost
+                        PlayerRef.RemoveItem(akMiscItem, aiCost)
+                    else
+                        StopPlacement()
+                        return false
+                    endif
+                endif
+
+                akIndicator.Disable()
+                ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace)
+                if akInventoryItem
+                    PlayerRef.RemoveItem(akInventoryItem, 1, true)
+                endif
+                StopPlacement()
+
+                ;Raise the ire of those around you
+                _Camp_CampingCrimeTracking.Stop()
+                int i = 0
+                while !_Camp_CampingCrimeTracking.IsStopped() && i < 30
+                    utility.wait(0.1)
+                    i += 1
+                endWhile
+                _Camp_CampingCrimeTracking.Start()
+                if !IllegalItem1.GetRef()
+                    IllegalItem1.ForceRefTo(campitem)
+                elseif !IllegalItem2.GetRef()
+                    IllegalItem2.ForceRefTo(campitem)
+                elseif !IllegalItem3.GetRef()
+                    IllegalItem3.ForceRefTo(campitem)
+                endif
+                
+                return false
+            elseif ibutton == 1
                 StopPlacement()
                 _Camp_CurrentlyPlacingObject.SetValue(1)
                 _Camp_Placement_Cancelled.Show()
                 return false
-            elseif ibutton == 1     ;Back
+            elseif ibutton == 2     ;Back
                 _Camp_CurrentlyPlacingObject.SetValue(2)
                 return true
             endif

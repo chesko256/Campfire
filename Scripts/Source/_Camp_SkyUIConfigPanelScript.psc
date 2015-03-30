@@ -3,6 +3,7 @@ Scriptname _Camp_SkyUIConfigPanelScript extends SKI_ConfigBase
 ; External scripts
 _Camp_Compatibility property Compatibility auto
 GlobalVariable property _Camp_Setting_ManualFireLighting auto
+GlobalVariable property _Camp_Setting_EquipmentFlammable auto
 GlobalVariable property _Camp_Setting_CampingArmorTakeOff auto
 GlobalVariable property _Camp_Setting_TakeOff_Helm auto
 GlobalVariable property _Camp_Setting_TakeOff_Cuirass auto
@@ -49,6 +50,7 @@ int TroubleshootingIndex = 0
 int Gameplay_SettingCampingLegalityToggle_OID
 int Gameplay_SettingCampingArmorTentsText_OID
 int Gameplay_SettingCampingFireLightingText_OID
+int Gameplay_SettingCampingFlammabilityToggle_OID
 
 int Gameplay_SettingCampingPlaceHelm_OID
 int Gameplay_SettingCampingPlaceCuirass_OID
@@ -122,6 +124,12 @@ function PageReset_Gameplay()
 		Gameplay_SettingCampingLegalityToggle_OID = AddToggleOption("$CampfireGameplaySettingLegality", true)
 	else
 		Gameplay_SettingCampingLegalityToggle_OID = AddToggleOption("$CampfireGameplaySettingLegality", false)
+	endif
+
+	if _Camp_Setting_EquipmentFlammable.GetValueInt() == 2
+		Gameplay_SettingCampingFlammabilityToggle_OID = AddToggleOption("$CampfireGameplaySettingFlammability", true)
+	else
+		Gameplay_SettingCampingFlammabilityToggle_OID = AddToggleOption("$CampfireGameplaySettingFlammability", false)
 	endif
 
 	AddEmptyOption()
@@ -273,6 +281,8 @@ event OnOptionHighlight(int option)
 		SetInfoText("$CampfireOptionHighlightSettingCampingFireLightingText")
 	elseif option == Gameplay_SettingCampingLegalityToggle_OID
 		SetInfoText("$CampfireOptionHighlightSettingLegality")
+	elseif option == Gameplay_SettingCampingFlammabilityToggle_OID
+		SetInfoText("$CampfireOptionHighlightSettingFlammability")
 
 	elseif option == Gameplay_SettingCampingPlaceHelm_OID
 		SetInfoText("$CampfireOptionHighlightShowHelm")
@@ -341,6 +351,14 @@ event OnOptionSelect(int option)
 		else
 			_Camp_Setting_Legality.SetValueInt(2)
 			SetToggleOptionValue(Gameplay_SettingCampingLegalityToggle_OID, true)
+		endif
+	elseif option == Gameplay_SettingCampingFlammabilityToggle_OID
+		if _Camp_Setting_EquipmentFlammable.GetValueInt() == 2
+			_Camp_Setting_EquipmentFlammable.SetValueInt(1)
+			SetToggleOptionValue(Gameplay_SettingCampingFlammabilityToggle_OID, false)
+		else
+			_Camp_Setting_EquipmentFlammable.SetValueInt(2)
+			SetToggleOptionValue(Gameplay_SettingCampingFlammabilityToggle_OID, true)
 		endif
 	elseif option == Gameplay_SettingCampingPlaceHelm_OID
 		if _Camp_Setting_TakeOff_Helm.GetValueInt() == 2
@@ -485,6 +503,9 @@ event OnOptionDefault(int option)
 	elseif option == Gameplay_SettingCampingLegalityToggle_OID
 		_Camp_Setting_Legality.SetValueInt(2)
 		SetToggleOptionValue(Gameplay_SettingCampingLegalityToggle_OID, true)
+	elseif option == Gameplay_SettingCampingFlammabilityToggle_OID
+		_Camp_Setting_EquipmentFlammable.SetValueInt(2)
+		SetToggleOptionValue(Gameplay_SettingCampingFlammabilityToggle_OID, true)
 	elseif option == Gameplay_SettingCampingPlaceCuirass_OID
 		_Camp_Setting_TakeOff_Cuirass.SetValueInt(1)
 		SetToggleOptionValue(Gameplay_SettingCampingPlaceCuirass_OID, false)

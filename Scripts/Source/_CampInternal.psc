@@ -30,6 +30,21 @@ Keyword function GetMagicDamageFrostKeyword() global
 	return Campfire.MagicDamageFrost
 endFunction
 
+function ClearEquipmentFromCrimeAlias(ObjectReference akObject) global
+	_CampfireInternalAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+	if akObject == Campfire.IllegalItem1.GetRef()
+		Campfire.IllegalItem1.Clear()
+	elseif akObject == Campfire.IllegalItem2.GetRef()
+		Campfire.IllegalItem2.Clear()
+	elseif akObject == Campfire.IllegalItem3.GetRef()
+		Campfire.IllegalItem3.Clear()
+	endif
+endFunction
+
 function TryToEnableRef(ObjectReference akReference, bool bFadeIn = false) global
 	;A more concise way to enable references without checking for None first (to avoid Papyrus log errors, etc)
 	if akReference

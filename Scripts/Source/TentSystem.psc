@@ -239,6 +239,15 @@ Form function GetFireVolume() global
 	return TentAPI.BFXFireVol01
 endFunction
 
+function DestroyTent(ObjectReference akTent) global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return
+	endif
+	TentAPI.DestroyTent(akTent)
+endFunction
+
 function RaiseTentAPIError() global
 	debug.trace("[Campfire] Fatal Tent API error occurred.")
 endFunction

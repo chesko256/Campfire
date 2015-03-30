@@ -1042,7 +1042,6 @@ function GetResults()
         mySpareBedRoll3SitMarker = GetFuture(mySpareBedRoll3SitMarkerFuture).get_result()
 	endif
 
-	debug.trace("[Campfire] My size is " + myNormalTent.GetLength() + "L, " + myNormalTent.GetWidth() + "W")
 	;GenerateDebugReport()
 endFunction
 
@@ -1454,6 +1453,10 @@ function PlaceObject_Follower3Shield(CampTentEx Extended)
 	myFollowerCMarker_ShieldFuture = PlacementSystem.PlaceObject(self, XMarker, Extended.PositionRef_Follower3_Shield, x_local_ang_adjust = 90.0, z_local_ang_adjust = 124.0, inverted_local_y = true, is_propped = true)
 endFunction
 
+function DestroyMyself()
+	TentSystem.DestroyTent(self)
+endFunction
+
 state BurningDown
 	function BurnDown()
 		ObjectReference myBigFire
@@ -1505,7 +1508,7 @@ state BurningDown
 		TryToPlayShader(myNormalTent)
 		TryToPlayShader(myTent)
 		utility.wait(10.5)
-		
+
 		if myTent
 			ObjectReference rubble = PlaceAndWaitFor3DLoaded(myTent, PlacementSystem._Camp_ObjectRubbleFire)
 			rubble.SetScale(0.8)
