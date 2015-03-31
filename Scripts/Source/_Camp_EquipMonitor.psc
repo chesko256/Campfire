@@ -6,9 +6,10 @@ import utility
 import CampUtil
 
 CampfireData property CampData auto
-
-Formlist property _DE_EquipExceptions auto
-Formlist property _DE_Backpacks auto
+_Camp_Compatibility property Compatibility auto
+Actor property PlayerRef auto
+Formlist property _Camp_EquipExceptions auto
+Formlist property _Camp_Backpacks auto
 keyword property ArmorCuirass auto
 keyword property ArmorGauntlets auto
 keyword property ArmorHelmet auto
@@ -18,12 +19,12 @@ keyword property ClothingHands auto
 keyword property ClothingHead auto
 keyword property ClothingFeet auto
 
-Actor property PlayerRef auto
+; Edge case - Only armor in vanilla game with integrated headgear
 Armor property ClothesMGRobesArchmage1Hooded auto
 
 Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
 	;check exceptions
-	if _DE_EquipExceptions.HasForm(akBaseObject)
+	if _Camp_EquipExceptions.HasForm(akBaseObject)
 		return
 	elseif !(GetUsesMainBodySlot(akBaseObject))
 		return
@@ -45,38 +46,38 @@ Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 
 		if akBaseObject.HasKeyword(ArmorCuirass) || akBaseObject.HasKeyword(ClothingBody)
 			;trace("[Campfire] Unequipped body armor!")
-			bEventRaised = RaiseEvent_CampfireOnGearUnequipped(akBaseObject, 1)
+			bEventRaised = RaiseEventOnGearUnequipped(akBaseObject, 1)
 			CampData.CurrentBody = none
 		endif
 		if akBaseObject.HasKeyword(ArmorGauntlets) || akBaseObject.HasKeyword(ClothingHands)
 			;trace("[Campfire] Unequipped gloves!")
-			bEventRaised = RaiseEvent_CampfireOnGearUnequipped(akBaseObject, 2)
+			bEventRaised = RaiseEventOnGearUnequipped(akBaseObject, 2)
 			CampData.CurrentHands = none
 		endif
 		if akBaseObject.HasKeyword(ArmorHelmet) || akBaseObject.HasKeyword(ClothingHead) || akBaseObject == ClothesMGRobesArchmage1Hooded
 			;trace("[Campfire] Unequipped helmet!")
-			bEventRaised = RaiseEvent_CampfireOnGearUnequipped(akBaseObject, 3)
+			bEventRaised = RaiseEventOnGearUnequipped(akBaseObject, 3)
 			CampData.CurrentHead = none
 		endif
 		if akBaseObject.HasKeyword(ArmorBoots) || akBaseObject.HasKeyword(ClothingFeet)
 			;trace("[Campfire] Unequipped boots!")
-			bEventRaised = RaiseEvent_CampfireOnGearUnequipped(akBaseObject, 4)
+			bEventRaised = RaiseEventOnGearUnequipped(akBaseObject, 4)
 			CampData.CurrentFeet = none
 		endif
 		if _DE_Backpacks.HasForm(akBaseObject)
-			bEventRaised = RaiseEvent_CampfireOnGearUnequipped(akBaseObject, 5)
+			bEventRaised = RaiseEventOnGearUnequipped(akBaseObject, 5)
 			CampData.CurrentBackpack = none
 		endif
 		
 		;Cloak check
 		if !bEventRaised
-			bool b = RaiseEvent_CampfireOnGearUnequipped(akBaseObject, 7)
+			bool b = RaiseEventOnGearUnequipped(akBaseObject, 7)
 		endif
 		
 	elseif akBaseObject as Ammo
 		;trace("[Campfire] Setting ammo to none")
 		CampData.CurrentAmmo = none
-		bool b = RaiseEvent_CampfireOnGearUnequipped(akBaseObject, 6)
+		bool b = RaiseEventOnGearUnequipped(akBaseObject, 6)
 	endif
 endEvent
 
@@ -86,46 +87,141 @@ function ProcessEquippedObject(Form akBaseObject)
 
 	if akBaseObject.HasKeyword(ArmorCuirass) || akBaseObject.HasKeyword(ClothingBody)
 		CampData.CurrentBody = akBaseObject as Armor
-		bEventRaised = RaiseEvent_CampfireOnGearEquipped(akBaseObject, 1)
+		bEventRaised = RaiseEventOnGearEquipped(akBaseObject, 1)
 		;trace("[Campfire] The player equipped a piece of body armor.")
 	endif
 	if akBaseObject.HasKeyword(ArmorGauntlets) || akBaseObject.HasKeyword(ClothingHands)
 		CampData.CurrentHands = akBaseObject as Armor
-		bEventRaised = RaiseEvent_CampfireOnGearEquipped(akBaseObject, 2)
+		bEventRaised = RaiseEventOnGearEquipped(akBaseObject, 2)
 		;trace("[Campfire] The player equipped a piece of hand armor.")
 	endif
 	if akBaseObject.HasKeyword(ArmorHelmet) || akBaseObject.HasKeyword(ClothingHead) || akBaseObject == ClothesMGRobesArchmage1Hooded
 		CampData.CurrentHead = akBaseObject as Armor
-		bEventRaised = RaiseEvent_CampfireOnGearEquipped(akBaseObject, 3)
+		bEventRaised = RaiseEventOnGearEquipped(akBaseObject, 3)
 		;trace("[Campfire] The player equipped a piece of head armor.")
 	endif
 	if akBaseObject.HasKeyword(ArmorBoots) || akBaseObject.HasKeyword(ClothingFeet)	
 		CampData.CurrentFeet = akBaseObject as Armor
-		bEventRaised = RaiseEvent_CampfireOnGearEquipped(akBaseObject, 4)
+		bEventRaised = RaiseEventOnGearEquipped(akBaseObject, 4)
 		;trace("[Campfire] The player equipped a piece of feet armor.")
 	endif
 	if !bEventRaised
 		if _DE_Backpacks.HasForm(akBaseObject)
 			CampData.CurrentBackpack = akBaseObject as Armor
-			bool b = RaiseEvent_CampfireOnGearEquipped(akBaseObject, 5)
+			bool b = RaiseEventOnGearEquipped(akBaseObject, 5)
 			;trace("[Campfire] The player equipped a backpack.")
 		elseif akBaseObject as Ammo
 			CampData.CurrentAmmo = akBaseObject as Ammo
-			bool b = RaiseEvent_CampfireOnGearEquipped(akBaseObject, 6)
+			bool b = RaiseEventOnGearEquipped(akBaseObject, 6)
 			;trace("[Campfire] The player equipped ammo.")
 		else
-			;CloakCheck()
-			;TTis object might be what Frostfall would consider to be a cloak.
-			bool b = RaiseEvent_CampfireOnGearEquipped(akBaseObject, 7)
+			;This object might be what Frostfall considers a cloak.
+			bool b = RaiseEventOnGearEquipped(akBaseObject, 7)
 			;trace("[Campfire] The player equipped a cloak." + akBaseObject)
 		endif
 	endif
 endFunction
 
+bool function RaiseEventOnGearEquipped(Form akBaseObject, int iGearType)
+	;===========
+	;Parameters
+	;===========
+	;	akBaseObject: The base object the actor just equipped.
+	;	iGearType: The type of gear the actor equipped, which is one of the following values:
+	;		1: Body gear (Armor, clothing)
+	;		2: Hands gear (Gauntlets, gloves)
+	;		3: Head gear (Helmet, hat, hoods)
+	;		4: Foot gear (Boots, shoes)
+	;		5: Backpack
+	;		6: Ammo
+	;		7: Other (could be shield, cloak, etc)
+	;===========
+	;Notes
+	;===========
+	;	* The intent of this event is to notify when a piece of visual worn gear
+	;	  (armor, clothing, backpacks, ammo, etc) is equipped, instead of every equipped
+	;	  object. Primarily, the emphasis is on gear that has a substantive gameplay purpose
+	;	  (not purely cosmetic or utility equipment).
+	;
+	;	* This event can be raised multiple times for the same Base Object if that object
+	;	  is a set of "compound" gear (i.e. having more than one matching keyword, such 
+	;	  as ArmorBody AND ArmorGauntlets), allowing you to act on each part of an otherwise
+	;	  "one piece" set of gear (example: Vagabond Armor (Immersive Armors), which has both
+	;	  body armor and a cloak).
+	;
+	;	* Unlike OnObjectEquipped, this event filters results based on the equipped item's
+	;	  slot mask. Gear that utilizes slots 61 - 53, 51 - 47, or 45 will not be returned.
+	;	  Slot 52 is not checked for compatibility reasons. These slots are checked in 
+	;	  order of greatest to smallest, so if a piece of gear uses slots 61 and 30, it will 
+	;	  be filtered out and this event will not be raised when the object is equipped.
+	;
+	;	* This event is not raised when weapons are equipped.
+
+	if Compatibility.IsFrostfallLoaded
+		FrostUtil.GetClothingSystem().ObjectEquipped(akBaseObject, iGearType)
+	endif
+
+	; Help prevent the system from becoming overloaded with many requests.
+	Utility.Wait(0.2)
+
+	return true
+endFunction
+
+function RaiseEventOnGearUnequipped(Form akBaseObject, int iGearType)
+	;===========
+	;Parameters
+	;===========
+	;	akBaseObject: The base object the actor just unequipped.
+	;	iGearType: The type of gear the actor unequipped, which is one of the following values:
+	;		1: Body gear (Armor, clothing)
+	;		2: Hands gear (Gauntlets, gloves)
+	;		3: Head gear (Helmet, hat, hoods)
+	;		4: Foot gear (Boots, shoes)
+	;		5: Backpack
+	;		6: Ammo
+	;		7: Other (could be shield, cloak, etc)
+	;===========
+	;Notes
+	;===========
+	;	* The intent of this event is to notify when a piece of visual worn gear
+	;	  (armor, clothing, backpacks, ammo, etc) is unequipped, instead of every unequipped
+	;	  object. Primarily, the emphasis is on gear that has a substantive gameplay purpose
+	;	  (not purely cosmetic or utility equipment).
+	;
+	;	* This event can be raised multiple times for the same Base Object if that object
+	;	  is a set of "compound" gear (i.e. having more than one matching keyword, such 
+	;	  as ArmorBody AND ArmorGauntlets), allowing you to act on each part of an otherwise
+	;	  "one piece" set of gear (example: Vagabond Armor (Immersive Armors), which has both
+	;	  body armor and a cloak).
+	;
+	;	* Unlike OnObjectUnequipped, this event filters results based on the unequipped item's
+	;	  slot mask. Gear that utilizes slots 61 - 53, 51 - 47, or 45 will not be returned.
+	;	  Slot 52 is not checked for compatibility reasons. These slots are checked in 
+	;	  order of greatest to smallest, so if a piece of gear uses slots 61 and 30, it will 
+	;	  be filtered out and this event will not be raised when the object is unequipped.
+	;
+	;	* This event is not raised when weapons are unequipped.
+
+	if Compatibility.IsFrostfallLoaded
+		FrostUtil.GetClothingSystem().ObjectUnequipped(akBaseObject, iGearType)
+	endif
+
+	; Help prevent the system from becoming overloaded with many requests.
+	Utility.Wait(0.2)
+
+	return true
+endFunction
+
 bool function GetUsesMainBodySlot(Form akBaseObject)
-	;Requires SKSE
-	;Checks if akBaseObject uses one of the main gear slots for the body (30-39,41-43)
-	;Returns True on slots 40 and 46 as well for cloak support
+	; Requires SKSE
+	; Checks if akBaseObject uses one of the main gear slots for the body (30-39,41-43)
+	; Returns True on slots 40 and 46 as well for cloak support
+
+	if GetCompatibilitySystem().isSKSELoaded
+		; SKSE not loaded or too old; fall back to True
+		return true
+	endif
+
 	if akBaseObject == None
 		return false
 	elseif akBaseObject as Ammo
@@ -141,55 +237,55 @@ bool function GetUsesMainBodySlot(Form akBaseObject)
 		endif
 		int mySlotMask = akArmor.GetSlotMask()
 		if LogicalAnd(mySlotMask, akArmor.kSlotMask61)
-			;trace("[Campfire] This equipment has slot kSlotMask61, which is NOT valid armor, returning false!")
+			;trace("[Campfire] This equipment has slot kSlotMask61, which is NOT valid armor, returning false.")
 			return false
 		elseif LogicalAnd(mySlotMask, akArmor.kSlotMask60)
-			;trace("[Campfire] This equipment has slot kSlotMask60, which is NOT valid armor, returning false!")
+			;trace("[Campfire] This equipment has slot kSlotMask60, which is NOT valid armor, returning false.")
 			return false
 		elseif LogicalAnd(mySlotMask, akArmor.kSlotMask59)
-			;trace("[Campfire] This equipment has slot kSlotMask59, which is NOT valid armor, returning false!")
+			;trace("[Campfire] This equipment has slot kSlotMask59, which is NOT valid armor, returning false.")
 			return false
 		elseif LogicalAnd(mySlotMask, akArmor.kSlotMask58)
-			;trace("[Campfire] This equipment has slot kSlotMask58, which is NOT valid armor, returning false!")
+			;trace("[Campfire] This equipment has slot kSlotMask58, which is NOT valid armor, returning false.")
 			return false
 		elseif LogicalAnd(mySlotMask, akArmor.kSlotMask57)
-			;trace("[Campfire] This equipment has slot kSlotMask57, which is NOT valid armor, returning false!")
+			;trace("[Campfire] This equipment has slot kSlotMask57, which is NOT valid armor, returning false.")
 			return false
 		elseif LogicalAnd(mySlotMask, akArmor.kSlotMask56)
-			;trace("[Campfire] This equipment has slot kSlotMask56, which is NOT valid armor, returning false!")
+			;trace("[Campfire] This equipment has slot kSlotMask56, which is NOT valid armor, returning false.")
 			return false
 		elseif LogicalAnd(mySlotMask, akArmor.kSlotMask55)
-			;trace("[Campfire] This equipment has slot kSlotMask55, which is NOT valid armor, returning false!")
+			;trace("[Campfire] This equipment has slot kSlotMask55, which is NOT valid armor, returning false.")
 			return false
 		elseif LogicalAnd(mySlotMask, akArmor.kSlotMask54)
-			;trace("[Campfire] This equipment has slot kSlotMask54, which is NOT valid armor, returning false!")
+			;trace("[Campfire] This equipment has slot kSlotMask54, which is NOT valid armor, returning false.")
 			return false
 		elseif LogicalAnd(mySlotMask, akArmor.kSlotMask53)
-			;trace("[Campfire] This equipment has slot kSlotMask53, which is NOT valid armor, returning false!")
+			;trace("[Campfire] This equipment has slot kSlotMask53, which is NOT valid armor, returning false.")
 			return false
 		;elseif LogicalAnd(mySlotMask, akArmor.kSlotMask52)
-		;	;trace("[Campfire] This equipment has slot kSlotMask52, which is NOT valid armor, returning false!")
+		;	;trace("[Campfire] This equipment has slot kSlotMask52, which is NOT valid armor, returning false.")
 		;	return false
 		elseif LogicalAnd(mySlotMask, akArmor.kSlotMask51)
-			;trace("[Campfire] This equipment has slot kSlotMask51, which is NOT valid armor, returning false!")
+			;trace("[Campfire] This equipment has slot kSlotMask51, which is NOT valid armor, returning false.")
 			return false
 		elseif LogicalAnd(mySlotMask, akArmor.kSlotMask50)
-			;trace("[Campfire] This equipment has slot kSlotMask50, which is NOT valid armor, returning false!")
+			;trace("[Campfire] This equipment has slot kSlotMask50, which is NOT valid armor, returning false.")
 			return false
 		elseif LogicalAnd(mySlotMask, akArmor.kSlotMask49)
-			;trace("[Campfire] This equipment has slot kSlotMask49, which is NOT valid armor, returning false!")
+			;trace("[Campfire] This equipment has slot kSlotMask49, which is NOT valid armor, returning false.")
 			return false
 		elseif LogicalAnd(mySlotMask, akArmor.kSlotMask48)
-			;trace("[Campfire] This equipment has slot kSlotMask48, which is NOT valid armor, returning false!")
+			;trace("[Campfire] This equipment has slot kSlotMask48, which is NOT valid armor, returning false.")
 			return false
 		elseif LogicalAnd(mySlotMask, akArmor.kSlotMask47)
-			;trace("[Campfire] This equipment has slot kSlotMask47, which is NOT valid armor, returning false!")
+			;trace("[Campfire] This equipment has slot kSlotMask47, which is NOT valid armor, returning false.")
 			return false
 		elseif LogicalAnd(mySlotMask, akArmor.kSlotMask46)
 			;trace("[Campfire] This equipment has slot kSlotMask46, which is valid armor.")
 			return true
 		elseif LogicalAnd(mySlotMask, akArmor.kSlotMask45)
-			;trace("[Campfire] This equipment has slot kSlotMask45, which is NOT valid armor, returning false!")
+			;trace("[Campfire] This equipment has slot kSlotMask45, which is NOT valid armor, returning false.")
 			return false
 		elseif LogicalAnd(mySlotMask, akArmor.kSlotMask44)
 			;trace("[Campfire] This equipment has slot kSlotMask44, which is valid armor.")
@@ -237,10 +333,16 @@ bool function GetUsesMainBodySlot(Form akBaseObject)
 			;trace("[Campfire] This equipment has slot kSlotMask30, which is valid armor.")
 			return true
 		else
-			;trace("[Campfire] I don't know what happened, returning True.")
+			;trace("[Campfire] This equipment has slot could not be determined, returning True.")
 			return True
 		endif
 	else
 		return false
 	endif
 endFunction
+
+Event OnRaceSwitchComplete()
+	if Compatibility.IsFrostfallLoaded
+		FrostUtil.GetClothingSystem().RaceChanged()
+	endif
+endEvent

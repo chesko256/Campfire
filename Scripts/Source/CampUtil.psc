@@ -12,151 +12,12 @@ scriptname CampUtil hidden
 import math
 import debug
 
+; Define the minimum SKSE version
+float SKSE_MIN_VERSION = 1.7
+
 CampfireAPI function GetAPI() global
 	;@TODO: Change to .esm check
 	return (Game.GetFormFromFile(0x00024095, "Campfire.esp") as Quest) as CampfireAPI
-endFunction
-
-; Events =====================================================================================
-
-bool function RaiseEvent_CampfireOnGearEquipped(Form akBaseObject, int iGearType) global
-	;===========
-	;Syntax
-	;===========
-	;	Event CampfireOnGearEquipped(Form akBaseObject, int iGearType)
-	;
-	;===========
-	;Parameters
-	;===========
-	;	akBaseObject: The base object the actor just equipped.
-	;	iGearType: The type of gear the actor equipped, which is one of the following values:
-	;		1: Body gear (Armor, clothing)
-	;		2: Hands gear (Gauntlets, gloves)
-	;		3: Head gear (Helmet, hat, hoods)
-	;		4: Foot gear (Boots, shoes)
-	;		5: Backpack
-	;		6: Ammo
-	;		7: Other (could be shield, cloak, etc)
-	;
-	;===========
-	;Return Values
-	;===========
-	;	Returns True if the ModEvent was successfully created, False otherwise.
-	;
-	;===========
-	;Examples
-	;===========
-	;	RegisterForModEvent("Campfire_CampfireOnGearEquipped", "CampfireOnGearEquipped")
-	;
-	;	Event CampfireOnGearEquipped(Form akBaseObject, int iGearType)
-	;		if iGearType == 5
-	;			debug.trace("A backpack recognized by Campfire was equipped!")
-	;		endif
-	;	EndEvent
-	;
-	;===========
-	;Notes
-	;===========
-	;	* The intent of this event is to notify when a piece of visual worn gear
-	;	  (armor, clothing, backpacks, ammo, etc) is equipped, instead of every equipped
-	;	  object. Primarily, the emphasis is on gear that has a substantive gameplay purpose
-	;	  (not purely cosmetic or utility equipment).
-	;
-	;	* This event can be raised multiple times for the same Base Object if that object
-	;	  is a set of "compound" gear (i.e. having more than one matching keyword, such 
-	;	  as ArmorBody AND ArmorGauntlets), allowing you to act on each part of an otherwise
-	;	  "one piece" set of gear (example: Vagabond Armor (Immersive Armors), which has both
-	;	  body armor and a cloak).
-	;
-	;	* Unlike OnObjectEquipped, this event filters results based on the equipped item's
-	;	  slot mask. Gear that utilizes slots 61 - 53, 51 - 47, or 45 will not be returned.
-	;	  Slot 52 is not checked for compatibility reasons. These slots are checked in 
-	;	  order of greatest to smallest, so if a piece of gear uses slots 61 and 30, it will 
-	;	  be filtered out and this event will not be raised when the object is equipped.
-	;
-	;	* This event is not raised when weapons are equipped.
-
-	trace("[Campfire] Raising Event: CampfireOnGearEquipped(" + akBaseObject + ", " + iGearType + ")")
-
-	int handle = ModEvent.Create("Campfire_CampfireOnGearEquipped")
-	if handle
-		ModEvent.PushForm(handle, akBaseObject)
-		ModEvent.PushInt(handle, iGearType)
-		ModEvent.Send(handle)
-		return True
-	else
-		return False
-	endif
-endFunction
-
-bool function RaiseEvent_CampfireOnGearUnequipped(Form akBaseObject, int iGearType) global
-	;===========
-	;Syntax
-	;===========
-	;	Event CampfireOnGearUnequipped(Form akBaseObject, int iGearType)
-	;
-	;===========
-	;Parameters
-	;===========
-	;	akBaseObject: The base object the actor just unequipped.
-	;	iGearType: The type of gear the actor unequipped, which is one of the following values:
-	;		1: Body gear (Armor, clothing)
-	;		2: Hands gear (Gauntlets, gloves)
-	;		3: Head gear (Helmet, hat, hoods)
-	;		4: Foot gear (Boots, shoes)
-	;		5: Backpack
-	;		6: Ammo
-	;		7: Other (could be shield, cloak, etc)
-	;
-	;===========
-	;Return Values
-	;===========
-	;	Returns True if the ModEvent was successfully created, False otherwise.
-	;
-	;===========
-	;Examples
-	;===========
-	;	RegisterForModEvent("Campfire_CampfireOnGearUnequipped", "CampfireOnGearUnequipped")
-	;
-	;	Event CampfireOnGearUnequipped(Form akBaseObject, int iGearType)
-	;		if iGearType == 4
-	;			debug.trace("The player unequipped some boots!")
-	;		endif
-	;	EndEvent
-	;
-	;===========
-	;Notes
-	;===========
-	;	* The intent of this event is to notify when a piece of visual worn gear
-	;	  (armor, clothing, backpacks, ammo, etc) is unequipped, instead of every unequipped
-	;	  object. Primarily, the emphasis is on gear that has a substantive gameplay purpose
-	;	  (not purely cosmetic or utility equipment).
-	;
-	;	* This event can be raised multiple times for the same Base Object if that object
-	;	  is a set of "compound" gear (i.e. having more than one matching keyword, such 
-	;	  as ArmorBody AND ArmorGauntlets), allowing you to act on each part of an otherwise
-	;	  "one piece" set of gear (example: Vagabond Armor (Immersive Armors), which has both
-	;	  body armor and a cloak).
-	;
-	;	* Unlike OnObjectUnequipped, this event filters results based on the unequipped item's
-	;	  slot mask. Gear that utilizes slots 61 - 53, 51 - 47, or 45 will not be returned.
-	;	  Slot 52 is not checked for compatibility reasons. These slots are checked in 
-	;	  order of greatest to smallest, so if a piece of gear uses slots 61 and 30, it will 
-	;	  be filtered out and this event will not be raised when the object is unequipped.
-	;
-	;	* This event is not raised when weapons are unequipped.
-
-	trace("[Campfire] Raising Event: CampfireOnGearUnequipped(" + akBaseObject + ", " + iGearType + ")")
-
-	int handle = ModEvent.Create("Campfire_CampfireOnGearUnequipped")
-	if handle
-		ModEvent.PushForm(handle, akBaseObject)
-		ModEvent.PushInt(handle, iGearType)
-		ModEvent.Send(handle)
-		return True
-	else
-		return False
-	endif
 endFunction
 
 ; Functions ==================================================================================
@@ -169,6 +30,16 @@ _Camp_ObjectPlacementThreadManager function GetPlacementSystem() global
 	endif
 
 	return Campfire.CampfireObjectPlacementSystem as _Camp_ObjectPlacementThreadManager
+endFunction
+
+_Camp_Compatibility function GetCompatibilitySystem() global
+	;@TODO: Change to ESM
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return -1
+	endif
+	return Campfire.Compatibility
 endFunction
 
 ;/********f* CampUtil/GetPlayerEquippedHead
@@ -530,7 +401,7 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true, bool abPlayerBusy
 			notification("[Debug]You can't use this while placing something else.")
 		endif
 		return false
-	elseif Campfire.PlayerRef.IsSwimming()
+	elseif GetCompatibilitySystem().isSKSELoaded && Campfire.PlayerRef.IsSwimming()
 		if abShowMessage
 			;_DE_Placement_Swimming.Show()	;@TODO: Rename
 			notification("[Debug]You can't use this while swimming.")
@@ -693,8 +564,6 @@ ObjectReference function GetLastUsedCampfire() global
 
 	return Campfire.LastUsedCampfire
 endFunction
-
-;@TODO: int function IsPlayerUnderShelter()
 
 ;@TODO: Finalize and document
 int function GetCurrentTentType() global
