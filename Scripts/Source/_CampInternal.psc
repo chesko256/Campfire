@@ -107,3 +107,24 @@ endFunction
 function RaiseCampAPIError() global
 	debug.trace("[Campfire] Fatal Internal Campfire API error occurred.")
 endFunction
+
+int LOG_DEBUG = 0
+int LOG_INFO = 1
+int LOG_WARNING = 2
+int LOG_ERROR = 3
+function CampDebug(int aiSeverity, string asLogMessage) global
+	;@TODO: Create a global, and access using Game.GetFormFromFile
+	;@TODO: Change to .esm check
+	GlobalVariable LOG_LEVEL = Game.GetFormFromFile(, "Campfire.esp")
+	if LOG_LEVEL <= aiSeverity
+		if aiSeverity == LOG_DEBUG
+			debug.trace("[Campfire][Debug] " + asLogMessage)
+		elseif aiSeverity == LOG_INFO
+			debug.trace("[Campfire][Info] " + asLogMessage)
+		elseif aiSeverity == LOG_WARNING
+			debug.trace("[Campfire][Warning] " + asLogMessage)
+		elseif aiSeverity == LOG_ERROR
+			debug.trace("[Campfire][ERROR] " + asLogMessage)
+		endif
+	endif
+endFunction

@@ -1,14 +1,16 @@
 scriptname _Camp_PlayerHitMonitor extends ReferenceAlias
 
-GlobalVariable property _Camp_SKSEVersion auto
+;@TODO: Get rid of this global
+;GlobalVariable property _Camp_SKSEVersion auto
+import CampUtil
 
 Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
 	RaiseEvent_PlayerHit(akAggressor, akSource, akProjectile)
 EndEvent
 
 function RaiseEvent_PlayerHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile)
-	CampUtil.GetPlacementSystem().PlayerHitEvent(akAggressor, akSource, akProjectile)
-	if _Camp_SKSEVersion.GetValue() >= 1.7
+	GetPlacementSystem().PlayerHitEvent(akAggressor, akSource, akProjectile)
+	if GetCompatibilitySystem.isSKSELoaded
 		int handle = ModEvent.Create("Campfire_PlayerHit")
 		if handle
 			ModEvent.PushForm(handle, akAggressor as Form)

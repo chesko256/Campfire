@@ -11,6 +11,7 @@ Scriptname _Camp_Compatibility extends ReferenceAlias
 ; ===============================================================================================================================
 
 import debug
+import CampUtil
 
 ;#PROPERTIES=====================================================================================================================
 actor property PlayerRef auto
@@ -148,23 +149,15 @@ function RunCompatibility()
 	trace("                                                                                                                  ")
 	trace("============================================[Campfire: Warning Start]=====================-=======================")
 	
-	if isSKSELoaded
-		isSKSELoaded = SKSE.GetVersion()
-		if !isSKSELoaded
-			;SKSE was removed since the last save.
-			;Turn off SKSE-only features
-			_Camp_SKSEVersion.SetValue(0.0)
+	bool skse_loaded = SKSE.GetVersion()
+	if skse_loaded
+		float skse_version = SKSE.GetVersion() + SKSE.GetVersionMinor() * 0.01 + SKSE.GetVersionBeta() * 0.0001
+		if skse_version < SKSE_MIN_VERSION
+			isSKSELoaded = false
+			Conditions.IsSKSELoaded = false
 		else
-			_Camp_SKSEVersion.SetValue(SKSE.GetVersion() + SKSE.GetVersionMinor() * 0.01 + SKSE.GetVersionBeta() * 0.0001)
-		endif
-	else
-		isSKSELoaded = SKSE.GetVersion()
-		if isSKSELoaded
-			;SKSE was just added.
-			_Camp_SKSEVersion.SetValue(SKSE.GetVersion() + SKSE.GetVersionMinor() * 0.01 + SKSE.GetVersionBeta() * 0.0001)
-		else
-			;Turn off SKSE-only features
-			_Camp_SKSEVersion.SetValue(0.0)
+			isSKSELoaded = true
+			Conditions.IsSKSELoaded = true
 		endif
 	endif
 	

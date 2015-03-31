@@ -3,6 +3,7 @@ scriptname CampfireAPI extends Quest
 ;#Properties =======================================================================
 CampfireData property CampData auto
 _Camp_LegalAreaCheck property Legal auto
+_Camp_Compatibility property Compatibility auto
 Actor property PlayerRef auto
 Formlist property _Camp_WorldspacesInteriors auto
 Keyword property isCampfirePlaceableObject auto

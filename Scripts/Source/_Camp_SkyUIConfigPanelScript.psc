@@ -24,7 +24,6 @@ GlobalVariable property _DE_HelpDone_Visualize auto
 GlobalVariable property _DE_HelpDone_PlacementError auto
 GlobalVariable property _Camp_HelpDone_TentActivate auto
 GlobalVariable property _Camp_Setting_Tutorials auto
-GlobalVariable property _DE_SKSEVersion auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 GlobalVariable property _Camp_HotkeyCreateItem auto
 GlobalVariable property _Camp_HotkeyBuildCampfire auto

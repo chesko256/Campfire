@@ -67,7 +67,7 @@ ReferenceAlias property Follower1 auto
 ReferenceAlias property Follower2 auto
 ReferenceAlias property Follower3 auto
 
-;@From OnUpdate on CampTent / CampTentEx
+; From OnUpdate on CampTent / CampTentEx
 function UpdateTentUseState(ObjectReference akTent)
 	;@TODO: Might need to reintroduce some idea of myActor in order to maintain async state
 	;@TODO: Check hit, not combat!
