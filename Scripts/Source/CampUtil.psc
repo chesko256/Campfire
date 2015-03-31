@@ -12,9 +12,6 @@ scriptname CampUtil hidden
 import math
 import debug
 
-; Define the minimum SKSE version
-float SKSE_MIN_VERSION = 1.7
-
 CampfireAPI function GetAPI() global
 	;@TODO: Change to .esm check
 	return (Game.GetFormFromFile(0x00024095, "Campfire.esp") as Quest) as CampfireAPI
@@ -37,7 +34,7 @@ _Camp_Compatibility function GetCompatibilitySystem() global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
-		return -1
+		return none
 	endif
 	return Campfire.Compatibility
 endFunction
