@@ -1,17 +1,20 @@
 scriptname _Camp_PlayerHitMonitor extends ReferenceAlias
 
+GlobalVariable property _Camp_SKSEVersion auto
+
 Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
-	RaiseEvent_PlayerHit(akAggressor as Form, akSource, akProjectile as Form)
+	RaiseEvent_PlayerHit(akAggressor, akSource, akProjectile)
 EndEvent
 
-function RaiseEvent_PlayerHit(Form akAggressor, Form akSource, Form akProjectile)
-	int handle = ModEvent.Create("Campfire_PlayerHit")
-	if handle
-		ModEvent.PushForm(handle, akAggressor)
-		ModEvent.PushForm(handle, akSource)
-		ModEvent.PushForm(handle, akProjectile)
-		ModEvent.Send(handle)
+function RaiseEvent_PlayerHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile)
+	CampUtil.GetPlacementSystem().PlayerHitEvent(akAggressor, akSource, akProjectile)
+	if _Camp_SKSEVersion.GetValue() >= 1.7
+		int handle = ModEvent.Create("Campfire_PlayerHit")
+		if handle
+			ModEvent.PushForm(handle, akAggressor as Form)
+			ModEvent.PushForm(handle, akSource)
+			ModEvent.PushForm(handle, akProjectile as Form)
+			ModEvent.Send(handle)
+		endif
 	endif
 endFunction
-
-;@TODO: Wood harvesting needs direct hit notification to node

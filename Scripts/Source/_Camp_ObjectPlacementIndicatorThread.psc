@@ -21,7 +21,7 @@ function get_async(float center_point_x, float center_point_y, float x_offset, f
 	_y_offset = y_offset
 endFunction
 
-Event OnIndicatorUpdateStart()
+Event OnUpdate()
 	if thread_queued
 		float pos_x = _center_point_x + _x_offset
 		float pos_y = _center_point_y + _y_offset

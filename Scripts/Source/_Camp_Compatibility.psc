@@ -588,6 +588,5 @@ function RegisterForControlsOnLoad()
 endFunction
 
 function RegisterForEventsOnLoad()
-	RegisterForModEvent("Campfire_OnCellChange", "OnCellChange")
 	Campfire.RegisterForEventsOnLoad()
 endFunction

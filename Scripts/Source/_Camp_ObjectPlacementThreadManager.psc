@@ -89,12 +89,6 @@ _Camp_ObjectPlacementIndicatorThread02 PlacementIndicatorThread2
 _Camp_ObjectPlacementIndicatorThread03 PlacementIndicatorThread3
  
 Event OnInit()
-    ;Register for the event that will start all threads
-    ;NOTE - This needs to be re-registered once per load! Use an alias and OnPlayerLoadGame() in a real implementation.
-    RegisterForModEvent("Campfire_OnObjectPlacementStart", "OnObjectPlacementStart")
-    RegisterForModEvent("Campfire_OnIndicatorUpdateStart", "OnIndicatorUpdateStart")
-    RegisterForModEvent("Campfire_OnPlaceableObjectUsed", "OnPlaceableObjectUsed")
-
     ;Let's cast our threads to local variables so things are less cluttered in our code
     thread01 = CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread01
     thread02 = CampfireObjectPlacementSystem as _Camp_ObjectPlacementThread02
@@ -434,6 +428,7 @@ function StartPlacement(ObjectReference akIndicator)
     ;   _DE_HelpDone_Visualize.SetValue(2)
     ;endif
     ;#Help Text=========================
+    was_hit = false
     akIndicator.SetAngle(0.0, 0.0, 0.0)
     _Camp_CurrentlyPlacingObject.SetValue(2)
     if _Camp_Setting_AdvancedPlacement.GetValueInt() == 2
@@ -453,14 +448,19 @@ function StopPlacement()
     ;@TODO: Restore Inventory menu access
 endFunction
 
+bool was_hit = false
+function PlayerHitEvent(ObjectReference akAggressor, Form akSource, Projectile akProjectile)
+    was_hit = true
+endFunction
+
 bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  \
                               MiscObject akInventoryItem,                       \
                               Float afDistance, Float afHeightOffset,           \
                               Float afRotationOffset, Bool abSnapToTerrain,     \
                               Ingredient akIngredient, MiscObject akMiscItem,   \
                               int aiCost)
-    ;@TODO: Drop IsInCombat, check for OnHit event instead
-    if !PlayerCanPlaceObjects(abPlayerBusyCheck = false)
+    if !PlayerCanPlaceObjects(abPlayerBusyCheck = false) || was_hit
+        was_hit = false
         StopPlacement()
         ;_Camp_Placement_Cancelled.Show()
         _Camp_CurrentlyPlacingObject.SetValue(1)
@@ -730,12 +730,7 @@ function PlaceableObjectUsed(Activator akPlacementIndicator, Ingredient akIngred
 endFunction
 
 function RaiseEvent_OnIndicatorUpdateStart()
-    int handle = ModEvent.Create("Campfire_OnIndicatorUpdateStart")
-    if handle
-        ModEvent.Send(handle)
-    else
-        ;pass
-    endif
+    RegisterForSingleUpdate(0.1)
 endFunction
 
 function wait_all()
@@ -840,12 +835,7 @@ function TryToUnlockThread(ObjectReference akFuture)
 endFunction
 
 function RaiseEvent_OnObjectPlacementStart()
-    int handle = ModEvent.Create("Campfire_OnObjectPlacementStart")
-    if handle
-        ModEvent.Send(handle)
-    else
-        ;pass
-    endif
+    RegisterForSingleUpdate(0.1)
 endFunction
 
 float[] function GetOffsets(Actor akSource, Float afDistance = 100.0, float afOffset = 0.0)

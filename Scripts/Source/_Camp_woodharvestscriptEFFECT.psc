@@ -99,7 +99,7 @@ function HarvestWoodNoAxe()
 endFunction
 
 function GiveDeadwoodLogs()
-	int myHarvest = RandomInt(4, 8)
+	int myHarvest = RandomInt(3, 6)
 
 	if GetTrackedFollowerCount() > 0
 		myHarvest += 2
@@ -110,7 +110,7 @@ function GiveDeadwoodLogs()
 endFunction
 
 function GiveDeadwoodBranches()
-	int myHarvest = RandomInt(3, 7)
+	int myHarvest = RandomInt(2, 6)
 
 	if GetTrackedFollowerCount() > 0
 		myHarvest += RandomInt(2, 4)
