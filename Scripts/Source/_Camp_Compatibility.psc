@@ -20,6 +20,7 @@ _Camp_LegalAreaCheck property Legal Auto 							;Camping Legality script
 _Camp_Main property Campfire auto 									;Main script
 _Camp_ObjectPlacementThreadManager property PlacementSystem auto 	;Placement System Script
 _Camp_TentSystem property TentSys auto
+_Camp_ConditionValues property Conditions auto
 
 ;#Official DLC=================================================================
 bool property isDLC1Loaded auto	hidden						;Dawnguard
@@ -30,7 +31,6 @@ bool property isHFLoaded auto hidden						;Hearthfire
 bool property isSKSELoaded auto hidden						;SKSE
 bool property isSKYUILoaded auto hidden						;SkyUI 3.4+
 bool property isLSLoaded auto hidden						;Last Seed
-bool property isSKYRELoaded auto hidden						;Skyrim Redone
 bool property isIMCNLoaded auto hidden						;Imp's More Complex Needs
 bool property isRNDLoaded auto hidden			 			;Realistic Needs and Diseases
 
@@ -100,34 +100,22 @@ Tree property TreeReachTreeStump01 auto hidden
 ;#DLC / Mod Worldspaces============================================================
 Worldspace property DLC2WS auto hidden						;Solstheim
 
-;#SkyRe Perks======================================================================
-
-Perk property Traveller_Rank1 auto hidden
-Perk property Traveller_Rank2 auto hidden
-Perk property Traveller_Rank3 auto hidden
-Perk property Traveller_Rank4 auto hidden
-Perk property Traveller_Rank5 auto hidden
-Perk property Forestry_Rank1 auto hidden
-Perk property Forestry_Rank2 auto hidden
-Perk property Forestry_Rank3 auto hidden
-
 ;#Misc=============================================================================
 message property _DE_CompatibilityFinished auto
 Perk property _DE_DummyPerk auto
-GlobalVariable property _DE_SKSEVersion auto
-GlobalVariable property _DE_DLC1Loaded auto
-GlobalVariable property _DE_HFLoaded auto
+GlobalVariable property _Camp_SKSEVersion auto
 GlobalVariable property _DE_SKYRELoaded auto
 GlobalVariable property _Camp_HotkeyCreateItem auto
 GlobalVariable property _Camp_HotkeyBuildCampfire auto
 GlobalVariable property _Camp_HotkeyHarvestWood auto
 GlobalVariable property _Camp_Setting_TrackFollowers auto
 
-ConstructibleObject property _DE_RecipeSuppliesRockHF auto
-ConstructibleObject property _DE_RecipeLeatherValeDeerHideDLC1 auto
-ConstructibleObject property _DE_RecipeLeatherValeSabreCatHideDLC1 auto
-ConstructibleObject property _DE_RecipeTanningLeatherValeDeerHideDLC1 auto
-ConstructibleObject property _DE_RecipeTanningLeatherValeSabreCatHideDLC1 auto
+ConstructibleObject property _Camp_FireMiscRecipe_TinderStraw auto
+ConstructibleObject property _Camp_RecipeSuppliesRockHF auto
+ConstructibleObject property _Camp_RecipeLeatherValeDeerHideDLC1 auto
+ConstructibleObject property _Camp_RecipeLeatherValeSabreCatHideDLC1 auto
+ConstructibleObject property _Camp_RecipeTanningLeatherValeDeerHideDLC1 auto
+ConstructibleObject property _Camp_RecipeTanningLeatherValeSabreCatHideDLC1 auto
 
 Spell property _Camp_CreateItemSpell auto
 Spell property _Camp_CampfireSpell auto
@@ -165,18 +153,18 @@ function RunCompatibility()
 		if !isSKSELoaded
 			;SKSE was removed since the last save.
 			;Turn off SKSE-only features
-			_DE_SKSEVersion.SetValue(0.0)
+			_Camp_SKSEVersion.SetValue(0.0)
 		else
-			_DE_SKSEVersion.SetValue(SKSE.GetVersion() + SKSE.GetVersionMinor() * 0.01 + SKSE.GetVersionBeta() * 0.0001)
+			_Camp_SKSEVersion.SetValue(SKSE.GetVersion() + SKSE.GetVersionMinor() * 0.01 + SKSE.GetVersionBeta() * 0.0001)
 		endif
 	else
 		isSKSELoaded = SKSE.GetVersion()
 		if isSKSELoaded
 			;SKSE was just added.
-			_DE_SKSEVersion.SetValue(SKSE.GetVersion() + SKSE.GetVersionMinor() * 0.01 + SKSE.GetVersionBeta() * 0.0001)
+			_Camp_SKSEVersion.SetValue(SKSE.GetVersion() + SKSE.GetVersionMinor() * 0.01 + SKSE.GetVersionBeta() * 0.0001)
 		else
 			;Turn off SKSE-only features
-			_DE_SKSEVersion.SetValue(0.0)
+			_Camp_SKSEVersion.SetValue(0.0)
 		endif
 	endif
 	
@@ -196,17 +184,17 @@ function RunCompatibility()
 		isDLC1Loaded = Game.GetFormFromFile(0x02009403, "Dawnguard.esm")
 		if !isDLC1Loaded
 			;DLC1 was removed since the last save.
-			_DE_DLC1Loaded.SetValue(1.0)
+			Conditions.IsDawnguardLoaded = false
 		else
-			_DE_DLC1Loaded.SetValue(2.0)
+			Conditions.IsDawnguardLoaded = true
 		endif
 	else
 		isDLC1Loaded = Game.GetFormFromFile(0x02009403, "Dawnguard.esm")
 		if isDLC1Loaded
 			;DLC1 was just added.
-			_DE_DLC1Loaded.SetValue(2.0)
+			Conditions.IsDawnguardLoaded = true
 		else
-			_DE_DLC1Loaded.SetValue(1.0)
+			Conditions.IsDawnguardLoaded = false
 		endif
 	endif
 
@@ -226,35 +214,17 @@ function RunCompatibility()
 		isHFLoaded = Game.GetFormFromFile(0x0200306C, "HearthFires.esm")
 		if !isHFLoaded
 			;Hearthfire was removed since the last save.
-			_DE_HFLoaded.SetValue(1.0)
+			Conditions.IsHearthfireLoaded = false
 		else
-			_DE_HFLoaded.SetValue(2.0)
+			Conditions.IsHearthfireLoaded = true
 		endif
 	else
 		isHFLoaded = Game.GetFormFromFile(0x0200306C, "HearthFires.esm")
 		if isHFLoaded
 			;Hearthfire was just added.
-			_DE_HFLoaded.SetValue(2.0)
+			Conditions.IsHearthfireLoaded = true
 		else
-			_DE_HFLoaded.SetValue(1.0)
-		endif
-	endif
-	
-	if isSKYRELoaded
-		isSKYRELoaded = Game.GetFormFromFile(0x02002F9A, "SkyRe_Survivalism.esp")
-		if !isSKYRELoaded
-			;SkyRe was removed since the last save.
-			_DE_SKYRELoaded.SetValue(1.0)
-		else
-			_DE_SKYRELoaded.SetValue(2.0)
-		endif
-	else
-		isSKYRELoaded = Game.GetFormFromFile(0x02002F9A, "SkyRe_Survivalism.esp")
-		if isSKYRELoaded
-			;SkyRe was just added.
-			_DE_SKYRELoaded.SetValue(2.0)
-		else
-			_DE_SKYRELoaded.SetValue(1.0)
+			Conditions.IsHearthfireLoaded = false
 		endif
 	endif
 	
@@ -498,44 +468,31 @@ function RunCompatibility()
 	endif
 	
 	;#Region SKSE + Mod Support Section
-	if isHFLoaded && isSKSELoaded
+	if isHFLoaded && isSKSELoaded && _Camp_SKSEVersion.GetValue() >= 1.0505
 		
 		form QuarriedStone = Game.GetFormFromFile(0x0200306C, "HearthFires.esm")		;Quarried Stone
-		_DE_RecipeSuppliesRockHF.SetNthIngredient(QuarriedStone, 0)
+		form Straw = Game.GetFormFromFile(0x00005A68, "HearthFires.esm")				;Straw
+		_Camp_RecipeSuppliesRockHF.SetNthIngredient(QuarriedStone, 0)
+		_Camp_FireMiscRecipe_TinderStraw.SetNthIngredient(Straw, 0)
 		
 	endif
 	
-	if isDLC1Loaded && isSKSELoaded
+	if isDLC1Loaded && isSKSELoaded && _Camp_SKSEVersion.GetValue() >= 1.0505
 	
 		form ValeDeerHide = Game.GetFormFromFile(0x02011999, "Dawnguard.esm")			;Vale Deer Hide
 		form ValeSabreCatHide = Game.GetFormFromFile(0x0201199A, "Dawnguard.esm")		;Vale Sabre Cat Hide
 		
-		_DE_RecipeLeatherValeDeerHideDLC1.SetNthIngredient(ValeDeerHide, 0)
-		_DE_RecipeLeatherValeSabreCatHideDLC1.SetNthIngredient(ValeSabreCatHide, 0)
-		_DE_RecipeTanningLeatherValeDeerHideDLC1.SetNthIngredient(ValeDeerHide, 0)
-		_DE_RecipeTanningLeatherValeSabreCatHideDLC1.SetNthIngredient(ValeSabreCatHide, 0)
-		
+		_Camp_RecipeLeatherValeDeerHideDLC1.SetNthIngredient(ValeDeerHide, 0)
+		_Camp_RecipeLeatherValeSabreCatHideDLC1.SetNthIngredient(ValeSabreCatHide, 0)
+		_Camp_RecipeTanningLeatherValeDeerHideDLC1.SetNthIngredient(ValeDeerHide, 0)
+		_Camp_RecipeTanningLeatherValeSabreCatHideDLC1.SetNthIngredient(ValeSabreCatHide, 0)
 	endif
-	
-	;#EndRegion
-	
-	if isSKYRELoaded
-		SKYRELoadUp()
-	else
-		SKYREUnload()
-	endif
-	
-	;#EndRegion
 	
 	trace("============================================[ Campfire: Warning End ]=============================================")
 	trace("                                                                                                                  ")
 	trace("                                       Campfire compatibility check complete.                                     ")
 	trace("                                                                                                                  ")
 	trace("============================================[ Campfire: Warning End ]=============================================")
-	
-	;if _DE_Setting_SystemMsg.GetValueInt() == 2
-	;	_DE_CompatibilityFinished.Show()
-	;endif	
 
 	AddStartupSpells()
 endFunction
@@ -544,10 +501,7 @@ function VanillaGameLoadUp()
 	if bAddedSpellBooks == false
 		AddSpellBooks()
 	endif
-
 	PlacementSystem.SmallFire = Game.GetFormFromFile(0x00013B40, "Skyrim.esm")
-	;PlacementSystem.LargeFire = Game.GetFormFromFile(0x000D61B6, "Skyrim.esm")
-
 	TreeReachTreeStump01 = Game.GetFormFromFile(0x000B8A75, "Skyrim.esm") as Tree
 endFunction
 
@@ -560,12 +514,9 @@ function AddStartupSpells()							;Approved 2.0
 	endif
 
 	if isSKYUILoaded
-		debug.trace("[Campfire] SkyUI loaded...")
 		if _Camp_HotkeyCreateItem.GetValueInt() != 0
-			debug.trace("[Campfire] Hotkey has value, removing......")
 			PlayerRef.RemoveSpell(_Camp_CreateItemSpell)
 		else
-			debug.trace("[Campfire] Hotkey has NO value, adding......")
 			PlayerRef.AddSpell(_Camp_CreateItemSpell, false)
 		endif
 		if _Camp_HotkeyBuildCampfire.GetValueInt() != 0
@@ -590,39 +541,6 @@ function AddStartupSpells()							;Approved 2.0
 	if _Camp_Setting_TrackFollowers.GetValueInt() == 2
 		PlayerRef.AddSpell(_Camp_FollowerDetectSpell, false)
 	endif
-endFunction
-
-function SKYRELoadUp()
-
-	Traveller_Rank1 = Game.GetFormFromFile(0x0208DCAA, "SkyRe_Main.esp") as Perk				;Traveller - Rank 1
-	Traveller_Rank2 = Game.GetFormFromFile(0x0208E232, "SkyRe_Main.esp") as Perk				;Traveller - Rank 2
-	Traveller_Rank3 = Game.GetFormFromFile(0x0208E234, "SkyRe_Main.esp") as Perk				;Traveller - Rank 3
-	Traveller_Rank4 = Game.GetFormFromFile(0x0208E235, "SkyRe_Main.esp") as Perk				;Traveller - Rank 4
-	Traveller_Rank5 = Game.GetFormFromFile(0x0208E236, "SkyRe_Main.esp") as Perk				;Traveller - Rank 5
-	Forestry_Rank1 = Game.GetFormFromFile(0x02002F9F, "SkyRe_Survivalism.esp") as Perk				;Forestry - Rank 1
-	Forestry_Rank2 = Game.GetFormFromFile(0x02002FA0, "SkyRe_Survivalism.esp") as Perk				;Forestry - Rank 2
-	Forestry_Rank3 = Game.GetFormFromFile(0x02002FA1, "SkyRe_Survivalism.esp") as Perk				;Forestry - Rank 3
-
-	trace("SkyRe Traveller_Rank1 " + Traveller_Rank1)
-	trace("SkyRe Traveller_Rank2 " + Traveller_Rank2)
-	trace("SkyRe Traveller_Rank3 " + Traveller_Rank3)
-	trace("SkyRe Traveller_Rank4 " + Traveller_Rank4)
-	trace("SkyRe Traveller_Rank5 " + Traveller_Rank5)
-	trace("SkyRe Forestry_Rank1 " + Forestry_Rank1)
-	trace("SkyRe Forestry_Rank2 " + Forestry_Rank2)
-	trace("SkyRe Forestry_Rank3 " + Forestry_Rank3)
-	
-endFunction
-
-function SKYREUnload()
-	Traveller_Rank1 = _DE_DummyPerk
-	Traveller_Rank2 = _DE_DummyPerk
-	Traveller_Rank3 = _DE_DummyPerk
-	Traveller_Rank4 = _DE_DummyPerk
-	Traveller_Rank5 = _DE_DummyPerk
-	Forestry_Rank1 = _DE_DummyPerk
-	Forestry_Rank2 = _DE_DummyPerk
-	Forestry_Rank3 = _DE_DummyPerk
 endFunction
 
 function AddSpellBooks()

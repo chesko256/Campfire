@@ -260,7 +260,7 @@ endFunction
 
 event OnPageReset(string page)
 	if page == ""
-		LoadCustomContent("frostfall/frostfall_splash.swf")
+		LoadCustomContent("campfire/logo.dds")
 	else
 		UnloadCustomContent()
 	endif

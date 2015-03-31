@@ -6,3 +6,5 @@ bool property IsPlayerLayingInTent = false auto conditional hidden
 bool property IsChoppingWood = false auto conditional hidden
 bool property IsChoppingWoodEnvironment = false auto conditional hidden
 bool property IsRidingFlyingMount = false auto conditional hidden
+bool property IsHearthfireLoaded = false auto conditional hidden
+bool property IsDawnguardLoaded = false auto conditional hidden

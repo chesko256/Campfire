@@ -18,6 +18,7 @@
 
 #Interface
 !Interface/frostfall/*
+!Interface/campfire/*
 !Interface/Translations/Chesko_Frostfall_*.txt
 !Interface/Translations/Campfire*.txt
 !Interface/exported/widgets/frostfall/*
@@ -42,6 +43,8 @@
 !_Camp*.psc
 !Camp*.pex
 !Camp*.psc
+!SF__Camp*.pex
+!SF__Camp*.psc
 !Tent*.pex
 !Tent*.psc
 !_Frost*.pex
