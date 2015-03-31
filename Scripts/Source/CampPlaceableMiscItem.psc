@@ -66,16 +66,11 @@ Perk property necessary_perk auto
 Event OnEquipped(Actor akActor)
 	if PlayerCanPlaceObjects()
 		if akActor == Game.GetPlayer()
-			;@TODO: Reimplement as an API call
-			int handle = ModEvent.Create("Campfire_OnPlaceableObjectUsed")
-			if handle
-				ModEvent.PushForm(handle, Required_placement_indicator as Form)
-				ModEvent.PushForm(handle, consumable_ingredient as Form)
-				ModEvent.PushForm(handle, consumable_misc_item as Form)
-				ModEvent.PushInt(handle, consumable_cost)
-				ModEvent.PushForm(handle, necessary_perk as Form)
-				ModEvent.Send(handle)
-			endif
+			CampUtil.GetPlacementSystem().PlaceableObjectUsed(Required_placement_indicator, \
+										  					  consumable_ingredient,		\
+										  					  consumable_misc_item,			\
+										  					  consumable_cost,				\
+										  					  necessary_perk)
 		endif
 	endif
 endEvent

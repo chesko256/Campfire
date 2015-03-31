@@ -41,6 +41,8 @@ Message property _Camp_Placement_Cancelled auto
 Message property _Camp_Placement_Cancelled_CollisionBug auto
 Message property _Camp_PlacementIllegal auto
 Message property _Camp_IndicatorSelect auto
+Message property _Camp_PlaceObjectError_Perk auto
+Message property _Camp_PlaceObjectError_Item auto
 
 ;Crime
 Quest property _Camp_CampingCrimeTracking auto
@@ -693,59 +695,39 @@ function UpdateIndicatorPosition(ObjectReference akIndicator, float afDistance, 
     endif
 endFunction
 
-;@TODO: Register for this
-Event OnPlaceableObjectUsed(Form akPlacementIndicator, Form akIngredient, Form akMiscItem, Int aiCost, Form akPerk)
+function PlaceableObjectUsed(Activator akPlacementIndicator, Ingredient akIngredient, MiscObject akMiscItem, Int aiCost, Perk akPerk)
     if PlayerCanPlaceObjects()
-
-        Activator placement_indicator
-        Ingredient req_ingredient
-        MiscObject req_miscitem
-        int cost
-        Perk req_perk
-        
-        if akIngredient
-            req_ingredient = akIngredient as Ingredient
-        endif
-        if akMiscItem
-            req_miscitem = akMiscItem as MiscObject
-        endif
         if akPerk
-            req_perk = akPerk as Perk
-        endif
-
-        if req_perk
-            if !PlayerRef.HasPerk(req_perk)
-                ;stringbuilder error with translation support
+            if !PlayerRef.HasPerk(akPerk)
+                _Camp_PlaceObjectError_Perk.Show()
                 return
             endif
         endif
-
-        if req_ingredient && cost > 0
-            if !(PlayerRef.GetItemCount(req_ingredient) >= cost)
-                ;stringbuilder error with translation support
+        if akIngredient && aiCost > 0
+            if !(PlayerRef.GetItemCount(akIngredient) >= aiCost)
+                _Camp_PlaceObjectError_Item.Show()
                 return
             endif
-        elseif req_miscitem && cost > 0
-            if !(PlayerRef.GetItemCount(req_miscitem) >= cost)
-                ;stringbuilder error with translation support
+        elseif akMiscItem && aiCost > 0
+            if !(PlayerRef.GetItemCount(akMiscItem) >= aiCost)
+                _Camp_PlaceObjectError_Item.Show()
                 return
             endif
         endif
-
 
         ExitMenus()
         ;@TODO: block inventory menu
         ObjectReference ref = PlayerRef.PlaceAtMe(akPlacementIndicator as Activator)
         CampPlacementIndicator indicator = ref as CampPlacementIndicator
-        if req_ingredient
-            indicator.required_ingredient = req_ingredient
-            indicator.cost = cost
-        elseif req_miscitem
-            indicator.required_miscitem = req_miscitem
-            indicator.cost = cost
+        if akIngredient
+            indicator.required_ingredient = akIngredient
+            indicator.cost = aiCost
+        elseif akMiscItem
+            indicator.required_miscitem = akMiscItem
+            indicator.cost = aiCost
         endif
     endif
-endEvent
+endFunction
 
 function RaiseEvent_OnIndicatorUpdateStart()
     int handle = ModEvent.Create("Campfire_OnIndicatorUpdateStart")
