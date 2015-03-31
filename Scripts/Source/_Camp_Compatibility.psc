@@ -13,6 +13,8 @@ Scriptname _Camp_Compatibility extends ReferenceAlias
 import debug
 import CampUtil
 
+float property SKSE_MIN_VERSION = 1.7 autoReadOnly
+
 ;#PROPERTIES=====================================================================================================================
 actor property PlayerRef auto
 ;#Scripts======================================================================
@@ -31,7 +33,8 @@ bool property isHFLoaded auto hidden						;Hearthfire
 ;#Supported Mods===============================================================
 bool property isSKSELoaded auto hidden						;SKSE
 bool property isSKYUILoaded auto hidden						;SkyUI 3.4+
-bool property isLSLoaded auto hidden						;Last Seed
+bool property isFrostfallLoaded auto hidden					;Frostfall
+bool property isLastSeedLoaded auto hidden					;Last Seed
 bool property isIMCNLoaded auto hidden						;Imp's More Complex Needs
 bool property isRNDLoaded auto hidden			 			;Realistic Needs and Diseases
 
@@ -149,6 +152,9 @@ function RunCompatibility()
 	trace("                                                                                                                  ")
 	trace("============================================[Campfire: Warning Start]=====================-=======================")
 	
+	;@TODO: Add support
+	isFrostfallLoaded = false
+
 	bool skse_loaded = SKSE.GetVersion()
 	if skse_loaded
 		float skse_version = SKSE.GetVersion() + SKSE.GetVersionMinor() * 0.01 + SKSE.GetVersionBeta() * 0.0001
@@ -263,14 +269,14 @@ function RunCompatibility()
 		endif
 	endif
 
-	if isLSLoaded
-		isLSLoaded = Game.GetFormFromFile(0x02000D63, "LastSeed.esp")
-		if !isLSLoaded
+	if isLastSeedLoaded
+		isLastSeedLoaded = Game.GetFormFromFile(0x02000D63, "LastSeed.esp")
+		if !isLastSeedLoaded
 			;Last Seed was removed since the last save.
 		endif
 	else
-		isLSLoaded = Game.GetFormFromFile(0x02000D63, "LastSeed.esp")
-		if isLSLoaded
+		isLastSeedLoaded = Game.GetFormFromFile(0x02000D63, "LastSeed.esp")
+		if isLastSeedLoaded
 			;Last Seed was just added.
 		endif
 	endif

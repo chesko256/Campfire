@@ -4,7 +4,7 @@ function RaceChanged()
 
 endFunction
 
-function ObjectUnequipped(Form akBaseObject, int iGearType)
+function ObjectEquipped(Form akBaseObject, int iGearType)
     ;===========
     ;Parameters
     ;===========

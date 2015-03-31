@@ -38,7 +38,7 @@ Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 
 	if akBaseObject as Armor
 
-		if _DE_EquipExceptions.HasForm(akBaseObject)
+		if _Camp_EquipExceptions.HasForm(akBaseObject)
 			return
 		elseif !(GetUsesMainBodySlot(akBaseObject))
 			return
@@ -64,7 +64,7 @@ Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 			bEventRaised = RaiseEventOnGearUnequipped(akBaseObject, 4)
 			CampData.CurrentFeet = none
 		endif
-		if _DE_Backpacks.HasForm(akBaseObject)
+		if _Camp_Backpacks.HasForm(akBaseObject)
 			bEventRaised = RaiseEventOnGearUnequipped(akBaseObject, 5)
 			CampData.CurrentBackpack = none
 		endif
@@ -106,7 +106,7 @@ function ProcessEquippedObject(Form akBaseObject)
 		;trace("[Campfire] The player equipped a piece of feet armor.")
 	endif
 	if !bEventRaised
-		if _DE_Backpacks.HasForm(akBaseObject)
+		if _Camp_Backpacks.HasForm(akBaseObject)
 			CampData.CurrentBackpack = akBaseObject as Armor
 			bool b = RaiseEventOnGearEquipped(akBaseObject, 5)
 			;trace("[Campfire] The player equipped a backpack.")
@@ -167,7 +167,7 @@ bool function RaiseEventOnGearEquipped(Form akBaseObject, int iGearType)
 	return true
 endFunction
 
-function RaiseEventOnGearUnequipped(Form akBaseObject, int iGearType)
+bool function RaiseEventOnGearUnequipped(Form akBaseObject, int iGearType)
 	;===========
 	;Parameters
 	;===========
@@ -226,7 +226,7 @@ bool function GetUsesMainBodySlot(Form akBaseObject)
 		return false
 	elseif akBaseObject as Ammo
 		return true
-	elseif _DE_Backpacks.HasForm(akBaseObject)
+	elseif _Camp_Backpacks.HasForm(akBaseObject)
 		;trace("[Campfire] This equipment is a backpack.")
 		return true
 	elseif akBaseObject as Armor
