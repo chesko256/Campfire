@@ -66,7 +66,7 @@ ObjectReference function get_async(Activator akFuture, ObjectReference akFutureA
 	return future
 endFunction
 
-Event OnObjectPlacementStart()
+Event OnUpdate()
 	if thread_queued
 		float[] relative_position = new float[6]
 		relative_position = GetRelativePosition(_RelativeCenterObject, _ObjectPositionReference)
