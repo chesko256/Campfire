@@ -504,7 +504,7 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
     ;Scenario: placing object (simple)
     elseif _Camp_CurrentlyPlacingObject.GetValueInt() == 2 && _Camp_Setting_AdvancedPlacement.GetValueInt() == 1
         UpdateIndicatorPositionSimple(akIndicator, afDistance, afHeightOffset, afRotationOffset)
-        if LegalToCampHere()
+        if LegalToCampHere() && !IsCrimeToPlaceInTowns(akFormToPlace)
             _Camp_VisError.Stop(akIndicator)
             _Camp_VisPlacement.Play(akIndicator)
         else
@@ -516,7 +516,7 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
 
     ;Scenario: Player activated the placement indicator
     else
-        if !LegalToCampHere()
+        if !LegalToCampHere() && IsCrimeToPlaceInTowns(akFormToPlace)
             int ibutton = _Camp_PlacementIllegal.Show()
             if ibutton == 0
                 ;Place it anyway
