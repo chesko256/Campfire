@@ -2,6 +2,7 @@ scriptname _Camp_ObjectPlacementThreadManager extends Quest
 
 import math
 import CampUtil
+import _CampInternal
 
 ;Object Placement
 Quest property CampfireObjectPlacementSystem auto
@@ -751,7 +752,7 @@ function begin_waiting()
             i += 1
             Utility.wait(0.1)
             if i >= 100
-                debug.trace("Error: A catastrophic error has occurred. All threads have become unresponsive. Please debug this issue or notify the author.")
+                CampDebug(3, "A catastrophic error has occurred. All threads have become unresponsive. Please debug this issue or notify the author.")
                 i = 0
                 ;Fail by returning None. The mod needs to be fixed.
                 return
@@ -828,9 +829,9 @@ function TryToUnlockThread(ObjectReference akFuture)
     endif
  
     if !success
-        debug.trace("Error: A thread has encountered an error and has become unresponsive.")
+        CampDebug(3, "A thread has encountered an error and has become unresponsive.")
     else
-        debug.trace("Warning: An unresponsive thread was successfully unlocked.")
+        CampDebug(2, "An unresponsive thread was successfully unlocked.")
     endif
 endFunction
 

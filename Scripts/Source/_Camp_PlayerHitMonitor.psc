@@ -1,7 +1,5 @@
 scriptname _Camp_PlayerHitMonitor extends ReferenceAlias
 
-;@TODO: Get rid of this global
-;GlobalVariable property _Camp_SKSEVersion auto
 import CampUtil
 
 Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)

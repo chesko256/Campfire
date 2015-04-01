@@ -187,7 +187,7 @@ EndEvent
 
 function ProcessOnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abBashAttack)
 	if akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11
-		;debug.trace("[Campfire] Torch bash!")
+		CampDebug(0, "Torch bash!")
 		IncreaseFireLevel()
 	endif
 endFunction
@@ -210,7 +210,7 @@ function IncreaseFireLevel()
 	if fire_level < 9
 		fire_level += 1
 	endif
-	debug.trace("[Campfire] Fire level increased to " + fire_level)
+	CampDebug(1, "Fire level increased to " + fire_level)
 	UpdateFireState()
 endFunction
 
@@ -218,7 +218,7 @@ function DecreaseFireLevel()
 	if fire_level > 0 && fire_level < 9
 		fire_level -= 1
 	endif
-	debug.trace("[Campfire] Fire level decreased to " + fire_level)
+	CampDebug(1, "Fire level decreased to " + fire_level)
 	UpdateFireState()
 endFunction
 
@@ -318,7 +318,7 @@ State OnFire
 		endif
 	endEvent
 	Event OnActivate(ObjectReference akActionRef)
-		debug.trace("[Campfire] Can't use something while it's on fire!")
+		CampDebug(1, "Can't use something while it's on fire!")
 	EndEvent
 endState
 
@@ -330,16 +330,16 @@ State BurningDown
 		BurnDown()
 	EndEvent
 	Event OnActivate(ObjectReference akActionRef)
-		debug.trace("[Campfire] Can't use something while it's burning down!")
+		CampDebug(1, "Can't use something while it's burning down!")
 	EndEvent
 	function BurnDown()
-		debug.trace("[Campfire] Burning down!")
+		CampDebug(1, "Burning down!")
 		;@Override
 	endFunction
 endState
 
 function BurnDown()
-	debug.trace("[Campfire] Not burning down, do nothing.")
+	CampDebug(1, "Not burning down, do nothing.")
 endFunction
 
 function TryToPlayShader(ObjectReference akObjectReference)

@@ -281,7 +281,7 @@ function Initialize()
     last_update_registration_time = Utility.GetCurrentGameTime()
     remaining_time = ASH_DURATION
     RegisterForSingleUpdateGameTime(remaining_time)
-    debug.trace("[Campfire] Registered for update in " + remaining_time + " hours.")
+    CampDebug(0, "Campfire registered for update in " + remaining_time + " hours.")
 endFunction
 
 Event OnActivate(ObjectReference akActionRef)
@@ -509,7 +509,7 @@ endFunction
 
 Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
     if akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11
-        ;debug.trace("[Campfire] Torch bash!")
+        CampDebug(0, "Torch bash!")
         if campfire_size > 0 && campfire_stage == 3
             LightFire()
         endif
@@ -529,7 +529,7 @@ Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
 EndEvent
 
 function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int aiBurnDuration)
-    debug.trace("[Campfire] Fuel set: " + akFuelLit + "," + akFuelUnlit + "," + akLight)
+    CampDebug(1, "Fuel set: " + akFuelLit + "," + akFuelUnlit + "," + akLight)
     burn_duration = aiBurnDuration
     
     ;If there is pre-existing fuel, get rid of it
@@ -580,7 +580,7 @@ function SitDown()
 endFunction
 
 function PlaceFuel()
-    debug.trace("[Campfire] PlaceFuel")
+    CampDebug(0, "PlaceFuel")
     myFuelUnlit.EnableNoWait()
     myFuelLit.DisableNoWait()
     myLight.DisableNoWait()
@@ -588,12 +588,12 @@ function PlaceFuel()
     RegisterForSingleUpdateGameTime(ASH_DURATION)
     last_update_registration_time = Utility.GetCurrentGameTime()
     remaining_time = ASH_DURATION
-    debug.trace("[Campfire] Registered for update in " + ASH_DURATION + " hours.")
+    CampDebug(1, "Campfire registered for update in " + ASH_DURATION + " hours.")
     campfire_stage = 3
 endFunction
 
 function LightFire()
-    debug.trace("[Campfire] LightFire")
+    CampDebug(0, "LightFire")
     myFuelUnlit.DisableNoWait()
     myFuelLit.EnableNoWait()
     myLight.EnableNoWait()
@@ -602,19 +602,19 @@ function LightFire()
     RegisterForSingleUpdateGameTime(burn_duration)
     last_update_registration_time = Utility.GetCurrentGameTime()
     remaining_time = burn_duration + EMBERS_DURATION + ASH_DURATION
-    debug.trace("[Campfire] Registered for update in " + burn_duration + " hours.")
+    CampDebug(1, "Campfire registered for update in " + burn_duration + " hours.")
     campfire_stage = 2
 endFunction
 
 function PutOutFire()
-    debug.trace("[Campfire] PutOutFire")
+    CampDebug(0, "PutOutFire")
     myFuelUnlit.EnableNoWait()
     myFuelLit.DisableNoWait()
     myLight.DisableNoWait()
     RegisterForSingleUpdateGameTime(ASH_DURATION)
     last_update_registration_time = Utility.GetCurrentGameTime()
     remaining_time = ASH_DURATION
-    debug.trace("[Campfire] Registered for update in " + remaining_time + " hours.")
+    CampDebug(1, "Campfire registered for update in " + remaining_time + " hours.")
     campfire_stage = 3
 
     FXFireOut.Play(self)
@@ -624,7 +624,7 @@ function PutOutFire()
 endFunction
 
 function BurnToEmbers()
-    debug.trace("[Campfire] BurnToEmbers")
+    CampDebug(0, "BurnToEmbers")
     myFuelUnlit.DisableNoWait(true)
     myFuelLit.DisableNoWait(true)
     myLight.DisableNoWait(true)
@@ -632,13 +632,13 @@ function BurnToEmbers()
     myAshes.EnableNoWait()
     last_update_registration_time = Utility.GetCurrentGameTime()
     RegisterForSingleUpdateGameTime(remaining_time - ASH_DURATION)
-    debug.trace("[Campfire] Registered for update in " + (remaining_time - ASH_DURATION) + " hours.")
+    CampDebug(1, "Campfire registered for update in " + (remaining_time - ASH_DURATION) + " hours.")
     campfire_stage = 1
     campfire_size = 0
 endFunction
 
 function BurnToAshes()
-    debug.trace("[Campfire] BurnToAshes")
+    CampDebug(0, "BurnToAshes")
     myFuelUnlit.DisableNoWait(true)
     myFuelLit.DisableNoWait(true)
     myLight.DisableNoWait()
@@ -646,7 +646,7 @@ function BurnToAshes()
     myAshes.EnableNoWait()
     last_update_registration_time = Utility.GetCurrentGameTime()
     RegisterForSingleUpdateGameTime(remaining_time)
-    debug.trace("[Campfire] Registered for update in " + remaining_time + " hours.")
+    CampDebug(1, "Campfire registered for update in " + remaining_time + " hours.")
     campfire_stage = 0
     campfire_size = 0
 endFunction
@@ -656,7 +656,7 @@ Event OnUpdateGameTime()
     float this_time = (Utility.GetCurrentGameTime() * 24.0)
     float time_delta = this_time - (last_update_registration_time * 24.0)
     remaining_time -= time_delta
-    debug.trace("[Campfire] Remaining time " + remaining_time)
+    CampDebug(0, "Campfire remaining time " + remaining_time)
 
     if remaining_time < 1
         TakeDown()

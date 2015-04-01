@@ -1,5 +1,7 @@
 Scriptname _Camp_FollowerRegistration extends ActiveMagicEffect  
 
+import _CampInternal
+
 Quest property _Camp_FollowerQuest auto
 
 Race property DogCompanionRace auto
@@ -10,7 +12,7 @@ ReferenceAlias property Follower3 auto
 ReferenceAlias property Animal auto
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
-	debug.trace("Registering actor: " + akTarget.GetBaseObject().GetName() + " self " + self)
+	CampDebug(1, "Registering actor: " + akTarget.GetBaseObject().GetName() + " self " + self)
     if akTarget.GetRace() != DogCompanionRace
         RegisterFollower(akTarget)
     else
@@ -19,7 +21,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 EndEvent
 
 Event OnEffectFinish(Actor akTarget, Actor akCaster)
-    debug.trace("Unregistering actor: " + akTarget.GetBaseObject().GetName() + " self " + self)
+    CampDebug(1, "Unregistering actor: " + akTarget.GetBaseObject().GetName() + " self " + self)
     if akTarget.GetRace() != DogCompanionRace
         UnregisterFollower(akTarget)
     else
@@ -51,7 +53,7 @@ function RegisterFollower(Actor akActor)
     elseif !third_actor_ref
         Follower3.ForceRefTo(akActor)
     else
-        debug.trace("[Campfire] Tried to register " + akActor + " as Follower, but aliases were full.")
+        CampDebug(1, "[Campfire] Tried to register " + akActor + " as Follower, but aliases were full.")
     endif
 endFunction
 

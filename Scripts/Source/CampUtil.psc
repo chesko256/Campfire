@@ -603,5 +603,5 @@ function ExitMenus() global
 endFunction
 
 function RaiseCampAPIError() global
-	debug.trace("[Campfire] Fatal Campfire API error occurred.")
+	debug.trace("[Campfire][ERROR] Fatal Campfire API error occurred.")
 endFunction

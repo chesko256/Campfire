@@ -1,10 +1,5 @@
 scriptname _CampInternal hidden
 
-int LOG_DEBUG = 0
-int LOG_INFO = 1
-int LOG_WARNING = 2
-int LOG_ERROR = 3
-
 _CampfireInternalAPI function GetAPI() global
 	;@TODO: Change to .esm check
 	return (Game.GetFormFromFile(0x00024095, "Campfire.esp") as Quest) as _CampfireInternalAPI
@@ -110,12 +105,10 @@ function SetLastUsedCampfire(ObjectReference akCampfire) global
 endFunction
 
 function RaiseCampAPIError() global
-	debug.trace("[Campfire] Fatal Internal Campfire API error occurred.")
+	CampDebug(3, "Fatal Internal Campfire API error occurred.")
 endFunction
 
-
 function CampDebug(int aiSeverity, string asLogMessage) global
-	;@TODO: Create a global, and access using Game.GetFormFromFile
 	;@TODO: Change to .esm check
 	int LOG_LEVEL = (Game.GetFormFromFile(0x0203AB34, "Campfire.esp") as GlobalVariable).GetValueInt()
 	if LOG_LEVEL <= aiSeverity

@@ -2,6 +2,7 @@ Scriptname _Camp_CampTentNPCBedrollScript extends ObjectReference
 
 import CampUtil
 import TentSystem
+import _CampInternal
 
 ; Resolved in CK
 Actor property PlayerRef auto
@@ -27,7 +28,7 @@ endEvent
 
 Event OnActivate(ObjectReference akActionRef)
 	if !in_use
-		debug.trace("[Campfire] Activated by " + akActionRef)
+		CampDebug(0, "Activated by " + akActionRef)
 		if (akActionRef as Actor) == PlayerRef
 			_Camp_Tent_FollowerBedroll.Show()
 		elseif IsTrackedFollower(akActionRef as Actor)
@@ -35,7 +36,7 @@ Event OnActivate(ObjectReference akActionRef)
 			self.BlockActivation(false)
 			utility.wait(0.2)
 			my_actor = akActionRef as Actor
-			debug.trace("[Campfire] OnActivate my_actor " + my_actor)
+			CampDebug(0, "OnActivate my_actor " + my_actor)
 			self.Activate(my_actor)
 			if _Camp_Setting_FollowersRemoveGearInTents.GetValueInt() == 2
 				DisplayGear(my_actor)
@@ -97,7 +98,7 @@ endFunction
 
 function UnDisplayGear()
 	if my_actor
-		debug.trace("[Campfire] UnDisplayGear my_actor " + my_actor)
+		CampDebug(0, "UnDisplayGear my_actor " + my_actor)
 		TentSystem.UnDisplayFollowerMainWeapon(TentObject, FollowerBedrollIndex, my_actor)
 		TentSystem.UnDisplayFollowerOffHandWeapon(TentObject, FollowerBedrollIndex, my_actor)
 		TentSystem.UnDisplayFollowerBigWeapon(TentObject, FollowerBedrollIndex, my_actor)
