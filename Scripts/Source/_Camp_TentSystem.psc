@@ -282,7 +282,6 @@ function PlayerSit(ObjectReference akTent)
 	
 	; Fall back to persistent trigger without SKSE
 	if !Compatibility.isSKSELoaded
-		utility.wait(3)
 		_Camp_Tent_InteractTriggerREF.MoveTo(PlayerRef)
 	endif
 	
@@ -338,7 +337,6 @@ function PlayerLieDown(ObjectReference akTent)
 	
 	; Fall back to persistent trigger without SKSE
 	if !Compatibility.isSKSELoaded
-		utility.wait(3)
 		_Camp_Tent_InteractTriggerREF.MoveTo(PlayerRef)
 	endif
 	
@@ -996,7 +994,7 @@ function CleanUpTent(ObjectReference akTent)
 	
 	;Move activation triggers to the anchor
 	_Camp_Tent_InteractTriggerREF.MoveTo(_Camp_Anchor)
-	
+
 	;Stop follower functionality
 	ConditionVars.IsPlayerSittingInTent = false
 	ConditionVars.IsPlayerLayingInTent = false

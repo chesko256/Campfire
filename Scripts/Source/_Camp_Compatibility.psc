@@ -145,7 +145,7 @@ function RunCompatibility()
 	if skse_loaded
 		float skse_version = SKSE.GetVersion() + SKSE.GetVersionMinor() * 0.01 + SKSE.GetVersionBeta() * 0.0001
 		if skse_version < SKSE_MIN_VERSION
-			_Camp_CriticalError_SKSE.Show()
+			_Camp_CriticalError_SKSE.Show(skse_version, SKSE_MIN_VERSION)
 			isSKSELoaded = false
 			Conditions.IsSKSELoaded = false
 		else
