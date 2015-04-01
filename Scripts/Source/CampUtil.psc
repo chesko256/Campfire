@@ -615,41 +615,6 @@ bool function IsCrimeToPlaceInTowns(Form akBaseObject) global
 	endif
 endFunction
 
-;@TODO: Finalize and document
-int function GetCurrentTentType() global
-	CampfireAPI Campfire = GetAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return 0
-	endif
-
-	int TentType = 0
-	
-	;0	=	None
-	;1	=	Small Fur Tent
-	;2  =   Large Fur Tent
-	;3	=	Small Leather Tent
-	;4	=	Large Leather Tent
-	;5  =	Conjured Shelter
-
-	ObjectReference myTent = Game.FindClosestReferenceOfAnyTypeInListFromRef(Campfire._Camp_TentActivators, Campfire.PlayerRef, 235.0)
-	if myTent
-		Form myTentBaseObject = myTent.GetBaseObject()
-		if Campfire._Camp_FurTentsSmall.HasForm(myTentBaseObject)
-			TentType = 1
-		elseif Campfire._Camp_FurTentsLarge.HasForm(myTentBaseObject)
-			TentType = 2
-		elseif Campfire._Camp_LeatherTentsSmall.HasForm(myTentBaseObject)
-			TentType = 3
-		elseif Campfire._Camp_LeatherTentsLarge.HasForm(myTentBaseObject)
-			TentType = 4
-		elseif Campfire._Camp_ConjuredShelters.HasForm(myTentBaseObject)
-			TentType = 5
-		endif
-	endif
-	return TentType
-endFunction
-
 function ExitMenus() global
 	Game.DisablePlayerControls()
 	Game.EnablePlayerControls()
