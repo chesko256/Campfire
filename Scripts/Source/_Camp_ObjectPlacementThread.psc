@@ -240,15 +240,15 @@ endFunction
 
 float[] function GlobalToLocalOffset(float x_offset, float y_offset, float z_angle)
 	;float[] function GetOffsets(Actor akSource, Float afDistance = 100.0, float afOffset = 0.0)
-    Float XDist = Sin(z_angle)
-    Float YDist = Cos(z_angle)
+    Float YDist = Sin(z_angle)
+    Float XDist = Cos(z_angle)
 
     XDist *= x_offset
     YDist *= y_offset
 
     Float[] Offsets = New Float[2]
-    Offsets[0] = XDist
-    Offsets[1] = YDist
+    Offsets[0] = YDist
+    Offsets[1] = XDist
     Return Offsets
 endFunction
 

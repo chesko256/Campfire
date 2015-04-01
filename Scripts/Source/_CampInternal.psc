@@ -1,5 +1,7 @@
 scriptname _CampInternal hidden
 
+import math
+
 _CampfireInternalAPI function GetAPI() global
 	;@TODO: Change to .esm check
 	return (Game.GetFormFromFile(0x00024095, "Campfire.esp") as Quest) as _CampfireInternalAPI
@@ -102,6 +104,15 @@ function SetLastUsedCampfire(ObjectReference akCampfire) global
 	endif
 
 	Campfire.LastUsedCampfire = akCampfire
+endFunction
+
+float function Get2DDistance(ObjectReference afFirst, ObjectReference afSecond) global
+	float a1x = afFirst.GetPositionX()
+	float a1y = afFirst.GetPositionY()
+	float a2x = afSecond.GetPositionX()
+	float a2y = afSecond.GetPositionY()
+
+	return sqrt(pow((a2x - a1x), 2) + pow((a2y - a1y), 2))
 endFunction
 
 function RaiseCampAPIError() global
