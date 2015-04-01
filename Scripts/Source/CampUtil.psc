@@ -391,35 +391,34 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true, bool abPlayerBusy
 		return False
 	endif
 
-	;@TODO: Check being attacked
 	if abPlayerBusyCheck && IsPlayerPlacingObject()
 		if abShowMessage
 			;_DE_Placement_InUse.Show()
-			notification("[Debug]You can't use this while placing something else.")
+			Campfire._Camp_GeneralError_Placement.Show()
 		endif
 		return false
 	elseif GetCompatibilitySystem().isSKSELoaded && Campfire.PlayerRef.IsSwimming()
 		if abShowMessage
 			;_DE_Placement_Swimming.Show()	;@TODO: Rename
-			notification("[Debug]You can't use this while swimming.")
+			Campfire._Camp_GeneralError_Swimming.Show()
 		endif
 		return false
 	elseif Campfire.PlayerRef.IsOnMount()
 		if abShowMessage
 			;@TODO: Provide error
-			notification("[Debug]You can't use this while mounted.")
+			Campfire._Camp_GeneralError_Mounted.Show()
 		endif
 		return false
 	elseif Campfire.PlayerRef.GetSleepState() != 0
 		if abShowMessage
 			;@TODO: Error
-			notification("[Debug]You can't use this while lying down.")
+			Campfire._Camp_GeneralError_Sleeping.Show()
 		endif
 		return false
 	elseif Campfire.PlayerRef.GetSitState() != 0
 		if abShowMessage
 			;@TODO: Error
-			notification("[Debug]You can't use this while using something else.")
+			Campfire._Camp_GeneralError_Busy.Show()
 		endif
 		return false
 	else
