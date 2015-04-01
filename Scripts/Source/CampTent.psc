@@ -793,7 +793,7 @@ function GetResults()
 	if myAshTentFuture
 		myAshTent = GetFuture(myAshTentFuture).get_result()
 	endif
-	TentSystem.SelectExterior(self)
+	TentSystem.SelectExterior(self, false)
 
 	if myFire1Future
 		myFire1 = GetFuture(myFire1Future).get_result()
@@ -1509,14 +1509,12 @@ state BurningDown
 		TryToPlayShader(myTent)
 		utility.wait(10.5)
 
-		if myTent
-			ObjectReference rubble = PlaceAndWaitFor3DLoaded(myTent, PlacementSystem._Camp_ObjectRubbleFire)
+		if myTent && myTent.IsEnabled()
+			ObjectReference rubble = myTent.PlaceAtMe(PlacementSystem._Camp_ObjectRubbleFire, abInitiallyDisabled = true)
 			rubble.SetScale(0.8)
+			rubble.SetAngle(rubble.GetAngleX(), rubble.GetAngleY(), Utility.RandomFloat(0.0, 359.0))
+			rubble.EnableNoWait()
 			myTent.PlaceAtMe(PlacementSystem._Camp_CollapseFireball)
-		else
-			ObjectReference rubble = PlaceAndWaitFor3DLoaded(self, PlacementSystem._Camp_ObjectRubbleFire)
-			rubble.SetScale(0.8)
-			self.PlaceAtMe(PlacementSystem._Camp_CollapseFireball)
 		endif
 		TakeDown()
 		utility.wait(3.5)

@@ -28,14 +28,14 @@ function ActivateTent(ObjectReference akActionRef, ObjectReference akTent) globa
 	TentAPI.ActivateTent(akActionRef, akTent)
 endFunction
 
-function SelectExterior(ObjectReference akTent) global
+function SelectExterior(ObjectReference akTent, bool abInTent) global
 	_Camp_TentSystem TentAPI = GetAPI()
 	if TentAPI == none
 		RaiseTentAPIError()
 		return None
 	endif
 
-	TentAPI.SelectExterior(akTent)
+	TentAPI.SelectExterior(akTent, abInTent)
 endFunction
 
 Weapon function GetFollowerMainWeapon(CampTent akTentObject, int aiFollowerBedrollIndex) global
