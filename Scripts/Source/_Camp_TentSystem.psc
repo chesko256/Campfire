@@ -1,9 +1,7 @@
 scriptname _Camp_TentSystem extends Quest
-{@TODO}
 
 import math
 import utility
-import debug
 import _CampInternal
 import CampUtil
 
@@ -33,16 +31,12 @@ GlobalVariable property _Camp_Setting_TakeOff_Ammo auto
 GlobalVariable property _Camp_HelpDone_TentActivate auto
 GlobalVariable property _Camp_Setting_Tutorials auto
 GlobalVariable property _Camp_TentSeeThru auto
-Message property _DE_CampTent_Placed_ACT_Menu auto
-Message property _DE_CampTent2_SitMenu auto
-Message property _DE_CampTent2_SitMenu_Positive auto
-Message property _DE_CampTent2_LayMenu auto
-Message property _DE_CampTent2_LayMenu_Positive auto
-Message property _DE_CampTent2_PickUpError auto
+Message property _Camp_TentMainMenu auto
+Message property _Camp_TentSitMenu auto
+Message property _Camp_TentLayMenu auto
+Message property _Camp_TentPickUpError auto
 Message property _Camp_Tent_Combat auto
-Message property _DE_Combat_Error auto
 Message property _Camp_Help_TentActivate auto
-Message property _DE_TentSeeThruError auto
 ObjectReference property _DE_Anchor auto
 Light property _Camp_LanternLight auto
 Static property XMarker auto
@@ -69,7 +63,6 @@ ReferenceAlias property Follower3 auto
 
 ; From OnUpdate on CampTent / CampTentEx
 function UpdateTentUseState(ObjectReference akTent)
-	;@TODO: Might need to reintroduce some idea of myActor in order to maintain async state
 	;@TODO: Check hit, not combat!
 	CampTent TentObject = akTent as CampTent
 	if PlayerRef.IsInCombat()
@@ -113,7 +106,7 @@ function ActivateTent(ObjectReference akActionRef, ObjectReference akTent)
 endFunction
 
 function ShowMainMenu(ObjectReference akTent)
-	int i = _DE_CampTent_Placed_ACT_Menu.Show()
+	int i = _Camp_TentMainMenu.Show()
 	if i == 0										;Sit
 		if _Camp_Setting_Tutorials.GetValueInt() == 2 && _Camp_HelpDone_TentActivate.GetValueInt() == 1
 			;@TODO: Move to Frostfall
@@ -158,24 +151,19 @@ function ShowSitMenu(ObjectReference akTent)
 	endif/;
 	CampTent TentObject = akTent as CampTent
 	int i
-	i = _DE_CampTent2_SitMenu.Show(0, 0)
+	i = _Camp_TentSitMenu.Show(0, 0)
 	if i == 0										;Wait
 		ToggleLantern(akTent)
 	elseif i == 1
-		if IsRefInInterior(PlayerRef)
-			_DE_TentSeeThruError.Show()
+		if TentObject.myTentExterior.IsDisabled()
+			_Camp_TentSeeThru.SetValue(1)
+			TryToEnableRef(TentObject.myTentExterior, true)
 		else
-			if TentObject.myTentExterior.IsDisabled()
-				_Camp_TentSeeThru.SetValue(1)
-				TryToEnableRef(TentObject.myTentExterior, true)
-			else
-				_Camp_TentSeeThru.SetValue(2)
-				TryToDisableRef(TentObject.myTentExterior, true)
-			endif
+			_Camp_TentSeeThru.SetValue(2)
+			TryToDisableRef(TentObject.myTentExterior, true)
 		endif
 	elseif i == 2
 		TentObject.myPlayerSitMarker.Activate(PlayerRef)
-		;StopFollowerUse(akTent)
 	elseif i == 3
 		;do nothing
 	endif
@@ -197,7 +185,7 @@ function ShowLayMenu(ObjectReference akTent)
 	endif/;
 	CampTent TentObject = akTent as CampTent
 	int i
-	i = _DE_CampTent2_LayMenu.Show(0, 0)
+	i = _Camp_TentLayMenu.Show(0, 0)
 	if i == 0										;Sleep
 		TentObject.bGettingUp = true
 		_Camp_FadeDown.Apply()
@@ -220,16 +208,12 @@ function ShowLayMenu(ObjectReference akTent)
 	elseif i == 1									;Lantern
 		ToggleLantern(akTent)
 	elseif i == 2 									;Toggle View
-		if IsRefInInterior(PlayerRef)
-			_DE_TentSeeThruError.Show()
+		if TentObject.myTentExterior.IsDisabled()
+			_Camp_TentSeeThru.SetValue(1)
+			TryToEnableRef(TentObject.myTentExterior, true)
 		else
-			if TentObject.myTentExterior.IsDisabled()
-				_Camp_TentSeeThru.SetValue(1)
-				TryToEnableRef(TentObject.myTentExterior, true)
-			else
-				_Camp_TentSeeThru.SetValue(2)
-				TryToDisableRef(TentObject.myTentExterior, true)
-			endif
+			_Camp_TentSeeThru.SetValue(2)
+			TryToDisableRef(TentObject.myTentExterior, true)
 		endif
 	elseif i == 3									;Get Up
 		TentObject.myPlayerLayDownMarker.Activate(PlayerRef)
@@ -936,25 +920,25 @@ function PackTent(ObjectReference akTent)
 	;Are any of the bed rolls in use?
 	if TentObject.myBedRoll
 		if TentObject.myBedRoll.IsFurnitureInUse()
-			_DE_CampTent2_PickUpError.Show()
+			_Camp_TentPickUpError.Show()
 			return
 		endif
 	endif
 	if TentObject.mySpareBedRoll1
 		if TentObject.mySpareBedRoll1.IsFurnitureInUse()
-			_DE_CampTent2_PickUpError.Show()
+			_Camp_TentPickUpError.Show()
 			return
 		endif
 	endif
 	if TentObject.mySpareBedRoll2
 		if TentObject.mySpareBedRoll2.IsFurnitureInUse()
-			_DE_CampTent2_PickUpError.Show()
+			_Camp_TentPickUpError.Show()
 			return
 		endif
 	endif
 	if TentObject.mySpareBedRoll3
 		if TentObject.mySpareBedRoll3.IsFurnitureInUse()
-			_DE_CampTent2_PickUpError.Show()
+			_Camp_TentPickUpError.Show()
 			return
 		endif
 	endif
