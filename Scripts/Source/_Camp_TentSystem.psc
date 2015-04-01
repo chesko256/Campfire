@@ -35,9 +35,9 @@ Message property _Camp_TentMainMenu auto
 Message property _Camp_TentSitMenu auto
 Message property _Camp_TentLayMenu auto
 Message property _Camp_TentPickUpError auto
-Message property _Camp_Tent_Combat auto
 Message property _Camp_Help_TentActivate auto
-ObjectReference property _DE_Anchor auto
+ObjectReference property _Camp_Anchor auto
+ObjectReference property _Camp_Tent_InteractTriggerREF auto
 Light property _Camp_LanternLight auto
 Static property XMarker auto
 Static property _Camp_Tent_LanternOnGround auto
@@ -63,10 +63,9 @@ ReferenceAlias property Follower3 auto
 
 ; From OnUpdate on CampTent / CampTentEx
 function UpdateTentUseState(ObjectReference akTent)
-	;@TODO: Check hit, not combat!
 	CampTent TentObject = akTent as CampTent
-	if PlayerRef.IsInCombat()
-		;Player entered combat, kick them out of the tent
+	if was_hit
+		;Player was hit, kick them out of the tent
 		_Camp_FadeDown.Apply()
 		wait(0.5)
 		_Camp_FadeDown.PopTo(_Camp_Black)
@@ -77,7 +76,6 @@ function UpdateTentUseState(ObjectReference akTent)
 			PlayerRef.MoveTo(PlayerRef)
 		endif
 		_Camp_Black.PopTo(_Camp_FadeUp)
-		_Camp_Tent_Combat.Show()
 		CleanUpTent(akTent)
 	elseif !(PlayerRef.GetSitState() == 2 || PlayerRef.GetSitState() == 3) && !TentObject.bGettingUp
 		;Player getting up from sitting or lying down
@@ -93,6 +91,7 @@ endFunction
 ;@From OnActivate on CampTent / CampTentEx
 function ActivateTent(ObjectReference akActionRef, ObjectReference akTent)
 	if akActionRef == PlayerRef
+		was_hit = false
 		CampTent TentObject = akTent as CampTent
 		int iSitState = (akActionRef as Actor).GetSitState()
 		if iSitState == 0
@@ -254,6 +253,11 @@ function ToggleLantern(ObjectReference akTent)
 	endif
 endFunction
 
+bool was_hit = false
+function PlayerHitEvent(ObjectReference akAggressor, Form akSource, Projectile akProjectile)
+    was_hit = true
+endFunction
+
 function PlayerSit(ObjectReference akTent)
 
 	;@TODO: Come back to this
@@ -279,6 +283,12 @@ function PlayerSit(ObjectReference akTent)
 	;Start the quest so that the aliases fill and follower packages run.
 	self.Start()
 	Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
+	
+	; Fall back to persistent trigger without SKSE
+	if !Compatibility.isSKSELoaded
+		_Camp_Tent_InteractTriggerREF.MoveTo(PlayerRef)
+	endif
+	
 	TentObject.RegisterForSingleUpdate(0.5)
 endFunction
 
@@ -328,8 +338,13 @@ function PlayerLieDown(ObjectReference akTent)
 	;Start the quest so that the aliases fill and follower packages run.
 	self.Start()
 	Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
-	TentObject.RegisterForSingleUpdate(0.5)
 	
+	; Fall back to persistent trigger without SKSE
+	if !Compatibility.isSKSELoaded
+		_Camp_Tent_InteractTriggerREF.MoveTo(PlayerRef)
+	endif
+	
+	TentObject.RegisterForSingleUpdate(0.5)
 endFunction
 
 function DisplayPlayerTentEquipment(ObjectReference akTent, bool bLimited = false)
@@ -944,8 +959,7 @@ function PackTent(ObjectReference akTent)
 	endif
 	
 	;Move activation trigger to the anchor
-	;@TODO: Remove
-	;_DE_Tent_InteractTriggerREF.MoveTo(_DE_Anchor)
+	_Camp_Tent_InteractTriggerREF.MoveTo(_Camp_Anchor)
 
 	;Delete display models, if any
 	UnDisplayShield_Player(TentObject)
@@ -969,6 +983,9 @@ function PackTent(ObjectReference akTent)
 	
 	;Delete markers and furniture
 	TentObject.TakeDown()
+
+	;Move activation triggers to the anchor
+	_Camp_Tent_InteractTriggerREF.MoveTo(_Camp_Anchor)
 	
 	wait(0.2)
 
@@ -1003,6 +1020,9 @@ function CleanUpTent(ObjectReference akTent)
 	if TentObject.mySpareBedRoll3
 		(TentObject.mySpareBedRoll3 as _Camp_CampTentNPCBedrollScript).CleanUp()
 	endif
+
+	;Move activation triggers to the anchor
+	_Camp_Tent_InteractTriggerREF.MoveTo(_Camp_Anchor)
 
 	TryToEnableRef(TentObject.myShelterCollider)
 	TryToEnableRef(TentObject.myTentExterior, true)

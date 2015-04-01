@@ -39,6 +39,16 @@ _Camp_Compatibility function GetCompatibilitySystem() global
 	return Campfire.Compatibility
 endFunction
 
+_Camp_TentSystem function GetTentSystem() global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+
+	return Campfire.CampfireTentSystem as _Camp_TentSystem
+endFunction
+
 ;/********f* CampUtil/GetPlayerEquippedHead
 * DESCRIPTION
 * Gets the player's currently equipped head armor.

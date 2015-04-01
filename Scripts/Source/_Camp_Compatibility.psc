@@ -116,6 +116,7 @@ Spell property _Camp_HarvestWoodSpell auto
 
 Spell property _Camp_LegacyConfig_Spell auto
 Spell property _Camp_FollowerDetectSpell auto
+Message property _Camp_CriticalError_SKSE auto
 formlist property woodChoppingAxes auto
 Weather property DLC2AshStorm auto hidden
 bool bAddedSpellBooks = false
@@ -144,6 +145,7 @@ function RunCompatibility()
 	if skse_loaded
 		float skse_version = SKSE.GetVersion() + SKSE.GetVersionMinor() * 0.01 + SKSE.GetVersionBeta() * 0.0001
 		if skse_version < SKSE_MIN_VERSION
+			_Camp_CriticalError_SKSE.Show()
 			isSKSELoaded = false
 			Conditions.IsSKSELoaded = false
 		else
