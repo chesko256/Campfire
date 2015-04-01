@@ -393,31 +393,26 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true, bool abPlayerBusy
 
 	if abPlayerBusyCheck && IsPlayerPlacingObject()
 		if abShowMessage
-			;_DE_Placement_InUse.Show()
 			Campfire._Camp_GeneralError_Placement.Show()
 		endif
 		return false
 	elseif GetCompatibilitySystem().isSKSELoaded && Campfire.PlayerRef.IsSwimming()
 		if abShowMessage
-			;_DE_Placement_Swimming.Show()	;@TODO: Rename
 			Campfire._Camp_GeneralError_Swimming.Show()
 		endif
 		return false
 	elseif Campfire.PlayerRef.IsOnMount()
 		if abShowMessage
-			;@TODO: Provide error
 			Campfire._Camp_GeneralError_Mounted.Show()
 		endif
 		return false
 	elseif Campfire.PlayerRef.GetSleepState() != 0
 		if abShowMessage
-			;@TODO: Error
 			Campfire._Camp_GeneralError_Sleeping.Show()
 		endif
 		return false
 	elseif Campfire.PlayerRef.GetSitState() != 0
 		if abShowMessage
-			;@TODO: Error
 			Campfire._Camp_GeneralError_Busy.Show()
 		endif
 		return false
@@ -559,6 +554,65 @@ ObjectReference function GetLastUsedCampfire() global
 	endif
 
 	return Campfire.LastUsedCampfire
+endFunction
+
+ObjectReference function GetCurrentTent() global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+
+	ObjectReference myTent = Game.FindClosestReferenceOfAnyTypeInListFromRef(Campfire._Camp_TentActivators, Campfire.PlayerRef, 235.0)
+	if myTent
+		return myTent
+	else
+		return none
+	endif
+endFunction
+
+bool function IsCurrentTentWaterproof(ObjectReference akTent) global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+
+	Form TentForm = akTent.GetBaseObject()
+	if TentForm.HasKeyword(Campfire.isCampfireTentWaterproof)
+		return true
+	else
+		return false
+	endif
+endFunction
+
+bool function IsCurrentTentWarm(ObjectReference akTent) global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+
+	Form TentForm = akTent.GetBaseObject()
+	if TentForm.HasKeyword(Campfire.isCampfireTentWarm)
+		return true
+	else
+		return false
+	endif
+endFunction
+
+bool function IsCrimeToPlaceInTowns(Form akBaseObject) global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+
+	if akBaseObject.HasKeyword(Campfire.isCampfireCrimeToPlaceInTowns)
+		return true
+	else
+		return false
+	endif
 endFunction
 
 ;@TODO: Finalize and document

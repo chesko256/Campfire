@@ -38,24 +38,11 @@ endFunction
 
 Event OnControlDown(string control)
 	if control == "Jump"
-		CampDebug(0, "I got a jump!")
-		int i = GetCurrentTentType()
-		CampDebug(0, "GetCurrentTentType: " + i)
-		CampDebug(0, "Current sit state: " + PlayerRef.GetSitState())
-		if i == 1 || i == 3
-			;activate on button press in small tents
-			ActivateTent()
-		elseif (i == 2 || i == 4) && PlayerRef.GetSitState() == 3
-			;activate on button press while using large tent
-			ActivateTent()
+		CampDebug(0, "Got jump press, checking for tent.")
+		ObjectReference tent = GetCurrentTent()
+		if tent && PlayerRef.GetSitState() == 3
+			CampDebug(0, "Activating tent " + tent)
+			tent.Activate(PlayerRef)
 		endif
 	endif
 endEvent
-
-function ActivateTent()
-	CampDebug(0, "Activating tent!")
-	ObjectReference myTent = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_TentActivators, PlayerRef, 150.0)
-	if myTent
-		myTent.Activate(PlayerRef)
-	endif
-endFunction

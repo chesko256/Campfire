@@ -6,7 +6,10 @@ _Camp_LegalAreaCheck property Legal auto
 _Camp_Compatibility property Compatibility auto
 Actor property PlayerRef auto
 Formlist property _Camp_WorldspacesInteriors auto
+Keyword property isCampfireCrimeToPlaceInTowns auto
 Keyword property isCampfirePlaceableObject auto
+Keyword property isCampfireTentWaterproof auto
+Keyword property isCampfireTentWarm auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 GlobalVariable property _Camp_Setting_EquipmentFlammable auto
 Quest property CampfireObjectPlacementSystem auto
