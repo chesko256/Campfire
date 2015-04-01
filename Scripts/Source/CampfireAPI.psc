@@ -21,10 +21,6 @@ ReferenceAlias property Follower3 auto
 ReferenceAlias property Animal auto
 
 Formlist property _Camp_TentActivators auto
-Formlist property _Camp_FurTentsSmall auto
-Formlist property _Camp_FurTentsLarge auto
-Formlist property _Camp_LeatherTentsSmall auto
-Formlist property _Camp_LeatherTentsLarge auto
 Formlist property _Camp_ConjuredShelters auto
 
 Message property _Camp_GeneralError_Placement auto
