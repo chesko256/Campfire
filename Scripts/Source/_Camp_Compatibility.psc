@@ -4,7 +4,7 @@ import debug
 import CampUtil
 import _CampInternal
 
-float property SKSE_MIN_VERSION = 1.7 autoReadOnly
+float property SKSE_MIN_VERSION = 1.07 autoReadOnly
 
 ;#PROPERTIES=====================================================================================================================
 actor property PlayerRef auto

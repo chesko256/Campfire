@@ -193,7 +193,7 @@ function ShowLayMenu(ObjectReference akTent)
 			wait(0.4)
 			TentObject.myPlayerLayDownMarker.Activate(PlayerRef)				
 			wait(3.5)
-			SelectExterior(akTent)
+			SelectExterior(akTent, true)
 			_Camp_Black.PopTo(_Camp_FadeUp)
 		else
 			;Something went wrong, make sure that the player's vision is restored!
@@ -373,11 +373,12 @@ function DisplayPlayerTentEquipment(ObjectReference akTent, bool bLimited = fals
 	endif
 endFunction
 
-function SelectExterior(ObjectReference akTent)
+function SelectExterior(ObjectReference akTent, bool abInTent)
 	if IsRefInInterior(PlayerRef)
 		return
 	endif
 
+	CampDebug(0, "Player not in interior, checking exterior state.")
 	Weather myWeather = Weather.GetCurrentWeather()
 	bool SnowyWeather = myWeather.GetClassification() == 3
 
@@ -416,7 +417,9 @@ function SelectExterior(ObjectReference akTent)
 	if TentObject.myTentExterior != TentObject.myTent
 		TryToEnableRef(TentObject.myTent, true)
 	endif
-	TryToEnableRef(TentObject.myShelterCollider)
+	if !abInTent
+		TryToEnableRef(TentObject.myShelterCollider)
+	endif
 	
 	TryToDisableRef(TentObject.myNormalTent)
 	TryToDisableRef(TentObject.mySnowTent)
@@ -1020,7 +1023,9 @@ function CleanUpTent(ObjectReference akTent)
 		(TentObject.mySpareBedRoll3 as _Camp_CampTentNPCBedrollScript).CleanUp()
 	endif
 
-	TryToEnableRef(TentObject.myShelterCollider)
+	if !IsRefInInterior(PlayerRef)
+		TryToEnableRef(TentObject.myShelterCollider)
+	endif
 	TryToEnableRef(TentObject.myTentExterior, true)
 endFunction
 
