@@ -1,4 +1,4 @@
-scriptname _DE_SwapCraftedItem extends ObjectReference
+scriptname _Camp_SwapCraftedItem extends ObjectReference
 
 Armor property RealArmor auto
 {The item to swap to.}
