@@ -13,6 +13,7 @@ Keyword property isCampfireTentWarm auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 GlobalVariable property _Camp_Setting_EquipmentFlammable auto
 Quest property CampfireObjectPlacementSystem auto
+Quest property CampfireTentSystem auto
 ObjectReference property LastUsedCampfire auto hidden
 ReferenceAlias property Follower1 auto
 ReferenceAlias property Follower2 auto

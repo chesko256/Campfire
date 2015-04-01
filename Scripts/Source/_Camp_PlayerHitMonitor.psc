@@ -8,6 +8,7 @@ EndEvent
 
 function RaiseEvent_PlayerHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile)
 	GetPlacementSystem().PlayerHitEvent(akAggressor, akSource, akProjectile)
+	GetTentSystem().PlayerHitEvent(akAggressor, akSource, akProjectile)
 	if GetCompatibilitySystem().isSKSELoaded
 		int handle = ModEvent.Create("Campfire_PlayerHit")
 		if handle
