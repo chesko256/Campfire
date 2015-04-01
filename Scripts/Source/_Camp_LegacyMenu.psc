@@ -42,10 +42,7 @@ Message property _Camp_legacyconfig_advancedplacement_off auto
 Message property _Camp_legacyconfig_placementthreads auto
 Message property _Camp_legacyconfig_detectfollowers_on auto
 Message property _Camp_legacyconfig_detectfollowers_off auto
-Message property _Camp_legacyconfig_displaytutorials_on auto
-Message property _Camp_legacyconfig_displaytutorials_off auto
 Message property _Camp_legacyconfig_helpstuckplacement auto
-Message property _Camp_legacyconfig_tutorialreset auto
 Message property _Camp_TroubleshootingConfirmMsg auto
 
 ;Globals
@@ -66,7 +63,6 @@ GlobalVariable property _Camp_Setting_FollowersRemoveGearInTents auto
 GlobalVariable property _Camp_Setting_AdvancedPlacement auto
 GlobalVariable property _Camp_Setting_MaxThreads auto
 GlobalVariable property _Camp_Setting_TrackFollowers auto
-GlobalVariable property _Camp_Setting_Tutorials auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 
 ;References
@@ -208,14 +204,8 @@ endFunction
 function menu_help()
     int i = _Camp_legacyconfig_help.Show()
     if i == 0
-        bool b = MenuHandler_Toggle_Tutorials(_Camp_legacyconfig_displaytutorials_on, _Camp_legacyconfig_displaytutorials_off, _Camp_Setting_Tutorials)
-        if b
-            reset_tutorials()
-        endif
-        menu_help()
-    elseif i == 1
         menu_troubleshooting()
-    elseif i == 2
+    elseif i == 1
         menu_root()
     endif
 endFunction
@@ -238,10 +228,6 @@ function Troubleshooting_StuckPlacement()
     _Camp_TroubleshootingConfirmMsg.Show()
 endFunction
 
-function reset_tutorials()
-    _Camp_legacyconfig_tutorialreset.Show()
-endFunction
-
 ;Format: On/Off, Back
 ;akSetting: 2 = ON, 1 = OFF
 function MenuHandler_Toggle(Message akMessageOn, Message akMessageOff, GlobalVariable akSetting)
@@ -260,34 +246,6 @@ function MenuHandler_Toggle(Message akMessageOn, Message akMessageOff, GlobalVar
             MenuHandler_Toggle(akMessageOn, akMessageOff, akSetting)
         elseif i == 1
             ;return
-        endif
-    endif
-endFunction
-
-;Format: On/Off, Execute, Back (Tutorials special case)
-;akSetting: 2 = ON, 1 = OFF
-bool function MenuHandler_Toggle_Tutorials(Message akMessageOn, Message akMessageOff, GlobalVariable akSetting)
-    if akSetting.GetValueInt() == 2
-        int i = akMessageOn.Show()
-        if i == 0
-            akSetting.SetValueInt(1)
-            bool b = MenuHandler_Toggle_Tutorials(akMessageOn, akMessageOff, akSetting)
-            return b
-        elseif i == 1
-            return true
-        elseif i == 2
-            return false
-        endif
-    elseif akSetting.GetValueInt() == 1
-        int i = akMessageOff.Show()
-        if i == 0
-            akSetting.SetValueInt(2)
-            bool b = MenuHandler_Toggle_Tutorials(akMessageOn, akMessageOff, akSetting)
-            return b
-        elseif i == 1
-            return true
-        elseif i == 2
-            return false
         endif
     endif
 endFunction

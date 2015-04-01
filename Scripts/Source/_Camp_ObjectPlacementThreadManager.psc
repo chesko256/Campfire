@@ -422,13 +422,6 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
 endFunction
 
 function StartPlacement(ObjectReference akIndicator)
-    ;#Help Text=========================
-    ;bool bShowHelp = _DE_HelpDone_Visualize.GetValueInt() == 1 && _DE_Setting_Help.GetValueInt() == 2
-    ;if bShowHelp
-    ;   _DE_Help_Visualize.Show()
-    ;   _DE_HelpDone_Visualize.SetValue(2)
-    ;endif
-    ;#Help Text=========================
     was_hit = false
     akIndicator.SetAngle(0.0, 0.0, 0.0)
     _Camp_CurrentlyPlacingObject.SetValue(2)
@@ -480,7 +473,7 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
                 ;No
             elseif i == 2
                 ;@TODO: No - Don't Ask Again
-                _Camp_HelpDone_PlacementError.SetValue(1)
+                _Camp_HelpDone_PlacementError.SetValue(2)
             endif
         endif
         _Camp_Placement_Cancelled.Show()
