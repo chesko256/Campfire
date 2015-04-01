@@ -22,3 +22,9 @@ Formlist property _Camp_FurTentsLarge auto
 Formlist property _Camp_LeatherTentsSmall auto
 Formlist property _Camp_LeatherTentsLarge auto
 Formlist property _Camp_ConjuredShelters auto
+
+Message property _Camp_GeneralError_Placement auto
+Message property _Camp_GeneralError_Swimming auto
+Message property _Camp_GeneralError_Mounted auto
+Message property _Camp_GeneralError_Sleeping auto
+Message property _Camp_GeneralError_Busy auto
