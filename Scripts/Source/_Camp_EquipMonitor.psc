@@ -8,7 +8,6 @@ import _CampInternal
 CampfireData property CampData auto
 _Camp_Compatibility property Compatibility auto
 Actor property PlayerRef auto
-Formlist property _Camp_EquipExceptions auto
 Formlist property _Camp_Backpacks auto
 keyword property ArmorCuirass auto
 keyword property ArmorGauntlets auto
@@ -23,10 +22,7 @@ keyword property ClothingFeet auto
 Armor property ClothesMGRobesArchmage1Hooded auto
 
 Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
-	;check exceptions
-	if _Camp_EquipExceptions.HasForm(akBaseObject)
-		return
-	elseif !(GetUsesMainBodySlot(akBaseObject))
+	if !(GetUsesMainBodySlot(akBaseObject))
 		return
 	else
 		ProcessEquippedObject(akBaseObject)
@@ -38,9 +34,7 @@ Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 
 	if akBaseObject as Armor
 
-		if _Camp_EquipExceptions.HasForm(akBaseObject)
-			return
-		elseif !(GetUsesMainBodySlot(akBaseObject))
+		if !(GetUsesMainBodySlot(akBaseObject))
 			return
 		endif
 
