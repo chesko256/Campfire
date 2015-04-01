@@ -1012,7 +1012,9 @@ function GetResults()
 	endif
 	if myBedRollFuture
 		myBedRoll = GetFuture(myBedRollFuture).get_result()
-		self.MoveTo(myBedRoll, afZOffset = -2000.0)
+		if Get2DDistance(self, myBedRoll) > 50.0
+			self.MoveTo(myBedRoll, afZOffset = -2000.0)
+		endif
 		if Setting_BedRollScale != 1.0
 			self.SetScale(Setting_BedRollScale)
 		endif
