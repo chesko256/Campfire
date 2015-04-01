@@ -2,6 +2,7 @@ Scriptname _Camp_SkyUIConfigPanelScript extends SKI_ConfigBase
 
 ; External scripts
 _Camp_Compatibility property Compatibility auto
+
 GlobalVariable property _Camp_Setting_ManualFireLighting auto
 GlobalVariable property _Camp_Setting_EquipmentFlammable auto
 GlobalVariable property _Camp_Setting_CampingArmorTakeOff auto
@@ -20,10 +21,6 @@ GlobalVariable property _Camp_Setting_MaxThreads auto
 GlobalVariable property _Camp_Setting_EquipTentOutfit auto
 GlobalVariable property _Camp_Setting_Legality auto
 GlobalVariable property _Camp_Setting_AdvancedPlacement auto
-GlobalVariable property _DE_HelpDone_Visualize auto
-GlobalVariable property _DE_HelpDone_PlacementError auto
-GlobalVariable property _Camp_HelpDone_TentActivate auto
-GlobalVariable property _Camp_Setting_Tutorials auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 GlobalVariable property _Camp_HotkeyCreateItem auto
 GlobalVariable property _Camp_HotkeyBuildCampfire auto
@@ -71,8 +68,6 @@ int Advanced_SettingAdvancedPlacement_OID
 int Advanced_SettingMaxThreads_OID
 int Advanced_SettingTrackFollowers_OID
 
-int Help_TutorialsToggle_OID
-int Help_TutorialsResetText_OID
 int Help_TroubleshootingMenu_OID
 int Guide_Topic1
 int Guide_Topic2
@@ -233,14 +228,7 @@ endFunction
 
 function PageReset_Help()
 	SetCursorFillMode(TOP_TO_BOTTOM)
-	AddHeaderOption("$CampfireHelpHeaderTutorials")
-	if _Camp_Setting_Tutorials.GetValueInt() == 2
-		Help_TutorialsToggle_OID = AddToggleOption("$CampfireHelpSettingTutorialsShow", true)
-	else
-		Help_TutorialsToggle_OID = AddToggleOption("$CampfireHelpSettingTutorialsShow", false)
-	endif
-	Help_TutorialsResetText_OID = AddTextOption("", "$CampfireHelpSettingTutorialsReset")
-	AddEmptyOption()
+	
 	AddHeaderOption("$CampfireHelpHeaderTroubleshooting")
 
 	Help_TroubleshootingMenu_OID = AddMenuOption("$CampfireHelpTroubleshootingSelectProblem", TroubleshootingList[TroubleshootingIndex])
@@ -314,9 +302,6 @@ event OnOptionHighlight(int option)
 		SetInfoText("$CampfireOptionHighlightSettingMaxThreads")
 	elseif option == Advanced_SettingTrackFollowers_OID
 		SetInfoText("$CampfireOptionHighlightSettingTrackFollowers")
-
-	elseif option == Help_TutorialsToggle_OID
-		SetInfoText("$CampfireOptionHighlightSettingTutorials")
 	endif
 endEvent
 
@@ -459,23 +444,6 @@ event OnOptionSelect(int option)
 		endif
 	endif
 
-	if option == Help_TutorialsToggle_OID
-		if _Camp_Setting_Tutorials.GetValueInt() == 2
-			_Camp_Setting_Tutorials.SetValueInt(1)
-			SetToggleOptionValue(Help_TutorialsToggle_OID, false)
-		else
-			_Camp_Setting_Tutorials.SetValueInt(2)
-			SetToggleOptionValue(Help_TutorialsToggle_OID, true)
-		endif
-	elseif option == Help_TutorialsResetText_OID
-		bool bChoice = ShowMessage("$CampfireTutorialResetPrompt")
-		if bChoice
-			_Camp_HelpDone_TentActivate.SetValueInt(1)
-			_DE_HelpDone_Visualize.SetValueInt(1)
-			_DE_HelpDone_PlacementError.SetValueInt(1)
-		endif
-	endif
-
 	if option == Guide_Topic1
 		ShowGuideTopic1()
 	elseif option == Guide_Topic2
@@ -540,9 +508,6 @@ event OnOptionDefault(int option)
 	elseif option == Advanced_SettingTrackFollowers_OID
 		_Camp_Setting_TrackFollowers.SetValueInt(2)
 		SetToggleOptionValue(Advanced_SettingTrackFollowers_OID, true)
-	elseif option == Help_TutorialsToggle_OID
-		_Camp_Setting_Tutorials.SetValueInt(2)
-		SetToggleOptionValue(Help_TutorialsToggle_OID, true)
 	endif
 	if option == Gameplay_HotkeyCreateItem_OID
 		UnregisterForKey(_Camp_HotkeyCreateItem.GetValueInt())

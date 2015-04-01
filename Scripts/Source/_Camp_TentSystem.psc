@@ -28,8 +28,6 @@ GlobalVariable property _Camp_Setting_TakeOff_Shield auto
 GlobalVariable property _Camp_Setting_TakeOff_Ammo auto
 ;GlobalVariable property _DE_CurrentTemp auto
 ;GlobalVariable property _DE_ExposurePoints auto
-GlobalVariable property _Camp_HelpDone_TentActivate auto
-GlobalVariable property _Camp_Setting_Tutorials auto
 GlobalVariable property _Camp_TentSeeThru auto
 Message property _Camp_TentMainMenu auto
 Message property _Camp_TentSitMenu auto
@@ -107,21 +105,19 @@ endFunction
 function ShowMainMenu(ObjectReference akTent)
 	int i = _Camp_TentMainMenu.Show()
 	if i == 0										;Sit
-		if _Camp_Setting_Tutorials.GetValueInt() == 2 && _Camp_HelpDone_TentActivate.GetValueInt() == 1
+		if Compatibility.isSKSELoaded
 			;@TODO: Move to Frostfall
 			;_DE_Help_Tents.Show()
 			Message.ResetHelpMessage("Activate")
 			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
-			_Camp_HelpDone_TentActivate.SetValueInt(2)
 		endif
 		PlayerSit(akTent)
 	elseif i == 1									;Lie Down
-		if _Camp_Setting_Tutorials.GetValueInt() == 2 && _Camp_HelpDone_TentActivate.GetValueInt() == 1
+		if Compatibility.isSKSELoaded
 			;@TODO: Move to Frostfall
 			;_DE_Help_Tents.Show()
 			Message.ResetHelpMessage("Activate")
 			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
-			_Camp_HelpDone_TentActivate.SetValueInt(2)
 		endif
 		PlayerLieDown(akTent)
 	elseif i == 2									;Pack
