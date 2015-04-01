@@ -1,5 +1,7 @@
 Scriptname _Camp_DebugSpouseAliasScript extends ReferenceAlias  
 
+import _CampInternal
+
 Event OnInit()
-	debug.trace("[Campfire] Filled spouse alias with " + self.GetActorRef())
+	CampDebug(0, "Filled spouse alias with " + self.GetActorRef())
 EndEvent

@@ -1,17 +1,8 @@
 Scriptname _Camp_Compatibility extends ReferenceAlias
 
-;#SUMMARY# =====================================================================================================================
-; Name ...................: _Camp_Compatibility
-; Attached To (EditorID)..: 
-; Description ............: Checks for presence of other mods for compatibility purposes, and sets flags as appropriate.
-; Author .................: Chesko
-; Last Approved (version) : 1.0
-; Status .................: Complete
-; Remarks ................: 
-; ===============================================================================================================================
-
 import debug
 import CampUtil
+import _CampInternal
 
 float property SKSE_MIN_VERSION = 1.7 autoReadOnly
 
@@ -106,8 +97,6 @@ Worldspace property DLC2WS auto hidden						;Solstheim
 
 ;#Misc=============================================================================
 message property _DE_CompatibilityFinished auto
-Perk property _DE_DummyPerk auto
-GlobalVariable property _Camp_SKSEVersion auto
 GlobalVariable property _DE_SKYRELoaded auto
 GlobalVariable property _Camp_HotkeyCreateItem auto
 GlobalVariable property _Camp_HotkeyBuildCampfire auto
@@ -140,11 +129,7 @@ endEvent
 
 function RunCompatibility()
 	VanillaGameLoadUp()
-	RegisterForControlsOnLoad()
-	RegisterForEventsOnLoad()
-	Campfire.CheckFollowerPolling()
-		
-	;debug.notification("[Frostfall]Compatibility startup check...")
+
 	trace("============================================[Campfire: Warning Start]=============================================")
 	trace("                                                                                                                  ")
 	trace("               Campfire is now performing compatibility checks. Papyrus warnings about missing or                 ")
@@ -467,7 +452,7 @@ function RunCompatibility()
 	endif
 	
 	;#Region SKSE + Mod Support Section
-	if isHFLoaded && isSKSELoaded && _Camp_SKSEVersion.GetValue() >= 1.0505
+	if isHFLoaded && isSKSELoaded
 		
 		form QuarriedStone = Game.GetFormFromFile(0x0200306C, "HearthFires.esm")		;Quarried Stone
 		form Straw = Game.GetFormFromFile(0x00005A68, "HearthFires.esm")				;Straw
@@ -476,7 +461,7 @@ function RunCompatibility()
 		
 	endif
 	
-	if isDLC1Loaded && isSKSELoaded && _Camp_SKSEVersion.GetValue() >= 1.0505
+	if isDLC1Loaded && isSKSELoaded
 	
 		form ValeDeerHide = Game.GetFormFromFile(0x02011999, "Dawnguard.esm")			;Vale Deer Hide
 		form ValeSabreCatHide = Game.GetFormFromFile(0x0201199A, "Dawnguard.esm")		;Vale Sabre Cat Hide
@@ -493,6 +478,10 @@ function RunCompatibility()
 	trace("                                                                                                                  ")
 	trace("============================================[ Campfire: Warning End ]=============================================")
 
+	if isSKSELoaded
+		RegisterForControlsOnLoad()
+		RegisterForEventsOnLoad()
+	endif
 	AddStartupSpells()
 endFunction
 
@@ -582,7 +571,7 @@ function RegisterForKeysOnLoad()
 endFunction
 
 function RegisterForControlsOnLoad()
-	trace("[Campfire] Compatibility is trying to call Campfire.RegisterForControlsOnLoad()")
+	CampDebug(0, "Compatibility is trying to call Campfire.RegisterForControlsOnLoad()")
 	Campfire.RegisterForControlsOnLoad()
 endFunction
 

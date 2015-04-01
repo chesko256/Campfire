@@ -1,6 +1,8 @@
 scriptname TentSystem hidden
 {Interface between _Camp_TentAPI and mods that implement Campfire tents.}
 
+import _CampInternal
+
 _Camp_TentSystem function GetAPI() global
 	;@TODO: Change to ESM.
 	return (Game.GetFormFromFile(0x00025BC2, "Campfire.esp") as Quest) as _Camp_TentSystem
@@ -249,5 +251,5 @@ function DestroyTent(ObjectReference akTent) global
 endFunction
 
 function RaiseTentAPIError() global
-	debug.trace("[Campfire] Fatal Tent API error occurred.")
+	CampDebug(3, "Fatal Tent API error occurred.")
 endFunction

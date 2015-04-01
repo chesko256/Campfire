@@ -1,9 +1,11 @@
 Scriptname _Camp_FollowerDetectDebugEffect extends activemagiceffect  
 
+import _CampInternal
+
 Event OnEffectStart(Actor akTarget, Actor akCaster)
-    debug.trace("[Campfire] Detect effect started")
+    CampDebug(0, "Detect effect started")
 EndEvent
 
 Event OnEffectFinish(Actor akTarget, Actor akCaster)
-    debug.trace("[Campfire] Detect effect stopped")
+    CampDebug(0, "Detect effect stopped")
 EndEvent

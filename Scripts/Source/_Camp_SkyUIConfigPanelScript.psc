@@ -84,7 +84,6 @@ float MIN_THREADS = 0.0
 float MAX_THREADS = 30.0
 
 Event OnConfigInit()
-	
 	Pages = new string[3]
 	Pages[0] = "$CampfireGameplayPage"
 	Pages[1] = "$CampfireAdvancedPage"
@@ -93,9 +92,6 @@ Event OnConfigInit()
 	TroubleshootingList = new string[2]
 	TroubleshootingList[0] = "$CampfireTroubleshooting0"
 	TroubleshootingList[1] = "$CampfireTroubleshooting1"
-
-	debug.trace("[CAMPFIRE] Initialized the SkyUI Mod Config Menu.")
-	
 endEvent
 
 function PageReset_Gameplay()

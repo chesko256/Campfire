@@ -1,5 +1,7 @@
 Scriptname _Camp_CampCrimeGuardScript extends ReferenceAlias  
 
+import _CampInternal
+
 Actor property PlayerRef auto
 Scene property _Camp_CampingCrimeTrackingGuardScene auto
 ReferenceAlias property IllegalItem1 auto
@@ -13,18 +15,18 @@ Event OnInit()
 EndEvent
 
 Event OnUpdate()
-	debug.trace("[Campfire] Guard " + self.GetActorRef() + " hunting for player...")
+	CampDebug(0, "Guard " + self.GetActorRef() + " hunting for player...")
 	if self.GetActorRef().GetDistance(PlayerRef) <= 2048.0
-		debug.trace("[Campfire] Found you!")
+		CampDebug(0, "Found you!")
 		_Camp_CampingCrimeTrackingGuardScene.Start()
 	elseif self.GetActorRef().GetDistance(PlayerRef) > 2048.0
-		debug.trace("[Campfire] Player is too far away, stop hunting.")
+		CampDebug(0, "Player is too far away, stop hunting.")
 		StopHunting()
 	elseif !IllegalItem1.GetRef() && !IllegalItem2.GetRef() && !IllegalItem3.GetRef()
-		debug.trace("[Campfire] No more illegal items, stop hunting.")
+		CampDebug(0, "No more illegal items, stop hunting.")
 		StopHunting()
 	else
-		debug.trace("[Campfire] Waiting...")
+		CampDebug(0, "Waiting...")
 		RegisterForSingleUpdate(5)
 	endif
 EndEvent
