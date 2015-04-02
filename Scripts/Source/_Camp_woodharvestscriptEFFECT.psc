@@ -15,13 +15,12 @@ message property _Camp_WoodHarvestErrorNoTrees auto
 message property _Camp_WoodHarvestErrorTooCold auto
 message property _Camp_DeadwoodHarvestSuccess auto
 message property _Camp_BranchHarvestSuccess auto
-message property _DE_WoodHarvest_Stone auto
+message property _Camp_WoodHarvest_Stone auto
 formlist property _Camp_Trees auto
 formlist property woodChoppingAxes auto
 MiscObject property _Camp_DeadwoodLog auto
 MiscObject property _Camp_DeadwoodBranch auto
-MiscObject property _DE_Rock auto
-MiscObject property _DE_RockFrag auto
+MiscObject property _Camp_Rock auto
 ImageSpaceModifier Property _Camp_FadeDown auto
 ImageSpaceModifier Property _Camp_FadeUp auto
 ImageSpaceModifier Property _Camp_Black auto
@@ -32,7 +31,7 @@ globalvariable property GameHour auto
 Sound property _Camp_ChopWoodSM auto
 
 ;Axes
-Weapon property _DE_StoneWarAxe auto
+Weapon property _Camp_StoneWarAxe auto
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)	
 	;@TODO: Wrap in IsFrostfallLoaded	
@@ -124,8 +123,8 @@ function GiveDeadwoodBranches()
 	;	myStone += 0.15
 	;endif
 	;if myStone >= 0.80
-	;	_DE_WoodHarvest_Stone.Show()
-	;	PlayerRef.AddItem(_DE_Rock, 1, true)
+	;	_Camp_WoodHarvest_Stone.Show()
+	;	PlayerRef.AddItem(_Camp_Rock, 1, true)
 	;endif
 endFunction
 

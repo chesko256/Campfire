@@ -3,17 +3,14 @@ scriptname _Camp_Main extends Quest
 import CampUtil
 import _CampInternal
 
+_Camp_Compatibility property Compatibility auto
 Actor property PlayerRef auto
 Quest property _Camp_FollowerQuest auto
-ReferenceAlias property PlayerAlias auto
-_Camp_Compatibility property Compatibility auto
-
-formlist property _Camp_TentActivators auto
-
 Quest property _Camp_CampingCrimeTracking auto
-ReferenceAlias property Guard auto
-
 Quest property CampfireObjectPlacementSystem auto
+formlist property _Camp_TentActivators auto
+ReferenceAlias property PlayerAlias auto
+ReferenceAlias property Guard auto
 
 event OnInit()
 	if !self.IsRunning()

@@ -1,4 +1,6 @@
-Scriptname _DE_AlchemyFurnitureScript extends ObjectReference
+Scriptname _Camp_AlchemyFurnitureScript extends ObjectReference
+
+import _CampInternal
 
 Actor property PlayerRef auto
 
@@ -10,11 +12,10 @@ Event OnInit()
 endEvent
 
 Event OnUpdate()
-	
 	if self.IsFurnitureInUse()
-		RegisterForSingleUpdate(0.5)
+		RegisterForSingleUpdate(1)
 	else
-		;debug.notification("Deleting furniture")
+		CampDebug(0, "Deleting furniture")
 		self.Disable()
 		self.Delete()
 	endif
