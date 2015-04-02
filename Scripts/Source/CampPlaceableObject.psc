@@ -88,11 +88,8 @@ function PlaceObjects()
 	CampPlaceableObjectEx Extended = self as CampPlaceableObjectEx
 
 	if Extended
-		if Extended.PositionRef_CenterObjectOverride
-			CenterObject = Extended.PositionRef_CenterObjectOverride
-		else
-			CenterObject = None
-		endif
+		CenterObject = Extended.RequiredPositionRef_CenterObject
+		
 		if Extended.Asset_ExtraStatic1 && Extended.PositionRef_ExtraStatic1
 			PlaceObject_ExtraStatic1(Extended)
 		endif

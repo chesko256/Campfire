@@ -76,7 +76,7 @@ Form form_to_place
 
 float update_speed = 0.3
 
-Event OnInit()
+function Ready()
 	PlacementSystem = CampUtil.GetPlacementSystem()	
 	PlacementSystem.StartPlacement(self)
 	if Required_furniture_to_place
@@ -85,10 +85,9 @@ Event OnInit()
 		form_to_place = Required_activator_to_place as Form
 	endif
 	RegisterForSingleUpdate(0.1)
-endEvent
+endFunction
 
 Event OnUpdate()
-	float t = utility.GetCurrentRealTime()
 	bool keep_updating = PlacementSystem.UpdateIndicator(self, 							\
 														 form_to_place,					\
 														 Required_inventory_item,		\
@@ -105,6 +104,6 @@ Event OnUpdate()
 		self.Disable()
 		self.Delete()
 	endif
-	float tdiff = utility.GetCurrentRealTime() - t
+	;float tdiff = utility.GetCurrentRealTime() - t
 	;debug.trace("[Campfire] Update speed: " + tdiff)
 endEvent

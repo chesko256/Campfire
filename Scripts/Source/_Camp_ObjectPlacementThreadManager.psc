@@ -4,6 +4,8 @@ import math
 import CampUtil
 import _CampInternal
 
+_Camp_Compatibility property Compatibility auto
+
 ;Object Placement
 Quest property CampfireObjectPlacementSystem auto
 Activator property _Camp_ObjectPlacementFutureActivator auto
@@ -487,7 +489,6 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
     if !PlayerCanPlaceObjects(abPlayerBusyCheck = false) || was_hit
         was_hit = false
         StopPlacement()
-        ;_Camp_Placement_Cancelled.Show()
         _Camp_CurrentlyPlacingObject.SetValue(1)
         return false
     endif
@@ -725,17 +726,26 @@ function PlaceableObjectUsed(Activator akPlacementIndicator, Ingredient akIngred
         if akPerk
             if !PlayerRef.HasPerk(akPerk)
                 _Camp_PlaceObjectError_Perk.Show()
+                if Compatibility.isSKSELoaded
+                    debug.notification(akPerk.GetName() + " required.")
+                endif
                 return
             endif
         endif
         if akIngredient && aiCost > 0
             if !(PlayerRef.GetItemCount(akIngredient) >= aiCost)
                 _Camp_PlaceObjectError_Item.Show()
+                if Compatibility.isSKSELoaded
+                    debug.notification(aiCost + " " + akIngredient.GetName() + " required.")
+                endif
                 return
             endif
         elseif akMiscItem && aiCost > 0
             if !(PlayerRef.GetItemCount(akMiscItem) >= aiCost)
                 _Camp_PlaceObjectError_Item.Show()
+                if Compatibility.isSKSELoaded
+                    debug.notification(aiCost + " " + akMiscItem.GetName() + " required.")
+                endif
                 return
             endif
         endif
@@ -751,6 +761,7 @@ function PlaceableObjectUsed(Activator akPlacementIndicator, Ingredient akIngred
             indicator.required_miscitem = akMiscItem
             indicator.cost = aiCost
         endif
+        indicator.Ready()
     endif
 endFunction
 
@@ -759,22 +770,27 @@ function UsableObjectUsed(Activator akActivatorToUse, Furniture akFurnitureToUse
         if akPerk
             if !PlayerRef.HasPerk(akPerk)
                 _Camp_PlaceObjectError_Perk.Show()
+                if Compatibility.isSKSELoaded
+                    debug.notification(akPerk.GetName() + " required.")
+                endif
                 return
             endif
         endif
         if akIngredient && aiCost > 0
             if !(PlayerRef.GetItemCount(akIngredient) >= aiCost)
                 _Camp_PlaceObjectError_Item.Show()
+                if Compatibility.isSKSELoaded
+                    debug.notification(aiCost + " " + akIngredient.GetName() + " required.")
+                endif
                 return
-            else
-                PlayerRef.RemoveItem(akIngredient, aiCost)
             endif
         elseif akMiscItem && aiCost > 0
             if !(PlayerRef.GetItemCount(akMiscItem) >= aiCost)
                 _Camp_PlaceObjectError_Item.Show()
+                if Compatibility.isSKSELoaded
+                    debug.notification(aiCost + " " + akMiscItem.GetName() + " required.")
+                endif
                 return
-            else
-                PlayerRef.RemoveItem(akMiscItem, aiCost)
             endif
         endif
 
