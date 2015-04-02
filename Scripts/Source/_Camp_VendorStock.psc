@@ -2,19 +2,18 @@ scriptname _Camp_VendorStock extends Quest
 
 import utility
 
-;book property _DE_SurvivorsGuide auto
-armor property _DE_Cloak_BasicBurlap auto
-armor property _DE_Cloak_BasicLinen auto
-MiscObject property _DE_CampTent2_LeatherSmall1BR_MISC auto
-MiscObject property _DE_CampTentLeatherLarge_1BR auto
-MiscObject property _DE_CampTent2_HideSmall_MISC auto
-MiscObject property _DE_CampTentHideLarge_1BR auto
-MiscObject property _DE_CampCookingPot_MISC auto
-armor property _DE_Backpack_Brown auto
-armor property _DE_Backpack_Black auto
-armor property _DE_Backpack_White auto
+armor property _Camp_Cloak_BasicBurlap auto
+armor property _Camp_Cloak_BasicLinen auto
+MiscObject property _Camp_Tent_LeatherSmall1BR_MISC auto
+MiscObject property _Camp_Tent_LeatherLarge1BR_MISC auto
+MiscObject property _Camp_Tent_FurSmall1BR_MISC auto
+MiscObject property _Camp_Tent_FurLarge1BR_MISC auto
+MiscObject property _Camp_CookingPot_MISC auto
+armor property _Camp_Backpack_Brown auto
+armor property _Camp_Backpack_Black auto
+armor property _Camp_Backpack_White auto
 
-MiscObject property _DE_Alchemy_MortarPestleMISC auto
+MiscObject property _Camp_Alchemy_MortarPestleMISC auto
 
 ReferenceAlias property WhitePhialChestAlias auto
 ReferenceAlias property AngelineAromaticsChestAlias auto
@@ -140,81 +139,79 @@ endFunction
 function RemoveAllModItems()
 
 	;Apothecaries
-	RemoveItemFromVendor(_DE_Alchemy_MortarPestleMISC, MerchantWindhelmWhitePhialChestRef)
-	RemoveItemFromVendor(_DE_Alchemy_MortarPestleMISC, MerchantSolitudeAngelinesAromaticsRef)
-	RemoveItemFromVendor(_DE_Alchemy_MortarPestleMISC, MerchantMorthalLamisChestRef)
-	RemoveItemFromVendor(_DE_Alchemy_MortarPestleMISC, MerchantDawnstarMortarPestleChestRef)
-	RemoveItemFromVendor(_DE_Alchemy_MortarPestleMISC, MerchantMarkarthHagsCureChestRef)
-	RemoveItemFromVendor(_DE_Alchemy_MortarPestleMISC, MerchantRiftenElgrimsElixtersChest)
-	RemoveItemFromVendor(_DE_Alchemy_MortarPestleMISC, WhiterunArcadiasCauldronChestRef)
+	RemoveItemFromVendor(_Camp_Alchemy_MortarPestleMISC, MerchantWindhelmWhitePhialChestRef)
+	RemoveItemFromVendor(_Camp_Alchemy_MortarPestleMISC, MerchantSolitudeAngelinesAromaticsRef)
+	RemoveItemFromVendor(_Camp_Alchemy_MortarPestleMISC, MerchantMorthalLamisChestRef)
+	RemoveItemFromVendor(_Camp_Alchemy_MortarPestleMISC, MerchantDawnstarMortarPestleChestRef)
+	RemoveItemFromVendor(_Camp_Alchemy_MortarPestleMISC, MerchantMarkarthHagsCureChestRef)
+	RemoveItemFromVendor(_Camp_Alchemy_MortarPestleMISC, MerchantRiftenElgrimsElixtersChest)
+	RemoveItemFromVendor(_Camp_Alchemy_MortarPestleMISC, WhiterunArcadiasCauldronChestRef)
 
 	;General Goods
-	RemoveItemFromVendor(_DE_Cloak_BasicBurlap, RiverwoodTraderMerchantContainer)
-	RemoveItemFromVendor(_DE_CampTent2_LeatherSmall1BR_MISC, RiverwoodTraderMerchantContainer)
-	RemoveItemFromVendor(_DE_CampCookingPot_MISC, RiverwoodTraderMerchantContainer)
-	RemoveItemFromVendor(_DE_Backpack_Brown, RiverwoodTraderMerchantContainer)
+	RemoveItemFromVendor(_Camp_Cloak_BasicBurlap, RiverwoodTraderMerchantContainer)
+	RemoveItemFromVendor(_Camp_Tent_LeatherSmall1BR_MISC, RiverwoodTraderMerchantContainer)
+	RemoveItemFromVendor(_Camp_CookingPot_MISC, RiverwoodTraderMerchantContainer)
+	RemoveItemFromVendor(_Camp_Backpack_Brown, RiverwoodTraderMerchantContainer)
 
-	RemoveItemFromVendor(_DE_Cloak_BasicBurlap, CaravanAChestREF)
-	RemoveItemFromVendor(_DE_CampTent2_HideSmall_MISC, CaravanAChestREF)
-	RemoveItemFromVendor(_DE_CampCookingPot_MISC, CaravanAChestREF)
-	RemoveItemFromVendor(_DE_Backpack_Brown, CaravanAChestREF)
+	RemoveItemFromVendor(_Camp_Cloak_BasicBurlap, CaravanAChestREF)
+	RemoveItemFromVendor(_Camp_Tent_FurSmall1BR_MISC, CaravanAChestREF)
+	RemoveItemFromVendor(_Camp_CookingPot_MISC, CaravanAChestREF)
+	RemoveItemFromVendor(_Camp_Backpack_Brown, CaravanAChestREF)
 
-	RemoveItemFromVendor(_DE_Cloak_BasicBurlap, CaravanBChestREF)
-	RemoveItemFromVendor(_DE_CampTent2_HideSmall_MISC, CaravanBChestREF)
-	RemoveItemFromVendor(_DE_CampCookingPot_MISC, CaravanBChestREF)
-	RemoveItemFromVendor(_DE_Backpack_Brown, CaravanBChestREF)
+	RemoveItemFromVendor(_Camp_Cloak_BasicBurlap, CaravanBChestREF)
+	RemoveItemFromVendor(_Camp_Tent_FurSmall1BR_MISC, CaravanBChestREF)
+	RemoveItemFromVendor(_Camp_CookingPot_MISC, CaravanBChestREF)
+	RemoveItemFromVendor(_Camp_Backpack_Brown, CaravanBChestREF)
 
-	RemoveItemFromVendor(_DE_Cloak_BasicBurlap, CaravanCChestREF)
-	RemoveItemFromVendor(_DE_CampTent2_HideSmall_MISC, CaravanCChestREF)
-	RemoveItemFromVendor(_DE_CampCookingPot_MISC, CaravanCChestREF)
-	RemoveItemFromVendor(_DE_Backpack_Brown, CaravanCChestREF)
+	RemoveItemFromVendor(_Camp_Cloak_BasicBurlap, CaravanCChestREF)
+	RemoveItemFromVendor(_Camp_Tent_FurSmall1BR_MISC, CaravanCChestREF)
+	RemoveItemFromVendor(_Camp_CookingPot_MISC, CaravanCChestREF)
+	RemoveItemFromVendor(_Camp_Backpack_Brown, CaravanCChestREF)
 
-	RemoveItemFromVendor(_DE_Cloak_BasicBurlap, AvalAtheronChest)
-	RemoveItemFromVendor(_DE_CampCookingPot_MISC, AvalAtheronChest)
-	RemoveItemFromVendor(_DE_Backpack_Black, AvalAtheronChest)
+	RemoveItemFromVendor(_Camp_Cloak_BasicBurlap, AvalAtheronChest)
+	RemoveItemFromVendor(_Camp_CookingPot_MISC, AvalAtheronChest)
+	RemoveItemFromVendor(_Camp_Backpack_Black, AvalAtheronChest)
 
-	RemoveItemFromVendor(_DE_Cloak_BasicLinen, BethethorsMerchantChestRef)
-	RemoveItemFromVendor(_DE_CampTent2_LeatherSmall1BR_MISC, BethethorsMerchantChestRef)
-	RemoveItemFromVendor(_DE_CampTentLeatherLarge_1BR, BethethorsMerchantChestRef)
-	RemoveItemFromVendor(_DE_CampCookingPot_MISC, BethethorsMerchantChestRef)
-	RemoveItemFromVendor(_DE_Backpack_Brown, BethethorsMerchantChestRef)
+	RemoveItemFromVendor(_Camp_Cloak_BasicLinen, BethethorsMerchantChestRef)
+	RemoveItemFromVendor(_Camp_Tent_LeatherSmall1BR_MISC, BethethorsMerchantChestRef)
+	RemoveItemFromVendor(_Camp_Tent_LeatherLarge1BR_MISC, BethethorsMerchantChestRef)
+	RemoveItemFromVendor(_Camp_CookingPot_MISC, BethethorsMerchantChestRef)
+	RemoveItemFromVendor(_Camp_Backpack_Brown, BethethorsMerchantChestRef)
 
-	RemoveItemFromVendor(_DE_Cloak_BasicLinen, BirnaChest)
-	RemoveItemFromVendor(_DE_CampTent2_HideSmall_MISC, BirnaChest)
-	RemoveItemFromVendor(_DE_CampTentHideLarge_1BR, BirnaChest)
-	RemoveItemFromVendor(_DE_CampCookingPot_MISC, BirnaChest)
-	RemoveItemFromVendor(_DE_Backpack_White, BirnaChest)
-	;RemoveItemFromVendor(_DE_SurvivorsGuide, BirnaChest)
+	RemoveItemFromVendor(_Camp_Cloak_BasicLinen, BirnaChest)
+	RemoveItemFromVendor(_Camp_Tent_FurSmall1BR_MISC, BirnaChest)
+	RemoveItemFromVendor(_Camp_Tent_FurLarge1BR_MISC, BirnaChest)
+	RemoveItemFromVendor(_Camp_CookingPot_MISC, BirnaChest)
+	RemoveItemFromVendor(_Camp_Backpack_White, BirnaChest)
 
-	RemoveItemFromVendor(_DE_Cloak_BasicBurlap, PawnedPrawnChest)
-	RemoveItemFromVendor(_DE_CampTent2_LeatherSmall1BR_MISC, PawnedPrawnChest)
-	RemoveItemFromVendor(_DE_CampCookingPot_MISC, PawnedPrawnChest)
-	RemoveItemFromVendor(_DE_Backpack_Brown, PawnedPrawnChest)
+	RemoveItemFromVendor(_Camp_Cloak_BasicBurlap, PawnedPrawnChest)
+	RemoveItemFromVendor(_Camp_Tent_LeatherSmall1BR_MISC, PawnedPrawnChest)
+	RemoveItemFromVendor(_Camp_CookingPot_MISC, PawnedPrawnChest)
+	RemoveItemFromVendor(_Camp_Backpack_Brown, PawnedPrawnChest)
 	
-	RemoveItemFromVendor(_DE_Cloak_BasicLinen, MerchantSolitudeBitsAndPiecesChestRef)
-	RemoveItemFromVendor(_DE_CampTent2_LeatherSmall1BR_MISC, MerchantSolitudeBitsAndPiecesChestRef)
-	RemoveItemFromVendor(_DE_CampTentLeatherLarge_1BR, MerchantSolitudeBitsAndPiecesChestRef)
-	RemoveItemFromVendor(_DE_CampCookingPot_MISC, MerchantSolitudeBitsAndPiecesChestRef)
-	RemoveItemFromVendor(_DE_Backpack_Brown, MerchantSolitudeBitsAndPiecesChestRef)
+	RemoveItemFromVendor(_Camp_Cloak_BasicLinen, MerchantSolitudeBitsAndPiecesChestRef)
+	RemoveItemFromVendor(_Camp_Tent_LeatherSmall1BR_MISC, MerchantSolitudeBitsAndPiecesChestRef)
+	RemoveItemFromVendor(_Camp_Tent_LeatherLarge1BR_MISC, MerchantSolitudeBitsAndPiecesChestRef)
+	RemoveItemFromVendor(_Camp_CookingPot_MISC, MerchantSolitudeBitsAndPiecesChestRef)
+	RemoveItemFromVendor(_Camp_Backpack_Brown, MerchantSolitudeBitsAndPiecesChestRef)
 
-	RemoveItemFromVendor(_DE_Cloak_BasicBurlap, ArnleifChest)
-	RemoveItemFromVendor(_DE_CampTent2_LeatherSmall1BR_MISC, ArnleifChest)
-	RemoveItemFromVendor(_DE_CampCookingPot_MISC, ArnleifChest)
-	RemoveItemFromVendor(_DE_Backpack_Brown, ArnleifChest)
+	RemoveItemFromVendor(_Camp_Cloak_BasicBurlap, ArnleifChest)
+	RemoveItemFromVendor(_Camp_Tent_LeatherSmall1BR_MISC, ArnleifChest)
+	RemoveItemFromVendor(_Camp_CookingPot_MISC, ArnleifChest)
+	RemoveItemFromVendor(_Camp_Backpack_Brown, ArnleifChest)
 
-	RemoveItemFromVendor(_DE_Cloak_BasicBurlap, GrayPineGoodsChest)
-	RemoveItemFromVendor(_DE_CampTent2_LeatherSmall1BR_MISC, GrayPineGoodsChest)
-	RemoveItemFromVendor(_DE_CampCookingPot_MISC, GrayPineGoodsChest)
-	RemoveItemFromVendor(_DE_Backpack_Brown, GrayPineGoodsChest)
-	;RemoveItemFromVendor(_DE_SurvivorsGuide, GrayPineGoodsChest)
+	RemoveItemFromVendor(_Camp_Cloak_BasicBurlap, GrayPineGoodsChest)
+	RemoveItemFromVendor(_Camp_Tent_LeatherSmall1BR_MISC, GrayPineGoodsChest)
+	RemoveItemFromVendor(_Camp_CookingPot_MISC, GrayPineGoodsChest)
+	RemoveItemFromVendor(_Camp_Backpack_Brown, GrayPineGoodsChest)
 
-	RemoveItemFromVendor(_DE_Cloak_BasicBurlap, NiranyeChest)
-	RemoveItemFromVendor(_DE_CampTent2_HideSmall_MISC, NiranyeChest)
-	RemoveItemFromVendor(_DE_CampCookingPot_MISC, NiranyeChest)
-	RemoveItemFromVendor(_DE_Backpack_Brown, NiranyeChest)
+	RemoveItemFromVendor(_Camp_Cloak_BasicBurlap, NiranyeChest)
+	RemoveItemFromVendor(_Camp_Tent_FurSmall1BR_MISC, NiranyeChest)
+	RemoveItemFromVendor(_Camp_CookingPot_MISC, NiranyeChest)
+	RemoveItemFromVendor(_Camp_Backpack_Brown, NiranyeChest)
 
-	RemoveItemFromVendor(_DE_Cloak_BasicBurlap, BrandChest)
-	RemoveItemFromVendor(_DE_CampCookingPot_MISC, BrandChest)
+	RemoveItemFromVendor(_Camp_Cloak_BasicBurlap, BrandChest)
+	RemoveItemFromVendor(_Camp_CookingPot_MISC, BrandChest)
 
 endFunction
 
