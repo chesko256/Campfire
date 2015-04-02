@@ -24,7 +24,7 @@ ObjectReference property CenterMarkerSolitudeSawmill auto
 ObjectReference property RiverwoodLocationCenterMarker auto
 ObjectReference property KynesgroveLocationCenterMarkerREF auto
 ObjectReference property WindhelmLocationCenterMarkerREF auto
-ObjectReference property _DE_MarkarthCenterMarker auto
+ObjectReference property _Camp_MarkarthCenterMarker auto
 ObjectReference property CWSiegeDefendTrigger1Whiterun auto		;Dragon's Reach
 ObjectReference property WinterholdCollegeCenterMarker auto		;Resolve manually
 
@@ -121,7 +121,7 @@ Faction function GetAreaCampingFaction(ObjectReference akCenter)
 		return TownRiverwoodFaction
 	elseif akCenter.GetDistance(KynesgroveLocationCenterMarkerREF) < 5000.0
 		return TownKynesgroveFaction
-	elseif akCenter.GetDistance(_DE_MarkarthCenterMarker) < 6000.0
+	elseif akCenter.GetDistance(_Camp_MarkarthCenterMarker) < 6000.0
 		return TownMarkarthFaction
 	elseif akCenter.GetDistance(CenterMarkerRfiten) < 6000.0
 		return TownRiftenFaction
