@@ -333,11 +333,11 @@ ObjectReference property PositionRef_ExtraLight3 auto
 { Optional: Extra Light object position reference. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/PositionRef_CenterObjectOverride
+;/********p* CampPlaceableObjectEx/RequiredPositionRef_CenterObject
 * SYNTAX
 */;
-ObjectReference property PositionRef_CenterObjectOverride auto
+ObjectReference property RequiredPositionRef_CenterObject auto
 ;/*
 * DESCRIPTION
-{ Optional: Set this to specify a different object as the one which all other objects "orbit" when rotated. Uses this object if left blank. }
+{ Required: Set this to specify the position reference of the object that all other objects "orbit" when rotated. }
 ;*********/;
