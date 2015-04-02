@@ -723,6 +723,42 @@ function PlaceableObjectUsed(Activator akPlacementIndicator, Ingredient akIngred
     endif
 endFunction
 
+function UsableObjectUsed(Activator akActivatorToUse, Furniture akFurnitureToUse, Ingredient akIngredient, MiscObject akMiscItem, Int aiCost, Perk akPerk)
+    if PlayerCanPlaceObjects()
+        if akPerk
+            if !PlayerRef.HasPerk(akPerk)
+                _Camp_PlaceObjectError_Perk.Show()
+                return
+            endif
+        endif
+        if akIngredient && aiCost > 0
+            if !(PlayerRef.GetItemCount(akIngredient) >= aiCost)
+                _Camp_PlaceObjectError_Item.Show()
+                return
+            else
+                PlayerRef.RemoveItem(akIngredient, aiCost)
+            endif
+        elseif akMiscItem && aiCost > 0
+            if !(PlayerRef.GetItemCount(akMiscItem) >= aiCost)
+                _Camp_PlaceObjectError_Item.Show()
+                return
+            else
+                PlayerRef.RemoveItem(akMiscItem, aiCost)
+            endif
+        endif
+
+        ExitMenus()
+
+        ; It is the object's responsibility to activate the player once loaded
+        ; and clean itself up.
+        if akActivatorToUse
+            PlayerRef.PlaceAtMe(akActivatorToUse)
+        elseif akFurnitureToUse
+            PlayerRef.PlaceAtMe(akFurnitureToUse)
+        endif
+    endif
+endFunction
+
 function RaiseEvent_OnIndicatorUpdateStart()
     RegisterForSingleUpdate(0.1)
 endFunction
