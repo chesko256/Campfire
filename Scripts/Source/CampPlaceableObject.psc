@@ -298,6 +298,12 @@ state BurningDown
 		float ys
 		xs = self.GetWidth()
 		ys = self.GetLength()
+		if xs == 0.0
+			xs = 200.0
+		endif
+		if ys == 0.0
+			ys = 200.0
+		endif
 		float size
 		if xs > ys
 			size = xs

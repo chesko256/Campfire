@@ -141,13 +141,6 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
     ObjectReference origin = origin_object
 
     int thread_limit = _Camp_Setting_MaxThreads.GetValueInt()
-
-    CampDebug(0, "Preparing for threaded placement")
-    CampDebug(0, "future: " + future)
-    CampDebug(0, "origin_angle: " + origin_angle)
-    CampDebug(0, "center_object: " + center_object)
-    CampDebug(0, "origin: " + origin)
-    CampDebug(0, "Thread limit: " + thread_limit)
 	while !future
         CampDebug(0, "Checking threads")
 		if !thread01.queued() && thread_limit >= 1
@@ -455,9 +448,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
             CampDebug(0, "wait_all start")
             wait_all()
 		endif
-        CampDebug(0, "End of thread check")
 	endWhile
- 
 	return future
 endFunction
 
@@ -804,47 +795,15 @@ function RaiseEvent_OnIndicatorUpdateStart()
 endFunction
 
 function wait_all()
-    CampDebug(0, "wait_all start")
     RaiseEvent_OnObjectPlacementStart()
     begin_waiting()
-    CampDebug(0, "wait_all end")
 endFunction
 
 function begin_waiting()
-    CampDebug(0, "waiting...")
+    CampDebug(0, "Waiting on threads...")
     bool waiting = true
     int i = 0
     while waiting
-        CampDebug(0, "Thread 01 queued: " + thread01.queued())
-        CampDebug(0, "Thread 02 queued: " + thread02.queued())
-        CampDebug(0, "Thread 03 queued: " + thread03.queued())
-        CampDebug(0, "Thread 04 queued: " + thread04.queued())
-        CampDebug(0, "Thread 05 queued: " + thread05.queued())
-        CampDebug(0, "Thread 06 queued: " + thread06.queued())
-        CampDebug(0, "Thread 07 queued: " + thread07.queued())
-        CampDebug(0, "Thread 08 queued: " + thread08.queued())
-        CampDebug(0, "Thread 09 queued: " + thread09.queued())
-        CampDebug(0, "Thread 10 queued: " + thread10.queued())
-        CampDebug(0, "Thread 11 queued: " + thread11.queued())
-        CampDebug(0, "Thread 12 queued: " + thread12.queued())
-        CampDebug(0, "Thread 13 queued: " + thread13.queued())
-        CampDebug(0, "Thread 14 queued: " + thread14.queued())
-        CampDebug(0, "Thread 15 queued: " + thread15.queued())
-        CampDebug(0, "Thread 16 queued: " + thread16.queued())
-        CampDebug(0, "Thread 17 queued: " + thread17.queued())
-        CampDebug(0, "Thread 18 queued: " + thread18.queued())
-        CampDebug(0, "Thread 19 queued: " + thread19.queued())
-        CampDebug(0, "Thread 20 queued: " + thread20.queued())
-        CampDebug(0, "Thread 21 queued: " + thread21.queued())
-        CampDebug(0, "Thread 22 queued: " + thread22.queued())
-        CampDebug(0, "Thread 23 queued: " + thread23.queued())
-        CampDebug(0, "Thread 24 queued: " + thread24.queued())
-        CampDebug(0, "Thread 25 queued: " + thread25.queued())
-        CampDebug(0, "Thread 26 queued: " + thread26.queued())
-        CampDebug(0, "Thread 27 queued: " + thread27.queued())
-        CampDebug(0, "Thread 28 queued: " + thread28.queued())
-        CampDebug(0, "Thread 29 queued: " + thread29.queued())
-        CampDebug(0, "Thread 30 queued: " + thread30.queued())
         if thread01.queued() || thread02.queued() || thread03.queued() || thread04.queued() || thread05.queued() || \
            thread06.queued() || thread07.queued() || thread08.queued() || thread09.queued() || thread10.queued() || \ 
            thread11.queued() || thread12.queued() || thread13.queued() || thread14.queued() || thread15.queued() || \ 
@@ -853,7 +812,6 @@ function begin_waiting()
            thread26.queued() || thread27.queued() || thread28.queued() || thread29.queued() || thread30.queued()
             i += 1
             Utility.wait(0.1)
-            CampDebug(0, "thread wait count " + i)
             if i >= 100
                 CampDebug(3, "A catastrophic error has occurred. All threads have become unresponsive. Please debug this issue or notify the author.")
                 i = 0
@@ -861,12 +819,9 @@ function begin_waiting()
                 return
             endif
         else
-            CampDebug(0, "Exiting wait.")
             waiting = false
         endif
-        CampDebug(0, "Exit thread check")
     endWhile
-    CampDebug(0, "Exit while")
 endFunction
 
 ;A helper function that can avert permanent thread failure if something goes wrong
