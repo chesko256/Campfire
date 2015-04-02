@@ -29,59 +29,13 @@ bool property isLastSeedLoaded auto hidden					;Last Seed
 bool property isIMCNLoaded auto hidden						;Imp's More Complex Needs
 bool property isRNDLoaded auto hidden			 			;Realistic Needs and Diseases
 
-;#Leveled Lists================================================================
-LeveledItem property LItemSpellTomes25AllAlteration auto
-LeveledItem property LItemSpellTomes25Alteration auto
-LeveledItem property LItemSpellTomes25AllIllusion auto
-LeveledItem property LItemSpellTomes25Illusion auto
-LeveledItem property LItemSpellTomes25AllConjuration auto
-LeveledItem property LItemSpellTomes25Conjuration auto
-LeveledItem property LItemSpellTomes50AllAlteration auto
-LeveledItem property LItemSpellTomes50Alteration auto
-LeveledItem property LItemSpellTomes50Spells auto
-LeveledItem property LitemSpellTomes50AllDestruction auto
-LeveledItem property LitemSpellTomes50Destruction auto
-LeveledItem property LItemSpellTomes50AllIllusion auto
-LeveledItem property LItemSpellTomes50Illusion auto
-LeveledItem property LItemSpellTOmes50AllRestoration auto
-LeveledItem property LItemSpellTOmes50Restoration auto
-LeveledItem property LItemSpellTomes50AllConjuration auto
-LeveledItem property LItemSpellTomes50Conjuration auto
-LeveledItem property LItemSpellTomes75Conjuration auto
-LeveledItem property LItemSpellTomes75AllConjuration auto
-LeveledItem property LItemSpellTomes75Alteration auto
-LeveledItem property LItemSpellTomes75AllAlteration auto
-LeveledItem property LItemSpellTomes75Spells auto
-LeveledItem property LItemSpellTomes100Conjuration auto
-LeveledItem property MGRitualConjurationBooks auto
-LeveledItem property LItemScroll25Skill auto
-LeveledItem property LItemScroll50Skill auto
-LeveledItem property LItemScroll75Skill auto
-LeveledItem property LItemScroll100Skill auto
-
-;#Spellbooks===================================================================
-book property _DE_SpellTomeBoundCloakLesser auto
-book property _DE_SpellTomeBoundCloakGreater auto
-book property _DE_SpellTomeConjureShelterLesser auto
-book property _DE_SpellTomeTransmuteWood auto
-book property _DE_SpellTomeConjureShelterGreater auto
-
-;#Scrolls======================================================================
-scroll property _DE_ScrollBoundCloakLesser auto
-scroll property _DE_ScrollBoundCloakGreater auto
-scroll property _DE_ScrollConjureShelterLesser auto
-scroll property _DE_ScrollConjureShelterGreater auto
-
 ;#Merchant Containers==========================================================
 ObjectReference property MerchantRiverwoodTraderContainer auto
 
 ;#FormLists====================================================================
-formlist property _DE_Trees auto							;List of valid trees for Wood Harvesting
-formlist property _DE_WorldspacesInteriors auto				;Interior exception worldspace
-formlist property _DE_ModWaterSkins auto 					;List of waterskins from other mods
-formlist property _DE_LightableCampfires auto 				;List of small unlit campfires
-formlist property _DE_LightableCampfiresAll auto 			;List of all unlit campfires
-formlist property _DE_DeadwoodList auto
+formlist property _Camp_Trees auto							;List of valid trees for Wood Harvesting
+formlist property _Camp_WorldspacesInteriors auto			;Interior exception worldspace
+formlist property _Camp_ModWaterSkins auto 					;List of waterskins from other mods
 formlist property _Camp_HeatSources_All auto
 formlist property _Camp_HeatSources_Fire auto
 formlist property _Camp_HeatSources_Fire_Small auto
@@ -96,8 +50,6 @@ Tree property TreeReachTreeStump01 auto hidden
 Worldspace property DLC2WS auto hidden						;Solstheim
 
 ;#Misc=============================================================================
-message property _DE_CompatibilityFinished auto
-GlobalVariable property _DE_SKYRELoaded auto
 GlobalVariable property _Camp_HotkeyCreateItem auto
 GlobalVariable property _Camp_HotkeyBuildCampfire auto
 GlobalVariable property _Camp_HotkeyHarvestWood auto
@@ -113,13 +65,10 @@ ConstructibleObject property _Camp_RecipeTanningLeatherValeSabreCatHideDLC1 auto
 Spell property _Camp_CreateItemSpell auto
 Spell property _Camp_CampfireSpell auto
 Spell property _Camp_HarvestWoodSpell auto
-
 Spell property _Camp_LegacyConfig_Spell auto
 Spell property _Camp_FollowerDetectSpell auto
 Message property _Camp_CriticalError_SKSE auto
-formlist property woodChoppingAxes auto
 Weather property DLC2AshStorm auto hidden
-bool bAddedSpellBooks = false
 
 Event OnPlayerLoadGame()
 	RunCompatibility()
@@ -223,10 +172,10 @@ function RunCompatibility()
 		isIMCNLoaded = Game.GetFormFromFile(0x0005CF47, "Imp's More Complex Needs.esp")
 		if isIMCNLoaded
 			;Imp's More Complex Needs was just added.
-			_DE_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0005CF47, "Imp's More Complex Needs.esp"))
-			_DE_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0005CF4B, "Imp's More Complex Needs.esp"))
-			_DE_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0005CF4D, "Imp's More Complex Needs.esp"))
-			_DE_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0005CF49, "Imp's More Complex Needs.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0005CF47, "Imp's More Complex Needs.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0005CF4B, "Imp's More Complex Needs.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0005CF4D, "Imp's More Complex Needs.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0005CF49, "Imp's More Complex Needs.esp"))
 		endif
 	endif
 
@@ -239,19 +188,19 @@ function RunCompatibility()
 		isRNDLoaded = Game.GetFormFromFile(0x00047F94, "RealisticNeedsandDiseases.esp")
 		if isRNDLoaded
 			;Realistic Needs and Diseases was just added.
-			_DE_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047F94, "RealisticNeedsandDiseases.esp"))
-			_DE_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047F96, "RealisticNeedsandDiseases.esp"))
-			_DE_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047F9A, "RealisticNeedsandDiseases.esp"))
-			_DE_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047F98, "RealisticNeedsandDiseases.esp"))
-			_DE_ModWaterSkins.AddForm(Game.GetFormFromFile(0x000449AB, "RealisticNeedsandDiseases.esp"))
-			_DE_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047F88, "RealisticNeedsandDiseases.esp"))
-			_DE_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047F89, "RealisticNeedsandDiseases.esp"))
-			_DE_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047F8B, "RealisticNeedsandDiseases.esp"))
-			_DE_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00069FBE, "RealisticNeedsandDiseases.esp"))
-			_DE_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047FA2, "RealisticNeedsandDiseases.esp"))
-			_DE_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047FA4, "RealisticNeedsandDiseases.esp"))
-			_DE_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047FA5, "RealisticNeedsandDiseases.esp"))
-			_DE_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047FA7, "RealisticNeedsandDiseases.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047F94, "RealisticNeedsandDiseases.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047F96, "RealisticNeedsandDiseases.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047F9A, "RealisticNeedsandDiseases.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047F98, "RealisticNeedsandDiseases.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x000449AB, "RealisticNeedsandDiseases.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047F88, "RealisticNeedsandDiseases.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047F89, "RealisticNeedsandDiseases.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047F8B, "RealisticNeedsandDiseases.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00069FBE, "RealisticNeedsandDiseases.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047FA2, "RealisticNeedsandDiseases.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047FA4, "RealisticNeedsandDiseases.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047FA5, "RealisticNeedsandDiseases.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047FA7, "RealisticNeedsandDiseases.esp"))
 
 		endif
 	endif
@@ -289,25 +238,25 @@ function RunCompatibility()
 		form DLC01WS06 = Game.GetFormFromFile(0x02004BEA, "Dawnguard.esm")			;DLC1DarkfallPassageWorld			;Interior
 		form DLC01WS07 = Game.GetFormFromFile(0x02002F64, "Dawnguard.esm")			;DLC1ForebearsHoldout				;Interior
 			
-		if !(_DE_Trees.HasForm(DLC01TreeForm01))		
-			_DE_Trees.AddForm(DLC01TreeForm01)
-			_DE_Trees.AddForm(DLC01TreeForm02)
-			_DE_Trees.AddForm(DLC01TreeForm03)
-			_DE_Trees.AddForm(DLC01TreeForm04)
-			_DE_Trees.AddForm(DLC01TreeForm05)
-			_DE_Trees.AddForm(DLC01TreeForm06)
-			_DE_Trees.AddForm(DLC01TreeForm07)
-			_DE_Trees.AddForm(DLC01TreeForm08)
-			_DE_Trees.AddForm(DLC01TreeForm09)
-			_DE_Trees.AddForm(DLC01TreeForm10)
-			_DE_Trees.AddForm(DLC01TreeForm11)
-			_DE_Trees.AddForm(DLC01TreeForm12)
+		if !(_Camp_Trees.HasForm(DLC01TreeForm01))		
+			_Camp_Trees.AddForm(DLC01TreeForm01)
+			_Camp_Trees.AddForm(DLC01TreeForm02)
+			_Camp_Trees.AddForm(DLC01TreeForm03)
+			_Camp_Trees.AddForm(DLC01TreeForm04)
+			_Camp_Trees.AddForm(DLC01TreeForm05)
+			_Camp_Trees.AddForm(DLC01TreeForm06)
+			_Camp_Trees.AddForm(DLC01TreeForm07)
+			_Camp_Trees.AddForm(DLC01TreeForm08)
+			_Camp_Trees.AddForm(DLC01TreeForm09)
+			_Camp_Trees.AddForm(DLC01TreeForm10)
+			_Camp_Trees.AddForm(DLC01TreeForm11)
+			_Camp_Trees.AddForm(DLC01TreeForm12)
 		endif
 		
-		if !(_DE_WorldspacesInteriors.HasForm(DLC01WS05))
-			_DE_WorldspacesInteriors.AddForm(DLC01WS05)
-			_DE_WorldspacesInteriors.AddForm(DLC01WS06)
-			_DE_WorldspacesInteriors.AddForm(DLC01WS07)
+		if !(_Camp_WorldspacesInteriors.HasForm(DLC01WS05))
+			_Camp_WorldspacesInteriors.AddForm(DLC01WS05)
+			_Camp_WorldspacesInteriors.AddForm(DLC01WS06)
+			_Camp_WorldspacesInteriors.AddForm(DLC01WS07)
 		endif
 			
 	endif
@@ -354,23 +303,6 @@ function RunCompatibility()
 			_Camp_HeatSources_Fire_Medium.AddForm(DLC02HeatForm06)
 		endif
 
-		;Add new unlit campfires
-		form _DE_CampfireForm01 = Game.GetFormFromFile(0x0202C0B1, "Dragonborn.esm")	;Campfire01LandOffDirtPath01
-		form _DE_CampfireForm02 = Game.GetFormFromFile(0x02028A8D, "Dragonborn.esm")	;Campfire01LandOffAsh
-		form _DE_CampfireForm03 = Game.GetFormFromFile(0x02018D91, "Dragonborn.esm")	;Campfire01LandOffDirtSnowPath
-		form _DE_CampfireForm04 = Game.GetFormFromFile(0x02018D90, "Dragonborn.esm")	;Campfire01LandOffLtSnow
-		if !(_DE_LightableCampfires.HasForm(_DE_CampfireForm01))
-			_DE_LightableCampfires.AddForm(_DE_CampfireForm01)
-			_DE_LightableCampfires.AddForm(_DE_CampfireForm02)
-			_DE_LightableCampfires.AddForm(_DE_CampfireForm03)
-			_DE_LightableCampfires.AddForm(_DE_CampfireForm04)
-		endif
-		if !(_DE_LightableCampfiresAll.HasForm(_DE_CampfireForm01))
-			_DE_LightableCampfiresAll.AddForm(_DE_CampfireForm01)
-			_DE_LightableCampfiresAll.AddForm(_DE_CampfireForm02)
-			_DE_LightableCampfiresAll.AddForm(_DE_CampfireForm03)
-			_DE_LightableCampfiresAll.AddForm(_DE_CampfireForm04)
-		endif
 		;Trees
 		form DLC02TreeForm01 = Game.GetFormFromFile(0x02017F76, "Dragonborn.esm")		;<DLC2TreePineForestAsh05>
 		form DLC02TreeForm02 = Game.GetFormFromFile(0x02017F75, "Dragonborn.esm")		;<DLC2TreePineForestAsh04>
@@ -404,38 +336,38 @@ function RunCompatibility()
 		form DLC02TreeForm30 = Game.GetFormFromFile(0x020185ED, "Dragonborn.esm")		;<DLC2TreePineForestStump01Ash>
 		form DLC02TreeForm31 = Game.GetFormFromFile(0x02017F64, "Dragonborn.esm")		;<DLC2TreePineForestStump01AshL>
 		
-		if !(_DE_Trees.HasForm(DLC02TreeForm01))
-			_DE_Trees.AddForm(DLC02TreeForm01)
-			_DE_Trees.AddForm(DLC02TreeForm02)
-			_DE_Trees.AddForm(DLC02TreeForm03)
-			_DE_Trees.AddForm(DLC02TreeForm04)
-			_DE_Trees.AddForm(DLC02TreeForm05)
-			_DE_Trees.AddForm(DLC02TreeForm06)
-			_DE_Trees.AddForm(DLC02TreeForm07)
-			_DE_Trees.AddForm(DLC02TreeForm08)
-			_DE_Trees.AddForm(DLC02TreeForm09)
-			_DE_Trees.AddForm(DLC02TreeForm10)
-			_DE_Trees.AddForm(DLC02TreeForm11)
-			_DE_Trees.AddForm(DLC02TreeForm12)
-			_DE_Trees.AddForm(DLC02TreeForm13)
-			_DE_Trees.AddForm(DLC02TreeForm14)
-			_DE_Trees.AddForm(DLC02TreeForm15)
-			_DE_Trees.AddForm(DLC02TreeForm16)
-			_DE_Trees.AddForm(DLC02TreeForm17)
-			_DE_Trees.AddForm(DLC02TreeForm18)
-			_DE_Trees.AddForm(DLC02TreeForm19)
-			_DE_Trees.AddForm(DLC02TreeForm20)
-			_DE_Trees.AddForm(DLC02TreeForm21)
-			_DE_Trees.AddForm(DLC02TreeForm22)
-			_DE_Trees.AddForm(DLC02TreeForm23)
-			_DE_Trees.AddForm(DLC02TreeForm24)
-			_DE_Trees.AddForm(DLC02TreeForm25)
-			_DE_Trees.AddForm(DLC02TreeForm26)
-			_DE_Trees.AddForm(DLC02TreeForm27)
-			_DE_Trees.AddForm(DLC02TreeForm28)
-			_DE_Trees.AddForm(DLC02TreeForm29)
-			_DE_Trees.AddForm(DLC02TreeForm30)
-			_DE_Trees.AddForm(DLC02TreeForm31)
+		if !(_Camp_Trees.HasForm(DLC02TreeForm01))
+			_Camp_Trees.AddForm(DLC02TreeForm01)
+			_Camp_Trees.AddForm(DLC02TreeForm02)
+			_Camp_Trees.AddForm(DLC02TreeForm03)
+			_Camp_Trees.AddForm(DLC02TreeForm04)
+			_Camp_Trees.AddForm(DLC02TreeForm05)
+			_Camp_Trees.AddForm(DLC02TreeForm06)
+			_Camp_Trees.AddForm(DLC02TreeForm07)
+			_Camp_Trees.AddForm(DLC02TreeForm08)
+			_Camp_Trees.AddForm(DLC02TreeForm09)
+			_Camp_Trees.AddForm(DLC02TreeForm10)
+			_Camp_Trees.AddForm(DLC02TreeForm11)
+			_Camp_Trees.AddForm(DLC02TreeForm12)
+			_Camp_Trees.AddForm(DLC02TreeForm13)
+			_Camp_Trees.AddForm(DLC02TreeForm14)
+			_Camp_Trees.AddForm(DLC02TreeForm15)
+			_Camp_Trees.AddForm(DLC02TreeForm16)
+			_Camp_Trees.AddForm(DLC02TreeForm17)
+			_Camp_Trees.AddForm(DLC02TreeForm18)
+			_Camp_Trees.AddForm(DLC02TreeForm19)
+			_Camp_Trees.AddForm(DLC02TreeForm20)
+			_Camp_Trees.AddForm(DLC02TreeForm21)
+			_Camp_Trees.AddForm(DLC02TreeForm22)
+			_Camp_Trees.AddForm(DLC02TreeForm23)
+			_Camp_Trees.AddForm(DLC02TreeForm24)
+			_Camp_Trees.AddForm(DLC02TreeForm25)
+			_Camp_Trees.AddForm(DLC02TreeForm26)
+			_Camp_Trees.AddForm(DLC02TreeForm27)
+			_Camp_Trees.AddForm(DLC02TreeForm28)
+			_Camp_Trees.AddForm(DLC02TreeForm29)
+			_Camp_Trees.AddForm(DLC02TreeForm30)
+			_Camp_Trees.AddForm(DLC02TreeForm31)
 		endif
 		
 		;Weather
@@ -488,9 +420,6 @@ function RunCompatibility()
 endFunction
 
 function VanillaGameLoadUp()
-	if bAddedSpellBooks == false
-		AddSpellBooks()
-	endif
 	PlacementSystem.SmallFire = Game.GetFormFromFile(0x00013B40, "Skyrim.esm")
 	TreeReachTreeStump01 = Game.GetFormFromFile(0x000B8A75, "Skyrim.esm") as Tree
 endFunction
@@ -531,41 +460,6 @@ function AddStartupSpells()							;Approved 2.0
 	if _Camp_Setting_TrackFollowers.GetValueInt() == 2
 		PlayerRef.AddSpell(_Camp_FollowerDetectSpell, false)
 	endif
-endFunction
-
-function AddSpellBooks()
-	if bAddedSpellBooks == false
-		
-		;0
-
-		;25
-		LItemSpellTomes25AllConjuration.AddForm(_DE_SpellTomeBoundCloakLesser, 1, 1)
-		LItemSpellTomes25Conjuration.AddForm(_DE_SpellTomeBoundCloakLesser, 1, 1)
-		LItemScroll25Skill.AddForm(_DE_ScrollBoundCloakLesser, 1, 1)
-
-		;50
-		LItemSpellTomes50AllConjuration.AddForm(_DE_SpellTomeBoundCloakGreater, 1, 1)
-		LItemSpellTomes50Conjuration.AddForm(_DE_SpellTomeBoundCloakGreater, 1, 1)
-		LItemSpellTomes50Spells.AddForm(_DE_SpellTomeBoundCloakGreater, 1, 1)
-		LItemScroll50Skill.AddForm(_DE_ScrollBoundCloakGreater, 1, 1)
-
-		;75
-		LItemSpellTomes75AllConjuration.AddForm(_DE_SpellTomeConjureShelterLesser, 1, 1)
-		LItemSpellTomes75Conjuration.AddForm(_DE_SpellTomeConjureShelterLesser, 1, 1)
-		LItemSpellTomes75Spells.AddForm(_DE_SpellTomeConjureShelterLesser, 1, 1)
-		LItemSpellTomes75AllAlteration.AddForm(_DE_SpellTomeTransmuteWood, 1, 1)
-		LItemSpellTomes75Alteration.AddForm(_DE_SpellTomeTransmuteWood, 1, 1)
-		LItemSpellTomes75Spells.AddForm(_DE_SpellTomeTransmuteWood, 1, 1)
-		LItemScroll75Skill.AddForm(_DE_ScrollConjureShelterLesser, 1, 1)
-
-		;100
-		LItemSpellTomes100Conjuration.AddForm(_DE_SpellTomeConjureShelterGreater, 1, 1)
-		MGRitualConjurationBooks.AddForm(_DE_SpellTomeConjureShelterGreater, 1, 1)
-		LItemScroll100Skill.AddForm(_DE_ScrollConjureShelterGreater, 1, 1)
-
-		bAddedSpellBooks = true
-	endif
-
 endFunction
 
 function RegisterForKeysOnLoad()
