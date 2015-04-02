@@ -46,12 +46,10 @@ ObjectReference property myExtraLight3Future auto hidden
 
 bool in_use = false
 
-Event OnInit()
-	CampDebug(0, "Start initialize")
+function Initialize()
 	self.BlockActivation()
-    parent.Initialize()
-    CampDebug(0, "Finished initialize")
-EndEvent
+	parent.Initialize()
+endFunction
 
 Event OnActivate(ObjectReference akActionRef)
 	CampDebug(0, "Got activate")
