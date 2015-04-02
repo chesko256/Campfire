@@ -1,13 +1,11 @@
 Scriptname _Camp_CreateItemScript extends ActiveMagicEffect
 
-objectreference property _Camp_CraftingObjectREF auto
-message property _Camp_GeneralError_Swimming auto
-Actor property PlayerRef auto
+import CampUtil
+
+Furniture property _Camp_CraftingObject auto
 
 Event OnInit()
-	Craft()
+	if PlayerCanPlaceObjects()
+		CampUtil.GetPlacementSystem().UsableObjectUsed(none, _Camp_CraftingObject, none, none, 0, none)
+	endif
 endEvent
-
-function Craft()
-	_Camp_CraftingObjectREF.Activate(PlayerRef)
-endFunction

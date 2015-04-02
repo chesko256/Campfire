@@ -102,8 +102,16 @@ function SetLastUsedCampfire(ObjectReference akCampfire) global
 		RaiseCampAPIError()
 		return
 	endif
-
 	Campfire.LastUsedCampfire = akCampfire
+endFunction
+
+Message function GetObjectMainMenu() global
+	_CampfireInternalAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+	return Campfire._Camp_ObjectMainMenu
 endFunction
 
 float function Get2DDistance(ObjectReference afFirst, ObjectReference afSecond) global

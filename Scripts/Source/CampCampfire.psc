@@ -289,7 +289,7 @@ Event OnActivate(ObjectReference akActionRef)
     _Camp_LastUsedCampfireSize.SetValueInt(campfire_size)
     _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
 
-    if !in_use
+    if akActionRef == Game.GetPlayer() && !in_use
         int i = _Camp_Campfire_Menu.Show()
         if i == 0
             in_use = true

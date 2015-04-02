@@ -1,12 +1,10 @@
-Scriptname _Camp_AlchemyFurnitureScript extends ObjectReference
+Scriptname CampUsableObject extends ObjectReference
 
 import _CampInternal
 
-Actor property PlayerRef auto
-
 Event OnInit()
 	utility.wait(0.1)		;Make sure that the object is completely initialized
-	self.Activate(PlayerRef)
+	self.Activate(Game.GetPlayer())
 	
 	RegisterForSingleUpdate(0.5)
 endEvent
