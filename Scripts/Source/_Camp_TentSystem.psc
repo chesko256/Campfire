@@ -17,7 +17,7 @@ _Camp_ConditionValues property ConditionVars auto
 Quest property DBEntranceQuest auto
 Actor property PlayerRef auto
 Armor property _Camp_WalkingStickShield auto
-GlobalVariable property _DE_Setting_CampingArmorTakeOff auto
+GlobalVariable property _Camp_Setting_CampingArmorTakeOff auto
 GlobalVariable property _Camp_Setting_TakeOff_Helm auto
 GlobalVariable property _Camp_Setting_TakeOff_Cuirass auto
 GlobalVariable property _Camp_Setting_TakeOff_Gauntlets auto
@@ -106,16 +106,12 @@ function ShowMainMenu(ObjectReference akTent)
 	int i = _Camp_TentMainMenu.Show()
 	if i == 0										;Sit
 		if Compatibility.isSKSELoaded
-			;@TODO: Move to Frostfall
-			;_DE_Help_Tents.Show()
 			Message.ResetHelpMessage("Activate")
 			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
 		endif
 		PlayerSit(akTent)
 	elseif i == 1									;Lie Down
 		if Compatibility.isSKSELoaded
-			;@TODO: Move to Frostfall
-			;_DE_Help_Tents.Show()
 			Message.ResetHelpMessage("Activate")
 			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
 		endif
@@ -263,7 +259,7 @@ function PlayerSit(ObjectReference akTent)
 	ConditionVars.IsPlayerSittingInTent = true
 	Game.ForceThirdPerson()
 	TentObject.myPlayerSitMarker.Activate(PlayerRef)
-	if _DE_Setting_CampingArmorTakeOff.GetValueInt() == 2
+	if _Camp_Setting_CampingArmorTakeOff.GetValueInt() == 2
 		;@TODO: Use new gear processing function	
 		;if Frostfall.GetFireState() || _DE_CurrentTemp.GetValue() >= 6.0 || Frostfall.bInInterior
 			DisplayPlayerTentEquipment(akTent)
@@ -317,7 +313,7 @@ function PlayerLieDown(ObjectReference akTent)
 	ConditionVars.IsPlayerLayingInTent = true
 	Game.ForceThirdPerson()
 	(TentObject.myPlayerLayDownMarker as ObjectReference).Activate(PlayerRef)
-	if _DE_Setting_CampingArmorTakeOff.GetValueInt() == 2
+	if _Camp_Setting_CampingArmorTakeOff.GetValueInt() == 2
 		;@TODO: Wrap in IsFrostfallLoaded
 		
 		;if Frostfall.GetFireState() || _DE_CurrentTemp.GetValue() >= 10.0 || Frostfall.bInInterior
