@@ -721,13 +721,15 @@ function UpdateIndicatorPosition(ObjectReference akIndicator, float afDistance, 
     endif
 endFunction
 
-function PlaceableObjectUsed(Activator akPlacementIndicator, Ingredient akIngredient, MiscObject akMiscItem, Int aiCost, Perk akPerk)
+function PlaceableObjectUsed(Activator akPlacementIndicator, Ingredient akIngredient, MiscObject akMiscItem, Int aiCost, Perk akPerk, string asIngredientName, string asMiscItemName, string asPerkName)
     if PlayerCanPlaceObjects()
         if akPerk
             if !PlayerRef.HasPerk(akPerk)
                 _Camp_PlaceObjectError_Perk.Show()
                 if Compatibility.isSKSELoaded
                     debug.notification(akPerk.GetName() + " required.")
+                else
+                    debug.notification(asPerkName + " required.")
                 endif
                 return
             endif
@@ -737,6 +739,8 @@ function PlaceableObjectUsed(Activator akPlacementIndicator, Ingredient akIngred
                 _Camp_PlaceObjectError_Item.Show()
                 if Compatibility.isSKSELoaded
                     debug.notification(aiCost + " " + akIngredient.GetName() + " required.")
+                else
+                    debug.notification(aiCost + " " + asIngredientName + " required.")
                 endif
                 return
             endif
@@ -745,6 +749,8 @@ function PlaceableObjectUsed(Activator akPlacementIndicator, Ingredient akIngred
                 _Camp_PlaceObjectError_Item.Show()
                 if Compatibility.isSKSELoaded
                     debug.notification(aiCost + " " + akMiscItem.GetName() + " required.")
+                else
+                    debug.notification(aiCost + " " + asMiscItemName + " required.")
                 endif
                 return
             endif
