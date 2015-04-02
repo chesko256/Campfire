@@ -63,6 +63,33 @@ Perk property necessary_perk auto
 { Optional: A perk required to use / place this item. }
 ;********/;
 
+;/********p* CampPlaceableMiscItem/consumable_ingredient_name
+* SYNTAX
+*/;
+string property consumable_ingredient_name auto
+;/*
+* DESCRIPTION
+{ Optional: The name of any required ingredient. Used if user does not have SKSE installed. }
+;********/;
+
+;/********p* CampPlaceableMiscItem/consumable_ingredient_name
+* SYNTAX
+*/;
+string property consumable_miscitem_name auto
+;/*
+* DESCRIPTION
+{ Optional: The name of any required misc item. Used if user does not have SKSE installed. }
+;********/;
+
+;/********p* CampPlaceableMiscItem/consumable_ingredient_name
+* SYNTAX
+*/;
+string property necessary_perk_name auto
+;/*
+* DESCRIPTION
+{ Optional: The name of any required perk. Used if user does not have SKSE installed. }
+;********/;
+
 Event OnEquipped(Actor akActor)
 	if PlayerCanPlaceObjects()
 		if akActor == Game.GetPlayer()
@@ -70,7 +97,10 @@ Event OnEquipped(Actor akActor)
 										  					  consumable_ingredient,		\
 										  					  consumable_misc_item,			\
 										  					  consumable_cost,				\
-										  					  necessary_perk)
+										  					  necessary_perk,               \
+                                                              consumable_ingredient_name,   \
+                                                              consumable_miscitem_name,     \
+                                                              necessary_perk_name)
 		endif
 	endif
 endEvent
