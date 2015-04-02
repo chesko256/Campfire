@@ -36,6 +36,7 @@ ObjectReference function get_async(Activator akFuture, ObjectReference akFutureA
 						float x_pos_offset = 0.0, float y_pos_offset = 0.0,	float z_pos_offset,														\
 						bool initially_disabled = false, bool is_propped = false, bool is_hanging = false)
 	
+	CampDebug(0, "get_async")
 	thread_queued = true
 
 	_OriginAngle = new float[3]
@@ -63,11 +64,13 @@ ObjectReference function get_async(Activator akFuture, ObjectReference akFutureA
 	_IsHanging = is_hanging
 	
 	future = akFutureAnchor.PlaceAtMe(akFuture)
+	CampDebug(0, "Returning future " + future)
 	return future
 endFunction
 
 Event OnUpdate()
 	if thread_queued
+		CampDebug(0, self + "Thread was queued")
 		float[] relative_position = new float[6]
 		relative_position = GetRelativePosition(_RelativeCenterObject, _ObjectPositionReference)
 		CampDebug(0, "position reference " + _ObjectPositionReference)
@@ -181,13 +184,46 @@ float[] function GetPosXYZRotateAroundRef(ObjectReference akOrigin, ObjectRefere
 endFunction
 
 float[] function GetRelativePosition(ObjectReference akOrigin, ObjectReference akObject)
+	int i = 0
+	utility.wait(5)
+	while (!akOrigin.Is3DLoaded() || !akObject.Is3DLoaded())
+		utility.wait(0.1)
+		i += 1
+		CampDebug(0, "Waiting on objects to load before calcs...")
+		if i >= 50
+			CampDebug(0, "Ran out of time waiting for objects to load.")
+			float[] none_return = new Float[6]
+			return none_return
+		endif
+	endWhile
+
+	CampDebug(0, self + "Getting relative position of " + akOrigin + " and " + akObject)
+	CampDebug(0, "Here we go before failure...!")
+	float objx = akObject.GetPositionX()
+	float objy = akObject.GetPositionY()
+	float objz = akObject.GetPositionZ()
+	CampDebug(0, " obj x y z " + objx + ", " + objy + ", " + objz)
+	float orgx = akOrigin.GetPositionX()
+	float orgy = akOrigin.GetPositionY()
+	float orgz = akOrigin.GetPositionZ()
+	CampDebug(0, " org x y z " + orgx + ", " + orgy + ", " + orgz)
+
+	CampDebug(0, "For giggles, here is the thing that dies: " + (objx - orgx))
+	CampDebug(0, "I did it!")
 	float[] myRelativePosition = new float[6]
+	CampDebug(0, self + "myRelativePosition: " + myRelativePosition)
 	myRelativePosition[0] = akObject.GetPositionX() - akOrigin.GetPositionX()
+	CampDebug(0, self + "myRelativePosition: " + myRelativePosition)
 	myRelativePosition[1] = akObject.GetPositionY() - akOrigin.GetPositionY()
+	CampDebug(0, self + "myRelativePosition: " + myRelativePosition)
 	myRelativePosition[2] = akObject.GetPositionZ() - akOrigin.GetPositionZ()
+	CampDebug(0, self + "myRelativePosition: " + myRelativePosition)
 	myRelativePosition[3] = akObject.GetAngleX()
+	CampDebug(0, self + "myRelativePosition: " + myRelativePosition)
 	myRelativePosition[4] = akObject.GetAngleY()
+	CampDebug(0, self + "myRelativePosition: " + myRelativePosition)
 	myRelativePosition[5] = akObject.GetAngleZ()
+	CampDebug(0, self + "(End) Relative position: " + myRelativePosition)
 	
 	return myRelativePosition
 endFunction

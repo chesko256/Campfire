@@ -82,14 +82,21 @@ function Update()
 endFunction
 
 function Initialize()
+	CampDebug(0, "Base initialize start")
 	PlacementSystem = CampUtil.GetPlacementSystem()
+	CampDebug(0, "Got placement system")
 	RotateOnStartUp()
 	OriginAng = GetAngleData(self)
+	CampDebug(0, "Rotated, got OriginAng...")
 	PlaceBaseObjects()
+	CampDebug(0, "Placed base objects")
 	PlaceObjects()
+	CampDebug(0, "Placed objects, waiting for all futures...")
 	PlacementSystem.wait_all()
+	CampDebug(0, "Getting results")
 	GetResults()
 	initialized = true
+	CampDebug(0, "Base initialized")
 endFunction
 
 function RotateOnStartUp()
@@ -101,10 +108,13 @@ function PlaceObjects()
 endFunction
 
 function PlaceBaseObjects()
-	PlaceObject_FireMarkers()
+	if Setting_Flammable
+		PlaceObject_FireMarkers()
+	endif
 endFunction
 
 function GetResults()
+	CampDebug(0, "Base get results")
 	if myFire1Future
 		myFire1 = GetFuture(myFire1Future).get_result()
 	endif
@@ -127,6 +137,12 @@ function GetResults()
 		mySmoke = GetFuture(mySmokeFuture).get_result()
 		float xs = self.GetWidth()
 		float ys = self.GetLength()
+		if xs == 0.0
+			xs = 100.0
+		endif
+		if ys == 0.0
+			ys = 100.0
+		endif
 		float size
 		if xs > ys
 			size = xs
@@ -157,12 +173,25 @@ function TakeDown()
 endFunction
 
 function PlaceObject_FireMarkers()
+	CampDebug(0, "Placing fire markers")
 	float xr = (self.GetWidth() / 2) * 0.8
 	float yr = (self.GetLength() / 2) * 0.8
+	CampDebug(0, xr + ", " + yr)
+
+	if xr == 0.0
+		xr = 100.0
+	endif
+	if yr == 0.0
+		yr = 100.0
+	endif
+
+	CampDebug(0, " Fire marker: xr " + xr + ", yr " + yr)
 
 	myFire1Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
+	CampDebug(0, "Finished fire future 1")
 	myFire2Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire3Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
+	CampDebug(0, "Finished fire future 3")
 	myFire4Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire5Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))
 	myFire6Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr))

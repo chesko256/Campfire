@@ -141,8 +141,17 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
     ObjectReference origin = origin_object
 
     int thread_limit = _Camp_Setting_MaxThreads.GetValueInt()
+
+    CampDebug(0, "Preparing for threaded placement")
+    CampDebug(0, "future: " + future)
+    CampDebug(0, "origin_angle: " + origin_angle)
+    CampDebug(0, "center_object: " + center_object)
+    CampDebug(0, "origin: " + origin)
+    CampDebug(0, "Thread limit: " + thread_limit)
 	while !future
+        CampDebug(0, "Checking threads")
 		if !thread01.queued() && thread_limit >= 1
+            CampDebug(0, "Queuing thread 01")
             future = thread01.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -152,6 +161,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
 		elseif !thread02.queued() && thread_limit >= 2
+            CampDebug(0, "Queuing thread 02")
 			future = thread02.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -161,6 +171,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread03.queued() && thread_limit >= 3
+            CampDebug(0, "Queuing thread 03")
             future = thread03.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -170,6 +181,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread04.queued() && thread_limit >= 4
+            CampDebug(0, "Queuing thread 04")
             future = thread04.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -179,6 +191,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread05.queued() && thread_limit >= 5
+            CampDebug(0, "Queuing thread 05")
             future = thread05.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -188,6 +201,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread06.queued() && thread_limit >= 6
+            CampDebug(0, "Queuing thread 06")
             future = thread06.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -197,6 +211,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread07.queued() && thread_limit >= 7
+            CampDebug(0, "Queuing thread 07")
             future = thread07.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -206,6 +221,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread08.queued() && thread_limit >= 8
+            CampDebug(0, "Queuing thread 08")
             future = thread08.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -215,6 +231,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
 		elseif !thread09.queued() && thread_limit >= 9
+            CampDebug(0, "Queuing thread 09")
             future = thread09.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -224,6 +241,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
 		elseif !thread10.queued() && thread_limit >= 10
+            CampDebug(0, "Queuing thread 10")
             future = thread10.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -233,6 +251,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread11.queued() && thread_limit >= 11
+            CampDebug(0, "Queuing thread 11")
             future = thread11.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -242,6 +261,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread12.queued() && thread_limit >= 12
+            CampDebug(0, "Queuing thread 12")
             future = thread12.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -251,6 +271,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread13.queued() && thread_limit >= 13
+            CampDebug(0, "Queuing thread 13")
             future = thread13.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -260,6 +281,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread14.queued() && thread_limit >= 14
+            CampDebug(0, "Queuing thread 14")
             future = thread14.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -269,6 +291,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread15.queued() && thread_limit >= 15
+            CampDebug(0, "Queuing thread 15")
             future = thread15.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -278,6 +301,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread16.queued() && thread_limit >= 16
+            CampDebug(0, "Queuing thread 16")
             future = thread16.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -287,6 +311,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread17.queued() && thread_limit >= 17
+            CampDebug(0, "Queuing thread 17")
             future = thread17.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -296,6 +321,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread18.queued() && thread_limit >= 18
+            CampDebug(0, "Queuing thread 18")
             future = thread18.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -305,6 +331,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread19.queued() && thread_limit >= 19
+            CampDebug(0, "Queuing thread 19")
             future = thread19.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -314,6 +341,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread20.queued() && thread_limit >= 20
+            CampDebug(0, "Queuing thread 20")
             future = thread20.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -323,6 +351,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread21.queued() && thread_limit >= 21
+            CampDebug(0, "Queuing thread 21")
             future = thread21.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -332,6 +361,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread22.queued() && thread_limit >= 22
+            CampDebug(0, "Queuing thread 22")
             future = thread22.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -341,6 +371,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread23.queued() && thread_limit >= 23
+            CampDebug(0, "Queuing thread 23")
             future = thread23.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -350,6 +381,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread24.queued() && thread_limit >= 24
+            CampDebug(0, "Queuing thread 24")
             future = thread24.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -359,6 +391,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread25.queued() && thread_limit >= 25
+            CampDebug(0, "Queuing thread 25")
             future = thread25.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -368,6 +401,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread26.queued() && thread_limit >= 26
+            CampDebug(0, "Queuing thread 26")
             future = thread26.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -377,6 +411,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread27.queued() && thread_limit >= 27
+            CampDebug(0, "Queuing thread 27")
             future = thread27.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -386,6 +421,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread28.queued() && thread_limit >= 28
+            CampDebug(0, "Queuing thread 28")
             future = thread28.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -395,6 +431,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread29.queued() && thread_limit >= 29
+            CampDebug(0, "Queuing thread 29")
             future = thread29.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -404,6 +441,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         x_pos_offset, y_pos_offset, z_pos_offset,               \
                                         initially_disabled, is_propped, is_hanging)
         elseif !thread30.queued() && thread_limit >= 30
+            CampDebug(0, "Queuing thread 30")
             future = thread30.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \
                                         XMarker, center_object, object_position_reference,      \
                                         origin, form_to_place, origin_angle,                    \
@@ -414,8 +452,10 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                                         initially_disabled, is_propped, is_hanging)
 		else
 			;All threads are queued; start all threads, wait, and try again.
+            CampDebug(0, "wait_all start")
             wait_all()
 		endif
+        CampDebug(0, "End of thread check")
 	endWhile
  
 	return future
@@ -764,14 +804,47 @@ function RaiseEvent_OnIndicatorUpdateStart()
 endFunction
 
 function wait_all()
+    CampDebug(0, "wait_all start")
     RaiseEvent_OnObjectPlacementStart()
     begin_waiting()
+    CampDebug(0, "wait_all end")
 endFunction
 
 function begin_waiting()
+    CampDebug(0, "waiting...")
     bool waiting = true
     int i = 0
     while waiting
+        CampDebug(0, "Thread 01 queued: " + thread01.queued())
+        CampDebug(0, "Thread 02 queued: " + thread02.queued())
+        CampDebug(0, "Thread 03 queued: " + thread03.queued())
+        CampDebug(0, "Thread 04 queued: " + thread04.queued())
+        CampDebug(0, "Thread 05 queued: " + thread05.queued())
+        CampDebug(0, "Thread 06 queued: " + thread06.queued())
+        CampDebug(0, "Thread 07 queued: " + thread07.queued())
+        CampDebug(0, "Thread 08 queued: " + thread08.queued())
+        CampDebug(0, "Thread 09 queued: " + thread09.queued())
+        CampDebug(0, "Thread 10 queued: " + thread10.queued())
+        CampDebug(0, "Thread 11 queued: " + thread11.queued())
+        CampDebug(0, "Thread 12 queued: " + thread12.queued())
+        CampDebug(0, "Thread 13 queued: " + thread13.queued())
+        CampDebug(0, "Thread 14 queued: " + thread14.queued())
+        CampDebug(0, "Thread 15 queued: " + thread15.queued())
+        CampDebug(0, "Thread 16 queued: " + thread16.queued())
+        CampDebug(0, "Thread 17 queued: " + thread17.queued())
+        CampDebug(0, "Thread 18 queued: " + thread18.queued())
+        CampDebug(0, "Thread 19 queued: " + thread19.queued())
+        CampDebug(0, "Thread 20 queued: " + thread20.queued())
+        CampDebug(0, "Thread 21 queued: " + thread21.queued())
+        CampDebug(0, "Thread 22 queued: " + thread22.queued())
+        CampDebug(0, "Thread 23 queued: " + thread23.queued())
+        CampDebug(0, "Thread 24 queued: " + thread24.queued())
+        CampDebug(0, "Thread 25 queued: " + thread25.queued())
+        CampDebug(0, "Thread 26 queued: " + thread26.queued())
+        CampDebug(0, "Thread 27 queued: " + thread27.queued())
+        CampDebug(0, "Thread 28 queued: " + thread28.queued())
+        CampDebug(0, "Thread 29 queued: " + thread29.queued())
+        CampDebug(0, "Thread 30 queued: " + thread30.queued())
         if thread01.queued() || thread02.queued() || thread03.queued() || thread04.queued() || thread05.queued() || \
            thread06.queued() || thread07.queued() || thread08.queued() || thread09.queued() || thread10.queued() || \ 
            thread11.queued() || thread12.queued() || thread13.queued() || thread14.queued() || thread15.queued() || \ 
@@ -780,6 +853,7 @@ function begin_waiting()
            thread26.queued() || thread27.queued() || thread28.queued() || thread29.queued() || thread30.queued()
             i += 1
             Utility.wait(0.1)
+            CampDebug(0, "thread wait count " + i)
             if i >= 100
                 CampDebug(3, "A catastrophic error has occurred. All threads have become unresponsive. Please debug this issue or notify the author.")
                 i = 0
@@ -787,9 +861,12 @@ function begin_waiting()
                 return
             endif
         else
+            CampDebug(0, "Exiting wait.")
             waiting = false
         endif
+        CampDebug(0, "Exit thread check")
     endWhile
+    CampDebug(0, "Exit while")
 endFunction
 
 ;A helper function that can avert permanent thread failure if something goes wrong

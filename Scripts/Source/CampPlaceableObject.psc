@@ -1,5 +1,6 @@
 scriptname CampPlaceableObject extends _Camp_PlaceableObjectBase
 
+import CampUtil
 import _CampInternal
 
 ; PRIVATE
@@ -43,9 +44,46 @@ ObjectReference property myExtraLight1Future auto hidden
 ObjectReference property myExtraLight2Future auto hidden
 ObjectReference property myExtraLight3Future auto hidden
 
+bool in_use = false
+
+Event OnInit()
+	CampDebug(0, "Start initialize")
+	self.BlockActivation()
+    parent.Initialize()
+    CampDebug(0, "Finished initialize")
+EndEvent
+
 Event OnActivate(ObjectReference akActionRef)
-	;Do default behavior, override if necessary.
-	;Use / Pick Up / Cancel
+	CampDebug(0, "Got activate")
+	if akActionRef == Game.GetPlayer() && !in_use
+		int i = GetObjectMainMenu().Show()
+		if i == 0										;Use
+			in_use = true
+			self.BlockActivation(false)
+			self.Activate(Game.GetPlayer())
+			
+			;Wait until the player is "using" the object, or enough time passes.
+            int j = 0
+            while !self.IsFurnitureInUse() && j < 50
+                utility.wait(0.1)
+                j += 1
+            endWhile
+
+            ;Wait until they finish.
+            while self.IsFurnitureInUse()
+                utility.wait(0.1)
+            endWhile
+
+			;Return to the previous state.
+            self.BlockActivation()
+            in_use = false
+		elseif i == 1									;Pick Up
+			TakeDown()
+			Game.GetPlayer().Additem(Required_InventoryItem, 1, true)
+		else
+			;exit
+		endif
+	endif
 EndEvent
 
 function PlaceObjects()
@@ -229,6 +267,29 @@ function PlaceObject_ExtraLight2(CampPlaceableObjectEx Extended)
 endFunction
 function PlaceObject_ExtraLight3(CampPlaceableObjectEx Extended)
 	myExtraLight3Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraLight3, Extended.PositionRef_ExtraLight3)
+endFunction
+
+function TakeDown()
+	parent.TakeDown()
+	TryToDisableAndDeleteRef(myExtraStatic1)
+	TryToDisableAndDeleteRef(myExtraStatic2)
+	TryToDisableAndDeleteRef(myExtraStatic3)
+	TryToDisableAndDeleteRef(myExtraStatic4)
+	TryToDisableAndDeleteRef(myExtraStatic5)
+	TryToDisableAndDeleteRef(myExtraActivator1)
+	TryToDisableAndDeleteRef(myExtraActivator2)
+	TryToDisableAndDeleteRef(myExtraActivator3)
+	TryToDisableAndDeleteRef(myExtraActivator4)
+	TryToDisableAndDeleteRef(myExtraActivator5)
+	TryToDisableAndDeleteRef(myExtraFurniture1)
+	TryToDisableAndDeleteRef(myExtraFurniture2)
+	TryToDisableAndDeleteRef(myExtraFurniture3)
+	TryToDisableAndDeleteRef(myExtraFurniture4)
+	TryToDisableAndDeleteRef(myExtraFurniture5)
+	TryToDisableAndDeleteRef(myExtraLight1)
+	TryToDisableAndDeleteRef(myExtraLight2)
+	TryToDisableAndDeleteRef(myExtraLight3)
+	TryToDisableAndDeleteRef(self)
 endFunction
 
 state BurningDown
