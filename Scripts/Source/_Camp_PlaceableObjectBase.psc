@@ -82,18 +82,12 @@ function Update()
 endFunction
 
 function Initialize()
-	CampDebug(0, "Base initialize start")
 	PlacementSystem = CampUtil.GetPlacementSystem()
-	CampDebug(0, "Got placement system")
 	RotateOnStartUp()
 	OriginAng = GetAngleData(self)
-	CampDebug(0, "Rotated, got OriginAng...")
 	PlaceBaseObjects()
-	CampDebug(0, "Placed base objects")
 	PlaceObjects()
-	CampDebug(0, "Placed objects, waiting for all futures...")
 	PlacementSystem.wait_all()
-	CampDebug(0, "Getting results")
 	GetResults()
 	initialized = true
 	CampDebug(0, "Base initialized")
@@ -138,10 +132,10 @@ function GetResults()
 		float xs = self.GetWidth()
 		float ys = self.GetLength()
 		if xs == 0.0
-			xs = 100.0
+			xs = 45.0
 		endif
 		if ys == 0.0
-			ys = 100.0
+			ys = 45.0
 		endif
 		float size
 		if xs > ys
