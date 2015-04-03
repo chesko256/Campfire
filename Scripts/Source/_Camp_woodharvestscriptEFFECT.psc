@@ -6,16 +6,17 @@ import math
 import CampUtil
 
 _Camp_Compatibility property Compatibility auto
+_Camp_ConditionValues property Conditions auto
 
 Actor property PlayerRef auto
 message property _Camp_WoodHarvestConfirmMsg auto
-message property _Camp_WoodHarvestNoAxeConfirmMsg auto
 message property _Camp_WoodHarvestErrorCombat auto
 message property _Camp_WoodHarvestErrorNoTrees auto
 message property _Camp_WoodHarvestErrorTooCold auto
 message property _Camp_DeadwoodHarvestSuccess auto
 message property _Camp_BranchHarvestSuccess auto
 message property _Camp_WoodHarvest_Stone auto
+message property _Camp_StoneError auto
 formlist property _Camp_Trees auto
 formlist property woodChoppingAxes auto
 MiscObject property _Camp_DeadwoodLog auto
@@ -47,19 +48,21 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 	endif
 
 	if Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_Trees, PlayerRef, 3000.0) != none
-		if PlayerRef.GetItemCount(woodChoppingAxes) > 0
-			int i = _Camp_WoodHarvestConfirmMsg.Show()
-			if i == 0
-				HarvestWood()
-			endif
-		else
-			int i = _Camp_WoodHarvestNoAxeConfirmMsg.Show()
-			if i == 0
-				HarvestWoodNoAxe()
-			endif
-		endif
+		Conditions.TreesAreNearby = true
 	else
+		Conditions.TreesAreNearby = false
 		_Camp_WoodHarvestErrorNoTrees.Show()
+	endif
+
+	int i = _Camp_WoodHarvestConfirmMsg.Show()
+	if i == 0
+		HarvestWood()
+	elseif i == 1
+		HarvestBranches()
+	elseif i == 2
+		HarvestStone()
+	else
+		;pass
 	endif
 endEvent
 
@@ -80,10 +83,15 @@ function HarvestWood()
 	_Camp_Black.PopTo(_Camp_FadeUp)
 
 	GiveDeadwoodLogs()
-	GiveDeadwoodBranches()
+
+	if PlayerRef.GetItemCount(woodChoppingAxes) > 0
+		; Favor using this instead of stone axe
+	elseif PlayerRef.GetItemCount(_Camp_StoneWarAxe) > 0
+		PlayerRef.RemoveItem(_Camp_StoneWarAxe, 1)
+	endif
 endFunction
 
-function HarvestWoodNoAxe()
+function HarvestBranches()
 	_Camp_FadeDown.Apply()
 	Wait(1)
 	_Camp_FadeDown.PopTo(_Camp_Black)
@@ -97,8 +105,28 @@ function HarvestWoodNoAxe()
 	GiveDeadwoodBranches()
 endFunction
 
+function HarvestStone()
+	_Camp_FadeDown.Apply()
+	Wait(1)
+	_Camp_FadeDown.PopTo(_Camp_Black)
+	AdvanceTime()
+
+	Game.EnablePlayerControls()
+
+	wait(2)
+	_Camp_Black.PopTo(_Camp_FadeUp)
+
+	float stone_roll = RandomFloat(0.1, 1.0)
+	if stone_roll < 0.7
+		_Camp_WoodHarvest_Stone.Show()
+		PlayerRef.AddItem(_Camp_Rock, 1, true)
+	else
+		_Camp_StoneError.Show()
+	endif
+endFunction
+
 function GiveDeadwoodLogs()
-	int myHarvest = RandomInt(3, 6)
+	int myHarvest = RandomInt(4, 8)
 
 	if GetTrackedFollowerCount() > 0
 		myHarvest += 2
@@ -109,23 +137,14 @@ function GiveDeadwoodLogs()
 endFunction
 
 function GiveDeadwoodBranches()
-	int myHarvest = RandomInt(2, 6)
+	int myHarvest = RandomInt(3, 6)
 
 	if GetTrackedFollowerCount() > 0
-		myHarvest += RandomInt(2, 4)
+		myHarvest += 2
 	endif
 	
 	_Camp_BranchHarvestSuccess.Show(myHarvest)
 	PlayerRef.AddItem(_Camp_DeadwoodBranch, myHarvest, true)
-	
-	;float myStone = RandomFloat()
-	;if _Camp_FollowerCount.GetValueInt() > 0
-	;	myStone += 0.15
-	;endif
-	;if myStone >= 0.80
-	;	_Camp_WoodHarvest_Stone.Show()
-	;	PlayerRef.AddItem(_Camp_Rock, 1, true)
-	;endif
 endFunction
 
 function AdvanceTime()

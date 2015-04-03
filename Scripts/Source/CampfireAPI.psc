@@ -1,6 +1,8 @@
 scriptname CampfireAPI extends Quest
 
 ;#Properties =======================================================================
+GlobalVariable property _Camp_APIVersion auto
+
 CampfireData property CampData auto
 _Camp_LegalAreaCheck property Legal auto
 _Camp_Compatibility property Compatibility auto
@@ -21,7 +23,6 @@ ReferenceAlias property Follower3 auto
 ReferenceAlias property Animal auto
 
 Formlist property _Camp_TentActivators auto
-Formlist property _Camp_ConjuredShelters auto
 
 Message property _Camp_GeneralError_Placement auto
 Message property _Camp_GeneralError_Swimming auto
