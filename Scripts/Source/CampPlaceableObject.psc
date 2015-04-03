@@ -80,12 +80,16 @@ function UseObject(ObjectReference akActionRef)
             self.BlockActivation()
             in_use = false
 		elseif i == 1									;Pick Up
-			TakeDown()
-			Game.GetPlayer().Additem(Required_InventoryItem, 1, true)
+			PickUp()
 		else
 			;exit
 		endif
 	endif
+endFunction
+
+function PickUp()
+	TakeDown()
+	Game.GetPlayer().Additem(Required_InventoryItem, 1, true)
 endFunction
 
 function PlaceObjects()

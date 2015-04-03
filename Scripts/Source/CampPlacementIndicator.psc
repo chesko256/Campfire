@@ -1,6 +1,7 @@
 Scriptname CampPlacementIndicator extends ObjectReference
 
 import CampUtil
+import _CampInternal
 
 ;@TODO: Move somewhere else
 _Camp_ObjectPlacementThreadManager property PlacementSystem auto hidden
@@ -88,6 +89,7 @@ function Ready()
 endFunction
 
 Event OnUpdate()
+	CampDebug(0, "Indicator updating")
 	bool keep_updating = PlacementSystem.UpdateIndicator(self, 							\
 														 form_to_place,					\
 														 Required_inventory_item,		\
