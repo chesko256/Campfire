@@ -455,16 +455,18 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
 endFunction
 
 function StartPlacement(ObjectReference akIndicator)
+    ; Block inventory menu access
+    Game.DisablePlayerControls(false, false, false, false, false, true, false, false)
     was_hit = false
     akIndicator.SetAngle(0.0, 0.0, 0.0)
     _Camp_CurrentlyPlacingObject.SetValue(2)
     if _Camp_Setting_AdvancedPlacement.GetValueInt() == 2
         _Camp_IndicatorTriggerRef.MoveTo(PlayerRef)
     endif
-    ;@TODO: Block inventory menu access
 endFunction
 
 function StopPlacement()
+    Game.EnablePlayerControls()
     _Camp_IndicatorTriggerRef.MoveTo(_Camp_Anchor)
     _Camp_ZTestShooterREF_A.MoveTo(_Camp_Anchor)
     _Camp_ZTestShooterREF_B.MoveTo(_Camp_Anchor)
@@ -472,7 +474,6 @@ function StopPlacement()
     _Camp_ZTestReceiverREF_A.MoveTo(_Camp_Anchor)
     _Camp_ZTestReceiverREF_B.MoveTo(_Camp_Anchor)
     _Camp_ZTestReceiverREF_C.MoveTo(_Camp_Anchor)
-    ;@TODO: Restore Inventory menu access
 endFunction
 
 bool was_hit = false
@@ -563,7 +564,9 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
 
                 akIndicator.Disable()
                 ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace)
+
                 if akInventoryItem
+                    (campitem as _Camp_PlaceableObjectBase).Required_InventoryItem = akInventoryItem
                     PlayerRef.RemoveItem(akInventoryItem, 1, true)
                 endif
                 StopPlacement()
@@ -721,16 +724,16 @@ function UpdateIndicatorPosition(ObjectReference akIndicator, float afDistance, 
     endif
 endFunction
 
-function PlaceableObjectUsed(Activator akPlacementIndicator, Ingredient akIngredient, MiscObject akMiscItem, Int aiCost, Perk akPerk, string asIngredientName, string asMiscItemName, string asPerkName)
+function PlaceableObjectUsed(MiscObject akInventoryItem, Activator akPlacementIndicator, Ingredient akIngredient, MiscObject akMiscItem, Int aiCost, Perk akPerk, string asIngredientName, string asMiscItemName, string asPerkName)
     bool can_use = MeetsRequirements(akIngredient, akMiscItem, aiCost, akPerk, asIngredientName, asMiscItemName, asPerkName)
     if !can_use
         return
     endif
 
     ExitMenus()
-    ;@TODO: block inventory menu
     ObjectReference ref = PlayerRef.PlaceAtMe(akPlacementIndicator as Activator)
     CampPlacementIndicator indicator = ref as CampPlacementIndicator
+    indicator.required_inventory_item = akInventoryItem
     if akIngredient
         indicator.required_ingredient = akIngredient
         indicator.cost = aiCost

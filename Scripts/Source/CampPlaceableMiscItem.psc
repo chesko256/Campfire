@@ -9,6 +9,15 @@ scriptname CampPlaceableMiscItem extends ObjectReference
 
 import CampUtil
 
+;/********p* CampPlacementIndicator/Required_this_item
+* SYNTAX
+*/;
+MiscObject property Required_this_item auto
+;/*
+* DESCRIPTION
+{ Required: This inventory item, the object this script is attached to. }
+;*********/;
+
 ;/********p* CampPlaceableMiscItem/Required_placement_indicator
 * SYNTAX
 */;
@@ -93,7 +102,8 @@ string property necessary_perk_name auto
 Event OnEquipped(Actor akActor)
 	if PlayerCanPlaceObjects()
 		if akActor == Game.GetPlayer()
-			CampUtil.GetPlacementSystem().PlaceableObjectUsed(Required_placement_indicator, \
+			CampUtil.GetPlacementSystem().PlaceableObjectUsed(Required_this_item,           \
+                                                              Required_placement_indicator, \
 										  					  consumable_ingredient,		\
 										  					  consumable_misc_item,			\
 										  					  consumable_cost,				\

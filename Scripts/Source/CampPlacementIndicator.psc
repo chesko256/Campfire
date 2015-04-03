@@ -24,15 +24,6 @@ Activator property Required_activator_to_place auto
 { Required: The Activator object to place with this indicator. Fill only the furniture or the activator, not both. }
 ;*********/;
 
-;/********p* CampPlacementIndicator/Required_inventory_item
-* SYNTAX
-*/;
-MiscObject property Required_inventory_item auto
-;/*
-* DESCRIPTION
-{ Required: The Misc Item that starts this placement indicator. }
-;*********/;
-
 ;/********p* CampPlacementIndicator/height_adjustment
 * SYNTAX
 */;
@@ -69,6 +60,7 @@ Float property indicator_distance = 300.0 auto
 { (Default: 300.0) The distance from the player to render the indicator. }
 ;*********/;
 
+MiscObject property required_inventory_item auto hidden
 ingredient property required_ingredient auto hidden
 miscobject property required_miscitem auto hidden
 int property cost = 0 auto hidden
@@ -92,7 +84,7 @@ Event OnUpdate()
 	CampDebug(0, "Indicator updating")
 	bool keep_updating = PlacementSystem.UpdateIndicator(self, 							\
 														 form_to_place,					\
-														 Required_inventory_item,		\
+														 required_inventory_item,		\
 														 indicator_distance,			\
 														 height_adjustment,				\
 														 z_angle_adjustment,			\
