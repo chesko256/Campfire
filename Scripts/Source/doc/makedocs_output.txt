@@ -4,6 +4,14 @@ robodoc.exe:
 ./../CampTent.psc(30) : Warning R1:
   A header with the name "CampTent/Setting_BedRollScale" already exists.
   See ./../CampTent.psc(21)
+robodoc.exe:
+./../CampPlaceableMiscItem.psc(75) : Warning R2:
+  A header with the name "CampPlaceableMiscItem/consumable_ingredient_name" already exists.
+  See ./../CampPlaceableMiscItem.psc(66)
+robodoc.exe:
+./../CampPlaceableMiscItem.psc(84) : Warning R3:
+  A header with the name "CampPlaceableMiscItem/consumable_ingredient_name" already exists.
+  See ./../CampPlaceableMiscItem.psc(66)
 
 E:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data\Scripts\Source\doc>pandoc.exe "./output/CampUtil_psc.xml" -f docbook -t markdown_github -o "./output/CampUtil_psc.txt" --base-header-level=3 
 

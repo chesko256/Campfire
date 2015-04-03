@@ -67,3 +67,33 @@ Optional: A perk required to use / place this item. }
 **SYNTAX.**
 
     Perk property necessary_perk auto
+
+### CampPlaceableMiscItem/consumable\_ingredient\_name
+
+**DESCRIPTION.**
+
+Optional: The name of any required ingredient. Used if user does not have SKSE installed. }
+
+**SYNTAX.**
+
+    string property consumable_ingredient_name auto
+
+### CampPlaceableMiscItem/consumable\_ingredient\_name
+
+**DESCRIPTION.**
+
+Optional: The name of any required misc item. Used if user does not have SKSE installed. }
+
+**SYNTAX.**
+
+    string property consumable_miscitem_name auto
+
+### CampPlaceableMiscItem/consumable\_ingredient\_name
+
+**DESCRIPTION.**
+
+Optional: The name of any required perk. Used if user does not have SKSE installed. }
+
+**SYNTAX.**
+
+    string property necessary_perk_name auto

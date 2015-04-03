@@ -89,4 +89,40 @@ CampPlaceableMiscItem/necessary_perk</title>
 Perk property necessary_perk auto
 </literallayout>
 </section>
+<section>
+<title>
+CampPlaceableMiscItem/consumable_ingredient_name</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Optional: The name of any required ingredient. Used if user does not have SKSE installed. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+string property consumable_ingredient_name auto
+</literallayout>
+</section>
+<section>
+<title>
+CampPlaceableMiscItem/consumable_ingredient_name</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Optional: The name of any required misc item. Used if user does not have SKSE installed. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+string property consumable_miscitem_name auto
+</literallayout>
+</section>
+<section>
+<title>
+CampPlaceableMiscItem/consumable_ingredient_name</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Optional: The name of any required perk. Used if user does not have SKSE installed. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+string property necessary_perk_name auto
+</literallayout>
+</section>
 </article>

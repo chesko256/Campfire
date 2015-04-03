@@ -53,6 +53,10 @@ endFunction
 
 Event OnActivate(ObjectReference akActionRef)
 	CampDebug(0, "Got activate")
+	UseObject(akActionRef)
+EndEvent
+
+function UseObject(ObjectReference akActionRef)
 	if akActionRef == Game.GetPlayer() && !in_use
 		int i = GetObjectMainMenu().Show()
 		if i == 0										;Use
@@ -82,7 +86,7 @@ Event OnActivate(ObjectReference akActionRef)
 			;exit
 		endif
 	endif
-EndEvent
+endFunction
 
 function PlaceObjects()
 	CampPlaceableObjectEx Extended = self as CampPlaceableObjectEx
