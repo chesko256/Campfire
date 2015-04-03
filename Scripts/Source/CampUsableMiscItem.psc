@@ -27,7 +27,10 @@ Event OnEquipped(Actor akActor)
 														   consumable_ingredient, 				\
 														   consumable_misc_item,				\
 														   consumable_cost,						\
-														   necessary_perk)
+														   necessary_perk,                      \
+                                                           consumable_ingredient_name,          \
+                                                           consumable_miscitem_name,            \
+                                                           necessary_perk_name)
 		endif
 	endif
 endEvent
