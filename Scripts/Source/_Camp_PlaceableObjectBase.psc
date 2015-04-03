@@ -4,17 +4,6 @@ import _CampInternal
 import CampUtil
 import TentSystem
 
-; REQUIRED PROPERTIES
-
-;/********p* _Camp_PlaceableObjectBase/Required_InventoryItem
-* SYNTAX
-*/;
-MiscObject property Required_InventoryItem auto
-;/*
-* DESCRIPTION
-{ Required: The item the player obtains when picking up this object. }
-;*********/;
-
 ; OPTIONAL PROPERTIES
 
 ;/********p* _Camp_PlaceableObjectBase/Setting_StartUpRotation
@@ -36,6 +25,7 @@ bool property Setting_Flammable = False auto
 ;*********/;
 
 ; PRIVATE
+MiscObject property Required_InventoryItem auto hidden
 _Camp_ObjectPlacementThreadManager property PlacementSystem auto hidden
 bool property initialized = false auto hidden
 float[] property OriginAng auto hidden
