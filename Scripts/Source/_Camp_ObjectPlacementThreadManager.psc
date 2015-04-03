@@ -722,56 +722,50 @@ function UpdateIndicatorPosition(ObjectReference akIndicator, float afDistance, 
 endFunction
 
 function PlaceableObjectUsed(Activator akPlacementIndicator, Ingredient akIngredient, MiscObject akMiscItem, Int aiCost, Perk akPerk, string asIngredientName, string asMiscItemName, string asPerkName)
-    if PlayerCanPlaceObjects()
-        if akPerk
-            if !PlayerRef.HasPerk(akPerk)
-                _Camp_PlaceObjectError_Perk.Show()
-                if Compatibility.isSKSELoaded
-                    debug.notification(akPerk.GetName() + " required.")
-                else
-                    debug.notification(asPerkName + " required.")
-                endif
-                return
-            endif
-        endif
-        if akIngredient && aiCost > 0
-            if !(PlayerRef.GetItemCount(akIngredient) >= aiCost)
-                _Camp_PlaceObjectError_Item.Show()
-                if Compatibility.isSKSELoaded
-                    debug.notification(aiCost + " " + akIngredient.GetName() + " required.")
-                else
-                    debug.notification(aiCost + " " + asIngredientName + " required.")
-                endif
-                return
-            endif
-        elseif akMiscItem && aiCost > 0
-            if !(PlayerRef.GetItemCount(akMiscItem) >= aiCost)
-                _Camp_PlaceObjectError_Item.Show()
-                if Compatibility.isSKSELoaded
-                    debug.notification(aiCost + " " + akMiscItem.GetName() + " required.")
-                else
-                    debug.notification(aiCost + " " + asMiscItemName + " required.")
-                endif
-                return
-            endif
-        endif
+    bool can_use = MeetsRequirements(akIngredient, akMiscItem, aiCost, akPerk, asIngredientName, asMiscItemName, asPerkName)
+    if !can_use
+        return
+    endif
 
-        ExitMenus()
-        ;@TODO: block inventory menu
-        ObjectReference ref = PlayerRef.PlaceAtMe(akPlacementIndicator as Activator)
-        CampPlacementIndicator indicator = ref as CampPlacementIndicator
-        if akIngredient
-            indicator.required_ingredient = akIngredient
-            indicator.cost = aiCost
-        elseif akMiscItem
-            indicator.required_miscitem = akMiscItem
-            indicator.cost = aiCost
-        endif
-        indicator.Ready()
+    ExitMenus()
+    ;@TODO: block inventory menu
+    ObjectReference ref = PlayerRef.PlaceAtMe(akPlacementIndicator as Activator)
+    CampPlacementIndicator indicator = ref as CampPlacementIndicator
+    if akIngredient
+        indicator.required_ingredient = akIngredient
+        indicator.cost = aiCost
+    elseif akMiscItem
+        indicator.required_miscitem = akMiscItem
+        indicator.cost = aiCost
+    endif
+    indicator.Ready()
+endFunction
+
+function UsableObjectUsed(Activator akActivatorToUse, Furniture akFurnitureToUse, Ingredient akIngredient, MiscObject akMiscItem, Int aiCost, Perk akPerk, string asIngredientName, string asMiscItemName, string asPerkName)
+    bool can_use = MeetsRequirements(akIngredient, akMiscItem, aiCost, akPerk, asIngredientName, asMiscItemName, asPerkName)
+    if !can_use
+        return
+    endif
+    
+    ExitMenus()
+
+    ; Take the required items now since we don't wait for placement
+    if akIngredient && aiCost > 0
+        PlayerRef.RemoveItem(akIngredient, aiCost)
+    elseif akMiscItem && aiCost > 0
+        PlayerRef.RemoveItem(akMiscItem, aiCost)
+    endif
+
+    ; It is the object's responsibility to activate the player once loaded,
+    ; and cleaning itself up.
+    if akActivatorToUse
+        PlayerRef.PlaceAtMe(akActivatorToUse)
+    elseif akFurnitureToUse
+        PlayerRef.PlaceAtMe(akFurnitureToUse)
     endif
 endFunction
 
-function UsableObjectUsed(Activator akActivatorToUse, Furniture akFurnitureToUse, Ingredient akIngredient, MiscObject akMiscItem, Int aiCost, Perk akPerk)
+bool function MeetsRequirements(Ingredient akIngredient, MiscObject akMiscItem, Int aiCost, Perk akPerk, string asIngredientName, string asMiscItemName, string asPerkName)
     if PlayerCanPlaceObjects()
         if akPerk
             if !PlayerRef.HasPerk(akPerk)
@@ -779,7 +773,7 @@ function UsableObjectUsed(Activator akActivatorToUse, Furniture akFurnitureToUse
                 if Compatibility.isSKSELoaded
                     debug.notification(akPerk.GetName() + " required.")
                 endif
-                return
+                return false
             endif
         endif
         if akIngredient && aiCost > 0
@@ -788,7 +782,7 @@ function UsableObjectUsed(Activator akActivatorToUse, Furniture akFurnitureToUse
                 if Compatibility.isSKSELoaded
                     debug.notification(aiCost + " " + akIngredient.GetName() + " required.")
                 endif
-                return
+                return false
             endif
         elseif akMiscItem && aiCost > 0
             if !(PlayerRef.GetItemCount(akMiscItem) >= aiCost)
@@ -796,20 +790,13 @@ function UsableObjectUsed(Activator akActivatorToUse, Furniture akFurnitureToUse
                 if Compatibility.isSKSELoaded
                     debug.notification(aiCost + " " + akMiscItem.GetName() + " required.")
                 endif
-                return
+                return false
             endif
         endif
-
-        ExitMenus()
-
-        ; It is the object's responsibility to activate the player once loaded
-        ; and clean itself up.
-        if akActivatorToUse
-            PlayerRef.PlaceAtMe(akActivatorToUse)
-        elseif akFurnitureToUse
-            PlayerRef.PlaceAtMe(akFurnitureToUse)
-        endif
+    else
+        return false
     endif
+    return true
 endFunction
 
 function RaiseEvent_OnIndicatorUpdateStart()
