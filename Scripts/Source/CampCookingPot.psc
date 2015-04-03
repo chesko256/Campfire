@@ -1,6 +1,7 @@
 scriptname CampCookingPot extends CampPlaceableObjectEx
 
 import CampUtil
+import _CampInternal
 
 bool enable_update = false
 
@@ -9,7 +10,7 @@ message property _Camp_CookingPotError auto
 
 Event OnCellAttach()
 	enable_update = true
-	;RegisterForSingleUpdate(3)
+	RegisterForSingleUpdate(3)
 endEvent
 
 Event OnCellDetach()
@@ -17,9 +18,9 @@ Event OnCellDetach()
 EndEvent
 
 ;myExtraActivator1 = _Camp_CookingPot_Steam
-Event OnUpdate()
+function Update()
 	;@TODO: Rework into 'heat link' system
-	;/ObjectReference heat = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_HeatSources_Fire, self, 300.0)
+	ObjectReference heat = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_HeatSources_Fire, self, 300.0)
 	if heat != none && heat.IsEnabled()
 		TryToEnableRef(myExtraActivator1, true)
 	else
@@ -28,20 +29,18 @@ Event OnUpdate()
 	if enable_update
 		RegisterForSingleUpdate(3)
 	endif
-	/;
-endEvent
-
-;Overrides CampPlaceableObject
-function UseObject(ObjectReference akActionRef)
-	if myExtraActivator1.IsEnabled()
-		self.BlockActivation(false)
-		self.Activate(akActionRef)
-		utility.wait(0.1)
-		self.BlockActivation(true)
-	else
-		_Camp_CookingPotError.Show()
-	endif
 endFunction
+
+Event OnActivate(ObjectReference akActionRef)
+	if akActionRef == Game.GetPlayer()
+		if myExtraActivator1.IsDisabled()
+			_Camp_CookingPotError.Show()
+			return
+		else
+			UseObject(akActionRef)
+		endif
+	endif
+EndEvent
 
 ;@Overrides CampPlaceableObject
 function PlaceObject_ExtraActivator1(CampPlaceableObjectEx Extended)

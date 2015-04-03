@@ -70,7 +70,6 @@ endFunction
 
 Event OnUpdate()
 	if thread_queued
-		CampDebug(0, self + "Thread was queued")
 		float[] relative_position = new float[6]
 		relative_position = GetRelativePosition(_RelativeCenterObject, _ObjectPositionReference)
 		CampDebug(0, "position reference " + _ObjectPositionReference)

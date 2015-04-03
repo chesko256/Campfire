@@ -453,14 +453,14 @@ ObjectReference property PositionRef_ExtraLight3 auto
 </section>
 <section>
 <title>
-CampPlaceableObjectEx/PositionRef_CenterObjectOverride</title>
+CampPlaceableObjectEx/RequiredPositionRef_CenterObject</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: Set this to specify a different object as the one which all other objects "orbit" when rotated. Uses this object if left blank. }
+ Required: Set this to specify the position reference of the object that all other objects "orbit" when rotated. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-ObjectReference property PositionRef_CenterObjectOverride auto
+ObjectReference property RequiredPositionRef_CenterObject auto
 </literallayout>
 </section>
 </article>
