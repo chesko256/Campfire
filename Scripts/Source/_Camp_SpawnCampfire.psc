@@ -9,6 +9,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 	if PlayerRef.GetRace().HasKeyword(ActorTypeCreature) || PlayerRef.GetRace().HasKeyword(ImmuneParalysis)
 		;@TODO: Error message
 	else
-		Game.GetPlayer().PlaceAtMe(_Camp_Indicator_Campfire)
+		ObjectReference f = Game.GetPlayer().PlaceAtMe(_Camp_Indicator_Campfire)
+		(f as CampPlacementIndicator).Ready()
 	endif
 EndEvent
