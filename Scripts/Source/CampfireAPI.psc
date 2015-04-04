@@ -9,9 +9,10 @@ _Camp_Compatibility property Compatibility auto
 Actor property PlayerRef auto
 Formlist property _Camp_WorldspacesInteriors auto
 Keyword property isCampfireCrimeToPlaceInTowns auto
-Keyword property isCampfirePlaceableObject auto
 Keyword property isCampfireTentWaterproof auto
 Keyword property isCampfireTentWarm auto
+Keyword property ActorTypeCreature auto
+Keyword property ImmuneParalysis auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 GlobalVariable property _Camp_Setting_EquipmentFlammable auto
 Quest property CampfireObjectPlacementSystem auto
@@ -29,3 +30,4 @@ Message property _Camp_GeneralError_Swimming auto
 Message property _Camp_GeneralError_Mounted auto
 Message property _Camp_GeneralError_Sleeping auto
 Message property _Camp_GeneralError_Busy auto
+Message property _Camp_GeneralError_Transformed auto

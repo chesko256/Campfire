@@ -10,13 +10,13 @@
 CampTent/CampTentEx</title>
 <formalpara><title>SCRIPTNAME</title><para></para></formalpara>
 <literallayout class="monospaced">
-scriptname CampTentEx extends <link linkend="robo54">CampTent</link>
+scriptname CampTentEx extends <link linkend="robo74">CampTent</link>
 </literallayout>
 <formalpara><title>OVERVIEW</title><para></para></formalpara>
 <para>
- This script is an expanded version of <link linkend="robo54">CampTent</link>, and includes a larger number of optional properties 
+ This script is an expanded version of <link linkend="robo74">CampTent</link>, and includes a larger number of optional properties 
  in order to create more elaborate tents. CampTentEx includes support for up to 3 follower bed rolls,
- 2 additional lanterns, new clutter options, and more. As with <link linkend="robo54">CampTent</link>, only the PlayerBed, 
+ 2 additional lanterns, new clutter options, and more. As with <link linkend="robo74">CampTent</link>, only the PlayerBed, 
  SitFurniture, and LieDownFurniture Position References are required for the tent to work.
 </para>
 </section>
@@ -24,9 +24,6 @@ scriptname CampTentEx extends <link linkend="robo54">CampTent</link>
 <title>
 CampTentEx/TentAsset_ClutterActivator1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: An activator to place in or around the tent. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Activator property TentAsset_ClutterActivator1 auto
@@ -36,9 +33,6 @@ Activator property TentAsset_ClutterActivator1 auto
 <title>
 CampTentEx/TentAsset_ClutterActivator2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: An activator to place in or around the tent. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Activator property TentAsset_ClutterActivator2 auto
@@ -48,9 +42,6 @@ Activator property TentAsset_ClutterActivator2 auto
 <title>
 CampTentEx/TentAsset_ClutterActivator3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: An activator to place in or around the tent. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Activator property TentAsset_ClutterActivator3 auto
@@ -60,9 +51,6 @@ Activator property TentAsset_ClutterActivator3 auto
 <title>
 CampTentEx/TentAsset_ClutterActivator4</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: An activator to place in or around the tent. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Activator property TentAsset_ClutterActivator4 auto
@@ -72,9 +60,6 @@ Activator property TentAsset_ClutterActivator4 auto
 <title>
 CampTentEx/TentAsset_ClutterActivator5</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: An activator to place in or around the tent. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Activator property TentAsset_ClutterActivator5 auto
@@ -84,9 +69,6 @@ Activator property TentAsset_ClutterActivator5 auto
 <title>
 CampTentEx/TentAsset_ClutterFurniture1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A furniture object to place in or around the tent. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Furniture property TentAsset_ClutterFurniture1 auto
@@ -96,9 +78,6 @@ Furniture property TentAsset_ClutterFurniture1 auto
 <title>
 CampTentEx/TentAsset_ClutterFurniture2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A furniture object to place in or around the tent. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Furniture property TentAsset_ClutterFurniture2 auto
@@ -108,9 +87,6 @@ Furniture property TentAsset_ClutterFurniture2 auto
 <title>
 CampTentEx/TentAsset_ClutterFurniture3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A furniture object to place in or around the tent. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Furniture property TentAsset_ClutterFurniture3 auto
@@ -120,9 +96,6 @@ Furniture property TentAsset_ClutterFurniture3 auto
 <title>
 CampTentEx/TentAsset_ClutterFurniture4</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A furniture object to place in or around the tent. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Furniture property TentAsset_ClutterFurniture4 auto
@@ -132,9 +105,6 @@ Furniture property TentAsset_ClutterFurniture4 auto
 <title>
 CampTentEx/TentAsset_ClutterFurniture5</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A furniture object to place in or around the tent. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Furniture property TentAsset_ClutterFurniture5 auto
@@ -144,9 +114,6 @@ Furniture property TentAsset_ClutterFurniture5 auto
 <title>
 CampTentEx/PositionRef_Lantern2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The second lantern's position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Lantern2 auto
@@ -156,9 +123,6 @@ ObjectReference property PositionRef_Lantern2 auto
 <title>
 CampTentEx/PositionRef_Lantern3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The third lantern's position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Lantern3 auto
@@ -168,9 +132,6 @@ ObjectReference property PositionRef_Lantern3 auto
 <title>
 CampTentEx/PositionRef_ClutterActivator1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Clutter position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ClutterActivator1 auto
@@ -180,9 +141,6 @@ ObjectReference property PositionRef_ClutterActivator1 auto
 <title>
 CampTentEx/PositionRef_ClutterActivator2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Clutter position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ClutterActivator2 auto
@@ -192,9 +150,6 @@ ObjectReference property PositionRef_ClutterActivator2 auto
 <title>
 CampTentEx/PositionRef_ClutterActivator3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Clutter position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ClutterActivator3 auto
@@ -204,9 +159,6 @@ ObjectReference property PositionRef_ClutterActivator3 auto
 <title>
 CampTentEx/PositionRef_ClutterActivator4</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Clutter position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ClutterActivator4 auto
@@ -216,9 +168,6 @@ ObjectReference property PositionRef_ClutterActivator4 auto
 <title>
 CampTentEx/PositionRef_ClutterActivator5</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Clutter position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ClutterActivator5 auto
@@ -228,9 +177,6 @@ ObjectReference property PositionRef_ClutterActivator5 auto
 <title>
 CampTentEx/PositionRef_ClutterFurniture1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Clutter position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ClutterFurniture1 auto
@@ -240,9 +186,6 @@ ObjectReference property PositionRef_ClutterFurniture1 auto
 <title>
 CampTentEx/PositionRef_ClutterFurniture2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Clutter position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ClutterFurniture2 auto
@@ -252,9 +195,6 @@ ObjectReference property PositionRef_ClutterFurniture2 auto
 <title>
 CampTentEx/PositionRef_ClutterFurniture3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Clutter position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ClutterFurniture3 auto
@@ -264,9 +204,6 @@ ObjectReference property PositionRef_ClutterFurniture3 auto
 <title>
 CampTentEx/PositionRef_ClutterFurniture4</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Clutter position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ClutterFurniture4 auto
@@ -276,9 +213,6 @@ ObjectReference property PositionRef_ClutterFurniture4 auto
 <title>
 CampTentEx/PositionRef_ClutterFurniture5</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Clutter position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ClutterFurniture5 auto
@@ -288,9 +222,6 @@ ObjectReference property PositionRef_ClutterFurniture5 auto
 <title>
 CampTentEx/PositionRef_Follower1_Bed</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The first follower's bed furniture position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Follower1_Bed auto
@@ -300,9 +231,6 @@ ObjectReference property PositionRef_Follower1_Bed auto
 <title>
 CampTentEx/PositionRef_Follower1_Shield</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The first follower's shield position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Follower1_Shield auto
@@ -312,9 +240,6 @@ ObjectReference property PositionRef_Follower1_Shield auto
 <title>
 CampTentEx/PositionRef_Follower1_WeaponMainHand</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The first follower's main hand weapon position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Follower1_WeaponMainHand auto
@@ -324,9 +249,6 @@ ObjectReference property PositionRef_Follower1_WeaponMainHand auto
 <title>
 CampTentEx/PositionRef_Follower1_WeaponOffHand</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The first follower's off hand weapon position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Follower1_WeaponOffHand auto
@@ -336,9 +258,6 @@ ObjectReference property PositionRef_Follower1_WeaponOffHand auto
 <title>
 CampTentEx/PositionRef_Follower1_WeaponTwoHand</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The first follower's two-handed weapon position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Follower1_WeaponTwoHand auto
@@ -348,9 +267,6 @@ ObjectReference property PositionRef_Follower1_WeaponTwoHand auto
 <title>
 CampTentEx/PositionRef_Follower1_WeaponBow</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The first follower's bow position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Follower1_WeaponBow auto
@@ -360,9 +276,6 @@ ObjectReference property PositionRef_Follower1_WeaponBow auto
 <title>
 CampTentEx/PositionRef_Follower2_Bed</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The second follower's bed furniture position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Follower2_Bed auto
@@ -372,9 +285,6 @@ ObjectReference property PositionRef_Follower2_Bed auto
 <title>
 CampTentEx/PositionRef_Follower2_Shield</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The second follower's shield position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Follower2_Shield auto
@@ -384,9 +294,6 @@ ObjectReference property PositionRef_Follower2_Shield auto
 <title>
 CampTentEx/PositionRef_Follower2_WeaponMainHand</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The second follower's main hand weapon position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Follower2_WeaponMainHand auto
@@ -396,9 +303,6 @@ ObjectReference property PositionRef_Follower2_WeaponMainHand auto
 <title>
 CampTentEx/PositionRef_Follower2_WeaponOffHand</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The second follower's off hand weapon position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Follower2_WeaponOffHand auto
@@ -408,9 +312,6 @@ ObjectReference property PositionRef_Follower2_WeaponOffHand auto
 <title>
 CampTentEx/PositionRef_Follower2_WeaponTwoHand</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The second follower's two-handed weapon position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Follower2_WeaponTwoHand auto
@@ -420,9 +321,6 @@ ObjectReference property PositionRef_Follower2_WeaponTwoHand auto
 <title>
 CampTentEx/PositionRef_Follower2_WeaponBow</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The second follower's bow position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Follower2_WeaponBow auto
@@ -432,9 +330,6 @@ ObjectReference property PositionRef_Follower2_WeaponBow auto
 <title>
 CampTentEx/PositionRef_Follower3_Bed</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The third follower's bed furniture position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Follower3_Bed auto
@@ -444,9 +339,6 @@ ObjectReference property PositionRef_Follower3_Bed auto
 <title>
 CampTentEx/PositionRef_Follower3_Shield</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The third follower's shield position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Follower3_Shield auto
@@ -456,9 +348,6 @@ ObjectReference property PositionRef_Follower3_Shield auto
 <title>
 CampTentEx/PositionRef_Follower3_WeaponMainHand</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The third follower's main hand weapon position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Follower3_WeaponMainHand auto
@@ -468,9 +357,6 @@ ObjectReference property PositionRef_Follower3_WeaponMainHand auto
 <title>
 CampTentEx/PositionRef_Follower3_WeaponOffHand</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The third follower's off hand weapon position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Follower3_WeaponOffHand auto
@@ -480,9 +366,6 @@ ObjectReference property PositionRef_Follower3_WeaponOffHand auto
 <title>
 CampTentEx/PositionRef_Follower3_WeaponTwoHand</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The third follower's two-handed weapon position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Follower3_WeaponTwoHand auto
@@ -492,9 +375,6 @@ ObjectReference property PositionRef_Follower3_WeaponTwoHand auto
 <title>
 CampTentEx/PositionRef_Follower3_WeaponBow</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The third follower's bow position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Follower3_WeaponBow auto

@@ -8,13 +8,18 @@ float property SKSE_MIN_VERSION = 1.07 autoReadOnly
 
 ;#PROPERTIES=====================================================================================================================
 actor property PlayerRef auto
+ReferenceAlias property PlayerAlias auto
+
 ;#Scripts======================================================================
 _Camp_SkyUIConfigPanelScript property CampConfig Auto 				;SkyUI Configuration script
-_Camp_LegalAreaCheck property Legal Auto 							;Camping Legality script
 _Camp_Main property Campfire auto 									;Main script
 _Camp_ObjectPlacementThreadManager property PlacementSystem auto 	;Placement System Script
 _Camp_TentSystem property TentSys auto
 _Camp_ConditionValues property Conditions auto
+
+;#Quests=======================================================================
+Quest property _Camp_MainQuest auto 						;Main quest
+Quest property _Camp_FollowerQuest auto 					;Follower tracking quest
 
 ;#Official DLC=================================================================
 bool property isDLC1Loaded auto	hidden						;Dawnguard
@@ -80,14 +85,12 @@ endEvent
 function RunCompatibility()
 	VanillaGameLoadUp()
 
-	trace("============================================[Campfire: Warning Start]=============================================")
-	trace("                                                                                                                  ")
-	trace("               Campfire is now performing compatibility checks. Papyrus warnings about missing or                 ")
-	trace("                        unloaded files may follow. This is NORMAL and can be ignored.   		                     ")
-	trace("                                                                                                                  ")
-	trace("============================================[Campfire: Warning Start]=====================-=======================")
+	trace("[Campfire]======================================================================================================")
+	trace("[Campfire]     Campfire is now performing compatibility checks. Papyrus warnings about missing or               ")
+	trace("[Campfire]             unloaded files may follow. This is NORMAL and can be ignored.   		                   ")
+	trace("[Campfire]======================================================================================================")
 	
-	;@TODO: Add support
+	;@TODO: Add support for Frostfall compatibility
 	isFrostfallLoaded = false
 
 	bool skse_loaded = SKSE.GetVersion()
@@ -104,19 +107,19 @@ function RunCompatibility()
 	endif
 	
 	if isSKYUILoaded
-		isSKYUILoaded = Game.GetFormFromFile(0x01000814, "SkyUI.esp")
+		isSKYUILoaded = IsPluginLoaded(0x01000814, "SkyUI.esp")
 		if !isSKYUILoaded
 			;SkyUI was removed since the last save.
 		endif
 	else
-		isSKYUILoaded = Game.GetFormFromFile(0x01000814, "SkyUI.esp")
+		isSKYUILoaded = IsPluginLoaded(0x01000814, "SkyUI.esp")
 		if isSKYUILoaded
 			;SkyUI was just loaded.
 		endif
 	endif
 
 	if isDLC1Loaded
-		isDLC1Loaded = Game.GetFormFromFile(0x02009403, "Dawnguard.esm")
+		isDLC1Loaded = IsPluginLoaded(0x02009403, "Dawnguard.esm")
 		if !isDLC1Loaded
 			;DLC1 was removed since the last save.
 			Conditions.IsDawnguardLoaded = false
@@ -124,7 +127,7 @@ function RunCompatibility()
 			Conditions.IsDawnguardLoaded = true
 		endif
 	else
-		isDLC1Loaded = Game.GetFormFromFile(0x02009403, "Dawnguard.esm")
+		isDLC1Loaded = IsPluginLoaded(0x02009403, "Dawnguard.esm")
 		if isDLC1Loaded
 			;DLC1 was just added.
 			Conditions.IsDawnguardLoaded = true
@@ -134,19 +137,25 @@ function RunCompatibility()
 	endif
 
 	if isDLC2Loaded
-		isDLC2Loaded = Game.GetFormFromFile(0x0201FB99, "Dragonborn.esm")
+		isDLC2Loaded = IsPluginLoaded(0x0201FB99, "Dragonborn.esm")
 		if !isDLC2Loaded
 			;DLC2 was removed since the last save.
+			Conditions.IsDragonbornLoaded = false
+		else
+			Conditions.IsDragonbornLoaded = true
 		endif
 	else
-		isDLC2Loaded = Game.GetFormFromFile(0x0201FB99, "Dragonborn.esm")
+		isDLC2Loaded = IsPluginLoaded(0x0201FB99, "Dragonborn.esm")
 		if isDLC2Loaded
 			;DLC2 was just added.
+			Conditions.IsDragonbornLoaded = true
+		else
+			Conditions.IsDragonbornLoaded = false
 		endif
 	endif
 	
 	if isHFLoaded
-		isHFLoaded = Game.GetFormFromFile(0x0200306C, "HearthFires.esm")
+		isHFLoaded = IsPluginLoaded(0x0200306C, "HearthFires.esm")
 		if !isHFLoaded
 			;Hearthfire was removed since the last save.
 			Conditions.IsHearthfireLoaded = false
@@ -154,7 +163,7 @@ function RunCompatibility()
 			Conditions.IsHearthfireLoaded = true
 		endif
 	else
-		isHFLoaded = Game.GetFormFromFile(0x0200306C, "HearthFires.esm")
+		isHFLoaded = IsPluginLoaded(0x0200306C, "HearthFires.esm")
 		if isHFLoaded
 			;Hearthfire was just added.
 			Conditions.IsHearthfireLoaded = true
@@ -164,12 +173,12 @@ function RunCompatibility()
 	endif
 	
 	if isIMCNLoaded
-		isIMCNLoaded = Game.GetFormFromFile(0x0005CF47, "Imp's More Complex Needs.esp")
+		isIMCNLoaded = IsPluginLoaded(0x0005CF47, "Imp's More Complex Needs.esp")
 		if !isIMCNLoaded
 			;Imp's More Complex Needs was removed since the last save.
 		endif
 	else
-		isIMCNLoaded = Game.GetFormFromFile(0x0005CF47, "Imp's More Complex Needs.esp")
+		isIMCNLoaded = IsPluginLoaded(0x0005CF47, "Imp's More Complex Needs.esp")
 		if isIMCNLoaded
 			;Imp's More Complex Needs was just added.
 			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0005CF47, "Imp's More Complex Needs.esp"))
@@ -180,12 +189,12 @@ function RunCompatibility()
 	endif
 
 	if isRNDLoaded
-		isRNDLoaded = Game.GetFormFromFile(0x00047F94, "RealisticNeedsandDiseases.esp")
+		isRNDLoaded = IsPluginLoaded(0x00047F94, "RealisticNeedsandDiseases.esp")
 		if !isRNDLoaded
 			;Realistic Needs and Diseases was removed since the last save.
 		endif
 	else
-		isRNDLoaded = Game.GetFormFromFile(0x00047F94, "RealisticNeedsandDiseases.esp")
+		isRNDLoaded = IsPluginLoaded(0x00047F94, "RealisticNeedsandDiseases.esp")
 		if isRNDLoaded
 			;Realistic Needs and Diseases was just added.
 			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047F94, "RealisticNeedsandDiseases.esp"))
@@ -206,14 +215,20 @@ function RunCompatibility()
 	endif
 
 	if isLastSeedLoaded
-		isLastSeedLoaded = Game.GetFormFromFile(0x02000D63, "LastSeed.esp")
+		isLastSeedLoaded = IsPluginLoaded(0x02000D63, "LastSeed.esp")
 		if !isLastSeedLoaded
 			;Last Seed was removed since the last save.
+			Conditions.IsLastSeedLoaded = false
+		else
+			Conditions.IsLastSeedLoaded = true
 		endif
 	else
-		isLastSeedLoaded = Game.GetFormFromFile(0x02000D63, "LastSeed.esp")
+		isLastSeedLoaded = IsPluginLoaded(0x02000D63, "LastSeed.esp")
 		if isLastSeedLoaded
 			;Last Seed was just added.
+			Conditions.IsLastSeedLoaded = true
+		else
+			Conditions.IsLastSeedLoaded = false
 		endif
 	endif
 	
@@ -272,7 +287,6 @@ function RunCompatibility()
 		form DLC02HeatForm06 = Game.GetFormFromFile(0x0202C0B0, "Dragonborn.esm")		;Campfire01LandBurningDirtPath01
 		form DLC02HeatForm07 = Game.GetFormFromFile(0x0203CF6E, "Dragonborn.esm")		;DLC2CraftingBlacksmithForge
 		form DLC02HeatForm08 = Game.GetFormFromFile(0x0202B074, "Dragonborn.esm")		;DLC2CraftingBlacksmithSkaalForge
-		;@TODO: Does anyone use the Small formlist? Purpose?
 
 		if !(_Camp_HeatSources_All.HasForm(DLC02HeatForm01))
 			_Camp_HeatSources_All.AddForm(DLC02HeatForm01)
@@ -373,8 +387,8 @@ function RunCompatibility()
 		;Weather
 		DLC2AshStorm = Game.GetFormFromFile(0x02032336, "Dragonborn.esm") as Weather
 		
-		if Legal.DLC2RavenRockCenterMarker == none
-			Legal.DLC2RavenRockCenterMarker = Game.GetFormFromFile(0x020295EA, "Dragonborn.esm") as ObjectReference
+		if ((self as ReferenceAlias) as _Camp_LegalAreaCheck).DLC2RavenRockCenterMarker == none
+			((self as ReferenceAlias) as _Camp_LegalAreaCheck).DLC2RavenRockCenterMarker = Game.GetFormFromFile(0x020295EA, "Dragonborn.esm") as ObjectReference
 		endif
 
 		;Worldspaces
@@ -406,11 +420,9 @@ function RunCompatibility()
 		_Camp_RecipeTanningLeatherValeSabreCatHideDLC1.SetNthIngredient(ValeSabreCatHide, 0)
 	endif
 	
-	trace("============================================[ Campfire: Warning End ]=============================================")
-	trace("                                                                                                                  ")
-	trace("                                       Campfire compatibility check complete.                                     ")
-	trace("                                                                                                                  ")
-	trace("============================================[ Campfire: Warning End ]=============================================")
+	trace("[Campfire]======================================================================================================")
+	trace("[Campfire]                            Campfire compatibility check complete.   		                           ")
+	trace("[Campfire]======================================================================================================")
 
 	if isSKSELoaded
 		RegisterForControlsOnLoad()
@@ -419,7 +431,40 @@ function RunCompatibility()
 	AddStartupSpells()
 endFunction
 
+bool function IsPluginLoaded(int iFormID, string sPluginName)
+	if isSKSELoaded
+		int i = Game.GetModByName(sPluginName)
+		if i != 255
+			debug.trace("[Campfire] Loaded: " + sPluginName)
+			return true
+		else
+			return false
+		endif
+	else
+		bool b = Game.GetFormFromFile(iFormID, sPluginName)
+		if b
+			debug.trace("[Campfire] Loaded: " + sPluginName)
+			return true
+		else
+			return false
+		endif
+	endif
+endFunction
+
 function VanillaGameLoadUp()
+	; Verify quests are running and aliases are filled
+	if !_Camp_MainQuest.IsRunning()
+		_Camp_MainQuest.Start()
+	endif
+	if !_Camp_FollowerQuest.IsRunning()
+		_Camp_FollowerQuest.Start()
+	endif
+
+	if !PlayerAlias.GetActorRef()
+		PlayerAlias.ForceRefTo(PlayerRef)
+	endif
+
+	; Grab forms we can't fill as properties
 	PlacementSystem.SmallFire = Game.GetFormFromFile(0x00013B40, "Skyrim.esm")
 	TreeReachTreeStump01 = Game.GetFormFromFile(0x000B8A75, "Skyrim.esm") as Tree
 endFunction

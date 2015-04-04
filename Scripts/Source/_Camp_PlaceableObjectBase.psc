@@ -187,35 +187,40 @@ _Camp_ObjectFuture function GetFuture(ObjectReference akObjectReference)
 endFunction
 
 Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
-	if CampUtil.GetSettingEquipmentFlammable().GetValueInt() == 2 && Setting_Flammable
-		ProcessOnHit(akAggressor, akSource, akProjectile, abBashAttack)
-	endif
+	ProcessOnHit(akAggressor, akSource, akProjectile, abBashAttack)
 EndEvent
 
 Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
-	if CampUtil.GetSettingEquipmentFlammable().GetValueInt() == 2 && Setting_Flammable
-		ProcessMagicEffect(akCaster, akEffect)
-	endif
+	ProcessMagicEffect(akCaster, akEffect)
 EndEvent
 
 function ProcessOnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abBashAttack)
-	if akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11
-		CampDebug(0, "Torch bash!")
-		IncreaseFireLevel()
+	if CampUtil.GetSettingEquipmentFlammable().GetValueInt() == 2 && Setting_Flammable
+		if block_spell_hits == false
+			block_spell_hits = true
+			if akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11
+				CampDebug(0, "Torch bash!")
+				IncreaseFireLevel()
+				utility.wait(0.5)
+			endif
+			block_spell_hits = false
+		endif
 	endif
 endFunction
 
 function ProcessMagicEffect(ObjectReference akCaster, MagicEffect akEffect)
-	if block_spell_hits == false
-		block_spell_hits = true
-		if akEffect.HasKeyword(_CampInternal.GetMagicDamageFireKeyword())
-			IncreaseFireLevel()
-			utility.wait(0.5)
-		elseif akEffect.HasKeyword(_CampInternal.GetMagicDamageFrostKeyword())
-			DecreaseFireLevel()
-			utility.wait(0.5)
+	if CampUtil.GetSettingEquipmentFlammable().GetValueInt() == 2 && Setting_Flammable
+		if block_spell_hits == false
+			block_spell_hits = true
+			if akEffect.HasKeyword(_CampInternal.GetMagicDamageFireKeyword())
+				IncreaseFireLevel()
+				utility.wait(0.5)
+			elseif akEffect.HasKeyword(_CampInternal.GetMagicDamageFrostKeyword())
+				DecreaseFireLevel()
+				utility.wait(0.5)
+			endif
+			block_spell_hits = false
 		endif
-		block_spell_hits = false
 	endif
 endFunction
 

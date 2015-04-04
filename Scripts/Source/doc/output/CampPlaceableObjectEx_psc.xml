@@ -23,9 +23,6 @@ scriptname CampPlaceableObjectEx extends CampPlaceableObject
 <title>
 CampPlaceableObject/Asset_ExtraStatic1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A static to place near this object. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Static property Asset_ExtraStatic1 auto
@@ -35,9 +32,6 @@ Static property Asset_ExtraStatic1 auto
 <title>
 CampPlaceableObjectEx/Asset_ExtraStatic2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A static to place near this object. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Static property Asset_ExtraStatic2 auto
@@ -47,9 +41,6 @@ Static property Asset_ExtraStatic2 auto
 <title>
 CampPlaceableObjectEx/Asset_ExtraStatic3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A static to place near this object. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Static property Asset_ExtraStatic3 auto
@@ -59,9 +50,6 @@ Static property Asset_ExtraStatic3 auto
 <title>
 CampPlaceableObjectEx/Asset_ExtraStatic4</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A static to place near this object. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Static property Asset_ExtraStatic4 auto
@@ -71,9 +59,6 @@ Static property Asset_ExtraStatic4 auto
 <title>
 CampPlaceableObjectEx/Asset_ExtraStatic5</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A static to place near this object. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Static property Asset_ExtraStatic5 auto
@@ -83,9 +68,6 @@ Static property Asset_ExtraStatic5 auto
 <title>
 CampPlaceableObjectEx/Asset_ExtraActivator1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: An activator to place near this object. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Activator property Asset_ExtraActivator1 auto
@@ -95,9 +77,6 @@ Activator property Asset_ExtraActivator1 auto
 <title>
 CampPlaceableObjectEx/Asset_ExtraActivator2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: An activator to place near this object. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Activator property Asset_ExtraActivator2 auto
@@ -107,9 +86,6 @@ Activator property Asset_ExtraActivator2 auto
 <title>
 CampPlaceableObjectEx/Asset_ExtraActivator3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: An activator to place near this object. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Activator property Asset_ExtraActivator3 auto
@@ -119,9 +95,6 @@ Activator property Asset_ExtraActivator3 auto
 <title>
 CampPlaceableObjectEx/Asset_ExtraActivator4</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: An activator to place near this object. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Activator property Asset_ExtraActivator4 auto
@@ -131,9 +104,6 @@ Activator property Asset_ExtraActivator4 auto
 <title>
 CampPlaceableObjectEx/Asset_ExtraActivator5</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: An activator to place near this object. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Activator property Asset_ExtraActivator5 auto
@@ -143,9 +113,6 @@ Activator property Asset_ExtraActivator5 auto
 <title>
 CampPlaceableObjectEx/Asset_ExtraFurniture1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A piece of furniture to place near this object. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Furniture property Asset_ExtraFurniture1 auto
@@ -155,9 +122,6 @@ Furniture property Asset_ExtraFurniture1 auto
 <title>
 CampPlaceableObjectEx/Asset_ExtraFurniture2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A piece of furniture to place near this object. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Furniture property Asset_ExtraFurniture2 auto
@@ -167,9 +131,6 @@ Furniture property Asset_ExtraFurniture2 auto
 <title>
 CampPlaceableObjectEx/Asset_ExtraFurniture3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A piece of furniture to place near this object. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Furniture property Asset_ExtraFurniture3 auto
@@ -179,9 +140,6 @@ Furniture property Asset_ExtraFurniture3 auto
 <title>
 CampPlaceableObjectEx/Asset_ExtraFurniture4</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A piece of furniture to place near this object. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Furniture property Asset_ExtraFurniture4 auto
@@ -191,9 +149,6 @@ Furniture property Asset_ExtraFurniture4 auto
 <title>
 CampPlaceableObjectEx/Asset_ExtraFurniture5</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A piece of furniture to place near this object. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Furniture property Asset_ExtraFurniture5 auto
@@ -203,9 +158,6 @@ Furniture property Asset_ExtraFurniture5 auto
 <title>
 CampPlaceableObjectEx/Asset_ExtraLight1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A light source to place near this object. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Light property Asset_ExtraLight1 auto
@@ -215,9 +167,6 @@ Light property Asset_ExtraLight1 auto
 <title>
 CampPlaceableObjectEx/Asset_ExtraLight2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A light source to place near this object. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Light property Asset_ExtraLight2 auto
@@ -227,9 +176,6 @@ Light property Asset_ExtraLight2 auto
 <title>
 CampPlaceableObjectEx/Asset_ExtraLight3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A light source to place near this object. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Light property Asset_ExtraLight3 auto
@@ -239,9 +185,6 @@ Light property Asset_ExtraLight3 auto
 <title>
 CampPlaceableObjectEx/PositionRef_ExtraStatic1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Extra Static object position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ExtraStatic1 auto
@@ -251,9 +194,6 @@ ObjectReference property PositionRef_ExtraStatic1 auto
 <title>
 CampPlaceableObjectEx/PositionRef_ExtraStatic2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Extra Static object position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ExtraStatic2 auto
@@ -263,9 +203,6 @@ ObjectReference property PositionRef_ExtraStatic2 auto
 <title>
 CampPlaceableObjectEx/PositionRef_ExtraStatic3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Extra Static object position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ExtraStatic3 auto
@@ -275,9 +212,6 @@ ObjectReference property PositionRef_ExtraStatic3 auto
 <title>
 CampPlaceableObjectEx/PositionRef_ExtraStatic4</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Extra Static object position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ExtraStatic4 auto
@@ -287,9 +221,6 @@ ObjectReference property PositionRef_ExtraStatic4 auto
 <title>
 CampPlaceableObjectEx/PositionRef_ExtraStatic5</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Extra Static object position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ExtraStatic5 auto
@@ -299,9 +230,6 @@ ObjectReference property PositionRef_ExtraStatic5 auto
 <title>
 CampPlaceableObjectEx/PositionRef_ExtraActivator1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Extra Activator object position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ExtraActivator1 auto
@@ -311,9 +239,6 @@ ObjectReference property PositionRef_ExtraActivator1 auto
 <title>
 CampPlaceableObjectEx/PositionRef_ExtraActivator2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Extra Activator object position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ExtraActivator2 auto
@@ -323,9 +248,6 @@ ObjectReference property PositionRef_ExtraActivator2 auto
 <title>
 CampPlaceableObjectEx/PositionRef_ExtraActivator3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Extra Activator object position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ExtraActivator3 auto
@@ -335,9 +257,6 @@ ObjectReference property PositionRef_ExtraActivator3 auto
 <title>
 CampPlaceableObjectEx/PositionRef_ExtraActivator4</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Extra Activator object position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ExtraActivator4 auto
@@ -347,9 +266,6 @@ ObjectReference property PositionRef_ExtraActivator4 auto
 <title>
 CampPlaceableObjectEx/PositionRef_ExtraActivator5</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Extra Activator object position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ExtraActivator5 auto
@@ -359,9 +275,6 @@ ObjectReference property PositionRef_ExtraActivator5 auto
 <title>
 CampPlaceableObjectEx/PositionRef_ExtraFurniture1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Extra Furniture object position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ExtraFurniture1 auto
@@ -371,9 +284,6 @@ ObjectReference property PositionRef_ExtraFurniture1 auto
 <title>
 CampPlaceableObjectEx/PositionRef_ExtraFurniture2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Extra Furniture object position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ExtraFurniture2 auto
@@ -383,9 +293,6 @@ ObjectReference property PositionRef_ExtraFurniture2 auto
 <title>
 CampPlaceableObjectEx/PositionRef_ExtraFurniture3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Extra Furniture object position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ExtraFurniture3 auto
@@ -395,9 +302,6 @@ ObjectReference property PositionRef_ExtraFurniture3 auto
 <title>
 CampPlaceableObjectEx/PositionRef_ExtraFurniture4</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Extra Furniture object position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ExtraFurniture4 auto
@@ -407,9 +311,6 @@ ObjectReference property PositionRef_ExtraFurniture4 auto
 <title>
 CampPlaceableObjectEx/PositionRef_ExtraFurniture5</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Extra Furniture object position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ExtraFurniture5 auto
@@ -419,9 +320,6 @@ ObjectReference property PositionRef_ExtraFurniture5 auto
 <title>
 CampPlaceableObjectEx/PositionRef_ExtraLight1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Extra Light object position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ExtraLight1 auto
@@ -431,9 +329,6 @@ ObjectReference property PositionRef_ExtraLight1 auto
 <title>
 CampPlaceableObjectEx/PositionRef_ExtraLight2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Extra Light object position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ExtraLight2 auto
@@ -443,9 +338,6 @@ ObjectReference property PositionRef_ExtraLight2 auto
 <title>
 CampPlaceableObjectEx/PositionRef_ExtraLight3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Extra Light object position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ExtraLight3 auto
@@ -455,9 +347,6 @@ ObjectReference property PositionRef_ExtraLight3 auto
 <title>
 CampPlaceableObjectEx/RequiredPositionRef_CenterObject</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Required: Set this to specify the position reference of the object that all other objects "orbit" when rotated. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property RequiredPositionRef_CenterObject auto

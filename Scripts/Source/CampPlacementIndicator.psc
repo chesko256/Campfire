@@ -3,7 +3,6 @@ Scriptname CampPlacementIndicator extends ObjectReference
 import CampUtil
 import _CampInternal
 
-;@TODO: Move somewhere else
 _Camp_ObjectPlacementThreadManager property PlacementSystem auto hidden
 
 ;/********p* CampPlacementIndicator/Required_furniture_to_place

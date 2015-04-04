@@ -6,13 +6,11 @@
 
 **OVERVIEW.**
 
-This script is an expanded version of [CampTent](#robo54), and includes a larger number of optional properties in order to create more elaborate tents. CampTentEx includes support for up to 3 follower bed rolls, 2 additional lanterns, new clutter options, and more. As with [CampTent](#robo54), only the PlayerBed, SitFurniture, and LieDownFurniture Position References are required for the tent to work.
+This script is an expanded version of [CampTent](#robo74), and includes a larger number of optional properties in order to create more elaborate tents. CampTentEx includes support for up to 3 follower bed rolls, 2 additional lanterns, new clutter options, and more. As with [CampTent](#robo74), only the PlayerBed, SitFurniture, and LieDownFurniture Position References are required for the tent to work.
 
 ### CampTentEx/TentAsset\_ClutterActivator1
 
 **DESCRIPTION.**
-
-Optional: An activator to place in or around the tent. }
 
 **SYNTAX.**
 
@@ -22,8 +20,6 @@ Optional: An activator to place in or around the tent. }
 
 **DESCRIPTION.**
 
-Optional: An activator to place in or around the tent. }
-
 **SYNTAX.**
 
     Activator property TentAsset_ClutterActivator2 auto
@@ -31,8 +27,6 @@ Optional: An activator to place in or around the tent. }
 ### CampTentEx/TentAsset\_ClutterActivator3
 
 **DESCRIPTION.**
-
-Optional: An activator to place in or around the tent. }
 
 **SYNTAX.**
 
@@ -42,8 +36,6 @@ Optional: An activator to place in or around the tent. }
 
 **DESCRIPTION.**
 
-Optional: An activator to place in or around the tent. }
-
 **SYNTAX.**
 
     Activator property TentAsset_ClutterActivator4 auto
@@ -51,8 +43,6 @@ Optional: An activator to place in or around the tent. }
 ### CampTentEx/TentAsset\_ClutterActivator5
 
 **DESCRIPTION.**
-
-Optional: An activator to place in or around the tent. }
 
 **SYNTAX.**
 
@@ -62,8 +52,6 @@ Optional: An activator to place in or around the tent. }
 
 **DESCRIPTION.**
 
-Optional: A furniture object to place in or around the tent. }
-
 **SYNTAX.**
 
     Furniture property TentAsset_ClutterFurniture1 auto
@@ -71,8 +59,6 @@ Optional: A furniture object to place in or around the tent. }
 ### CampTentEx/TentAsset\_ClutterFurniture2
 
 **DESCRIPTION.**
-
-Optional: A furniture object to place in or around the tent. }
 
 **SYNTAX.**
 
@@ -82,8 +68,6 @@ Optional: A furniture object to place in or around the tent. }
 
 **DESCRIPTION.**
 
-Optional: A furniture object to place in or around the tent. }
-
 **SYNTAX.**
 
     Furniture property TentAsset_ClutterFurniture3 auto
@@ -91,8 +75,6 @@ Optional: A furniture object to place in or around the tent. }
 ### CampTentEx/TentAsset\_ClutterFurniture4
 
 **DESCRIPTION.**
-
-Optional: A furniture object to place in or around the tent. }
 
 **SYNTAX.**
 
@@ -102,8 +84,6 @@ Optional: A furniture object to place in or around the tent. }
 
 **DESCRIPTION.**
 
-Optional: A furniture object to place in or around the tent. }
-
 **SYNTAX.**
 
     Furniture property TentAsset_ClutterFurniture5 auto
@@ -111,8 +91,6 @@ Optional: A furniture object to place in or around the tent. }
 ### CampTentEx/PositionRef\_Lantern2
 
 **DESCRIPTION.**
-
-Optional: The second lantern's position reference. }
 
 **SYNTAX.**
 
@@ -122,8 +100,6 @@ Optional: The second lantern's position reference. }
 
 **DESCRIPTION.**
 
-Optional: The third lantern's position reference. }
-
 **SYNTAX.**
 
     ObjectReference property PositionRef_Lantern3 auto
@@ -131,8 +107,6 @@ Optional: The third lantern's position reference. }
 ### CampTentEx/PositionRef\_ClutterActivator1
 
 **DESCRIPTION.**
-
-Optional: Clutter position reference. }
 
 **SYNTAX.**
 
@@ -142,8 +116,6 @@ Optional: Clutter position reference. }
 
 **DESCRIPTION.**
 
-Optional: Clutter position reference. }
-
 **SYNTAX.**
 
     ObjectReference property PositionRef_ClutterActivator2 auto
@@ -151,8 +123,6 @@ Optional: Clutter position reference. }
 ### CampTentEx/PositionRef\_ClutterActivator3
 
 **DESCRIPTION.**
-
-Optional: Clutter position reference. }
 
 **SYNTAX.**
 
@@ -162,8 +132,6 @@ Optional: Clutter position reference. }
 
 **DESCRIPTION.**
 
-Optional: Clutter position reference. }
-
 **SYNTAX.**
 
     ObjectReference property PositionRef_ClutterActivator4 auto
@@ -171,8 +139,6 @@ Optional: Clutter position reference. }
 ### CampTentEx/PositionRef\_ClutterActivator5
 
 **DESCRIPTION.**
-
-Optional: Clutter position reference. }
 
 **SYNTAX.**
 
@@ -182,8 +148,6 @@ Optional: Clutter position reference. }
 
 **DESCRIPTION.**
 
-Optional: Clutter position reference. }
-
 **SYNTAX.**
 
     ObjectReference property PositionRef_ClutterFurniture1 auto
@@ -191,8 +155,6 @@ Optional: Clutter position reference. }
 ### CampTentEx/PositionRef\_ClutterFurniture2
 
 **DESCRIPTION.**
-
-Optional: Clutter position reference. }
 
 **SYNTAX.**
 
@@ -202,8 +164,6 @@ Optional: Clutter position reference. }
 
 **DESCRIPTION.**
 
-Optional: Clutter position reference. }
-
 **SYNTAX.**
 
     ObjectReference property PositionRef_ClutterFurniture3 auto
@@ -211,8 +171,6 @@ Optional: Clutter position reference. }
 ### CampTentEx/PositionRef\_ClutterFurniture4
 
 **DESCRIPTION.**
-
-Optional: Clutter position reference. }
 
 **SYNTAX.**
 
@@ -222,8 +180,6 @@ Optional: Clutter position reference. }
 
 **DESCRIPTION.**
 
-Optional: Clutter position reference. }
-
 **SYNTAX.**
 
     ObjectReference property PositionRef_ClutterFurniture5 auto
@@ -231,8 +187,6 @@ Optional: Clutter position reference. }
 ### CampTentEx/PositionRef\_Follower1\_Bed
 
 **DESCRIPTION.**
-
-Optional: The first follower's bed furniture position reference. }
 
 **SYNTAX.**
 
@@ -242,8 +196,6 @@ Optional: The first follower's bed furniture position reference. }
 
 **DESCRIPTION.**
 
-Optional: The first follower's shield position reference. }
-
 **SYNTAX.**
 
     ObjectReference property PositionRef_Follower1_Shield auto
@@ -251,8 +203,6 @@ Optional: The first follower's shield position reference. }
 ### CampTentEx/PositionRef\_Follower1\_WeaponMainHand
 
 **DESCRIPTION.**
-
-Optional: The first follower's main hand weapon position reference. }
 
 **SYNTAX.**
 
@@ -262,8 +212,6 @@ Optional: The first follower's main hand weapon position reference. }
 
 **DESCRIPTION.**
 
-Optional: The first follower's off hand weapon position reference. }
-
 **SYNTAX.**
 
     ObjectReference property PositionRef_Follower1_WeaponOffHand auto
@@ -271,8 +219,6 @@ Optional: The first follower's off hand weapon position reference. }
 ### CampTentEx/PositionRef\_Follower1\_WeaponTwoHand
 
 **DESCRIPTION.**
-
-Optional: The first follower's two-handed weapon position reference. }
 
 **SYNTAX.**
 
@@ -282,8 +228,6 @@ Optional: The first follower's two-handed weapon position reference. }
 
 **DESCRIPTION.**
 
-Optional: The first follower's bow position reference. }
-
 **SYNTAX.**
 
     ObjectReference property PositionRef_Follower1_WeaponBow auto
@@ -291,8 +235,6 @@ Optional: The first follower's bow position reference. }
 ### CampTentEx/PositionRef\_Follower2\_Bed
 
 **DESCRIPTION.**
-
-Optional: The second follower's bed furniture position reference. }
 
 **SYNTAX.**
 
@@ -302,8 +244,6 @@ Optional: The second follower's bed furniture position reference. }
 
 **DESCRIPTION.**
 
-Optional: The second follower's shield position reference. }
-
 **SYNTAX.**
 
     ObjectReference property PositionRef_Follower2_Shield auto
@@ -311,8 +251,6 @@ Optional: The second follower's shield position reference. }
 ### CampTentEx/PositionRef\_Follower2\_WeaponMainHand
 
 **DESCRIPTION.**
-
-Optional: The second follower's main hand weapon position reference. }
 
 **SYNTAX.**
 
@@ -322,8 +260,6 @@ Optional: The second follower's main hand weapon position reference. }
 
 **DESCRIPTION.**
 
-Optional: The second follower's off hand weapon position reference. }
-
 **SYNTAX.**
 
     ObjectReference property PositionRef_Follower2_WeaponOffHand auto
@@ -331,8 +267,6 @@ Optional: The second follower's off hand weapon position reference. }
 ### CampTentEx/PositionRef\_Follower2\_WeaponTwoHand
 
 **DESCRIPTION.**
-
-Optional: The second follower's two-handed weapon position reference. }
 
 **SYNTAX.**
 
@@ -342,8 +276,6 @@ Optional: The second follower's two-handed weapon position reference. }
 
 **DESCRIPTION.**
 
-Optional: The second follower's bow position reference. }
-
 **SYNTAX.**
 
     ObjectReference property PositionRef_Follower2_WeaponBow auto
@@ -351,8 +283,6 @@ Optional: The second follower's bow position reference. }
 ### CampTentEx/PositionRef\_Follower3\_Bed
 
 **DESCRIPTION.**
-
-Optional: The third follower's bed furniture position reference. }
 
 **SYNTAX.**
 
@@ -362,8 +292,6 @@ Optional: The third follower's bed furniture position reference. }
 
 **DESCRIPTION.**
 
-Optional: The third follower's shield position reference. }
-
 **SYNTAX.**
 
     ObjectReference property PositionRef_Follower3_Shield auto
@@ -371,8 +299,6 @@ Optional: The third follower's shield position reference. }
 ### CampTentEx/PositionRef\_Follower3\_WeaponMainHand
 
 **DESCRIPTION.**
-
-Optional: The third follower's main hand weapon position reference. }
 
 **SYNTAX.**
 
@@ -382,8 +308,6 @@ Optional: The third follower's main hand weapon position reference. }
 
 **DESCRIPTION.**
 
-Optional: The third follower's off hand weapon position reference. }
-
 **SYNTAX.**
 
     ObjectReference property PositionRef_Follower3_WeaponOffHand auto
@@ -392,8 +316,6 @@ Optional: The third follower's off hand weapon position reference. }
 
 **DESCRIPTION.**
 
-Optional: The third follower's two-handed weapon position reference. }
-
 **SYNTAX.**
 
     ObjectReference property PositionRef_Follower3_WeaponTwoHand auto
@@ -401,8 +323,6 @@ Optional: The third follower's two-handed weapon position reference. }
 ### CampTentEx/PositionRef\_Follower3\_WeaponBow
 
 **DESCRIPTION.**
-
-Optional: The third follower's bow position reference. }
 
 **SYNTAX.**
 

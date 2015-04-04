@@ -5,11 +5,6 @@ import utility
 import _CampInternal
 import CampUtil
 
-;Scripts
-;@TODO: Resolve at startup
-;_DE_EPMonitor_1_6 property Frostfall auto
-;@TODO: Resolve at startup
-
 ; TO KEEP IN UTIL
 _Camp_Compatibility property Compatibility auto
 pDBEntranceQuestScript property DBEntranceQuestScript auto
@@ -70,7 +65,6 @@ function UpdateTentUseState(ObjectReference akTent)
 		if TentObject.myExitFront && TentObject.myExitFront.IsEnabled() && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
 			PlayerRef.MoveTo(TentObject.myExitFront)
 		else
-			;@TODO: Test this
 			PlayerRef.MoveTo(PlayerRef)
 		endif
 		_Camp_Black.PopTo(_Camp_FadeUp)
@@ -126,20 +120,6 @@ function ShowMainMenu(ObjectReference akTent)
 endFunction
 
 function ShowSitMenu(ObjectReference akTent)
-	;float myEP
-	;@TODO: Wrap in IsFrostfallLoaded, otherwise display alternate message
-	;/if _DE_ExposurePoints.GetValueInt() > 120.0				;Don't show the player that it is greater than 120 - will self-correct next cycle
-		myEP = 120
-	else
-		myEP = _DE_ExposurePoints.GetValueInt()
-	endif
-
-	int i 
-	if myEP > 100
-		i = _DE_CampTent2_SitMenu_Positive.Show(myEP - 100, ((Frostfall.pWetPoints/750) * 100))
-	else
-		i = _DE_CampTent2_SitMenu.Show(myEP - 100, ((Frostfall.pWetPoints/750) * 100))
-	endif/;
 	CampTent TentObject = akTent as CampTent
 	int i
 	i = _Camp_TentSitMenu.Show(0, 0)
@@ -161,19 +141,6 @@ function ShowSitMenu(ObjectReference akTent)
 endFunction
 
 function ShowLayMenu(ObjectReference akTent)
-	;float myEP
-	;@TODO: Wrap in IsFrostfallLoaded, otherwise display alternate message
-	;/if _DE_ExposurePoints.GetValueInt() > 120.0				;Don't show the player that it is greater than 120 - will self-correct next cycle
-		myEP = 120
-	else
-		myEP = _DE_ExposurePoints.GetValueInt()
-	endif		
-	int i
-	if myEP > 100
-		i = _DE_CampTent2_LayMenu_Positive.Show(myEP - 100, ((Frostfall.pWetPoints/750) * 100))
-	else
-		i = _DE_CampTent2_LayMenu.Show(myEP - 100, ((Frostfall.pWetPoints/750) * 100))
-	endif/;
 	CampTent TentObject = akTent as CampTent
 	int i
 	i = _Camp_TentLayMenu.Show(0, 0)
@@ -251,28 +218,23 @@ function PlayerHitEvent(ObjectReference akAggressor, Form akSource, Projectile a
 endFunction
 
 function PlayerSit(ObjectReference akTent)
-
-	;@TODO: Come back to this
-	;TryToMakeFollowersUse()
-
 	CampTent TentObject = akTent as CampTent
 	ConditionVars.IsPlayerSittingInTent = true
 	Game.ForceThirdPerson()
 	TentObject.myPlayerSitMarker.Activate(PlayerRef)
 	if _Camp_Setting_CampingArmorTakeOff.GetValueInt() == 2
-		;@TODO: Use new gear processing function	
-		;if Frostfall.GetFireState() || _DE_CurrentTemp.GetValue() >= 6.0 || Frostfall.bInInterior
+		if Compatibility.IsFrostfallLoaded && FrostUtil.IsWarmEnoughToRemoveGearInTent()
 			DisplayPlayerTentEquipment(akTent)
-		;else
-		;	DisplayPlayerTentEquipment(true)
-		;endif
+		else
+			DisplayPlayerTentEquipment(akTent)
+		endif
 	endif
 	TryToDisableRef(TentObject.myShelterCollider)
 	if _Camp_TentSeeThru.GetValueInt() == 2
 		TryToDisableRef(TentObject.myTentExterior, true)
 	endif
 
-	;Start the quest so that the aliases fill and follower packages run.
+	; Start the quest so that the aliases fill and follower packages run.
 	self.Start()
 	Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
 	
@@ -314,20 +276,18 @@ function PlayerLieDown(ObjectReference akTent)
 	Game.ForceThirdPerson()
 	(TentObject.myPlayerLayDownMarker as ObjectReference).Activate(PlayerRef)
 	if _Camp_Setting_CampingArmorTakeOff.GetValueInt() == 2
-		;@TODO: Wrap in IsFrostfallLoaded
-		
-		;if Frostfall.GetFireState() || _DE_CurrentTemp.GetValue() >= 10.0 || Frostfall.bInInterior
+		if Compatibility.IsFrostfallLoaded && FrostUtil.IsWarmEnoughToRemoveGearInTent()
 			DisplayPlayerTentEquipment(akTent)
-		;else
-		;	DisplayPlayerTentEquipment(true)
-		;endif
+		else
+			DisplayPlayerTentEquipment(akTent)
+		endif
 	endif
 	TryToDisableRef(TentObject.myShelterCollider)
 	if _Camp_TentSeeThru.GetValueInt() == 2
 		TryToDisableRef(TentObject.myTentExterior, true)
 	endif
 
-	;Start the quest so that the aliases fill and follower packages run.
+	; Start the quest so that the aliases fill and follower packages run.
 	self.Start()
 	Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
 	

@@ -16,8 +16,33 @@ scriptname CampUtil hidden
 <para>
  The `CampUtil` script is the primary way most mods should interact with Campfire and contains many helpful functions. To call any of the following functions, download the SDK and in your script include the line:
  &lt;pre&gt;import CampUtil&lt;/pre&gt;
- Alternatively, you can call `CampUtil.FunctionName()` without importing CampUtil.
+ Alternatively, you can call `CampUtil.FunctionName()` without importing CampUtil. }
 </para>
+</section>
+<section>
+<title>
+CampUtil/GetAPIVersion</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Get the <link linkend="robo0">CampUtil</link> API version number.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+float function GetAPIVersion() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The <link linkend="robo0">CampUtil</link> API version number. This is NOT the same thing as the version number of Campfire.
+ <link linkend="robo0">CampUtil</link>'s version number will increment only when changes have been made to the API itself.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+float ver = <link linkend="robo0">CampUtil</link>.GetAPIVersion()
+</literallayout>
 </section>
 <section>
 <title>
@@ -205,6 +230,154 @@ endif
 </section>
 <section>
 <title>
+CampUtil/GetTrackedFollower</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Returns the tracked follower at the specified index.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Actor function GetTrackedFollower(int aiIndex) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> aiIndex: The index (1 - 3) to check. Returns None if index is out of range or there
+</para></listitem></itemizedlist><para>
+ is no follower filling the specified index.
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The Actor occupying this index, or None if no tracked follower in this index.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+int i = 1
+while i &lt; 4
+        debug.trace("Follower " + i + " is " + <link linkend="robo0">CampUtil</link>.GetTrackedFollower(i))
+        i += 1
+endWhile
+</literallayout>
+</section>
+<section>
+<title>
+CampUtil/IsTrackedFollower</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Whether or not this actor is a tracked follower.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsTrackedFollower(Actor akActor) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> akActor: The actor to check.
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if this actor is a tracked follower; false if not.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+if <link linkend="robo0">CampUtil</link>.IsTrackedFollower(myActor)
+        debug.trace(myActor + " is a follower!")
+endif
+</literallayout>
+</section>
+<section>
+<title>
+CampUtil/GetTrackedFollowerCount</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Return the number of tracked followers.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+int function GetTrackedFollowerCount() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The number of followers currently being tracked, from 0 to 3.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+debug.trace("I have " + <link linkend="robo0">CampUtil</link>.GetTrackedFollowerCount() + " followers.")
+</literallayout>
+</section>
+<section>
+<title>
+CampUtil/GetTrackedAnimal</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Returns the tracked animal in the player's service.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Actor function GetTrackedAnimal() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The tracked animal Actor currently in the player's service, or None if no animal
+ currently following the player.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+debug.trace("My dog is " + <link linkend="robo0">CampUtil</link>.GetTrackedAnimal())
+</literallayout>
+</section>
+<section>
+<title>
+CampUtil/IsTrackedAnimal</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Whether or not the Actor is a tracked animal.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsTrackedAnimal(Actor akActor) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if the Actor is a tracked animal; False if not.
+</para>
+</section>
+<section>
+<title>
+CampUtil/GetTrackedAnimalCount</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Get the number of animals currently in the player's service.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+int function GetTrackedAnimalCount() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The number of animals currently being tracked, from 0 to 1.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+debug.trace("I have " + <link linkend="robo0">CampUtil</link>.GetTrackedAnimalCount() + " doggies.")
+</literallayout>
+</section>
+<section>
+<title>
 CampUtil/PlayerCanPlaceObjects</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
@@ -233,8 +406,7 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true, bool abPlayerBusy
 <para>
  Reasons that this function might return false are:
 </para>
-<itemizedlist><listitem><para> The player is being attacked.
-</para></listitem><listitem><para> The player is already trying to place something.
+<itemizedlist><listitem><para> The player is already trying to place something.
 </para></listitem><listitem><para> The player is swimming.
 </para></listitem><listitem><para> The player is mounted.
 </para></listitem><listitem><para> The player is sleeping.
@@ -267,32 +439,6 @@ bool function IsPlayerPlacingObject() global
 <literallayout class="monospaced">
 if IsPlayerPlacingObject()
         debug.trace("The player is placing an object right now!")
-endif
-</literallayout>
-</section>
-<section>
-<title>
-CampUtil/IsPlaceableObject</title>
-<formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Whether or not the Form is a Placeable Object.
-</para>
-<formalpara><title>SYNTAX</title><para></para></formalpara>
-<literallayout class="monospaced">
-bool function IsPlaceableObject(Form akBaseObject) global
-</literallayout>
-<formalpara><title>PARAMETERS</title><para></para></formalpara>
-<itemizedlist><listitem><para> akBaseObject: The base object to check.
-</para></listitem></itemizedlist><para>
-</para>
-<formalpara><title>RETURN VALUE</title><para></para></formalpara>
-<para>
- True if the Form is a Placeable Object, false otherwise.
-</para>
-<formalpara><title>EXAMPLES</title><para></para></formalpara>
-<literallayout class="monospaced">
-if IsPlaceableObject()
-        debug.trace("The item is a placeable object.")
 endif
 </literallayout>
 </section>
@@ -352,5 +498,113 @@ if GetAreaCampingFaction() == MyCoolFaction
         debug.trace("MyCoolFaction are a bunch of facists for not letting me camp here!")
 endif
 </literallayout>
+</section>
+<section>
+<title>
+CampUtil/GetLastUsedCampfire</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Returns the last campfire used by the player.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+ObjectReference function GetLastUsedCampfire() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The last campfire used by the player, or None if it no longer exists.
+</para>
+</section>
+<section>
+<title>
+CampUtil/GetCurrentTent</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Returns the current tent being used.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+ObjectReference function GetCurrentTent() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The current tent being used, or None if the player is not using a tent.
+</para>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ Return value used as input to <link linkend="robo21">IsCurrentTentWaterproof</link>() and <link linkend="robo22">IsCurrentTentWarm</link>().
+</para>
+</section>
+<section>
+<title>
+CampUtil/IsCurrentTentWaterproof</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Is the current tent waterproof?
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsCurrentTentWaterproof(ObjectReference akTent) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo20">GetCurrentTent</link>().
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if the current tent is flagged as being waterproof, or false if not.
+</para>
+</section>
+<section>
+<title>
+CampUtil/IsCurrentTentWarm</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Is the current tent warm?
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsCurrentTentWarm(ObjectReference akTent) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo20">GetCurrentTent</link>().
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if the current tent is flagged as being warm, or false if not.
+</para>
+</section>
+<section>
+<title>
+CampUtil/IsCrimeToPlaceInTowns</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Is it a crime to place this base object in towns, inside owned houses, etc?
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsCrimeToPlaceInTowns(Form akBaseObject) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ akBaseObject: The base object to check.
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if the Form is illegal to place in settled areas, or False if not.
+</para>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ This function returns true or false without regard to the current legality setting.
+</para>
 </section>
 </article>
