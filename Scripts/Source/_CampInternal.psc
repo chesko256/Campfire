@@ -3,13 +3,11 @@ scriptname _CampInternal hidden
 import math
 
 _CampfireInternalAPI function GetAPI() global
-	;@TODO: Change to .esm check
-	return (Game.GetFormFromFile(0x00024095, "Campfire.esp") as Quest) as _CampfireInternalAPI
+	return (Game.GetFormFromFile(0x00024095, "Campfire.esm") as Quest) as _CampfireInternalAPI
 endFunction
 
 CampfireAPI function GetPublicAPI() global
-	;@TODO: Change to .esm check
-	return (Game.GetFormFromFile(0x00024095, "Campfire.esp") as Quest) as CampfireAPI
+	return (Game.GetFormFromFile(0x00024095, "Campfire.esm") as Quest) as CampfireAPI
 endFunction
 
 Keyword function GetMagicDamageFireKeyword() global
@@ -127,8 +125,7 @@ function RaiseCampAPIError() global
 endFunction
 
 function CampDebug(int aiSeverity, string asLogMessage) global
-	;@TODO: Change to .esm check
-	int LOG_LEVEL = (Game.GetFormFromFile(0x0203AB34, "Campfire.esp") as GlobalVariable).GetValueInt()
+	int LOG_LEVEL = (Game.GetFormFromFile(0x0203AB34, "Campfire.esm") as GlobalVariable).GetValueInt()
 	if LOG_LEVEL <= aiSeverity
 		if aiSeverity == 0
 			debug.trace("[Campfire][Debug] " + asLogMessage)

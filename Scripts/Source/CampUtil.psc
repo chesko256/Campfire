@@ -13,8 +13,7 @@ import math
 import debug
 
 CampfireAPI function GetAPI() global
-	;@TODO: Change to .esm check
-	return (Game.GetFormFromFile(0x00024095, "Campfire.esp") as Quest) as CampfireAPI
+	return (Game.GetFormFromFile(0x00024095, "Campfire.esm") as Quest) as CampfireAPI
 endFunction
 
 ; Functions ==================================================================================
@@ -30,7 +29,6 @@ _Camp_ObjectPlacementThreadManager function GetPlacementSystem() global
 endFunction
 
 _Camp_Compatibility function GetCompatibilitySystem() global
-	;@TODO: Change to ESM
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()

@@ -4,8 +4,7 @@ scriptname TentSystem hidden
 import _CampInternal
 
 _Camp_TentSystem function GetAPI() global
-	;@TODO: Change to ESM.
-	return (Game.GetFormFromFile(0x00025BC2, "Campfire.esp") as Quest) as _Camp_TentSystem
+	return (Game.GetFormFromFile(0x00025BC2, "Campfire.esm") as Quest) as _Camp_TentSystem
 endFunction
 
 function UpdateTentUseState(ObjectReference akTent) global
