@@ -10,6 +10,8 @@
 
 **DESCRIPTION.**
 
+Required: The furniture that will spawn and immediately be used by the player when using this item. }
+
 **SYNTAX.**
 
     Furniture property furniture_to_use auto
@@ -17,6 +19,8 @@
 ### CampPlaceableMiscItem/consumable\_ingredient
 
 **DESCRIPTION.**
+
+Optional: An ingredient that is needed and consumed when using / placing this item. Fill only the ingredient or the misc item property. }
 
 **SYNTAX.**
 
@@ -26,6 +30,8 @@
 
 **DESCRIPTION.**
 
+Optional: A misc item that is needed and consumed when using / placing this item. Fill only the ingredient or the misc item property. }
+
 **SYNTAX.**
 
     MiscObject property consumable_misc_item auto
@@ -33,6 +39,8 @@
 ### CampPlaceableMiscItem/consumable\_cost
 
 **DESCRIPTION.**
+
+Optional: How many of the ingredients or misc items that will be consumed when this item is used / placed. }
 
 **SYNTAX.**
 
@@ -42,6 +50,8 @@
 
 **DESCRIPTION.**
 
+Optional: A perk required to use / place this item. }
+
 **SYNTAX.**
 
     Perk property necessary_perk auto
@@ -49,6 +59,8 @@
 ### CampPlaceableMiscItem/consumable\_ingredient\_name
 
 **DESCRIPTION.**
+
+Optional: The name of any required ingredient. Used if user does not have SKSE installed. }
 
 **SYNTAX.**
 
@@ -58,6 +70,8 @@
 
 **DESCRIPTION.**
 
+Optional: The name of any required misc item. Used if user does not have SKSE installed. }
+
 **SYNTAX.**
 
     string property consumable_miscitem_name auto
@@ -65,6 +79,8 @@
 ### CampPlaceableMiscItem/consumable\_ingredient\_name
 
 **DESCRIPTION.**
+
+Optional: The name of any required perk. Used if user does not have SKSE installed. }
 
 **SYNTAX.**
 
