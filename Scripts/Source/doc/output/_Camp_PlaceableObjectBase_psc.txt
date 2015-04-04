@@ -2,6 +2,8 @@
 
 **DESCRIPTION.**
 
+Optional: The amount, in degrees, to rotate on the Z axis on start-up. }
+
 **SYNTAX.**
 
     Float property Setting_StartUpRotation = 0.0 auto
@@ -9,6 +11,8 @@
 ### \_Camp\_PlaceableObjectBase/Setting\_Flammable
 
 **DESCRIPTION.**
+
+Optional: Whether or not this object can be destroyed by fire. }
 
 **SYNTAX.**
 

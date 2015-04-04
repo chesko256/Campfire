@@ -9,6 +9,9 @@
 <title>
 CampPlacementIndicator/Required_furniture_to_place</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Required: The Furniture object to place with this indicator. Fill only the furniture or the activator, not both. }
+</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Furniture property Required_furniture_to_place auto
@@ -18,6 +21,9 @@ Furniture property Required_furniture_to_place auto
 <title>
 CampPlacementIndicator/Required_activator_to_place</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Required: The Activator object to place with this indicator. Fill only the furniture or the activator, not both. }
+</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Activator property Required_activator_to_place auto
@@ -27,6 +33,9 @@ Activator property Required_activator_to_place auto
 <title>
 CampPlacementIndicator/height_adjustment</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ (Default: 1.0) How much to adjust the placement indicator up or down. Useful if indicator is always above or below the ground. }
+</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 float property height_adjustment = 1.0 auto
@@ -36,6 +45,9 @@ float property height_adjustment = 1.0 auto
 <title>
 CampPlacementIndicator/z_angle_adjustment</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ (Default: 0.0) How much to adjust the placement indicator's z angle (compass rotation). Useful if indicator is always facing the wrong way. }
+</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 float property z_angle_adjustment = 0.0 auto
@@ -45,6 +57,9 @@ float property z_angle_adjustment = 0.0 auto
 <title>
 CampPlacementIndicator/snap_to_terrain</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ (Default: True) Whether this object should rotate according to the slope of the terrain. Results in a more natural position. }
+</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Bool property snap_to_terrain = true auto
@@ -54,6 +69,9 @@ Bool property snap_to_terrain = true auto
 <title>
 CampPlacementIndicator/indicator_distance</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ (Default: 300.0) The distance from the player to render the indicator. }
+</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Float property indicator_distance = 300.0 auto

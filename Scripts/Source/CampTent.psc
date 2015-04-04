@@ -22,18 +22,18 @@ import TentSystem
 * SYNTAX
 */;
 Float property Setting_BedRollScale = 1.0 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: The scale to render the player's and follower's bed rolls. 1.0 by default. }
+* Optional: The scale to render the player's and follower's bed rolls. 1.0 by default. }
 ;*********/;
 
 ;/********p* CampTent/Setting_BedRollScale
 * SYNTAX
 */;
 Float property Setting_PlayerSitAngle = 0.0 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: The compass direction adjustment applied to the player's sitting position. 0.0 by default. }
+* Optional: The compass direction adjustment applied to the player's sitting position. 0.0 by default. }
 ;*********/;
 
 ;/********p* CampTent/RequiredPositionRef_PlayerBed
@@ -49,288 +49,288 @@ ObjectReference property RequiredPositionRef_PlayerBed auto
 * SYNTAX
 */;
 Static property TentAsset_ShelterModel auto
-;/*
+{
 * DESCRIPTION
-{ Optional: The tent static object. }
+* Optional: The tent static object. }
 ;*********/;
 
 ;/********p* CampTent/TentAsset_ShelterModelExterior
 * SYNTAX
 */;
 Static property TentAsset_ShelterModelExterior auto
-;/*
+{
 * DESCRIPTION
-{ Optional: The tent static object exterior (for use with Toggle View feature). }
+* Optional: The tent static object exterior (for use with Toggle View feature). }
 ;*********/;
 
 ;/********p* CampTent/TentAsset_ShelterModelMaterialSnow
 * SYNTAX
 */;
 Static property TentAsset_ShelterModelMaterialSnow auto
-;/*
+{
 * DESCRIPTION
-{ Optional: The tent (ShelterModel or ShelterModelExterior) with snow directional shader applied. }
+* Optional: The tent (ShelterModel or ShelterModelExterior) with snow directional shader applied. }
 ;*********/;
 
 ;/********p* CampTent/TentAsset_ShelterModelMaterialAsh
 * SYNTAX
 */;
 Static property TentAsset_ShelterModelMaterialAsh auto
-;/*
+{
 * DESCRIPTION
-{ Optional: The tent (ShelterModel or ShelterModelExterior) with ash directional shader applied (use _Camp_AshMaterialSolstheim1P_2 instead of a direct dependency on Dragonborn.esm) }
+* Optional: The tent (ShelterModel or ShelterModelExterior) with ash directional shader applied (use _Camp_AshMaterialSolstheim1P_2 instead of a direct dependency on Dragonborn.esm) }
 ;*********/;
 
 ;/********p* CampTent/TentAsset_ClutterStatic1
 * SYNTAX
 */;
 Static property TentAsset_ClutterStatic1 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: A static to place in or around the tent. }
+* Optional: A static to place in or around the tent. }
 ;*********/;
 
 ;/********p* CampTent/TentAsset_ClutterStatic2
 * SYNTAX
 */;
 Static property TentAsset_ClutterStatic2 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: A static to place in or around the tent. }
+* Optional: A static to place in or around the tent. }
 ;*********/;
 
 ;/********p* CampTent/TentAsset_ClutterStatic3
 * SYNTAX
 */;
 Static property TentAsset_ClutterStatic3 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: A static to place in or around the tent. }
+* Optional: A static to place in or around the tent. }
 ;*********/;
 
 ;/********p* CampTent/TentAsset_ClutterStatic4
 * SYNTAX
 */;
 Static property TentAsset_ClutterStatic4 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: A static to place in or around the tent. }
+* Optional: A static to place in or around the tent. }
 ;*********/;
 
 ;/********p* CampTent/TentAsset_ClutterStatic5
 * SYNTAX
 */;
 Static property TentAsset_ClutterStatic5 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: A static to place in or around the tent. }
+* Optional: A static to place in or around the tent. }
 ;*********/;
 
 ;/********p* CampTent/TentAsset_ShelterDestructionCollider
 * SYNTAX
 */;
 Activator property TentAsset_ShelterDestructionCollider auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Activator that passes its OnHit data to this object. Used to allow hitting the shelter object to destroy the tent. }
+* Optional: Activator that passes its OnHit data to this object. Used to allow hitting the shelter object to destroy the tent. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_FrontExitMarker
 * SYNTAX
 */;
 ObjectReference property PositionRef_FrontExitMarker auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of marker to move the player to when exiting a small tent. }
+* Optional: Position reference of marker to move the player to when exiting a small tent. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_AnimalLayDownMarker
 * SYNTAX
 */;
 ObjectReference property PositionRef_AnimalLayDownMarker auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of marker that animals will lie down at. }
+* Optional: Position reference of marker that animals will lie down at. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_Shelter
 * SYNTAX
 */;
 ObjectReference property PositionRef_Shelter auto
-;/*
+{
 * DESCRIPTION
-{ Optional: The shelter (tent, structure) position reference. }
+* Optional: The shelter (tent, structure) position reference. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_Ward
 * SYNTAX
 */;
 ObjectReference property PositionRef_Ward auto
-;/*
+{
 * DESCRIPTION
-{ Optional: The ward position reference. }
+* Optional: The ward position reference. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_Lantern1
 * SYNTAX
 */;
 ObjectReference property PositionRef_Lantern1 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: The first lantern's position reference. }
+* Optional: The first lantern's position reference. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_ClutterStatic1
 * SYNTAX
 */;
 ObjectReference property PositionRef_ClutterStatic1 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Clutter position reference. }
+* Optional: Clutter position reference. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_ClutterStatic2
 * SYNTAX
 */;
 ObjectReference property PositionRef_ClutterStatic2 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Clutter position reference. }
+* Optional: Clutter position reference. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_ClutterStatic3
 * SYNTAX
 */;
 ObjectReference property PositionRef_ClutterStatic3 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Clutter position reference. }
+* Optional: Clutter position reference. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_ClutterStatic4
 * SYNTAX
 */;
 ObjectReference property PositionRef_ClutterStatic4 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Clutter position reference. }
+* Optional: Clutter position reference. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_ClutterStatic5
 * SYNTAX
 */;
 ObjectReference property PositionRef_ClutterStatic5 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Clutter position reference. }
+* Optional: Clutter position reference. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_Player_Backpack
 * SYNTAX
 */;
 ObjectReference property PositionRef_Player_Backpack auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of player's backpack. }
+* Optional: Position reference of player's backpack. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_Player_Shield
 * SYNTAX
 */;
 ObjectReference property PositionRef_Player_Shield auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of player's shield. }
+* Optional: Position reference of player's shield. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_Player_ShieldInterior
 * SYNTAX
 */;
 ObjectReference property PositionRef_Player_ShieldInterior auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of player's shield when in an interior (usually lying flat). }
+* Optional: Position reference of player's shield when in an interior (usually lying flat). }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_Player_WeaponMainHand
 * SYNTAX
 */;
 ObjectReference property PositionRef_Player_WeaponMainHand auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of player's main hand weapon. }
+* Optional: Position reference of player's main hand weapon. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_Player_WeaponOffHand
 * SYNTAX
 */;
 ObjectReference property PositionRef_Player_WeaponOffHand auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of player's off hand weapon. }
+* Optional: Position reference of player's off hand weapon. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_Player_WeaponTwoHand
 * SYNTAX
 */;
 ObjectReference property PositionRef_Player_WeaponTwoHand auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of player's two-handed weapon. }
+* Optional: Position reference of player's two-handed weapon. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_Player_WeaponBow
 * SYNTAX
 */;
 ObjectReference property PositionRef_Player_WeaponBow auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of player's bow. }
+* Optional: Position reference of player's bow. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_Player_ArmorHelm
 * SYNTAX
 */;
 ObjectReference property PositionRef_Player_ArmorHelm auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of player's head gear. }
+* Optional: Position reference of player's head gear. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_Player_ArmorCuirass
 * SYNTAX
 */;
 ObjectReference property PositionRef_Player_ArmorCuirass auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of player's body gear. }
+* Optional: Position reference of player's body gear. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_Player_ArmorGauntlets
 * SYNTAX
 */;
 ObjectReference property PositionRef_Player_ArmorGauntlets auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of player's hand gear. }
+* Optional: Position reference of player's hand gear. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_Player_ArmorBoots
 * SYNTAX
 */;
 ObjectReference property PositionRef_Player_ArmorBoots auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of player's foot gear. }
+* Optional: Position reference of player's foot gear. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_CenterObjectOverride
 * SYNTAX
 */;
 ObjectReference property PositionRef_CenterObjectOverride auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Set this to specify a different object as the one which all other tent objects "orbit" when rotated. Uses the Shelter or Player Bed if left blank. }
+* Optional: Set this to specify a different object as the one which all other tent objects "orbit" when rotated. Uses the Shelter or Player Bed if left blank. }
 ;*********/;
 
 ; PRIVATE

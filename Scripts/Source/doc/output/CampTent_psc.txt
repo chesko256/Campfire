@@ -12,6 +12,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 
 **DESCRIPTION.**
 
+Optional: The scale to render the player's and follower's bed rolls. 1.0 by default. }
+
 **SYNTAX.**
 
     Float property Setting_BedRollScale = 1.0 auto
@@ -19,6 +21,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 ### CampTent/Setting\_BedRollScale
 
 **DESCRIPTION.**
+
+Optional: The compass direction adjustment applied to the player's sitting position. 0.0 by default. }
 
 **SYNTAX.**
 
@@ -36,6 +40,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 
 **DESCRIPTION.**
 
+Optional: The tent static object. }
+
 **SYNTAX.**
 
     Static property TentAsset_ShelterModel auto
@@ -43,6 +49,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 ### CampTent/TentAsset\_ShelterModelExterior
 
 **DESCRIPTION.**
+
+Optional: The tent static object exterior (for use with Toggle View feature). }
 
 **SYNTAX.**
 
@@ -52,6 +60,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 
 **DESCRIPTION.**
 
+Optional: The tent (ShelterModel or ShelterModelExterior) with snow directional shader applied. }
+
 **SYNTAX.**
 
     Static property TentAsset_ShelterModelMaterialSnow auto
@@ -59,6 +69,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 ### CampTent/TentAsset\_ShelterModelMaterialAsh
 
 **DESCRIPTION.**
+
+Optional: The tent (ShelterModel or ShelterModelExterior) with ash directional shader applied (use \_Camp\_AshMaterialSolstheim1P\_2 instead of a direct dependency on Dragonborn.esm) }
 
 **SYNTAX.**
 
@@ -68,6 +80,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 
 **DESCRIPTION.**
 
+Optional: A static to place in or around the tent. }
+
 **SYNTAX.**
 
     Static property TentAsset_ClutterStatic1 auto
@@ -75,6 +89,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 ### CampTent/TentAsset\_ClutterStatic2
 
 **DESCRIPTION.**
+
+Optional: A static to place in or around the tent. }
 
 **SYNTAX.**
 
@@ -84,6 +100,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 
 **DESCRIPTION.**
 
+Optional: A static to place in or around the tent. }
+
 **SYNTAX.**
 
     Static property TentAsset_ClutterStatic3 auto
@@ -91,6 +109,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 ### CampTent/TentAsset\_ClutterStatic4
 
 **DESCRIPTION.**
+
+Optional: A static to place in or around the tent. }
 
 **SYNTAX.**
 
@@ -100,6 +120,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 
 **DESCRIPTION.**
 
+Optional: A static to place in or around the tent. }
+
 **SYNTAX.**
 
     Static property TentAsset_ClutterStatic5 auto
@@ -107,6 +129,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 ### CampTent/TentAsset\_ShelterDestructionCollider
 
 **DESCRIPTION.**
+
+Optional: Activator that passes its OnHit data to this object. Used to allow hitting the shelter object to destroy the tent. }
 
 **SYNTAX.**
 
@@ -116,6 +140,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 
 **DESCRIPTION.**
 
+Optional: Position reference of marker to move the player to when exiting a small tent. }
+
 **SYNTAX.**
 
     ObjectReference property PositionRef_FrontExitMarker auto
@@ -123,6 +149,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 ### CampTent/PositionRef\_AnimalLayDownMarker
 
 **DESCRIPTION.**
+
+Optional: Position reference of marker that animals will lie down at. }
 
 **SYNTAX.**
 
@@ -132,6 +160,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 
 **DESCRIPTION.**
 
+Optional: The shelter (tent, structure) position reference. }
+
 **SYNTAX.**
 
     ObjectReference property PositionRef_Shelter auto
@@ -139,6 +169,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 ### CampTent/PositionRef\_Ward
 
 **DESCRIPTION.**
+
+Optional: The ward position reference. }
 
 **SYNTAX.**
 
@@ -148,6 +180,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 
 **DESCRIPTION.**
 
+Optional: The first lantern's position reference. }
+
 **SYNTAX.**
 
     ObjectReference property PositionRef_Lantern1 auto
@@ -155,6 +189,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 ### CampTent/PositionRef\_ClutterStatic1
 
 **DESCRIPTION.**
+
+Optional: Clutter position reference. }
 
 **SYNTAX.**
 
@@ -164,6 +200,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 
 **DESCRIPTION.**
 
+Optional: Clutter position reference. }
+
 **SYNTAX.**
 
     ObjectReference property PositionRef_ClutterStatic2 auto
@@ -171,6 +209,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 ### CampTent/PositionRef\_ClutterStatic3
 
 **DESCRIPTION.**
+
+Optional: Clutter position reference. }
 
 **SYNTAX.**
 
@@ -180,6 +220,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 
 **DESCRIPTION.**
 
+Optional: Clutter position reference. }
+
 **SYNTAX.**
 
     ObjectReference property PositionRef_ClutterStatic4 auto
@@ -187,6 +229,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 ### CampTent/PositionRef\_ClutterStatic5
 
 **DESCRIPTION.**
+
+Optional: Clutter position reference. }
 
 **SYNTAX.**
 
@@ -196,6 +240,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 
 **DESCRIPTION.**
 
+Optional: Position reference of player's backpack. }
+
 **SYNTAX.**
 
     ObjectReference property PositionRef_Player_Backpack auto
@@ -203,6 +249,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 ### CampTent/PositionRef\_Player\_Shield
 
 **DESCRIPTION.**
+
+Optional: Position reference of player's shield. }
 
 **SYNTAX.**
 
@@ -212,6 +260,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 
 **DESCRIPTION.**
 
+Optional: Position reference of player's shield when in an interior (usually lying flat). }
+
 **SYNTAX.**
 
     ObjectReference property PositionRef_Player_ShieldInterior auto
@@ -219,6 +269,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 ### CampTent/PositionRef\_Player\_WeaponMainHand
 
 **DESCRIPTION.**
+
+Optional: Position reference of player's main hand weapon. }
 
 **SYNTAX.**
 
@@ -228,6 +280,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 
 **DESCRIPTION.**
 
+Optional: Position reference of player's off hand weapon. }
+
 **SYNTAX.**
 
     ObjectReference property PositionRef_Player_WeaponOffHand auto
@@ -235,6 +289,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 ### CampTent/PositionRef\_Player\_WeaponTwoHand
 
 **DESCRIPTION.**
+
+Optional: Position reference of player's two-handed weapon. }
 
 **SYNTAX.**
 
@@ -244,6 +300,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 
 **DESCRIPTION.**
 
+Optional: Position reference of player's bow. }
+
 **SYNTAX.**
 
     ObjectReference property PositionRef_Player_WeaponBow auto
@@ -251,6 +309,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 ### CampTent/PositionRef\_Player\_ArmorHelm
 
 **DESCRIPTION.**
+
+Optional: Position reference of player's head gear. }
 
 **SYNTAX.**
 
@@ -260,6 +320,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 
 **DESCRIPTION.**
 
+Optional: Position reference of player's body gear. }
+
 **SYNTAX.**
 
     ObjectReference property PositionRef_Player_ArmorCuirass auto
@@ -267,6 +329,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 ### CampTent/PositionRef\_Player\_ArmorGauntlets
 
 **DESCRIPTION.**
+
+Optional: Position reference of player's hand gear. }
 
 **SYNTAX.**
 
@@ -276,6 +340,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 
 **DESCRIPTION.**
 
+Optional: Position reference of player's foot gear. }
+
 **SYNTAX.**
 
     ObjectReference property PositionRef_Player_ArmorBoots auto
@@ -283,6 +349,8 @@ This script controls all tent behavior. Attach this script to an Activator which
 ### CampTent/PositionRef\_CenterObjectOverride
 
 **DESCRIPTION.**
+
+Optional: Set this to specify a different object as the one which all other tent objects "orbit" when rotated. Uses the Shelter or Player Bed if left blank. }
 
 **SYNTAX.**
 
