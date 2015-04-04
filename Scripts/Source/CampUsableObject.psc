@@ -2,19 +2,23 @@ Scriptname CampUsableObject extends ObjectReference
 
 import _CampInternal
 
+bool in_use = false
+
 Event OnInit()
-	utility.wait(0.1)		;Make sure that the object is completely initialized
-	self.Activate(Game.GetPlayer())
-	
-	RegisterForSingleUpdate(0.5)
+	RegisterForSingleUpdate(0.1)
 endEvent
 
 Event OnUpdate()
-	if self.IsFurnitureInUse()
+	if !in_use
+		self.Activate(Game.GetPlayer())
+		in_use = true
 		RegisterForSingleUpdate(1)
 	else
-		CampDebug(0, "Deleting furniture")
-		self.Disable()
-		self.Delete()
+		if self.IsFurnitureInUse()
+			RegisterForSingleUpdate(1)
+		else	
+			self.Disable()
+			self.Delete()
+		endif
 	endif
 endEvent
