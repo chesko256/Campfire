@@ -8,7 +8,7 @@ import CampUtil
 Activator property activator_to_use auto
 {
 * DESCRIPTION
-*The activator that will spawn and immediately be used by the player when using this item. }
+* The activator that will spawn and immediately be used by the player when using this item. }
 ;*********/;
 
 ;/********p* CampUsableMiscItem/furniture_to_use
