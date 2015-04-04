@@ -9,6 +9,9 @@
 <title>
 CampUsableMiscItem/activator_to_use</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ The activator that will spawn and immediately be used by the player when using this item. }
+</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Activator property activator_to_use auto
