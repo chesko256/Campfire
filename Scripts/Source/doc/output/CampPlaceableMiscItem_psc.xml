@@ -19,6 +19,18 @@ scriptname CampPlaceableMiscItem extends ObjectReference
 </section>
 <section>
 <title>
+CampPlacementIndicator/Required_this_item</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Required: This inventory item, the object this script is attached to. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+MiscObject property Required_this_item auto
+</literallayout>
+</section>
+<section>
+<title>
 CampPlaceableMiscItem/Required_placement_indicator</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>

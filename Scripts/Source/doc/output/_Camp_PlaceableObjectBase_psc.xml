@@ -7,18 +7,6 @@
 </articleinfo>
 <section>
 <title>
-_Camp_PlaceableObjectBase/Required_InventoryItem</title>
-<formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Required: The item the player obtains when picking up this object. }
-</para>
-<formalpara><title>SYNTAX</title><para></para></formalpara>
-<literallayout class="monospaced">
-MiscObject property Required_InventoryItem auto
-</literallayout>
-</section>
-<section>
-<title>
 _Camp_PlaceableObjectBase/Setting_StartUpRotation</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>

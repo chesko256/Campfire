@@ -18,16 +18,6 @@ Required: The Activator object to place with this indicator. Fill only the furni
 
     Activator property Required_activator_to_place auto
 
-### CampPlacementIndicator/Required\_inventory\_item
-
-**DESCRIPTION.**
-
-Required: The Misc Item that starts this placement indicator. }
-
-**SYNTAX.**
-
-    MiscObject property Required_inventory_item auto
-
 ### CampPlacementIndicator/height\_adjustment
 
 **DESCRIPTION.**

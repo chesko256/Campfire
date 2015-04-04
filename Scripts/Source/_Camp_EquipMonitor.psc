@@ -21,6 +21,8 @@ keyword property ClothingFeet auto
 ; Edge case - Only armor in vanilla game with integrated headgear
 Armor property ClothesMGRobesArchmage1Hooded auto
 
+bool processing_unequip = false
+
 Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
 	if !(GetUsesMainBodySlot(akBaseObject))
 		return
@@ -31,6 +33,7 @@ endEvent
 
 Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 	bool bEventRaised = false
+	processing_unequip = true
 
 	if akBaseObject as Armor
 
@@ -73,45 +76,53 @@ Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 		CampData.CurrentAmmo = none
 		bool b = RaiseEventOnGearUnequipped(akBaseObject, 6)
 	endif
+	processing_unequip = false
 endEvent
 
 function ProcessEquippedObject(Form akBaseObject)
-	WaitMenuMode(0.3)	;Helps prevent a race condition when switching equipment.
+	int i = 0
+	while processing_unequip && i < 50
+		WaitMenuMode(0.1)
+		i += 1
+	endWhile
+	CampDebug(0, "Processing equipped object")
+	WaitMenuMode(0.1)	;Helps prevent a race condition when switching equipment.
 	bool bEventRaised = false
 
 	if akBaseObject.HasKeyword(ArmorCuirass) || akBaseObject.HasKeyword(ClothingBody)
+		CampDebug(1, "The player equipped a piece of body armor.")
 		CampData.CurrentBody = akBaseObject as Armor
 		bEventRaised = RaiseEventOnGearEquipped(akBaseObject, 1)
-		CampDebug(1, "The player equipped a piece of body armor.")
+		
 	endif
 	if akBaseObject.HasKeyword(ArmorGauntlets) || akBaseObject.HasKeyword(ClothingHands)
+		CampDebug(1, "The player equipped a piece of hand armor.")
 		CampData.CurrentHands = akBaseObject as Armor
 		bEventRaised = RaiseEventOnGearEquipped(akBaseObject, 2)
-		CampDebug(1, "The player equipped a piece of hand armor.")
 	endif
 	if akBaseObject.HasKeyword(ArmorHelmet) || akBaseObject.HasKeyword(ClothingHead) || akBaseObject == ClothesMGRobesArchmage1Hooded
+		CampDebug(1, "The player equipped a piece of head armor.")
 		CampData.CurrentHead = akBaseObject as Armor
 		bEventRaised = RaiseEventOnGearEquipped(akBaseObject, 3)
-		CampDebug(1, "The player equipped a piece of head armor.")
 	endif
 	if akBaseObject.HasKeyword(ArmorBoots) || akBaseObject.HasKeyword(ClothingFeet)	
+		CampDebug(1, "The player equipped a piece of feet armor.")
 		CampData.CurrentFeet = akBaseObject as Armor
 		bEventRaised = RaiseEventOnGearEquipped(akBaseObject, 4)
-		CampDebug(1, "The player equipped a piece of feet armor.")
 	endif
 	if !bEventRaised
 		if _Camp_Backpacks.HasForm(akBaseObject)
+			CampDebug(1, "The player equipped a backpack.")
 			CampData.CurrentBackpack = akBaseObject as Armor
 			bool b = RaiseEventOnGearEquipped(akBaseObject, 5)
-			CampDebug(1, "The player equipped a backpack.")
 		elseif akBaseObject as Ammo
+			CampDebug(1, "The player equipped ammo.")
 			CampData.CurrentAmmo = akBaseObject as Ammo
 			bool b = RaiseEventOnGearEquipped(akBaseObject, 6)
-			CampDebug(1, "The player equipped ammo.")
 		else
 			;This object might be what Frostfall considers a cloak.
-			bool b = RaiseEventOnGearEquipped(akBaseObject, 7)
 			CampDebug(1, "The player equipped a cloak." + akBaseObject)
+			bool b = RaiseEventOnGearEquipped(akBaseObject, 7)
 		endif
 	endif
 endFunction
@@ -155,9 +166,6 @@ bool function RaiseEventOnGearEquipped(Form akBaseObject, int iGearType)
 		FrostUtil.GetClothingSystem().ObjectEquipped(akBaseObject, iGearType)
 	endif
 
-	; Help prevent the system from becoming overloaded with many requests.
-	Utility.Wait(0.2)
-
 	return true
 endFunction
 
@@ -200,9 +208,6 @@ bool function RaiseEventOnGearUnequipped(Form akBaseObject, int iGearType)
 		FrostUtil.GetClothingSystem().ObjectUnequipped(akBaseObject, iGearType)
 	endif
 
-	; Help prevent the system from becoming overloaded with many requests.
-	Utility.Wait(0.2)
-
 	return true
 endFunction
 
@@ -211,7 +216,7 @@ bool function GetUsesMainBodySlot(Form akBaseObject)
 	; Checks if akBaseObject uses one of the main gear slots for the body (30-39,41-43)
 	; Returns True on slots 40 and 46 as well for cloak support
 
-	if GetCompatibilitySystem().isSKSELoaded
+	if !(GetCompatibilitySystem().isSKSELoaded)
 		; SKSE not loaded or too old; fall back to True
 		return true
 	endif

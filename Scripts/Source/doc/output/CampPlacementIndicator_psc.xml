@@ -31,18 +31,6 @@ Activator property Required_activator_to_place auto
 </section>
 <section>
 <title>
-CampPlacementIndicator/Required_inventory_item</title>
-<formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Required: The Misc Item that starts this placement indicator. }
-</para>
-<formalpara><title>SYNTAX</title><para></para></formalpara>
-<literallayout class="monospaced">
-MiscObject property Required_inventory_item auto
-</literallayout>
-</section>
-<section>
-<title>
 CampPlacementIndicator/height_adjustment</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
