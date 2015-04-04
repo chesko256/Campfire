@@ -15,6 +15,7 @@ ReferenceAlias property Guard auto
 event OnInit()
 	if !self.IsRunning()
 		self.Start()
+		return
 	endif
 	if !_Camp_FollowerQuest.IsRunning()
 		_Camp_FollowerQuest.Start()

@@ -505,7 +505,7 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
             elseif i == 1
                 ;No
             elseif i == 2
-                ;@TODO: No - Don't Ask Again
+                ;No - Don't ask again
                 _Camp_HelpDone_PlacementError.SetValue(2)
             endif
         endif
@@ -518,30 +518,32 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
         UpdateIndicatorPosition(akIndicator, afDistance, afHeightOffset, afRotationOffset, abSnapToTerrain)
         ;@TODO: Handle "heat link" feature
         ;Update placement indicator shader
-        if LegalToCampHere()
-            _Camp_VisError.Stop(akIndicator)
-            _Camp_VisPlacement.Play(akIndicator)
-        else
+        if !LegalToCampHere() && IsCrimeToPlaceInTowns(akFormToPlace)
             _Camp_VisPlacement.Stop(akIndicator)
             _Camp_VisError.Play(akIndicator)
+        else
+            _Camp_VisError.Stop(akIndicator)
+            _Camp_VisPlacement.Play(akIndicator)
         endif
         return true
     
     ;Scenario: placing object (simple)
     elseif _Camp_CurrentlyPlacingObject.GetValueInt() == 2 && _Camp_Setting_AdvancedPlacement.GetValueInt() == 1
         UpdateIndicatorPositionSimple(akIndicator, afDistance, afHeightOffset, afRotationOffset)
-        if LegalToCampHere() && !IsCrimeToPlaceInTowns(akFormToPlace)
-            _Camp_VisError.Stop(akIndicator)
-            _Camp_VisPlacement.Play(akIndicator)
-        else
+        if !LegalToCampHere() && IsCrimeToPlaceInTowns(akFormToPlace)
             _Camp_VisPlacement.Stop(akIndicator)
             _Camp_VisError.Play(akIndicator)
+        else
+            _Camp_VisError.Stop(akIndicator)
+            _Camp_VisPlacement.Play(akIndicator)
         endif
         _Camp_CurrentlyPlacingObject.SetValueInt(1)
         return true
 
     ;Scenario: Player activated the placement indicator
     else
+        CampDebug(0, "LegalToCampHere: " + LegalToCampHere())
+        CampDebug(0, "IsCrimeToPlaceInTowns: " + IsCrimeToPlaceInTowns(akFormToPlace))
         if !LegalToCampHere() && IsCrimeToPlaceInTowns(akFormToPlace)
             int ibutton = _Camp_PlacementIllegal.Show()
             if ibutton == 0

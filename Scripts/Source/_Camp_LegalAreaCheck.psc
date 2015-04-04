@@ -1,5 +1,7 @@
 scriptname _Camp_LegalAreaCheck extends ReferenceAlias
 
+import CampUtil
+
 GlobalVariable property _Camp_Setting_Legality auto
 
 Keyword property LocTypeDwelling auto
@@ -68,16 +70,15 @@ bool property InIllegalArea hidden
 	endFunction
 endProperty
 
-_Camp_Compatibility property Compatibility auto
 Actor property PlayerRef auto
 ObjectReference property DLC2RavenRockCenterMarker auto hidden
 Faction property DLC2RavenRockGuardFaction auto hidden
 
-bool function GetCampingLegal()
-	if _Camp_Setting_Legality.GetValueInt() == 1
+bool function GetCampingLegal(bool bIgnoreSetting = false)
+	if _Camp_Setting_Legality.GetValueInt() == 1 && !bIgnoreSetting
 		return true
 	endif
-	if InIllegalArea || Compatibility.isDLC2Loaded && PlayerRef.GetDistance(DLC2RavenRockCenterMarker) < 4100.0
+	if InIllegalArea || GetCompatibilitySystem().isDLC2Loaded && PlayerRef.GetDistance(DLC2RavenRockCenterMarker) < 4100.0
 		return false
 	else
 		return true
@@ -86,7 +87,7 @@ endFunction
 
 Faction function GetAreaCampingFaction(ObjectReference akCenter)
 
-	if Compatibility.isDLC2Loaded
+	if GetCompatibilitySystem().isDLC2Loaded
 		if DLC2RavenRockCenterMarker == none
 			DLC2RavenRockCenterMarker = Game.GetFormFromFile(0x020295EA, "Dragonborn.esm") as ObjectReference
 		endif
@@ -133,7 +134,7 @@ Faction function GetAreaCampingFaction(ObjectReference akCenter)
 		return TownWhiterunFaction
 	elseif akCenter.GetDistance(WinterholdCollegeCenterMarker) < 4000.0
 		return TownWinterholdFaction
-	elseif Compatibility.isDLC2Loaded && akCenter.GetDistance(DLC2RavenRockCenterMarker) < 4100.0	;RavenRock center marker 
+	elseif GetCompatibilitySystem().isDLC2Loaded && akCenter.GetDistance(DLC2RavenRockCenterMarker) < 4100.0	;RavenRock center marker 
 		return DLC2RavenRockGuardFaction
 	else
 		Location myLoc = akCenter.GetCurrentLocation()

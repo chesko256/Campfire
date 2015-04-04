@@ -1,36 +1,18 @@
-### ObjectReference/CampPlaceableMiscItem
-
-**SCRIPTNAME.**
-
-    scriptname CampPlaceableMiscItem extends ObjectReference
-
-**OVERVIEW.**
-
-Attach this script to a Misc Item that represents the inventory item of a Placeable Object.
-
-### CampPlacementIndicator/Required\_this\_item
+### CampUsableMiscItem/activator\_to\_use
 
 **DESCRIPTION.**
 
 **SYNTAX.**
 
-    MiscObject property Required_this_item auto
+    Activator property activator_to_use auto
 
-### CampPlaceableMiscItem/Required\_placement\_indicator
-
-**DESCRIPTION.**
-
-**SYNTAX.**
-
-    Activator property Required_placement_indicator auto
-
-### CampPlaceableMiscItem/z\_angle\_offset
+### CampUsableMiscItem/furniture\_to\_use
 
 **DESCRIPTION.**
 
 **SYNTAX.**
 
-    float property z_angle_offset auto
+    Furniture property furniture_to_use auto
 
 ### CampPlaceableMiscItem/consumable\_ingredient
 

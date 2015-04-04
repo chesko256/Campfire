@@ -27,20 +27,15 @@ ImageSpaceModifier Property _Camp_FadeUp auto
 ImageSpaceModifier Property _Camp_Black auto
 globalvariable property TimeScale auto
 globalvariable property GameHour auto
-;globalvariable property _DE_ExposurePoints auto
-;globalvariable property _DE_CurrentTemp auto
 Sound property _Camp_ChopWoodSM auto
 
 ;Axes
 Weapon property _Camp_StoneWarAxe auto
 
-Event OnEffectStart(Actor akTarget, Actor akCaster)	
-	;@TODO: Wrap in IsFrostfallLoaded	
-	;if _DE_ExposurePoints.GetValue() <= 20.0
-	;	_Camp_WoodHarvestErrorTooCold.Show()
-	;	return
-	;endif
-	;@TODO: Wrap in IsFrostfallLoaded
+Event OnEffectStart(Actor akTarget, Actor akCaster)
+	if Compatibility.IsFrostfallLoaded && !FrostUtil.IsWarmEnoughToHarvestWood()
+		return
+	endif
 	
 	if PlayerRef.IsInCombat()
 		_Camp_WoodHarvestErrorCombat.Show()
@@ -154,25 +149,7 @@ function AdvanceTime()
 	else
 		GameHour.SetValue(0.0)
 	endif
-	
-	;@TODO: Wrap in IsFrostfallLoaded
-	;/
-	float myTemp = _DE_CurrentTemp.GetValue()
-	
-	if myTemp <= -15
-		_DE_ExposurePoints.Mod(-20.0)
-	elseif myTemp <= -10
-		_DE_ExposurePoints.Mod(-15.0)
-	elseif myTemp <= -5
-		_DE_ExposurePoints.Mod(-10.0)
-	elseif myTemp <= 0
-		_DE_ExposurePoints.Mod(-5.0)
-	endif
-	
-	if _DE_ExposurePoints.GetValue() < 20.0
-		_DE_ExposurePoints.SetValue(20.0)
-	endif
-	/;
-	;@TODO: Wrap in IsFrostfallLoaded
-	
+	if Compatibility.IsFrostfallLoaded
+		FrostUtil.Event_LegacyWoodHarvest()
+	endif	
 endFunction

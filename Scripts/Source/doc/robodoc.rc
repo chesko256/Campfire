@@ -2,10 +2,10 @@ header markers:
   ;/********
 remark markers:
   *
-  {
 end markers:
   ;********
 remark begin markers:
+  {
   ;/*
 remark end markers:
   */;
@@ -28,6 +28,7 @@ accept files:
   CampPlaceableObject.psc
   CampPlaceableObjectEx.psc
   CampPlaceableMiscItem.psc
+  CampUsableMiscItem.psc
   CampPlacementIndicator.psc
 items:
   SCRIPTNAME

@@ -18,7 +18,7 @@ scriptname CampTent extends _Camp_PlaceableObjectBase
  the player's bed roll. Attaching this script and filling out properties in the Creation Kit is 
  how new tents are created; please see the tutorials for more information. Only 3 properties 
  are required in order for the tent to function, with the rest optional. This script supports 
- creating a tent with a single bed roll, a lantern, clutter, and more. See <link linkend="robo13">CampTentEx</link> for even 
+ creating a tent with a single bed roll, a lantern, clutter, and more. See <link linkend="robo33">CampTentEx</link> for even 
  more capability.
 </para>
 </section>
@@ -26,9 +26,6 @@ scriptname CampTent extends _Camp_PlaceableObjectBase
 <title>
 CampTent/Setting_BedRollScale</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The scale to render the player's and follower's bed rolls. 1.0 by default. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Float property Setting_BedRollScale = 1.0 auto
@@ -38,9 +35,6 @@ Float property Setting_BedRollScale = 1.0 auto
 <title>
 CampTent/Setting_BedRollScale</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The compass direction adjustment applied to the player's sitting position. 0.0 by default. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Float property Setting_PlayerSitAngle = 0.0 auto
@@ -50,9 +44,6 @@ Float property Setting_PlayerSitAngle = 0.0 auto
 <title>
 CampTent/RequiredPositionRef_PlayerBed</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Required: The player's bed roll (main interactible) position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property RequiredPositionRef_PlayerBed auto
@@ -62,9 +53,6 @@ ObjectReference property RequiredPositionRef_PlayerBed auto
 <title>
 CampTent/TentAsset_ShelterModel</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The tent static object. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Static property TentAsset_ShelterModel auto
@@ -74,9 +62,6 @@ Static property TentAsset_ShelterModel auto
 <title>
 CampTent/TentAsset_ShelterModelExterior</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The tent static object exterior (for use with Toggle View feature). }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Static property TentAsset_ShelterModelExterior auto
@@ -86,9 +71,6 @@ Static property TentAsset_ShelterModelExterior auto
 <title>
 CampTent/TentAsset_ShelterModelMaterialSnow</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The tent (ShelterModel or ShelterModelExterior) with snow directional shader applied. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Static property TentAsset_ShelterModelMaterialSnow auto
@@ -98,9 +80,6 @@ Static property TentAsset_ShelterModelMaterialSnow auto
 <title>
 CampTent/TentAsset_ShelterModelMaterialAsh</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The tent (ShelterModel or ShelterModelExterior) with ash directional shader applied (use _Camp_AshMaterialSolstheim1P_2 instead of a direct dependency on Dragonborn.esm) }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Static property TentAsset_ShelterModelMaterialAsh auto
@@ -110,9 +89,6 @@ Static property TentAsset_ShelterModelMaterialAsh auto
 <title>
 CampTent/TentAsset_ClutterStatic1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A static to place in or around the tent. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Static property TentAsset_ClutterStatic1 auto
@@ -122,9 +98,6 @@ Static property TentAsset_ClutterStatic1 auto
 <title>
 CampTent/TentAsset_ClutterStatic2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A static to place in or around the tent. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Static property TentAsset_ClutterStatic2 auto
@@ -134,9 +107,6 @@ Static property TentAsset_ClutterStatic2 auto
 <title>
 CampTent/TentAsset_ClutterStatic3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A static to place in or around the tent. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Static property TentAsset_ClutterStatic3 auto
@@ -146,9 +116,6 @@ Static property TentAsset_ClutterStatic3 auto
 <title>
 CampTent/TentAsset_ClutterStatic4</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A static to place in or around the tent. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Static property TentAsset_ClutterStatic4 auto
@@ -158,9 +125,6 @@ Static property TentAsset_ClutterStatic4 auto
 <title>
 CampTent/TentAsset_ClutterStatic5</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: A static to place in or around the tent. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Static property TentAsset_ClutterStatic5 auto
@@ -170,9 +134,6 @@ Static property TentAsset_ClutterStatic5 auto
 <title>
 CampTent/TentAsset_ShelterDestructionCollider</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Activator that passes its OnHit data to this object. Used to allow hitting the shelter object to destroy the tent. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Activator property TentAsset_ShelterDestructionCollider auto
@@ -182,9 +143,6 @@ Activator property TentAsset_ShelterDestructionCollider auto
 <title>
 CampTent/PositionRef_FrontExitMarker</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Position reference of marker to move the player to when exiting a small tent. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_FrontExitMarker auto
@@ -194,9 +152,6 @@ ObjectReference property PositionRef_FrontExitMarker auto
 <title>
 CampTent/PositionRef_AnimalLayDownMarker</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Position reference of marker that animals will lie down at. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_AnimalLayDownMarker auto
@@ -206,9 +161,6 @@ ObjectReference property PositionRef_AnimalLayDownMarker auto
 <title>
 CampTent/PositionRef_Shelter</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The shelter (tent, structure) position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Shelter auto
@@ -218,9 +170,6 @@ ObjectReference property PositionRef_Shelter auto
 <title>
 CampTent/PositionRef_Ward</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The ward position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Ward auto
@@ -230,9 +179,6 @@ ObjectReference property PositionRef_Ward auto
 <title>
 CampTent/PositionRef_Lantern1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: The first lantern's position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Lantern1 auto
@@ -242,9 +188,6 @@ ObjectReference property PositionRef_Lantern1 auto
 <title>
 CampTent/PositionRef_ClutterStatic1</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Clutter position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ClutterStatic1 auto
@@ -254,9 +197,6 @@ ObjectReference property PositionRef_ClutterStatic1 auto
 <title>
 CampTent/PositionRef_ClutterStatic2</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Clutter position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ClutterStatic2 auto
@@ -266,9 +206,6 @@ ObjectReference property PositionRef_ClutterStatic2 auto
 <title>
 CampTent/PositionRef_ClutterStatic3</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Clutter position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ClutterStatic3 auto
@@ -278,9 +215,6 @@ ObjectReference property PositionRef_ClutterStatic3 auto
 <title>
 CampTent/PositionRef_ClutterStatic4</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Clutter position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ClutterStatic4 auto
@@ -290,9 +224,6 @@ ObjectReference property PositionRef_ClutterStatic4 auto
 <title>
 CampTent/PositionRef_ClutterStatic5</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Clutter position reference. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_ClutterStatic5 auto
@@ -302,9 +233,6 @@ ObjectReference property PositionRef_ClutterStatic5 auto
 <title>
 CampTent/PositionRef_Player_Backpack</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Position reference of player's backpack. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Player_Backpack auto
@@ -314,9 +242,6 @@ ObjectReference property PositionRef_Player_Backpack auto
 <title>
 CampTent/PositionRef_Player_Shield</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Position reference of player's shield. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Player_Shield auto
@@ -326,9 +251,6 @@ ObjectReference property PositionRef_Player_Shield auto
 <title>
 CampTent/PositionRef_Player_ShieldInterior</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Position reference of player's shield when in an interior (usually lying flat). }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Player_ShieldInterior auto
@@ -338,9 +260,6 @@ ObjectReference property PositionRef_Player_ShieldInterior auto
 <title>
 CampTent/PositionRef_Player_WeaponMainHand</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Position reference of player's main hand weapon. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Player_WeaponMainHand auto
@@ -350,9 +269,6 @@ ObjectReference property PositionRef_Player_WeaponMainHand auto
 <title>
 CampTent/PositionRef_Player_WeaponOffHand</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Position reference of player's off hand weapon. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Player_WeaponOffHand auto
@@ -362,9 +278,6 @@ ObjectReference property PositionRef_Player_WeaponOffHand auto
 <title>
 CampTent/PositionRef_Player_WeaponTwoHand</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Position reference of player's two-handed weapon. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Player_WeaponTwoHand auto
@@ -374,9 +287,6 @@ ObjectReference property PositionRef_Player_WeaponTwoHand auto
 <title>
 CampTent/PositionRef_Player_WeaponBow</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Position reference of player's bow. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Player_WeaponBow auto
@@ -386,9 +296,6 @@ ObjectReference property PositionRef_Player_WeaponBow auto
 <title>
 CampTent/PositionRef_Player_ArmorHelm</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Position reference of player's head gear. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Player_ArmorHelm auto
@@ -398,9 +305,6 @@ ObjectReference property PositionRef_Player_ArmorHelm auto
 <title>
 CampTent/PositionRef_Player_ArmorCuirass</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Position reference of player's body gear. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Player_ArmorCuirass auto
@@ -410,9 +314,6 @@ ObjectReference property PositionRef_Player_ArmorCuirass auto
 <title>
 CampTent/PositionRef_Player_ArmorGauntlets</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Position reference of player's hand gear. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Player_ArmorGauntlets auto
@@ -422,9 +323,6 @@ ObjectReference property PositionRef_Player_ArmorGauntlets auto
 <title>
 CampTent/PositionRef_Player_ArmorBoots</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Position reference of player's foot gear. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_Player_ArmorBoots auto
@@ -434,9 +332,6 @@ ObjectReference property PositionRef_Player_ArmorBoots auto
 <title>
 CampTent/PositionRef_CenterObjectOverride</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
-<para>
- Optional: Set this to specify a different object as the one which all other tent objects "orbit" when rotated. Uses the Shelter or Player Bed if left blank. }
-</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property PositionRef_CenterObjectOverride auto

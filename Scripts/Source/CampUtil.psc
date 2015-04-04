@@ -2,11 +2,11 @@
 * SCRIPTNAME
 */;
 scriptname CampUtil hidden
-;/*
+{
 * OVERVIEW
 * The `CampUtil` script is the primary way most mods should interact with Campfire and contains many helpful functions. To call any of the following functions, download the SDK and in your script include the line:
 * <pre>import CampUtil</pre>
-* Alternatively, you can call `CampUtil.FunctionName()` without importing CampUtil.
+* Alternatively, you can call `CampUtil.FunctionName()` without importing CampUtil. }
 ;*********/;
 
 import math
@@ -49,7 +49,24 @@ _Camp_TentSystem function GetTentSystem() global
 	return Campfire.CampfireTentSystem as _Camp_TentSystem
 endFunction
 
+;/********f* CampUtil/GetAPIVersion
+* DESCRIPTION
+* Get the CampUtil API version number.
+*
+* SYNTAX
+*/;
 float function GetAPIVersion() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The CampUtil API version number. This is NOT the same thing as the version number of Campfire.
+* CampUtil's version number will increment only when changes have been made to the API itself.
+*
+* EXAMPLES
+float ver = CampUtil.GetAPIVersion()
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -269,7 +286,28 @@ endif
 	endif
 endFunction
 
+;/********f* CampUtil/GetTrackedFollower
+* DESCRIPTION
+* Returns the tracked follower at the specified index.
+*
+* SYNTAX
+*/;
 Actor function GetTrackedFollower(int aiIndex) global
+;/*
+* PARAMETERS
+* * aiIndex: The index (1 - 3) to check. Returns None if index is out of range or there
+* is no follower filling the specified index.
+*
+* RETURN VALUE
+* The Actor occupying this index, or None if no tracked follower in this index.
+*
+* EXAMPLES
+int i = 1
+while i < 4
+	debug.trace("Follower " + i + " is " + CampUtil.GetTrackedFollower(i))
+	i += 1
+endWhile
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -286,7 +324,25 @@ Actor function GetTrackedFollower(int aiIndex) global
 	endif
 endFunction
 
+;/********f* CampUtil/IsTrackedFollower
+* DESCRIPTION
+* Whether or not this actor is a tracked follower.
+*
+* SYNTAX
+*/;
 bool function IsTrackedFollower(Actor akActor) global
+;/*
+* PARAMETERS
+* * akActor: The actor to check.
+*
+* RETURN VALUE
+* True if this actor is a tracked follower; false if not.
+*
+* EXAMPLES
+if CampUtil.IsTrackedFollower(myActor)
+	debug.trace(myActor + " is a follower!")
+endif
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -303,7 +359,23 @@ bool function IsTrackedFollower(Actor akActor) global
 	endif
 endFunction
 
+;/********f* CampUtil/GetTrackedFollowerCount
+* DESCRIPTION
+* Return the number of tracked followers.
+*
+* SYNTAX
+*/;
 int function GetTrackedFollowerCount() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The number of followers currently being tracked, from 0 to 3.
+*
+* EXAMPLES
+debug.trace("I have " + CampUtil.GetTrackedFollowerCount() + " followers.")
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -322,7 +394,24 @@ int function GetTrackedFollowerCount() global
 	return i
 endFunction
 
-Actor function GetTrackedAnimal()
+;/********f* CampUtil/GetTrackedAnimal
+* DESCRIPTION
+* Returns the tracked animal in the player's service.
+*
+* SYNTAX
+*/;
+Actor function GetTrackedAnimal() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The tracked animal Actor currently in the player's service, or None if no animal
+* currently following the player.
+*
+* EXAMPLES
+debug.trace("My dog is " + CampUtil.GetTrackedAnimal())
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -331,7 +420,20 @@ Actor function GetTrackedAnimal()
 	return Campfire.Animal.GetActorRef()
 endFunction
 
+;/********f* CampUtil/IsTrackedAnimal
+* DESCRIPTION
+* Whether or not the Actor is a tracked animal.
+*
+* SYNTAX
+*/;
 bool function IsTrackedAnimal(Actor akActor) global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* True if the Actor is a tracked animal; False if not.
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -344,7 +446,23 @@ bool function IsTrackedAnimal(Actor akActor) global
 	endif
 endFunction
 
+;/********f* CampUtil/GetTrackedAnimalCount
+* DESCRIPTION
+* Get the number of animals currently in the player's service.
+*
+* SYNTAX
+*/;
 int function GetTrackedAnimalCount() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The number of animals currently being tracked, from 0 to 1.
+*
+* EXAMPLES
+debug.trace("I have " + CampUtil.GetTrackedAnimalCount() + " doggies.")
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -394,7 +512,6 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true, bool abPlayerBusy
 	endif
 * NOTES
 * Reasons that this function might return false are:
-* * The player is being attacked.
 * * The player is already trying to place something.
 * * The player is swimming.
 * * The player is mounted.
@@ -403,7 +520,6 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true, bool abPlayerBusy
 * * The player is using another object (crafting bench, etc).
 * * The player is currently transformed into a Vampire Lord or Werewolf.
 ;*********/;
-	;@TODO: Check Vampire Lord, Werewolf
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -433,6 +549,11 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true, bool abPlayerBusy
 	elseif Campfire.PlayerRef.GetSitState() != 0
 		if abShowMessage
 			Campfire._Camp_GeneralError_Busy.Show()
+		endif
+		return false
+	elseif Campfire.PlayerRef.GetRace().HasKeyword(Campfire.ActorTypeCreature) || Campfire.PlayerRef.GetRace().HasKeyword(Campfire.ImmuneParalysis)
+		if abShowMessage
+			Campfire._Camp_GeneralError_Transformed.Show()
 		endif
 		return false
 	else
@@ -472,38 +593,6 @@ endif
 	endif
 endFunction
 
-;/********f* CampUtil/IsPlaceableObject
-* DESCRIPTION
-* Whether or not the Form is a Placeable Object.
-*
-* SYNTAX
-*/;
-bool function IsPlaceableObject(Form akBaseObject) global
-;/*
-* PARAMETERS
-* * akBaseObject: The base object to check.
-*
-* RETURN VALUE
-* True if the Form is a Placeable Object, false otherwise.
-*
-* EXAMPLES
-if IsPlaceableObject()
-	debug.trace("The item is a placeable object.")
-endif
-;*********/;
-	CampfireAPI Campfire = GetAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return False
-	endif
-	
-	if akBaseObject.HasKeyword(Campfire.isCampfirePlaceableObject)
-		return True
-	else
-		return False
-	endif
-endFunction
-
 ;/********f* CampUtil/LegalToCampHere
 * DESCRIPTION
 * Whether or not the player's current location is considered a legal camping area.
@@ -525,14 +614,13 @@ endif
 * NOTES
 * In Campfire, it is illegal for the player to place Placeable Objects inside houses, other owned buildings (inns, taverns), and within range of / inside settled areas like towns and cities.
 ;*********/;
-	;@TODO: Support abIgnoreSetting
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
 		return False
 	endif
 
-	return Campfire.Legal.GetCampingLegal()
+	return Campfire.Legal.GetCampingLegal(abIgnoreSetting)
 endFunction
 
 ;/********f* CampUtil/GetAreaCampingFaction
@@ -555,7 +643,6 @@ if GetAreaCampingFaction() == MyCoolFaction
 	debug.trace("MyCoolFaction are a bunch of facists for not letting me camp here!")
 endif
 ;*********/;
-	;@TODO: Support abIgnoreSetting
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -565,7 +652,20 @@ endif
 	return Campfire.Legal.GetAreaCampingFaction(akCenter)
 endFunction
 
+;/********f* CampUtil/GetLastUsedCampfire
+* DESCRIPTION
+* Returns the last campfire used by the player.
+*
+* SYNTAX
+*/;
 ObjectReference function GetLastUsedCampfire() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The last campfire used by the player, or None if it no longer exists.
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -575,7 +675,23 @@ ObjectReference function GetLastUsedCampfire() global
 	return Campfire.LastUsedCampfire
 endFunction
 
+;/********f* CampUtil/GetCurrentTent
+* DESCRIPTION
+* Returns the current tent being used.
+*
+* SYNTAX
+*/;
 ObjectReference function GetCurrentTent() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The current tent being used, or None if the player is not using a tent.
+*
+* NOTES
+* Return value used as input to IsCurrentTentWaterproof() and IsCurrentTentWarm().
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -590,7 +706,20 @@ ObjectReference function GetCurrentTent() global
 	endif
 endFunction
 
+;/********f* CampUtil/IsCurrentTentWaterproof
+* DESCRIPTION
+* Is the current tent waterproof?
+*
+* SYNTAX
+*/;
 bool function IsCurrentTentWaterproof(ObjectReference akTent) global
+;/*
+* PARAMETERS
+* akTent: The Tent ObjectReference to check. Use the return value of GetCurrentTent().
+*
+* RETURN VALUE
+* True if the current tent is flagged as being waterproof, or false if not.
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -605,7 +734,20 @@ bool function IsCurrentTentWaterproof(ObjectReference akTent) global
 	endif
 endFunction
 
+;/********f* CampUtil/IsCurrentTentWarm
+* DESCRIPTION
+* Is the current tent warm?
+*
+* SYNTAX
+*/;
 bool function IsCurrentTentWarm(ObjectReference akTent) global
+;/*
+* PARAMETERS
+* akTent: The Tent ObjectReference to check. Use the return value of GetCurrentTent().
+*
+* RETURN VALUE
+* True if the current tent is flagged as being warm, or false if not.
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -620,7 +762,23 @@ bool function IsCurrentTentWarm(ObjectReference akTent) global
 	endif
 endFunction
 
+;/********f* CampUtil/IsCrimeToPlaceInTowns
+* DESCRIPTION
+* Is it a crime to place this base object in towns, inside owned houses, etc?
+*
+* SYNTAX
+*/;
 bool function IsCrimeToPlaceInTowns(Form akBaseObject) global
+;/*
+* PARAMETERS
+* akBaseObject: The base object to check.
+*
+* RETURN VALUE
+* True if the Form is illegal to place in settled areas, or False if not.
+*
+* NOTES
+* This function returns true or false without regard to the current legality setting.
+;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()

@@ -7,56 +7,83 @@
 </articleinfo>
 <section>
 <title>
-CampPlacementIndicator/Required_furniture_to_place</title>
+CampUsableMiscItem/activator_to_use</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-Furniture property Required_furniture_to_place auto
+Activator property activator_to_use auto
 </literallayout>
 </section>
 <section>
 <title>
-CampPlacementIndicator/Required_activator_to_place</title>
+CampUsableMiscItem/furniture_to_use</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-Activator property Required_activator_to_place auto
+Furniture property furniture_to_use auto
 </literallayout>
 </section>
 <section>
 <title>
-CampPlacementIndicator/height_adjustment</title>
+CampPlaceableMiscItem/consumable_ingredient</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-float property height_adjustment = 1.0 auto
+Ingredient property consumable_ingredient auto
 </literallayout>
 </section>
 <section>
 <title>
-CampPlacementIndicator/z_angle_adjustment</title>
+CampPlaceableMiscItem/consumable_misc_item</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-float property z_angle_adjustment = 0.0 auto
+MiscObject property consumable_misc_item auto
 </literallayout>
 </section>
 <section>
 <title>
-CampPlacementIndicator/snap_to_terrain</title>
+CampPlaceableMiscItem/consumable_cost</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-Bool property snap_to_terrain = true auto
+int property consumable_cost auto
 </literallayout>
 </section>
 <section>
 <title>
-CampPlacementIndicator/indicator_distance</title>
+CampPlaceableMiscItem/necessary_perk</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-Float property indicator_distance = 300.0 auto
+Perk property necessary_perk auto
+</literallayout>
+</section>
+<section>
+<title>
+CampPlaceableMiscItem/consumable_ingredient_name</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+string property consumable_ingredient_name auto
+</literallayout>
+</section>
+<section>
+<title>
+CampPlaceableMiscItem/consumable_ingredient_name</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+string property consumable_miscitem_name auto
+</literallayout>
+</section>
+<section>
+<title>
+CampPlaceableMiscItem/consumable_ingredient_name</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+string property necessary_perk_name auto
 </literallayout>
 </section>
 </article>

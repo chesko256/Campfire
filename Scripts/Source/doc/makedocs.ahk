@@ -2,6 +2,6 @@
 Send ^b
 SetTitleMatchMode 2
 Run makedocs.lnk
-WinWaitActive, makedocs.bat
-WinWaitClose, makedocs.bat
+WinWaitActive, makedocs
+WinWaitClose, makedocs
 WinActivate, Sublime Text

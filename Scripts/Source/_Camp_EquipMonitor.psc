@@ -6,7 +6,6 @@ import CampUtil
 import _CampInternal
 
 CampfireData property CampData auto
-_Camp_Compatibility property Compatibility auto
 Actor property PlayerRef auto
 Formlist property _Camp_Backpacks auto
 keyword property ArmorCuirass auto
@@ -162,7 +161,7 @@ bool function RaiseEventOnGearEquipped(Form akBaseObject, int iGearType)
 	;
 	;	* This event is not raised when weapons are equipped.
 
-	if Compatibility.IsFrostfallLoaded
+	if GetCompatibilitySystem().IsFrostfallLoaded
 		FrostUtil.GetClothingSystem().ObjectEquipped(akBaseObject, iGearType)
 	endif
 
@@ -204,7 +203,7 @@ bool function RaiseEventOnGearUnequipped(Form akBaseObject, int iGearType)
 	;
 	;	* This event is not raised when weapons are unequipped.
 
-	if Compatibility.IsFrostfallLoaded
+	if GetCompatibilitySystem().IsFrostfallLoaded
 		FrostUtil.GetClothingSystem().ObjectUnequipped(akBaseObject, iGearType)
 	endif
 
@@ -341,7 +340,7 @@ bool function GetUsesMainBodySlot(Form akBaseObject)
 endFunction
 
 Event OnRaceSwitchComplete()
-	if Compatibility.IsFrostfallLoaded
+	if GetCompatibilitySystem().IsFrostfallLoaded
 		FrostUtil.GetClothingSystem().RaceChanged()
 	endif
 endEvent
