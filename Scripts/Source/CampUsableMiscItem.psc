@@ -20,7 +20,7 @@ Furniture property furniture_to_use auto
 * Required: The furniture that will spawn and immediately be used by the player when using this item. }
 ;*********/;
 
-;/********p* CampPlaceableMiscItem/consumable_ingredient
+;/********p* CampUsableMiscItem/consumable_ingredient
 * SYNTAX
 */;
 Ingredient property consumable_ingredient auto
@@ -29,7 +29,7 @@ Ingredient property consumable_ingredient auto
 * Optional: An ingredient that is needed and consumed when using / placing this item. Fill only the ingredient or the misc item property. }
 ;********/;
 
-;/********p* CampPlaceableMiscItem/consumable_misc_item
+;/********p* CampUsableMiscItem/consumable_misc_item
 * SYNTAX
 */;
 MiscObject property consumable_misc_item auto
@@ -38,7 +38,7 @@ MiscObject property consumable_misc_item auto
 * Optional: A misc item that is needed and consumed when using / placing this item. Fill only the ingredient or the misc item property. }
 ;********/;
 
-;/********p* CampPlaceableMiscItem/consumable_cost
+;/********p* CampUsableMiscItem/consumable_cost
 * SYNTAX
 */;
 int property consumable_cost auto
@@ -47,7 +47,7 @@ int property consumable_cost auto
 * Optional: How many of the ingredients or misc items that will be consumed when this item is used / placed. }
 ;********/;
 
-;/********p* CampPlaceableMiscItem/necessary_perk
+;/********p* CampUsableMiscItem/necessary_perk
 * SYNTAX
 */;
 Perk property necessary_perk auto
@@ -56,7 +56,7 @@ Perk property necessary_perk auto
 * Optional: A perk required to use / place this item. }
 ;********/;
 
-;/********p* CampPlaceableMiscItem/consumable_ingredient_name
+;/********p* CampUsableMiscItem/consumable_ingredient_name
 * SYNTAX
 */;
 string property consumable_ingredient_name auto
@@ -65,7 +65,7 @@ string property consumable_ingredient_name auto
 * Optional: The name of any required ingredient. Used if user does not have SKSE installed. }
 ;********/;
 
-;/********p* CampPlaceableMiscItem/consumable_ingredient_name
+;/********p* CampUsableMiscItem/consumable_ingredient_name
 * SYNTAX
 */;
 string property consumable_miscitem_name auto
@@ -74,7 +74,7 @@ string property consumable_miscitem_name auto
 * Optional: The name of any required misc item. Used if user does not have SKSE installed. }
 ;********/;
 
-;/********p* CampPlaceableMiscItem/consumable_ingredient_name
+;/********p* CampUsableMiscItem/consumable_ingredient_name
 * SYNTAX
 */;
 string property necessary_perk_name auto
