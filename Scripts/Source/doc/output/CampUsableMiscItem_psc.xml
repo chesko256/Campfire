@@ -28,7 +28,7 @@ Furniture property furniture_to_use auto
 </section>
 <section>
 <title>
-CampPlaceableMiscItem/consumable_ingredient</title>
+CampUsableMiscItem/consumable_ingredient</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Optional: An ingredient that is needed and consumed when using / placing this item. Fill only the ingredient or the misc item property. }
@@ -40,7 +40,7 @@ Ingredient property consumable_ingredient auto
 </section>
 <section>
 <title>
-CampPlaceableMiscItem/consumable_misc_item</title>
+CampUsableMiscItem/consumable_misc_item</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Optional: A misc item that is needed and consumed when using / placing this item. Fill only the ingredient or the misc item property. }
@@ -52,7 +52,7 @@ MiscObject property consumable_misc_item auto
 </section>
 <section>
 <title>
-CampPlaceableMiscItem/consumable_cost</title>
+CampUsableMiscItem/consumable_cost</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Optional: How many of the ingredients or misc items that will be consumed when this item is used / placed. }
@@ -64,7 +64,7 @@ int property consumable_cost auto
 </section>
 <section>
 <title>
-CampPlaceableMiscItem/necessary_perk</title>
+CampUsableMiscItem/necessary_perk</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Optional: A perk required to use / place this item. }
@@ -76,7 +76,7 @@ Perk property necessary_perk auto
 </section>
 <section>
 <title>
-CampPlaceableMiscItem/consumable_ingredient_name</title>
+CampUsableMiscItem/consumable_ingredient_name</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Optional: The name of any required ingredient. Used if user does not have SKSE installed. }
@@ -88,7 +88,7 @@ string property consumable_ingredient_name auto
 </section>
 <section>
 <title>
-CampPlaceableMiscItem/consumable_ingredient_name</title>
+CampUsableMiscItem/consumable_ingredient_name</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Optional: The name of any required misc item. Used if user does not have SKSE installed. }
@@ -100,7 +100,7 @@ string property consumable_miscitem_name auto
 </section>
 <section>
 <title>
-CampPlaceableMiscItem/consumable_ingredient_name</title>
+CampUsableMiscItem/consumable_ingredient_name</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Optional: The name of any required perk. Used if user does not have SKSE installed. }
