@@ -71,7 +71,7 @@ endFunction
 Event OnUpdate()
 	if thread_queued
 		float[] relative_position = new float[6]
-		relative_position = GetRelativePosition(_RelativeCenterObject, _ObjectPositionReference)
+		relative_position = GetRelativePosition(_RelativeCenterObject, _ObjectPositionReference, _XPosOffset, _YPosOffset)
 		CampDebug(0, "position reference " + _ObjectPositionReference)
 		ObjectReference result = PlaceAtMeRelative(_Origin, _FormToPlace, _OriginAngle, relative_position, \
 				_ZGlobalAngAdjust, _XLocalAngAdjust, _YLocalAngAdjust, _ZLocalAngAdjust, \
@@ -102,7 +102,7 @@ function clear_thread_vars()
 	_IsHanging = false
 endFunction
 
-float[] function GetPosXYZRotateAroundRef(ObjectReference akOrigin, ObjectReference akObject, float fAngleX, float fAngleY, float fAngleZ)
+float[] function GetPosXYZRotateAroundRef(ObjectReference akOrigin, ObjectReference akObject, float afXPosOffset, float afYPosOffset, float fAngleX, float fAngleY, float fAngleZ)
 
 	;-----------\
 	;Description \ 
@@ -139,7 +139,27 @@ float[] function GetPosXYZRotateAroundRef(ObjectReference akOrigin, ObjectRefere
 	float myOriginPosX = akOrigin.GetPositionX()
 	float myOriginPosY = akOrigin.GetPositionY()
 	float myOriginPosZ = akOrigin.GetPositionZ()
-	
+
+	; Find the local offset values
+	;/float local_theta = 0.0
+	if afXPosOffset != 0.0 
+		local_theta = atan(afYPosOffset / afXPosOffset)
+	endif
+	float local_dist = sqrt(pow(afXPosOffset, 2) + pow(afYPosOffset, 2))
+	float new_theta = (local_theta + fAngleZ)
+	if new_theta > 180.0
+		new_theta -= 360.0
+	endif
+	float new_c = 180.0 - (abs(new_theta) + 90.0)
+	float new_opp = (local_dist * sin(new_theta))
+	float new_adj = (local_dist * sin(new_c))
+
+	if afXPosOffset || afYPosOffset
+		CampDebug(1, "obj: " + akObject)
+		CampDebug(1, "new x: " + new_adj)
+		CampDebug(1, "new y: " + new_opp)
+	endif/;
+
 	float fInitialX = akObject.GetPositionX() - myOriginPosX
 	float fInitialY = akObject.GetPositionY() - myOriginPosY
 	float fInitialZ = akObject.GetPositionZ() - myOriginPosZ
@@ -182,10 +202,21 @@ float[] function GetPosXYZRotateAroundRef(ObjectReference akOrigin, ObjectRefere
 	return fNewPos 
 endFunction
 
-float[] function GetRelativePosition(ObjectReference akOrigin, ObjectReference akObject)
+float[] function GetRelativePosition(ObjectReference akOrigin, ObjectReference akObject, float afXPosOffset, float afYPosOffset)
 	float[] myRelativePosition = new float[6]
-	myRelativePosition[0] = akObject.GetPositionX() - akOrigin.GetPositionX()
-	myRelativePosition[1] = akObject.GetPositionY() - akOrigin.GetPositionY()
+	float theta = 0.0
+	float x_prime = 0.0
+	float y_prime = 0.0
+	if afXPosOffset != 0.0 
+		theta = (atan(afYPosOffset / afXPosOffset) - 270.0) + -(akObject.GetAngleZ())
+	else
+		theta = -(akObject.GetAngleZ())
+	endif
+	x_prime = (afXPosOffset * cos(theta)) - (afYPosOffset * sin(theta))
+	y_prime = (afYPosOffset * cos(theta)) - (afXPosOffset * sin(theta))
+
+	myRelativePosition[0] = (akObject.GetPositionX() + x_prime) - akOrigin.GetPositionX()
+	myRelativePosition[1] = (akObject.GetPositionY() + y_prime) - akOrigin.GetPositionY()
 	myRelativePosition[2] = akObject.GetPositionZ() - akOrigin.GetPositionZ()
 	myRelativePosition[3] = akObject.GetAngleX()
 	myRelativePosition[4] = akObject.GetAngleY()
@@ -204,13 +235,8 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
     myTempMarker.MoveTo(myTempMarker, fRelativePos[0], fRelativePos[1], fRelativePos[2])
         
 	float[] myNewPos = new float[3]
-    myNewPos = GetPosXYZRotateAroundRef(akOrigin, myTempMarker, fOriginAng[0], fOriginAng[1], fOriginAng[2] + fZGlobalAngAdjust)
-    if afXPosOffset != 0.0 || afYPosOffset != 0.0
-    	float[] local_offsets = GlobalToLocalOffset(afXPosOffset, afYPosOffset, fOriginAng[2] + fZGlobalAngAdjust)
-    	myTempMarker.MoveTo(akOrigin, myNewPos[0] + local_offsets[0], myNewPos[1] + local_offsets[1], myNewPos[2])
-    else
-    	myTempMarker.MoveTo(akOrigin, myNewPos[0], myNewPos[1], myNewPos[2])
-    endif
+    myNewPos = GetPosXYZRotateAroundRef(akOrigin, myTempMarker, afXPosOffset, afYPosOffset, fOriginAng[0], fOriginAng[1], fOriginAng[2] + fZGlobalAngAdjust)
+   	myTempMarker.MoveTo(akOrigin, myNewPos[0], myNewPos[1], myNewPos[2])
 	
 	if abIsPropped
 		if abInvertedLocalY
@@ -237,20 +263,6 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
     TryToDisableAndDeleteRef(myTempMarker)
 
     return myObject
-endFunction
-
-float[] function GlobalToLocalOffset(float x_offset, float y_offset, float z_angle)
-	;float[] function GetOffsets(Actor akSource, Float afDistance = 100.0, float afOffset = 0.0)
-    Float YDist = Sin(z_angle)
-    Float XDist = Cos(z_angle)
-
-    XDist *= x_offset
-    YDist *= y_offset
-
-    Float[] Offsets = New Float[2]
-    Offsets[0] = YDist
-    Offsets[1] = XDist
-    Return Offsets
 endFunction
 
 ;Allows the Thread Manager to determine if this thread is available

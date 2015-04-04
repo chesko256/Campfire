@@ -8,6 +8,16 @@
 
 Attach this script to a Misc Item that represents the inventory item of a Placeable Object.
 
+### CampPlacementIndicator/Required\_this\_item
+
+**DESCRIPTION.**
+
+Required: This inventory item, the object this script is attached to. }
+
+**SYNTAX.**
+
+    MiscObject property Required_this_item auto
+
 ### CampPlaceableMiscItem/Required\_placement\_indicator
 
 **DESCRIPTION.**

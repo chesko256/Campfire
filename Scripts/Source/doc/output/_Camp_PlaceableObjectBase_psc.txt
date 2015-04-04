@@ -1,13 +1,3 @@
-### \_Camp\_PlaceableObjectBase/Required\_InventoryItem
-
-**DESCRIPTION.**
-
-Required: The item the player obtains when picking up this object. }
-
-**SYNTAX.**
-
-    MiscObject property Required_InventoryItem auto
-
 ### \_Camp\_PlaceableObjectBase/Setting\_StartUpRotation
 
 **DESCRIPTION.**
