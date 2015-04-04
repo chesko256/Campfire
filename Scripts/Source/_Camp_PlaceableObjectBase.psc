@@ -10,18 +10,18 @@ import TentSystem
 * SYNTAX
 */;
 Float property Setting_StartUpRotation = 0.0 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: The amount, in degrees, to rotate on the Z axis on start-up. }
+* Optional: The amount, in degrees, to rotate on the Z axis on start-up. }
 ;*********/;
 
 ;/********p* _Camp_PlaceableObjectBase/Setting_Flammable
 * SYNTAX
 */;
 bool property Setting_Flammable = False auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Whether or not this object can be destroyed by fire. }
+* Optional: Whether or not this object can be destroyed by fire. }
 ;*********/;
 
 ; PRIVATE

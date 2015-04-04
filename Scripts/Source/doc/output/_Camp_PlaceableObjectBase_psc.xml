@@ -9,6 +9,9 @@
 <title>
 _Camp_PlaceableObjectBase/Setting_StartUpRotation</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Optional: The amount, in degrees, to rotate on the Z axis on start-up. }
+</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Float property Setting_StartUpRotation = 0.0 auto
@@ -18,6 +21,9 @@ Float property Setting_StartUpRotation = 0.0 auto
 <title>
 _Camp_PlaceableObjectBase/Setting_Flammable</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Optional: Whether or not this object can be destroyed by fire. }
+</para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 bool property Setting_Flammable = False auto

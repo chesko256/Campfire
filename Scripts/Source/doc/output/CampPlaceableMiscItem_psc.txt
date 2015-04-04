@@ -12,6 +12,8 @@ Attach this script to a Misc Item that represents the inventory item of a Placea
 
 **DESCRIPTION.**
 
+Required: This inventory item, the object this script is attached to. }
+
 **SYNTAX.**
 
     MiscObject property Required_this_item auto
@@ -19,6 +21,8 @@ Attach this script to a Misc Item that represents the inventory item of a Placea
 ### CampPlaceableMiscItem/Required\_placement\_indicator
 
 **DESCRIPTION.**
+
+Required: The object that will indicate to the player where to place this item. }
 
 **SYNTAX.**
 
@@ -28,6 +32,8 @@ Attach this script to a Misc Item that represents the inventory item of a Placea
 
 **DESCRIPTION.**
 
+Adjust Z angle (compass rotation) of placed item. Use if placed item is at a different angle than the placement indicator. }
+
 **SYNTAX.**
 
     float property z_angle_offset auto
@@ -35,6 +41,8 @@ Attach this script to a Misc Item that represents the inventory item of a Placea
 ### CampPlaceableMiscItem/consumable\_ingredient
 
 **DESCRIPTION.**
+
+Optional: An ingredient that is needed and consumed when using / placing this item. Fill only the ingredient or the misc item property. }
 
 **SYNTAX.**
 
@@ -44,6 +52,8 @@ Attach this script to a Misc Item that represents the inventory item of a Placea
 
 **DESCRIPTION.**
 
+Optional: A misc item that is needed and consumed when using / placing this item. Fill only the ingredient or the misc item property. }
+
 **SYNTAX.**
 
     MiscObject property consumable_misc_item auto
@@ -51,6 +61,8 @@ Attach this script to a Misc Item that represents the inventory item of a Placea
 ### CampPlaceableMiscItem/consumable\_cost
 
 **DESCRIPTION.**
+
+Optional: How many of the ingredients or misc items that will be consumed when this item is used / placed. }
 
 **SYNTAX.**
 
@@ -60,6 +72,8 @@ Attach this script to a Misc Item that represents the inventory item of a Placea
 
 **DESCRIPTION.**
 
+Optional: A perk required to use / place this item. }
+
 **SYNTAX.**
 
     Perk property necessary_perk auto
@@ -67,6 +81,8 @@ Attach this script to a Misc Item that represents the inventory item of a Placea
 ### CampPlaceableMiscItem/consumable\_ingredient\_name
 
 **DESCRIPTION.**
+
+Optional: The name of any required ingredient. Used if user does not have SKSE installed. }
 
 **SYNTAX.**
 
@@ -76,6 +92,8 @@ Attach this script to a Misc Item that represents the inventory item of a Placea
 
 **DESCRIPTION.**
 
+Optional: The name of any required misc item. Used if user does not have SKSE installed. }
+
 **SYNTAX.**
 
     string property consumable_miscitem_name auto
@@ -83,6 +101,8 @@ Attach this script to a Misc Item that represents the inventory item of a Placea
 ### CampPlaceableMiscItem/consumable\_ingredient\_name
 
 **DESCRIPTION.**
+
+Optional: The name of any required perk. Used if user does not have SKSE installed. }
 
 **SYNTAX.**
 
