@@ -91,6 +91,7 @@ function RunCompatibility()
 	trace("[Campfire]======================================================================================================")
 	
 	;@TODO: Add support for Frostfall compatibility
+	;@TODO: Add fatal error for old version of Frostfall
 	isFrostfallLoaded = false
 
 	bool skse_loaded = SKSE.GetVersion()

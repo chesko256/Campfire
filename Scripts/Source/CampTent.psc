@@ -563,25 +563,15 @@ function PlaceObjects()
 	CampTentEx Extended = self as CampTentEx
 
 	; Cache shared resources locally
-	; @TODO: Change to Campfire.esm
 	XMarker = Game.GetFormFromFile(0x0000003B, "Skyrim.esm") as Static
 	DogLayingDownIdleMarker = Game.GetFormFromFile(0x0010F801, "Skyrim.esm")
-	;/_Camp_Bedroll_ActualF = Game.GetFormFromFile(0x02007EFA, "Campfire.esm") as Furniture 
+	_Camp_Bedroll_ActualF = Game.GetFormFromFile(0x02007EFA, "Campfire.esm") as Furniture 
 	_Camp_Bedroll_NPC_F = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
 	_Camp_Bedroll_SpouseF = Game.GetFormFromFile(0x0203900D, "Campfire.esm") as Furniture
 	_Camp_TentLayDownMarker = Game.GetFormFromFile(0x02036587, "Campfire.esm") as Furniture
 	_Camp_TentSitMarker = Game.GetFormFromFile(0x02036586, "Campfire.esm") as Furniture
 	_Camp_TentSitMarkerSandbox = Game.GetFormFromFile(0x0203232B, "Campfire.esm") as Furniture
-	_Camp_TentWard = Game.GetFormFromFile(0x0203BE8E, "Campfire.esm") as Static
-	/;
-	_Camp_Bedroll_ActualF = Game.GetFormFromFile(0x02007EFA, "Campfire.esp") as Furniture 
-	_Camp_Bedroll_NPC_F = Game.GetFormFromFile(0x02038CBF, "Campfire.esp") as Furniture
-	_Camp_Bedroll_SpouseF = Game.GetFormFromFile(0x0203900D, "Campfire.esp") as Furniture
-	_Camp_TentLayDownMarker = Game.GetFormFromFile(0x02036587, "Campfire.esp") as Furniture
-	_Camp_TentSitMarker = Game.GetFormFromFile(0x02036586, "Campfire.esp") as Furniture
-	_Camp_TentSitMarkerSandbox = Game.GetFormFromFile(0x0203232B, "Campfire.esp") as Furniture
-	_Camp_TentWard = Game.GetFormFromFile(0x0203BE8E, "Campfire.esp") as Static
-	
+	_Camp_TentWard = Game.GetFormFromFile(0x0203BE8E, "Campfire.esm") as Static	
 
 	if PositionRef_CenterObjectOverride
 		CenterObject = PositionRef_CenterObjectOverride
