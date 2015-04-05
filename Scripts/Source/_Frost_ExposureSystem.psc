@@ -187,23 +187,110 @@ int function GetExceptionBlockTemp()
 endFunction
 
 function SetExposureEffects(int iExposureLevel)
-	if PlayerIsVampire()
-		pPlayer.RemoveSpell(_DE_Hypo_Spell_0_2)
-		pPlayer.RemoveSpell(_DE_Hypo_Spell_1)
-		pPlayer.RemoveSpell(_DE_Hypo_Spell_2)
-		pPlayer.RemoveSpell(_DE_Hypo_Spell_3)
-		pPlayer.RemoveSpell(_DE_Hypo_Spell_4)
-		pPlayer.RemoveSpell(_DE_Hypo_Spell_4NoFrost)
-		pPlayer.RemoveSpell(_DE_Hypo_Spell_5)
-		pPlayer.RemoveSpell(_DE_Hypo_Spell_5NoFrost)
+	bool player_is_vampire = PlayerIsVampire()
+
+	if iExposureLevel == 5 && !player_is_vampire
+		PlayerRef.AddSpell(_DE_Hypo_Spell_5, false)
+		PlayerRef.AddSpell(_DE_Hypo_Spell_5NoFrost, false)
+	else
+		PlayerRef.RemoveSpell(_DE_Hypo_Spell_5)
+		PlayerRef.RemoveSpell(_DE_Hypo_Spell_5NoFrost)
+	endif
+
+	if iExposureLevel == 4 && !player_is_vampire
+		PlayerRef.AddSpell(_DE_Hypo_Spell_4, false)
+		PlayerRef.AddSpell(_DE_Hypo_Spell_4NoFrost, false)
+	else
+		PlayerRef.RemoveSpell(_DE_Hypo_Spell_4)
+		PlayerRef.RemoveSpell(_DE_Hypo_Spell_4NoFrost)
+	endif
+
+	if iExposureLevel == 3 && !player_is_vampire
+		PlayerRef.AddSpell(_DE_Hypo_Spell_3, false)
+	else
+		PlayerRef.RemoveSpell(_DE_Hypo_Spell_3)
+	endif
+
+	if iExposureLevel == 2 && !player_is_vampire
+		PlayerRef.AddSpell(_DE_Hypo_Spell_2, false)
+	else
+		PlayerRef.RemoveSpell(_DE_Hypo_Spell_2)
+	endif
+
+	if iExposureLevel == 1 && !player_is_vampire
+		PlayerRef.AddSpell(_DE_Hypo_Spell_1, false)
+	else
+		PlayerRef.RemoveSpell(_DE_Hypo_Spell_1)
+	endif
+
+	ApplyVisualEffects(iExposureLevel)
+	if !player_is_vampire
+		ShowExposureStateMessage(iExposureLevel)
+		ApplySoundEffects(iExposureLevel)
+		ApplyForceFeedback(iExposureLevel)
+	endif
+endFunction
+
+function ShowExposureStateMessage(int iExposureLevel)
+	if (iExposureLevel != last_exposure_level) && _DE_Setting_ConditionMsg.GetValueInt() == 2
+		if iExposureLevel == 1
+			_DE_HypoState_1.Show()
+		elseif iExposureLevel == 2
+			_DE_HypoState_2.Show()
+		elseif iExposureLevel == 3
+			_DE_HypoState_3.Show()
+			ShowTutorial_Exposure()
+		elseif iExposureLevel == 4
+			_DE_HypoState_4.Show()
+		elseif iExposureLevel == 5
+			_DE_HypoState_5.Show()
+		endif
+	endif
+endFunction
+
+function ApplyVisualEffects(int iExposureLevel)
+	; Make sure to clear ISM if a vampire, or existing effect if setting toggled off
+	if _Frost_Setting_FullScreenEffects.GetValueInt() == 1 || PlayerIsVampire()
+		ImageSpaceModifier.RemoveCrossFade(4.0)
 		return
 	endif
 
+	if iExposureLevel <= 2
+		ImageSpaceModifier.RemoveCrossFade(4.0)
+	elseif iExposureLevel == 3
+		_Frost_ColdISM_Level3.ApplyCrossFade(4.0)
+	elseif iExposureLevel == 4
+		_Frost_ColdISM_Level4.ApplyCrossFade(4.0)
+	elseif iExposureLevel == 5
+		_Frost_ColdISM_Level5.ApplyCrossFade(4.0)
+	endif
+endFunction
+
+function ApplySoundEffects(int iExposureLevel)
+	if iExposureLevel >= 4 && 							\
+		iExposureLevel != last_exposure_level && 		\
+		_DE_Setting_SoundEffects.GetValueInt() == 2
+		
+		if PlayerRef.GetActorBase().GetSex() == 1
+			_Frost_Female_FreezingSM.Play(PlayerRef)
+		else
+			_Frost_Male_FreezingSM.Play(PlayerRef)
+		endif
+	endif
+endFunction
+
+function ApplyForceFeedback()
 
 endFunction
 
-
-
+function ShowTutorial_Exposure()
+	if _DE_Setting_Help.GetValueInt() == 2 && _Frost_HelpDone_ExposurePoints.GetValueInt() == 1
+		if !PlayerIsVampire()
+			_Frost_Help_ExposurePoints.Show()
+			_Frost_HelpDone_ExposurePoints.SetValue(2)
+		endif
+	endif
+endFunction
 
 ; dark souls-like lingering heat effect
 
@@ -298,13 +385,7 @@ function ExposureStatusUpdate()
 	if myCurrentEP < 61 && myCurrentEP >= 41
 		
 		;====HELP TEXT====
-		if _DE_HelpDone_ExposurePoints.GetValueInt() == 1
-			if _DE_Setting_Help.GetValueInt() == 2
-				if !bIsVampire
-					ShowHelp(1)
-				endif
-			endif
-		endif
+		
 		;====HELP TEXT====
 		
 		if pPlayer.HasSpell(_DE_Hypo_Spell_3)
@@ -329,7 +410,7 @@ function ExposureStatusUpdate()
 					endif
 				endif
 				if pSetting_FullScreenEffects
-					_DE_Cold3.ApplyCrossFade(4.0)
+					
 				else
 					ImageSpaceModifier.RemoveCrossFade(4.0)
 				endif
