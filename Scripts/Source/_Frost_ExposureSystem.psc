@@ -43,11 +43,11 @@ endEvent
 function UpdateExposure()
 	WaitStateUpdate()
 	FastTravelStateUpdate()
-
 	PlayerStateUpdate()
 	
+	ExposureStatusUpdate()
 
-	StorePlayerState()
+	StoreLastPlayerState()
 endFunction
 
 function PlayerStateUpdate()
@@ -65,11 +65,12 @@ function PlayerStateUpdate()
 	endif
 endFunction
 
-function StorePlayerState()
+function StoreLastPlayerState()
 	last_worldspace = this_worldspace
 	last_interior_state = in_interior
 	last_x = player_x
 	last_y = player_y
+	last_vampire_state = this_vampire_state
 endFunction
 
 ;@TODO: Possibly wrap in FrostUtil IsAbleToWait() or similar
@@ -186,41 +187,62 @@ int function GetExceptionBlockTemp()
 	return maxTemp
 endFunction
 
+function ExposureStatusUpdate()
+	float myCurrentEP = _DE_ExposurePoints.GetValue()
+	
+	elseif myCurrentEP >= 81
+		SetExposureEffects(0)
+	if myCurrentEP < 81 && myCurrentEP >= 61
+		SetExposureEffects(1)
+	elseif myCurrentEP < 61 && myCurrentEP >= 41
+		SetExposureEffects(2)
+	elseif myCurrentEP < 41 && myCurrentEP >= 21
+		SetExposureEffects(3)
+	elseif myCurrentEP < 21 && myCurrentEP >= 1
+		SetExposureEffects(4)
+	elseif myCurrentEP < 1
+		SetExposureEffects(5)
+	endif
+endFunction
+
 function SetExposureEffects(int iExposureLevel)
 	bool player_is_vampire = PlayerIsVampire()
 
+	; Death / Incapacitate
 	if iExposureLevel == 5 && !player_is_vampire
-		PlayerRef.AddSpell(_DE_Hypo_Spell_5, false)
-		PlayerRef.AddSpell(_DE_Hypo_Spell_5NoFrost, false)
-	else
-		PlayerRef.RemoveSpell(_DE_Hypo_Spell_5)
-		PlayerRef.RemoveSpell(_DE_Hypo_Spell_5NoFrost)
+		HandleMaxExposure()
 	endif
 
+	; Freezing to Death
 	if iExposureLevel == 4 && !player_is_vampire
-		PlayerRef.AddSpell(_DE_Hypo_Spell_4, false)
-		PlayerRef.AddSpell(_DE_Hypo_Spell_4NoFrost, false)
+		PlayerRef.AddSpell(_Frost_Hypo_Spell_4, false)
+		PlayerRef.AddSpell(_Frost_Hypo_Spell_4NoFrost, false)
 	else
-		PlayerRef.RemoveSpell(_DE_Hypo_Spell_4)
-		PlayerRef.RemoveSpell(_DE_Hypo_Spell_4NoFrost)
+		PlayerRef.RemoveSpell(_Frost_Hypo_Spell_4)
+		PlayerRef.RemoveSpell(_Frost_Hypo_Spell_4NoFrost)
 	endif
 
+	; Freezing
 	if iExposureLevel == 3 && !player_is_vampire
-		PlayerRef.AddSpell(_DE_Hypo_Spell_3, false)
+		PlayerRef.AddSpell(_Frost_Hypo_Spell_3, false)
+		PlayerRef.AddSpell(_Frost_Hypo_Spell_3NoFrost, false)
 	else
-		PlayerRef.RemoveSpell(_DE_Hypo_Spell_3)
+		PlayerRef.RemoveSpell(_Frost_Hypo_Spell_3)
+		PlayerRef.RemoveSpell(_Frost_Hypo_Spell_3NoFrost)
 	endif
 
+	; Cold
 	if iExposureLevel == 2 && !player_is_vampire
-		PlayerRef.AddSpell(_DE_Hypo_Spell_2, false)
+		PlayerRef.AddSpell(_Frost_Hypo_Spell_2, false)
 	else
-		PlayerRef.RemoveSpell(_DE_Hypo_Spell_2)
+		PlayerRef.RemoveSpell(_Frost_Hypo_Spell_2)
 	endif
 
+	; Chilly
 	if iExposureLevel == 1 && !player_is_vampire
-		PlayerRef.AddSpell(_DE_Hypo_Spell_1, false)
+		PlayerRef.AddSpell(_Frost_Hypo_Spell_1, false)
 	else
-		PlayerRef.RemoveSpell(_DE_Hypo_Spell_1)
+		PlayerRef.RemoveSpell(_Frost_Hypo_Spell_1)
 	endif
 
 	ApplyVisualEffects(iExposureLevel)
@@ -232,18 +254,18 @@ function SetExposureEffects(int iExposureLevel)
 endFunction
 
 function ShowExposureStateMessage(int iExposureLevel)
-	if (iExposureLevel != last_exposure_level) && _DE_Setting_ConditionMsg.GetValueInt() == 2
-		if iExposureLevel == 1
-			_DE_HypoState_1.Show()
+	if (iExposureLevel != last_exposure_level) && _Frost_Setting_ConditionMsg.GetValueInt() == 2
+		if iExposureLevel == 0
+			_Frost_HypoState_0.Show()
+		elseif iExposureLevel == 1
+			_Frost_HypoState_1.Show()
 		elseif iExposureLevel == 2
-			_DE_HypoState_2.Show()
-		elseif iExposureLevel == 3
-			_DE_HypoState_3.Show()
+			_Frost_HypoState_2.Show()
 			ShowTutorial_Exposure()
+		elseif iExposureLevel == 3
+			_Frost_HypoState_3.Show()
 		elseif iExposureLevel == 4
-			_DE_HypoState_4.Show()
-		elseif iExposureLevel == 5
-			_DE_HypoState_5.Show()
+			_Frost_HypoState_4.Show()
 		endif
 	endif
 endFunction
@@ -261,8 +283,6 @@ function ApplyVisualEffects(int iExposureLevel)
 		_Frost_ColdISM_Level3.ApplyCrossFade(4.0)
 	elseif iExposureLevel == 4
 		_Frost_ColdISM_Level4.ApplyCrossFade(4.0)
-	elseif iExposureLevel == 5
-		_Frost_ColdISM_Level5.ApplyCrossFade(4.0)
 	endif
 endFunction
 
@@ -279,8 +299,41 @@ function ApplySoundEffects(int iExposureLevel)
 	endif
 endFunction
 
-function ApplyForceFeedback()
+function ApplyForceFeedback(int iExposureLevel)
+	if _Frost_Setting_ForceFeedback.GetValueInt() == 2
+		if iExposureLevel == 4
+			Game.ShakeController(0.7, 0.3, 1.5)
+		elseif iExposureLevel == 5
+			Game.ShakeController(0.4, 0.6, 2.5)
+		endif
+	endif
+endFunction
 
+function HandleMaxExposure()
+	if _Frost_Setting_ExposureIsFatal.GetValueInt() == 2
+		bool is_rescued = RescuePlayer()
+		if !is_rescued
+			
+			; Kill companions, one by one.
+			Actor[] followers = new Actor[3]
+			followers[0] = CampUtil.GetTrackedFollower(1)
+			followers[1] = CampUtil.GetTrackedFollower(2)
+			followers[2] = CampUtil.GetTrackedFollower(3)
+			int i = 0
+			while i < followers.Length
+				if followers[i]
+					followers[i].Kill()
+					utility.wait(2)
+				endif
+				i += 1
+			endWhile
+
+			; Now, kill the player.			
+			_Frost_ExposureDeathMsg.Show()
+			wait(3)
+			PlayerRef.Kill()
+		endif
+	endif
 endFunction
 
 function ShowTutorial_Exposure()
@@ -293,277 +346,3 @@ function ShowTutorial_Exposure()
 endFunction
 
 ; dark souls-like lingering heat effect
-
-
-
-
-function ExposureStatusUpdate()
-	float myCurrentEP = _DE_ExposurePoints.GetValue()
-	
-	if myCurrentEP < 121 && myCurrentEP >= 102
-		if pPlayer.HasSpell(_DE_Hypo_Spell_0_2)
-			if bIsVampire
-				pPlayer.RemoveSpell(_DE_Hypo_Spell_0_2)
-			endif
-		else
-			;Remove all other effects
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_1)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_2)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_3)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_4)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_4NoFrost)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_5)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_5NoFrost)
-		
-			;Apply "Warm" condition
-			if !bIsVampire				;Vampires don't get the warmth bonus
-				if (pPlayer.AddSpell(_DE_Hypo_Spell_0_2, false))
-					if _DE_Setting_ConditionMsg.GetValueInt() == 2
-						_DE_HypoState_0.Show()
-					endif
-				endif
-			endif
-			ImageSpaceModifier.RemoveCrossFade(4.0)
-		endif
-	endif
-	
-	if myCurrentEP < 101 && myCurrentEP >= 81
-		if pPlayer.HasSpell(_DE_Hypo_Spell_1)
-			if bIsVampire
-				pPlayer.RemoveSpell(_DE_Hypo_Spell_1)
-			endif
-		else
-			;Remove all other effects
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_0_2)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_2)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_3)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_4)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_4NoFrost)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_5)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_5NoFrost)
-			
-			;Apply "Comfortable" condition
-			if !bIsVampire
-				if (pPlayer.AddSpell(_DE_Hypo_Spell_1, false))
-					if _DE_Setting_ConditionMsg.GetValueInt() == 2
-						_DE_HypoState_1.Show()
-					endif
-				endif
-			endif
-			ImageSpaceModifier.RemoveCrossFade(4.0)
-		endif
-	endif
-	
-	if myCurrentEP < 81 && myCurrentEP >= 61
-			
-		if pPlayer.HasSpell(_DE_Hypo_Spell_2)
-			if bIsVampire
-				pPlayer.RemoveSpell(_DE_Hypo_Spell_2)
-			endif
-		else
-			;Remove all other effects
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_0_2)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_1)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_3)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_4)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_4NoFrost)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_5)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_5NoFrost)
-			
-			;Apply "Cold" condition
-			if !bIsVampire
-				if (pPlayer.AddSpell(_DE_Hypo_Spell_2, false))
-					if _DE_Setting_ConditionMsg.GetValueInt() == 2
-						_DE_HypoState_2.Show()
-					endif
-				endif
-			endif
-			ImageSpaceModifier.RemoveCrossFade(4.0)
-		endif
-	endif
-	
-	if myCurrentEP < 61 && myCurrentEP >= 41
-		
-		;====HELP TEXT====
-		
-		;====HELP TEXT====
-		
-		if pPlayer.HasSpell(_DE_Hypo_Spell_3)
-			if bIsVampire
-				pPlayer.RemoveSpell(_DE_Hypo_Spell_3)
-			endif
-		else
-			;Remove all other effects
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_0_2)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_1)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_2)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_4)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_4NoFrost)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_5)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_5NoFrost)
-			
-			;Apply "Very Cold" condition
-			if !bIsVampire
-				if (pPlayer.AddSpell(_DE_Hypo_Spell_3, false))
-					if _DE_Setting_ConditionMsg.GetValueInt() == 2
-						_DE_HypoState_3.Show()
-					endif
-				endif
-				if pSetting_FullScreenEffects
-					
-				else
-					ImageSpaceModifier.RemoveCrossFade(4.0)
-				endif
-			else
-				ImageSpaceModifier.RemoveCrossFade(4.0)
-			endif
-		endif
-	endif
-	
-	if myCurrentEP < 41 && myCurrentEP >= 21
-		if pPlayer.HasSpell(_DE_Hypo_Spell_4)
-			if bIsVampire
-				pPlayer.RemoveSpell(_DE_Hypo_Spell_4)
-			endif
-		else
-			;Remove all other effects
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_0_2)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_1)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_2)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_3)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_5)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_5NoFrost)
-			
-			;Apply "Freezing" condition
-			if !bIsVampire
-				if myLastRegion >= 7 && pSetting_EffectFrostShader == true		;Snow and Coast regions, show character frost shader
-					if (pPlayer.AddSpell(_DE_Hypo_Spell_4, false))
-						;ExposureMeter.StartFlash()
-						if _DE_Setting_SoundEffects.GetValueInt() == 2
-							if (pPlayer.GetBaseObject() as ActorBase).GetSex() == 1
-								_DE_Female_FreezingSM.Play(pPlayer)
-							else
-								_DE_Male_FreezingSM.Play(pPlayer)
-							endif
-						endif
-						if _DE_Setting_ForceFeedback.GetValueInt() == 2
-							Game.ShakeController(0.7, 0.3, 1.5)
-						endif
-						if _DE_Setting_ConditionMsg.GetValueInt() == 2
-							_DE_HypoState_4.Show()
-						endif
-					endif
-				else						;Elsewhere, do not show frost shader OR setting is off
-					if (pPlayer.AddSpell(_DE_Hypo_Spell_4NoFrost, false))
-						;ExposureMeter.StartFlash()
-						if _DE_Setting_SoundEffects.GetValueInt() == 2
-							if (pPlayer.GetBaseObject() as ActorBase).GetSex() == 1
-								_DE_Female_FreezingSM.Play(pPlayer)
-							else
-								_DE_Male_FreezingSM.Play(pPlayer)
-							endif
-						endif
-						if _DE_Setting_ForceFeedback.GetValueInt() == 2
-							Game.ShakeController(0.7, 0.3, 1.5)
-						endif
-						if _DE_Setting_ConditionMsg.GetValueInt() == 2
-							_DE_HypoState_4.Show()
-						endif
-					endif
-				endif
-				
-				if pSetting_FullScreenEffects
-					_DE_Cold4.ApplyCrossFade(4.0)
-				else
-					ImageSpaceModifier.RemoveCrossFade(4.0)
-				endif
-			else
-				ImageSpaceModifier.RemoveCrossFade(4.0)
-			endif
-		endif
-	endif
-	
-	if myCurrentEP < 21 && myCurrentEP >= 1
-		if pPlayer.HasSpell(_DE_Hypo_Spell_5)
-			if bIsVampire == true
-				pPlayer.RemoveSpell(_DE_Hypo_Spell_5)
-			endif
-		else
-			;Remove all other effects
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_0_2)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_1)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_2)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_3)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_4)
-			pPlayer.RemoveSpell(_DE_Hypo_Spell_4NoFrost)
-			
-			;Apply "Freezing to Death" condition
-			if !bIsVampire
-				if myLastRegion >= 7 && pSetting_EffectFrostShader == true		;Snow and Coast regions, show character frost shader
-					if (pPlayer.AddSpell(_DE_Hypo_Spell_5, false))
-						;ExposureMeter.StartFlash()
-						if _DE_Setting_SoundEffects.GetValueInt() == 2
-							if (pPlayer.GetBaseObject() as ActorBase).GetSex() == 1
-								_DE_Female_FreezingToDeathSM.Play(pPlayer)
-							else
-								_DE_Male_FreezingToDeathSM.Play(pPlayer)
-							endif
-						endif
-						if _DE_Setting_ForceFeedback.GetValueInt() == 2
-							Game.ShakeController(0.4, 0.6, 2.5)
-						endif
-						if _DE_Setting_ConditionMsg.GetValueInt() == 2
-							_DE_HypoState_5.Show()
-						endif
-					endif
-				else						;Elsewhere, do not show frost shader
-					if (pPlayer.AddSpell(_DE_Hypo_Spell_5NoFrost, false))
-						;ExposureMeter.StartFlash()
-						if _DE_Setting_SoundEffects.GetValueInt() == 2
-							if (pPlayer.GetBaseObject() as ActorBase).GetSex() == 1
-								_DE_Female_FreezingToDeathSM.Play(pPlayer)
-							else
-								_DE_Male_FreezingToDeathSM.Play(pPlayer)
-							endif
-						endif
-						if _DE_Setting_ForceFeedback.GetValueInt() == 2
-							Game.ShakeController(0.4, 0.6, 2.5)
-						endif
-						if _DE_Setting_ConditionMsg.GetValueInt() == 2
-							_DE_HypoState_5.Show()
-						endif
-					endif
-				endif
-				
-				if pSetting_FullScreenEffects
-					_DE_Cold5.ApplyCrossFade(4.0)
-				else
-					ImageSpaceModifier.RemoveCrossFade(4.0)
-				endif
-			else
-					ImageSpaceModifier.RemoveCrossFade(4.0)
-			endif
-		endif
-	endif
-	
-	if myCurrentEP < 0
-		;Oh no...
-		if !bIsVampire
-			if pSetting_PlayerDeath
-				bool bRescue = RescuePlayer()
-				if !bRescue
-					_DE_ExposureDeath.Show()
-					;kill companions, one by one
-					wait(3)
-					pPlayer.Kill()
-					SetExposure(0.0)
-				endif
-			endif
-		else
-			SetExposure(0.0)
-		endif
-	endif
-	
-	;Store the last known vampirism state
-	bLastVampirismState = bIsVampire
-endFunction

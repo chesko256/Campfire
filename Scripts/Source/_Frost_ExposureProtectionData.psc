@@ -1,0 +1,1 @@
+scriptname _Frost_ExposureProtectionData extends ReferenceAlias

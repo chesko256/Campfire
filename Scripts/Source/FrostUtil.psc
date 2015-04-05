@@ -25,3 +25,30 @@ bool function IsNearFastTravelException() global
 		return false
 	endif
 endFunction
+
+int function GetWeatherClassificationActual(Weather akWeather) global
+    if !akWeather
+        return -1
+    endif
+    
+    if FrostAPI._Frost_OvercastWeatherList.HasForm(akWeather)
+        return 0
+    endif
+    
+    int classification = akWeather.GetClassification()
+    
+    _Frost_Compatibility Compatibility = GetCompatibilitySystem()
+    if classification == 3
+        if Compatibility.isDLC2Loaded
+            if akWeather == Compatibility.DLC2AshStorm
+                return 1
+            else
+                return 3
+            endif
+        else
+            return 3
+        endif
+    else
+        return classification
+    endif
+endFunction
