@@ -17,3 +17,11 @@ endFunction
 function Event_LegacyWoodHarvest() global
     ;pass
 endFunction
+
+bool function IsNearFastTravelException() global
+	if Game.FindClosestReferenceOfAnyTypeInListFromRef(_DE_FastTravelExceptions, pPlayer,  600.0) != None
+		return true
+	else
+		return false
+	endif
+endFunction
