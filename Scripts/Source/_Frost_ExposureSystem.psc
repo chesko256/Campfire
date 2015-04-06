@@ -41,11 +41,39 @@ Event OnUpdate()
 endEvent
 
 function UpdateExposure()
+	
+	if PlayerIsInDialogue()
+		return
+	endif
+
+	; Gather data
 	WaitStateUpdate()
 	FastTravelStateUpdate()
 	PlayerStateUpdate()
-	
-	ExposureStatusUpdate()
+
+	; Super cereal
+	int WetPenalty = GetWetPenalty(bNearFire)
+	int FoodBonus = GetFoodState()
+	int ClothingBonus = GetClothingState()
+	int HeldHeatBonus = GetHeldHeatState()
+	int CloakBonus = GetCloakState()
+	int ConditioningBonus = GetConditioningState()
+	int FollowerBonus = GetFollowerFactor()
+	int SpellModification = GetSpellModification()
+	int FrostResistBonus = GetFrostResistBonus()
+
+	;@TODO: Check _Frost_ExposureProtectionData instead
+	int TotalProtection = FoodBonus + ClothingBonus + HeldHeatBonus + FrostResistBonus + \
+						  ConditioningBonus + FollowerBonus + SpellModification + WetPenalty
+
+	; Take action
+	if this_vampire_state == false && last_vampire_state == true
+		; The player just cured their vampirism. Set their exposure low.
+		SetExposure(30.0)
+	endif
+
+	CalculateExposureChange()
+	ExposureEffectsUpdate()
 
 	StoreLastPlayerState()
 endFunction
@@ -187,7 +215,7 @@ int function GetExceptionBlockTemp()
 	return maxTemp
 endFunction
 
-function ExposureStatusUpdate()
+function ExposureEffectsUpdate()
 	float myCurrentEP = _DE_ExposurePoints.GetValue()
 	
 	elseif myCurrentEP >= 81
@@ -334,6 +362,168 @@ function HandleMaxExposure()
 			PlayerRef.Kill()
 		endif
 	endif
+endFunction
+
+int function GetFoodBonus()
+	if PlayerRef.HasEffectKeyword(_Frost_FoodBuffKeyword10)
+		return 1
+	elseif PlayerRef.HasEffectKeyword(_Frost_FoodBuffKeyword15)
+		return 2
+	elseif PlayerRef.HasEffectKeyword(_Frost_FoodBuffKeyword20)
+		return 3
+	elseif PlayerRef.HasEffectKeyword(_Frost_FoodBuffKeyword25)
+		return 4
+	else
+		return 0
+	endif
+endFunction
+
+;@TODO: Roll into Equip Monitor
+float function GetHeldHeatState()
+	if PlayerRef.GetEquippedItemType(0) == 11 || PlayerRef.GetEquippedItemType(1) == 11
+		; The player has equipped a torch.
+		;PlayerRef.AddSpell(_DE_TorchState_Spell, false)
+		;return 0.1
+	endif
+	if ;Player has fire spell equipped
+		;give more bonus, based on Augmented Flames perk
+	endif
+endFunction
+
+bool function PlayerIsInDialogue()
+	if FrostUtil.GetCompatibilitySystem().IsSKSELoaded
+		if UI.IsMenuOpen("Dialogue Menu")
+			return true
+		else
+			return false
+		endif
+	else
+		return false
+	endif
+endif
+
+function CalculateExposureChange()
+	; If enough game time has passed since the last update, modify based on waiting instead.
+	float time_delta_game_days = GetCurrentGameTime() - last_update_time
+	float time_delta_game_hours = time_delta_game_days * 24.0
+
+	if time_delta_game_hours > 1.0
+		ModExposureDueToTime(time_delta_game_hours)
+		return
+	endif
+
+	; Determine real time that would have transpired relative to game time.
+	float time_delta_real_seconds
+	if time_delta_game_days > 0.0
+		time_delta_real_seconds = (time_delta_game_days * 86400) / TimeScale.GetValue()
+	else
+		; Return sane value
+		time_delta_real_seconds = 6.0
+	endif
+	
+	if fTimeDeltaSec <= 20.0	;Clamp point loss to 20-seconds between intervals
+		iSlowUpdateCounter = 0
+		
+		; Master Exposure loss formula
+		exposure_loss = ((((((fTempMultiplier * 20) + WetFactor)/(ClothingFactor + FrostFactor)) * AuxFactor) * pSetting_ExposureRate) * fTimeDeltaSec) / 60
+			
+	else
+		iSlowUpdateCounter += 1
+		if iSlowUpdateCounter == 4 && _Frost_Setting_SystemMsg.GetValueInt() == 2
+			debug.messagebox("Your game's scripting system is running too slowly in order for Frostfall to run correctly. Please see the Troubleshooting page of the online documentation for tips. Your exposure value will not change until this improves. (Last update took " + time_delta_real_seconds + "sec, expected <20.0sec)")
+		endif
+	endif
+	
+	return exposure_loss
+endfunction
+
+function ModExposureDueToTime(float aiHoursPassed)
+    float exposure_limit
+    float exposure_limit_if_near_fire
+
+    if player_fast_traveled
+        ; The player fast traveled.
+        ;@TODO: Also reduce wetness.
+        SetExposure(100.0)
+        return
+    endif
+
+    ; define max values
+    if in_interior
+        exposure_limit = MIN_EXPOSURE
+        exposure_limit_if_near_fire = MIN_EXPOSURE
+    elseif current_weather_temp <= -15
+        if sheltered
+            if shelter_is_warm
+                exposure_limit = 25.0
+                exposure_limit_if_near_fire = MIN_EXPOSURE
+            else
+                exposure_limit = 40.0
+                exposure_limit_if_near_fire = 25.0
+            endif
+        else
+            exposure_limit = 81.0 ; GetTempExposureCeiling()
+            exposure_limit_if_near_fire = 50.0
+        endif
+    elseif current_weather_temp <= 0
+        if sheltered
+            if shelter_is_warm
+                exposure_limit = 15.0
+                exposure_limit_if_near_fire = MIN_EXPOSURE
+            else
+                exposure_limit = 30.0
+                exposure_limit_if_near_fire = 20.0
+            endif
+        else
+            exposure_limit = 60.0
+            exposure_limit_if_near_fire = 30.0
+        endif
+    elseif current_weather_temp < 10
+        if sheltered
+            if shelter_is_warm
+                exposure_limit = MIN_EXPOSURE
+                exposure_limit_if_near_fire = MIN_EXPOSURE
+            else
+                exposure_limit = 15.0
+                exposure_limit_if_near_fire = MIN_EXPOSURE
+            endif
+        else
+            exposure_limit = 30.0
+            exposure_limit_if_near_fire = MIN_EXPOSURE
+        endif
+    else
+        exposure_limit = MIN_EXPOSURE
+        exposure_limit_if_near_fire = MIN_EXPOSURE
+    endif
+
+    ; If they waited less than 2 hours, halve the amount modified.
+    float tf
+    if aiHoursPassed < 2
+        tf = 1
+    else
+        tf = 0.5
+    endif
+
+    ; Modify exposure based on temperature
+    if in_interior
+        DecreaseExposureToLimit((MAJOR_EXPOSURE * tf), exposure_limit)
+    elseif current_weather_temp <= -15
+        if near_fire
+            DecreaseExposureToLimit((MAJOR_EXPOSURE * tf), exposure_limit_if_near_fire)    
+        elseif sheltered
+            DecreaseExposureToLimit((MAJOR_EXPOSURE * tf), exposure_limit)
+        else
+            IncreaseExposureToLimit((EXTREME_EXPOSURE * tf), exposure_limit)
+        endif
+    elseif current_weather_temp > -15
+        if near_fire
+            DecreaseExposureToLimit((EXTREME_EXPOSURE * tf), exposure_limit_if_near_fire)
+        elseif sheltered
+            DecreaseExposureToLimit((MAJOR_EXPOSURE * tf), exposure_limit)
+        else
+            IncreaseExposureToLimit((MAJOR_EXPOSURE * tf), exposure_limit)
+        endif
+    endif
 endFunction
 
 function ShowTutorial_Exposure()
