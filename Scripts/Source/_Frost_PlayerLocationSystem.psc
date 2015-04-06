@@ -1,0 +1,1 @@
+scriptname _Frost_PlayerLocationSystem extends ReferenceAlias

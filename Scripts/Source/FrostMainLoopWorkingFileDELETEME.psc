@@ -566,38 +566,12 @@ function MainLoop()
 	endif
 	
 	;====================Weather Discovery=======================
-	;Get current weather
-	wMyWeather = Weather.GetCurrentWeather()
+	; see _Frost_ClimateSystem
 	
-	;Get the current temperature based on the weather
-	if !bInInterior
-		maxTemp = GetExceptionBlockTemp()
-		iCurrWeatherTemp = GetWeatherTemp(maxTemp)
-	else
-		maxTemp = 0
-		iCurrWeatherTemp = 10
-	endif
-	
-	;Store the temperature in a global so that other scripts can use it
-	int iCurrTemp = 10
-	if maxTemp < iCurrWeatherTemp
-		iCurrTemp = maxTemp
-	else
-		iCurrTemp = iCurrWeatherTemp
-	endif
-	
-	;Is it daytime, or nighttime?
-	float myGameHour = GameHour.GetValue()
-    if myGameHour > 19.0
-        iCurrTemp -= 5
-    elseif myGameHour < 7.0
-        iCurrTemp -= 5
-    endif
-	
-	_DE_CurrentTemp.SetValue(iCurrTemp)
+    ; Access this via Climate System
+	;_DE_CurrentTemp.SetValue(iCurrTemp)
 
 	;======================Player State==========================
-	GetWaterskinState()
 	GetVampirismState()
 	iIsInTent = GetInTent()
 	bNearFire = GetFireState()
@@ -823,14 +797,6 @@ function DebugEPReport(int myEP, bool myFire, bool myInterior, float currEPChang
 	
 	FrostfallDebug(1, "EP: " + myEP + "/" + "WP: " + pWetPoints + "/" + sFire + sInterior + sTent + "/Change: " + (currEPChange * -1.0) + " " + ((GameHour.GetValue() - fLastGameHour) * 180) + "sec")
 	fLastGameHour = GameHour.GetValue()	
-endFunction
-
-function GetWaterskinState()
-	if pPlayer.GetItemCount(_DE_ModWaterSkins) > 0
-		_DE_HasWaterSkin.SetValue(2.0)
-	else
-		_DE_HasWaterSkin.SetValue(0.0)
-	endif
 endFunction
 
 float function GetTorchState()						;Approved 2.5
