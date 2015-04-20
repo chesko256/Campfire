@@ -69,6 +69,16 @@
 !DGIntimidatePlayerScript.psc
 !MS11CalixtoScript.psc
 
+#CampDevKit Files
+!CampDevKit/*
+!CampDevKit/Source/*
+
+#CampDevTutorial Files
+!CampDevTutorials/Tutorial1/*
+!CampDevTutorials/Tutorial2/*
+!CampDevTutorials/Tutorial3/*
+!CampDevTutorials/Tutorial4/*
+
 #Documentation
 !Scripts/Source/doc/*
 !Scripts/Source/doc/headers/*
