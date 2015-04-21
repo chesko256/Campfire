@@ -4,7 +4,7 @@ scriptname _Camp_ObjectPlacementThreadManager extends Quest
 string script_name = "_Camp_ObjectPlacementThreadManager"
 Event OnInit()
     while true
-        debug.messagebox("Mod Developer: You have recompiled " + script_name + " in the Campfire SDK. Please exit and delete " + script_name + ".pex from your scripts directory; reinstalling SDK might be necessary. This message will repeat.")
+        debug.messagebox("Mod Developer: You have recompiled " + script_name + " in the Campfire Dev Kit. Please exit and delete " + script_name + ".pex from your scripts directory; reinstalling Dev Kit might be necessary. This message will repeat.")
         utility.wait(1)
     endWhile
 endEvent
@@ -21,7 +21,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                               ObjectReference object_position_reference,                                                        \
                               float x_local_ang_adjust = 0.0, float y_local_ang_adjust = 0.0, float z_local_ang_adjust = 0.0,   \
                               float z_global_ang_adjust = 0.0, float z_hanging_offset = 0.0, bool inverted_local_y = false,     \
-                              float x_pos_offset = 0.0, float y_pos_offset = 0.0, float z_pos_offset = 0.0,                           \
+                              float x_pos_offset = 0.0, float y_pos_offset = 0.0, float z_pos_offset = 0.0,                     \
                               bool initially_disabled = false, bool is_propped = false, bool is_hanging = false)
 endFunction
 
