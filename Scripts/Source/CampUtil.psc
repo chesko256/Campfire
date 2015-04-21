@@ -704,13 +704,13 @@ ObjectReference function GetCurrentTent() global
 	endif
 endFunction
 
-;/********f* CampUtil/IsCurrentTentWaterproof
+;/********f* CampUtil/IsTentWaterproof
 * DESCRIPTION
 * Is the current tent waterproof?
 *
 * SYNTAX
 */;
-bool function IsCurrentTentWaterproof(ObjectReference akTent) global
+bool function IsTentWaterproof(ObjectReference akTent) global
 ;/*
 * PARAMETERS
 * akTent: The Tent ObjectReference to check. Use the return value of GetCurrentTent().
@@ -732,13 +732,13 @@ bool function IsCurrentTentWaterproof(ObjectReference akTent) global
 	endif
 endFunction
 
-;/********f* CampUtil/IsCurrentTentWarm
+;/********f* CampUtil/IsTentWarm
 * DESCRIPTION
 * Is the current tent warm?
 *
 * SYNTAX
 */;
-bool function IsCurrentTentWarm(ObjectReference akTent) global
+bool function IsTentWarm(ObjectReference akTent) global
 ;/*
 * PARAMETERS
 * akTent: The Tent ObjectReference to check. Use the return value of GetCurrentTent().
@@ -787,6 +787,70 @@ bool function IsCrimeToPlaceInTowns(Form akBaseObject) global
 		return true
 	else
 		return false
+	endif
+endFunction
+
+bool function IsTent(Form akBaseObject) global
+	if (akBaseObject as CampTent)
+		return true
+	else
+		return false
+	endif
+endFunction
+
+function RaiseEvent_OnObjectPlaced(ObjectReference akObjectReference) global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return
+	endif
+
+	if akObjectReference
+		if GetCompatibilitySystem().isSKSELoaded
+			float px = akObjectReference.GetPositionX()
+			float py = akObjectReference.GetPositionY()
+			float pz = akObjectReference.GetPositionZ()
+			float ax = akObjectReference.GetAngleX()
+			float ay = akObjectReference.GetAngleY()
+			float az = akObjectReference.GetAngleZ()
+			int handle = ModEvent.Create("Campfire_OnObjectPlaced")
+			if handle
+				ModEvent.PushForm(handle, akObjectReference as Form)
+				ModEvent.PushFloat(handle, px)
+				ModEvent.PushFloat(handle, py)
+				ModEvent.PushFloat(handle, pz)
+				ModEvent.PushFloat(handle, ax)
+				ModEvent.PushFloat(handle, ay)
+				ModEvent.PushFloat(handle, az)
+				ModEvent.PushBool(handle, IsTent(akObjectReference.GetBaseObject()))
+				ModEvent.Send(handle)
+			endif
+		endif
+	endif
+endFunction
+
+function RaiseEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ) global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return
+	endif
+
+	if akBaseObject
+		if GetCompatibilitySystem().isSKSELoaded
+			int handle = ModEvent.Create("Campfire_OnObjectRemoved")
+			if handle
+				ModEvent.PushForm(handle, akBaseObject)
+				ModEvent.PushFloat(handle, afPositionX)
+				ModEvent.PushFloat(handle, afPositionY)
+				ModEvent.PushFloat(handle, afPositionZ)
+				ModEvent.PushFloat(handle, afAngleX)
+				ModEvent.PushFloat(handle, afAngleY)
+				ModEvent.PushFloat(handle, afAngleZ)
+				ModEvent.PushBool(handle, IsTent(akBaseObject))
+				ModEvent.Send(handle)
+			endif
+		endif
 	endif
 endFunction
 
