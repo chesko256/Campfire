@@ -33,6 +33,7 @@ bool property isFrostfallLoaded auto hidden					;Frostfall
 bool property isLastSeedLoaded auto hidden					;Last Seed
 bool property isIMCNLoaded auto hidden						;Imp's More Complex Needs
 bool property isRNDLoaded auto hidden			 			;Realistic Needs and Diseases
+bool property isINEEDLoaded auto hidden						;iNeed
 
 ;#Merchant Containers==========================================================
 ObjectReference property MerchantRiverwoodTraderContainer auto
@@ -212,6 +213,25 @@ function RunCompatibility()
 			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047FA5, "RealisticNeedsandDiseases.esp"))
 			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00047FA7, "RealisticNeedsandDiseases.esp"))
 
+		endif
+	endif
+
+	if isINEEDLoaded
+		isINEEDLoaded = IsPluginLoaded(0x0000437F, "iNeed.esp")
+		if !isINEEDLoaded
+			;iNeed was removed since the last save.
+		endif
+	else
+		isINEEDLoaded = IsPluginLoaded(0x0000437F, "iNeed.esp")
+		if isINEEDLoaded
+			;iNeed was just added.
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0000437F, "iNeed.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0000437D, "iNeed.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x00004376, "iNeed.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0003B2C5, "iNeed.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0003B2C8, "iNeed.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0003B2CC, "iNeed.esp"))
+			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0003AD62, "iNeed.esp"))
 		endif
 	endif
 
