@@ -4,7 +4,7 @@ scriptname _Camp_LegalAreaCheck extends ReferenceAlias
 string script_name = "_Camp_LegalAreaCheck"
 Event OnInit()
     while true
-        debug.messagebox("Mod Developer: You have recompiled " + script_name + " in the Campfire SDK. Please exit and delete " + script_name + ".pex from your scripts directory; reinstalling SDK might be necessary. This message will repeat.")
+        debug.messagebox("Mod Developer: You have recompiled " + script_name + " in the Campfire Dev Kit. Please exit and delete " + script_name + ".pex from your scripts directory; reinstalling Dev Kit might be necessary. This message will repeat.")
         utility.wait(1)
     endWhile
 endEvent
