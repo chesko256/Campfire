@@ -19,15 +19,15 @@ function Event_LegacyWoodHarvest() global
 endFunction
 
 bool function IsNearFastTravelException() global
-	if Game.FindClosestReferenceOfAnyTypeInListFromRef(_DE_FastTravelExceptions, pPlayer,  600.0) != None
-		return true
-	else
-		return false
-	endif
+	;if Game.FindClosestReferenceOfAnyTypeInListFromRef(_DE_FastTravelExceptions, pPlayer,  600.0) != None
+	;	return true
+	;else
+	;	return false
+	;endif
 endFunction
 
 int function GetWeatherClassificationActual(Weather akWeather) global
-    if !akWeather
+    ;/if !akWeather
         return -1
     endif
     
@@ -50,5 +50,5 @@ int function GetWeatherClassificationActual(Weather akWeather) global
         endif
     else
         return classification
-    endif
+    endif/;
 endFunction
