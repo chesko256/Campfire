@@ -230,7 +230,8 @@ function PlayerSit(ObjectReference akTent)
 		endif
 	endif
 	TryToDisableRef(TentObject.myShelterCollider)
-	if _Camp_TentSeeThru.GetValueInt() == 2
+	; Setting must be on and there must be a separate exterior object
+	if _Camp_TentSeeThru.GetValueInt() == 2 && (TentObject.myTent && TentObject.myNormalTent)
 		TryToDisableRef(TentObject.myTentExterior, true)
 	endif
 
@@ -283,7 +284,8 @@ function PlayerLieDown(ObjectReference akTent)
 		endif
 	endif
 	TryToDisableRef(TentObject.myShelterCollider)
-	if _Camp_TentSeeThru.GetValueInt() == 2
+	; Setting must be on and there must be a separate exterior object
+	if _Camp_TentSeeThru.GetValueInt() == 2 && (TentObject.myTent && TentObject.myNormalTent)
 		TryToDisableRef(TentObject.myTentExterior, true)
 	endif
 
