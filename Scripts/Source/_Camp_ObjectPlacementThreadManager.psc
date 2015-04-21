@@ -566,6 +566,8 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
 
                 akIndicator.Disable()
                 ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace)
+                ; Raise optional SKSE event
+                RaiseEvent_OnObjectPlaced(campitem)
 
                 if akInventoryItem
                     (campitem as _Camp_PlaceableObjectBase).Required_InventoryItem = akInventoryItem
@@ -619,8 +621,12 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
                 endif
 
                 akIndicator.Disable()
-                akIndicator.PlaceAtMe(akFormToPlace)
+                ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace)
+                ; Raise optional SKSE event
+                RaiseEvent_OnObjectPlaced(campitem)
+
                 if akInventoryItem
+                    (campitem as _Camp_PlaceableObjectBase).Required_InventoryItem = akInventoryItem
                     PlayerRef.RemoveItem(akInventoryItem, 1, true)
                 endif
                 StopPlacement()
@@ -736,6 +742,7 @@ function PlaceableObjectUsed(MiscObject akInventoryItem, Activator akPlacementIn
     ObjectReference ref = PlayerRef.PlaceAtMe(akPlacementIndicator as Activator)
     CampPlacementIndicator indicator = ref as CampPlacementIndicator
     indicator.required_inventory_item = akInventoryItem
+    debug.trace("[Campfire] " + indicator.required_inventory_item)
     if akIngredient
         indicator.required_ingredient = akIngredient
         indicator.cost = aiCost

@@ -89,6 +89,7 @@ endFunction
 
 function PickUp()
 	TakeDown()
+	debug.trace("[Campfire] " + Required_InventoryItem)
 	Game.GetPlayer().Additem(Required_InventoryItem, 1, true)
 endFunction
 
