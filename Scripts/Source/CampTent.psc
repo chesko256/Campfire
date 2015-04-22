@@ -598,7 +598,9 @@ function PlaceObjects()
 	if TentAsset_ShelterModelMaterialAsh && PositionRef_Shelter
 		PlaceObject_AshTent()
 	endif
-	PlaceObject_Ward()
+	if PositionRef_Ward
+		PlaceObject_Ward()
+	endif
 	if TentAsset_ClutterStatic1 && PositionRef_ClutterStatic1
 		PlaceObject_ClutterStatic1()
 	endif

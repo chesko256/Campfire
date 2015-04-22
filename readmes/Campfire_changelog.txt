@@ -7,6 +7,27 @@ Complete Camping System
 Change Log
 
 ===================================================
+Release 1.0.2 (4/21/2015)
+	Added support for the Campfire Dev Kit. Please see http://skyrimsurvival.com/home/campfire/mod-developers/ for more info.
+
+	Removed all unnecessary edits from the plug-in. All remaining edits are intentional and necessary; do not clean the mod.
+		Removed a number of edits to Wood Chopping Block references.
+		Removed an edit to a Civil War trigger reference in Whiterun.
+
+	Fixed a visual issue with the White Backpack of Zenithar.
+
+	The damage of stone arrows is now 7 (was 9).
+
+	Added missing rabbit haunch recipe to flickering campfires and above.
+
+	Switched to using a form list to determine if a cooking pot is in the player's inventory instead of the actual item. Will improve mod compatibility.
+
+	Added iNeed waterskin compatibility; these waterskins will now display on your backpack if the waterskin is not empty.
+
+	Fixed several miscellaneous issues that could result in a placed object not returning the inventory item to the player when picked up.
+
+Release 1.0.1 (4/15/2015)
+	Fixed texture path issue with Leather Tent inventory items.
 
 Release 1.0 (4/15/2015)
 
