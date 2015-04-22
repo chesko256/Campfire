@@ -742,7 +742,7 @@ function PlaceableObjectUsed(MiscObject akInventoryItem, Activator akPlacementIn
     ObjectReference ref = PlayerRef.PlaceAtMe(akPlacementIndicator as Activator)
     CampPlacementIndicator indicator = ref as CampPlacementIndicator
     indicator.required_inventory_item = akInventoryItem
-    debug.trace("[Campfire] " + indicator.required_inventory_item)
+    ;debug.trace("[Campfire] " + indicator.required_inventory_item)
     if akIngredient
         indicator.required_ingredient = akIngredient
         indicator.cost = aiCost
