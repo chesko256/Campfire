@@ -497,31 +497,31 @@ function ModExposureDueToTime(float aiHoursPassed)
     endif
 
     ; If they waited less than 2 hours, halve the amount modified.
-    float tf
+    float time_factor
     if aiHoursPassed < 2
-        tf = 1
+        time_factor = 1
     else
-        tf = 0.5
+        time_factor = 0.5
     endif
 
     ; Modify exposure based on temperature
     if in_interior
-        DecreaseExposureToLimit((MAJOR_EXPOSURE * tf), exposure_limit)
+        DecreaseExposureToLimit((MAJOR_EXPOSURE * time_factor), exposure_limit)
     elseif current_weather_temp <= -15
         if near_fire
-            DecreaseExposureToLimit((MAJOR_EXPOSURE * tf), exposure_limit_if_near_fire)    
+            DecreaseExposureToLimit((MAJOR_EXPOSURE * time_factor), exposure_limit_if_near_fire)    
         elseif sheltered
-            DecreaseExposureToLimit((MAJOR_EXPOSURE * tf), exposure_limit)
+            DecreaseExposureToLimit((MAJOR_EXPOSURE * time_factor), exposure_limit)
         else
-            IncreaseExposureToLimit((EXTREME_EXPOSURE * tf), exposure_limit)
+            IncreaseExposureToLimit((EXTREME_EXPOSURE * time_factor), exposure_limit)
         endif
     elseif current_weather_temp > -15
         if near_fire
-            DecreaseExposureToLimit((EXTREME_EXPOSURE * tf), exposure_limit_if_near_fire)
+            DecreaseExposureToLimit((EXTREME_EXPOSURE * time_factor), exposure_limit_if_near_fire)
         elseif sheltered
-            DecreaseExposureToLimit((MAJOR_EXPOSURE * tf), exposure_limit)
+            DecreaseExposureToLimit((MAJOR_EXPOSURE * time_factor), exposure_limit)
         else
-            IncreaseExposureToLimit((MAJOR_EXPOSURE * tf), exposure_limit)
+            IncreaseExposureToLimit((MAJOR_EXPOSURE * time_factor), exposure_limit)
         endif
     endif
 endFunction
