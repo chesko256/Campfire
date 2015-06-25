@@ -54,6 +54,10 @@
 !_Frost*.psc
 !Frost*.pex
 !Frost*.psc
+!_Seed*.pex
+!_Seed*.psc
+!Seed*.pex
+!Seed*.psc
 
 #Brawl Bug Patch Scripts
 !BladesSparringScript.pex
