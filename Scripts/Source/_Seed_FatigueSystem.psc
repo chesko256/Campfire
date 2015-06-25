@@ -1,0 +1,1 @@
+scriptname _Seed_FatigueSystem extends Quest
