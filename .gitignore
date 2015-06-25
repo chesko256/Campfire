@@ -22,9 +22,11 @@
 #Interface
 !Interface/frostfall/*
 !Interface/campfire/*
+!Interface/lastseed/*
 !Interface/Translations/Chesko_Frostfall_*.txt
 !Interface/Translations/Campfire*.txt
 !Interface/exported/widgets/frostfall/*
+!Interface/exported/widgets/lastseed/*
 
 #Meshes
 !Meshes/campfire/*
@@ -33,9 +35,11 @@
 #Readmes
 !readmes/Frostfall*.txt
 !readmes/Campfire*.txt
+!readmes/LastSeed*.txt
 
 #Sound
 !sound/fx/frostfall/*
+!sound/fx/lastseed/*
 
 #Scripts
 !qf__de_trackingquest_010177d7.pex
@@ -93,9 +97,8 @@
 
 #Textures
 !textures/campfire/*
+!textures/frostfall/*
+!textures/lastseed/*
 
 #Ignore working files
 Scripts/Source/_Camp_SkyUIConfigPanelScript - Copy.psc
-
-#Textures
-!textures/frostfall/*
