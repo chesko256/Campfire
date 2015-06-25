@@ -46,7 +46,15 @@ function UpdateVitality()
     endWhile
     ArrayClear(VitalityChangeQueue)
 
-    _Seed_AttributeVitality.SetValue(_Seed_AttributeVitality.GetValue() + total_change)
+    float current_value = _Seed_AttributeVitality.GetValue()
+    if current_value + total_change > MAX_VITALITY
+        _Seed_AttributeVitality.SetValue(MAX_VITALITY)
+    elseif current_value + total_change < MIN_VITALITY
+        _Seed_AttributeVitality.SetValue(MIN_VITALITY)
+    else
+        _Seed_AttributeVitality.SetValue(current_value + total_change)
+    endif
+
     ApplyVitalityEffects()
 endFunction
 
