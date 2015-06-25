@@ -1,6 +1,10 @@
 scriptname _Seed_VitalitySystem extends Quest
 
 GlobalVariable property _Seed_AttributeVitality auto
+
+float property MAX_VITALITY = 120.0 autoReadOnly
+float property MIN_VITALITY = 0.0 autoReadOnly
+
 float[] VitalityChangeQueue
 
 function Initialize()
@@ -21,7 +25,14 @@ function ModVitality(float amount)
     ; Modifies Vitality immediately and directly. Used only
     ; in special circumstances.
 
-    _Seed_AttributeVitality.SetValue(_Seed_AttributeVitality.GetValue() + amount)
+    float current_value = _Seed_AttributeVitality.GetValue()
+    if current_value + amount > MAX_VITALITY
+        _Seed_AttributeVitality.SetValue(MAX_VITALITY)
+    elseif current_value + amount < MIN_VITALITY
+        _Seed_AttributeVitality.SetValue(MIN_VITALITY)
+    else
+        _Seed_AttributeVitality.SetValue(current_value + amount)
+    endif
 endFunction
 
 function UpdateVitality()
