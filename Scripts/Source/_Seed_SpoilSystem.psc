@@ -20,11 +20,21 @@ function AddTrackedContainer(ObjectReference akContainer)
 endFunction
 
 function ProcessDroppedFood()
-    
+
 endFunction
 
 function ProcessTrackedContainers()
 
+endFunction
+
+function ProcessTrackedContainer(ObjectReference akContainer)
+    int item_count = akContainer.GetNumItems()
+    int i = 0
+    while i < item_count
+        Form this_form = akContainer.GetNthForm(i)
+        ; do things to this_form, replace if needed on degredation path
+        i += 1
+    endWhile
 endFunction
 
 bool function ArrayAdd(ObjectReference[] myArray, ObjectReference ref)
