@@ -1,0 +1,1 @@
+scriptname _Seed_SpoilSystem extends Quest
