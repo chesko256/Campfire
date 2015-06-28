@@ -20,11 +20,17 @@ function AddTrackedContainer(ObjectReference akContainer)
 endFunction
 
 function ProcessDroppedFood()
-
+    int i = 0
+    while i < DroppedFood.Length
+        if DroppedFood[i]
+            ; do things to DroppedFood[i]
+        endif
+        i += 1
+    endWhile
 endFunction
 
 function ProcessTrackedContainers()
-
+    ; Need to determine periodicity before we can write this
 endFunction
 
 function ProcessTrackedContainer(ObjectReference akContainer)
@@ -32,7 +38,7 @@ function ProcessTrackedContainer(ObjectReference akContainer)
     int i = 0
     while i < item_count
         Form this_form = akContainer.GetNthForm(i)
-        ; do things to this_form, replace if needed on degredation path
+        ; do things to this_form, replace if needed on degradation path
         i += 1
     endWhile
 endFunction
