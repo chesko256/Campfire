@@ -74,29 +74,39 @@ function ProcessTrackedContainer(ObjectReference akContainer)
     endWhile
 endFunction
 
-function GetNextSpoilStageForm(Form akBaseObject)
+Form function GetNextSpoilStageForm(Form akBaseObject)
+    int index
     if HasSpoilStage4Name(akBaseObject)
         return None
     elseif HasSpoilStage3Name(akBaseObject)
-
+        index = PerishableFoodTable_FindFormInColumn(akBaseObject, COL_FOOD_SPOIL_STAGE3)
+        if index != -1
+            PerishableFoodTable_GetFoodAtIndexColumn(index, COL_FOOD_SPOIL_STAGE4)
+        endif
     elseif HasSpoilStage2Name(akBaseObject)
-
+        index = PerishableFoodTable_FindFormInColumn(akBaseObject, COL_FOOD_SPOIL_STAGE2)
+        if index != -1
+            PerishableFoodTable_GetFoodAtIndexColumn(index, COL_FOOD_SPOIL_STAGE3)
+        endif
     else
-
+        index = PerishableFoodTable_FindFormInColumn(akBaseObject, COL_FOOD_SPOIL_STAGE1)
+        if index != -1
+            PerishableFoodTable_GetFoodAtIndexColumn(index, COL_FOOD_SPOIL_STAGE2)
+        endif
     endif
 endFunction
 
 ; TABLE FUNCTIONS
 
-; PerishableFoodDefinitionTable
+; PerishableFoodTable
 ;
 ; FoodSpoilStage1 | FoodSpoilStage2 | FoodSpoilStage3 | FoodSpoilStage4 | SpoilRate |
 ; ================|=================|=================|=================|===========|
 ; Bread           | Old Bread       | Moldy Bread     | Foul Bread      | 24.0      |
 
-int function PerishableFoodDefinitionTable_AddRow(Form food_stage1, Form food_stage2, Form food_stage3, Form food_stage4, float rate, int cursor = None)
+int function PerishableFoodTable_AddRow(Form food_stage1, Form food_stage2, Form food_stage3, Form food_stage4, float rate, int cursor = None)
     if !cursor
-        cursor = PerishableFoodDefinitionTable_FindAvailableIndex()
+        cursor = PerishableFoodTable_FindAvailableIndex()
         if cursor == -1
             ;@TODO: Log error
             return
@@ -110,18 +120,37 @@ int function PerishableFoodDefinitionTable_AddRow(Form food_stage1, Form food_st
     return cursor
 endFunction
 
-int function PerishableFoodDefinitionTable_FindAvailableIndex()
-    int index = FoodSpoilStage1_1.Find(None)
-    if index == -1
-        index = FoodSpoilStage1_2.Find(None)
-        if index == -1
-            return -1
-        else
-            return index + 128
-        endif
-    else
-        return index
+int function PerishableFoodTable_FindFormInColumn(Form akBaseObject, int BigArrayID)
+    if BigArrayID == COL_FOOD_SPOIL_STAGE1
+        return BigArrayFindForm_Do(akBaseObject, FoodSpoilStage1_1, FoodSpoilStage1_2)
+    elseif BigArrayID == COL_FOOD_SPOIL_STAGE2
+        return BigArrayFindForm_Do(akBaseObject, FoodSpoilStage2_1, FoodSpoilStage2_2)
+    elseif BigArrayID == COL_FOOD_SPOIL_STAGE3
+        return BigArrayFindForm_Do(akBaseObject, FoodSpoilStage3_1, FoodSpoilStage3_2)
+    elseif BigArrayID == COL_FOOD_SPOIL_STAGE4
+        return BigArrayFindForm_Do(akBaseObject, FoodSpoilStage4_1, FoodSpoilStage4_2)
     endif
+endFunction
+
+Form function PerishableFoodTable_GetFoodAtIndexColumn(int index, int col)
+    if col == COL_FOOD_SPOIL_STAGE1
+        return BigArrayGetFormAtIndex_Do(index, FoodSpoilStage1_1, FoodSpoilStage1_2)
+    elseif col == COL_FOOD_SPOIL_STAGE2
+        return BigArrayGetFormAtIndex_Do(index, FoodSpoilStage2_1, FoodSpoilStage2_2)
+    elseif col == COL_FOOD_SPOIL_STAGE3
+        return BigArrayGetFormAtIndex_Do(index, FoodSpoilStage3_1, FoodSpoilStage3_2)
+    elseif col == COL_FOOD_SPOIL_STAGE4
+        return BigArrayGetFormAtIndex_Do(index, FoodSpoilStage4_1, FoodSpoilStage4_2)
+    endif
+endFunction
+
+float function PerishableFoodTable_GetSpoilRateAtIndex(int index)
+
+endFunction
+
+int function PerishableFoodTable_FindAvailableIndex()
+    int index = BigArrayFindForm_Do(None, FoodSpoilStage1_1, FoodSpoilStage1_2)
+    return index
 endFunction
 
 ; BIG ARRAY FUNCTIONS
@@ -137,6 +166,29 @@ function BigArrayAdd(int BigArrayID, int index, Form akBaseObject = None, Float 
         BigArrayAddForm_Do(index, akBaseObject, FoodSpoilStage4_1, FoodSpoilStage4_2)
     elseif BigArrayID == COL_FOOD_SPOIL_RATE
         BigArrayAddFloat_Do(index, afRate, FoodSpoilRate_1, FoodSpoilRate_2)
+    endif
+endFunction
+
+int function BigArrayFindForm_Do(Form akBaseObject, Form[] array1, Form[] array2)
+    int index = array1.Find(akBaseObject)
+    if index == -1
+        index = array2.Find(akBaseObject)
+        if index == -1
+            return -1
+        else
+            return index + 128
+        endif
+    else
+        return index
+    endif
+endFunction
+
+Form function BigArrayGetFormAtIndex_Do(int index, Form[] array1, Form[] array2)
+    if index > 127
+        index = index - 128
+        return array2[index]
+    else
+        return array1[index]
     endif
 endFunction
 
