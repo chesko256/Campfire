@@ -1,6 +1,6 @@
 scriptname _Seed_SpoilSystem extends Quest
 
-
+import StringUtil
 
 ObjectReference[] property DroppedFood auto hidden
 ObjectReference[] property TrackedFoodContainers auto hidden
@@ -74,19 +74,23 @@ function ProcessTrackedContainer(ObjectReference akContainer)
     endWhile
 endFunction
 
-bool function ArrayAdd(ObjectReference[] myArray, ObjectReference ref)
-    int index = myArray.Find(None)
-    if index >= 0
-        myArray[index] = ref
-        return true
+function GetNextSpoilStageForm(Form akBaseObject)
+    if HasSpoilStage4Name(akBaseObject)
+        return None
+    elseif HasSpoilStage3Name(akBaseObject)
+
+    elseif HasSpoilStage2Name(akBaseObject)
+
     else
-        return false
+
     endif
 endFunction
 
+; TABLE FUNCTIONS
+
 ; PerishableFoodDefinitionTable
 ;
-; FormSpoilLevel1 | FormSpoilLevel2 | FormSpoilLevel3 | FormSpoilLevel4 | SpoilRate |
+; FoodSpoilStage1 | FoodSpoilStage2 | FoodSpoilStage3 | FoodSpoilStage4 | SpoilRate |
 ; ================|=================|=================|=================|===========|
 ; Bread           | Old Bread       | Moldy Bread     | Foul Bread      | 24.0      |
 
@@ -119,6 +123,8 @@ int function PerishableFoodDefinitionTable_FindAvailableIndex()
         return index
     endif
 endFunction
+
+; BIG ARRAY FUNCTIONS
 
 function BigArrayAdd(int BigArrayID, int index, Form akBaseObject = None, Float afRate = 0.0)
     if BigArrayID == COL_FOOD_SPOIL_STAGE1
@@ -155,5 +161,17 @@ function BigArrayAddFloat_Do(int index, float afFloat, Float[] array1, Float[] a
         array2[(128 - index)] = afFloat
     else
         array1[index] = afFloat
+    endif
+endFunction
+
+; ARRAY FUNCTIONS
+
+bool function ArrayAdd(ObjectReference[] myArray, ObjectReference ref)
+    int index = myArray.Find(None)
+    if index >= 0
+        myArray[index] = ref
+        return true
+    else
+        return false
     endif
 endFunction
