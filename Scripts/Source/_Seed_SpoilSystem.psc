@@ -96,6 +96,32 @@ Form function GetNextSpoilStageForm(Form akBaseObject)
     endif
 endFunction
 
+float function GetSpoilRate(Form akBaseObject)
+    int index
+    if HasSpoilStage4Name(akBaseObject)
+        index = PerishableFoodTable_FindFormInColumn(akBaseObject, COL_FOOD_SPOIL_STAGE4)
+        if index != -1
+            return PerishableFoodTable_GetSpoilRateAtIndex(index)
+        endif
+    elseif HasSpoilStage3Name(akBaseObject)
+        index = PerishableFoodTable_FindFormInColumn(akBaseObject, COL_FOOD_SPOIL_STAGE3)
+        if index != -1
+            return PerishableFoodTable_GetSpoilRateAtIndex(index)
+        endif
+    elseif HasSpoilStage2Name(akBaseObject)
+        index = PerishableFoodTable_FindFormInColumn(akBaseObject, COL_FOOD_SPOIL_STAGE2)
+        if index != -1
+            return PerishableFoodTable_GetSpoilRateAtIndex(index)
+        endif
+    else
+        index = PerishableFoodTable_FindFormInColumn(akBaseObject, COL_FOOD_SPOIL_STAGE1)
+        if index != -1
+            return PerishableFoodTable_GetSpoilRateAtIndex(index)
+        endif
+    endif
+    return -1.0
+endFunction
+
 ; TABLE FUNCTIONS
 
 ; PerishableFoodTable
@@ -145,12 +171,11 @@ Form function PerishableFoodTable_GetFoodAtIndexColumn(int index, int col)
 endFunction
 
 float function PerishableFoodTable_GetSpoilRateAtIndex(int index)
-
+    return BigArrayGetFloatAtIndex_Do(index, FoodSpoilRate_1, FoodSpoilRate_2)
 endFunction
 
 int function PerishableFoodTable_FindAvailableIndex()
-    int index = BigArrayFindForm_Do(None, FoodSpoilStage1_1, FoodSpoilStage1_2)
-    return index
+    return BigArrayFindForm_Do(None, FoodSpoilStage1_1, FoodSpoilStage1_2)
 endFunction
 
 ; BIG ARRAY FUNCTIONS
@@ -184,6 +209,15 @@ int function BigArrayFindForm_Do(Form akBaseObject, Form[] array1, Form[] array2
 endFunction
 
 Form function BigArrayGetFormAtIndex_Do(int index, Form[] array1, Form[] array2)
+    if index > 127
+        index = index - 128
+        return array2[index]
+    else
+        return array1[index]
+    endif
+endFunction
+
+float function BigArrayGetFloatAtIndex_Do(int index, Float[] array1, Float[] array2)
     if index > 127
         index = index - 128
         return array2[index]
