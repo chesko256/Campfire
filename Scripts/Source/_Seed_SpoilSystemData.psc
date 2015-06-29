@@ -7,8 +7,6 @@ Potion property FoodAppleCabbageStew auto
 Potion property FoodBeef auto
 Potion property FoodBeefCooked auto
 Potion property FoodBeefStew auto
-Potion property FoodBlackBriarMead auto
-Potion property FoodBlackBriarMeadPrivateReserve auto
 Potion property FoodBoiledCremeTreat auto
 Potion property FoodBread01A auto
 Potion property FoodBread01B auto
@@ -70,8 +68,6 @@ Potion property FoodAppleCabbageStew_Stage2 auto
 Potion property FoodBeef_Stage2 auto
 Potion property FoodBeefCooked_Stage2 auto
 Potion property FoodBeefStew_Stage2 auto
-Potion property FoodBlackBriarMead_Stage2 auto
-Potion property FoodBlackBriarMeadPrivateReserve_Stage2 auto
 Potion property FoodBoiledCremeTreat_Stage2 auto
 Potion property FoodBread01A_Stage2 auto
 Potion property FoodBread01B_Stage2 auto
@@ -133,8 +129,6 @@ Potion property FoodAppleCabbageStew_Stage3 auto
 Potion property FoodBeef_Stage3 auto
 Potion property FoodBeefCooked_Stage3 auto
 Potion property FoodBeefStew_Stage3 auto
-Potion property FoodBlackBriarMead_Stage3 auto
-Potion property FoodBlackBriarMeadPrivateReserve_Stage3 auto
 Potion property FoodBoiledCremeTreat_Stage3 auto
 Potion property FoodBread01A_Stage3 auto
 Potion property FoodBread01B_Stage3 auto
@@ -196,8 +190,6 @@ Potion property FoodAppleCabbageStew_Stage4 auto
 Potion property FoodBeef_Stage4 auto
 Potion property FoodBeefCooked_Stage4 auto
 Potion property FoodBeefStew_Stage4 auto
-Potion property FoodBlackBriarMead_Stage4 auto
-Potion property FoodBlackBriarMeadPrivateReserve_Stage4 auto
 Potion property FoodBoiledCremeTreat_Stage4 auto
 Potion property FoodBread01A_Stage4 auto
 Potion property FoodBread01B_Stage4 auto
