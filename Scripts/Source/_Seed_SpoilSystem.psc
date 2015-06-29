@@ -2,6 +2,7 @@ scriptname _Seed_SpoilSystem extends Quest
 
 import StringUtil
 
+bool property initialized = false auto hidden
 ObjectReference[] property DroppedFood auto hidden
 ObjectReference[] property TrackedFoodContainers auto hidden
 
@@ -36,6 +37,7 @@ Function Initialize()
     FoodSpoilStage4_2 = new Form[128]
     FoodSpoilRate_1 = new Float[128]
     FoodSpoilRate_2 = new Float[128]
+    initialized = true
 endFunction
 
 function HandleDroppedFood(ObjectReference akFood)
