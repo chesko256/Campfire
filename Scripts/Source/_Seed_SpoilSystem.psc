@@ -11,6 +11,8 @@ ObjectReference[] property TrackedFoodContainers auto hidden
 ; TrackedFoodTable
 Form[] TrackedFoodBaseObject_1
 Form[] TrackedFoodBaseObject_2
+int[] PerishableFoodID_1
+int[] PerishableFoodID_2
 int[] TrackedFoodCount_1
 int[] TrackedFoodCount_2
 int[] LastInterval_1
@@ -21,10 +23,11 @@ ObjectReference[] TrackedFoodReference_1
 ObjectReference[] TrackedFoodReference_2
 
 int COL_FOOD_FORM = 100
-int COL_FOOD_COUNT = 101
-int COL_LAST_INTERVAL = 102
-int COL_CONTAINER = 103
-int COL_FOOD_REFERENCE = 104
+int COL_PERISHABLEFOODID_FK = 101
+int COL_FOOD_COUNT = 102
+int COL_LAST_INTERVAL = 103
+int COL_CONTAINER = 104
+int COL_FOOD_REFERENCE = 105
 
 ; PerishableFoodTable
 Form[] FoodSpoilStage1_1
@@ -127,7 +130,7 @@ Form function GetNextSpoilStageForm(Form akBaseObject)
     endif
 endFunction
 
-Int function GetSpoilRate(Form akBaseObject)
+Int function GetSpoilRateByForm(Form akBaseObject)
     int index
     if HasSpoilStage4Name(akBaseObject)
         index = PerishableFoodTable_FindFormInColumn(akBaseObject, COL_FOOD_SPOIL_STAGE4)
@@ -148,6 +151,36 @@ Int function GetSpoilRate(Form akBaseObject)
         index = PerishableFoodTable_FindFormInColumn(akBaseObject, COL_FOOD_SPOIL_STAGE1)
         if index != -1
             return PerishableFoodTable_GetSpoilRateAtIndex(index)
+        endif
+    endif
+    return -1.0
+endFunction
+
+int function GetSpoilRateByIndex(int index)
+    return BigArrayGetIntAtIndex_Do(index, FoodSpoilRate_1, FoodSpoilRate_2)
+endFunction
+
+Int function GetPerishableFoodIndex(Form akBaseObject)
+    int index
+    if HasSpoilStage4Name(akBaseObject)
+        index = PerishableFoodTable_FindFormInColumn(akBaseObject, COL_FOOD_SPOIL_STAGE4)
+        if index != -1
+            return index
+        endif
+    elseif HasSpoilStage3Name(akBaseObject)
+        index = PerishableFoodTable_FindFormInColumn(akBaseObject, COL_FOOD_SPOIL_STAGE3)
+        if index != -1
+            return index
+        endif
+    elseif HasSpoilStage2Name(akBaseObject)
+        index = PerishableFoodTable_FindFormInColumn(akBaseObject, COL_FOOD_SPOIL_STAGE2)
+        if index != -1
+            return index
+        endif
+    else
+        index = PerishableFoodTable_FindFormInColumn(akBaseObject, COL_FOOD_SPOIL_STAGE1)
+        if index != -1
+            return index
         endif
     endif
     return -1.0
@@ -213,10 +246,10 @@ int function TrackedFoodTable_FindAvailableIndex()
 endFunction
 
 ; TrackedFoodTable
-; akBaseObject    | Count           | Last Interval   | Container       | Reference  |
-; ================|=================|=================|=================|============|
-; FoodApple       | 3               | 417             | None            | 0xFF000011 |
-; FoodCabbage     | 1               | 316             | 0x0105674b      | None       |
+; akBaseObject    | PerishableFoodID (FK) | Count | Last Interval | Container  | Reference  |
+; ================|=======================|=======|===============|============|============|
+; FoodApple       | 0                     | 3     | 417           | None       | 0xFF000011 |
+; FoodCabbage     | 9                     | 1     | 316           | 0x0105674b | None       |
 
 int function TrackedFoodTable_AddRow(Form akFood, int aiCount, int aiLastInterval, ObjectReference akContainer, ObjectReference akFoodRef)
     if !cursor
@@ -227,6 +260,7 @@ int function TrackedFoodTable_AddRow(Form akFood, int aiCount, int aiLastInterva
         endif
     endif
     TrackedFoodTable_BigArrayAdd(COL_FOOD_FORM, cursor, akBaseObject = akFood)
+    TrackedFoodTable_BigArrayAdd(COL_PERISHABLEFOODID_FK, cursor, aiValue = GetPerishableFoodIndex(akFood))
     TrackedFoodTable_BigArrayAdd(COL_FOOD_COUNT, cursor, aiValue = aiCount)
     TrackedFoodTable_BigArrayAdd(COL_LAST_INTERVAL, cursor, aiValue = aiLastInterval)
     TrackedFoodTable_BigArrayAdd(COL_CONTAINER, cursor, akReference = akContainer)
@@ -271,7 +305,7 @@ function TrackedFoodTable_UpdateReference(int index, ObjectReference akNewRefere
 endFunction
 
 function TrackedFoodTable_RemoveRow()
-    
+
 endFunction
 
 ; BIG ARRAY FUNCTIONS
@@ -293,6 +327,8 @@ endFunction
 function TrackedFoodTable_BigArrayAdd(int BigArrayID, int index, Form akBaseObject = None, int aiValue = None, ObjectReference akReference = None)
     if BigArrayID == COL_FOOD_FORM
         BigArrayAddForm_Do(index, akBaseObject, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2)
+    elseif BigArrayID == COL_PERISHABLEFOODID_FK
+        BigArrayAddForm_Do(index, aiValue, PerishableFoodID_1, PerishableFoodID_2)
     elseif BigArrayID == COL_FOOD_COUNT
         BigArrayAddInt_Do(index, aiValue, TrackedFoodCount_1, TrackedFoodCount_2)
     elseif BigArrayID == COL_LAST_INTERVAL
