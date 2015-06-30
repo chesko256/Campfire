@@ -57,8 +57,18 @@ GlobalVariable property _Seed_SpoilRate_CookedFood auto             ; 4
 
 
 Function Initialize()
-    DroppedFood = new ObjectReference[128]
-    TrackedFoodContainers = new ObjectReference[32]
+    TrackedFoodBaseObject_1 = Form[128]
+    TrackedFoodBaseObject_2 = Form[128]
+    PerishableFoodID_1 = new Int[128]
+    PerishableFoodID_2 = new Int[128]
+    TrackedFoodCount_1 = new Int[128]
+    TrackedFoodCount_2 = new Int[128]
+    LastInterval_1 = new Int[128]
+    LastInterval_2 = new Int[128]
+    Container_1 = ObjectReference[128]
+    Container_2 = ObjectReference[128]
+    TrackedFoodReference_1 = new ObjectReference[128]
+    TrackedFoodReference_2 = new ObjectReference[128]
 
     FoodSpoilStage1_1 = new Form[128]
     FoodSpoilStage1_2 = new Form[128]
@@ -100,7 +110,7 @@ function HandleFoodTransfer(Form akFood, int aiXferredCount, ObjectReference akO
         int tracked_count = 0
         int i = 0
         bool break = false
-        while i < found_indicies.Length || break
+        while i < found_indicies.Length && !break
             if found_indicies[i] != None            ; // Probable error with int array initializing to all 0's
                 tracked_count += BigArrayGetIntAtIndex_Do(i, TrackedFoodCount_1, TrackedFoodCount_2)
                 i += 1
@@ -146,31 +156,48 @@ function AddTrackedFood(Form akFood, int aiCount, ObjectReference akContainer, O
     TrackedFoodTable_AddRow(akFood, aiCount, aiInterval, akContainer, akFoodRef)
 endFunction
 
-int function FindTrackedFoodByRef(ObjectReference akFoodRef)
-    return BigArrayFindRef_Do(akFoodRef, TrackedFoodReference_1, TrackedFoodReference_2)
+int[] function FindTrackedFoodsByRef(ObjectReference akFoodRef)
+    int[] indicies = new Int[128]
+    int current_index = -1
+    current_index = BigArrayFindRef_Do(akFoodRef, TrackedFoodReference_1, TrackedFoodReference_2)
+    if current_index != -1
+        indicies[0] = current_index
+        i = 0
+        while current_index != -1 && i < indicies.Length
+            current_index = BigArrayFindNextRef_Do(akFoodRef, TrackedFoodReference_1, TrackedFoodReference_2, current_index + 1)
+            if current_index != -1
+                indicies[i] = current_index
+            endif
+            i += 1
+        endWhile
+    else
+        indicies[0] = -1
+    endif
+    return indicies
 endFunction
 
-int function FindTrackedFood(Form akFood, ObjectReference akContainer, ObjectReference akFoodRef)
-    ; Find all instances of akFood
-    int[] indicies = new int[128]
-    int i = 0
-    while i < indicies.Length
-        BigArrayFindForm_Do(akFood, )
-endFunction
-
-function ProcessDroppedFood()
-
-    int i = 0
-    while i < DroppedFood.Length
-        if DroppedFood[i]
-            ; do things to DroppedFood[i]
+int[] function FindTrackedFoodsByContainer(Form akFood, ObjectReference akContainer)
+    int[] indicies = new Int[128]
+    int current_index = -1
+    current_index = BigArrayFindRef_Do(akContainer, Container_1, Container_2)
+    if current_index != -1
+        if BigArrayGetFormAtIndex_Do(current_index, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2) == akFood
+            indicies[0] = current_index
         endif
-        i += 1
-    endWhile
-endFunction
-
-function ProcessTrackedContainers()
-    ; Need to determine periodicity before we can write this
+        i = 0
+        while current_index != -1 && i < indicies.Length
+            current_index = BigArrayFindNextRef_Do(akFoodRef, TrackedFoodReference_1, TrackedFoodReference_2, current_index + 1)
+            if current_index != -1
+                if BigArrayGetFormAtIndex_Do(current_index, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2) == akFood
+                    indicies[i] = current_index
+                endif
+            endif
+            i += 1
+        endWhile
+    else
+        indicies[0] = -1
+    endif
+    return indicies
 endFunction
 
 ; SPOILAGE HELPER FUNCTIONS
@@ -464,6 +491,30 @@ int function BigArrayFindRef_Do(ObjectReference akReference, ObjectReference[] a
         endif
     else
         return index
+    endif
+endFunction
+
+int function BigArrayFindNextRef_Do(ObjectReference akReference, ObjectReference[] array1, ObjectReference[] array2, int starting_index)
+    int index
+    if starting_index < 128
+        index = array1.Find(akReference, starting_index)
+        if index == -1
+            index = array2.Find(akReference, starting_index)
+            if index == -1
+                return -1
+            else
+                return index + 128
+            endif
+        else
+            return index
+        endif
+    else
+        index = array2.Find(akReference, starting_index - 128)
+        if index == -1
+            return -1
+        else
+            return index + 128
+        endif
     endif
 endFunction
 
