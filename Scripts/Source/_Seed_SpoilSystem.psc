@@ -7,6 +7,8 @@ int property current_spoil_interval = 0 auto hidden
 GlobalVariable property _Seed_DebugDumpFT auto
 GlobalVariable property _Seed_DebugDumpST auto
 
+; Roll-up schedule: 3 hours = 1 Interval, process 21 records per 15 in-game minutes (25 on 12th cycle to make 256)
+
 ; TrackedFoodTable
 Form[] TrackedFoodBaseObject_1
 Form[] TrackedFoodBaseObject_2
