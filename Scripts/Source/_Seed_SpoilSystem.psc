@@ -233,10 +233,6 @@ Form function PerishableFoodTable_GetFoodAtIndexColumn(int index, int col)
     endif
 endFunction
 
-Int function PerishableFoodTable_GetSpoilRateAtIndex(int index)
-    return BigArrayGetIntAtIndex_Do(index, FoodSpoilRate_1, FoodSpoilRate_2)
-endFunction
-
 int function PerishableFoodTable_FindAvailableIndex()
     return BigArrayFindForm_Do(None, FoodSpoilStage1_1, FoodSpoilStage1_2)
 endFunction
@@ -265,45 +261,20 @@ int function TrackedFoodTable_AddRow(Form akFood, int aiCount, int aiLastInterva
     return cursor
 endFunction
 
-; consolidate these to improve transaction
-function TrackedFoodTable_UpdateCount(int index, int aiNewCount)
-    if index > 127
-        index = index - 128
-        TrackedFoodCount_2[index] = aiNewCount
-    else
-        TrackedFoodCount_1[index] = aiNewCount
-    endif
+function TrackedFoodTable_UpdateRow(int index, int aiNewCount, int aiNewLastInterval, ObjectReference akNewContainer, ObjectReference akNewFoodRef)
+    BigArrayAddInt_Do(index, aiNewCount, TrackedFoodCount_1, TrackedFoodCount_2)
+    BigArrayAddInt_Do(index, aiNewLastInterval, LastInterval_1, LastInterval_2)
+    BigArrayAddRef_Do(index, akNewContainer, Container_1, Container_2)
+    BigArrayAddRef_Do(index, akNewFoodRef, TrackedFoodReference_1, TrackedFoodReference_2)
 endFunction
 
-function TrackedFoodTable_UpdateInterval(int index, int aiNewInterval)
-    if index > 127
-        index = index - 128
-        LastInterval_2[index] = aiNewInterval
-    else
-        LastInterval_1[index] = aiNewInterval
-    endif
-endFunction
-
-function TrackedFoodTable_UpdateContainer(int index, ObjectReference akNewContainer)
-    if index > 127
-        index = index - 128
-        Container_2[index] = akNewContainer
-    else
-        Container_1[index] = akNewContainer
-    endif
-endFunction
-
-function TrackedFoodTable_UpdateReference(int index, ObjectReference akNewReference)
-    if index > 127
-        index = index - 128
-        TrackedFoodReference_2[index] = akNewReference
-    else
-        TrackedFoodReference_1[index] = akNewReference
-    endif
-endFunction
-
-function TrackedFoodTable_RemoveRow()
-
+function TrackedFoodTable_RemoveRow(int index)
+    BigArrayClearForm_Do(index, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2)
+    BigArrayClearInt_Do(index, PerishableFoodID_1, PerishableFoodID_2)
+    BigArrayClearInt_Do(index, TrackedFoodCount_1, TrackedFoodCount_2)
+    BigArrayClearInt_Do(index, LastInterval_1, LastInterval_2)
+    BigArrayClearRef_Do(index, Container_1, Container_2)
+    BigArrayClearRef_Do(index, TrackedFoodReference_1, TrackedFoodReference_2)
 endFunction
 
 int function TrackedFoodTable_FindAvailableIndex()
@@ -407,6 +378,42 @@ function BigArrayAddRef_Do(int index, ObjectReference akReference, ObjectReferen
         array2[(128 - index)] = akReference
     else
         array1[index] = akReference
+    endif
+endFunction
+
+function BigArrayClearForm_Do(int index, Form[] array1, Form[] array2)
+    if index > 254
+        ;@TODO: Log error
+        return
+    endif
+    if index > 127
+        array2[(128 - index)] = None
+    else
+        array1[index] = None
+    endif
+endFunction
+
+function BigArrayClearInt_Do(int index, Int[] array1, Int[] array2)
+    if index > 254
+        ;@TODO: Log error
+        return
+    endif
+    if index > 127
+        array2[(128 - index)] = None
+    else
+        array1[index] = None
+    endif
+endFunction
+
+function BigArrayClearRef_Do(int index, ObjectReference[] array1, ObjectReference[] array2)
+    if index > 254
+        ;@TODO: Log error
+        return
+    endif
+    if index > 127
+        array2[(128 - index)] = None
+    else
+        array1[index] = None
     endif
 endFunction
 
