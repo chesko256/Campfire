@@ -149,6 +149,20 @@ function HandleFoodTransfer(Form akFood, int aiXferredCount, ObjectReference akO
     endif
 endFunction
 
+function HandleFoodConsumed(Form akFood, ObjectReference akConsumer)
+    int index = FindOldestTrackedFoodByContainer(akFood, akConsumer)
+    if index == -1
+        ; Was not being tracked anyway.
+    else
+        int count = BigArrayGetIntAtIndex_Do(index, TrackedFoodCount_1, TrackedFoodCount_2)
+        if count == 1
+            TrackedFoodTable_RemoveRow(index)
+        else
+            TrackedFoodTable_UpdateRow(index, aiCount = (count - 1))
+        endif
+    endif
+endFunction
+
 function AddTrackedFood(Form akFood, int aiCount, ObjectReference akContainer, ObjectReference akFoodRef, int aiInterval = 0)
     if aiInterval == 0
         aiInterval = current_spoil_interval
@@ -176,6 +190,28 @@ int[] function FindTrackedFoodsByRef(ObjectReference akFoodRef)
     return indicies
 endFunction
 
+int function FindOldestTrackedFoodByContainer(Form akFood, ObjectReference akContainer)
+    int current_index = -1
+    current_index = BigArrayFindRef_Do(akContainer, Container_1, Container_2)
+    if current_index != -1
+        if BigArrayGetFormAtIndex_Do(current_index, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2) == akFood
+            return current_index
+        else
+            i = 0
+            while current_index != -1 && i < indicies.Length
+                current_index = BigArrayFindNextRef_Do(akContainer, Container_1, Container_2, current_index + 1)
+                if current_index != -1
+                    if BigArrayGetFormAtIndex_Do(current_index, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2) == akFood
+                        return current_index
+                    endif
+                endif
+                i += 1
+            endWhile
+        endif
+    endif
+    return -1
+endFunction
+
 int[] function FindTrackedFoodsByContainer(Form akFood, ObjectReference akContainer)
     int[] indicies = new Int[128]
     int current_index = -1
@@ -186,7 +222,7 @@ int[] function FindTrackedFoodsByContainer(Form akFood, ObjectReference akContai
         endif
         i = 0
         while current_index != -1 && i < indicies.Length
-            current_index = BigArrayFindNextRef_Do(akFoodRef, TrackedFoodReference_1, TrackedFoodReference_2, current_index + 1)
+            current_index = BigArrayFindNextRef_Do(akContainer, Container_1, Container_2, current_index + 1)
             if current_index != -1
                 if BigArrayGetFormAtIndex_Do(current_index, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2) == akFood
                     indicies[i] = current_index
