@@ -101,7 +101,7 @@ function HandleFoodTransfer(Form akFood, int aiXferredCount, ObjectReference akO
         int i = 0
         bool break = false
         while i < found_indicies.Length || break
-            if found_indicies[i] != None
+            if found_indicies[i] != None            ; // Probable error with int array initializing to all 0's
                 tracked_count += BigArrayGetIntAtIndex_Do(i, TrackedFoodCount_1, TrackedFoodCount_2)
                 i += 1
             else
@@ -109,7 +109,6 @@ function HandleFoodTransfer(Form akFood, int aiXferredCount, ObjectReference akO
             endif
         endWhile
 
-        break = false
         int remaining_to_transfer = aiXferredCount
         int j = 0
         while (remaining_to_transfer > 0 && j < found_indicies.Length)
