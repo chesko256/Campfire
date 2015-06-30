@@ -6,6 +6,7 @@ bool property initialized = false auto hidden
 int property current_spoil_interval = 0 auto hidden
 GlobalVariable property _Seed_DebugDumpFT auto
 GlobalVariable property _Seed_DebugDumpST auto
+GlobalVariable property _Seed_DebugDumpVerbose auto
 
 ; Roll-up schedule: 3 hours = 1 Interval, process 21 records per 15 in-game minutes (25 on 12th cycle to make 256)
 
@@ -335,19 +336,28 @@ function PerishableFoodTable_DebugPrintTable()
     debug.trace("=====================================================================================================================")
     debug.trace("| Idx |   FoodSpoilStage1   |    FoodSpoilStage2   |    FoodSpoilStage3   |    FoodSpoilStage4   |     SpoilRate    |")
     int i = 0
+    bool break = false
     while i < 255
-        PerishableFoodTable_DebugPrintRow(i)
+        break = PerishableFoodTable_DebugPrintRow(i)
         i += 1
     endWhile
 endFunction
 
 function PerishableFoodTable_DebugPrintRow(int index)
+    if BigArrayGetFormAtIndex_Do(index, FoodSpoilStage1_1, FoodSpoilStage1_2) == None
+        if _Seed_DebugDumpVerbose.GetValueInt() == 2
+            ; continue
+        else
+            return true
+        endif
+    endif
     string stage_1_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage1_1, FoodSpoilStage1_2).GetName()
     string stage_2_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage2_1, FoodSpoilStage2_2).GetName()
     string stage_3_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage3_1, FoodSpoilStage3_2).GetName()
     string stage_4_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage4_1, FoodSpoilStage4_2).GetName()
     int spoil_rate = BigArrayGetIntAtIndex_Do(index, FoodSpoilRate_1, FoodSpoilRate_2)
     debug.trace("| " + index + " | " + stage_1_name + " | " + stage_2_name + " | " + stage_3_name + " | " + stage_4_name + " | " + spoil_rate " |")
+    return false
 endFunction
 
 ; TrackedFoodTable
@@ -457,18 +467,29 @@ function TrackedFoodTable_DebugPrintTable()
     debug.trace("=============================================================================================================")
     debug.trace("| Idx |       akFood       |  PerishableFoodID(FK)  | Count | Last Interval | Container |     Reference     |")
     int i = 0
-    while i < 255
-        TrackedFoodTable_DebugPrintRow(i)
+    bool break = false
+    while i < 255 && !break
+        break = TrackedFoodTable_DebugPrintRow(i)
+        i += 1
     endWhile
 endFunction
 
-function TrackedFoodTable_DebugPrintRow(int index)
-    string stage_1_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage1_1, FoodSpoilStage1_2).GetName()
-    string stage_2_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage2_1, FoodSpoilStage2_2).GetName()
-    string stage_3_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage3_1, FoodSpoilStage3_2).GetName()
-    string stage_4_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage4_1, FoodSpoilStage4_2).GetName()
-    int spoil_rate = BigArrayGetIntAtIndex_Do(index, FoodSpoilRate_1, FoodSpoilRate_2)
-    debug.trace("| " + index + " | " + stage_1_name + " | " + stage_2_name + " | " + stage_3_name + " | " + stage_4_name + " | " + spoil_rate " |")
+bool function TrackedFoodTable_DebugPrintRow(int index)
+    if BigArrayGetFormAtIndex_Do(index, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2) == None
+        if _Seed_DebugDumpVerbose.GetValueInt() == 2
+            ; continue
+        else
+            return true
+        endif
+    endif
+    string food_name = BigArrayGetFormAtIndex_Do(index, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2).GetName()
+    int perishable_id = BigArrayGetIntAtIndex_Do(index, PerishableFoodID_1, PerishableFoodID_2)
+    int food_count = BigArrayGetIntAtIndex_Do(index, TrackedFoodCount_1, TrackedFoodCount_2)
+    int last_interval = BigArrayGetFormAtIndex_Do(index, LastInterval_1, LastInterval_2)
+    ObjectReference container_ref = BigArrayGetRefAtIndex_Do(index, Container_1, Container_2)
+    ObjectReference food_ref = BigArrayGetRefAtIndex_Do(index, TrackedFoodReference_1, TrackedFoodReference_2)
+    debug.trace("| " + index + " | " + food_name + " | " + perishable_id + " | " + food_count + " | " + last_interval + " | " + container_ref " | " + food_ref + " |")
+    return false
 endFunction
 
 ; BIG ARRAY FUNCTIONS
@@ -658,17 +679,5 @@ function BigArrayClearRef_Do(int index, ObjectReference[] array1, ObjectReferenc
         array2[(128 - index)] = None
     else
         array1[index] = None
-    endif
-endFunction
-
-; ARRAY FUNCTIONS
-
-bool function ArrayAdd(ObjectReference[] myArray, ObjectReference ref)
-    int index = myArray.Find(None)
-    if index >= 0
-        myArray[index] = ref
-        return true
-    else
-        return false
     endif
 endFunction
