@@ -3,14 +3,12 @@ scriptname _Seed_SpoilSystem extends Quest
 import StringUtil
 
 bool property initialized = false auto hidden
-int property current_spoil_interval = 0 auto hidden
+int property current_spoil_interval = 1 auto hidden
 GlobalVariable property _Seed_DebugDumpFT auto
 GlobalVariable property _Seed_DebugDumpST auto
 GlobalVariable property _Seed_DebugDumpVerbose auto
 
 float last_interval_timestamp
-
-; Roll-up schedule: 3 hours = 1 Interval, process 21 records per 15 in-game minutes (25 on 12th cycle to make 256)
 
 ; TrackedFoodTable
 Form[] TrackedFoodBaseObject_1
@@ -60,10 +58,15 @@ GlobalVariable property _Seed_SpoilRate_Cheese auto                 ; 12
 GlobalVariable property _Seed_SpoilRate_BreadSweets auto            ; 8
 GlobalVariable property _Seed_SpoilRate_CookedFood auto             ; 4
 
-float UPDATE_GAMETIME_RATE = 0.25
+float UPDATE_GAMETIME_RATE = 3.0
 
 Event OnUpdateGameTime()
     ; Look at this timestamp and old timestamp, determine how many rollups I should be doing
+    float current_time = Utility.GetCurrentGameTime()
+    int intervals = Math.Floor(((last_interval_timestamp - current_time) * 24.0) / 3)
+    current_spoil_interval += intervals
+    AdvanceSpoilage()
+    last_interval_timestamp = current_time
 
     if _Seed_SpoilSystemEnabled.GetValueInt() == 2
         RegisterForSingleUpdateGameTime(UPDATE_GAMETIME_RATE)
@@ -95,6 +98,52 @@ Function Initialize()
     FoodSpoilRate_1 = new Int[128]
     FoodSpoilRate_2 = new Int[128]
     initialized = true
+endFunction
+
+function AdvanceSpoilage(int aiIntervals)
+    int[] rows_to_remove = new int[128]
+    int i = 0
+    int size = TrackedFoodTable_FindAvailableIndex()
+    if size == -1
+        size = 256
+    endif
+
+    while i < size
+        int this_food_interval = TrackedFoodTable_GetIntervalAtIndex(i)
+        int this_food_count = TrackedFoodTable_GetCountAtIndex(i)
+        if this_food_interval == 0 || this_food_count == 0
+            ; Sanity check; this row has no interval or count, but is populated.
+            ArrayAddInt(rows_to_remove, i)
+        
+        int this_food_perishid = TrackedFoodTable_GetPerishIDAtIndex(i)
+        elseif (current_spoil_interval - this_food_interval) >= GetSpoilRateByIndex(this_food_perishid)
+            ; Spoil the food
+            ObjectReference this_food_ref = TrackedFoodTable_GetRefAtIndex(i)
+            ObjectReference this_food_container = TrackedFoodTable_GetContainerAtIndex(i)
+            
+            Form spoiled_food = GetNextSpoilStageBySOMETHINGTODO
+
+            if this_food_ref != None && this_food_container == None
+                SpoilFoodInWorld(this_food_ref, spoiled_food)
+            elseif this_food_container != None
+                Form this_food = TrackedFoodTable_GetBaseObjectAtIndex(i)
+                SpoilFoodInContainer(this_food, spoiled_food, this_food_container, this_food_count)
+            else
+                ; Sanity check; has no ref or container, so stop tracking.
+                ArrayAddInt(rows_to_remove, i)
+            endif
+        endif
+        i += 1
+    endWhile
+endFunction
+
+function SpoilFoodInContainer(Form akFood, ObjectReference akContainer, int aiCount, int aiPerishableFoodID)
+
+endFunction
+
+function SpoilFoodInWorld(ObjectReference akFoodRef, int aiPerishableFoodID)
+    akFoodRef.Disable()
+
 endFunction
 
 function HandleFoodConsumed(Form akFood, ObjectReference akConsumer)
@@ -508,6 +557,10 @@ function TrackedFoodTable_SortByOldest()
     endWhile
 endFunction
 
+int function TrackedFoodTable_GetIntervalAtIndex(int index)
+    return BigArrayGetIntAtIndex_Do(index, LastInterval_1, LastInterval_2)
+endFunction
+
 int function TrackedFoodTable_FindAvailableIndex()
     return BigArrayFindForm_Do(None, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2)
 endFunction
@@ -729,5 +782,12 @@ function BigArrayClearRef_Do(int index, ObjectReference[] array1, ObjectReferenc
         array2[(128 - index)] = None
     else
         array1[index] = None
+    endif
+endFunction
+
+function ArrayAddInt(Int[] myArray, Int aiValue)
+    int index = myArray.Find(None)
+    if index >= 0
+        myArray[index] = aiValue
     endif
 endFunction
