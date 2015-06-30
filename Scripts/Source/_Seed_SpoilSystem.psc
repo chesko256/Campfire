@@ -241,15 +241,12 @@ int function PerishableFoodTable_FindAvailableIndex()
     return BigArrayFindForm_Do(None, FoodSpoilStage1_1, FoodSpoilStage1_2)
 endFunction
 
-int function TrackedFoodTable_FindAvailableIndex()
-    return BigArrayFindForm_Do(None, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2)
-endFunction
-
 ; TrackedFoodTable
 ; akBaseObject    | PerishableFoodID (FK) | Count | Last Interval | Container  | Reference  |
 ; ================|=======================|=======|===============|============|============|
 ; FoodApple       | 0                     | 3     | 417           | None       | 0xFF000011 |
 ; FoodCabbage     | 9                     | 1     | 316           | 0x0105674b | None       |
+; FoodUnknown     | -1                    | 4     | 525           | 0x0000000f | None       |
 
 int function TrackedFoodTable_AddRow(Form akFood, int aiCount, int aiLastInterval, ObjectReference akContainer, ObjectReference akFoodRef)
     if !cursor
@@ -268,6 +265,7 @@ int function TrackedFoodTable_AddRow(Form akFood, int aiCount, int aiLastInterva
     return cursor
 endFunction
 
+; consolidate these to improve transaction
 function TrackedFoodTable_UpdateCount(int index, int aiNewCount)
     if index > 127
         index = index - 128
@@ -306,6 +304,10 @@ endFunction
 
 function TrackedFoodTable_RemoveRow()
 
+endFunction
+
+int function TrackedFoodTable_FindAvailableIndex()
+    return BigArrayFindForm_Do(None, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2)
 endFunction
 
 ; BIG ARRAY FUNCTIONS
