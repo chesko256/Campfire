@@ -1,6 +1,7 @@
 scriptname _Seed_SpoilSystem extends Quest
 
 import StringUtil
+import CampUtil
 
 bool property initialized = false auto hidden
 int property current_spoil_interval = 1 auto hidden
@@ -121,13 +122,21 @@ function AdvanceSpoilage(int aiIntervals)
             ObjectReference this_food_ref = TrackedFoodTable_GetRefAtIndex(i)
             ObjectReference this_food_container = TrackedFoodTable_GetContainerAtIndex(i)
             
-            Form spoiled_food = GetNextSpoilStageBySOMETHINGTODO
+            Form spoiled_food = GetNextSpoilStageForm(this_food, this_food_perishid)
+            if spoiled_food == None
+                ; Already completely spoiled, stop tracking.
+                ArrayAddInt(rows_to_remove, i)
 
-            if this_food_ref != None && this_food_container == None
-                SpoilFoodInWorld(this_food_ref, spoiled_food)
+            elseif this_food_ref != None && this_food_container == None
+                ObjectReference spoiled_food_ref = SpoilFoodInWorld(this_food_ref, spoiled_food)
+                TrackedFoodTable_UpdateRow(i, akFood = spoiled_food, aiNewLastInterval = current_spoil_interval, akFoodRef = spoiled_food_ref)
+
             elseif this_food_container != None
                 Form this_food = TrackedFoodTable_GetBaseObjectAtIndex(i)
                 SpoilFoodInContainer(this_food, spoiled_food, this_food_container, this_food_count)
+                if !IsEventSendingActor(akContainer)
+                    TrackedFoodTable_UpdateRow(i, akFood = spoiled_food, aiNewLastInterval = current_spoil_interval)    
+                endif
             else
                 ; Sanity check; has no ref or container, so stop tracking.
                 ArrayAddInt(rows_to_remove, i)
@@ -137,13 +146,29 @@ function AdvanceSpoilage(int aiIntervals)
     endWhile
 endFunction
 
-function SpoilFoodInContainer(Form akFood, ObjectReference akContainer, int aiCount, int aiPerishableFoodID)
-
+bool function IsEventSendingActor(ObjectReference akReference)
+    if (akReference as actor) && (akReference == PlayerRef || akReference == GetTrackedFollower(1) || \
+                                  akReference == GetTrackedFollower(2) || akReference == GetTrackedFollower(3))
+        return true
+    else
+        return false
+    endif
 endFunction
 
-function SpoilFoodInWorld(ObjectReference akFoodRef, int aiPerishableFoodID)
-    akFoodRef.Disable()
+function SpoilFoodInContainer(Form akFood, Form akSpoiledFood, ObjectReference akContainer, int aiCount)
+        akContainer.RemoveItem(akFood, aiCount, true)
+        akContainer.AddItem(akSpoiledFood, aiCount, true)
+endFunction
 
+ObjectReference function SpoilFoodInWorld(ObjectReference akFoodRef, Form akSpoiledFood)
+    akFoodRef.Disable()
+    return akFoodRef.PlaceAtMe(akSpoiledFood, 1)
+endFunction
+
+Form function GetNextSpoilStageByPerishableFoodID(Form akFood, int aiPerishableFoodID)
+    Form food = BigArrayGetFormAtIndex_Do(aiPerishableFoodID, FoodSpoilStage1_1, FoodSpoilStage1_2)
+    if food == akFood
+        return 
 endFunction
 
 function HandleFoodConsumed(Form akFood, ObjectReference akConsumer)
@@ -301,25 +326,16 @@ endFunction
 
 ; SPOILAGE HELPER FUNCTIONS
 
-Form function GetNextSpoilStageForm(Form akBaseObject)
+Form function GetNextSpoilStageForm(Form akBaseObject, int aiPerishableFoodID)
     int index
     if HasSpoilStage4Name(akBaseObject)
         return None
     elseif HasSpoilStage3Name(akBaseObject)
-        index = PerishableFoodTable_FindFormInColumn(akBaseObject, COL_FOOD_SPOIL_STAGE3)
-        if index != -1
-            PerishableFoodTable_GetFoodAtIndexColumn(index, COL_FOOD_SPOIL_STAGE4)
-        endif
+        return BigArrayGetFormAtIndex_Do(aiPerishableFoodID, FoodSpoilStage4_1, FoodSpoilStage4_2)
     elseif HasSpoilStage2Name(akBaseObject)
-        index = PerishableFoodTable_FindFormInColumn(akBaseObject, COL_FOOD_SPOIL_STAGE2)
-        if index != -1
-            PerishableFoodTable_GetFoodAtIndexColumn(index, COL_FOOD_SPOIL_STAGE3)
-        endif
+        return BigArrayGetFormAtIndex_Do(aiPerishableFoodID, FoodSpoilStage3_1, FoodSpoilStage3_2)
     else
-        index = PerishableFoodTable_FindFormInColumn(akBaseObject, COL_FOOD_SPOIL_STAGE1)
-        if index != -1
-            PerishableFoodTable_GetFoodAtIndexColumn(index, COL_FOOD_SPOIL_STAGE2)
-        endif
+        return BigArrayGetFormAtIndex_Do(aiPerishableFoodID, FoodSpoilStage2_1, FoodSpoilStage2_2)
     endif
 endFunction
 
