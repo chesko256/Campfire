@@ -261,11 +261,25 @@ int function TrackedFoodTable_AddRow(Form akFood, int aiCount, int aiLastInterva
     return cursor
 endFunction
 
-function TrackedFoodTable_UpdateRow(int index, int aiNewCount, int aiNewLastInterval, ObjectReference akNewContainer, ObjectReference akNewFoodRef)
-    BigArrayAddInt_Do(index, aiNewCount, TrackedFoodCount_1, TrackedFoodCount_2)
-    BigArrayAddInt_Do(index, aiNewLastInterval, LastInterval_1, LastInterval_2)
-    BigArrayAddRef_Do(index, akNewContainer, Container_1, Container_2)
-    BigArrayAddRef_Do(index, akNewFoodRef, TrackedFoodReference_1, TrackedFoodReference_2)
+function TrackedFoodTable_UpdateRow(int index, Form akFood = None, int aiPerishableFoodID = None, int aiNewCount = None, int aiNewLastInterval = None, ObjectReference akNewContainer = None, ObjectReference akNewFoodRef = None)
+    if akFood
+        BigArrayAddForm_Do(index, akFood, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2)
+    endif
+    if aiPerishableFoodID
+        BigArrayAddInt_Do(index, aiPerishableFoodID, PerishableFoodID_1, PerishableFoodID_2)
+    endif
+    if aiNewCount
+        BigArrayAddInt_Do(index, aiNewCount, TrackedFoodCount_1, TrackedFoodCount_2)
+    endif
+    if aiNewLastInterval
+        BigArrayAddInt_Do(index, aiNewLastInterval, LastInterval_1, LastInterval_2)
+    endif
+    if akNewContainer
+        BigArrayAddRef_Do(index, akNewContainer, Container_1, Container_2)
+    endif
+    if akNewFoodRef
+        BigArrayAddRef_Do(index, akNewFoodRef, TrackedFoodReference_1, TrackedFoodReference_2)
+    endif
 endFunction
 
 function TrackedFoodTable_RemoveRow(int index)
@@ -275,6 +289,50 @@ function TrackedFoodTable_RemoveRow(int index)
     BigArrayClearInt_Do(index, LastInterval_1, LastInterval_2)
     BigArrayClearRef_Do(index, Container_1, Container_2)
     BigArrayClearRef_Do(index, TrackedFoodReference_1, TrackedFoodReference_2)
+    TrackedFoodTable_SortByOldest()
+endFunction
+
+function TrackedFoodTable_SortByOldest()
+    ;From https://en.wikipedia.org/wiki/Selection_sort, converted to Papyrus
+    int i
+    int j = 0
+    int iMin
+    int n = 256
+    while j < n - 1
+        iMin = j
+        i = j + 1
+        while i < n
+            ; fix
+            int i_val = BigArrayGetIntAtIndex_Do(i, LastInterval_1, LastInterval_2)
+            int iMin_val = BigArrayGetIntAtIndex_Do(iMin, LastInterval_1, LastInterval_2)
+            if i_val < iMin_val || (i_val != None && iMin_val == None)
+                iMin = i
+            endif
+            i += 1
+        endWhile
+        if iMin != j
+            ; Get row j values
+            Form temp_food = BigArrayGetFormAtIndex_Do(j, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2)
+            int temp_perishablefoodid = BigArrayGetIntAtIndex_Do(j, PerishableFoodID_1, PerishableFoodID_2)
+            int temp_count = BigArrayGetIntAtIndex_Do(j, TrackedFoodCount_1, TrackedFoodCount_2)
+            int temp_lastinterval = BigArrayGetIntAtIndex_Do(j, LastInterval_1, LastInterval_2)
+            ObjectReference temp_container = BigArrayGetRefAtIndex_Do(j, Container_1, Container_2)
+            ObjectReference temp_reference = BigArrayGetRefAtIndex_Do(j, TrackedFoodReference_1, TrackedFoodReference_2)
+
+            ; Get row iMin values
+            Form min_food = BigArrayGetFormAtIndex_Do(iMin, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2)
+            int min_perishablefoodid = BigArrayGetIntAtIndex_Do(iMin, PerishableFoodID_1, PerishableFoodID_2)
+            int min_count = BigArrayGetIntAtIndex_Do(iMin, TrackedFoodCount_1, TrackedFoodCount_2)
+            int min_lastinterval = BigArrayGetIntAtIndex_Do(iMin, LastInterval_1, LastInterval_2)
+            ObjectReference min_container = BigArrayGetRefAtIndex_Do(iMin, Container_1, Container_2)
+            ObjectReference min_reference = BigArrayGetRefAtIndex_Do(iMin, TrackedFoodReference_1, TrackedFoodReference_2)
+
+            ; Swap row j values with row iMin values
+            TrackedFoodTable_UpdateRow(j, min_food, min_perishablefoodid, min_count, min_lastinterval, min_container, min_reference)
+            TrackedFoodTable_UpdateRow(iMin, temp_food, temp_perishablefoodid, temp_count, temp_lastinterval, temp_container, temp_reference)
+        endif
+        j += 1
+    endWhile
 endFunction
 
 int function TrackedFoodTable_FindAvailableIndex()
@@ -337,6 +395,15 @@ Form function BigArrayGetFormAtIndex_Do(int index, Form[] array1, Form[] array2)
 endFunction
 
 Int function BigArrayGetIntAtIndex_Do(int index, Int[] array1, Int[] array2)
+    if index > 127
+        index = index - 128
+        return array2[index]
+    else
+        return array1[index]
+    endif
+endFunction
+
+ObjectReference function BigArrayGetRefAtIndex_Do(int index, ObjectReference[] array1, ObjectReference[] array2)
     if index > 127
         index = index - 128
         return array2[index]
