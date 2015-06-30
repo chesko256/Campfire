@@ -3,11 +3,9 @@ scriptname _Seed_SpoilSystem extends Quest
 import StringUtil
 
 bool property initialized = false auto hidden
-ObjectReference[] property DroppedFood_Reference auto hidden
-ObjectReference[] property DroppedFood_LastInterval auto hidden
-ObjectReference[] property TrackedFoodContainers auto hidden
-
 int property current_spoil_interval = 0 auto hidden
+GlobalVariable property _Seed_DebugDumpFT auto
+GlobalVariable property _Seed_DebugDumpST auto
 
 ; TrackedFoodTable
 Form[] TrackedFoodBaseObject_1
@@ -54,7 +52,6 @@ GlobalVariable property _Seed_SpoilRate_FruitVegetables auto        ; 12
 GlobalVariable property _Seed_SpoilRate_Cheese auto                 ; 12
 GlobalVariable property _Seed_SpoilRate_BreadSweets auto            ; 8
 GlobalVariable property _Seed_SpoilRate_CookedFood auto             ; 4
-
 
 Function Initialize()
     TrackedFoodBaseObject_1 = Form[128]
@@ -331,6 +328,26 @@ int function PerishableFoodTable_FindAvailableIndex()
     return BigArrayFindForm_Do(None, FoodSpoilStage1_1, FoodSpoilStage1_2)
 endFunction
 
+function PerishableFoodTable_DebugPrintTable()
+    debug.trace("PerishableFoodTable")
+    debug.trace("=====================================================================================================================")
+    debug.trace("| Idx |   FoodSpoilStage1   |    FoodSpoilStage2   |    FoodSpoilStage3   |    FoodSpoilStage4   |     SpoilRate    |")
+    int i = 0
+    while i < 255
+        PerishableFoodTable_DebugPrintRow(i)
+        i += 1
+    endWhile
+endFunction
+
+function PerishableFoodTable_DebugPrintRow(int index)
+    string stage_1_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage1_1, FoodSpoilStage1_2).GetName()
+    string stage_2_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage2_1, FoodSpoilStage2_2).GetName()
+    string stage_3_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage3_1, FoodSpoilStage3_2).GetName()
+    string stage_4_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage4_1, FoodSpoilStage4_2).GetName()
+    int spoil_rate = BigArrayGetIntAtIndex_Do(index, FoodSpoilRate_1, FoodSpoilRate_2)
+    debug.trace("| " + index + " | " + stage_1_name + " | " + stage_2_name + " | " + stage_3_name + " | " + stage_4_name + " | " + spoil_rate " |")
+endFunction
+
 ; TrackedFoodTable
 ; akBaseObject    | PerishableFoodID (FK) | Count | Last Interval | Container  | Reference  |
 ; ================|=======================|=======|===============|============|============|
@@ -397,7 +414,6 @@ function TrackedFoodTable_SortByOldest()
         iMin = j
         i = j + 1
         while i < n
-            ; fix
             int i_val = BigArrayGetIntAtIndex_Do(i, LastInterval_1, LastInterval_2)
             int iMin_val = BigArrayGetIntAtIndex_Do(iMin, LastInterval_1, LastInterval_2)
             if i_val < iMin_val || (i_val != None && iMin_val == None)
@@ -432,6 +448,25 @@ endFunction
 
 int function TrackedFoodTable_FindAvailableIndex()
     return BigArrayFindForm_Do(None, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2)
+endFunction
+
+function TrackedFoodTable_DebugPrintTable()
+    debug.trace("TrackedFoodTable")
+    debug.trace("=============================================================================================================")
+    debug.trace("| Idx |       akFood       |  PerishableFoodID(FK)  | Count | Last Interval | Container |     Reference     |")
+    int i = 0
+    while i < 255
+        TrackedFoodTable_DebugPrintRow(i)
+    endWhile
+endFunction
+
+function TrackedFoodTable_DebugPrintRow(int index)
+    string stage_1_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage1_1, FoodSpoilStage1_2).GetName()
+    string stage_2_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage2_1, FoodSpoilStage2_2).GetName()
+    string stage_3_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage3_1, FoodSpoilStage3_2).GetName()
+    string stage_4_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage4_1, FoodSpoilStage4_2).GetName()
+    int spoil_rate = BigArrayGetIntAtIndex_Do(index, FoodSpoilRate_1, FoodSpoilRate_2)
+    debug.trace("| " + index + " | " + stage_1_name + " | " + stage_2_name + " | " + stage_3_name + " | " + stage_4_name + " | " + spoil_rate " |")
 endFunction
 
 ; BIG ARRAY FUNCTIONS
