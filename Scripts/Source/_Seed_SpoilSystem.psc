@@ -8,6 +8,8 @@ GlobalVariable property _Seed_DebugDumpFT auto
 GlobalVariable property _Seed_DebugDumpST auto
 GlobalVariable property _Seed_DebugDumpVerbose auto
 
+float last_interval_timestamp
+
 ; Roll-up schedule: 3 hours = 1 Interval, process 21 records per 15 in-game minutes (25 on 12th cycle to make 256)
 
 ; TrackedFoodTable
@@ -49,12 +51,24 @@ int COL_FOOD_SPOIL_STAGE3 = 202
 int COL_FOOD_SPOIL_STAGE4 = 203
 int COL_FOOD_SPOIL_RATE = 204
 
+GlobalVariable property _Seed_SpoilSystemEnabled auto
+
 ; Spoil Rate = Spoil every x 3 hour intervals
 GlobalVariable property _Seed_SpoilRate_RawMeat auto                ; 1
 GlobalVariable property _Seed_SpoilRate_FruitVegetables auto        ; 12
 GlobalVariable property _Seed_SpoilRate_Cheese auto                 ; 12
 GlobalVariable property _Seed_SpoilRate_BreadSweets auto            ; 8
 GlobalVariable property _Seed_SpoilRate_CookedFood auto             ; 4
+
+float UPDATE_GAMETIME_RATE = 0.25
+
+Event OnUpdateGameTime()
+    ; Look at this timestamp and old timestamp, determine how many rollups I should be doing
+
+    if _Seed_SpoilSystemEnabled.GetValueInt() == 2
+        RegisterForSingleUpdateGameTime(UPDATE_GAMETIME_RATE)
+    endif
+endEvent
 
 Function Initialize()
     TrackedFoodBaseObject_1 = Form[128]
@@ -81,6 +95,20 @@ Function Initialize()
     FoodSpoilRate_1 = new Int[128]
     FoodSpoilRate_2 = new Int[128]
     initialized = true
+endFunction
+
+function HandleFoodConsumed(Form akFood, ObjectReference akConsumer)
+    int index = FindOldestTrackedFoodByContainer(akFood, akConsumer)
+    if index == -1
+        ; Was not being tracked anyway.
+    else
+        int count = BigArrayGetIntAtIndex_Do(index, TrackedFoodCount_1, TrackedFoodCount_2)
+        if count == 1
+            TrackedFoodTable_RemoveRow(index)
+        else
+            TrackedFoodTable_UpdateRow(index, aiCount = (count - 1))
+        endif
+    endif
 endFunction
 
 function HandleFoodTransfer(Form akFood, int aiXferredCount, ObjectReference akOldContainer, ObjectReference akNewContainer, ObjectReference akOldRef, ObjectReference akNewRef)
@@ -149,26 +177,12 @@ function HandleFoodTransfer(Form akFood, int aiXferredCount, ObjectReference akO
     endif
 endFunction
 
-function HandleFoodConsumed(Form akFood, ObjectReference akConsumer)
-    int index = FindOldestTrackedFoodByContainer(akFood, akConsumer)
-    if index == -1
-        ; Was not being tracked anyway.
-    else
-        int count = BigArrayGetIntAtIndex_Do(index, TrackedFoodCount_1, TrackedFoodCount_2)
-        if count == 1
-            TrackedFoodTable_RemoveRow(index)
-        else
-            TrackedFoodTable_UpdateRow(index, aiCount = (count - 1))
-        endif
-    endif
-endFunction
-
 function AddTrackedFood(Form akFood, int aiCount, ObjectReference akContainer, ObjectReference akFoodRef, int aiInterval = 0)
     if aiInterval == 0
         aiInterval = current_spoil_interval
     endif
     TrackedFoodTable_AddRow(akFood, aiCount, aiInterval, akContainer, akFoodRef)
-endFunction
+endFunction 
 
 int[] function FindTrackedFoodsByRef(ObjectReference akFoodRef)
     int[] indicies = new Int[128]
