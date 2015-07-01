@@ -1,5 +1,10 @@
 scriptname _Seed_SpoilSystem extends Quest
 
+; To do:
+;   Sorting too frequently
+;   Better positioning of in-world spoil objects and motion type
+;   Profile with many foods
+
 import StringUtil
 import CampUtil
 
