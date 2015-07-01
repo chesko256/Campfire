@@ -424,18 +424,6 @@ int function GetRefDataSetSize(ObjectReference[] array)
     return size
 endFunction
 
-function HandleFoodTransferByReference()
-
-endFunction
-
-function HandleFoodTransferByReferenceSet()
-
-endFunction
-
-function HandleFoodTransferByContainer()
-
-endFunction
-
 function AddTrackedFood(Form akFood, int aiCount, ObjectReference akContainer, ObjectReference akFoodRef, int aiInterval = 0)
     debug.trace("[Seed] AddTrackedFood")
     if aiInterval == 0
