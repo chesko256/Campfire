@@ -2,6 +2,9 @@ scriptname _Seed_SpoilSystem extends Quest
 
 ; To do:
 ;   Better positioning of in-world spoil objects and motion type (bug - dropped food doesn't report pos correctly)
+;   Immediately purge completely spoiled food
+;   Don't add completely spoiled food if picked up
+;   Add _Seed_SpoilSystemDelegate to queue requests
 ;   Profile with many foods
 
 import StringUtil
