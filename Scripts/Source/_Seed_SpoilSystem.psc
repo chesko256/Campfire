@@ -1,8 +1,7 @@
 scriptname _Seed_SpoilSystem extends Quest
 
 ; To do:
-;   Sorting too frequently
-;   Better positioning of in-world spoil objects and motion type
+;   Better positioning of in-world spoil objects and motion type (bug - dropped food doesn't report pos correctly)
 ;   Profile with many foods
 
 import StringUtil
@@ -185,6 +184,7 @@ function AdvanceSpoilage()
             TrackedFoodTable_RemoveRow(rows_to_remove[k] - 1000)
             k += 1
         endWhile
+        debug.trace("[Seed] Sorting because rows removed as part of spoil process.")
         TrackedFoodTable_SortByOldest()
     endif
 endFunction
@@ -211,7 +211,7 @@ ObjectReference function SpoilFoodInWorld(ObjectReference akFoodRef, Form akSpoi
     while !ref.Is3DLoaded() || i > 50
         i += 1
     endWhile
-    ref.SetMotionType(1, false)
+    ref.SetMotionType(4)
     ref.MoveTo(akFoodRef)
     akFoodRef.Delete()
     return ref
@@ -230,6 +230,7 @@ function HandleFoodConsumed(Form akFood, ObjectReference akConsumer, int aiCount
     if found_tracked_food
         ; Determine the total number of currently tracked foods that match the criteria.
         int tracked_count = 0
+        bool sort_required = false
         int i = 0
         bool break = false
         while i < found_indicies.Length && !break
@@ -255,16 +256,21 @@ function HandleFoodConsumed(Form akFood, ObjectReference akConsumer, int aiCount
                 ; Remove entry
                 TrackedFoodTable_RemoveRow(found_indicies[j] - 1000)
                 remaining_to_remove -= entry_count
+                sort_required = true
             else
                 ; Subtract transferred amount from existing entry, and add new entry for partial transfer, maintaining the entry interval
                 TrackedFoodTable_UpdateRow(found_indicies[j] - 1000, aiCount = (entry_count - remaining_to_remove))
                 remaining_to_remove = 0
+                sort_required = true
             endif
             j += 1
         endWhile
         debug.trace("[Seed] Exited consumption deduction loop.")
 
-        TrackedFoodTable_SortByOldest()
+        if sort_required
+            debug.trace("[Seed] Sorting required after consumption because rows were removed or modified.")
+            TrackedFoodTable_SortByOldest()
+        endif
     endif
 endFunction
 
@@ -296,6 +302,7 @@ function HandleFoodTransfer(Form akFood, int aiXferredCount, ObjectReference akO
     if found_tracked_food
         ; Determine the total number of currently tracked foods that match the criteria.
         int tracked_count = 0
+        bool sort_required = false
         int i = 0
         bool break = false
         while i < found_indicies.Length && !break
@@ -327,17 +334,20 @@ function HandleFoodTransfer(Form akFood, int aiXferredCount, ObjectReference akO
                 int interval = BigArrayGetIntAtIndex_Do(found_indicies[j] - 1000, LastInterval_1, LastInterval_2)
                 AddTrackedFood(akFood, remaining_to_transfer, akNewContainer, akNewRef, interval)
                 remaining_to_transfer = 0
+                sort_required = true
             endif
             j += 1
         endWhile
-        debug.trace("[Seed] Exited tracking deduction loop.")
 
         ; If there were more transferred than we were tracking, add new entries for those items
         if remaining_to_transfer > 0
             AddTrackedFood(akFood, remaining_to_transfer, akNewContainer, akNewRef)
         endif
 
-        TrackedFoodTable_SortByOldest()
+        if sort_required
+            debug.trace("[Seed] Sorting required after transfer because rows were removed or modified.")
+            TrackedFoodTable_SortByOldest()
+        endif
     else
         debug.trace("[Seed] Not tracking this food, adding...")
         ; Not tracking this food object, so create a table entry
@@ -490,20 +500,16 @@ endFunction
 
 bool function HasSpoilStage4Name(string asFoodName)
     if Find(asFoodName, "Rotten") != -1 || Find(asFoodName, "Rancid") != -1 || Find(asFoodName, "Foul") != -1 
-        Debug.trace("[Seed] HasSpoilStage4Name = true (" + asFoodName + ")")
         return true
     else
-        Debug.trace("[Seed] HasSpoilStage4Name = false (" + asFoodName + ")")
         return false
     endif
 endFunction
 
 bool function HasSpoilStage3Name(string asFoodName)
     if Find(asFoodName, "Spoiled") != -1 || Find(asFoodName, "Moldy") != -1
-        Debug.trace("[Seed] HasSpoilStage3Name = true (" + asFoodName + ")")
         return true
     else
-        Debug.trace("[Seed] HasSpoilStage3Name = false (" + asFoodName + ")")
         return false
     endif
 endFunction
@@ -511,10 +517,8 @@ endFunction
 bool function HasSpoilStage2Name(string asFoodName)
     if Find(asFoodName, "Stale") != -1 || Find(asFoodName, "Overripe") != -1 || \
         Find(asFoodName, "Dry") != -1 || Find(asFoodName, "Old") != -1
-        Debug.trace("[Seed] HasSpoilStage2Name = true (" + asFoodName + ")")
         return true
     else
-        Debug.trace("[Seed] HasSpoilStage2Name = false (" + asFoodName + ")")
         return false
     endif
 endFunction
