@@ -274,55 +274,37 @@ function HandleFoodConsumed(Form akFood, ObjectReference akConsumer, int aiCount
     endif
 endFunction
 
-function HandleFoodTransfer(Form akFood, int aiXferredCount, ObjectReference akOldContainer, ObjectReference akNewContainer, ObjectReference akOldRef, ObjectReference akNewRef)
-    ; Handle food moving between containers, between the world and a container, or between a container and the world.
+function HandleFoodTransferToContainer(Form akFood, int aiXferredCount, ObjectReference akOldContainer, ObjectReference akNewContainer, ObjectReference akOldRef)
+    ; Handle food moving between containers, or from the world to a container.
 
-    debug.trace("[Seed] HandleFoodTransfer")
+    debug.trace("[Seed] HandleFoodTransferToContainer")
     bool found_tracked_food = false
     int[] found_indicies
     
-    ; Am I already tracking this food?
+    ; Is this food already in the table?
     if akOldRef
         found_indicies = FindTrackedFoodsByRef(akOldRef)
         if found_indicies[0] != 0
-            debug.trace("[Seed] (World) Already tracking this food at indicies " + found_indicies[0] + ", " + found_indicies[1] + ", " + found_indicies[2] + "...")
             found_tracked_food = true
         endif
     endif
     
-    ; Didn't find reference, so try finding by type and container
     if !found_tracked_food && akOldContainer
         found_indicies = FindTrackedFoodsByContainer(akFood, akOldContainer)
         if found_indicies[0] != 0
-            debug.trace("[Seed] (Container) Already tracking this food at indicies " + found_indicies[0] + ", " + found_indicies[1] + ", " + found_indicies[2] + "...")
             found_tracked_food = true
         endif
     endif
 
     if found_tracked_food
-        ; Determine the total number of currently tracked foods that match the criteria.
-        int tracked_count = 0
         bool sort_required = false
-        int i = 0
-        bool break = false
-        while i < found_indicies.Length && !break
-            if found_indicies[i] != 0
-                tracked_count += BigArrayGetIntAtIndex_Do(found_indicies[i] - 1000, TrackedFoodCount_1, TrackedFoodCount_2)
-                i += 1
-            else
-                break = true
-            endif
-        endWhile
 
+        ; Transfer the items by updating their rows and adding new ones as required.        
+        int criteria_match_count = GetIntDataSetSize(found_indicies)
         int remaining_to_transfer = aiXferredCount
-        int j = 0
-        int size = found_indicies.Find(0)
-        if size == -1
-            size = 128
-        endif
 
-        while (remaining_to_transfer > 0 && j < size)
-            debug.trace("[Seed] remaining_to_transfer = " + remaining_to_transfer + ", j = " + j)
+        int j = 0
+        while (remaining_to_transfer > 0 && j < criteria_match_count)
             int entry_count = BigArrayGetIntAtIndex_Do(found_indicies[j] - 1000, TrackedFoodCount_1, TrackedFoodCount_2)
             if entry_count <= remaining_to_transfer
                 ; Transfer location in place
@@ -349,10 +331,109 @@ function HandleFoodTransfer(Form akFood, int aiXferredCount, ObjectReference akO
             TrackedFoodTable_SortByOldest()
         endif
     else
-        debug.trace("[Seed] Not tracking this food, adding...")
         ; Not tracking this food object, so create a table entry
         AddTrackedFood(akFood, aiXferredCount, akNewContainer, akNewRef)
     endif
+endFunction
+
+function HandleFoodTransferToWorld(Form akFood, ObjectReference akOldContainer, ObjectReference[] akNewRefs)
+    ; Handle food moving from a container to the world. Assumes a set of individual references (not a stack).
+
+    debug.trace("[Seed] HandleFoodTransferToWorld")
+    bool found_tracked_food = false
+    int[] found_indicies
+    
+    ; Is this food already in the table?
+    found_indicies = FindTrackedFoodsByContainer(akFood, akOldContainer)
+    if found_indicies[0] != 0
+        found_tracked_food = true
+    endif
+
+    if found_tracked_food
+        bool sort_required = false
+
+        ; Transfer the items by updating their rows and adding new ones as required.
+        int criteria_match_count = GetIntDataSetSize(found_indicies)
+        int refs_to_transfer = GetRefDataSetSize(akNewRefs)
+
+        int j = 0
+        int k = 0
+        int food_transferred = 0
+        break = false
+        while (j < refs_to_transfer)    ;for ref in refset
+            while (k < criteria_match_count && !break)    ;for match in matchset
+                int entry_count = BigArrayGetIntAtIndex_Do(found_indicies[k] - 1000, TrackedFoodCount_1, TrackedFoodCount_2)
+                if entry_count > 1
+                    ; subtract from existing entry and add new tracked reference
+                    TrackedFoodTable_UpdateRow(found_indicies[k] - 1000, aiCount = entry_count - 1)
+                    TrackedFoodTable_AddRow(akFood, 1, TrackedFoodTable_GetIntervalAtIndex(found_indicies[k] - 1000), None, akNewRefs[j])
+                    food_transferred += 1
+                    sort_required = true
+                    break = true
+                elseif entry_count == 1
+                    ; update this record in place
+                    TrackedFoodTable_UpdateRow(found_indicies[k] - 1000, akFoodRef = akNewRefs[j], clear_container = true)
+                    food_transferred += 1
+                    ; we've exhausted this record, increment to the next existing match
+                    k += 1
+                    break = true
+                else
+                    ; Error, we shouldn't ever have rows with 0 count. Force a consistency check later.
+                    k += 1
+                endif
+            endWhile
+
+            break = false
+            j += 1
+        endWhile
+
+        ; If there were more transferred than we were tracking, add new entries for those items
+        while food_transferred < refs_to_transfer
+            AddTrackedFood(akFood, 1, None, akNewRefs[food_transferred])
+            food_transferred += 1
+        endif
+
+        if sort_required
+            debug.trace("[Seed] Sorting required after transfer because rows were removed or modified.")
+            TrackedFoodTable_SortByOldest()
+        endif
+    else
+        ; Not tracking these food objects, so create table entries
+        int refs_to_transfer = GetRefDataSetSize(akNewRefs)
+        int food_transferred = 0
+        while food_transferred < refs_to_transfer
+            AddTrackedFood(akFood, 1, None, akNewRefs[food_transferred])
+            food_transferred += 1
+        endif
+    endif
+endFunction
+
+int function GetIntDataSetSize(int[] array)
+    int size = array.Find(0)
+    if size == -1
+        size = 128
+    endif
+    return size
+endFunction
+
+int function GetRefDataSetSize(ObjectReference[] array)
+    int size = array.Find(None)
+    if size == -1
+        size = 128
+    endif
+    return size
+endFunction
+
+function HandleFoodTransferByReference()
+
+endFunction
+
+function HandleFoodTransferByReferenceSet()
+
+endFunction
+
+function HandleFoodTransferByContainer()
+
 endFunction
 
 function AddTrackedFood(Form akFood, int aiCount, ObjectReference akContainer, ObjectReference akFoodRef, int aiInterval = 0)
