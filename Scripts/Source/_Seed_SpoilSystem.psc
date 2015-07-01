@@ -72,7 +72,8 @@ endEvent
 Event OnUpdateGameTime()
     ; Look at this timestamp and old timestamp, determine how many rollups I should be doing
     float current_time = Utility.GetCurrentGameTime()
-    int intervals = Math.Floor(((last_interval_timestamp - current_time) * 24.0) / 3)
+    int intervals = Math.Floor(((current_time - last_interval_timestamp) * 24.0) / 3)
+    debug.trace("[Seed] intervals " + intervals)
     current_spoil_interval += intervals
     AdvanceSpoilage()
     last_interval_timestamp = current_time
@@ -124,35 +125,46 @@ function AdvanceSpoilage()
     endif
 
     while i < size
+        debug.trace("[Seed] Spoil loop " + i)
         int this_food_interval = TrackedFoodTable_GetIntervalAtIndex(i)
         int this_food_count = TrackedFoodTable_GetCountAtIndex(i)
         int this_food_perishid = TrackedFoodTable_GetPerishIDAtIndex(i)
 
         if this_food_interval == 0 || this_food_count == 0
+            debug.trace("[Seed] this row has no interval or count, but is populated.")
             ; Sanity check; this row has no interval or count, but is populated.
             ArrayAddInt(rows_to_remove, i + 1000)
         
         elseif (current_spoil_interval - this_food_interval) >= GetSpoilRateByIndex(this_food_perishid)
+            debug.trace("[Seed] Spoil rate exceeded for food " + i)
             ; Spoil the food
             Form this_food = TrackedFoodTable_GetFoodFormAtIndex(i)
+            debug.trace("[Seed] This spoiled stage form: " + this_food.GetName())
             ObjectReference this_food_ref = TrackedFoodTable_GetRefAtIndex(i)
             ObjectReference this_food_container = TrackedFoodTable_GetContainerAtIndex(i)
             
             Form spoiled_food = GetNextSpoilStageForm(this_food, this_food_perishid)
+            debug.trace("[Seed] Next spoiled stage form: " + spoiled_food.GetName())
             if spoiled_food == None
+                debug.trace("[Seed] Already completely spoiled.")
                 ; Already completely spoiled, stop tracking.
                 ArrayAddInt(rows_to_remove, i + 1000)
 
             elseif this_food_ref != None && this_food_container == None
+                debug.trace("[Seed] Attempting to spoil food in the world.")
                 ObjectReference spoiled_food_ref = SpoilFoodInWorld(this_food_ref, spoiled_food)
                 TrackedFoodTable_UpdateRow(i, akFood = spoiled_food, aiNewLastInterval = current_spoil_interval, akFoodRef = spoiled_food_ref)
 
             elseif this_food_container != None
+                debug.trace("[Seed] Attempting to spoil food in a container.")
                 SpoilFoodInContainer(this_food, spoiled_food, this_food_container, this_food_count)
                 if !IsEventSendingActor(this_food_container)
                     TrackedFoodTable_UpdateRow(i, akFood = spoiled_food, aiNewLastInterval = current_spoil_interval)    
+                else
+                    debug.trace("[Seed] This container is an event-sending actor; avoiding manual row update.")
                 endif
             else
+                debug.trace("[Seed] Sanity check; has no ref or container, so stop tracking.")
                 ; Sanity check; has no ref or container, so stop tracking.
                 ArrayAddInt(rows_to_remove, i + 1000)
             endif
@@ -162,7 +174,7 @@ function AdvanceSpoilage()
 
     ; remove rows tagged for removal and resort
     int rsize = rows_to_remove.Find(0)
-    if rsize != -1
+    if rsize > 0
         int k = 0
         while k < rsize
             TrackedFoodTable_RemoveRow(rows_to_remove[k] - 1000)
@@ -182,26 +194,72 @@ bool function IsEventSendingActor(ObjectReference akReference)
 endFunction
 
 function SpoilFoodInContainer(Form akFood, Form akSpoiledFood, ObjectReference akContainer, int aiCount)
-        akContainer.RemoveItem(akFood, aiCount, true)
-        akContainer.AddItem(akSpoiledFood, aiCount, true)
+    akContainer.RemoveItem(akFood, aiCount, true)
+    utility.wait(0.1)
+    akContainer.AddItem(akSpoiledFood, aiCount, true)
 endFunction
 
 ObjectReference function SpoilFoodInWorld(ObjectReference akFoodRef, Form akSpoiledFood)
     akFoodRef.Disable()
-    return akFoodRef.PlaceAtMe(akSpoiledFood, 1)
+    ObjectReference ref = akFoodRef.PlaceAtMe(akSpoiledFood, 1)
+    int i = 0
+    while !ref.Is3DLoaded() || i > 50
+        i += 1
+    endWhile
+    ref.SetMotionType(1, false)
+    ref.MoveTo(akFoodRef)
+    akFoodRef.Delete()
+    return ref
 endFunction
 
-function HandleFoodConsumed(Form akFood, ObjectReference akConsumer)
-    int index = FindOldestTrackedFoodByContainer(akFood, akConsumer)
-    if index == -1
-        ; Was not being tracked anyway.
-    else
-        int count = BigArrayGetIntAtIndex_Do(index, TrackedFoodCount_1, TrackedFoodCount_2)
-        if count == 1
-            TrackedFoodTable_RemoveRow(index)
-        else
-            TrackedFoodTable_UpdateRow(index, aiCount = (count - 1))
+function HandleFoodConsumed(Form akFood, ObjectReference akConsumer, int aiCount)
+    bool found_tracked_food = false
+    int[] found_indicies
+
+    found_indicies = FindTrackedFoodsByContainer(akFood, akConsumer)
+    if found_indicies[0] != 0
+        debug.trace("[Seed] (HandleFoodConsumed) Already tracking this food at indicies " + found_indicies[0] + ", " + found_indicies[1] + ", " + found_indicies[2] + "...")
+        found_tracked_food = true
+    endif
+
+    if found_tracked_food
+        ; Determine the total number of currently tracked foods that match the criteria.
+        int tracked_count = 0
+        int i = 0
+        bool break = false
+        while i < found_indicies.Length && !break
+            if found_indicies[i] != 0
+                tracked_count += BigArrayGetIntAtIndex_Do(found_indicies[i] - 1000, TrackedFoodCount_1, TrackedFoodCount_2)
+                i += 1
+            else
+                break = true
+            endif
+        endWhile
+
+        int remaining_to_remove = aiCount
+        int j = 0
+        int size = found_indicies.Find(0)
+        if size == -1
+            size = 128
         endif
+
+        while (remaining_to_remove > 0 && j < size)
+            debug.trace("[Seed] remaining_to_remove = " + remaining_to_remove + ", j = " + j)
+            int entry_count = BigArrayGetIntAtIndex_Do(found_indicies[j] - 1000, TrackedFoodCount_1, TrackedFoodCount_2)
+            if entry_count <= remaining_to_remove
+                ; Remove entry
+                TrackedFoodTable_RemoveRow(found_indicies[j] - 1000)
+                remaining_to_remove -= entry_count
+            else
+                ; Subtract transferred amount from existing entry, and add new entry for partial transfer, maintaining the entry interval
+                TrackedFoodTable_UpdateRow(found_indicies[j] - 1000, aiCount = (entry_count - remaining_to_remove))
+                remaining_to_remove = 0
+            endif
+            j += 1
+        endWhile
+        debug.trace("[Seed] Exited consumption deduction loop.")
+
+        TrackedFoodTable_SortByOldest()
     endif
 endFunction
 
@@ -250,12 +308,12 @@ function HandleFoodTransfer(Form akFood, int aiXferredCount, ObjectReference akO
         if size == -1
             size = 128
         endif
+
         while (remaining_to_transfer > 0 && j < size)
             debug.trace("[Seed] remaining_to_transfer = " + remaining_to_transfer + ", j = " + j)
             int entry_count = BigArrayGetIntAtIndex_Do(found_indicies[j] - 1000, TrackedFoodCount_1, TrackedFoodCount_2)
             if entry_count <= remaining_to_transfer
                 ; Transfer location in place
-
                 TrackedFoodTable_UpdateRow(found_indicies[j] - 1000, akContainer = akNewContainer, akFoodRef = akNewRef, clear_container = (akNewContainer==None), clear_ref = (akNewRef==None))
                 remaining_to_transfer -= entry_count
             else
@@ -354,11 +412,12 @@ endFunction
 
 Form function GetNextSpoilStageForm(Form akBaseObject, int aiPerishableFoodID)
     int index
-    if HasSpoilStage4Name(akBaseObject)
+    string food_name = akBaseObject.GetName()
+    if HasSpoilStage4Name(food_name)
         return None
-    elseif HasSpoilStage3Name(akBaseObject)
+    elseif HasSpoilStage3Name(food_name)
         return BigArrayGetFormAtIndex_Do(aiPerishableFoodID, FoodSpoilStage4_1, FoodSpoilStage4_2)
-    elseif HasSpoilStage2Name(akBaseObject)
+    elseif HasSpoilStage2Name(food_name)
         return BigArrayGetFormAtIndex_Do(aiPerishableFoodID, FoodSpoilStage3_1, FoodSpoilStage3_2)
     else
         return BigArrayGetFormAtIndex_Do(aiPerishableFoodID, FoodSpoilStage2_1, FoodSpoilStage2_2)
@@ -367,17 +426,18 @@ endFunction
 
 Int function GetSpoilRateByForm(Form akBaseObject)
     int index
-    if HasSpoilStage4Name(akBaseObject)
+    string food_name = akBaseObject.GetName()
+    if HasSpoilStage4Name(food_name)
         index = PerishableFoodTable_FindFormInColumn(akBaseObject, COL_FOOD_SPOIL_STAGE4)
         if index != -1
             return GetSpoilRateByIndex(index)
         endif
-    elseif HasSpoilStage3Name(akBaseObject)
+    elseif HasSpoilStage3Name(food_name)
         index = PerishableFoodTable_FindFormInColumn(akBaseObject, COL_FOOD_SPOIL_STAGE3)
         if index != -1
             return GetSpoilRateByIndex(index)
         endif
-    elseif HasSpoilStage2Name(akBaseObject)
+    elseif HasSpoilStage2Name(food_name)
         index = PerishableFoodTable_FindFormInColumn(akBaseObject, COL_FOOD_SPOIL_STAGE2)
         if index != -1
             return GetSpoilRateByIndex(index)
@@ -392,6 +452,7 @@ Int function GetSpoilRateByForm(Form akBaseObject)
 endFunction
 
 int function GetSpoilRateByIndex(int index)
+    debug.trace("[Seed] Returning spoil rate " + BigArrayGetIntAtIndex_Do(index, FoodSpoilRate_1, FoodSpoilRate_2))
     return BigArrayGetIntAtIndex_Do(index, FoodSpoilRate_1, FoodSpoilRate_2)
 endFunction
 
@@ -424,25 +485,31 @@ endFunction
 
 bool function HasSpoilStage4Name(string asFoodName)
     if Find(asFoodName, "Rotten") != -1 || Find(asFoodName, "Rancid") != -1 || Find(asFoodName, "Foul") != -1 
+        Debug.trace("[Seed] HasSpoilStage4Name = true (" + asFoodName + ")")
         return true
     else
+        Debug.trace("[Seed] HasSpoilStage4Name = false (" + asFoodName + ")")
         return false
     endif
 endFunction
 
 bool function HasSpoilStage3Name(string asFoodName)
     if Find(asFoodName, "Spoiled") != -1 || Find(asFoodName, "Moldy") != -1
+        Debug.trace("[Seed] HasSpoilStage3Name = true (" + asFoodName + ")")
         return true
     else
+        Debug.trace("[Seed] HasSpoilStage3Name = false (" + asFoodName + ")")
         return false
     endif
 endFunction
 
 bool function HasSpoilStage2Name(string asFoodName)
     if Find(asFoodName, "Stale") != -1 || Find(asFoodName, "Overripe") != -1 || \
-       Find(asFoodName, "Dry") != -1 || Find(asFoodName, "Old") != -1
+        Find(asFoodName, "Dry") != -1 || Find(asFoodName, "Old") != -1
+        Debug.trace("[Seed] HasSpoilStage2Name = true (" + asFoodName + ")")
         return true
     else
+        Debug.trace("[Seed] HasSpoilStage2Name = false (" + asFoodName + ")")
         return false
     endif
 endFunction
@@ -520,10 +587,27 @@ bool function PerishableFoodTable_DebugPrintRow(int index)
             return true
         endif
     endif
-    string stage_1_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage1_1, FoodSpoilStage1_2).GetName()
-    string stage_2_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage2_1, FoodSpoilStage2_2).GetName()
-    string stage_3_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage3_1, FoodSpoilStage3_2).GetName()
-    string stage_4_name = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage4_1, FoodSpoilStage4_2).GetName()
+    string stage_1_name
+    string stage_2_name
+    string stage_3_name
+    string stage_4_name
+
+    Form f1 = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage1_1, FoodSpoilStage1_2)
+    Form f2 = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage2_1, FoodSpoilStage2_2)
+    Form f3 = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage3_1, FoodSpoilStage3_2)
+    Form f4 = BigArrayGetFormAtIndex_Do(index, FoodSpoilStage4_1, FoodSpoilStage4_2)
+    if f1
+        stage_1_name = f1.GetName()
+    endif
+     if f2
+        stage_2_name = f2.GetName()
+    endif
+     if f3
+        stage_3_name = f3.GetName()
+    endif
+     if f4
+        stage_4_name = f4.GetName()
+    endif
     int spoil_rate = BigArrayGetIntAtIndex_Do(index, FoodSpoilRate_1, FoodSpoilRate_2)
     debug.trace("[Seed] | " + index + " | " + stage_1_name + " | " + stage_2_name + " | " + stage_3_name + " | " + stage_4_name + " | " + spoil_rate + " |")
     return false
@@ -691,7 +775,11 @@ bool function TrackedFoodTable_DebugPrintRow(int index)
             return true
         endif
     endif
-    string food_name = BigArrayGetFormAtIndex_Do(index, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2).GetName()
+    string food_name
+    Form f1 = BigArrayGetFormAtIndex_Do(index, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2)
+    if f1
+        food_name = f1.GetName()
+    endif
     int perishable_id = BigArrayGetIntAtIndex_Do(index, PerishableFoodID_1, PerishableFoodID_2)
     int food_count = BigArrayGetIntAtIndex_Do(index, TrackedFoodCount_1, TrackedFoodCount_2)
     int last_interval = BigArrayGetIntAtIndex_Do(index, LastInterval_1, LastInterval_2)
