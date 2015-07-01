@@ -244,7 +244,7 @@ Potion property FoodApple_Stage4 auto
 ;Potion property FoodVenisonCooked_Stage4 auto
 ;Potion property FoodVenisonStew_Stage4 auto
 
-function Setup()
+function SetupData()
     while !initialized
         utility.wait(1.0)
     endWhile
