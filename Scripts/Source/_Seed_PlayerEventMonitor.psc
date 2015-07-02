@@ -1,5 +1,7 @@
 scriptname _Seed_PlayerEventMonitor extends ReferenceAlias
 
+; Bug - can't always determine between consumption and dropping into world because script-spawned item keeps reference.
+
 Quest property _Seed_SpoilSystemQuest auto
 
 Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
