@@ -131,7 +131,7 @@ function AdvanceSpoilage()
     endif
 
     while i < size
-        debug.trace("[Seed] Spoil loop " + i)
+        debug.trace("[Seed] Spoil loop " + i + " of " + size)
         int this_food_interval = TrackedFoodTable_GetIntervalAtIndex(i)
         int this_food_count = TrackedFoodTable_GetCountAtIndex(i)
         int this_food_perishid = TrackedFoodTable_GetPerishIDAtIndex(i)
@@ -185,6 +185,7 @@ function AdvanceSpoilage()
     if rsize > 0
         int k = 0
         while k < rsize
+            debug.trace("[Seed] Spoil deletion loop " + k + " of " + rsize)
             TrackedFoodTable_RemoveRow(rows_to_remove[k] - 1000)
             k += 1
         endWhile
@@ -227,28 +228,13 @@ function HandleFoodConsumed(Form akFood, ObjectReference akConsumer, int aiCount
 
     if found_tracked_food
         ; Determine the total number of currently tracked foods that match the criteria.
-        int tracked_count = 0
         bool sort_required = false
-        int i = 0
-        bool break = false
-        while i < found_indicies.Length && !break
-            if found_indicies[i] != 0
-                tracked_count += BigArrayGetIntAtIndex_Do(found_indicies[i] - 1000, TrackedFoodCount_1, TrackedFoodCount_2)
-                i += 1
-            else
-                break = true
-            endif
-        endWhile
-
         int remaining_to_remove = aiCount
         int j = 0
-        int size = found_indicies.Find(0)
-        if size == -1
-            size = 128
-        endif
+        int criteria_match_count = GetIntDataSetSize(found_indicies)
 
-        while (remaining_to_remove > 0 && j < size)
-            debug.trace("[Seed] remaining_to_remove = " + remaining_to_remove + ", j = " + j)
+        while (remaining_to_remove > 0 && j < criteria_match_count)
+            debug.trace("[Seed] Consumption loop " + j + ", remaining_to_remove " + remaining_to_remove)
             int entry_count = BigArrayGetIntAtIndex_Do(found_indicies[j] - 1000, TrackedFoodCount_1, TrackedFoodCount_2)
             if entry_count <= remaining_to_remove
                 ; Remove entry
@@ -263,7 +249,6 @@ function HandleFoodConsumed(Form akFood, ObjectReference akConsumer, int aiCount
             endif
             j += 1
         endWhile
-        debug.trace("[Seed] Exited consumption deduction loop.")
 
         if sort_required
             debug.trace("[Seed] Sorting required after consumption because rows were removed or modified.")
@@ -303,6 +288,7 @@ function HandleFoodTransferToContainer(Form akFood, int aiXferredCount, ObjectRe
 
         int j = 0
         while (remaining_to_transfer > 0 && j < criteria_match_count)
+            debug.trace("[Seed] Transfer to container loop " + j + ", remaining_to_transfer " + remaining_to_transfer)
             int entry_count = BigArrayGetIntAtIndex_Do(found_indicies[j] - 1000, TrackedFoodCount_1, TrackedFoodCount_2)
             if entry_count <= remaining_to_transfer
                 ; Transfer location in place
@@ -701,7 +687,7 @@ endFunction
 ; FoodUnknown     | -1                    | 4     | 525           | 0x0000000f | None       |
 
 function TrackedFoodTable_AddRow(Form akFood, int aiCount, int aiLastInterval, ObjectReference akContainer, ObjectReference akFoodRef)
-    debug.trace("[Seed] TrackedFoodTable_AddRow")
+    debug.trace("[Seed] TrackedFoodTable_AddRow(akFood=" + akFood + ", aiCount=" + aiCount + ", aiLastInterval=" + aiLastInterval + ", akContainer=" + akContainer + ", akFoodRef=" + akFoodRef)
     int index = TrackedFoodTable_FindAvailableIndex()
     if index == -1
         ;@TODO: Log error
@@ -711,7 +697,6 @@ function TrackedFoodTable_AddRow(Form akFood, int aiCount, int aiLastInterval, O
     if perish_index == -1
         return
     endif
-    debug.trace("[Seed] perish_index " + perish_index)
     TrackedFoodTable_BigArrayAdd(COL_FOOD_FORM, index, akBaseObject = akFood)
     TrackedFoodTable_BigArrayAdd(COL_PERISHABLEFOODID_FK, index, aiValue = perish_index)
     TrackedFoodTable_BigArrayAdd(COL_FOOD_COUNT, index, aiValue = aiCount)
