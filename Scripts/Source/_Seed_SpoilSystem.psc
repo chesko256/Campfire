@@ -1,7 +1,6 @@
 scriptname _Seed_SpoilSystem extends Quest
 
 ; To do:
-;   Better positioning of in-world spoil objects and motion type (bug - dropped food doesn't report pos correctly)
 ;   Immediately purge completely spoiled food
 ;   Don't add completely spoiled food if picked up
 ;   Add _Seed_SpoilSystemDelegate to queue requests
@@ -151,7 +150,9 @@ function AdvanceSpoilage()
             ObjectReference this_food_container = TrackedFoodTable_GetContainerAtIndex(i)
             
             Form spoiled_food = GetNextSpoilStageForm(this_food, this_food_perishid)
-            debug.trace("[Seed] Next spoiled stage form: " + spoiled_food.GetName())
+            if spoiled_food
+                debug.trace("[Seed] Next spoiled stage form: " + spoiled_food.GetName())
+            endif
             if spoiled_food == None
                 debug.trace("[Seed] Already completely spoiled.")
                 ; Already completely spoiled, stop tracking.
@@ -203,19 +204,13 @@ endFunction
 
 function SpoilFoodInContainer(Form akFood, Form akSpoiledFood, ObjectReference akContainer, int aiCount)
     akContainer.RemoveItem(akFood, aiCount, true)
-    utility.wait(0.1)
     akContainer.AddItem(akSpoiledFood, aiCount, true)
 endFunction
 
 ObjectReference function SpoilFoodInWorld(ObjectReference akFoodRef, Form akSpoiledFood)
     akFoodRef.Disable()
-    ObjectReference ref = akFoodRef.PlaceAtMe(akSpoiledFood, 1)
-    int i = 0
-    while !ref.Is3DLoaded() || i > 50
-        i += 1
-    endWhile
-    ref.SetMotionType(4)
-    ref.MoveTo(akFoodRef)
+    ObjectReference ref = akFoodRef.PlaceAtMe(akSpoiledFood, 1, true)
+    ref.Enable()
     akFoodRef.Delete()
     return ref
 endFunction
@@ -311,13 +306,13 @@ function HandleFoodTransferToContainer(Form akFood, int aiXferredCount, ObjectRe
             int entry_count = BigArrayGetIntAtIndex_Do(found_indicies[j] - 1000, TrackedFoodCount_1, TrackedFoodCount_2)
             if entry_count <= remaining_to_transfer
                 ; Transfer location in place
-                TrackedFoodTable_UpdateRow(found_indicies[j] - 1000, akContainer = akNewContainer, akFoodRef = akNewRef, clear_container = (akNewContainer==None), clear_ref = (akNewRef==None))
+                TrackedFoodTable_UpdateRow(found_indicies[j] - 1000, akContainer = akNewContainer, clear_ref = true)
                 remaining_to_transfer -= entry_count
             else
                 ; Subtract transferred amount from existing entry, and add new entry for partial transfer, maintaining the entry interval
                 TrackedFoodTable_UpdateRow(found_indicies[j] - 1000, aiCount = (entry_count - remaining_to_transfer))
                 int interval = BigArrayGetIntAtIndex_Do(found_indicies[j] - 1000, LastInterval_1, LastInterval_2)
-                AddTrackedFood(akFood, remaining_to_transfer, akNewContainer, akNewRef, interval)
+                AddTrackedFood(akFood, remaining_to_transfer, akNewContainer, None, interval)
                 remaining_to_transfer = 0
                 sort_required = true
             endif
@@ -326,7 +321,7 @@ function HandleFoodTransferToContainer(Form akFood, int aiXferredCount, ObjectRe
 
         ; If there were more transferred than we were tracking, add new entries for those items
         if remaining_to_transfer > 0
-            AddTrackedFood(akFood, remaining_to_transfer, akNewContainer, akNewRef)
+            AddTrackedFood(akFood, remaining_to_transfer, akNewContainer, None)
         endif
 
         if sort_required
@@ -335,7 +330,7 @@ function HandleFoodTransferToContainer(Form akFood, int aiXferredCount, ObjectRe
         endif
     else
         ; Not tracking this food object, so create a table entry
-        AddTrackedFood(akFood, aiXferredCount, akNewContainer, akNewRef)
+        AddTrackedFood(akFood, aiXferredCount, akNewContainer, None)
     endif
 endFunction
 
@@ -357,13 +352,17 @@ function HandleFoodTransferToWorld(Form akFood, ObjectReference akOldContainer, 
 
         ; Transfer the items by updating their rows and adding new ones as required.
         int criteria_match_count = GetIntDataSetSize(found_indicies)
-        int refs_to_transfer = GetRefDataSetSize(akNewRefs)
+        int refs_to_transfer = 1
+        if akNewRefs.length > 1
+            refs_to_transfer = GetRefDataSetSize(akNewRefs)
+        endif
 
         int j = 0
         int k = 0
         int food_transferred = 0
-        break = false
+        bool break = false
         while (j < refs_to_transfer)    ;for ref in refset
+            debug.trace("j=" + j + ", k=" + k + ", food_transferred=" + food_transferred + ", refs_to_transfer=" + refs_to_transfer + ", criteria_match_count=" + criteria_match_count)
             while (k < criteria_match_count && !break)    ;for match in matchset
                 int entry_count = BigArrayGetIntAtIndex_Do(found_indicies[k] - 1000, TrackedFoodCount_1, TrackedFoodCount_2)
                 if entry_count > 1
@@ -394,7 +393,7 @@ function HandleFoodTransferToWorld(Form akFood, ObjectReference akOldContainer, 
         while food_transferred < refs_to_transfer
             AddTrackedFood(akFood, 1, None, akNewRefs[food_transferred])
             food_transferred += 1
-        endif
+        endWhile
 
         if sort_required
             debug.trace("[Seed] Sorting required after transfer because rows were removed or modified.")
@@ -407,7 +406,7 @@ function HandleFoodTransferToWorld(Form akFood, ObjectReference akOldContainer, 
         while food_transferred < refs_to_transfer
             AddTrackedFood(akFood, 1, None, akNewRefs[food_transferred])
             food_transferred += 1
-        endif
+        endWhile
     endif
 endFunction
 
@@ -761,10 +760,7 @@ function TrackedFoodTable_SortByOldest()
     int i
     int j = 0
     int iMin
-    int n = BigArrayFindInt_Do(0, LastInterval_1, LastInterval_2)
-    if n == -1
-        n = 256
-    endif
+    int n = 256
     while j < n - 1
         iMin = j
         i = j + 1
@@ -772,11 +768,11 @@ function TrackedFoodTable_SortByOldest()
             int i_val = BigArrayGetIntAtIndex_Do(i, LastInterval_1, LastInterval_2)
             int iMin_val = BigArrayGetIntAtIndex_Do(iMin, LastInterval_1, LastInterval_2)
             if i_val > 0 && iMin_val == 0
-                debug.trace("[Seed] [Sort] New min " + i + " (was " + iMin + ")")
-                iMin = i
+                debug.trace("[Seed] [Sort] New min " + i_val + " (was " + iMin + ")")
+                iMin = i_val
             elseif i_val < iMin_val
-                debug.trace("[Seed] [Sort] New min " + i + " (was " + iMin + ")")
-                iMin = i
+                debug.trace("[Seed] [Sort] New min " + i_val + " (was " + iMin + ")")
+                iMin = i_val
             endif
             i += 1
         endWhile

@@ -31,9 +31,11 @@ Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRefe
 
 				int i = 0
 				while i < aiItemCount
-					world_refs[i] = akItemReference.PlaceAtMe(akBaseItem, 1)
+					world_refs[i] = akItemReference.PlaceAtMe(akBaseItem, 1, true)
+					world_refs[i].Enable()
 					i += 1
 				endWhile
+				akItemReference.Delete()
 				(_Seed_SpoilSystemQuest as _Seed_SpoilSystem).HandleFoodTransferToWorld(akBaseItem, self.GetActorRef(), world_refs)
 			endif
 		endif
