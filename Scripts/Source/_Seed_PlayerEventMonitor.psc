@@ -3,14 +3,14 @@ scriptname _Seed_PlayerEventMonitor extends ReferenceAlias
 Quest property _Seed_SpoilSystemQuest auto
 
 Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
-	debug.trace("[Seed] Player OnItemAdded")
-	if (akBaseItem as Potion) && (akBaseItem as Potion).IsFood()
+	debug.trace("[Seed] Player OnItemAdded akBaseItem=" + akBaseItem + ", aiItemCount=" + aiItemCount + ", akItemReference=" + akItemReference + ", akSourceContainer=" + akSourceContainer)
+	if (akBaseItem as Potion) && (akBaseItem as Potion).IsFood() && !(_Seed_SpoilSystemQuest as _Seed_SpoilSystem).HasSpoilStage4Name(akBaseItem.GetName())
 		(_Seed_SpoilSystemQuest as _Seed_SpoilSystem).HandleFoodTransferToContainer(akBaseItem, aiItemCount, akSourceContainer, self.GetActorRef(), akItemReference)
 	endif
 EndEvent
 
 Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akDestContainer)
-	debug.trace("[Seed] Player OnItemRemoved")
+	debug.trace("[Seed] Player OnItemRemoved akBaseItem=" + akBaseItem + ", aiItemCount=" + aiItemCount + ", akItemReference=" + akItemReference + ", akDestContainer=" + akDestContainer)
 	if (akBaseItem as Potion) && (akBaseItem as Potion).IsFood()
 		if !akItemReference && !akDestContainer
 			(_Seed_SpoilSystemQuest as _Seed_SpoilSystem).HandleFoodConsumed(akBaseItem, self.GetActorRef(), aiItemCount)
@@ -31,7 +31,7 @@ Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRefe
 
 				int i = 0
 				while i < aiItemCount
-					world_refs[i] = akItemReference.PlaceAtMe(akBaseItem, 1, true)
+					world_refs[i] = akItemReference.PlaceAtMe(akBaseItem, 1, abInitiallyDisabled = true)
 					world_refs[i].Enable()
 					i += 1
 				endWhile
