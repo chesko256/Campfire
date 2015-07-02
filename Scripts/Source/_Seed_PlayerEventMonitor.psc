@@ -14,7 +14,7 @@ EndEvent
 Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akDestContainer)
 	debug.trace("[Seed] Player OnItemRemoved akBaseItem=" + akBaseItem + ", aiItemCount=" + aiItemCount + ", akItemReference=" + akItemReference + ", akDestContainer=" + akDestContainer)
 	if (akBaseItem as Potion) && (akBaseItem as Potion).IsFood()
-		if !akItemReference && !akDestContainer
+		if (!akItemReference && !akDestContainer) || (akItemReference && !akItemReference.Is3DLoaded())
 			(_Seed_SpoilSystemQuest as _Seed_SpoilSystem).HandleFoodConsumed(akBaseItem, self.GetActorRef(), aiItemCount)
 		else
 			; Did I drop the item, or was it moved to another container?
