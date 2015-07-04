@@ -6,6 +6,7 @@ scriptname _Seed_SpoilSystem extends Quest
 ;   Add _Seed_SpoilSystemDelegate to queue requests
 ;   Profile with many foods
 
+import Utility
 import StringUtil
 import CampUtil
 
@@ -15,6 +16,7 @@ int property current_spoil_interval = 1 auto hidden
 GlobalVariable property _Seed_DebugDumpFT auto
 GlobalVariable property _Seed_DebugDumpST auto
 GlobalVariable property _Seed_DebugDumpVerbose auto
+bool transaction_in_progress = false
 
 float last_interval_timestamp
 
@@ -122,6 +124,7 @@ Function Initialize()
 endFunction
 
 function AdvanceSpoilage()
+    TransactionStart()
     debug.trace("[Seed] Spoiling food...")
     int[] rows_to_remove = new int[128]
     int i = 0
@@ -165,12 +168,17 @@ function AdvanceSpoilage()
 
             elseif this_food_container != None
                 debug.trace("[Seed] Attempting to spoil food in a container.")
+                TransactionStop()
                 SpoilFoodInContainer(this_food, spoiled_food, this_food_container, this_food_count)
                 if !IsEventSendingActor(this_food_container)
                     TrackedFoodTable_UpdateRow(i, akFood = spoiled_food, aiNewLastInterval = current_spoil_interval)    
                 else
                     debug.trace("[Seed] This container is an event-sending actor; avoiding manual row update.")
+                    ; Our index positions have changed, shift everything up by one.
+                    size -= 1
+                    i -= 1
                 endif
+                TransactionStart()
             else
                 debug.trace("[Seed] Sanity check; has no ref or container, so stop tracking.")
                 ; Sanity check; has no ref or container, so stop tracking.
@@ -192,6 +200,7 @@ function AdvanceSpoilage()
         debug.trace("[Seed] Sorting because rows removed as part of spoil process.")
         TrackedFoodTable_SortByOldest()
     endif
+    TransactionStop()
 endFunction
 
 bool function IsEventSendingActor(ObjectReference akReference)
@@ -205,18 +214,22 @@ endFunction
 
 function SpoilFoodInContainer(Form akFood, Form akSpoiledFood, ObjectReference akContainer, int aiCount)
     akContainer.RemoveItem(akFood, aiCount, true)
+    wait(0.1)
     akContainer.AddItem(akSpoiledFood, aiCount, true)
 endFunction
 
 ObjectReference function SpoilFoodInWorld(ObjectReference akFoodRef, Form akSpoiledFood)
     akFoodRef.Disable()
-    ObjectReference ref = akFoodRef.PlaceAtMe(akSpoiledFood, 1, true)
+    ObjectReference ref = akFoodRef.PlaceAtMe(akSpoiledFood, 1, abInitiallyDisabled = true)
     ref.Enable()
     akFoodRef.Delete()
     return ref
 endFunction
 
+;@Transactional
 function HandleFoodConsumed(Form akFood, ObjectReference akConsumer, int aiCount)
+    TransactionStart()
+
     bool found_tracked_food = false
     int[] found_indicies
 
@@ -255,9 +268,13 @@ function HandleFoodConsumed(Form akFood, ObjectReference akConsumer, int aiCount
             TrackedFoodTable_SortByOldest()
         endif
     endif
+
+    TransactionStop()
 endFunction
 
+;@Transactional
 function HandleFoodTransferToContainer(Form akFood, int aiXferredCount, ObjectReference akOldContainer, ObjectReference akNewContainer, ObjectReference akOldRef)
+    TransactionStart()
     ; Handle food moving between containers, or from the world to a container.
 
     debug.trace("[Seed] HandleFoodTransferToContainer")
@@ -318,9 +335,13 @@ function HandleFoodTransferToContainer(Form akFood, int aiXferredCount, ObjectRe
         ; Not tracking this food object, so create a table entry
         AddTrackedFood(akFood, aiXferredCount, akNewContainer, None)
     endif
+
+    TransactionStop()
 endFunction
 
+;@Transactional
 function HandleFoodTransferToWorld(Form akFood, ObjectReference akOldContainer, ObjectReference[] akNewRefs)
+    TransactionStart()
     ; Handle food moving from a container to the world. Assumes a set of individual references (not a stack).
 
     debug.trace("[Seed] HandleFoodTransferToWorld")
@@ -390,10 +411,13 @@ function HandleFoodTransferToWorld(Form akFood, ObjectReference akOldContainer, 
         int refs_to_transfer = GetRefDataSetSize(akNewRefs)
         int food_transferred = 0
         while food_transferred < refs_to_transfer
+            debug.trace("[Seed] Adding untracked food " + akFood + ", " + food_transferred + " of " + refs_to_transfer)
             AddTrackedFood(akFood, 1, None, akNewRefs[food_transferred])
             food_transferred += 1
         endWhile
     endif
+
+    TransactionStop()
 endFunction
 
 int function GetIntDataSetSize(int[] array)
@@ -583,6 +607,25 @@ endFunction
 
 ; TABLE FUNCTIONS
 
+function TransactionStart()
+    int i = 0
+    bool had_to_wait = false
+    while transaction_in_progress && i < 100
+        debug.trace("[Seed] <<<<<<<<<<<<<<<<<<<<<< Waiting on transaction to finish! <<<<<<<<<<<<<<<<<<<<<<")
+        had_to_wait = true
+        wait(0.1)
+        i += 1
+    endWhile
+    if had_to_wait
+        debug.trace("[Seed] @@@@@@@@@@@@@@@@@@@@@@ New transaction able to continue! @@@@@@@@@@@@@@@@@@@@@@")
+    endif
+    transaction_in_progress = true
+endFunction
+
+function TransactionStop()
+    transaction_in_progress = false
+endFunction
+
 ; PerishableFoodTable
 ; FoodSpoilStage1 | FoodSpoilStage2 | FoodSpoilStage3 | FoodSpoilStage4 | SpoilRate |
 ; ================|=================|=================|=================|===========|
@@ -706,7 +749,7 @@ function TrackedFoodTable_AddRow(Form akFood, int aiCount, int aiLastInterval, O
     TrackedFoodTable_DebugPrintTable()
 endFunction
 
-function TrackedFoodTable_UpdateRow(int index, Form akFood = None, int aiPerishableFoodID = -1, int aiCount = -1, int aiNewLastInterval = -1, ObjectReference akContainer = None, ObjectReference akFoodRef = None, bool clear_container = false, bool clear_ref = false)
+function TrackedFoodTable_UpdateRow(int index, Form akFood = None, int aiPerishableFoodID = -1, int aiCount = -1, int aiNewLastInterval = -1, ObjectReference akContainer = None, ObjectReference akFoodRef = None, bool clear_container = false, bool clear_ref = false, bool show_debug = true)
     debug.trace("[Seed] TrackedFoodTable_UpdateRow(index=" + index + ", akFood=" + akFood + ", aiPerishableFoodID=" + aiPerishableFoodID + ", aiCount=" + aiCount + ", aiNewLastInterval=" + aiNewLastInterval + ", akContainer=" + akContainer + ", akFoodRef=" + akFoodRef + ", clear_container=" + clear_container + ", clear_ref=" + clear_ref)
     if akFood
         BigArrayAddForm_Do(index, akFood, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2)
@@ -726,7 +769,9 @@ function TrackedFoodTable_UpdateRow(int index, Form akFood = None, int aiPerisha
     if akFoodRef || clear_ref
         BigArrayAddRef_Do(index, akFoodRef, TrackedFoodReference_1, TrackedFoodReference_2)
     endif
-    TrackedFoodTable_DebugPrintTable()
+    if show_debug
+        TrackedFoodTable_DebugPrintTable()
+    endif
 endFunction
 
 function TrackedFoodTable_RemoveRow(int index)
@@ -740,7 +785,14 @@ function TrackedFoodTable_RemoveRow(int index)
 endFunction
 
 function TrackedFoodTable_SortByOldest()
-    debug.trace("[Seed] Beginning TrackedFoodTable sort.")
+    bool clear_tempval_row = false
+    bool clear_temp_container = false
+    bool clear_temp_ref = false
+    bool clear_minval_row = false
+    bool clear_min_container = false
+    bool clear_min_ref = false
+
+    debug.trace("[Seed] [Sort] Beginning TrackedFoodTable sort.")
     ;From https://en.wikipedia.org/wiki/Selection_sort, converted to Papyrus
     int i
     int j = 0
@@ -750,14 +802,16 @@ function TrackedFoodTable_SortByOldest()
         iMin = j
         i = j + 1
         while i < n
+            ;TrackedFoodTable_DebugPrintTable()
             int i_val = BigArrayGetIntAtIndex_Do(i, LastInterval_1, LastInterval_2)
-            int iMin_val = BigArrayGetIntAtIndex_Do(iMin, LastInterval_1, LastInterval_2)
+            int iMin_val = BigArrayGetIntAtIndex_Do(iMin, LastInterval_1, LastInterval_2)           ; This is returning 0 when it should be returning 5
+            ;debug.trace("[Sort] i_val: " + i_val + ", iMin_val: " + iMin_val)
             if i_val > 0 && iMin_val == 0
-                debug.trace("[Seed] [Sort] New min " + i_val + " (was " + iMin + ")")
-                iMin = i_val
-            elseif i_val < iMin_val
-                debug.trace("[Seed] [Sort] New min " + i_val + " (was " + iMin + ")")
-                iMin = i_val
+                debug.trace("[Seed] [Sort] New min index " + i + " with value " + i_val + " (was index " + iMin + " with value " + iMin_val +  ")")
+                iMin = i
+            elseif i_val < iMin_val && i_val != 0
+                debug.trace("[Seed] [Sort] New min index " + i + " with value " + i_val + " (was index " + iMin + " with value " + iMin_val +  ")")
+                iMin = i
             endif
             i += 1
         endWhile
@@ -769,6 +823,15 @@ function TrackedFoodTable_SortByOldest()
             int temp_lastinterval = BigArrayGetIntAtIndex_Do(j, LastInterval_1, LastInterval_2)
             ObjectReference temp_container = BigArrayGetRefAtIndex_Do(j, Container_1, Container_2)
             ObjectReference temp_reference = BigArrayGetRefAtIndex_Do(j, TrackedFoodReference_1, TrackedFoodReference_2)
+            if !temp_food
+                clear_tempval_row = true
+            endif
+            if !temp_container
+                clear_temp_container = true
+            endif
+            if !temp_reference
+                clear_temp_ref = true
+            endif
 
             ; Get row iMin values
             Form min_food = BigArrayGetFormAtIndex_Do(iMin, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2)
@@ -777,10 +840,28 @@ function TrackedFoodTable_SortByOldest()
             int min_lastinterval = BigArrayGetIntAtIndex_Do(iMin, LastInterval_1, LastInterval_2)
             ObjectReference min_container = BigArrayGetRefAtIndex_Do(iMin, Container_1, Container_2)
             ObjectReference min_reference = BigArrayGetRefAtIndex_Do(iMin, TrackedFoodReference_1, TrackedFoodReference_2)
+            if !min_food
+                clear_minval_row = true
+            endif
+            if !min_container
+                clear_min_container = true
+            endif
+            if !min_reference
+                clear_min_ref = true
+            endif
 
             ; Swap row j values with row iMin values
-            TrackedFoodTable_UpdateRow(j, min_food, min_perishablefoodid, min_count, min_lastinterval, min_container, min_reference)
-            TrackedFoodTable_UpdateRow(iMin, temp_food, temp_perishablefoodid, temp_count, temp_lastinterval, temp_container, temp_reference)
+            if clear_minval_row
+                TrackedFoodTable_RemoveRow(j)
+            else
+                TrackedFoodTable_UpdateRow(j, min_food, min_perishablefoodid, min_count, min_lastinterval, min_container, min_reference, clear_min_container, clear_min_ref, show_debug = false)
+            endif
+
+            if clear_tempval_row
+                TrackedFoodTable_RemoveRow(iMin)
+            else
+                TrackedFoodTable_UpdateRow(iMin, temp_food, temp_perishablefoodid, temp_count, temp_lastinterval, temp_container, temp_reference, clear_temp_container, clear_temp_ref, show_debug = false)
+            endif
         endif
         j += 1
     endWhile
