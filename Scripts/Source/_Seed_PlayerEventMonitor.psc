@@ -5,6 +5,11 @@ import Utility
 Quest property _Seed_SpoilSystemQuest auto
 
 Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
+	
+	if (_Seed_SpoilSystemQuest as _Seed_SpoilSystem).spoil_in_progress
+		debug.trace("[Seed] ########################### Discarding OnItemAdded event, spoil cycle in progress.")
+		return
+	endif
 	debug.trace("[Seed] Player OnItemAdded akBaseItem=" + akBaseItem + ", aiItemCount=" + aiItemCount + ", akItemReference=" + akItemReference + ", akSourceContainer=" + akSourceContainer)
 	if IsTrackableFood(akBaseItem)
 		(_Seed_SpoilSystemQuest as _Seed_SpoilSystem).HandleFoodTransferToContainer(akBaseItem, aiItemCount, akSourceContainer, self.GetActorRef(), akItemReference)
@@ -13,6 +18,10 @@ EndEvent
 
 Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akDestContainer)
 	debug.trace("[Seed] Player OnItemRemoved akBaseItem=" + akBaseItem + ", aiItemCount=" + aiItemCount + ", akItemReference=" + akItemReference + ", akDestContainer=" + akDestContainer)
+	if (_Seed_SpoilSystemQuest as _Seed_SpoilSystem).spoil_in_progress
+		debug.trace("[Seed] ########################### Discarding OnItemRemoved event, spoil cycle in progress.")
+		return
+	endif
 	if IsTrackableFood(akBaseItem)
 		if (!akItemReference && !akDestContainer) || (akItemReference && !akItemReference.Is3DLoaded())
 			(_Seed_SpoilSystemQuest as _Seed_SpoilSystem).HandleFoodConsumed(akBaseItem, self.GetActorRef(), aiItemCount)
@@ -23,30 +32,41 @@ Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRefe
 				(_Seed_SpoilSystemQuest as _Seed_SpoilSystem).HandleFoodTransferToContainer(akBaseItem, aiItemCount, self.GetActorRef(), akDestContainer, None)
 			elseif akItemReference && !akDestContainer
 				; Player to world transfer
-				ObjectReference[] world_refs
-				if aiItemCount > 1
-					world_refs = new ObjectReference[128]
+				ObjectReference[] world_refs_1
+				ObjectReference[] world_refs_2
+				if aiItemCount > 128
+					world_refs_1 = new ObjectReference[128]
+					world_refs_2 = new ObjectReference[128]
+				elseif aiItemCount > 1
+					world_refs_1 = new ObjectReference[128]
+					world_refs_2 = new ObjectReference[1]
 				else
-					world_refs = new ObjectReference[1]
+					world_refs_1 = new ObjectReference[1]
+					world_refs_2 = new ObjectReference[1]
 				endif
 
-				; If the reference's 3D is loaded while the player is in menu mode,
-				; the game will not update the references position data when calling
-				; GetPositionX(), etc.
-				while IsInMenuMode()
-					Wait(0.1)
+				While IsInMenuMode()
+					utility.wait(0.2)
 				endWhile
 
-				akItemReference.Disable()
+				akItemReference.DisableNoWait()
 				int i = 0
-				while i < aiItemCount
-					world_refs[i] = akItemReference.PlaceAtMe(akBaseItem, 1, abInitiallyDisabled = true)
-					world_refs[i].MoveTo(world_refs[i], afXOffset = Utility.RandomFloat(0.0, 25.0), afYOffset = Utility.RandomFloat(0.0, 25.0))
-					world_refs[i].enable()
+				; Flag persistent to force position data to be correct for the reference, but don't persist rotten food
+				bool flag_persistent = !(_Seed_SpoilSystemQuest as _Seed_SpoilSystem).HasSpoilStage4Name(akBaseItem.GetName())
+				while i < aiItemCount && i < 256
+					ObjectReference ref = akItemReference.PlaceAtMe(akBaseItem, 1, flag_persistent, true)
+					BigArrayAddRef_Do(i, ref, world_refs_1, world_refs_2)
+					ref.MoveTo(ref, afXOffset = Utility.RandomFloat(0.0, 20.0), afYOffset = Utility.RandomFloat(0.0, 20.0))
+					ref.enable()
 					i += 1
 				endWhile
 				akItemReference.Delete()
-				(_Seed_SpoilSystemQuest as _Seed_SpoilSystem).HandleFoodTransferToWorld(akBaseItem, self.GetActorRef(), world_refs)
+				(_Seed_SpoilSystemQuest as _Seed_SpoilSystem).HandleFoodTransferToWorld(akBaseItem, self.GetActorRef(), world_refs_1)
+
+				if aiItemCount > 128
+					utility.wait(0.2)
+					(_Seed_SpoilSystemQuest as _Seed_SpoilSystem).HandleFoodTransferToWorld(akBaseItem, self.GetActorRef(), world_refs_2)
+				endif
 			endif
 		endif
 	endif
@@ -58,4 +78,16 @@ bool function IsTrackableFood(Form akBaseItem)
 	else
 		return false
 	endif
+endFunction
+
+function BigArrayAddRef_Do(int index, ObjectReference akReference, ObjectReference[] array1, ObjectReference[] array2)
+    if index > 255
+        ;@TODO: Log error
+        return
+    endif
+    if index > 127
+        array2[(index - 128)] = akReference
+    else
+        array1[index] = akReference
+    endif
 endFunction

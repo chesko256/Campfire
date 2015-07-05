@@ -12,6 +12,7 @@ import CampUtil
 
 Actor property PlayerRef auto
 bool property initialized = false auto hidden
+bool property spoil_in_progress = false auto hidden
 int property current_spoil_interval = 1 auto hidden
 GlobalVariable property _Seed_DebugDumpFT auto
 GlobalVariable property _Seed_DebugDumpST auto
@@ -143,9 +144,11 @@ Function Initialize()
 endFunction
 
 function AdvanceSpoilage()
+    spoil_in_progress = true
     TransactionStart()
     debug.trace("[Seed] Spoiling food...")
-    int[] rows_to_remove = new int[128]
+    int[] rows_to_remove_1 = new int[128]
+    int[] rows_to_remove_2 = new int[128]
     int i = 0
     int size = TrackedFoodTable_FindAvailableIndex()
     if size == -1
@@ -153,7 +156,7 @@ function AdvanceSpoilage()
     endif
 
     while i < size
-        debug.trace("[Seed] Spoil loop " + i + " of " + size)
+        ;debug.trace("[Seed] Spoil loop " + i + " of " + size)
         int this_food_interval = TrackedFoodTable_GetIntervalAtIndex(i)
         int this_food_count = TrackedFoodTable_GetCountAtIndex(i)
         int this_food_perishid = TrackedFoodTable_GetPerishIDAtIndex(i)
@@ -161,77 +164,72 @@ function AdvanceSpoilage()
         if this_food_interval == 0 || this_food_count == 0
             debug.trace("[Seed] this row has no interval or count, but is populated.")
             ; Sanity check; this row has no interval or count, but is populated.
-            ArrayAddInt(rows_to_remove, i + 1000)
+            BigArrayAddInt_Do(BigArrayFindInt_Do(0, rows_to_remove_1, rows_to_remove_2), i + 1000, rows_to_remove_1, rows_to_remove_2)
         
         elseif (current_spoil_interval - this_food_interval) >= GetSpoilRateByIndex(this_food_perishid)
-            debug.trace("[Seed] Spoil rate exceeded for food " + i)
+            ;debug.trace("[Seed] Spoil rate exceeded for food " + i)
             ; Spoil the food
             Form this_food = TrackedFoodTable_GetFoodFormAtIndex(i)
-            debug.trace("[Seed] This spoiled stage form: " + this_food.GetName())
+            ;debug.trace("[Seed] This spoiled stage form: " + this_food.GetName())
             ObjectReference this_food_ref = TrackedFoodTable_GetRefAtIndex(i)
             ObjectReference this_food_container = TrackedFoodTable_GetContainerAtIndex(i)
             
             Form spoiled_food = GetNextSpoilStageForm(this_food, this_food_perishid)
-            if spoiled_food
-                debug.trace("[Seed] Next spoiled stage form: " + spoiled_food.GetName())
-            endif
+            ;if spoiled_food
+            ;    debug.trace("[Seed] Next spoiled stage form: " + spoiled_food.GetName())
+            ;endif
 
             if spoiled_food == None
-                debug.trace("[Seed] Already completely spoiled.")
+                ;debug.trace("[Seed] Already completely spoiled.")
                 ; Already completely spoiled, stop tracking.
-                ArrayAddInt(rows_to_remove, i + 1000)
+                BigArrayAddInt_Do(BigArrayFindInt_Do(0, rows_to_remove_1, rows_to_remove_2), i + 1000, rows_to_remove_1, rows_to_remove_2)
 
             elseif this_food_ref != None && this_food_container == None
-                debug.trace("[Seed] Attempting to spoil food in the world.")
+                ;debug.trace("[Seed] Attempting to spoil food in the world.")
                 ObjectReference spoiled_food_ref = SpoilFoodInWorld(this_food_ref, spoiled_food)
-                if !HasSpoilStage4Name(this_food.GetName())
+                if !HasSpoilStage4Name(spoiled_food.GetName())
                     TrackedFoodTable_UpdateRow(i, akFood = spoiled_food, aiNewLastInterval = current_spoil_interval, akFoodRef = spoiled_food_ref)
-                    sort_required = true
                 else
                     ; Completely spoiled, stop tracking.
-                    ArrayAddInt(rows_to_remove, i + 1000)
+                    BigArrayAddInt_Do(BigArrayFindInt_Do(0, rows_to_remove_1, rows_to_remove_2), i + 1000, rows_to_remove_1, rows_to_remove_2)
                 endif
 
             elseif this_food_container != None
-                debug.trace("[Seed] Attempting to spoil food in a container.")
-                TransactionStop()
+                ;debug.trace("[Seed] Attempting to spoil food in a container.")
                 SpoilFoodInContainer(this_food, spoiled_food, this_food_container, this_food_count)
-                if !IsEventSendingActor(this_food_container)
-                    if !HasSpoilStage4Name(this_food.GetName())
-                        TrackedFoodTable_UpdateRow(i, akFood = spoiled_food, aiNewLastInterval = current_spoil_interval)    
-                    else
-                        ; Completely spoiled, stop tracking.
-                        ArrayAddInt(rows_to_remove, i + 1000)
-                    endif
+                if !HasSpoilStage4Name(spoiled_food.GetName())
+                    TrackedFoodTable_UpdateRow(i, akFood = spoiled_food, aiNewLastInterval = current_spoil_interval)    
                 else
-                    debug.trace("[Seed] This container is an event-sending actor; avoiding manual row update.")
-                    ; Our index positions have changed, start over.
-                    i = 0
+                    ; Completely spoiled, stop tracking.
+                    BigArrayAddInt_Do(BigArrayFindInt_Do(0, rows_to_remove_1, rows_to_remove_2), i + 1000, rows_to_remove_1, rows_to_remove_2)
                 endif
-                TransactionStart()
             else
                 debug.trace("[Seed] Sanity check; has no ref or container, so stop tracking.")
                 ; Sanity check; has no ref or container, so stop tracking.
-                ArrayAddInt(rows_to_remove, i + 1000)
+                BigArrayAddInt_Do(BigArrayFindInt_Do(0, rows_to_remove_1, rows_to_remove_2), i + 1000, rows_to_remove_1, rows_to_remove_2)
             endif
         endif
         i += 1
     endWhile
 
     ; remove rows tagged for removal and resort
-    int rsize = rows_to_remove.Find(0)
-    if rsize > 0
-        int k = 0
-        while k < rsize
-            debug.trace("[Seed] Spoil deletion loop " + k + " of " + rsize)
-            TrackedFoodTable_RemoveRow(rows_to_remove[k] - 1000)
+    int k = 0
+    bool break = false
+    while k < 256 && !break
+        int rm_index = BigArrayGetIntAtIndex_Do(k, rows_to_remove_1, rows_to_remove_2)
+        if rm_index == 0
+            break = true
+        else
+            ;debug.trace("[Seed] Spoil deletion loop " + k)
+            TrackedFoodTable_RemoveRow(rm_index - 1000)
             k += 1
-        endWhile
-        debug.trace("[Seed] Sorting because rows removed as part of spoil process.")
-        TrackedFoodTable_SortByOldest()
-    endif
+        endif
+    endWhile
+
+    TrackedFoodTable_SortByOldest()
     TransactionStop()
     TrackedFoodTable_DebugPrintTable()
+    spoil_in_progress = false
 endFunction
 
 bool function IsTrackableFood(Form akBaseItem)
@@ -259,15 +257,15 @@ function SpoilFoodInContainer(Form akFood, Form akSpoiledFood, ObjectReference a
 endFunction
 
 ObjectReference function SpoilFoodInWorld(ObjectReference akFoodRef, Form akSpoiledFood)
-    ; If the reference's 3D is loaded while the player is in menu mode,
-    ; the game will not update the references position data when calling
-    ; GetPositionX(), etc.
-    while IsInMenuMode()
-        Wait(0.1)
+    While IsInMenuMode()
+        utility.wait(0.2)
     endWhile
 
-    akFoodRef.Disable()
-    ObjectReference ref = akFoodRef.PlaceAtMe(akSpoiledFood, 1)
+    ; Flag persistent to force position data to be correct for the reference, but don't persist rotten food
+    bool flag_persistent = !HasSpoilStage4Name(akSpoiledFood.GetName())
+
+    akFoodRef.DisableNoWait()    
+    ObjectReference ref = akFoodRef.PlaceAtMe(akSpoiledFood, 1, flag_persistent)
     akFoodRef.Delete()
     return ref
 endFunction
@@ -293,7 +291,7 @@ function HandleFoodConsumed(Form akFood, ObjectReference akConsumer, int aiCount
 
         int j = 0
         while (remaining_to_remove > 0 && j < criteria_match_count)
-            debug.trace("[Seed] Consumption loop " + j + ", remaining_to_remove " + remaining_to_remove)
+            ;debug.trace("[Seed] Consumption loop " + j + ", remaining_to_remove " + remaining_to_remove)
             int entry_count = BigArrayGetIntAtIndex_Do(found_indicies[j] - 1000, TrackedFoodCount_1, TrackedFoodCount_2)
             if entry_count <= remaining_to_remove
                 ; Remove entry
@@ -309,7 +307,7 @@ function HandleFoodConsumed(Form akFood, ObjectReference akConsumer, int aiCount
         endWhile
 
         if sort_required
-            debug.trace("[Seed] Sorting required after consumption because rows were removed or modified.")
+            ;debug.trace("[Seed] Sorting required after consumption because rows were removed or modified.")
             TrackedFoodTable_SortByOldest()
         endif
     endif
@@ -323,7 +321,7 @@ function HandleFoodTransferToContainer(Form akFood, int aiXferredCount, ObjectRe
     TransactionStart()
     ; Handle food moving between containers, or from the world to a container.
 
-    debug.trace("[Seed] HandleFoodTransferToContainer")
+    ;debug.trace("[Seed] HandleFoodTransferToContainer")
     bool found_tracked_food = false
     int[] found_indicies
     
@@ -351,7 +349,7 @@ function HandleFoodTransferToContainer(Form akFood, int aiXferredCount, ObjectRe
 
         int j = 0
         while (remaining_to_transfer > 0 && j < criteria_match_count)
-            debug.trace("[Seed] Transfer to container loop " + j + ", remaining_to_transfer " + remaining_to_transfer)
+            ;debug.trace("[Seed] Transfer to container loop " + j + ", remaining_to_transfer " + remaining_to_transfer)
             int entry_count = BigArrayGetIntAtIndex_Do(found_indicies[j] - 1000, TrackedFoodCount_1, TrackedFoodCount_2)
             if entry_count <= remaining_to_transfer
                 ; Transfer location in place
@@ -374,7 +372,7 @@ function HandleFoodTransferToContainer(Form akFood, int aiXferredCount, ObjectRe
         endif
 
         if sort_required
-            debug.trace("[Seed] Sorting required after transfer because rows were removed or modified.")
+            ;debug.trace("[Seed] Sorting required after transfer because rows were removed or modified.")
             TrackedFoodTable_SortByOldest()
         endif
     else
@@ -391,7 +389,7 @@ function HandleFoodTransferToWorld(Form akFood, ObjectReference akOldContainer, 
     TransactionStart()
     ; Handle food moving from a container to the world. Assumes a set of individual references (not a stack).
 
-    debug.trace("[Seed] HandleFoodTransferToWorld")
+    ;debug.trace("[Seed] HandleFoodTransferToWorld")
     bool found_tracked_food = false
     int[] found_indicies
     
@@ -416,12 +414,12 @@ function HandleFoodTransferToWorld(Form akFood, ObjectReference akOldContainer, 
         int food_transferred = 0
         bool break = false
         while (j < refs_to_transfer)    ;for ref in refset
-            debug.trace("[Seed] j=" + j + ", k=" + k + ", food_transferred=" + food_transferred + ", refs_to_transfer=" + refs_to_transfer + ", criteria_match_count=" + criteria_match_count)
+            ;debug.trace("[Seed] j=" + j + ", k=" + k + ", food_transferred=" + food_transferred + ", refs_to_transfer=" + refs_to_transfer + ", criteria_match_count=" + criteria_match_count)
             while (k < criteria_match_count && !break)    ;for match in matchset
                 int entry_count = BigArrayGetIntAtIndex_Do(found_indicies[k] - 1000, TrackedFoodCount_1, TrackedFoodCount_2)
                 if entry_count > 1
                     ; subtract from existing entry and add new tracked reference
-                    debug.trace("[Seed] HandleFoodTransferToWorld subtracting from existing entry " + (found_indicies[k] - 1000))
+                    ;debug.trace("[Seed] HandleFoodTransferToWorld subtracting from existing entry " + (found_indicies[k] - 1000))
                     TrackedFoodTable_UpdateRow(found_indicies[k] - 1000, aiCount = entry_count - 1)
                     TrackedFoodTable_AddRow(akFood, 1, TrackedFoodTable_GetIntervalAtIndex(found_indicies[k] - 1000), None, akNewRefs[j])
                     food_transferred += 1
@@ -429,7 +427,7 @@ function HandleFoodTransferToWorld(Form akFood, ObjectReference akOldContainer, 
                     break = true
                 elseif entry_count == 1
                     ; update this record in place
-                    debug.trace("[Seed] HandleFoodTransferToWorld depleting existing entry " + (found_indicies[k] - 1000))
+                    ;debug.trace("[Seed] HandleFoodTransferToWorld depleting existing entry " + (found_indicies[k] - 1000))
                     TrackedFoodTable_UpdateRow(found_indicies[k] - 1000, akFoodRef = akNewRefs[j], clear_container = true)
                     food_transferred += 1
                     ; we've exhausted this record, increment to the next existing match
@@ -452,7 +450,7 @@ function HandleFoodTransferToWorld(Form akFood, ObjectReference akOldContainer, 
         endWhile
 
         if sort_required
-            debug.trace("[Seed] Sorting required after transfer because rows were removed or modified.")
+            ;debug.trace("[Seed] Sorting required after transfer because rows were removed or modified.")
             TrackedFoodTable_SortByOldest()
         endif
     else
@@ -460,7 +458,7 @@ function HandleFoodTransferToWorld(Form akFood, ObjectReference akOldContainer, 
         int refs_to_transfer = GetRefDataSetSize(akNewRefs)
         int food_transferred = 0
         while food_transferred < refs_to_transfer
-            debug.trace("[Seed] Adding untracked food " + akFood + ", " + food_transferred + " of " + refs_to_transfer)
+            ;debug.trace("[Seed] Adding untracked food " + akFood + ", " + food_transferred + " of " + refs_to_transfer)
             AddTrackedFood(akFood, 1, None, akNewRefs[food_transferred])
             food_transferred += 1
         endWhile
@@ -487,7 +485,7 @@ int function GetRefDataSetSize(ObjectReference[] array)
 endFunction
 
 function AddTrackedFood(Form akFood, int aiCount, ObjectReference akContainer, ObjectReference akFoodRef, int aiInterval = 0)
-    debug.trace("[Seed] AddTrackedFood")
+    ;debug.trace("[Seed] AddTrackedFood")
     if aiInterval == 0
         aiInterval = current_spoil_interval
     endif
@@ -627,7 +625,6 @@ Int function GetSpoilRateByForm(Form akBaseObject)
 endFunction
 
 int function GetSpoilRateByIndex(int index)
-    debug.trace("[Seed] Returning spoil rate " + BigArrayGetIntAtIndex_Do(index, FoodSpoilRate_1, FoodSpoilRate_2))
     return BigArrayGetIntAtIndex_Do(index, FoodSpoilRate_1, FoodSpoilRate_2)
 endFunction
 
@@ -704,6 +701,7 @@ function TransactionStart()
 endFunction
 
 function TransactionStop()
+    debug.trace("[Seed] @@@ Spoil System transaction complete. @@@")
     transaction_in_progress = false
 endFunction
 
@@ -763,7 +761,7 @@ function PerishableFoodTable_DebugPrintTable()
     debug.trace("[Seed] | Idx |   FoodSpoilStage1   |    FoodSpoilStage2   |    FoodSpoilStage3   |    FoodSpoilStage4   |     SpoilRate    |")
     int i = 0
     bool break = false
-    while i < 255
+    while i < 256
         break = PerishableFoodTable_DebugPrintRow(i)
         i += 1
     endWhile
@@ -811,7 +809,7 @@ endFunction
 ; None            | 0                     | 0     | 0             | None       | None       |     False     |
 
 function TrackedFoodTable_AddRow(Form akFood, int aiCount, int aiLastInterval, ObjectReference akContainer, ObjectReference akFoodRef)
-    debug.trace("[Seed] TrackedFoodTable_AddRow(akFood=" + akFood + ", aiCount=" + aiCount + ", aiLastInterval=" + aiLastInterval + ", akContainer=" + akContainer + ", akFoodRef=" + akFoodRef)
+    ;debug.trace("[Seed] TrackedFoodTable_AddRow(akFood=" + akFood + ", aiCount=" + aiCount + ", aiLastInterval=" + aiLastInterval + ", akContainer=" + akContainer + ", akFoodRef=" + akFoodRef)
     int index = TrackedFoodTable_FindAvailableIndex()
     if index == -1
         ;@TODO: Log error
@@ -832,7 +830,7 @@ function TrackedFoodTable_AddRow(Form akFood, int aiCount, int aiLastInterval, O
 endFunction
 
 function TrackedFoodTable_UpdateRow(int index, Form akFood = None, int aiPerishableFoodID = -1, int aiCount = -1, int aiNewLastInterval = -1, ObjectReference akContainer = None, ObjectReference akFoodRef = None, bool clear_container = false, bool clear_ref = false, bool show_debug = true)
-    debug.trace("[Seed] TrackedFoodTable_UpdateRow(index=" + index + ", akFood=" + akFood + ", aiPerishableFoodID=" + aiPerishableFoodID + ", aiCount=" + aiCount + ", aiNewLastInterval=" + aiNewLastInterval + ", akContainer=" + akContainer + ", akFoodRef=" + akFoodRef + ", clear_container=" + clear_container + ", clear_ref=" + clear_ref)
+    ;debug.trace("[Seed] TrackedFoodTable_UpdateRow(index=" + index + ", akFood=" + akFood + ", aiPerishableFoodID=" + aiPerishableFoodID + ", aiCount=" + aiCount + ", aiNewLastInterval=" + aiNewLastInterval + ", akContainer=" + akContainer + ", akFoodRef=" + akFoodRef + ", clear_container=" + clear_container + ", clear_ref=" + clear_ref)
     if akFood
         BigArrayAddForm_Do(index, akFood, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2)
     endif
@@ -861,7 +859,7 @@ function TrackedFoodTable_UpdateRow(int index, Form akFood = None, int aiPerisha
 endFunction
 
 function TrackedFoodTable_RemoveRow(int index, bool abClearSortable = false)
-    debug.trace("[Seed] TrackedFoodTable_UpdateRow(index=" + index + ", abClearSortable=" + abClearSortable)
+    ;debug.trace("[Seed] TrackedFoodTable_UpdateRow(index=" + index + ", abClearSortable=" + abClearSortable)
     BigArrayClearForm_Do(index, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2)
     BigArrayClearInt_Do(index, PerishableFoodID_1, PerishableFoodID_2)
     BigArrayClearInt_Do(index, TrackedFoodCount_1, TrackedFoodCount_2)
@@ -900,17 +898,17 @@ function TrackedFoodTable_SortByOldest()
             int iMin_val = BigArrayGetIntAtIndex_Do(iMin, LastInterval_1, LastInterval_2)           ; This is returning 0 when it should be returning 5
             ;debug.trace("[Sort] i_val: " + i_val + ", iMin_val: " + iMin_val)
             if i_val > 0 && iMin_val == 0
-                debug.trace("[Seed] [Sort] New min index " + i + " with value " + i_val + " (was index " + iMin + " with value " + iMin_val +  ")")
+                ;debug.trace("[Seed] [Sort] New min index " + i + " with value " + i_val + " (was index " + iMin + " with value " + iMin_val +  ")")
                 iMin = i
             elseif i_val < iMin_val && i_val != 0
-                debug.trace("[Seed] [Sort] New min index " + i + " with value " + i_val + " (was index " + iMin + " with value " + iMin_val +  ")")
+                ;debug.trace("[Seed] [Sort] New min index " + i + " with value " + i_val + " (was index " + iMin + " with value " + iMin_val +  ")")
                 iMin = i
             endif
             i += 1
         endWhile
         if iMin != j
             ; Get row j values
-            debug.trace("[Seed] Swap " + iMin + ", " + j)
+            ;debug.trace("[Seed] Swap " + iMin + ", " + j)
             Form temp_food = BigArrayGetFormAtIndex_Do(j, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2)
             int temp_perishablefoodid = BigArrayGetIntAtIndex_Do(j, PerishableFoodID_1, PerishableFoodID_2)
             int temp_count = BigArrayGetIntAtIndex_Do(j, TrackedFoodCount_1, TrackedFoodCount_2)
@@ -1009,7 +1007,7 @@ function TrackedFoodTable_DebugPrintTable()
     debug.trace("[Seed] | Idx |       akFood       |  PerishableFoodID(FK)  | Count | Last Interval | Container |     Reference     |   Is Sortable  |")
     int i = 0
     bool break = false
-    while i < 255 && !break
+    while i < 256 && !break
         break = TrackedFoodTable_DebugPrintRow(i)
         i += 1
     endWhile
@@ -1178,6 +1176,10 @@ int function BigArrayFindNextRef_Do(ObjectReference akReference, ObjectReference
 endFunction
 
 Form function BigArrayGetFormAtIndex_Do(int index, Form[] array1, Form[] array2)
+    if index > 255
+        ;@TODO: Log error
+        return None
+    endif
     if index > 127
         index -= 128
         return array2[index]
@@ -1187,6 +1189,10 @@ Form function BigArrayGetFormAtIndex_Do(int index, Form[] array1, Form[] array2)
 endFunction
 
 Int function BigArrayGetIntAtIndex_Do(int index, Int[] array1, Int[] array2)
+    if index > 255
+        ;@TODO: Log error
+        return -1
+    endif
     if index > 127
         index -= 128
         return array2[index]
@@ -1196,6 +1202,10 @@ Int function BigArrayGetIntAtIndex_Do(int index, Int[] array1, Int[] array2)
 endFunction
 
 bool function BigArrayGetBoolAtIndex_Do(int index, Bool[] array1, Bool[] array2)
+    if index > 255
+        ;@TODO: Log error
+        return false
+    endif
     if index > 127
         index -= 128
         return array2[index]
@@ -1205,6 +1215,10 @@ bool function BigArrayGetBoolAtIndex_Do(int index, Bool[] array1, Bool[] array2)
 endFunction
 
 ObjectReference function BigArrayGetRefAtIndex_Do(int index, ObjectReference[] array1, ObjectReference[] array2)
+    if index > 255
+        ;@TODO: Log error
+        return None
+    endif
     if index > 127
         index -= 128
         return array2[index]
@@ -1214,96 +1228,96 @@ ObjectReference function BigArrayGetRefAtIndex_Do(int index, ObjectReference[] a
 endFunction
 
 function BigArrayAddForm_Do(int index, Form akBaseObject, Form[] array1, Form[] array2)
-    if index > 254
+    if index > 255
         ;@TODO: Log error
         return
     endif
     if index > 127
-        array2[(128 - index)] = akBaseObject
+        array2[(index - 128)] = akBaseObject
     else
         array1[index] = akBaseObject
     endif
 endFunction
 
 function BigArrayAddInt_Do(int index, Int aiValue, Int[] array1, Int[] array2)
-    if index > 254
+    if index > 255
         ;@TODO: Log error
         return
     endif
     if index > 127
-        array2[(128 - index)] = aiValue
+        array2[(index - 128)] = aiValue
     else
         array1[index] = aiValue
     endif
 endFunction
 
 function BigArrayAddRef_Do(int index, ObjectReference akReference, ObjectReference[] array1, ObjectReference[] array2)
-    if index > 254
+    if index > 255
         ;@TODO: Log error
         return
     endif
     if index > 127
-        array2[(128 - index)] = akReference
+        array2[(index - 128)] = akReference
     else
         array1[index] = akReference
     endif
 endFunction
 
 function BigArrayAddBool_Do(int index, Bool abValue, Bool[] array1, Bool[] array2)
-    if index > 254
+    if index > 255
         ;@TODO: Log error
         return
     endif
     if index > 127
-        array2[(128 - index)] = abValue
+        array2[(index - 128)] = abValue
     else
         array1[index] = abValue
     endif
 endFunction
 
 function BigArrayClearForm_Do(int index, Form[] array1, Form[] array2)
-    if index > 254
+    if index > 255
         ;@TODO: Log error
         return
     endif
     if index > 127
-        array2[(128 - index)] = None
+        array2[(index - 128)] = None
     else
         array1[index] = None
     endif
 endFunction
 
 function BigArrayClearInt_Do(int index, Int[] array1, Int[] array2)
-    if index > 254
+    if index > 255
         ;@TODO: Log error
         return
     endif
     if index > 127
-        array2[(128 - index)] = 0
+        array2[(index - 128)] = 0
     else
         array1[index] = 0
     endif
 endFunction
 
 function BigArrayClearBool_Do(int index, Bool[] array1, Bool[] array2)
-    if index > 254
+    if index > 255
         ;@TODO: Log error
         return
     endif
     if index > 127
-        array2[(128 - index)] = false
+        array2[(index - 128)] = false
     else
         array1[index] = false
     endif
 endFunction
 
 function BigArrayClearRef_Do(int index, ObjectReference[] array1, ObjectReference[] array2)
-    if index > 254
+    if index > 255
         ;@TODO: Log error
         return
     endif
     if index > 127
-        array2[(128 - index)] = None
+        array2[(index - 128)] = None
     else
         array1[index] = None
     endif
