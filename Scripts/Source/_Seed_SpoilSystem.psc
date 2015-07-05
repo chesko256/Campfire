@@ -33,6 +33,8 @@ ObjectReference[] Container_1
 ObjectReference[] Container_2
 ObjectReference[] TrackedFoodReference_1
 ObjectReference[] TrackedFoodReference_2
+bool[] IsSortable_1
+bool[] IsSortable_2
 
 int COL_FOOD_FORM = 100
 int COL_PERISHABLEFOODID_FK = 101
@@ -40,6 +42,7 @@ int COL_FOOD_COUNT = 102
 int COL_LAST_INTERVAL = 103
 int COL_CONTAINER = 104
 int COL_FOOD_REFERENCE = 105
+int COL_IS_SORTABLE = 106
 
 ; PerishableFoodTable
 Form[] FoodSpoilStage1_1
@@ -109,6 +112,8 @@ Function Initialize()
     Container_2 = new ObjectReference[128]
     TrackedFoodReference_1 = new ObjectReference[128]
     TrackedFoodReference_2 = new ObjectReference[128]
+    IsSortable_1 = new Bool[128]
+    IsSortable_2 = new Bool[128]
 
     FoodSpoilStage1_1 = new Form[128]
     FoodSpoilStage1_2 = new Form[128]
@@ -723,11 +728,11 @@ bool function PerishableFoodTable_DebugPrintRow(int index)
 endFunction
 
 ; TrackedFoodTable
-; akBaseObject    | PerishableFoodID (FK) | Count | Last Interval | Container  | Reference  |
-; ================|=======================|=======|===============|============|============|
-; FoodApple       | 0                     | 3     | 316           | None       | 0xFF000011 |
-; FoodCabbage     | 9                     | 1     | 474           | 0x0105674b | None       |
-; FoodUnknown     | -1                    | 4     | 525           | 0x0000000f | None       |
+; akBaseObject    | PerishableFoodID (FK) | Count | Last Interval | Container  | Reference  |  Is Sortable  |
+; ================|=======================|=======|===============|============|============|===============|
+; FoodApple       | 0                     | 3     | 316           | None       | 0xFF000011 |     True      |
+; FoodCabbage     | 9                     | 1     | 474           | 0x0105674b | None       |     True      |
+; None            | 0                     | 0     | 0             | None       | None       |     False     |
 
 function TrackedFoodTable_AddRow(Form akFood, int aiCount, int aiLastInterval, ObjectReference akContainer, ObjectReference akFoodRef)
     debug.trace("[Seed] TrackedFoodTable_AddRow(akFood=" + akFood + ", aiCount=" + aiCount + ", aiLastInterval=" + aiLastInterval + ", akContainer=" + akContainer + ", akFoodRef=" + akFoodRef)
@@ -746,6 +751,7 @@ function TrackedFoodTable_AddRow(Form akFood, int aiCount, int aiLastInterval, O
     TrackedFoodTable_BigArrayAdd(COL_LAST_INTERVAL, index, aiValue = aiLastInterval)
     TrackedFoodTable_BigArrayAdd(COL_CONTAINER, index, akReference = akContainer)
     TrackedFoodTable_BigArrayAdd(COL_FOOD_REFERENCE, index, akReference = akFoodRef)
+    TrackedFoodTable_BigArrayAdd(COL_IS_SORTABLE, index, abValue = true)
     TrackedFoodTable_DebugPrintTable()
 endFunction
 
@@ -769,18 +775,25 @@ function TrackedFoodTable_UpdateRow(int index, Form akFood = None, int aiPerisha
     if akFoodRef || clear_ref
         BigArrayAddRef_Do(index, akFoodRef, TrackedFoodReference_1, TrackedFoodReference_2)
     endif
+
+    ; Any row touched by Update should be sorted.
+    BigArrayAddBool_Do(index, true, IsSortable_1, IsSortable_2)
+
     if show_debug
         TrackedFoodTable_DebugPrintTable()
     endif
 endFunction
 
-function TrackedFoodTable_RemoveRow(int index)
+function TrackedFoodTable_RemoveRow(int index, bool abClearSortable = false)
     BigArrayClearForm_Do(index, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2)
     BigArrayClearInt_Do(index, PerishableFoodID_1, PerishableFoodID_2)
     BigArrayClearInt_Do(index, TrackedFoodCount_1, TrackedFoodCount_2)
     BigArrayClearInt_Do(index, LastInterval_1, LastInterval_2)
     BigArrayClearRef_Do(index, Container_1, Container_2)
     BigArrayClearRef_Do(index, TrackedFoodReference_1, TrackedFoodReference_2)
+    if abClearSortable
+        BigArrayClearBool_Do(index, IsSortable_1, IsSortable_2)
+    endif
     TrackedFoodTable_DebugPrintTable()
 endFunction
 
@@ -797,7 +810,10 @@ function TrackedFoodTable_SortByOldest()
     int i
     int j = 0
     int iMin
-    int n = 256
+    int n = BigArrayFindBool_Do(false, IsSortable_1, IsSortable_2)
+    if n == -1
+        n = 256
+    endif
     while j < n - 1
         iMin = j
         i = j + 1
@@ -817,6 +833,7 @@ function TrackedFoodTable_SortByOldest()
         endWhile
         if iMin != j
             ; Get row j values
+            debug.trace("[Seed] Swap " + iMin + ", " + j)
             Form temp_food = BigArrayGetFormAtIndex_Do(j, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2)
             int temp_perishablefoodid = BigArrayGetIntAtIndex_Do(j, PerishableFoodID_1, PerishableFoodID_2)
             int temp_count = BigArrayGetIntAtIndex_Do(j, TrackedFoodCount_1, TrackedFoodCount_2)
@@ -852,13 +869,13 @@ function TrackedFoodTable_SortByOldest()
 
             ; Swap row j values with row iMin values
             if clear_minval_row
-                TrackedFoodTable_RemoveRow(j)
+                TrackedFoodTable_RemoveRow(j, true)
             else
                 TrackedFoodTable_UpdateRow(j, min_food, min_perishablefoodid, min_count, min_lastinterval, min_container, min_reference, clear_min_container, clear_min_ref, show_debug = false)
             endif
 
             if clear_tempval_row
-                TrackedFoodTable_RemoveRow(iMin)
+                TrackedFoodTable_RemoveRow(iMin, true)
             else
                 TrackedFoodTable_UpdateRow(iMin, temp_food, temp_perishablefoodid, temp_count, temp_lastinterval, temp_container, temp_reference, clear_temp_container, clear_temp_ref, show_debug = false)
             endif
@@ -899,8 +916,8 @@ endFunction
 
 function TrackedFoodTable_DebugPrintTable()
     debug.trace("[Seed] TrackedFoodTable")
-    debug.trace("[Seed] =============================================================================================================")
-    debug.trace("[Seed] | Idx |       akFood       |  PerishableFoodID(FK)  | Count | Last Interval | Container |     Reference     |")
+    debug.trace("[Seed] ==============================================================================================================================")
+    debug.trace("[Seed] | Idx |       akFood       |  PerishableFoodID(FK)  | Count | Last Interval | Container |     Reference     |   Is Sortable  |")
     int i = 0
     bool break = false
     while i < 255 && !break
@@ -911,7 +928,7 @@ function TrackedFoodTable_DebugPrintTable()
 endFunction
 
 bool function TrackedFoodTable_DebugPrintRow(int index)
-    if BigArrayGetFormAtIndex_Do(index, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2) == None
+    if BigArrayGetBoolAtIndex_Do(index, IsSortable_1, IsSortable_2) == false && BigArrayGetFormAtIndex_Do(index, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2) == None
         if _Seed_DebugDumpVerbose.GetValueInt() == 2
             ; continue
         else
@@ -928,7 +945,8 @@ bool function TrackedFoodTable_DebugPrintRow(int index)
     int last_interval = BigArrayGetIntAtIndex_Do(index, LastInterval_1, LastInterval_2)
     ObjectReference container_ref = BigArrayGetRefAtIndex_Do(index, Container_1, Container_2)
     ObjectReference food_ref = BigArrayGetRefAtIndex_Do(index, TrackedFoodReference_1, TrackedFoodReference_2)
-    debug.trace("[Seed] | " + index + " | " + food_name + " | " + perishable_id + " | " + food_count + " | " + last_interval + " | " + container_ref + " | " + food_ref + " |")
+    bool is_sortable = BigArrayGetBoolAtIndex_Do(index, IsSortable_1, IsSortable_2)
+    debug.trace("[Seed] | " + index + " | " + food_name + " | " + perishable_id + " | " + food_count + " | " + last_interval + " | " + container_ref + " | " + food_ref + " | " + is_sortable + " |")
     return false
 endFunction
 
@@ -948,7 +966,7 @@ function PerishableFoodTable_BigArrayAdd(int BigArrayID, int index, Form akBaseO
     endif
 endFunction
 
-function TrackedFoodTable_BigArrayAdd(int BigArrayID, int index, Form akBaseObject = None, int aiValue = -1, ObjectReference akReference = None)
+function TrackedFoodTable_BigArrayAdd(int BigArrayID, int index, Form akBaseObject = None, int aiValue = -1, bool abValue = false, ObjectReference akReference = None)
     if BigArrayID == COL_FOOD_FORM
         BigArrayAddForm_Do(index, akBaseObject, TrackedFoodBaseObject_1, TrackedFoodBaseObject_2)
     elseif BigArrayID == COL_PERISHABLEFOODID_FK
@@ -961,6 +979,22 @@ function TrackedFoodTable_BigArrayAdd(int BigArrayID, int index, Form akBaseObje
         BigArrayAddRef_Do(index, akReference, Container_1, Container_2)
     elseif BigArrayID == COL_FOOD_REFERENCE
         BigArrayAddRef_Do(index, akReference, TrackedFoodReference_1, TrackedFoodReference_2)
+    elseif BigArrayID == COL_IS_SORTABLE
+        BigArrayAddBool_Do(index, abValue, IsSortable_1, IsSortable_2)
+    endif
+endFunction
+
+int function BigArrayFindBool_Do(Bool abValue, Bool[] array1, Bool[] array2)
+    int index = array1.Find(abValue)
+    if index == -1
+        index = array2.Find(abValue)
+        if index == -1
+            return -1
+        else
+            return index + 128
+        endif
+    else
+        return index
     endif
 endFunction
 
@@ -1048,6 +1082,15 @@ Int function BigArrayGetIntAtIndex_Do(int index, Int[] array1, Int[] array2)
     endif
 endFunction
 
+bool function BigArrayGetBoolAtIndex_Do(int index, Bool[] array1, Bool[] array2)
+    if index > 127
+        index -= 128
+        return array2[index]
+    else
+        return array1[index]
+    endif
+endFunction
+
 ObjectReference function BigArrayGetRefAtIndex_Do(int index, ObjectReference[] array1, ObjectReference[] array2)
     if index > 127
         index -= 128
@@ -1093,6 +1136,18 @@ function BigArrayAddRef_Do(int index, ObjectReference akReference, ObjectReferen
     endif
 endFunction
 
+function BigArrayAddBool_Do(int index, Bool abValue, Bool[] array1, Bool[] array2)
+    if index > 254
+        ;@TODO: Log error
+        return
+    endif
+    if index > 127
+        array2[(128 - index)] = abValue
+    else
+        array1[index] = abValue
+    endif
+endFunction
+
 function BigArrayClearForm_Do(int index, Form[] array1, Form[] array2)
     if index > 254
         ;@TODO: Log error
@@ -1114,6 +1169,18 @@ function BigArrayClearInt_Do(int index, Int[] array1, Int[] array2)
         array2[(128 - index)] = 0
     else
         array1[index] = 0
+    endif
+endFunction
+
+function BigArrayClearBool_Do(int index, Bool[] array1, Bool[] array2)
+    if index > 254
+        ;@TODO: Log error
+        return
+    endif
+    if index > 127
+        array2[(128 - index)] = false
+    else
+        array1[index] = false
     endif
 endFunction
 
