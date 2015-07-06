@@ -99,6 +99,7 @@
 !textures/campfire/*
 !textures/frostfall/*
 !textures/lastseed/*
+!textures/lastseed/PSDs/*
 
 #Ignore working files
 Scripts/Source/_Camp_SkyUIConfigPanelScript - Copy.psc
