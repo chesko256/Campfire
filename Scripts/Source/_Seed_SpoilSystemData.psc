@@ -5,7 +5,7 @@ Potion property FoodApple auto
 Potion property FoodApple02 auto
 ;Potion property FoodAppleCabbageStew auto
 Potion property FoodBeef auto
-;Potion property FoodBeefCooked auto
+Potion property FoodBeefCooked auto
 ;Potion property FoodBeefStew auto
 ;Potion property FoodBoiledCremeTreat auto
 ;Potion property FoodBread01A auto
@@ -66,7 +66,7 @@ Potion property FoodApple_Stage2 auto
 Potion property FoodApple02_Stage2 auto
 ;Potion property FoodAppleCabbageStew_Stage2 auto
 Potion property FoodBeef_Stage2 auto
-;Potion property FoodBeefCooked_Stage2 auto
+Potion property FoodBeefCooked_Stage2 auto
 ;Potion property FoodBeefStew_Stage2 auto
 ;Potion property FoodBoiledCremeTreat_Stage2 auto
 ;Potion property FoodBread01A_Stage2 auto
@@ -127,7 +127,7 @@ Potion property FoodApple_Stage3 auto
 Potion property FoodApple02_Stage3 auto
 ;Potion property FoodAppleCabbageStew_Stage3 auto
 Potion property FoodBeef_Stage3 auto
-;Potion property FoodBeefCooked_Stage3 auto
+Potion property FoodBeefCooked_Stage3 auto
 ;Potion property FoodBeefStew_Stage3 auto
 ;Potion property FoodBoiledCremeTreat_Stage3 auto
 ;Potion property FoodBread01A_Stage3 auto
@@ -188,7 +188,7 @@ Potion property FoodApple_Stage4 auto
 Potion property FoodApple02_Stage4 auto
 ;Potion property FoodAppleCabbageStew_Stage4 auto
 Potion property FoodBeef_Stage4 auto
-;Potion property FoodBeefCooked_Stage4 auto
+Potion property FoodBeefCooked_Stage4 auto
 ;Potion property FoodBeefStew_Stage4 auto
 ;Potion property FoodBoiledCremeTreat_Stage4 auto
 ;Potion property FoodBread01A_Stage4 auto
@@ -259,7 +259,7 @@ function AddAllVanillaFood()
     cursor = PerishableFoodTable_AddRow(FoodApple02, FoodApple02_Stage2, FoodApple02_Stage3, FoodApple02_Stage4, 1, cursor)
     ;cursor = PerishableFoodTable_AddRow(FoodAppleCabbageStew, FoodAppleCabbageStew_Stage2, FoodAppleCabbageStew_Stage3, FoodAppleCabbageStew_Stage4, RATE_GOES_HERE, cursor)
     cursor = PerishableFoodTable_AddRow(FoodBeef, FoodBeef_Stage2, FoodBeef_Stage3, FoodBeef_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodBeefCooked, FoodBeefCooked_Stage2, FoodBeefCooked_Stage3, FoodBeefCooked_Stage4, RATE_GOES_HERE, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodBeefCooked, FoodBeefCooked_Stage2, FoodBeefCooked_Stage3, FoodBeefCooked_Stage4, 1, cursor)
     ;cursor = PerishableFoodTable_AddRow(FoodBeefStew, FoodBeefStew_Stage2, FoodBeefStew_Stage3, FoodBeefStew_Stage4, RATE_GOES_HERE, cursor)
     ;cursor = PerishableFoodTable_AddRow(FoodBoiledCremeTreat, FoodBoiledCremeTreat_Stage2, FoodBoiledCremeTreat_Stage3, FoodBoiledCremeTreat_Stage4, RATE_GOES_HERE, cursor)
     ;cursor = PerishableFoodTable_AddRow(FoodBread01A, FoodBread01A_Stage2, FoodBread01A_Stage3, FoodBread01A_Stage4, RATE_GOES_HERE, cursor)
