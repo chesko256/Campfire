@@ -59,27 +59,23 @@ Potion property FoodVenison auto
 Potion property FoodVenisonCooked auto
 Potion property FoodVenisonStew auto
 
-;Abecean Longfin
-;Chicken's Egg
-;Cyrodilic Spadetail
-;Eye of Sabre Cat
-;Hawk's Egg (HF)
-;Histcarp
-;Honeycomb
-;Human Flesh
-;Human Heart
-;Jazbay Grapes
-;Juniper Berries
-;Pine Thrush Egg
-;River Betty
-;Rock Warbler Egg
+;Ingredient property JazBay auto
+;Ingredient property CritterPondFish01Ingredient auto
+;Ingredient property CritterPondFish02Ingredient auto
+;Ingredient property CritterPondFish03Ingredient auto
+;Ingredient property CritterPondFish04Ingredient auto
+;Ingredient property CritterPondFish05Ingredient auto
+;Ingredient property BirdEgg01 auto
+;Ingredient property BirdEgg02 auto
+;Ingredient property BirdEgg03 auto
+;Ingredient property SlaughterfishEgg01 auto
+;Ingredient property HumanFlesh auto
+;Ingredient property HumanHeart auto
+;Ingredient property Snowberry auto
+;Ingredient property JuniperBerries auto
+
 ;Salmon Roe (HF)
-;Silverside Perch
-;Slaughterfish Egg
-;Snowberries
-;Spider Egg
-;Troll Fat?
-;Wheat
+;Hawk's Egg (HF)
 
 ; Vanilla Food - Spoil Stage 2
 Potion property FoodApple_Stage2 auto
