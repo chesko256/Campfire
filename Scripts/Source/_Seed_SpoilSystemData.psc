@@ -45,19 +45,19 @@ Potion property FoodPheasant auto
 Potion property FoodPheasantCooked auto
 Potion property FoodPie auto
 Potion property FoodPotato auto
-;Potion property FoodPotatoesBaked auto
+Potion property FoodPotatoesBaked auto
 Potion property FoodRabbit auto
-;Potion property FoodRabbitCooked auto
-;Potion property FoodSalmon auto
-;Potion property FoodSalmonCooked auto
-;Potion property FoodSlaughterfishCooked auto
-;Potion property FoodSweetroll auto
-;Potion property FoodTomato auto
-;Potion property FoodTomatoSoup auto
-;Potion property FoodVegetableSoup auto
-;Potion property FoodVenison auto
-;Potion property FoodVenisonCooked auto
-;Potion property FoodVenisonStew auto
+Potion property FoodRabbitCooked auto
+Potion property FoodSalmon auto
+Potion property FoodSalmonCooked auto
+Potion property FoodSlaughterfishCooked auto
+Potion property FoodSweetroll auto
+Potion property FoodTomato auto
+Potion property FoodTomatoSoup auto
+Potion property FoodVegetableSoup auto
+Potion property FoodVenison auto
+Potion property FoodVenisonCooked auto
+Potion property FoodVenisonStew auto
 
 ; Vanilla Food - Spoil Stage 2
 Potion property FoodApple_Stage2 auto
@@ -104,19 +104,19 @@ Potion property FoodPheasant_Stage2 auto
 Potion property FoodPheasantCooked_Stage2 auto
 Potion property FoodPie_Stage2 auto
 Potion property FoodPotato_Stage2 auto
-;Potion property FoodPotatoesBaked_Stage2 auto
+Potion property FoodPotatoesBaked_Stage2 auto
 Potion property FoodRabbit_Stage2 auto
-;Potion property FoodRabbitCooked_Stage2 auto
-;Potion property FoodSalmon_Stage2 auto
-;Potion property FoodSalmonCooked_Stage2 auto
-;Potion property FoodSlaughterfishCooked_Stage2 auto
-;Potion property FoodSweetroll_Stage2 auto
-;Potion property FoodTomato_Stage2 auto
-;Potion property FoodTomatoSoup_Stage2 auto
-;Potion property FoodVegetableSoup_Stage2 auto
-;Potion property FoodVenison_Stage2 auto
-;Potion property FoodVenisonCooked_Stage2 auto
-;Potion property FoodVenisonStew_Stage2 auto
+Potion property FoodRabbitCooked_Stage2 auto
+Potion property FoodSalmon_Stage2 auto
+Potion property FoodSalmonCooked_Stage2 auto
+Potion property FoodSlaughterfishCooked_Stage2 auto
+Potion property FoodSweetroll_Stage2 auto
+Potion property FoodTomato_Stage2 auto
+Potion property FoodTomatoSoup_Stage2 auto
+Potion property FoodVegetableSoup_Stage2 auto
+Potion property FoodVenison_Stage2 auto
+Potion property FoodVenisonCooked_Stage2 auto
+Potion property FoodVenisonStew_Stage2 auto
 
 ; Vanilla Food - Spoil Stage 3
 Potion property FoodApple_Stage3 auto
@@ -163,19 +163,19 @@ Potion property FoodPheasant_Stage3 auto
 Potion property FoodPheasantCooked_Stage3 auto
 Potion property FoodPie_Stage3 auto
 Potion property FoodPotato_Stage3 auto
-;Potion property FoodPotatoesBaked_Stage3 auto
+Potion property FoodPotatoesBaked_Stage3 auto
 Potion property FoodRabbit_Stage3 auto
-;Potion property FoodRabbitCooked_Stage3 auto
-;Potion property FoodSalmon_Stage3 auto
-;Potion property FoodSalmonCooked_Stage3 auto
-;Potion property FoodSlaughterfishCooked_Stage3 auto
-;Potion property FoodSweetroll_Stage3 auto
-;Potion property FoodTomato_Stage3 auto
-;Potion property FoodTomatoSoup_Stage3 auto
-;Potion property FoodVegetableSoup_Stage3 auto
-;Potion property FoodVenison_Stage3 auto
-;Potion property FoodVenisonCooked_Stage3 auto
-;Potion property FoodVenisonStew_Stage3 auto
+Potion property FoodRabbitCooked_Stage3 auto
+Potion property FoodSalmon_Stage3 auto
+Potion property FoodSalmonCooked_Stage3 auto
+Potion property FoodSlaughterfishCooked_Stage3 auto
+Potion property FoodSweetroll_Stage3 auto
+Potion property FoodTomato_Stage3 auto
+Potion property FoodTomatoSoup_Stage3 auto
+Potion property FoodVegetableSoup_Stage3 auto
+Potion property FoodVenison_Stage3 auto
+Potion property FoodVenisonCooked_Stage3 auto
+Potion property FoodVenisonStew_Stage3 auto
 
 ; Vanilla Food - Spoil Stage 4
 Potion property FoodApple_Stage4 auto
@@ -222,19 +222,19 @@ Potion property FoodPheasant_Stage4 auto
 Potion property FoodPheasantCooked_Stage4 auto
 Potion property FoodPie_Stage4 auto
 Potion property FoodPotato_Stage4 auto
-;Potion property FoodPotatoesBaked_Stage4 auto
+Potion property FoodPotatoesBaked_Stage4 auto
 Potion property FoodRabbit_Stage4 auto
-;Potion property FoodRabbitCooked_Stage4 auto
-;Potion property FoodSalmon_Stage4 auto
-;Potion property FoodSalmonCooked_Stage4 auto
-;Potion property FoodSlaughterfishCooked_Stage4 auto
-;Potion property FoodSweetroll_Stage4 auto
-;Potion property FoodTomato_Stage4 auto
-;Potion property FoodTomatoSoup_Stage4 auto
-;Potion property FoodVegetableSoup_Stage4 auto
-;Potion property FoodVenison_Stage4 auto
-;Potion property FoodVenisonCooked_Stage4 auto
-;Potion property FoodVenisonStew_Stage4 auto
+Potion property FoodRabbitCooked_Stage4 auto
+Potion property FoodSalmon_Stage4 auto
+Potion property FoodSalmonCooked_Stage4 auto
+Potion property FoodSlaughterfishCooked_Stage4 auto
+Potion property FoodSweetroll_Stage4 auto
+Potion property FoodTomato_Stage4 auto
+Potion property FoodTomatoSoup_Stage4 auto
+Potion property FoodVegetableSoup_Stage4 auto
+Potion property FoodVenison_Stage4 auto
+Potion property FoodVenisonCooked_Stage4 auto
+Potion property FoodVenisonStew_Stage4 auto
 
 function SetupData()
     while !initialized
@@ -291,19 +291,19 @@ function AddAllVanillaFood()
     cursor = PerishableFoodTable_AddRow(FoodPheasantCooked, FoodPheasantCooked_Stage2, FoodPheasantCooked_Stage3, FoodPheasantCooked_Stage4, 1, cursor)
     cursor = PerishableFoodTable_AddRow(FoodPie, FoodPie_Stage2, FoodPie_Stage3, FoodPie_Stage4, 1, cursor)
     cursor = PerishableFoodTable_AddRow(FoodPotato, FoodPotato_Stage2, FoodPotato_Stage3, FoodPotato_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodPotatoesBaked, FoodPotatoesBaked_Stage2, FoodPotatoesBaked_Stage3, FoodPotatoesBaked_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodPotatoesBaked, FoodPotatoesBaked_Stage2, FoodPotatoesBaked_Stage3, FoodPotatoesBaked_Stage4, 1, cursor)
     cursor = PerishableFoodTable_AddRow(FoodRabbit, FoodRabbit_Stage2, FoodRabbit_Stage3, FoodRabbit_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodRabbitCooked, FoodRabbitCooked_Stage2, FoodRabbitCooked_Stage3, FoodRabbitCooked_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodSalmon, FoodSalmon_Stage2, FoodSalmon_Stage3, FoodSalmon_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodSalmonCooked, FoodSalmonCooked_Stage2, FoodSalmonCooked_Stage3, FoodSalmonCooked_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodSlaughterfishCooked, FoodSlaughterfishCooked_Stage2, FoodSlaughterfishCooked_Stage3, FoodSlaughterfishCooked_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodSweetroll, FoodSweetroll_Stage2, FoodSweetroll_Stage3, FoodSweetroll_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodTomato, FoodTomato_Stage2, FoodTomato_Stage3, FoodTomato_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodTomatoSoup, FoodTomatoSoup_Stage2, FoodTomatoSoup_Stage3, FoodTomatoSoup_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodVegetableSoup, FoodVegetableSoup_Stage2, FoodVegetableSoup_Stage3, FoodVegetableSoup_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodVenison, FoodVenison_Stage2, FoodVenison_Stage3, FoodVenison_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodVenisonCooked, FoodVenisonCooked_Stage2, FoodVenisonCooked_Stage3, FoodVenisonCooked_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodVenisonStew, FoodVenisonStew_Stage2, FoodVenisonStew_Stage3, FoodVenisonStew_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodRabbitCooked, FoodRabbitCooked_Stage2, FoodRabbitCooked_Stage3, FoodRabbitCooked_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodSalmon, FoodSalmon_Stage2, FoodSalmon_Stage3, FoodSalmon_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodSalmonCooked, FoodSalmonCooked_Stage2, FoodSalmonCooked_Stage3, FoodSalmonCooked_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodSlaughterfishCooked, FoodSlaughterfishCooked_Stage2, FoodSlaughterfishCooked_Stage3, FoodSlaughterfishCooked_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodSweetroll, FoodSweetroll_Stage2, FoodSweetroll_Stage3, FoodSweetroll_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodTomato, FoodTomato_Stage2, FoodTomato_Stage3, FoodTomato_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodTomatoSoup, FoodTomatoSoup_Stage2, FoodTomatoSoup_Stage3, FoodTomatoSoup_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodVegetableSoup, FoodVegetableSoup_Stage2, FoodVegetableSoup_Stage3, FoodVegetableSoup_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodVenison, FoodVenison_Stage2, FoodVenison_Stage3, FoodVenison_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodVenisonCooked, FoodVenisonCooked_Stage2, FoodVenisonCooked_Stage3, FoodVenisonCooked_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodVenisonStew, FoodVenisonStew_Stage2, FoodVenisonStew_Stage3, FoodVenisonStew_Stage4, 1, cursor)
 endFunction
 
 function AddAllDLCFood()
