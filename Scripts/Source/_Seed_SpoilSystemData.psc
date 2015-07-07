@@ -21,7 +21,7 @@ Potion property FoodCabbage auto
 ;Potion property FoodCheeseWheel01B auto
 ;Potion property FoodCheeseWheel02A auto
 ;Potion property FoodCheeseWheel02B auto
-;Potion property FoodChicken auto
+Potion property FoodChicken auto
 ;Potion property FoodChickenCooked auto
 ;Potion property FoodClamMeat auto
 ;Potion property FoodDogMeat auto
@@ -43,12 +43,12 @@ Potion property FoodCabbage auto
 ;Potion property FoodMammothMeat auto
 ;Potion property FoodMammothMeatCooked auto
 ;Potion property FoodMarriageMeal auto
-;Potion property FoodPheasant auto
+Potion property FoodPheasant auto
 ;Potion property FoodPheasantCooked auto
 ;Potion property FoodPie auto
 ;Potion property FoodPotato auto
 ;Potion property FoodPotatoesBaked auto
-;Potion property FoodRabbit auto
+Potion property FoodRabbit auto
 ;Potion property FoodRabbitCooked auto
 ;Potion property FoodSalmon auto
 ;Potion property FoodSalmonCooked auto
@@ -82,7 +82,7 @@ Potion property FoodCabbage_Stage2 auto
 ;Potion property FoodCheeseWheel01B_Stage2 auto
 ;Potion property FoodCheeseWheel02A_Stage2 auto
 ;Potion property FoodCheeseWheel02B_Stage2 auto
-;Potion property FoodChicken_Stage2 auto
+Potion property FoodChicken_Stage2 auto
 ;Potion property FoodChickenCooked_Stage2 auto
 ;Potion property FoodClamMeat_Stage2 auto
 ;Potion property FoodDogMeat_Stage2 auto
@@ -104,12 +104,12 @@ Potion property FoodCabbage_Stage2 auto
 ;Potion property FoodMammothMeat_Stage2 auto
 ;Potion property FoodMammothMeatCooked_Stage2 auto
 ;Potion property FoodMarriageMeal_Stage2 auto
-;Potion property FoodPheasant_Stage2 auto
+Potion property FoodPheasant_Stage2 auto
 ;Potion property FoodPheasantCooked_Stage2 auto
 ;Potion property FoodPie_Stage2 auto
 ;Potion property FoodPotato_Stage2 auto
 ;Potion property FoodPotatoesBaked_Stage2 auto
-;Potion property FoodRabbit_Stage2 auto
+Potion property FoodRabbit_Stage2 auto
 ;Potion property FoodRabbitCooked_Stage2 auto
 ;Potion property FoodSalmon_Stage2 auto
 ;Potion property FoodSalmonCooked_Stage2 auto
@@ -143,7 +143,7 @@ Potion property FoodCabbage_Stage3 auto
 ;Potion property FoodCheeseWheel01B_Stage3 auto
 ;Potion property FoodCheeseWheel02A_Stage3 auto
 ;Potion property FoodCheeseWheel02B_Stage3 auto
-;Potion property FoodChicken_Stage3 auto
+Potion property FoodChicken_Stage3 auto
 ;Potion property FoodChickenCooked_Stage3 auto
 ;Potion property FoodClamMeat_Stage3 auto
 ;Potion property FoodDogMeat_Stage3 auto
@@ -165,12 +165,12 @@ Potion property FoodCabbage_Stage3 auto
 ;Potion property FoodMammothMeat_Stage3 auto
 ;Potion property FoodMammothMeatCooked_Stage3 auto
 ;Potion property FoodMarriageMeal_Stage3 auto
-;Potion property FoodPheasant_Stage3 auto
+Potion property FoodPheasant_Stage3 auto
 ;Potion property FoodPheasantCooked_Stage3 auto
 ;Potion property FoodPie_Stage3 auto
 ;Potion property FoodPotato_Stage3 auto
 ;Potion property FoodPotatoesBaked_Stage3 auto
-;Potion property FoodRabbit_Stage3 auto
+Potion property FoodRabbit_Stage3 auto
 ;Potion property FoodRabbitCooked_Stage3 auto
 ;Potion property FoodSalmon_Stage3 auto
 ;Potion property FoodSalmonCooked_Stage3 auto
@@ -204,7 +204,7 @@ Potion property FoodCabbage_Stage4 auto
 ;Potion property FoodCheeseWheel01B_Stage4 auto
 ;Potion property FoodCheeseWheel02A_Stage4 auto
 ;Potion property FoodCheeseWheel02B_Stage4 auto
-;Potion property FoodChicken_Stage4 auto
+Potion property FoodChicken_Stage4 auto
 ;Potion property FoodChickenCooked_Stage4 auto
 ;Potion property FoodClamMeat_Stage4 auto
 ;Potion property FoodDogMeat_Stage4 auto
@@ -226,12 +226,12 @@ Potion property FoodCabbage_Stage4 auto
 ;Potion property FoodMammothMeat_Stage4 auto
 ;Potion property FoodMammothMeatCooked_Stage4 auto
 ;Potion property FoodMarriageMeal_Stage4 auto
-;Potion property FoodPheasant_Stage4 auto
+Potion property FoodPheasant_Stage4 auto
 ;Potion property FoodPheasantCooked_Stage4 auto
 ;Potion property FoodPie_Stage4 auto
 ;Potion property FoodPotato_Stage4 auto
 ;Potion property FoodPotatoesBaked_Stage4 auto
-;Potion property FoodRabbit_Stage4 auto
+Potion property FoodRabbit_Stage4 auto
 ;Potion property FoodRabbitCooked_Stage4 auto
 ;Potion property FoodSalmon_Stage4 auto
 ;Potion property FoodSalmonCooked_Stage4 auto
@@ -275,7 +275,7 @@ function AddAllVanillaFood()
     ;cursor = PerishableFoodTable_AddRow(FoodCheeseWheel01B, FoodCheeseWheel01B_Stage2, FoodCheeseWheel01B_Stage3, FoodCheeseWheel01B_Stage4, RATE_GOES_HERE, cursor)
     ;cursor = PerishableFoodTable_AddRow(FoodCheeseWheel02A, FoodCheeseWheel02A_Stage2, FoodCheeseWheel02A_Stage3, FoodCheeseWheel02A_Stage4, RATE_GOES_HERE, cursor)
     ;cursor = PerishableFoodTable_AddRow(FoodCheeseWheel02B, FoodCheeseWheel02B_Stage2, FoodCheeseWheel02B_Stage3, FoodCheeseWheel02B_Stage4, RATE_GOES_HERE, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodChicken, FoodChicken_Stage2, FoodChicken_Stage3, FoodChicken_Stage4, RATE_GOES_HERE, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodChicken, FoodChicken_Stage2, FoodChicken_Stage3, FoodChicken_Stage4, 1, cursor)
     ;cursor = PerishableFoodTable_AddRow(FoodChickenCooked, FoodChickenCooked_Stage2, FoodChickenCooked_Stage3, FoodChickenCooked_Stage4, RATE_GOES_HERE, cursor)
     ;cursor = PerishableFoodTable_AddRow(FoodClamMeat, FoodClamMeat_Stage2, FoodClamMeat_Stage3, FoodClamMeat_Stage4, RATE_GOES_HERE, cursor)
     ;cursor = PerishableFoodTable_AddRow(FoodDogMeat, FoodDogMeat_Stage2, FoodDogMeat_Stage3, FoodDogMeat_Stage4, RATE_GOES_HERE, cursor)
@@ -297,12 +297,12 @@ function AddAllVanillaFood()
     ;cursor = PerishableFoodTable_AddRow(FoodMammothMeat, FoodMammothMeat_Stage2, FoodMammothMeat_Stage3, FoodMammothMeat_Stage4, RATE_GOES_HERE, cursor)
     ;cursor = PerishableFoodTable_AddRow(FoodMammothMeatCooked, FoodMammothMeatCooked_Stage2, FoodMammothMeatCooked_Stage3, FoodMammothMeatCooked_Stage4, RATE_GOES_HERE, cursor)
     ;cursor = PerishableFoodTable_AddRow(FoodMarriageMeal, FoodMarriageMeal_Stage2, FoodMarriageMeal_Stage3, FoodMarriageMeal_Stage4, RATE_GOES_HERE, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodPheasant, FoodPheasant_Stage2, FoodPheasant_Stage3, FoodPheasant_Stage4, RATE_GOES_HERE, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodPheasant, FoodPheasant_Stage2, FoodPheasant_Stage3, FoodPheasant_Stage4, 1, cursor)
     ;cursor = PerishableFoodTable_AddRow(FoodPheasantCooked, FoodPheasantCooked_Stage2, FoodPheasantCooked_Stage3, FoodPheasantCooked_Stage4, RATE_GOES_HERE, cursor)
     ;cursor = PerishableFoodTable_AddRow(FoodPie, FoodPie_Stage2, FoodPie_Stage3, FoodPie_Stage4, RATE_GOES_HERE, cursor)
     ;cursor = PerishableFoodTable_AddRow(FoodPotato, FoodPotato_Stage2, FoodPotato_Stage3, FoodPotato_Stage4, RATE_GOES_HERE, cursor)
     ;cursor = PerishableFoodTable_AddRow(FoodPotatoesBaked, FoodPotatoesBaked_Stage2, FoodPotatoesBaked_Stage3, FoodPotatoesBaked_Stage4, RATE_GOES_HERE, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodRabbit, FoodRabbit_Stage2, FoodRabbit_Stage3, FoodRabbit_Stage4, RATE_GOES_HERE, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodRabbit, FoodRabbit_Stage2, FoodRabbit_Stage3, FoodRabbit_Stage4, 1, cursor)
     ;cursor = PerishableFoodTable_AddRow(FoodRabbitCooked, FoodRabbitCooked_Stage2, FoodRabbitCooked_Stage3, FoodRabbitCooked_Stage4, RATE_GOES_HERE, cursor)
     ;cursor = PerishableFoodTable_AddRow(FoodSalmon, FoodSalmon_Stage2, FoodSalmon_Stage3, FoodSalmon_Stage4, RATE_GOES_HERE, cursor)
     ;cursor = PerishableFoodTable_AddRow(FoodSalmonCooked, FoodSalmonCooked_Stage2, FoodSalmonCooked_Stage3, FoodSalmonCooked_Stage4, RATE_GOES_HERE, cursor)
