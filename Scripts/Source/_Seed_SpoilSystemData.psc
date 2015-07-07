@@ -59,6 +59,28 @@ Potion property FoodVenison auto
 Potion property FoodVenisonCooked auto
 Potion property FoodVenisonStew auto
 
+;Abecean Longfin
+;Chicken's Egg
+;Cyrodilic Spadetail
+;Eye of Sabre Cat
+;Hawk's Egg (HF)
+;Histcarp
+;Honeycomb
+;Human Flesh
+;Human Heart
+;Jazbay Grapes
+;Juniper Berries
+;Pine Thrush Egg
+;River Betty
+;Rock Warbler Egg
+;Salmon Roe (HF)
+;Silverside Perch
+;Slaughterfish Egg
+;Snowberries
+;Spider Egg
+;Troll Fat?
+;Wheat
+
 ; Vanilla Food - Spoil Stage 2
 Potion property FoodApple_Stage2 auto
 Potion property FoodApple02_Stage2 auto
