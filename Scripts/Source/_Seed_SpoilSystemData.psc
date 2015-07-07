@@ -30,21 +30,20 @@ Potion property FoodGoatMeat auto
 Potion property FoodGoatMeatCooked auto
 Potion property FoodGourd auto
 Potion property FoodHoneyNutTreat auto
-;Potion property FoodHorkerMeat auto
-;Potion property FoodHorkerMeatCooked auto
-;Potion property FoodHorkerStew auto
-;Potion property FoodHorseMeat auto
-;Potion property FoodHorseMeatCooked auto
-;Potion property FoodLeek auto
-;Potion property FoodLeeksGrilled auto
-;Potion property FoodLongTaffyTreat auto
-;Potion property FoodMammothCheeseBowl auto
-;Potion property FoodMammothMeat auto
-;Potion property FoodMammothMeatCooked auto
-;Potion property FoodMarriageMeal auto
+Potion property FoodHorkerMeat auto
+Potion property FoodHorkerMeatCooked auto
+Potion property FoodHorkerStew auto
+Potion property FoodHorseMeat auto
+Potion property FoodHorseMeatCooked auto
+Potion property FoodLeek auto
+Potion property FoodLeeksGrilled auto
+Potion property FoodMammothCheeseBowl auto
+Potion property FoodMammothMeat auto
+Potion property FoodMammothMeatCooked auto
+Potion property FoodMarriageMeal auto
 Potion property FoodPheasant auto
-;Potion property FoodPheasantCooked auto
-;Potion property FoodPie auto
+Potion property FoodPheasantCooked auto
+Potion property FoodPie auto
 Potion property FoodPotato auto
 ;Potion property FoodPotatoesBaked auto
 Potion property FoodRabbit auto
@@ -90,21 +89,20 @@ Potion property FoodGoatMeat_Stage2 auto
 Potion property FoodGoatMeatCooked_Stage2 auto
 Potion property FoodGourd_Stage2 auto
 Potion property FoodHoneyNutTreat_Stage2 auto
-;Potion property FoodHorkerMeat_Stage2 auto
-;Potion property FoodHorkerMeatCooked_Stage2 auto
-;Potion property FoodHorkerStew_Stage2 auto
-;Potion property FoodHorseMeat_Stage2 auto
-;Potion property FoodHorseMeatCooked_Stage2 auto
-;Potion property FoodLeek_Stage2 auto
-;Potion property FoodLeeksGrilled_Stage2 auto
-;Potion property FoodLongTaffyTreat_Stage2 auto
-;Potion property FoodMammothCheeseBowl_Stage2 auto
-;Potion property FoodMammothMeat_Stage2 auto
-;Potion property FoodMammothMeatCooked_Stage2 auto
-;Potion property FoodMarriageMeal_Stage2 auto
+Potion property FoodHorkerMeat_Stage2 auto
+Potion property FoodHorkerMeatCooked_Stage2 auto
+Potion property FoodHorkerStew_Stage2 auto
+Potion property FoodHorseMeat_Stage2 auto
+Potion property FoodHorseMeatCooked_Stage2 auto
+Potion property FoodLeek_Stage2 auto
+Potion property FoodLeeksGrilled_Stage2 auto
+Potion property FoodMammothCheeseBowl_Stage2 auto
+Potion property FoodMammothMeat_Stage2 auto
+Potion property FoodMammothMeatCooked_Stage2 auto
+Potion property FoodMarriageMeal_Stage2 auto
 Potion property FoodPheasant_Stage2 auto
-;Potion property FoodPheasantCooked_Stage2 auto
-;Potion property FoodPie_Stage2 auto
+Potion property FoodPheasantCooked_Stage2 auto
+Potion property FoodPie_Stage2 auto
 Potion property FoodPotato_Stage2 auto
 ;Potion property FoodPotatoesBaked_Stage2 auto
 Potion property FoodRabbit_Stage2 auto
@@ -150,21 +148,20 @@ Potion property FoodGoatMeat_Stage3 auto
 Potion property FoodGoatMeatCooked_Stage3 auto
 Potion property FoodGourd_Stage3 auto
 Potion property FoodHoneyNutTreat_Stage3 auto
-;Potion property FoodHorkerMeat_Stage3 auto
-;Potion property FoodHorkerMeatCooked_Stage3 auto
-;Potion property FoodHorkerStew_Stage3 auto
-;Potion property FoodHorseMeat_Stage3 auto
-;Potion property FoodHorseMeatCooked_Stage3 auto
-;Potion property FoodLeek_Stage3 auto
-;Potion property FoodLeeksGrilled_Stage3 auto
-;Potion property FoodLongTaffyTreat_Stage3 auto
-;Potion property FoodMammothCheeseBowl_Stage3 auto
-;Potion property FoodMammothMeat_Stage3 auto
-;Potion property FoodMammothMeatCooked_Stage3 auto
-;Potion property FoodMarriageMeal_Stage3 auto
+Potion property FoodHorkerMeat_Stage3 auto
+Potion property FoodHorkerMeatCooked_Stage3 auto
+Potion property FoodHorkerStew_Stage3 auto
+Potion property FoodHorseMeat_Stage3 auto
+Potion property FoodHorseMeatCooked_Stage3 auto
+Potion property FoodLeek_Stage3 auto
+Potion property FoodLeeksGrilled_Stage3 auto
+Potion property FoodMammothCheeseBowl_Stage3 auto
+Potion property FoodMammothMeat_Stage3 auto
+Potion property FoodMammothMeatCooked_Stage3 auto
+Potion property FoodMarriageMeal_Stage3 auto
 Potion property FoodPheasant_Stage3 auto
-;Potion property FoodPheasantCooked_Stage3 auto
-;Potion property FoodPie_Stage3 auto
+Potion property FoodPheasantCooked_Stage3 auto
+Potion property FoodPie_Stage3 auto
 Potion property FoodPotato_Stage3 auto
 ;Potion property FoodPotatoesBaked_Stage3 auto
 Potion property FoodRabbit_Stage3 auto
@@ -210,21 +207,20 @@ Potion property FoodGoatMeat_Stage4 auto
 Potion property FoodGoatMeatCooked_Stage4 auto
 Potion property FoodGourd_Stage4 auto
 Potion property FoodHoneyNutTreat_Stage4 auto
-;Potion property FoodHorkerMeat_Stage4 auto
-;Potion property FoodHorkerMeatCooked_Stage4 auto
-;Potion property FoodHorkerStew_Stage4 auto
-;Potion property FoodHorseMeat_Stage4 auto
-;Potion property FoodHorseMeatCooked_Stage4 auto
-;Potion property FoodLeek_Stage4 auto
-;Potion property FoodLeeksGrilled_Stage4 auto
-;Potion property FoodLongTaffyTreat_Stage4 auto
-;Potion property FoodMammothCheeseBowl_Stage4 auto
-;Potion property FoodMammothMeat_Stage4 auto
-;Potion property FoodMammothMeatCooked_Stage4 auto
-;Potion property FoodMarriageMeal_Stage4 auto
+Potion property FoodHorkerMeat_Stage4 auto
+Potion property FoodHorkerMeatCooked_Stage4 auto
+Potion property FoodHorkerStew_Stage4 auto
+Potion property FoodHorseMeat_Stage4 auto
+Potion property FoodHorseMeatCooked_Stage4 auto
+Potion property FoodLeek_Stage4 auto
+Potion property FoodLeeksGrilled_Stage4 auto
+Potion property FoodMammothCheeseBowl_Stage4 auto
+Potion property FoodMammothMeat_Stage4 auto
+Potion property FoodMammothMeatCooked_Stage4 auto
+Potion property FoodMarriageMeal_Stage4 auto
 Potion property FoodPheasant_Stage4 auto
-;Potion property FoodPheasantCooked_Stage4 auto
-;Potion property FoodPie_Stage4 auto
+Potion property FoodPheasantCooked_Stage4 auto
+Potion property FoodPie_Stage4 auto
 Potion property FoodPotato_Stage4 auto
 ;Potion property FoodPotatoesBaked_Stage4 auto
 Potion property FoodRabbit_Stage4 auto
@@ -280,21 +276,20 @@ function AddAllVanillaFood()
     cursor = PerishableFoodTable_AddRow(FoodGoatMeatCooked, FoodGoatMeatCooked_Stage2, FoodGoatMeatCooked_Stage3, FoodGoatMeatCooked_Stage4, 1, cursor)
     cursor = PerishableFoodTable_AddRow(FoodGourd, FoodGourd_Stage2, FoodGourd_Stage3, FoodGourd_Stage4, 1, cursor)
     cursor = PerishableFoodTable_AddRow(FoodHoneyNutTreat, FoodHoneyNutTreat_Stage2, FoodHoneyNutTreat_Stage3, FoodHoneyNutTreat_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodHorkerMeat, FoodHorkerMeat_Stage2, FoodHorkerMeat_Stage3, FoodHorkerMeat_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodHorkerMeatCooked, FoodHorkerMeatCooked_Stage2, FoodHorkerMeatCooked_Stage3, FoodHorkerMeatCooked_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodHorkerStew, FoodHorkerStew_Stage2, FoodHorkerStew_Stage3, FoodHorkerStew_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodHorseMeat, FoodHorseMeat_Stage2, FoodHorseMeat_Stage3, FoodHorseMeat_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodHorseMeatCooked, FoodHorseMeatCooked_Stage2, FoodHorseMeatCooked_Stage3, FoodHorseMeatCooked_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodLeek, FoodLeek_Stage2, FoodLeek_Stage3, FoodLeek_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodLeeksGrilled, FoodLeeksGrilled_Stage2, FoodLeeksGrilled_Stage3, FoodLeeksGrilled_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodLongTaffyTreat, FoodLongTaffyTreat_Stage2, FoodLongTaffyTreat_Stage3, FoodLongTaffyTreat_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodMammothCheeseBowl, FoodMammothCheeseBowl_Stage2, FoodMammothCheeseBowl_Stage3, FoodMammothCheeseBowl_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodMammothMeat, FoodMammothMeat_Stage2, FoodMammothMeat_Stage3, FoodMammothMeat_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodMammothMeatCooked, FoodMammothMeatCooked_Stage2, FoodMammothMeatCooked_Stage3, FoodMammothMeatCooked_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodMarriageMeal, FoodMarriageMeal_Stage2, FoodMarriageMeal_Stage3, FoodMarriageMeal_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodHorkerMeat, FoodHorkerMeat_Stage2, FoodHorkerMeat_Stage3, FoodHorkerMeat_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodHorkerMeatCooked, FoodHorkerMeatCooked_Stage2, FoodHorkerMeatCooked_Stage3, FoodHorkerMeatCooked_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodHorkerStew, FoodHorkerStew_Stage2, FoodHorkerStew_Stage3, FoodHorkerStew_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodHorseMeat, FoodHorseMeat_Stage2, FoodHorseMeat_Stage3, FoodHorseMeat_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodHorseMeatCooked, FoodHorseMeatCooked_Stage2, FoodHorseMeatCooked_Stage3, FoodHorseMeatCooked_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodLeek, FoodLeek_Stage2, FoodLeek_Stage3, FoodLeek_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodLeeksGrilled, FoodLeeksGrilled_Stage2, FoodLeeksGrilled_Stage3, FoodLeeksGrilled_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodMammothCheeseBowl, FoodMammothCheeseBowl_Stage2, FoodMammothCheeseBowl_Stage3, FoodMammothCheeseBowl_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodMammothMeat, FoodMammothMeat_Stage2, FoodMammothMeat_Stage3, FoodMammothMeat_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodMammothMeatCooked, FoodMammothMeatCooked_Stage2, FoodMammothMeatCooked_Stage3, FoodMammothMeatCooked_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodMarriageMeal, FoodMarriageMeal_Stage2, FoodMarriageMeal_Stage3, FoodMarriageMeal_Stage4, 1, cursor)
     cursor = PerishableFoodTable_AddRow(FoodPheasant, FoodPheasant_Stage2, FoodPheasant_Stage3, FoodPheasant_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodPheasantCooked, FoodPheasantCooked_Stage2, FoodPheasantCooked_Stage3, FoodPheasantCooked_Stage4, 1, cursor)
-    ;cursor = PerishableFoodTable_AddRow(FoodPie, FoodPie_Stage2, FoodPie_Stage3, FoodPie_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodPheasantCooked, FoodPheasantCooked_Stage2, FoodPheasantCooked_Stage3, FoodPheasantCooked_Stage4, 1, cursor)
+    cursor = PerishableFoodTable_AddRow(FoodPie, FoodPie_Stage2, FoodPie_Stage3, FoodPie_Stage4, 1, cursor)
     cursor = PerishableFoodTable_AddRow(FoodPotato, FoodPotato_Stage2, FoodPotato_Stage3, FoodPotato_Stage4, 1, cursor)
     ;cursor = PerishableFoodTable_AddRow(FoodPotatoesBaked, FoodPotatoesBaked_Stage2, FoodPotatoesBaked_Stage3, FoodPotatoesBaked_Stage4, 1, cursor)
     cursor = PerishableFoodTable_AddRow(FoodRabbit, FoodRabbit_Stage2, FoodRabbit_Stage3, FoodRabbit_Stage4, 1, cursor)
