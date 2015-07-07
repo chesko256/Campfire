@@ -748,8 +748,7 @@ int function PerishableFoodTable_AddRow(Form food_stage1, Form food_stage2, Form
     PerishableFoodTable_BigArrayAdd(COL_FOOD_SPOIL_STAGE3, cursor, akBaseObject = food_stage3)
     PerishableFoodTable_BigArrayAdd(COL_FOOD_SPOIL_STAGE4, cursor, akBaseObject = food_stage4)
     PerishableFoodTable_BigArrayAdd(COL_FOOD_SPOIL_RATE, cursor, aiValue = rate)
-    PerishableFoodTable_DebugPrintTable()
-    return cursor
+    return cursor + 1
 endFunction
 
 int function PerishableFoodTable_FindFormInColumn(Form akBaseObject, int BigArrayID)

@@ -322,6 +322,7 @@ function AddAllVanillaFood()
     cursor = PerishableFoodTable_AddRow(FoodVenison, FoodVenison_Stage2, FoodVenison_Stage3, FoodVenison_Stage4, 1, cursor)
     cursor = PerishableFoodTable_AddRow(FoodVenisonCooked, FoodVenisonCooked_Stage2, FoodVenisonCooked_Stage3, FoodVenisonCooked_Stage4, 1, cursor)
     cursor = PerishableFoodTable_AddRow(FoodVenisonStew, FoodVenisonStew_Stage2, FoodVenisonStew_Stage3, FoodVenisonStew_Stage4, 1, cursor)
+    PerishableFoodTable_DebugPrintTable()
 endFunction
 
 function AddAllDLCFood()
