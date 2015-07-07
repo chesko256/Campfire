@@ -66,11 +66,12 @@ int COL_FOOD_SPOIL_RATE = 204
 GlobalVariable property _Seed_SpoilSystemEnabled auto
 
 ; Spoil Rate = Spoil every x 3 hour intervals
-GlobalVariable property _Seed_SpoilRate_RawMeat auto                ; 1
-GlobalVariable property _Seed_SpoilRate_FruitVegetables auto        ; 12
-GlobalVariable property _Seed_SpoilRate_Cheese auto                 ; 12
-GlobalVariable property _Seed_SpoilRate_BreadSweets auto            ; 8
-GlobalVariable property _Seed_SpoilRate_CookedFood auto             ; 4
+GlobalVariable property _Seed_SpoilRate_RawMeat auto
+GlobalVariable property _Seed_SpoilRate_FruitVegetables auto
+GlobalVariable property _Seed_SpoilRate_LongLasting auto
+GlobalVariable property _Seed_SpoilRate_CheeseCut auto
+GlobalVariable property _Seed_SpoilRate_BreadSweets auto
+GlobalVariable property _Seed_SpoilRate_CookedFood auto
 
 float UPDATE_GAMETIME_RATE = 3.0
 
