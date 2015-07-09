@@ -1,11 +1,5 @@
 scriptname _Seed_SpoilSystem extends Quest
 
-; To do:
-;   Immediately purge completely spoiled food
-;   Don't add completely spoiled food if picked up
-;   Add _Seed_SpoilSystemDelegate to queue requests
-;   Profile with many foods
-
 import Utility
 import StringUtil
 import CampUtil
@@ -81,6 +75,7 @@ Event OnInit()
     SetupData()
     RegisterForSingleUpdateGameTime(UPDATE_GAMETIME_RATE)
     RegisterForSingleUpdate(5)
+    RegisterForMenu("InventoryMenu")
 endEvent
 
 Event OnUpdateGameTime()
@@ -107,8 +102,47 @@ Event OnUpdate()
         _Seed_DebugDumpST.SetValueInt(0)
         PerishableFoodTable_DebugPrintTable()
     endif
+
+    ;debug.trace("[Seed] ItemCard info " + UI.GetInt("InventoryMenu", "_root.MenuHolder.Menu_mc.ItemCard_mc.itemInfo.type"))
+
     RegisterForSingleUpdate(5)
 endEvent
+
+Event OnKeyUp(int keyCode, float holdTime)
+    if UI.IsMenuOpen("InventoryMenu")
+        utility.WaitMenuMode(0.1)
+        debug.trace("[Seed] ItemCard item type " + UI.GetInt("InventoryMenu", "_root.Menu_mc.itemCard.itemInfo.type"))
+        debug.trace("[Seed] ItemCard item name " + UI.GetString("InventoryMenu", "_root.Menu_mc.itemCard.ItemName.text"))
+    endif
+endEvent
+
+int k1 = -1
+int k2 = -1
+int k3 = -1
+Event OnMenuOpen(string menuName)
+    if menuName == "InventoryMenu"
+        k1 = Input.GetMappedKey("Move")
+        k2 = Input.GetMappedKey("Forward")
+        k3 = Input.GetMappedKey("Back")
+        if k1 != -1
+            RegisterForKey(k1)
+        endif
+        if k2 != -1
+            RegisterForKey(k2)
+        endif
+        if k3 != -1
+            RegisterForKey(k3)
+        endif
+    endif
+EndEvent
+
+Event OnMenuClose(string menuName)
+    if menuName == "InventoryMenu"
+        UnregisterForKey(k1)
+        UnregisterForKey(k2)
+        UnregisterForKey(k3)
+    endif
+EndEvent
 
 ;@override
 function SetupData()
