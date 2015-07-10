@@ -3,6 +3,7 @@ scriptname _Seed_PlayerEventMonitor extends ReferenceAlias
 import Utility
 
 Quest property _Seed_SpoilSystemQuest auto
+Quest property _Seed_FatigueSystemQuest auto
 
 Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
 	
@@ -69,6 +70,13 @@ Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRefe
 				endif
 			endif
 		endif
+	endif
+EndEvent
+
+Event OnSpellCast(Form akSpell)
+	if akSpell && akSpell as Spell
+		debug.trace("[Seed] Player casting spell " + akSpell)
+		(_Seed_FatigueSystemQuest as _Seed_FatigueSystem).SpellCast(akSpell as Spell)
 	endif
 EndEvent
 
