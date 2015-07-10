@@ -39,6 +39,7 @@ Event OnUpdateGameTime()
 	if !was_sleeping
 		hunger_increase = rate * cycles
 	else
+		was_sleeping = false
 		hunger_increase = (rate * cycles) / 4
 	endif
 

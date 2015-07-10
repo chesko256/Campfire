@@ -50,6 +50,7 @@ Event OnUpdateGameTime()
 	if !was_sleeping
 		thirst_increase = rate * cycles
 	else
+		was_sleeping = false
 		thirst_increase = (rate * cycles) / 4
 	endif
 
