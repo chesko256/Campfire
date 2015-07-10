@@ -21,6 +21,7 @@ bool property was_sleeping = false auto hidden
 function Initialize()
     RegisterForSingleUpdateGameTime(update_interval)
     last_update_time = GetCurrentGameTime() * 24.0
+    RegisterForSleep()
 
     ; Register for weapon swings and bow attacks.
     RegisterForActorAction(0)
@@ -28,6 +29,7 @@ function Initialize()
 endFunction
 
 Event OnUpdateGameTime()
+	Wait(1.0)
 	if _Seed_VampireBehavior.GetValueInt() == 2 && IsUndead()
 		return
 	endif
@@ -48,6 +50,10 @@ Event OnUpdateGameTime()
     if _Seed_VitalitySystemEnabled.GetValueInt() == 2
         RegisterForSingleUpdateGameTime(update_interval)
     endif
+EndEvent
+
+Event OnSleepStart(float afSleepStartTime, float afDesiredSleepEndTime)
+	was_sleeping = true
 EndEvent
 
 Event OnActorAction(int actionType, Actor akActor, Form source, int slot)
