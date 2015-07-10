@@ -6,6 +6,9 @@ GlobalVariable property _Seed_VitalitySystemEnabled auto
 GlobalVariable property _Seed_AttributeHunger auto
 GlobalVariable property _Seed_HungerRate auto 				; Default - 1.25
 GlobalVariable property _Seed_HungerActionRate auto 		; Default - 0.25
+Actor property PlayerRef auto
+Keyword property ActorTypeUndead auto
+Keyword property ImmuneParalysis auto
 
 float property MAX_HUNGER = 120.0 autoReadOnly
 float property MIN_HUNGER = 0.0 autoReadOnly
@@ -70,5 +73,14 @@ function ModHunger(float amount)
 		_Seed_AttributeHunger.SetValue(MIN_HUNGER)
 	else
 		_Seed_AttributeHunger.SetValue(current_hunger + amount)
+	endif
+endFunction
+
+bool function IsUndead()
+	; Is player humanoid Vampire, undead, or transformed Vampire Lord?
+	if PlayerRef.GetRace().HasKeyword(ActorTypeUndead) || PlayerRef.GetRace().HasKeyword(ImmuneParalysis)
+		return true
+	else
+		return false
 	endif
 endFunction
