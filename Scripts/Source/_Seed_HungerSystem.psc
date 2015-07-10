@@ -6,11 +6,12 @@ GlobalVariable property _Seed_VitalitySystemEnabled auto
 GlobalVariable property _Seed_AttributeHunger auto
 GlobalVariable property _Seed_HungerRate auto 				; Default - 1.25
 GlobalVariable property _Seed_HungerActionRate auto 		; Default - 0.25
-GlobalVariable property _Seed_VampireBehavior auto
+GlobalVariable property _Seed_Setting_VampireBehavior auto
 GlobalVariable property _Seed_Setting_Notifications auto
-GlobalVariable property _Seed_Setting_Meters auto
+GlobalVariable property _Seed_Setting_MeterDisplay auto
 GlobalVariable property _Seed_Setting_NeedsSFX auto
 GlobalVariable property _Seed_Setting_NeedsVFX auto
+GlobalVariable property _Seed_Setting_NeedsForceFeedback auto
 GlobalVariable property _Seed_Setting_NeedsAffectsRegeneration auto
 
 Spell property _Seed_HungerSpell1 auto
@@ -59,7 +60,7 @@ function Initialize()
 endFunction
 
 Event OnUpdateGameTime()
-	if _Seed_VampireBehavior.GetValueInt() == 2 && IsUndead()
+	if _Seed_Setting_VampireBehavior.GetValueInt() == 2 && IsUndead()
 		return
 	endif
 
@@ -186,7 +187,7 @@ function ApplyHungerLevel1()
     if _Seed_Setting_NeedsVFX.GetValueInt() == 2
         ; play needs VFX
     endif
-    if _Seed_Setting_Meters.GetValueInt() == 2
+    if _Seed_Setting_MeterDisplay.GetValueInt() == 2
         ; update meter and show
     endif
 endFunction
@@ -208,7 +209,7 @@ function ApplyHungerLevel2(bool increasing)
     if _Seed_Setting_NeedsVFX.GetValueInt() == 2
         ; play needs VFX
     endif
-    if _Seed_Setting_Meters.GetValueInt() == 2
+    if _Seed_Setting_MeterDisplay.GetValueInt() == 2
         ; update meter and show
     endif
 endFunction
@@ -229,7 +230,10 @@ function ApplyHungerLevel3()
     if _Seed_Setting_NeedsVFX.GetValueInt() == 2
         ; play needs VFX
     endif
-    if _Seed_Setting_Meters.GetValueInt() == 2
+    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
+        ; play force feedback
+    endif
+    if _Seed_Setting_MeterDisplay.GetValueInt() == 2
         ; update meter and show
     endif
 endFunction
@@ -250,7 +254,10 @@ function ApplyHungerLevel4()
     if _Seed_Setting_NeedsVFX.GetValueInt() == 2
         ; play needs VFX
     endif
-    if _Seed_Setting_Meters.GetValueInt() == 2
+    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
+        ; play force feedback
+    endif
+    if _Seed_Setting_MeterDisplay.GetValueInt() == 2
         ; update meter and show
     endif
 endFunction
@@ -271,7 +278,10 @@ function ApplyHungerLevel5()
     if _Seed_Setting_NeedsVFX.GetValueInt() == 2
         ; play needs VFX
     endif
-    if _Seed_Setting_Meters.GetValueInt() == 2
+    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
+        ; play force feedback
+    endif
+    if _Seed_Setting_MeterDisplay.GetValueInt() == 2
         ; update meter and show
     endif
 endFunction
@@ -292,7 +302,10 @@ function ApplyHungerLevel6()
     if _Seed_Setting_NeedsVFX.GetValueInt() == 2
         ; play needs VFX
     endif
-    if _Seed_Setting_Meters.GetValueInt() == 2
+    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
+        ; play force feedback
+    endif
+    if _Seed_Setting_MeterDisplay.GetValueInt() == 2
         ; update meter and show
     endif
 endFunction
