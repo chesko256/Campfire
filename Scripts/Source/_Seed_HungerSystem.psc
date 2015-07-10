@@ -11,8 +11,8 @@ float property MAX_HUNGER = 120.0 autoReadOnly
 float property MIN_HUNGER = 0.0 autoReadOnly
 
 float property update_interval = 0.5 auto hidden
-
 float property last_update_time auto hidden
+bool property was_sleeping = false auto hidden
 
 function Initialize()
     RegisterForSingleUpdateGameTime(update_interval)
@@ -27,6 +27,12 @@ Event OnUpdateGameTime()
 	float rate = _Seed_HungerRate.GetValue()
 	float this_time = GetCurrentGameTime() * 24.0
 	int cycles = Math.Floor((this_time - last_update_time) * 2)
+	float hunger_increase
+	if !was_sleeping
+		hunger_increase = rate * cycles
+	else
+		hunger_increase = (rate * cycles) / 4
+	endif
 
     IncreaseHunger(rate * cycles)
     if _Seed_VitalitySystemEnabled.GetValueInt() == 2
