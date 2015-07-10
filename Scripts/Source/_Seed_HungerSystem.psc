@@ -133,11 +133,15 @@ endFunction
 
 function ApplyHungerEffects()
     float hunger = _Seed_AttributeHunger.GetValue()
+    bool increasing = false
+    if hunger > last_hunger
+        increasing = true
+    endif
 
     if !(IsBetween(last_hunger, 20.0, 0.0)) && (IsBetween(hunger, 20.0, 0.0))
         ApplyHungerLevel1()
     elseif !(IsBetween(last_hunger, 40.0, 20.0)) && (IsBetween(hunger, 40.0, 20.0))
-        ApplyHungerLevel2()
+        ApplyHungerLevel2(increasing)
     elseif !(IsBetween(last_hunger, 60.0, 40.0)) && (IsBetween(hunger, 60.0, 40.0))
         ApplyHungerLevel3()
     elseif !(IsBetween(last_hunger, 80.0, 60.0)) && (IsBetween(hunger, 80.0, 60.0))
@@ -187,14 +191,15 @@ function ApplyHungerLevel1()
     endif
 endFunction
 
-function ApplyHungerLevel2()
+function ApplyHungerLevel2(bool increasing)
     RemoveAllHungerEffects()
     if _Seed_Setting_NeedsAffectsRegeneration.GetValueInt() == 2
         PlayerRef.AddSpell(_Seed_HungerSpell2, false)
     else
         PlayerRef.AddSpell(_Seed_HungerSpell2SkillsOnly, false)
     endif
-    if _Seed_Setting_Notifications.GetValueInt() == 2
+    ; suppress this message if hunger is increasing
+    if _Seed_Setting_Notifications.GetValueInt() == 2 && increasing
         _Seed_HungerLevel2Msg.Show()
     endif
     if _Seed_Setting_NeedsSFX.GetValueInt() == 2
