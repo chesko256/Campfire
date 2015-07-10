@@ -18,6 +18,10 @@ float property update_interval = 0.5 auto hidden
 float property last_update_time auto hidden
 bool property was_sleeping = false auto hidden
 
+Event OnInit()
+	Initialize()
+EndEvent
+
 function Initialize()
     RegisterForSingleUpdateGameTime(update_interval)
     last_update_time = GetCurrentGameTime() * 24.0
