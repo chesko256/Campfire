@@ -16,17 +16,21 @@ Keyword property ImmuneParalysis auto
 
 float property MAX_FATIGUE = 120.0 autoReadOnly
 float property MIN_FATIGUE = 0.0 autoReadOnly
+float property SLEEP_RESTORE_RATE = 3.0 autoReadOnly
 
 float property update_interval = 1.0 auto hidden
 float property last_update_time auto hidden
 bool property was_sleeping = false auto hidden
+float last_sleep_duration
 
 function Initialize()
     RegisterForSingleUpdateGameTime(update_interval)
     last_update_time = GetCurrentGameTime() * 24.0
+    RegisterForSleep()
 endFunction
 
 Event OnUpdateGameTime()
+	Wait(1.0)
 	if was_sleeping
 		was_sleeping = false
 		return
@@ -46,6 +50,17 @@ Event OnUpdateGameTime()
     if _Seed_VitalitySystemEnabled.GetValueInt() == 2
         RegisterForSingleUpdateGameTime(update_interval)
     endif
+EndEvent
+
+Event OnSleepStart(float afSleepStartTime, float afDesiredSleepEndTime)
+	was_sleeping = true
+	last_sleep_duration = (afDesiredSleepEndTime - afSleepStartTime) * 24.0
+EndEvent
+
+Event OnSleepStop(bool abInterrupted)
+	;@TODO: Modify by current hunger and thirst.
+	float fatigue_decrease = last_sleep_duration * SLEEP_RESTORE_RATE
+	DecreaseFatigue(fatigue_decrease)
 EndEvent
 
 function SpellCast(Spell akSpell)

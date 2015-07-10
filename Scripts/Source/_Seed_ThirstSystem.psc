@@ -21,6 +21,7 @@ bool property was_sleeping = false auto hidden
 function Initialize()
     RegisterForSingleUpdate(update_interval)
     last_update_time = GetCurrentGameTime() * 24.0
+    RegisterForSleep()
 
     ; Register for sprinting and jumping.
     RegisterForControl("Sprint")
@@ -43,6 +44,7 @@ Event OnUpdate()
 EndEvent
 
 Event OnUpdateGameTime()
+	Wait(1.0)
 	float rate = _Seed_ThirstRate.GetValue()
 	float this_time = GetCurrentGameTime() * 24.0
 	int cycles = Math.Floor((this_time - last_update_time) * 2)
@@ -63,6 +65,10 @@ Event OnUpdateGameTime()
     if _Seed_VitalitySystemEnabled.GetValueInt() == 2
         RegisterForSingleUpdateGameTime(update_interval)
     endif
+EndEvent
+
+Event OnSleepStart(float afSleepStartTime, float afDesiredSleepEndTime)
+	was_sleeping = true
 EndEvent
 
 function IncreaseThirst(float amount)
