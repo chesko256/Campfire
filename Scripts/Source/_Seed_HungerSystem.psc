@@ -6,6 +6,7 @@ GlobalVariable property _Seed_VitalitySystemEnabled auto
 GlobalVariable property _Seed_AttributeHunger auto
 GlobalVariable property _Seed_HungerRate auto 				; Default - 1.25
 GlobalVariable property _Seed_HungerActionRate auto 		; Default - 0.25
+GlobalVariable property _Seed_VampireBehavior auto
 Actor property PlayerRef auto
 Keyword property ActorTypeUndead auto
 Keyword property ImmuneParalysis auto
@@ -21,12 +22,16 @@ function Initialize()
     RegisterForSingleUpdateGameTime(update_interval)
     last_update_time = GetCurrentGameTime() * 24.0
 
-    ; Increase Hunger when the player attacks.
+    ; Register for weapon swings and bow attacks.
     RegisterForActorAction(0)
     RegisterForActorAction(6)
 endFunction
 
 Event OnUpdateGameTime()
+	if _Seed_VampireBehavior.GetValueInt() == 2 && IsUndead()
+		return
+	endif
+
 	float rate = _Seed_HungerRate.GetValue()
 	float this_time = GetCurrentGameTime() * 24.0
 	int cycles = Math.Floor((this_time - last_update_time) * 2)
@@ -37,13 +42,15 @@ Event OnUpdateGameTime()
 		hunger_increase = (rate * cycles) / 4
 	endif
 
-    IncreaseHunger(rate * cycles)
+    IncreaseHunger(hunger_increase)
+    last_update_time = this_time
     if _Seed_VitalitySystemEnabled.GetValueInt() == 2
         RegisterForSingleUpdateGameTime(update_interval)
     endif
 EndEvent
 
 Event OnActorAction(int actionType, Actor akActor, Form source, int slot)
+	; Increase Hunger when the player attacks.
 	IncreaseHunger(_Seed_HungerActionRate.GetValue())
 EndEvent
 
