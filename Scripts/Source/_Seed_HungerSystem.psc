@@ -7,6 +7,32 @@ GlobalVariable property _Seed_AttributeHunger auto
 GlobalVariable property _Seed_HungerRate auto 				; Default - 1.25
 GlobalVariable property _Seed_HungerActionRate auto 		; Default - 0.25
 GlobalVariable property _Seed_VampireBehavior auto
+GlobalVariable property _Seed_Setting_Notifications auto
+GlobalVariable property _Seed_Setting_Meters auto
+GlobalVariable property _Seed_Setting_NeedsSFX auto
+GlobalVariable property _Seed_Setting_NeedsVFX auto
+GlobalVariable property _Seed_Setting_NeedsAffectsRegeneration auto
+
+Spell property _Seed_HungerSpell1 auto
+Spell property _Seed_HungerSpell2 auto
+Spell property _Seed_HungerSpell3 auto
+Spell property _Seed_HungerSpell4 auto
+Spell property _Seed_HungerSpell5 auto
+Spell property _Seed_HungerSpell6 auto
+Spell property _Seed_HungerSpell1SkillsOnly auto
+Spell property _Seed_HungerSpell2SkillsOnly auto
+Spell property _Seed_HungerSpell3SkillsOnly auto
+Spell property _Seed_HungerSpell4SkillsOnly auto
+Spell property _Seed_HungerSpell5SkillsOnly auto
+Spell property _Seed_HungerSpell6SkillsOnly auto
+
+Message property _Seed_HungerLevel1Msg auto
+Message property _Seed_HungerLevel2Msg auto
+Message property _Seed_HungerLevel3Msg auto
+Message property _Seed_HungerLevel4Msg auto
+Message property _Seed_HungerLevel5Msg auto
+Message property _Seed_HungerLevel6Msg auto
+
 Actor property PlayerRef auto
 Keyword property ActorTypeUndead auto
 Keyword property ImmuneParalysis auto
@@ -71,6 +97,7 @@ function IncreaseHunger(float amount)
 	else
 		_Seed_AttributeHunger.SetValue(current_hunger + amount)
 	endif
+    ApplyHungerEffects()
 endFunction
 
 function DecreaseHunger(float amount)
@@ -80,6 +107,7 @@ function DecreaseHunger(float amount)
 	else
 		_Seed_AttributeHunger.SetValue(current_hunger - amount)
 	endif
+    ApplyHungerEffects()
 endFunction
 
 function ModHunger(float amount)
@@ -91,6 +119,7 @@ function ModHunger(float amount)
 	else
 		_Seed_AttributeHunger.SetValue(current_hunger + amount)
 	endif
+    ApplyHungerEffects()
 endFunction
 
 bool function IsUndead()
@@ -100,4 +129,174 @@ bool function IsUndead()
 	else
 		return false
 	endif
+endFunction
+
+function ApplyHungerEffects()
+    float hunger = _Seed_AttributeHunger.GetValue()
+
+    if !(IsBetween(last_hunger, 20.0, 0.0)) && (IsBetween(hunger, 20.0, 0.0))
+        ApplyHungerLevel1()
+    elseif !(IsBetween(last_hunger, 40.0, 20.0)) && (IsBetween(hunger, 40.0, 20.0))
+        ApplyHungerLevel2()
+    elseif !(IsBetween(last_hunger, 60.0, 40.0)) && (IsBetween(hunger, 60.0, 40.0))
+        ApplyHungerLevel3()
+    elseif !(IsBetween(last_hunger, 80.0, 60.0)) && (IsBetween(hunger, 80.0, 60.0))
+        ApplyHungerLevel4()
+    elseif !(IsBetween(last_hunger, 100.0, 80.0)) && (IsBetween(hunger, 100.0, 80.0))
+        ApplyHungerLevel5()
+    elseif !(IsBetween(last_hunger, 120.0, 100.0)) && (IsBetween(hunger, 120.0, 100.0))
+        ApplyHungerLevel6()
+    endif
+
+    last_hunger = hunger
+endFunction
+
+function RemoveAllHungerEffects()
+    PlayerRef.RemoveSpell(_Seed_HungerSpell1)
+    PlayerRef.RemoveSpell(_Seed_HungerSpell2)
+    PlayerRef.RemoveSpell(_Seed_HungerSpell3)
+    PlayerRef.RemoveSpell(_Seed_HungerSpell4)
+    PlayerRef.RemoveSpell(_Seed_HungerSpell5)
+    PlayerRef.RemoveSpell(_Seed_HungerSpell6)
+    PlayerRef.RemoveSpell(_Seed_HungerSpell1SkillsOnly)
+    PlayerRef.RemoveSpell(_Seed_HungerSpell2SkillsOnly)
+    PlayerRef.RemoveSpell(_Seed_HungerSpell3SkillsOnly)
+    PlayerRef.RemoveSpell(_Seed_HungerSpell4SkillsOnly)
+    PlayerRef.RemoveSpell(_Seed_HungerSpell5SkillsOnly)
+    PlayerRef.RemoveSpell(_Seed_HungerSpell6SkillsOnly)
+endFunction
+
+function ApplyHungerLevel1()
+    RemoveAllHungerEffects()
+    if _Seed_Setting_NeedsAffectsRegeneration.GetValueInt() == 2
+        PlayerRef.AddSpell(_Seed_HungerSpell1, false)
+    else
+        PlayerRef.AddSpell(_Seed_HungerSpell1SkillsOnly, false)
+    endif
+    if _Seed_Setting_Notifications.GetValueInt() == 2
+        _Seed_HungerLevel1Msg.Show()
+    endif
+    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
+        ; play needs SFX
+    endif
+    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
+        ; play needs VFX
+    endif
+    if _Seed_Setting_Meters.GetValueInt() == 2
+        ; update meter and show
+    endif
+endFunction
+
+function ApplyHungerLevel2()
+    RemoveAllHungerEffects()
+    if _Seed_Setting_NeedsAffectsRegeneration.GetValueInt() == 2
+        PlayerRef.AddSpell(_Seed_HungerSpell2, false)
+    else
+        PlayerRef.AddSpell(_Seed_HungerSpell2SkillsOnly, false)
+    endif
+    if _Seed_Setting_Notifications.GetValueInt() == 2
+        _Seed_HungerLevel2Msg.Show()
+    endif
+    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
+        ; play needs SFX
+    endif
+    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
+        ; play needs VFX
+    endif
+    if _Seed_Setting_Meters.GetValueInt() == 2
+        ; update meter and show
+    endif
+endFunction
+
+function ApplyHungerLevel3()
+    RemoveAllHungerEffects()
+    if _Seed_Setting_NeedsAffectsRegeneration.GetValueInt() == 2
+        PlayerRef.AddSpell(_Seed_HungerSpell3, false)
+    else
+        PlayerRef.AddSpell(_Seed_HungerSpell3SkillsOnly, false)
+    endif
+    if _Seed_Setting_Notifications.GetValueInt() == 2
+        _Seed_HungerLevel3Msg.Show()
+    endif
+    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
+        ; play needs SFX
+    endif
+    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
+        ; play needs VFX
+    endif
+    if _Seed_Setting_Meters.GetValueInt() == 2
+        ; update meter and show
+    endif
+endFunction
+
+function ApplyHungerLevel4()
+    RemoveAllHungerEffects()
+    if _Seed_Setting_NeedsAffectsRegeneration.GetValueInt() == 2
+        PlayerRef.AddSpell(_Seed_HungerSpell4, false)
+    else
+        PlayerRef.AddSpell(_Seed_HungerSpell1SkillsOnly, false)
+    endif
+    if _Seed_Setting_Notifications.GetValueInt() == 2
+        _Seed_HungerLevel4Msg.Show()
+    endif
+    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
+        ; play needs SFX
+    endif
+    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
+        ; play needs VFX
+    endif
+    if _Seed_Setting_Meters.GetValueInt() == 2
+        ; update meter and show
+    endif
+endFunction
+
+function ApplyHungerLevel5()
+    RemoveAllHungerEffects()
+    if _Seed_Setting_NeedsAffectsRegeneration.GetValueInt() == 2
+        PlayerRef.AddSpell(_Seed_HungerSpell5, false)
+    else
+        PlayerRef.AddSpell(_Seed_HungerSpell1SkillsOnly, false)
+    endif
+    if _Seed_Setting_Notifications.GetValueInt() == 2
+        _Seed_HungerLevel5Msg.Show()
+    endif
+    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
+        ; play needs SFX
+    endif
+    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
+        ; play needs VFX
+    endif
+    if _Seed_Setting_Meters.GetValueInt() == 2
+        ; update meter and show
+    endif
+endFunction
+
+function ApplyHungerLevel6()
+    RemoveAllHungerEffects()
+    if _Seed_Setting_NeedsAffectsRegeneration.GetValueInt() == 2
+        PlayerRef.AddSpell(_Seed_HungerSpell6, false)
+    else
+        PlayerRef.AddSpell(_Seed_HungerSpell1SkillsOnly, false)
+    endif
+    if _Seed_Setting_Notifications.GetValueInt() == 2
+        _Seed_HungerLevel6Msg.Show()
+    endif
+    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
+        ; play needs SFX
+    endif
+    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
+        ; play needs VFX
+    endif
+    if _Seed_Setting_Meters.GetValueInt() == 2
+        ; update meter and show
+    endif
+endFunction
+
+
+bool function IsBetween(float fValue, float fUpperBound, float fLowerBound)
+    if fValue <= fUpperBound && fValue > fLowerBound
+        return true
+    else
+        return false
+    endif
 endFunction
