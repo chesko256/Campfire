@@ -30,7 +30,6 @@ function Initialize()
 endFunction
 
 Event OnUpdateGameTime()
-	Wait(1.0)
 	if was_sleeping
 		was_sleeping = false
 		return
@@ -42,7 +41,7 @@ Event OnUpdateGameTime()
 
 	float rate = _Seed_FatigueRate.GetValue()
 	float this_time = GetCurrentGameTime() * 24.0
-	int cycles = Math.Floor((this_time - last_update_time) * 2)
+	int cycles = Math.Floor((this_time - last_update_time))
 	float fatigue_increase = rate * cycles
 	
     IncreaseFatigue(fatigue_increase)
