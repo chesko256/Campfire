@@ -1,5 +1,7 @@
 scriptname _Seed_HungerSystem extends Quest
 
+import Utility
+
 GlobalVariable property _Seed_VitalitySystemEnabled auto
 GlobalVariable property _Seed_AttributeHunger auto
 GlobalVariable property _Seed_HungerRate auto 				; Default - 1.25
@@ -10,8 +12,11 @@ float property MIN_HUNGER = 0.0 autoReadOnly
 
 float property update_interval = 0.5 auto hidden
 
+float property last_update_time auto hidden
+
 function Initialize()
     RegisterForSingleUpdateGameTime(update_interval)
+    last_update_time = GetCurrentGameTime() * 24.0
 
     ; Increase Hunger when the player attacks.
     RegisterForActorAction(0)
@@ -19,7 +24,11 @@ function Initialize()
 endFunction
 
 Event OnUpdateGameTime()
-    IncreaseHunger(_Seed_HungerRate.GetValue())
+	float rate = _Seed_HungerRate.GetValue()
+	float this_time = GetCurrentGameTime() * 24.0
+	int cycles = Math.Floor((this_time - last_update_time) * 2)
+
+    IncreaseHunger(rate * cycles)
     if _Seed_VitalitySystemEnabled.GetValueInt() == 2
         RegisterForSingleUpdateGameTime(update_interval)
     endif
