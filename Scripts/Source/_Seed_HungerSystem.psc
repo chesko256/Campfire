@@ -29,7 +29,6 @@ function Initialize()
 endFunction
 
 Event OnUpdateGameTime()
-	Wait(1.0)
 	if _Seed_VampireBehavior.GetValueInt() == 2 && IsUndead()
 		return
 	endif

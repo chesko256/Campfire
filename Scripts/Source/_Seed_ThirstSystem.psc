@@ -44,10 +44,9 @@ Event OnUpdate()
 EndEvent
 
 Event OnUpdateGameTime()
-	Wait(1.0)
 	float rate = _Seed_ThirstRate.GetValue()
 	float this_time = GetCurrentGameTime() * 24.0
-	int cycles = Math.Floor((this_time - last_update_time) * 2)
+	int cycles = Math.Floor((this_time - last_update_time) * 4)
 	float thirst_increase
 	if !was_sleeping
 		thirst_increase = rate * cycles
