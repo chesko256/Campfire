@@ -6,7 +6,7 @@ GlobalVariable property _Seed_VitalitySystemEnabled auto
 GlobalVariable property _Seed_AttributeThirst auto
 GlobalVariable property _Seed_ThirstRate auto 				; Default - 1.25
 GlobalVariable property _Seed_ThirstActionRate auto 		; Default - 0.25
-GlobalVariable property _Seed_VampireBehavior auto
+GlobalVariable property _Seed_Setting_VampireBehavior auto
 Actor property PlayerRef auto
 Keyword property ActorTypeUndead auto
 Keyword property ImmuneParalysis auto
@@ -59,7 +59,7 @@ Event OnUpdateGameTime()
 		thirst_increase = (rate * cycles) / 4
 	endif
 
-	if _Seed_VampireBehavior.GetValueInt() == 2 && IsUndead()
+	if _Seed_Setting_VampireBehavior.GetValueInt() == 2 && IsUndead()
 		thirst_increase /= 2
 	endif
 
