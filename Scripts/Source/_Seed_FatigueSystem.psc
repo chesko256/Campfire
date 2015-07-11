@@ -9,7 +9,7 @@ GlobalVariable property _Seed_FatigueActionRateMasterSpells auto 		; Default - 1
 GlobalVariable property _Seed_FatigueActionRateExpertSpells auto 		; Default - 2.0
 GlobalVariable property _Seed_FatigueActionRateAdeptSpells auto 		; Default - 1.0
 GlobalVariable property _Seed_FatigueActionRateApprenticeSpells auto 	; Default - 0.5
-GlobalVariable property _Seed_VampireBehavior auto
+GlobalVariable property _Seed_Setting_VampireBehavior auto
 Actor property PlayerRef auto
 Keyword property ActorTypeUndead auto
 Keyword property ImmuneParalysis auto
@@ -39,7 +39,7 @@ Event OnUpdateGameTime()
 		return
 	endif
 
-	if _Seed_VampireBehavior.GetValueInt() == 2 && IsUndead()
+	if _Seed_Setting_VampireBehavior.GetValueInt() == 2 && IsUndead()
 		return
 	endif
 

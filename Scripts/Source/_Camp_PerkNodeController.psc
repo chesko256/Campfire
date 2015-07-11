@@ -3,6 +3,7 @@ scriptname _Camp_PerkNodeController extends _Camp_PlaceableObjectBase
 
 Actor property PlayerRef auto
 
+ObjectReference property _Camp_PerkBGColliderRef auto hidden
 ObjectReference property myPerkNode0 auto hidden
 ObjectReference property myPerkNode1 auto hidden
 ObjectReference property myPerkNode2 auto hidden

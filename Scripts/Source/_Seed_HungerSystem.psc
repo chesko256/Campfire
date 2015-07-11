@@ -4,8 +4,8 @@ import Utility
 
 GlobalVariable property _Seed_VitalitySystemEnabled auto
 GlobalVariable property _Seed_AttributeHunger auto
-GlobalVariable property _Seed_HungerRate auto 				; Default - 1.25
-GlobalVariable property _Seed_HungerActionRate auto 		; Default - 0.25
+GlobalVariable property _Seed_HungerRate auto
+GlobalVariable property _Seed_HungerActionRate auto 
 GlobalVariable property _Seed_Setting_VampireBehavior auto
 GlobalVariable property _Seed_Setting_Notifications auto
 GlobalVariable property _Seed_Setting_MeterDisplay auto
@@ -44,6 +44,7 @@ float property MIN_HUNGER = 0.0 autoReadOnly
 float property update_interval = 0.5 auto hidden
 float property last_update_time auto hidden
 bool property was_sleeping = false auto hidden
+float last_hunger
 
 Event OnInit()
 	Initialize()
