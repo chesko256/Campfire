@@ -1,5 +1,9 @@
 scriptname _Seed_ThirstMeterController extends Quest
 
+; Tested as working under the following criteria:
+; meter.Height = -20
+; meter.Width = 265.75
+
 GlobalVariable property _Seed_AttributeThirst auto
 GlobalVariable property _Seed_DebugMetersAlwaysOn auto
 
@@ -39,11 +43,11 @@ Event OnUpdate()
 	;	endif
 	;endif
 	UpdateMeter()
-	RegisterForSingleUpdate(2)
+	RegisterForSingleUpdate(4)
 endEvent
 
 function StartUpdating()
-	RegisterForSingleUpdate(2)
+	RegisterForSingleUpdate(4)
 endFunction
 
 
@@ -52,12 +56,14 @@ function UpdateMeter(bool bSkipDisplayHandling = false)
 	
 	meter.HAnchor = "left"
 	meter.VAnchor = "bottom"
-	meter.FillDirection = "right"
+	meter.FillDirection = "both"
 	meter.X = 1194.25
 	meter.Y = 714.0
 	meter.Height = -20
+	meter.Width = 265.75
+	
 	;meter.Width = 235 ;shorter option
-	meter.Width = 265.75 ;full meter option
+	
 
 	float thirst = _Seed_AttributeThirst.GetValue()
 
@@ -65,6 +71,8 @@ function UpdateMeter(bool bSkipDisplayHandling = false)
 		meter.Alpha = 100.0
 		meter.SetPercent(thirst / 120.0)
 	endif
+
+	meter.StartFlash()
 
 	;/if _DE_ExposureMeterDisplay_Contextual.GetValueInt() == 1
 		WetMeter.Alpha = _DE_ExposureMeter_Opacity.GetValue()
