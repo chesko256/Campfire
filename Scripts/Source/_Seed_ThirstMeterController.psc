@@ -56,8 +56,8 @@ function UpdateMeter(bool bSkipDisplayHandling = false)
 	meter.X = 1194.25
 	meter.Y = 714.0
 	meter.Height = -20
-	meter.Width = 235 ;shorter option
-	;meter.Width = 265.75 ;full meter option
+	;meter.Width = 235 ;shorter option
+	meter.Width = 265.75 ;full meter option
 
 	float thirst = _Seed_AttributeThirst.GetValue()
 
