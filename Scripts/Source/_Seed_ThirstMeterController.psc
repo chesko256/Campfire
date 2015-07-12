@@ -56,11 +56,11 @@ function UpdateMeter(bool bSkipDisplayHandling = false)
 	
 	meter.HAnchor = "left"
 	meter.VAnchor = "bottom"
-	meter.FillDirection = "both"
+	meter.FillDirection = "right"
 	meter.X = 1194.25
-	meter.Y = 714.0
-	meter.Height = -20
-	meter.Width = 265.75
+	meter.Y = 717.5
+	meter.Height = -22.0
+	meter.Width = 292.0
 	
 	;meter.Width = 235 ;shorter option
 	
@@ -72,7 +72,7 @@ function UpdateMeter(bool bSkipDisplayHandling = false)
 		meter.SetPercent(thirst / 120.0)
 	endif
 
-	meter.StartFlash()
+	;meter.StartFlash()
 
 	;/if _DE_ExposureMeterDisplay_Contextual.GetValueInt() == 1
 		WetMeter.Alpha = _DE_ExposureMeter_Opacity.GetValue()
