@@ -52,10 +52,11 @@ function UpdateMeter(bool bSkipDisplayHandling = false)
 
 	meter.HAnchor = "center"
 	meter.VAnchor = "bottom"
-	meter.X = 894.0
-	meter.Y = 713.4
-	meter.Height = -20
-	meter.Width = 299
+	meter.FillDirection = "both"
+	meter.X = 916.75
+	meter.Y = 717.5
+	meter.Height = -22.0
+	meter.Width = 292.0
 
 	float hunger = _Seed_AttributeHunger.GetValue()
 
