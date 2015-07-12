@@ -21,15 +21,7 @@ float fLastWet
 
 
 Event OnInit()
-	utility.wait(1.0)
-	_Seed_FatigueMeter meter = ((self as Quest) as _Seed_FatigueMeter)
-	meter.HAnchor = "left"
-	meter.VAnchor = "bottom"
-	meter.FillDirection = "left"
-	meter.X = 300.0
-	meter.Y = 662.0
-	meter.Height = -23
-	meter.Width = 270
+	utility.wait(3)
 	StartUpdating()
 endEvent
 
