@@ -57,6 +57,7 @@ function UpdateMeter(bool bSkipDisplayHandling = false)
 	meter.Y = 717.5
 	meter.Height = -22.0
 	meter.Width = 292.0
+	meter.PrimaryColor = 0x8BC34A
 
 	float hunger = _Seed_AttributeHunger.GetValue()
 
