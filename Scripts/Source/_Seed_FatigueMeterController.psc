@@ -60,10 +60,10 @@ function UpdateMeter(bool bSkipDisplayHandling = false)
 	meter.HAnchor = "left"
 	meter.VAnchor = "bottom"
 	meter.FillDirection = "left"
-	meter.X = 300.0
-	meter.Y = 662.0
-	meter.Height = -23
-	meter.Width = 270
+	meter.X = 295.0
+	meter.Y = 713.4
+	meter.Height = -20
+	meter.Width = 299
 
 	float fatigue = _Seed_AttributeFatigue.GetValue()
 

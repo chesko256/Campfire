@@ -59,8 +59,8 @@ function UpdateMeter(bool bSkipDisplayHandling = false)
 
 	meter.HAnchor = "center"
 	meter.VAnchor = "bottom"
-	meter.X = 920.0
-	meter.Y = 712.4
+	meter.X = 894.0
+	meter.Y = 713.4
 	meter.Height = -20
 	meter.Width = 299
 
