@@ -27,6 +27,7 @@
 !Interface/Translations/Campfire*.txt
 !Interface/exported/widgets/frostfall/*
 !Interface/exported/widgets/lastseed/*
+!Interface/exported/widgets/lastseed/FLA/*
 
 #Meshes
 !Meshes/campfire/*

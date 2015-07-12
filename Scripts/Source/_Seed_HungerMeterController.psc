@@ -21,14 +21,7 @@ float fLastWet
 
 
 Event OnInit()
-	utility.wait(1.0)
-	_Seed_HungerMeter meter = ((self as Quest) as _Seed_HungerMeter)
-	meter.HAnchor = "center"
-	meter.VAnchor = "bottom"
-	meter.X = 890.0
-	meter.Y = 710.0
-	meter.Height = -23
-	meter.Width = 270
+	utility.wait(2)
 	StartUpdating()
 endEvent
 

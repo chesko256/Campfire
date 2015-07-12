@@ -21,14 +21,7 @@ float fLastWet
 
 
 Event OnInit()
-	_Seed_ThirstMeter meter = ((self as Quest) as _Seed_ThirstMeter)
-	meter.HAnchor = "center"
-	meter.VAnchor = "bottom"
-	meter.FillDirection = "left"
-	meter.X = 1240.0
-	meter.Y = 655.0
-	meter.Height = 14.1
-	meter.Width = 280.0
+	Utility.wait(1)
 	StartUpdating()
 endEvent
 
@@ -56,6 +49,15 @@ endFunction
 
 function UpdateMeter(bool bSkipDisplayHandling = false)
 	_Seed_ThirstMeter meter = ((self as Quest) as _Seed_ThirstMeter)
+	
+	meter.HAnchor = "right"
+	meter.VAnchor = "bottom"
+	meter.FillDirection = "right"
+	meter.X = 1492.0
+	meter.Y = 713.4
+	meter.Height = -20
+	meter.Width = 299
+
 	float thirst = _Seed_AttributeThirst.GetValue()
 
 	if _Seed_DebugMetersAlwaysOn.GetValueInt() == 2
