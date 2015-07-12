@@ -27,7 +27,6 @@
 !Interface/Translations/Campfire*.txt
 !Interface/exported/widgets/frostfall/*
 !Interface/exported/widgets/lastseed/*
-!Interface/exported/widgets/lastseed/FLA/*
 
 #Meshes
 !Meshes/campfire/*
@@ -101,6 +100,11 @@
 !textures/frostfall/*
 !textures/lastseed/*
 !textures/lastseed/PSDs/*
+
+#Working / raw files
+!WorkingFiles/*
+!WorkingFiles/FLA/*
+!WorkingFiles/Images/*
 
 #Ignore working files
 Scripts/Source/_Camp_SkyUIConfigPanelScript - Copy.psc

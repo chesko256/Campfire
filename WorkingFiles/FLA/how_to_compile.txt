@@ -1,0 +1,7 @@
+Must be loaded and compiled out of the following directory:
+
+$(Hard Disk)\skyui-master\src\HUDWidgets
+
+You must have your classpath set to the directory containing the AS class files in your ActionScript 2.0 Preferences.
+
+You must have TweenLite (AS2 version) installed from http://greensock.com/tweenlite-as. Configure a classpath to com.greensock as well.
