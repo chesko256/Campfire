@@ -49,7 +49,7 @@ endFunction
 
 function UpdateMeter(bool bSkipDisplayHandling = false)
 	_Seed_FatigueMeter meter = ((self as Quest) as _Seed_FatigueMeter)
-	meter.HAnchor = "left"
+	meter.HAnchor = "right"
 	meter.VAnchor = "bottom"
 	meter.FillDirection = "left"
 	meter.X = 295.0
