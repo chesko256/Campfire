@@ -61,6 +61,8 @@ function UpdateMeter(bool bSkipDisplayHandling = false)
 	meter.Y = 717.5
 	meter.Height = -22.0
 	meter.Width = 292.0
+	meter.PrimaryColor = 0x2196F3
+	meter.SecondaryColor = 0x1976D2
 	
 	;meter.Width = 235 ;shorter option
 	
