@@ -50,13 +50,14 @@ endFunction
 function UpdateMeter(bool bSkipDisplayHandling = false)
 	_Seed_ThirstMeter meter = ((self as Quest) as _Seed_ThirstMeter)
 	
-	meter.HAnchor = "right"
+	meter.HAnchor = "left"
 	meter.VAnchor = "bottom"
 	meter.FillDirection = "right"
-	meter.X = 1492.0
-	meter.Y = 713.4
+	meter.X = 1194.25
+	meter.Y = 714.0
 	meter.Height = -20
-	meter.Width = 299
+	meter.Width = 235 ;shorter option
+	;meter.Width = 265.75 ;full meter option
 
 	float thirst = _Seed_AttributeThirst.GetValue()
 
