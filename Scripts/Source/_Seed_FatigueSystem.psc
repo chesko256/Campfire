@@ -23,6 +23,8 @@ float property last_update_time auto hidden
 bool property was_sleeping = false auto hidden
 float last_sleep_duration
 
+int locks_picked
+
 Event OnInit()
 	Initialize()
 EndEvent
@@ -31,7 +33,29 @@ function Initialize()
     RegisterForSingleUpdateGameTime(update_interval)
     last_update_time = GetCurrentGameTime() * 24.0
     RegisterForSleep()
+
+    ; Register for lockpicking and archery attacks.
+    locks_picked = Game.QueryStat("Locks Picked")
+    RegisterForTrackedStatsEvent()
+    RegisterForAnimationEvent(PlayerRef, "BowRelease")
 endFunction
+
+Event OnAnimationEvent(ObjectReference akSource, string asEventName)
+	if asEventName == "BowRelease"
+		debug.trace("[Seed] Player Archery Attack")
+		IncreaseFatigue(0.2)
+	endif
+EndEvent
+
+Event OnTrackedStatsEvent(string arStatName, int aiStatValue)
+	if arStatName == "Locks Picked"
+		if aiStatValue > locks_picked
+			debug.trace("[Seed] Player Picked Lock")
+			locks_picked = aiStatValue
+			IncreaseFatigue(1.0)
+		endif
+	endif
+EndEvent
 
 Event OnUpdateGameTime()
 	if was_sleeping
@@ -67,7 +91,6 @@ Event OnSleepStop(bool abInterrupted)
 EndEvent
 
 function SpellCast(Spell akSpell)
-	;@TODO: Player ReferenceAlias needs to call this from OnSpellCast().
 	;@TODO: Increase Fatigue during concentration spell cast.
 	if akSpell
 		int mag_level = (akSpell.GetNthEffectMagicEffect(akSpell.GetCostliestEffectIndex())).GetSkillLevel()
