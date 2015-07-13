@@ -29,12 +29,28 @@ function Initialize()
 
     ; Register for sprinting and jumping.
     RegisterForControl("Sprint")
-    RegisterForControl("Jump")
+    RegisterForAnimationEvent(PlayerRef, "JumpUp")
+    RegisterForAnimationEvent(PlayerRef, "PowerAttackStop")
+    RegisterForAnimationEvent(PlayerRef, "SoundPlay.NPCHumanCombatShieldBash")
 endFunction
+
+Event OnAnimationEvent(ObjectReference akSource, string asEventName)
+	if asEventName == "JumpUp"
+		debug.trace("[Seed] Player Jumped")
+		IncreaseThirst(0.1)
+	elseif asEventName == "PowerAttackStop"
+		debug.trace("[Seed] Player PowerAttacked")
+		IncreaseThirst(0.25)
+	elseif asEventName == "SoundPlay.NPCHumanCombatShieldBash"
+		debug.trace("[Seed] Player Blocked Attack")
+		IncreaseThirst(0.1)
+	endif
+EndEvent
 
 Event OnControlDown(string control)
 	; Increase Thirst while sprinting or when jumping.
 	if control == "Sprint"
+		debug.trace("[Seed] Player Sprinting")
 		RegisterForSingleUpdate(2)
 	endif
 	IncreaseThirst(_Seed_ThirstActionRate.GetValue())
@@ -44,6 +60,8 @@ Event OnUpdate()
 	if PlayerRef.IsSprinting()
 		IncreaseThirst(_Seed_ThirstActionRate.GetValue())
 		RegisterForSingleUpdate(2)
+	else
+		debug.trace("[Seed] Player Sprinting End")
 	endif
 EndEvent
 
