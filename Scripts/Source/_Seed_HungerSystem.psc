@@ -58,7 +58,15 @@ function Initialize()
     ; Register for weapon swings and bow attacks.
     RegisterForActorAction(0)
     RegisterForActorAction(6)
+    RegisterForAnimationEvent(PlayerRef, "SoundPlay.NPCHumanCombatShieldBash")
 endFunction
+
+Event OnAnimationEvent(ObjectReference akSource, string asEventName)
+    if asEventName == "SoundPlay.NPCHumanCombatShieldBash"
+        debug.trace("[Seed] Player Blocked Attack")
+        IncreaseThirst(0.1)
+    endif
+EndEvent
 
 Event OnUpdateGameTime()
 	if _Seed_Setting_VampireBehavior.GetValueInt() == 2 && IsUndead()
