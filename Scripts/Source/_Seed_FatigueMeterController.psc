@@ -56,7 +56,7 @@ function UpdateMeter(bool bSkipDisplayHandling = false)
 	meter.Y = 717.5
 	meter.Height = -22.0
 	meter.Width = 292.0
-	meter.PrimaryColor = 0x607D8B
+	meter.PrimaryColor = 0x2196F3
 
 	float fatigue = _Seed_AttributeFatigue.GetValue()
 
