@@ -37,14 +37,12 @@ function Initialize()
     ; Register for lockpicking and archery attacks.
     locks_picked = Game.QueryStat("Locks Picked")
     RegisterForTrackedStatsEvent()
-    RegisterForAnimationEvent(PlayerRef, "BowRelease")
+    RegisterForActorAction(6)
 endFunction
 
-Event OnAnimationEvent(ObjectReference akSource, string asEventName)
-	if asEventName == "BowRelease"
-		debug.trace("[Seed] Player Archery Attack")
-		IncreaseFatigue(0.2)
-	endif
+Event OnActorAction(int actionType, Actor akActor, Form source, int slot)
+	debug.trace("[Seed] Player Archery Attack")
+	IncreaseFatigue(0.2)
 EndEvent
 
 Event OnTrackedStatsEvent(string arStatName, int aiStatValue)
