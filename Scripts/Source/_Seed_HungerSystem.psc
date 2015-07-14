@@ -58,15 +58,12 @@ function Initialize()
     ; Register for weapon swings and bow attacks.
     RegisterForActorAction(0)
     RegisterForActorAction(6)
-    RegisterForAnimationEvent(PlayerRef, "SoundPlay.NPCHumanCombatShieldBash")
 endFunction
 
-Event OnAnimationEvent(ObjectReference akSource, string asEventName)
-    if asEventName == "SoundPlay.NPCHumanCombatShieldBash"
-        debug.trace("[Seed] Player Blocked Attack")
-        IncreaseThirst(0.1)
-    endif
-EndEvent
+function PlayerBlockedHit()
+    debug.trace("[Seed] (Hunger) Player Blocked Attack")
+    IncreaseHunger(0.1)
+endFunction
 
 Event OnUpdateGameTime()
 	if _Seed_Setting_VampireBehavior.GetValueInt() == 2 && IsUndead()
@@ -97,7 +94,15 @@ EndEvent
 
 Event OnActorAction(int actionType, Actor akActor, Form source, int slot)
 	; Increase Hunger when the player attacks.
-	IncreaseHunger(_Seed_HungerActionRate.GetValue())
+    if akActor == PlayerRef
+        if actionType == 0
+            debug.trace("[Seed] (Hunger) Normal Attack " + akActor)
+            IncreaseHunger(0.05)
+        elseif actionType == 6
+            debug.trace("[Seed] (Hunger) Archery Attack " + akActor)
+	       IncreaseHunger(0.2)
+        endif
+    endif
 EndEvent
 
 function IncreaseHunger(float amount)

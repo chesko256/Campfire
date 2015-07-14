@@ -31,26 +31,28 @@ function Initialize()
     RegisterForControl("Sprint")
     RegisterForAnimationEvent(PlayerRef, "JumpUp")
     RegisterForAnimationEvent(PlayerRef, "PowerAttackStop")
-    RegisterForAnimationEvent(PlayerRef, "SoundPlay.NPCHumanCombatShieldBash")
+    RegisterForAnimationEvent(PlayerRef, "00NextClip")
 endFunction
 
 Event OnAnimationEvent(ObjectReference akSource, string asEventName)
 	if asEventName == "JumpUp"
-		debug.trace("[Seed] Player Jumped")
+		debug.trace("[Seed] (Thirst) Player Jumped")
 		IncreaseThirst(0.1)
-	elseif asEventName == "PowerAttackStop"
-		debug.trace("[Seed] Player PowerAttacked")
+	elseif asEventName == "PowerAttackStop" || asEventName == "00NextClip"
+		debug.trace("[Seed] (Thirst) Player PowerAttacked")
 		IncreaseThirst(0.25)
-	elseif asEventName == "SoundPlay.NPCHumanCombatShieldBash"
-		debug.trace("[Seed] Player Blocked Attack")
-		IncreaseThirst(0.1)
 	endif
 EndEvent
+
+function PlayerBlockedHit()
+	debug.trace("[Seed] (Thirst) Player Blocked Attack")
+	IncreaseThirst(0.1)
+endFunction
 
 Event OnControlDown(string control)
 	; Increase Thirst while sprinting or when jumping.
 	if control == "Sprint"
-		debug.trace("[Seed] Player Sprinting")
+		debug.trace("[Seed] (Thirst) Player Sprinting")
 		RegisterForSingleUpdate(2)
 	endif
 	IncreaseThirst(_Seed_ThirstActionRate.GetValue())
@@ -61,7 +63,7 @@ Event OnUpdate()
 		IncreaseThirst(_Seed_ThirstActionRate.GetValue())
 		RegisterForSingleUpdate(2)
 	else
-		debug.trace("[Seed] Player Sprinting End")
+		debug.trace("[Seed] (Thirst) Player Sprinting End")
 	endif
 EndEvent
 
