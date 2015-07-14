@@ -134,6 +134,7 @@ function IncreaseHunger(float amount)
 	else
 		_Seed_AttributeHunger.SetValue(current_hunger + amount)
 	endif
+    ; UpdateMeter
     ApplyHungerEffects()
 endFunction
 
@@ -144,6 +145,7 @@ function DecreaseHunger(float amount)
 	else
 		_Seed_AttributeHunger.SetValue(current_hunger - amount)
 	endif
+    ; UpdateMeter
     ApplyHungerEffects()
 endFunction
 
@@ -156,6 +158,7 @@ function ModHunger(float amount)
 	else
 		_Seed_AttributeHunger.SetValue(current_hunger + amount)
 	endif
+    ; UpdateMeter
     ApplyHungerEffects()
 endFunction
 
@@ -325,7 +328,7 @@ function ApplyHungerLevel5()
     endif
     int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
     if mode >= 1 && mode <= 4
-        ; DISPLAY METER
+        ; DISPLAY METER WITH FLASH
     endif
 endFunction
 
@@ -350,7 +353,7 @@ function ApplyHungerLevel6()
     endif
     int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
     if mode >= 1 && mode <= 4
-        ; DISPLAY METER
+        ; DISPLAY METER WITH FLASH
     endif
 endFunction
 
