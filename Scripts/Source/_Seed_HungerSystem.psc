@@ -36,6 +36,8 @@ Message property _Seed_HungerLevel4Msg auto
 Message property _Seed_HungerLevel5Msg auto
 Message property _Seed_HungerLevel6Msg auto
 
+Quest property _Seed_HungerMeterQuest auto
+
 Actor property PlayerRef auto
 Keyword property ActorTypeUndead auto
 Keyword property ImmuneParalysis auto
@@ -68,11 +70,11 @@ function PlayerHit(bool abBlocked)
         debug.trace("[Seed] (Hunger) Player Blocked Attack")
         IncreaseHunger(0.1)
         if mode >= 1 && mode <= 2
-            ; DISPLAY METER
+            (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
         endif
     else
         if mode >= 1 && mode <= 3
-            ; DISPLAY METER
+            (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
         endif
     endif
 endFunction
@@ -98,7 +100,7 @@ Event OnUpdateGameTime()
 
     int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
     if mode == 1
-        ; DISPLAY METER
+        (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
     endif
 
     if _Seed_VitalitySystemEnabled.GetValueInt() == 2
@@ -121,7 +123,7 @@ Event OnActorAction(int actionType, Actor akActor, Form source, int slot)
             debug.trace("[Seed] (Hunger) Archery Attack " + akActor)
             IncreaseHunger(0.2)
             if mode >= 1 && mode <= 2
-                ; DISPLAY METER
+                (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
             endif
         endif
     endif
@@ -134,7 +136,7 @@ function IncreaseHunger(float amount)
 	else
 		_Seed_AttributeHunger.SetValue(current_hunger + amount)
 	endif
-    ; UpdateMeter
+    (_Seed_HungerMeterQuest as _Seed_HungerMeterController).UpdateMeter((120.0 - _Seed_AttributeHunger.GetValue()) / 120)
     ApplyHungerEffects()
 endFunction
 
@@ -145,7 +147,7 @@ function DecreaseHunger(float amount)
 	else
 		_Seed_AttributeHunger.SetValue(current_hunger - amount)
 	endif
-    ; UpdateMeter
+    (_Seed_HungerMeterQuest as _Seed_HungerMeterController).UpdateMeter((120.0 - _Seed_AttributeHunger.GetValue()) / 120)
     ApplyHungerEffects()
 endFunction
 
@@ -158,7 +160,7 @@ function ModHunger(float amount)
 	else
 		_Seed_AttributeHunger.SetValue(current_hunger + amount)
 	endif
-    ; UpdateMeter
+    (_Seed_HungerMeterQuest as _Seed_HungerMeterController).UpdateMeter((120.0 - _Seed_AttributeHunger.GetValue()) / 120)
     ApplyHungerEffects()
 endFunction
 
@@ -228,7 +230,7 @@ function ApplyHungerLevel1()
     endif
     int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
     if mode >= 1 && mode <= 4
-        ; DISPLAY METER
+        (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
     endif
 endFunction
 
@@ -251,7 +253,7 @@ function ApplyHungerLevel2(bool increasing)
     endif
     int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
     if mode >= 1 && mode <= 4
-        ; DISPLAY METER
+        (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
     endif
 endFunction
 
@@ -276,7 +278,7 @@ function ApplyHungerLevel3()
     endif
     int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
     if mode >= 1 && mode <= 4
-        ; DISPLAY METER
+        (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
     endif
 endFunction
 
@@ -301,7 +303,7 @@ function ApplyHungerLevel4()
     endif
     int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
     if mode >= 1 && mode <= 4
-        ; DISPLAY METER
+        (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
     endif
 endFunction
 
@@ -326,7 +328,7 @@ function ApplyHungerLevel5()
     endif
     int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
     if mode >= 1 && mode <= 4
-        ; DISPLAY METER WITH FLASH
+        (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter(true)
     endif
 endFunction
 
@@ -351,7 +353,7 @@ function ApplyHungerLevel6()
     endif
     int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
     if mode >= 1 && mode <= 4
-        ; DISPLAY METER WITH FLASH
+        (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter(true)
     endif
 endFunction
 
