@@ -61,7 +61,8 @@ function UpdateMeter(bool bSkipDisplayHandling = false)
 	meter.Y = 717.5
 	meter.Height = -22.0
 	meter.Width = 292.0
-	meter.PrimaryColor = 0xEC407A
+	meter.PrimaryColor = 0x0D47A1
+	;meter.SecondaryColor = 0x1565C0
 	
 	;meter.Width = 235 ;shorter option
 	
@@ -70,7 +71,7 @@ function UpdateMeter(bool bSkipDisplayHandling = false)
 
 	if _Seed_DebugMetersAlwaysOn.GetValueInt() == 2
 		meter.Alpha = 100.0
-		meter.SetPercent(thirst / 120.0)
+		meter.SetPercent((120 - thirst) / 120.0)
 	endif
 
 	;meter.StartFlash()
