@@ -21,12 +21,11 @@ int property CompanionResource auto hidden
 ; Needs Meter Display Mode:
 ; Display...
 ; 0 = Always On
-; 1 = On any change to needs value (contextual, most frequent)
+; 1 = On action, H/M/S, time, and status (contextual, most frequent)
 ; 2 = On action, H/M/S, and status change                           ; Default
 ; 3 = On H/M/S and status change
-; 4 = On Health/Magicka/Stamina
-; 5 = On status change (contextual, least frequent)
-; 6 = Always Off
+; 4 = On status change (contextual, least frequent)
+; 5 = Always Off
 GlobalVariable property _Seed_Setting_NeedsMeterDisplayMode auto
 GlobalVariable property _Seed_Setting_MetersAlwaysOnWhenLow auto
 GlobalVariable property _Seed_Setting_InvertMeterFillBehavior auto
@@ -61,7 +60,7 @@ function UpdateMeter(float afPercent, bool abShouldDisplay, bool abFlash = false
     endif
 
     int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
-    if mode == 0 || mode == 6
+    if mode == 0 || mode == 5
         return
     endif
 
@@ -120,7 +119,7 @@ Event OnUpdate()
     int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
 
     ; Sanity check - bail out on Always On / Off
-    if mode == 0 || mode == 6
+    if mode == 0 || mode == 5
         return
     endif
 
@@ -131,7 +130,7 @@ Event OnUpdate()
     endif
 
     float av_pct
-    if mode >= 1 && mode <= 4
+    if mode >= 1 && mode <= 3
         if CompanionResource == 1
             av_pct = GetAVPercentage("Magicka")
         elseif CompanionResource == 2
@@ -144,7 +143,7 @@ Event OnUpdate()
         else
             RegisterForSingleUpdate(4.0)
         endif
-    elseif mode == 5
+    elseif mode == 4
         HideMeter()
     endif
 endEvent

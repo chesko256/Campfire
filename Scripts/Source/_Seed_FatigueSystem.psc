@@ -1,5 +1,8 @@
 scriptname _Seed_FatigueSystem extends Quest
 
+;@TODO: Catch shock spell damage, which reduces magicka
+;@TODO: Look for other sources of magicka damage
+
 import Utility
 
 GlobalVariable property _Seed_VitalitySystemEnabled auto

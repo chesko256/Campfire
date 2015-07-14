@@ -1,5 +1,8 @@
 scriptname _Seed_ThirstSystem extends Quest
 
+;@TODO: Catch frost spell damage, which reduces stamina
+;@TODO: Look for other sources of stamina damage
+
 import Utility
 
 GlobalVariable property _Seed_VitalitySystemEnabled auto
