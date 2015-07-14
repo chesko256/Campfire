@@ -226,11 +226,9 @@ function ApplyHungerLevel1()
     if _Seed_Setting_NeedsVFX.GetValueInt() == 2
         ; play needs VFX
     endif
-    if _Seed_Setting_MeterDisplay.GetValueInt() == 2
-        int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
-        if mode >= 1 && mode <= 4
-            ; DISPLAY METER
-        endif
+    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+    if mode >= 1 && mode <= 4
+        ; DISPLAY METER
     endif
 endFunction
 

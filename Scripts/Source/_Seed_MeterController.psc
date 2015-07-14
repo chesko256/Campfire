@@ -5,6 +5,7 @@ scriptname _Seed_MeterController extends Quest
 
 import Utility
 
+Actor property PlayerRef auto
 GlobalVariable property AttributeGlobal auto
 {Set in the CK. The global that corresponds to this meter's displayed attribute.}
 
@@ -68,7 +69,7 @@ function DisplayMeter(bool abFlash = false)
 
     ; If we should display this update, wait until we're done transitioning.
     int i = 0
-    while (transitioning && abShouldDisplay) && i < 50
+    while (transitioning) && i < 50
         wait(0.1)
         i += 1
     endWhile
@@ -101,10 +102,14 @@ function HideMeter()
 endFunction
 
 function SetAlwaysOn()
+    ;@TODO: Centralize
+    _Seed_SKI_MeterWidget meter = ((self as Quest) as _Seed_SKI_MeterWidget)
     meter.Alpha = _Seed_Setting_MeterOpacity.GetValue()
 endFunction
 
 function SetAlwaysOff()
+    ;@TODO: Centralize
+    _Seed_SKI_MeterWidget meter = ((self as Quest) as _Seed_SKI_MeterWidget)
     meter.Alpha = 0.0
 endFunction
 
@@ -125,11 +130,11 @@ Event OnUpdate()
     float av_pct
     if mode >= 1 && mode <= 3
         if CompanionResource == 1
-            av_pct = GetAVPercentage("Magicka")
+            av_pct = PlayerRef.GetAVPercentage("Magicka")
         elseif CompanionResource == 2
-            av_pct = GetAVPercentage("Health")
+            av_pct = PlayerRef.GetAVPercentage("Health")
         elseif CompanionResource == 3
-            av_pct = GetAVPercentage("Stamina")
+            av_pct = PlayerRef.GetAVPercentage("Stamina")
         endif
         if av_pct == 1.0
             HideMeter()
