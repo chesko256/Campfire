@@ -1,6 +1,6 @@
-scriptname _Seed_HungerMeterController extends Quest
+scriptname _Seed_VitalityMeterController extends Quest
 
-GlobalVariable property _Seed_AttributeHunger auto
+GlobalVariable property _Seed_AttributeVitality auto
 GlobalVariable property _Seed_DebugMetersAlwaysOn auto
 
 ;/_DE_WetMeter property WetMeter auto
@@ -48,23 +48,22 @@ endFunction
 
 
 function UpdateMeter(bool bSkipDisplayHandling = false)
-	_Seed_HungerMeter meter = ((self as Quest) as _Seed_HungerMeter)
+	_Seed_VitalityMeter meter = ((self as Quest) as _Seed_VitalityMeter)
 
 	meter.HAnchor = "center"
 	meter.VAnchor = "bottom"
 	meter.FillDirection = "both"
-	meter.X = 916.75
-	meter.Y = 717.5
-	meter.Height = -22.0
+	meter.X = 657.5
+	meter.Y = 665
+	meter.Height = 22.0
 	meter.Width = 292.0
-	meter.PrimaryColor = 0xAD1457
-	;meter.SecondaryColor = 0xC0CA33
+	meter.PrimaryColor = 0xFFF59D
 
-	float hunger = _Seed_AttributeHunger.GetValue()
+	float vitality = _Seed_AttributeVitality.GetValue()
 
 	if _Seed_DebugMetersAlwaysOn.GetValueInt() == 2
 		meter.Alpha = 100.0
-		meter.SetPercent((120 - hunger) / 120.0)
+		meter.SetPercent((120 - vitality) / 120.0)
 	endif
 
 	;meter.StartFlash()

@@ -56,14 +56,16 @@ function UpdateMeter(bool bSkipDisplayHandling = false)
 	meter.Y = 717.5
 	meter.Height = -22.0
 	meter.Width = 292.0
-	meter.PrimaryColor = 0x2196F3
+	meter.PrimaryColor = 0x9CCC65
 
 	float fatigue = _Seed_AttributeFatigue.GetValue()
 
 	if _Seed_DebugMetersAlwaysOn.GetValueInt() == 2
 		meter.Alpha = 100.0
-		meter.SetPercent(fatigue / 120.0)
+		meter.SetPercent((120 - fatigue) / 120.0)
 	endif
+
+	;meter.StartFlash()
 
 	;/if _DE_ExposureMeterDisplay_Contextual.GetValueInt() == 1
 		WetMeter.Alpha = _DE_ExposureMeter_Opacity.GetValue()
