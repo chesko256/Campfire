@@ -1,5 +1,7 @@
 scriptname _Seed_HungerSystem extends Quest
 
+;@TODO: Look for other sources of health damage
+
 import Utility
 
 GlobalVariable property _Seed_VitalitySystemEnabled auto
@@ -8,7 +10,7 @@ GlobalVariable property _Seed_HungerRate auto
 GlobalVariable property _Seed_HungerActionRate auto 
 GlobalVariable property _Seed_Setting_VampireBehavior auto
 GlobalVariable property _Seed_Setting_Notifications auto
-GlobalVariable property _Seed_Setting_MeterDisplay auto
+GlobalVariable property _Seed_Setting_NeedsMeterDisplayMode auto
 GlobalVariable property _Seed_Setting_NeedsSFX auto
 GlobalVariable property _Seed_Setting_NeedsVFX auto
 GlobalVariable property _Seed_Setting_NeedsForceFeedback auto
@@ -60,16 +62,26 @@ function Initialize()
     RegisterForActorAction(6)
 endFunction
 
-function PlayerBlockedHit()
-    debug.trace("[Seed] (Hunger) Player Blocked Attack")
-    IncreaseHunger(0.1)
+function PlayerHit(bool abBlocked)
+    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+    if abBlocked
+        debug.trace("[Seed] (Hunger) Player Blocked Attack")
+        IncreaseHunger(0.1)
+        if mode >= 1 && mode <= 2
+            ; DISPLAY METER
+        endif
+    else
+        if mode >= 1 && mode <= 3
+            ; DISPLAY METER
+        endif
+    endif
 endFunction
 
 Event OnUpdateGameTime()
 	if _Seed_Setting_VampireBehavior.GetValueInt() == 2 && IsUndead()
 		return
 	endif
-
+    
 	float rate = _Seed_HungerRate.GetValue()
 	float this_time = GetCurrentGameTime() * 24.0
 	int cycles = Math.Floor((this_time - last_update_time) * 2)
@@ -83,6 +95,12 @@ Event OnUpdateGameTime()
 
     IncreaseHunger(hunger_increase)
     last_update_time = this_time
+
+    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+    if mode == 1
+        ; DISPLAY METER
+    endif
+
     if _Seed_VitalitySystemEnabled.GetValueInt() == 2
         RegisterForSingleUpdateGameTime(update_interval)
     endif
@@ -93,6 +111,7 @@ Event OnSleepStart(float afSleepStartTime, float afDesiredSleepEndTime)
 EndEvent
 
 Event OnActorAction(int actionType, Actor akActor, Form source, int slot)
+    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
 	; Increase Hunger when the player attacks.
     if akActor == PlayerRef
         if actionType == 0
@@ -100,7 +119,10 @@ Event OnActorAction(int actionType, Actor akActor, Form source, int slot)
             IncreaseHunger(0.05)
         elseif actionType == 6
             debug.trace("[Seed] (Hunger) Archery Attack " + akActor)
-	       IncreaseHunger(0.2)
+            IncreaseHunger(0.2)
+            if mode >= 1 && mode <= 2
+                ; DISPLAY METER
+            endif
         endif
     endif
 EndEvent
@@ -202,7 +224,10 @@ function ApplyHungerLevel1()
         ; play needs VFX
     endif
     if _Seed_Setting_MeterDisplay.GetValueInt() == 2
-        ; update meter and show
+        int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+        if mode >= 1 && mode <= 4
+            ; DISPLAY METER
+        endif
     endif
 endFunction
 
@@ -223,8 +248,9 @@ function ApplyHungerLevel2(bool increasing)
     if _Seed_Setting_NeedsVFX.GetValueInt() == 2
         ; play needs VFX
     endif
-    if _Seed_Setting_MeterDisplay.GetValueInt() == 2
-        ; update meter and show
+    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+    if mode >= 1 && mode <= 4
+        ; DISPLAY METER
     endif
 endFunction
 
@@ -247,8 +273,9 @@ function ApplyHungerLevel3()
     if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
         ; play force feedback
     endif
-    if _Seed_Setting_MeterDisplay.GetValueInt() == 2
-        ; update meter and show
+    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+    if mode >= 1 && mode <= 4
+        ; DISPLAY METER
     endif
 endFunction
 
@@ -271,8 +298,9 @@ function ApplyHungerLevel4()
     if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
         ; play force feedback
     endif
-    if _Seed_Setting_MeterDisplay.GetValueInt() == 2
-        ; update meter and show
+    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+    if mode >= 1 && mode <= 4
+        ; DISPLAY METER
     endif
 endFunction
 
@@ -295,8 +323,9 @@ function ApplyHungerLevel5()
     if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
         ; play force feedback
     endif
-    if _Seed_Setting_MeterDisplay.GetValueInt() == 2
-        ; update meter and show
+    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+    if mode >= 1 && mode <= 4
+        ; DISPLAY METER
     endif
 endFunction
 
@@ -319,8 +348,9 @@ function ApplyHungerLevel6()
     if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
         ; play force feedback
     endif
-    if _Seed_Setting_MeterDisplay.GetValueInt() == 2
-        ; update meter and show
+    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+    if mode >= 1 && mode <= 4
+        ; DISPLAY METER
     endif
 endFunction
 
