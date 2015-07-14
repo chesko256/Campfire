@@ -4,6 +4,8 @@ import Utility
 
 Quest property _Seed_SpoilSystemQuest auto
 Quest property _Seed_FatigueSystemQuest auto
+Quest property _Seed_HungerSystemQuest auto
+Quest property _Seed_ThirstSystemQuest auto
 
 Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
 	
@@ -11,14 +13,14 @@ Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemRefere
 		debug.trace("[Seed] ########################### Discarding OnItemAdded event, spoil cycle in progress.")
 		return
 	endif
-	debug.trace("[Seed] Player OnItemAdded akBaseItem=" + akBaseItem + ", aiItemCount=" + aiItemCount + ", akItemReference=" + akItemReference + ", akSourceContainer=" + akSourceContainer)
+	;debug.trace("[Seed] Player OnItemAdded akBaseItem=" + akBaseItem + ", aiItemCount=" + aiItemCount + ", akItemReference=" + akItemReference + ", akSourceContainer=" + akSourceContainer)
 	if IsTrackableFood(akBaseItem)
 		(_Seed_SpoilSystemQuest as _Seed_SpoilSystem).HandleFoodTransferToContainer(akBaseItem, aiItemCount, akSourceContainer, self.GetActorRef(), akItemReference)
 	endif
 EndEvent
 
 Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akDestContainer)
-	debug.trace("[Seed] Player OnItemRemoved akBaseItem=" + akBaseItem + ", aiItemCount=" + aiItemCount + ", akItemReference=" + akItemReference + ", akDestContainer=" + akDestContainer)
+	;debug.trace("[Seed] Player OnItemRemoved akBaseItem=" + akBaseItem + ", aiItemCount=" + aiItemCount + ", akItemReference=" + akItemReference + ", akDestContainer=" + akDestContainer)
 	if (_Seed_SpoilSystemQuest as _Seed_SpoilSystem).spoil_in_progress
 		debug.trace("[Seed] ########################### Discarding OnItemRemoved event, spoil cycle in progress.")
 		return
@@ -70,6 +72,13 @@ Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRefe
 				endif
 			endif
 		endif
+	endif
+EndEvent
+
+Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
+	if abHitBlocked
+		(_Seed_HungerSystemQuest as _Seed_HungerSystem).PlayerBlockedHit()
+		(_Seed_ThirstSystemQuest as _Seed_ThirstSystem).PlayerBlockedHit()
 	endif
 EndEvent
 
