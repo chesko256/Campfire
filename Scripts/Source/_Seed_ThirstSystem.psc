@@ -47,9 +47,11 @@ Event OnAnimationEvent(ObjectReference akSource, string asEventName)
 	endif
 EndEvent
 
-function PlayerBlockedHit()
-	debug.trace("[Seed] (Thirst) Player Blocked Attack")
-	IncreaseThirst(0.1)
+function PlayerHit(bool abBlocked)
+	if abBlocked
+		debug.trace("[Seed] (Thirst) Player Blocked Attack")
+		IncreaseThirst(0.1)
+	endif
 endFunction
 
 Event OnControlDown(string control)
