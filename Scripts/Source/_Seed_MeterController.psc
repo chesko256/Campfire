@@ -45,7 +45,7 @@ float METER_TRANSITION_TIME = 2.0
 
 bool transitioning = false
 
-function UpdateMeter(float afPercent, bool abShouldDisplay, bool abFlash = false)
+function UpdateMeter(float afPercent)
     ;@TODO
     ;if shutdown
     ;   return
@@ -58,14 +58,11 @@ function UpdateMeter(float afPercent, bool abShouldDisplay, bool abFlash = false
     else
         meter.SetPercent(afPercent)
     endif
+endFunction
 
+function DisplayMeter(bool abFlash = false)
     int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
     if mode == 0 || mode == 5
-        return
-    endif
-
-    ; If we shouldn't be displaying this update, bail immediately.
-    if !abShouldDisplay
         return
     endif
 
@@ -76,10 +73,6 @@ function UpdateMeter(float afPercent, bool abShouldDisplay, bool abFlash = false
         i += 1
     endWhile
 
-    DisplayMeter(abFlash)
-endFunction
-
-function DisplayMeter(bool abFlash = false)
     ;@TODO: Centralize
     _Seed_SKI_MeterWidget meter = ((self as Quest) as _Seed_SKI_MeterWidget)
     
