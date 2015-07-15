@@ -14,6 +14,8 @@ Actor property PlayerRef auto
 Keyword property ActorTypeUndead auto
 Keyword property ImmuneParalysis auto
 
+Quest property _Seed_ThirstMeterQuest auto
+
 float property MAX_THIRST = 120.0 autoReadOnly
 float property MIN_THIRST = 0.0 autoReadOnly
 
@@ -51,16 +53,16 @@ function PlayerHit(bool abBlocked)
 	if abBlocked
 		debug.trace("[Seed] (Thirst) Player Blocked Attack")
 		IncreaseThirst(0.1)
+		(_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).DisplayMeter()
 	endif
 endFunction
 
 Event OnControlDown(string control)
 	; Increase Thirst while sprinting or when jumping.
-	if control == "Sprint"
-		debug.trace("[Seed] (Thirst) Player Sprinting")
-		RegisterForSingleUpdate(2)
-	endif
+	debug.trace("[Seed] (Thirst) Player Sprinting")
+	RegisterForSingleUpdate(2)
 	IncreaseThirst(_Seed_ThirstActionRate.GetValue())
+	(_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).DisplayMeter()
 EndEvent
 
 Event OnUpdate()
@@ -106,6 +108,7 @@ function IncreaseThirst(float amount)
 	else
 		_Seed_AttributeThirst.SetValue(current_thirst + amount)
 	endif
+	(_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).UpdateMeter((120.0 - _Seed_AttributeThirst.GetValue()) / 120)
 endFunction
 
 function DecreaseThirst(float amount)
@@ -115,6 +118,7 @@ function DecreaseThirst(float amount)
 	else
 		_Seed_AttributeThirst.SetValue(current_thirst - amount)
 	endif
+	(_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).UpdateMeter((120.0 - _Seed_AttributeThirst.GetValue()) / 120)
 endFunction
 
 function ModThirst(float amount)
@@ -126,6 +130,7 @@ function ModThirst(float amount)
 	else
 		_Seed_AttributeThirst.SetValue(current_thirst + amount)
 	endif
+	(_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).UpdateMeter((120.0 - _Seed_AttributeThirst.GetValue()) / 120)
 endFunction
 
 bool function IsUndead()
