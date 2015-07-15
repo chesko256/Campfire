@@ -48,7 +48,7 @@ float property MIN_HUNGER = 0.0 autoReadOnly
 float property update_interval = 0.5 auto hidden
 float property last_update_time auto hidden
 bool property was_sleeping = false auto hidden
-float last_hunger
+float last_hunger = 0.0
 
 Event OnInit()
 	Initialize()
@@ -62,6 +62,9 @@ function Initialize()
     ; Register for weapon swings and bow attacks.
     RegisterForActorAction(0)
     RegisterForActorAction(6)
+
+    ; Apply initial condition.
+    IncreaseHunger(0.01)
 endFunction
 
 function PlayerHit(bool abBlocked)

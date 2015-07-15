@@ -42,7 +42,7 @@ GlobalVariable property _Seed_Setting_InvertMeterFillBehavior auto
 GlobalVariable property _Seed_Setting_VitalityMeterDisplayMode auto
 GlobalVariable property _Seed_Setting_MeterOpacity auto
 
-float METER_TRANSITION_TIME = 2.0
+float METER_TRANSITION_TIME = 3.0
 
 bool transitioning = false
 
@@ -79,7 +79,7 @@ function DisplayMeter(bool abFlash = false)
     
     if meter.Alpha == 0.0
         transitioning = true
-        meter.Alpha = _Seed_Setting_MeterOpacity.GetValue()
+        meter.FadeTo(_Seed_Setting_MeterOpacity.GetValue(), METER_TRANSITION_TIME)
         ;@TODO: Verify transition time
         wait(METER_TRANSITION_TIME)
         transitioning = false
@@ -93,10 +93,11 @@ function DisplayMeter(bool abFlash = false)
 endFunction
 
 function HideMeter()
+    debug.trace("[Seed] HideMeter()")
     ;@TODO: Centralize
     _Seed_SKI_MeterWidget meter = ((self as Quest) as _Seed_SKI_MeterWidget)
     transitioning = true
-    meter.Alpha = 0.0
+    meter.FadeTo(0.0, METER_TRANSITION_TIME)
     wait(METER_TRANSITION_TIME)
     transitioning = false
 endFunction
@@ -104,16 +105,17 @@ endFunction
 function SetAlwaysOn()
     ;@TODO: Centralize
     _Seed_SKI_MeterWidget meter = ((self as Quest) as _Seed_SKI_MeterWidget)
-    meter.Alpha = _Seed_Setting_MeterOpacity.GetValue()
+    meter.FadeTo(_Seed_Setting_MeterOpacity.GetValue(), METER_TRANSITION_TIME)
 endFunction
 
 function SetAlwaysOff()
     ;@TODO: Centralize
     _Seed_SKI_MeterWidget meter = ((self as Quest) as _Seed_SKI_MeterWidget)
-    meter.Alpha = 0.0
+    meter.FadeTo(0.0, METER_TRANSITION_TIME)
 endFunction
 
 Event OnUpdate()
+    debug.trace("[Seed] Meter display update " + CompanionResource)
     int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
 
     ; Sanity check - bail out on Always On / Off
@@ -122,8 +124,9 @@ Event OnUpdate()
     endif
 
     ; If value is low and setting enabled, stay on
-    if _Seed_Setting_MetersAlwaysOnWhenLow.GetValueInt() == 2 && AttributeGlobal.GetValue() <= 40.0
-        RegisterForSingleUpdate(4.0)
+    if _Seed_Setting_MetersAlwaysOnWhenLow.GetValueInt() == 2 && AttributeGlobal.GetValue() >= 80.0
+        debug.trace("[Seed] Value too low, staying on. " + CompanionResource)
+        RegisterForSingleUpdate(7.0)
         return
     endif
 
@@ -139,7 +142,8 @@ Event OnUpdate()
         if av_pct == 1.0
             HideMeter()
         else
-            RegisterForSingleUpdate(4.0)
+            debug.trace("[Seed] Didn't meet hide conditions, staying on. " + CompanionResource)
+            RegisterForSingleUpdate(7.0)
         endif
     elseif mode == 4
         HideMeter()
