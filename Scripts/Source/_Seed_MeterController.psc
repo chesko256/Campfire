@@ -80,7 +80,6 @@ function DisplayMeter(bool abFlash = false)
     if meter.Alpha == 0.0
         transitioning = true
         meter.FadeTo(_Seed_Setting_MeterOpacity.GetValue(), METER_TRANSITION_TIME)
-        ;@TODO: Verify transition time
         wait(METER_TRANSITION_TIME)
         transitioning = false
     endif

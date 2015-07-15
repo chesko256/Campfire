@@ -59,9 +59,10 @@ function Initialize()
     last_update_time = GetCurrentGameTime() * 24.0
     RegisterForSleep()
 
-    ; Register for weapon swings and bow attacks.
-    RegisterForActorAction(0)
+    ; Register for power attacks and bow attacks.
     RegisterForActorAction(6)
+    RegisterForAnimationEvent(PlayerRef, "PowerAttackStop")
+    RegisterForAnimationEvent(PlayerRef, "00NextClip")
 
     ; Apply initial condition.
     IncreaseHunger(0.01)
@@ -119,15 +120,23 @@ Event OnActorAction(int actionType, Actor akActor, Form source, int slot)
     int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
 	; Increase Hunger when the player attacks.
     if akActor == PlayerRef
-        if actionType == 0
-            debug.trace("[Seed] (Hunger) Normal Attack " + akActor)
-            IncreaseHunger(0.05)
-        elseif actionType == 6
+        if actionType == 6
             debug.trace("[Seed] (Hunger) Archery Attack " + akActor)
-            IncreaseHunger(0.2)
+            IncreaseHunger(0.1)
             if mode >= 1 && mode <= 2
                 (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
             endif
+        endif
+    endif
+EndEvent
+
+Event OnAnimationEvent(ObjectReference akSource, string asEventName)
+    if asEventName == "PowerAttackStop" || asEventName == "00NextClip"
+        debug.trace("[Seed] (Hunger) Player PowerAttacked")
+        IncreaseHunger(0.25)
+        int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+        if mode >= 1 && mode <= 3
+            (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
         endif
     endif
 EndEvent

@@ -6,6 +6,7 @@ scriptname _Seed_ThirstSystem extends Quest
 import Utility
 
 GlobalVariable property _Seed_VitalitySystemEnabled auto
+GlobalVariable property _Seed_Setting_NeedsMeterDisplayMode auto
 GlobalVariable property _Seed_AttributeThirst auto
 GlobalVariable property _Seed_ThirstRate auto 				; Default - 1.25
 GlobalVariable property _Seed_ThirstActionRate auto 		; Default - 0.25
@@ -22,30 +23,34 @@ float property MIN_THIRST = 0.0 autoReadOnly
 float property update_interval = 0.25 auto hidden
 float property last_update_time auto hidden
 bool property was_sleeping = false auto hidden
+float last_thirst = 0.0
 
 Event OnInit()
 	Initialize()
 EndEvent
 
 function Initialize()
-    RegisterForSingleUpdate(update_interval)
+    RegisterForSingleUpdateGameTime(update_interval)
     last_update_time = GetCurrentGameTime() * 24.0
     RegisterForSleep()
 
     ; Register for sprinting and jumping.
     RegisterForControl("Sprint")
-    RegisterForAnimationEvent(PlayerRef, "JumpUp")
     RegisterForAnimationEvent(PlayerRef, "PowerAttackStop")
     RegisterForAnimationEvent(PlayerRef, "00NextClip")
+
+    ; Apply initial condition.
+    IncreaseThirst(0.01)
 endFunction
 
 Event OnAnimationEvent(ObjectReference akSource, string asEventName)
-	if asEventName == "JumpUp"
-		debug.trace("[Seed] (Thirst) Player Jumped")
-		IncreaseThirst(0.1)
-	elseif asEventName == "PowerAttackStop" || asEventName == "00NextClip"
+	if asEventName == "PowerAttackStop" || asEventName == "00NextClip"
 		debug.trace("[Seed] (Thirst) Player PowerAttacked")
 		IncreaseThirst(0.25)
+		int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+		if mode >= 1 && mode <= 3
+			(_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).DisplayMeter()
+		endif
 	endif
 EndEvent
 
@@ -53,7 +58,10 @@ function PlayerHit(bool abBlocked)
 	if abBlocked
 		debug.trace("[Seed] (Thirst) Player Blocked Attack")
 		IncreaseThirst(0.1)
-		(_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).DisplayMeter()
+		int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+		if mode >= 1 && mode <= 2
+			(_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).DisplayMeter()
+		endif
 	endif
 endFunction
 
@@ -62,12 +70,19 @@ Event OnControlDown(string control)
 	debug.trace("[Seed] (Thirst) Player Sprinting")
 	RegisterForSingleUpdate(2)
 	IncreaseThirst(_Seed_ThirstActionRate.GetValue())
-	(_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).DisplayMeter()
+	int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+	if mode >= 1 && mode <= 3
+		(_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).DisplayMeter()
+	endif
 EndEvent
 
 Event OnUpdate()
 	if PlayerRef.IsSprinting()
 		IncreaseThirst(_Seed_ThirstActionRate.GetValue())
+		int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+		if mode >= 1 && mode <= 2
+			(_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).DisplayMeter()
+		endif
 		RegisterForSingleUpdate(2)
 	else
 		debug.trace("[Seed] (Thirst) Player Sprinting End")
@@ -92,6 +107,12 @@ Event OnUpdateGameTime()
 
     IncreaseThirst(thirst_increase)
     last_update_time = this_time
+
+    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+	if mode == 1
+		(_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).DisplayMeter()
+	endif
+
     if _Seed_VitalitySystemEnabled.GetValueInt() == 2
         RegisterForSingleUpdateGameTime(update_interval)
     endif
