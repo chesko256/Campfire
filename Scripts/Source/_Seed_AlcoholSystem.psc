@@ -6,13 +6,13 @@ GlobalVariable property _Seed_AlcoholSystemEnabled auto
 GlobalVariable property _Seed_AttributeDrunk auto
 GlobalVariable property _Seed_Setting_DrunkNotifications auto
 GlobalVariable property _Seed_Setting_DrunkVFX auto
+GlobalVariable property GameHour auto
 
-Spell property _Seed_DrunkSpell1 auto   ; Buzzed
-Spell property _Seed_DrunkSpell2 auto   ; Tipsy
-Spell property _Seed_DrunkSpell3 auto   ; Drunk
-; Flag as "Disease"
-Spell property _Seed_DrunkSpell4 auto   ; Very Drunk
-Spell property _Seed_DrunkSpellHungOver auto   ; Hung Over (after having passed out)
+Spell property _Seed_DrunkSpell1 auto          ; Relaxed
+Spell property _Seed_DrunkSpell2 auto          ; Tipsy
+Spell property _Seed_DrunkSpell3 auto          ; Drunk
+Spell property _Seed_DrunkSpell4 auto          ; Very Drunk (flag Disease)
+Spell property _Seed_DrunkSpellHungOver auto   ; Hung Over (after having passed out) (flag Disease)
 
 Actor property PlayerRef auto
 Keyword property ActorTypeUndead auto
@@ -25,27 +25,31 @@ int DRINKTYPE_ALE = 1
 int DRINKTYPE_WINE = 2
 int DRINKTYPE_LIQUOR = 3
 
-float ALE_AMOUNT = 20.0
-float WINE_AMOUNT = 30.0
-float LIQUOR_AMOUNT = 40.0
+float ALE_AMOUNT = 12.0
+float WINE_AMOUNT = 32.0
+float LIQUOR_AMOUNT = 52.0
+float AMOUNT_VARIANCE = 10.0
 
 float SOBER_RATE = 20.0
 
 float property update_interval = 0.5 auto hidden
 float property last_update_time auto hidden
 float last_drunk = 0.0
+float last_hangover_time
 
 function AlcoholConsumed(int drinktype)
     if _Seed_Setting_VampireBehavior.GetValueInt() == 2 && IsUndead()
         return
     endif
 
+    float variance = (RandomFloat(0.0, AMOUNT_VARIANCE) - (AMOUNT_VARIANCE / 2)) ; +/- half of Variance (random)
+
     if drinktype == DRINKTYPE_ALE
-        IncreaseDrunk(ALE_AMOUNT)
+        IncreaseDrunk(ALE_AMOUNT + variance)
     elseif drinktype == DRINKTYPE_WINE
-        IncreaseDrunk(WINE_AMOUNT)
+        IncreaseDrunk(WINE_AMOUNT + variance)
     elseif drinktype == DRINKTYPE_LIQUOR
-        IncreaseDrunk(LIQUOR_AMOUNT)
+        IncreaseDrunk(LIQUOR_AMOUNT + variance)
     endif
     if _Seed_AttributeDrunk.GetValue() > 20.0
         RegisterForSingleUpdateGameTime(0.5)
@@ -113,13 +117,13 @@ function ApplyDrunkEffects()
         increasing = true
     endif
 
-    if !(IsBetween(last_drunk, 20.0, 0.0)) && (IsBetween(drunk, 20.0, 0.0))
+    if !(IsBetween(last_drunk, 10.0, 0.0)) && (IsBetween(drunk, 10.0, 0.0))
         ApplyDrunkLevel1()
-    elseif !(IsBetween(last_drunk, 40.0, 20.0)) && (IsBetween(drunk, 40.0, 20.0))
+    elseif !(IsBetween(last_drunk, 30.0, 10.0)) && (IsBetween(drunk, 30.0, 10.0))
         ApplyDrunkLevel2(increasing)
-    elseif !(IsBetween(last_drunk, 60.0, 40.0)) && (IsBetween(drunk, 60.0, 40.0))
+    elseif !(IsBetween(last_drunk, 50.0, 30.0)) && (IsBetween(drunk, 50.0, 30.0))
         ApplyDrunkLevel3()
-    elseif !(IsBetween(last_drunk, 80.0, 60.0)) && (IsBetween(drunk, 80.0, 60.0))
+    elseif !(IsBetween(last_drunk, 80.0, 50.0)) && (IsBetween(drunk, 80.0, 50.0))
         ApplyDrunkLevel4()
     elseif !(IsBetween(last_drunk, 100.0, 80.0)) && (IsBetween(drunk, 100.0, 80.0))
         ApplyDrunkLevel5()
@@ -128,7 +132,18 @@ function ApplyDrunkEffects()
     endif
 
     last_drunk = drunk
+
+    ; For Drinking Contest quest
+    SendModEvent_PlayerDrinkAlcohol(_Seed_AttributeDrunk.GetValue())
 endFunction
+
+function SendModEvent_PlayerDrinkAlcohol(float afDrunkAmount)
+    int handle = ModEvent.Create("LastSeed_PlayerDrinkAlcohol")
+    if (handle)
+        ModEvent.PushFloat(handle, afDrunkAmount)
+        ModEvent.Send(handle)
+    endIf
+EndFunction
 
 function RemoveAllDrunkEffects()
     PlayerRef.RemoveSpell(_Seed_DrunkSpell1)
@@ -197,12 +212,18 @@ endFunction
 function ApplyDrunkLevel6()
     RemoveAllDrunkEffects()
     PlayerRef.AddSpell(_Seed_DrunkSpellHungOver, false)
+    
     if _Seed_Setting_DrunkNotifications.GetValueInt() == 2
         _Seed_DrunkLevel6Msg.Show()
     endif
-    ; pass out FX, kick them out of inn / tavern onto street
+    ; pass out FX
+    GameHour.SetValue(GameHour.GetValue() + 6.0)
+    if PlayerRef.GetCurrentLocation().HasKeyword(LocTypeInn)
+        KickPlayerOutOfInn()
+    endif
+    ; After time passes...
+    last_hungover_time = GetCurrentGameTime()
 endFunction
-
 
 bool function IsBetween(float fValue, float fUpperBound, float fLowerBound)
     if fValue <= fUpperBound && fValue > fLowerBound
@@ -210,4 +231,28 @@ bool function IsBetween(float fValue, float fUpperBound, float fLowerBound)
     else
         return false
     endif
+endFunction
+
+function KickPlayerOutOfInn()
+    ;@TODO: Support Retching Netch
+
+    ; Braidwood Inn
+    ; Candlehearth Hall (bed)
+    ; New Gnisis Cornerclub (bed)
+    ; Dead Man's Drink
+    ; Four Shields Tavern
+    ; Winking Skeever
+    ; Moorside Inn
+    ; Nightgate Inn (bed)
+    ; Windpeak Inn (bed)
+    ; Silverblood Inn
+    ; Old Hroldan Inn
+    ; Bee and Barb
+    ; Vilemyr Inn
+    ; Frostfruit Inn
+    ; Sleeping Giant Inn
+    ; Bannered Mare
+    ; Drunken Huntsman
+    ; Frozen Hearth (bed)
+
 endFunction
