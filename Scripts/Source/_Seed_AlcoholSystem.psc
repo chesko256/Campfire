@@ -255,22 +255,22 @@ endFunction
 function KickPlayerOutOfInn()
     ;@TODO: Support Retching Netch
     if loc == KynesgroveBraidwoodInnLocation
-    elseif loc == WindhelmCandlehearthHallLocation
-    elseif loc == WindhelmNewGnisisCornerclubLocation
+    elseif loc == WindhelmCandlehearthHallLocation ; bed
+    elseif loc == WindhelmNewGnisisCornerclubLocation ; bed
     elseif loc == FalkreathDeadMansDrinkLocation
     elseif loc == DragonBridgeFourShieldsTavernLocation
-    elseif loc == SolitudeWinkingSkeeverLocation
+    elseif loc == SolitudeWinkingSkeeverLocation ; check OCS support
     elseif loc == MorthalMoorsideInnLocation ; bed
     elseif loc == NightgateInnLocation ; bed
     elseif loc == DawnstarWindpeakInnLocation ; bed
-    elseif loc == MarkarthSilverBloodInnLocation
+    elseif loc == MarkarthSilverBloodInnLocation ; check OCS support
     elseif loc == OldHroldanInnLocation
-    elseif loc == RiftenBeeandBarbLocation
+    elseif loc == RiftenBeeandBarbLocation ; check OCS support
     elseif loc == IvarsteadVilemyrInnLocation
     elseif loc == RoriksteadFrostfruitInnLocation
     elseif loc == RiverwoodSleepingGiantInnLocation
-    elseif loc == WhiterunBanneredMareLocation
-    elseif loc == WhiterunDrunkenHuntsmanLocation
-    elseif loc == WinterholdTheFrozenHearthLocation
+    elseif loc == WhiterunBanneredMareLocation ; check OCS support
+    elseif loc == WhiterunDrunkenHuntsmanLocation ; check OCS support
+    elseif loc == WinterholdTheFrozenHearthLocation ; bed
     endif
 endFunction
