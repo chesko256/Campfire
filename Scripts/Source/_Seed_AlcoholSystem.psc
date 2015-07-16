@@ -4,13 +4,15 @@ import Utility
 
 GlobalVariable property _Seed_AlcoholSystemEnabled auto
 GlobalVariable property _Seed_AttributeDrunk auto
+GlobalVariable property _Seed_Setting_DrunkNotifications auto
+GlobalVariable property _Seed_Setting_DrunkVFX auto
 
-Spell property _Seed_DrunkSpell1 auto
-Spell property _Seed_DrunkSpell2 auto
-Spell property _Seed_DrunkSpell3 auto
-Spell property _Seed_DrunkSpell4 auto
-Spell property _Seed_DrunkSpell5 auto
-Spell property _Seed_DrunkSpell6 auto
+Spell property _Seed_DrunkSpell1 auto   ; Buzzed
+Spell property _Seed_DrunkSpell2 auto   ; Tipsy
+Spell property _Seed_DrunkSpell3 auto   ; Drunk
+; Flag as "Disease"
+Spell property _Seed_DrunkSpell4 auto   ; Very Drunk
+Spell property _Seed_DrunkSpellHungOver auto   ; Hung Over (after having passed out)
 
 Actor property PlayerRef auto
 Keyword property ActorTypeUndead auto
@@ -133,105 +135,72 @@ function RemoveAllDrunkEffects()
     PlayerRef.RemoveSpell(_Seed_DrunkSpell2)
     PlayerRef.RemoveSpell(_Seed_DrunkSpell3)
     PlayerRef.RemoveSpell(_Seed_DrunkSpell4)
-    PlayerRef.RemoveSpell(_Seed_DrunkSpell5)
-    PlayerRef.RemoveSpell(_Seed_DrunkSpell6)
 endFunction
 
 function ApplyDrunkLevel1()
     RemoveAllDrunkEffects()
-    PlayerRef.AddSpell(_Seed_DrunkSpell1, false)
-    if _Seed_Setting_Notifications.GetValueInt() == 2
+    if _Seed_Setting_DrunkNotifications.GetValueInt() == 2
         _Seed_DrunkLevel1Msg.Show()
     endif
-    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
-        ; play drunk SFX
-    endif
-    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
-        ; play drunk VFX
-    endif
+    ; clear SFX
+    ; clear VFX
 endFunction
 
 function ApplyDrunkLevel2(bool increasing)
     RemoveAllDrunkEffects()
-    PlayerRef.AddSpell(_Seed_DrunkSpell2, false)
-    ; suppress this message if hunger is increasing
-    if _Seed_Setting_Notifications.GetValueInt() == 2 && increasing
+    PlayerRef.AddSpell(_Seed_DrunkSpell1, false)
+    if _Seed_Setting_DrunkNotifications.GetValueInt() == 2
         _Seed_DrunkLevel2Msg.Show()
     endif
-    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
-        ; play drunk SFX
-    endif
-    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
+    ; play drunk SFX
+    if _Seed_Setting_DrunkVFX.GetValueInt() == 2
         ; play drunk VFX
     endif
 endFunction
 
 function ApplyDrunkLevel3()
     RemoveAllDrunkEffects()
-    PlayerRef.AddSpell(_Seed_DrunkSpell3, false)
-    if _Seed_Setting_Notifications.GetValueInt() == 2
+    PlayerRef.AddSpell(_Seed_DrunkSpell2, false)
+    if _Seed_Setting_DrunkNotifications.GetValueInt() == 2
         _Seed_DrunkLevel3Msg.Show()
     endif
-    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
-        ; play drunk SFX
-    endif
-    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
+    ; play drunk SFX
+    if _Seed_Setting_DrunkVFX.GetValueInt() == 2
         ; play drunk VFX
-    endif
-    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
-        ; play force feedback
     endif
 endFunction
 
 function ApplyDrunkLevel4()
     RemoveAllDrunkEffects()
-    PlayerRef.AddSpell(_Seed_DrunkSpell4, false)
-    if _Seed_Setting_Notifications.GetValueInt() == 2
+    PlayerRef.AddSpell(_Seed_DrunkSpell3, false)
+    if _Seed_Setting_DrunkNotifications.GetValueInt() == 2
         _Seed_DrunkLevel4Msg.Show()
     endif
-    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
-        ; play drunk SFX
-    endif
-    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
+    ; play drunk SFX
+    if _Seed_Setting_DrunkVFX.GetValueInt() == 2
         ; play drunk VFX
-    endif
-    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
-        ; play force feedback
     endif
 endFunction
 
 function ApplyDrunkLevel5()
     RemoveAllDrunkEffects()
-    PlayerRef.AddSpell(_Seed_DrunkSpell5, false)
-    if _Seed_Setting_Notifications.GetValueInt() == 2
+    PlayerRef.AddSpell(_Seed_DrunkSpell4, false)
+    if _Seed_Setting_DrunkNotifications.GetValueInt() == 2
         _Seed_DrunkLevel5Msg.Show()
     endif
-    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
-        ; play drunk SFX
-    endif
-    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
+    ; play drunk SFX
+    if _Seed_Setting_DrunkVFX.GetValueInt() == 2
         ; play drunk VFX
-    endif
-    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
-        ; play force feedback
     endif
 endFunction
 
 function ApplyDrunkLevel6()
     RemoveAllDrunkEffects()
-    PlayerRef.AddSpell(_Seed_DrunkSpell6, false)
-    if _Seed_Setting_Notifications.GetValueInt() == 2
+    PlayerRef.AddSpell(_Seed_DrunkSpellHungOver, false)
+    if _Seed_Setting_DrunkNotifications.GetValueInt() == 2
         _Seed_DrunkLevel6Msg.Show()
     endif
-    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
-        ; play drunk SFX
-    endif
-    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
-        ; play drunk VFX
-    endif
-    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
-        ; play force feedback
-    endif
+    ; pass out FX, kick them out of inn / tavern onto street
 endFunction
 
 
