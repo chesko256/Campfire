@@ -14,7 +14,6 @@ GlobalVariable property _Seed_Setting_NeedsMeterDisplayMode auto
 GlobalVariable property _Seed_Setting_NeedsSFX auto
 GlobalVariable property _Seed_Setting_NeedsVFX auto
 GlobalVariable property _Seed_Setting_NeedsForceFeedback auto
-GlobalVariable property _Seed_Setting_NeedsAffectsRegeneration auto
 
 Spell property _Seed_HungerSpell1 auto
 Spell property _Seed_HungerSpell2 auto
@@ -22,12 +21,6 @@ Spell property _Seed_HungerSpell3 auto
 Spell property _Seed_HungerSpell4 auto
 Spell property _Seed_HungerSpell5 auto
 Spell property _Seed_HungerSpell6 auto
-Spell property _Seed_HungerSpell1SkillsOnly auto
-Spell property _Seed_HungerSpell2SkillsOnly auto
-Spell property _Seed_HungerSpell3SkillsOnly auto
-Spell property _Seed_HungerSpell4SkillsOnly auto
-Spell property _Seed_HungerSpell5SkillsOnly auto
-Spell property _Seed_HungerSpell6SkillsOnly auto
 
 Message property _Seed_HungerLevel1Msg auto
 Message property _Seed_HungerLevel2Msg auto
@@ -216,21 +209,11 @@ function RemoveAllHungerEffects()
     PlayerRef.RemoveSpell(_Seed_HungerSpell4)
     PlayerRef.RemoveSpell(_Seed_HungerSpell5)
     PlayerRef.RemoveSpell(_Seed_HungerSpell6)
-    PlayerRef.RemoveSpell(_Seed_HungerSpell1SkillsOnly)
-    PlayerRef.RemoveSpell(_Seed_HungerSpell2SkillsOnly)
-    PlayerRef.RemoveSpell(_Seed_HungerSpell3SkillsOnly)
-    PlayerRef.RemoveSpell(_Seed_HungerSpell4SkillsOnly)
-    PlayerRef.RemoveSpell(_Seed_HungerSpell5SkillsOnly)
-    PlayerRef.RemoveSpell(_Seed_HungerSpell6SkillsOnly)
 endFunction
 
 function ApplyHungerLevel1()
     RemoveAllHungerEffects()
-    if _Seed_Setting_NeedsAffectsRegeneration.GetValueInt() == 2
-        PlayerRef.AddSpell(_Seed_HungerSpell1, false)
-    else
-        PlayerRef.AddSpell(_Seed_HungerSpell1SkillsOnly, false)
-    endif
+    PlayerRef.AddSpell(_Seed_HungerSpell1, false)
     if _Seed_Setting_Notifications.GetValueInt() == 2
         _Seed_HungerLevel1Msg.Show()
     endif
@@ -248,11 +231,7 @@ endFunction
 
 function ApplyHungerLevel2(bool increasing)
     RemoveAllHungerEffects()
-    if _Seed_Setting_NeedsAffectsRegeneration.GetValueInt() == 2
-        PlayerRef.AddSpell(_Seed_HungerSpell2, false)
-    else
-        PlayerRef.AddSpell(_Seed_HungerSpell2SkillsOnly, false)
-    endif
+    PlayerRef.AddSpell(_Seed_HungerSpell2, false)
     ; suppress this message if hunger is increasing
     if _Seed_Setting_Notifications.GetValueInt() == 2 && increasing
         _Seed_HungerLevel2Msg.Show()
@@ -271,11 +250,7 @@ endFunction
 
 function ApplyHungerLevel3()
     RemoveAllHungerEffects()
-    if _Seed_Setting_NeedsAffectsRegeneration.GetValueInt() == 2
-        PlayerRef.AddSpell(_Seed_HungerSpell3, false)
-    else
-        PlayerRef.AddSpell(_Seed_HungerSpell3SkillsOnly, false)
-    endif
+    PlayerRef.AddSpell(_Seed_HungerSpell3, false)
     if _Seed_Setting_Notifications.GetValueInt() == 2
         _Seed_HungerLevel3Msg.Show()
     endif
@@ -296,11 +271,7 @@ endFunction
 
 function ApplyHungerLevel4()
     RemoveAllHungerEffects()
-    if _Seed_Setting_NeedsAffectsRegeneration.GetValueInt() == 2
-        PlayerRef.AddSpell(_Seed_HungerSpell4, false)
-    else
-        PlayerRef.AddSpell(_Seed_HungerSpell1SkillsOnly, false)
-    endif
+    PlayerRef.AddSpell(_Seed_HungerSpell4, false)
     if _Seed_Setting_Notifications.GetValueInt() == 2
         _Seed_HungerLevel4Msg.Show()
     endif
@@ -321,11 +292,7 @@ endFunction
 
 function ApplyHungerLevel5()
     RemoveAllHungerEffects()
-    if _Seed_Setting_NeedsAffectsRegeneration.GetValueInt() == 2
-        PlayerRef.AddSpell(_Seed_HungerSpell5, false)
-    else
-        PlayerRef.AddSpell(_Seed_HungerSpell1SkillsOnly, false)
-    endif
+    PlayerRef.AddSpell(_Seed_HungerSpell5, false)
     if _Seed_Setting_Notifications.GetValueInt() == 2
         _Seed_HungerLevel5Msg.Show()
     endif
@@ -346,11 +313,7 @@ endFunction
 
 function ApplyHungerLevel6()
     RemoveAllHungerEffects()
-    if _Seed_Setting_NeedsAffectsRegeneration.GetValueInt() == 2
-        PlayerRef.AddSpell(_Seed_HungerSpell6, false)
-    else
-        PlayerRef.AddSpell(_Seed_HungerSpell1SkillsOnly, false)
-    endif
+    PlayerRef.AddSpell(_Seed_HungerSpell6, false)
     if _Seed_Setting_Notifications.GetValueInt() == 2
         _Seed_HungerLevel6Msg.Show()
     endif

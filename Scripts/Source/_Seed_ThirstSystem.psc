@@ -15,7 +15,6 @@ GlobalVariable property _Seed_Setting_NeedsMeterDisplayMode auto
 GlobalVariable property _Seed_Setting_NeedsSFX auto
 GlobalVariable property _Seed_Setting_NeedsVFX auto
 GlobalVariable property _Seed_Setting_NeedsForceFeedback auto
-GlobalVariable property _Seed_Setting_NeedsAffectsRegeneration auto
 
 Spell property _Seed_ThirstSpell1 auto
 Spell property _Seed_ThirstSpell2 auto
@@ -23,12 +22,6 @@ Spell property _Seed_ThirstSpell3 auto
 Spell property _Seed_ThirstSpell4 auto
 Spell property _Seed_ThirstSpell5 auto
 Spell property _Seed_ThirstSpell6 auto
-Spell property _Seed_ThirstSpell1SkillsOnly auto
-Spell property _Seed_ThirstSpell2SkillsOnly auto
-Spell property _Seed_ThirstSpell3SkillsOnly auto
-Spell property _Seed_ThirstSpell4SkillsOnly auto
-Spell property _Seed_ThirstSpell5SkillsOnly auto
-Spell property _Seed_ThirstSpell6SkillsOnly auto
 
 Message property _Seed_ThirstLevel1Msg auto
 Message property _Seed_ThirstLevel2Msg auto
@@ -220,21 +213,11 @@ function RemoveAllThirstEffects()
     PlayerRef.RemoveSpell(_Seed_ThirstSpell4)
     PlayerRef.RemoveSpell(_Seed_ThirstSpell5)
     PlayerRef.RemoveSpell(_Seed_ThirstSpell6)
-    PlayerRef.RemoveSpell(_Seed_ThirstSpell1SkillsOnly)
-    PlayerRef.RemoveSpell(_Seed_ThirstSpell2SkillsOnly)
-    PlayerRef.RemoveSpell(_Seed_ThirstSpell3SkillsOnly)
-    PlayerRef.RemoveSpell(_Seed_ThirstSpell4SkillsOnly)
-    PlayerRef.RemoveSpell(_Seed_ThirstSpell5SkillsOnly)
-    PlayerRef.RemoveSpell(_Seed_ThirstSpell6SkillsOnly)
 endFunction
 
 function ApplyThirstLevel1()
     RemoveAllThirstEffects()
-    if _Seed_Setting_NeedsAffectsRegeneration.GetValueInt() == 2
-        PlayerRef.AddSpell(_Seed_ThirstSpell1, false)
-    else
-        PlayerRef.AddSpell(_Seed_ThirstSpell1SkillsOnly, false)
-    endif
+    PlayerRef.AddSpell(_Seed_ThirstSpell1, false)
     if _Seed_Setting_Notifications.GetValueInt() == 2
         _Seed_ThirstLevel1Msg.Show()
     endif
@@ -252,11 +235,7 @@ endFunction
 
 function ApplyThirstLevel2(bool increasing)
     RemoveAllThirstEffects()
-    if _Seed_Setting_NeedsAffectsRegeneration.GetValueInt() == 2
-        PlayerRef.AddSpell(_Seed_ThirstSpell2, false)
-    else
-        PlayerRef.AddSpell(_Seed_ThirstSpell2SkillsOnly, false)
-    endif
+    PlayerRef.AddSpell(_Seed_ThirstSpell2, false)
     ; suppress this message if thirst is increasing
     if _Seed_Setting_Notifications.GetValueInt() == 2 && increasing
         _Seed_ThirstLevel2Msg.Show()
@@ -275,11 +254,7 @@ endFunction
 
 function ApplyThirstLevel3()
     RemoveAllThirstEffects()
-    if _Seed_Setting_NeedsAffectsRegeneration.GetValueInt() == 2
-        PlayerRef.AddSpell(_Seed_ThirstSpell3, false)
-    else
-        PlayerRef.AddSpell(_Seed_ThirstSpell3SkillsOnly, false)
-    endif
+    PlayerRef.AddSpell(_Seed_ThirstSpell3, false)
     if _Seed_Setting_Notifications.GetValueInt() == 2
         _Seed_ThirstLevel3Msg.Show()
     endif
@@ -300,11 +275,7 @@ endFunction
 
 function ApplyThirstLevel4()
     RemoveAllThirstEffects()
-    if _Seed_Setting_NeedsAffectsRegeneration.GetValueInt() == 2
-        PlayerRef.AddSpell(_Seed_ThirstSpell4, false)
-    else
-        PlayerRef.AddSpell(_Seed_ThirstSpell1SkillsOnly, false)
-    endif
+    PlayerRef.AddSpell(_Seed_ThirstSpell4, false)
     if _Seed_Setting_Notifications.GetValueInt() == 2
         _Seed_ThirstLevel4Msg.Show()
     endif
@@ -325,11 +296,7 @@ endFunction
 
 function ApplyThirstLevel5()
     RemoveAllThirstEffects()
-    if _Seed_Setting_NeedsAffectsRegeneration.GetValueInt() == 2
-        PlayerRef.AddSpell(_Seed_ThirstSpell5, false)
-    else
-        PlayerRef.AddSpell(_Seed_ThirstSpell1SkillsOnly, false)
-    endif
+    PlayerRef.AddSpell(_Seed_ThirstSpell5, false)
     if _Seed_Setting_Notifications.GetValueInt() == 2
         _Seed_ThirstLevel5Msg.Show()
     endif
@@ -350,11 +317,7 @@ endFunction
 
 function ApplyThirstLevel6()
     RemoveAllThirstEffects()
-    if _Seed_Setting_NeedsAffectsRegeneration.GetValueInt() == 2
-        PlayerRef.AddSpell(_Seed_ThirstSpell6, false)
-    else
-        PlayerRef.AddSpell(_Seed_ThirstSpell1SkillsOnly, false)
-    endif
+    PlayerRef.AddSpell(_Seed_ThirstSpell6, false)
     if _Seed_Setting_Notifications.GetValueInt() == 2
         _Seed_ThirstLevel6Msg.Show()
     endif
