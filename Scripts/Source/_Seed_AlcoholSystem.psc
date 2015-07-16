@@ -14,6 +14,25 @@ Spell property _Seed_DrunkSpell3 auto          ; Drunk
 Spell property _Seed_DrunkSpell4 auto          ; Very Drunk (flag Disease)
 Spell property _Seed_DrunkSpellHungOver auto   ; Hung Over (after having passed out) (flag Disease)
 
+Location property KynesgroveBraidwoodInnLocation auto
+Location property WindhelmCandlehearthHallLocation auto
+Location property WindhelmNewGnisisCornerclubLocation auto
+Location property FalkreathDeadMansDrinkLocation auto
+Location property DragonBridgeFourShieldsTavernLocation auto
+Location property SolitudeWinkingSkeeverLocation auto
+Location property MorthalMoorsideInnLocation auto
+Location property NightgateInnLocation auto
+Location property DawnstarWindpeakInnLocation auto
+Location property MarkarthSilverBloodInnLocation auto
+Location property OldHroldanInnLocation auto
+Location property RiftenBeeandBarbLocation auto
+Location property IvarsteadVilemyrInnLocation auto
+Location property RoriksteadFrostfruitInnLocation auto
+Location property RiverwoodSleepingGiantInnLocation auto
+Location property WhiterunBanneredMareLocation auto
+Location property WhiterunDrunkenHuntsmanLocation auto
+Location property WinterholdTheFrozenHearthLocation auto
+
 Actor property PlayerRef auto
 Keyword property ActorTypeUndead auto
 Keyword property ImmuneParalysis auto
@@ -235,24 +254,23 @@ endFunction
 
 function KickPlayerOutOfInn()
     ;@TODO: Support Retching Netch
-
-    ; Braidwood Inn
-    ; Candlehearth Hall (bed)
-    ; New Gnisis Cornerclub (bed)
-    ; Dead Man's Drink
-    ; Four Shields Tavern
-    ; Winking Skeever
-    ; Moorside Inn
-    ; Nightgate Inn (bed)
-    ; Windpeak Inn (bed)
-    ; Silverblood Inn
-    ; Old Hroldan Inn
-    ; Bee and Barb
-    ; Vilemyr Inn
-    ; Frostfruit Inn
-    ; Sleeping Giant Inn
-    ; Bannered Mare
-    ; Drunken Huntsman
-    ; Frozen Hearth (bed)
-
+    if loc == KynesgroveBraidwoodInnLocation
+    elseif loc == WindhelmCandlehearthHallLocation
+    elseif loc == WindhelmNewGnisisCornerclubLocation
+    elseif loc == FalkreathDeadMansDrinkLocation
+    elseif loc == DragonBridgeFourShieldsTavernLocation
+    elseif loc == SolitudeWinkingSkeeverLocation
+    elseif loc == MorthalMoorsideInnLocation ; bed
+    elseif loc == NightgateInnLocation ; bed
+    elseif loc == DawnstarWindpeakInnLocation ; bed
+    elseif loc == MarkarthSilverBloodInnLocation
+    elseif loc == OldHroldanInnLocation
+    elseif loc == RiftenBeeandBarbLocation
+    elseif loc == IvarsteadVilemyrInnLocation
+    elseif loc == RoriksteadFrostfruitInnLocation
+    elseif loc == RiverwoodSleepingGiantInnLocation
+    elseif loc == WhiterunBanneredMareLocation
+    elseif loc == WhiterunDrunkenHuntsmanLocation
+    elseif loc == WinterholdTheFrozenHearthLocation
+    endif
 endFunction
