@@ -13,6 +13,28 @@ GlobalVariable property _Seed_FatigueActionRateExpertSpells auto 		; Default - 2
 GlobalVariable property _Seed_FatigueActionRateAdeptSpells auto 		; Default - 1.0
 GlobalVariable property _Seed_FatigueActionRateApprenticeSpells auto 	; Default - 0.5
 GlobalVariable property _Seed_Setting_VampireBehavior auto
+GlobalVariable property _Seed_Setting_Notifications auto
+GlobalVariable property _Seed_Setting_NeedsMeterDisplayMode auto
+GlobalVariable property _Seed_Setting_NeedsSFX auto
+GlobalVariable property _Seed_Setting_NeedsVFX auto
+GlobalVariable property _Seed_Setting_NeedsForceFeedback auto
+
+Spell property _Seed_FatigueSpell1 auto
+Spell property _Seed_FatigueSpell2 auto
+Spell property _Seed_FatigueSpell3 auto
+Spell property _Seed_FatigueSpell4 auto
+Spell property _Seed_FatigueSpell5 auto
+Spell property _Seed_FatigueSpell6 auto
+
+Message property _Seed_FatigueLevel1Msg auto
+Message property _Seed_FatigueLevel2Msg auto
+Message property _Seed_FatigueLevel3Msg auto
+Message property _Seed_FatigueLevel4Msg auto
+Message property _Seed_FatigueLevel5Msg auto
+Message property _Seed_FatigueLevel6Msg auto
+
+Quest property _Seed_FatigueMeterQuest auto
+
 Actor property PlayerRef auto
 Keyword property ActorTypeUndead auto
 Keyword property ImmuneParalysis auto
@@ -46,6 +68,10 @@ Event OnTrackedStatsEvent(string arStatName, int aiStatValue)
 		debug.trace("[Seed] (Fatigue) Lock Picked")
 		locks_picked = aiStatValue
 		IncreaseFatigue(1.0)
+		int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+		if mode >= 1 && mode <= 2
+        	(_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter()
+    	endif
 	endif
 EndEvent
 
@@ -53,6 +79,10 @@ Event OnActorAction(int actionType, Actor akActor, Form source, int slot)
 	if akActor == PlayerRef
 		debug.trace("[Seed] (Fatigue) Archery Attack")
 		IncreaseFatigue(0.2)
+		int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+		if mode >= 1 && mode <= 2
+        	(_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter()
+    	endif
 	endif
 EndEvent
 
@@ -73,6 +103,12 @@ Event OnUpdateGameTime()
 	
     IncreaseFatigue(fatigue_increase)
     last_update_time = this_time
+
+    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+    if mode == 1
+        (_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter()
+    endif
+
     if _Seed_VitalitySystemEnabled.GetValueInt() == 2
         RegisterForSingleUpdateGameTime(update_interval)
     endif
@@ -90,8 +126,7 @@ Event OnSleepStop(bool abInterrupted)
 EndEvent
 
 function SpellCast(Spell akSpell)
-	;@TODO: Player ReferenceAlias needs to call this from OnSpellCast().
-	;@TODO: Increase Fatigue during concentration spell cast.
+	;@TODO: Increase Fatigue during concentration spell cast
 	if akSpell
 		int mag_level = (akSpell.GetNthEffectMagicEffect(akSpell.GetCostliestEffectIndex())).GetSkillLevel()
 		if mag_level >= 100
@@ -102,9 +137,13 @@ function SpellCast(Spell akSpell)
 			IncreaseFatigue(_Seed_FatigueActionRateAdeptSpells.GetValue())
 		elseif mag_level >= 25
 			IncreaseFatigue(_Seed_FatigueActionRateApprenticeSpells.GetValue())
-		else
-			return
+		elseif mag_level < 25
+			IncreaseFatigue(_Seed_FatigueActionRateNoviceSpells.GetValue())
 		endif
+		int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+		if mode >= 1 && mode <= 3
+        	(_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter()
+    	endif
 	endif
 endFunction
 
@@ -115,6 +154,7 @@ function IncreaseFatigue(float amount)
 	else
 		_Seed_AttributeFatigue.SetValue(current_fatigue + amount)
 	endif
+	(_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).UpdateMeter((120.0 - _Seed_AttributeFatigue.GetValue()) / 120)
 endFunction
 
 function DecreaseFatigue(float amount)
@@ -124,6 +164,7 @@ function DecreaseFatigue(float amount)
 	else
 		_Seed_AttributeFatigue.SetValue(current_fatigue - amount)
 	endif
+	(_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).UpdateMeter((120.0 - _Seed_AttributeFatigue.GetValue()) / 120)
 endFunction
 
 function ModFatigue(float amount)
@@ -135,6 +176,7 @@ function ModFatigue(float amount)
 	else
 		_Seed_AttributeFatigue.SetValue(current_fatigue + amount)
 	endif
+	(_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).UpdateMeter((120.0 - _Seed_AttributeFatigue.GetValue()) / 120)
 endFunction
 
 bool function IsUndead()
@@ -144,4 +186,167 @@ bool function IsUndead()
 	else
 		return false
 	endif
+endFunction
+
+function ApplyFatigueEffects()
+    float fatigue = _Seed_AttributeFatigue.GetValue()
+    bool increasing = false
+    if fatigue > last_fatigue
+        increasing = true
+    endif
+
+    if !(IsBetween(last_fatigue, 20.0, 0.0)) && (IsBetween(fatigue, 20.0, 0.0))
+        ApplyFatigueLevel1()
+    elseif !(IsBetween(last_fatigue, 40.0, 20.0)) && (IsBetween(fatigue, 40.0, 20.0))
+        ApplyFatigueLevel2(increasing)
+    elseif !(IsBetween(last_fatigue, 60.0, 40.0)) && (IsBetween(fatigue, 60.0, 40.0))
+        ApplyFatigueLevel3()
+    elseif !(IsBetween(last_fatigue, 80.0, 60.0)) && (IsBetween(fatigue, 80.0, 60.0))
+        ApplyFatigueLevel4()
+    elseif !(IsBetween(last_fatigue, 100.0, 80.0)) && (IsBetween(fatigue, 100.0, 80.0))
+        ApplyFatigueLevel5()
+    elseif !(IsBetween(last_fatigue, 120.0, 100.0)) && (IsBetween(fatigue, 120.0, 100.0))
+        ApplyFatigueLevel6()
+    endif
+
+    last_fatigue = fatigue
+endFunction
+
+function RemoveAllFatigueEffects()
+    PlayerRef.RemoveSpell(_Seed_FatigueSpell1)
+    PlayerRef.RemoveSpell(_Seed_FatigueSpell2)
+    PlayerRef.RemoveSpell(_Seed_FatigueSpell3)
+    PlayerRef.RemoveSpell(_Seed_FatigueSpell4)
+    PlayerRef.RemoveSpell(_Seed_FatigueSpell5)
+    PlayerRef.RemoveSpell(_Seed_FatigueSpell6)
+endFunction
+
+function ApplyFatigueLevel1()
+    RemoveAllFatigueEffects()
+    PlayerRef.AddSpell(_Seed_FatigueSpell1, false)
+    if _Seed_Setting_Notifications.GetValueInt() == 2
+        _Seed_FatigueLevel1Msg.Show()
+    endif
+    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
+        ; play needs SFX
+    endif
+    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
+        ; play needs VFX
+    endif
+    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+    if mode >= 1 && mode <= 4
+        (_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter()
+    endif
+endFunction
+
+function ApplyFatigueLevel2(bool increasing)
+    RemoveAllFatigueEffects()
+    PlayerRef.AddSpell(_Seed_FatigueSpell2, false)
+    ; suppress this message if fatigue is increasing
+    if _Seed_Setting_Notifications.GetValueInt() == 2 && increasing
+        _Seed_FatigueLevel2Msg.Show()
+    endif
+    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
+        ; play needs SFX
+    endif
+    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
+        ; play needs VFX
+    endif
+    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+    if mode >= 1 && mode <= 4
+        (_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter()
+    endif
+endFunction
+
+function ApplyFatigueLevel3()
+    RemoveAllFatigueEffects()
+    PlayerRef.AddSpell(_Seed_FatigueSpell3, false)
+    if _Seed_Setting_Notifications.GetValueInt() == 2
+        _Seed_FatigueLevel3Msg.Show()
+    endif
+    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
+        ; play needs SFX
+    endif
+    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
+        ; play needs VFX
+    endif
+    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
+        ; play force feedback
+    endif
+    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+    if mode >= 1 && mode <= 4
+        (_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter()
+    endif
+endFunction
+
+function ApplyFatigueLevel4()
+    RemoveAllFatigueEffects()
+    PlayerRef.AddSpell(_Seed_FatigueSpell4, false)
+    if _Seed_Setting_Notifications.GetValueInt() == 2
+        _Seed_FatigueLevel4Msg.Show()
+    endif
+    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
+        ; play needs SFX
+    endif
+    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
+        ; play needs VFX
+    endif
+    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
+        ; play force feedback
+    endif
+    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+    if mode >= 1 && mode <= 4
+        (_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter()
+    endif
+endFunction
+
+function ApplyFatigueLevel5()
+    RemoveAllFatigueEffects()
+    PlayerRef.AddSpell(_Seed_FatigueSpell5, false)
+    if _Seed_Setting_Notifications.GetValueInt() == 2
+        _Seed_FatigueLevel5Msg.Show()
+    endif
+    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
+        ; play needs SFX
+    endif
+    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
+        ; play needs VFX
+    endif
+    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
+        ; play force feedback
+    endif
+    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+    if mode >= 1 && mode <= 4
+        (_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter(true)
+    endif
+endFunction
+
+function ApplyFatigueLevel6()
+    RemoveAllFatigueEffects()
+    PlayerRef.AddSpell(_Seed_FatigueSpell6, false)
+    if _Seed_Setting_Notifications.GetValueInt() == 2
+        _Seed_FatigueLevel6Msg.Show()
+    endif
+    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
+        ; play needs SFX
+    endif
+    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
+        ; play needs VFX
+    endif
+    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
+        ; play force feedback
+    endif
+    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
+    if mode >= 1 && mode <= 4
+        (_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter(true)
+    endif
+endFunction
+
+
+bool function IsBetween(float fValue, float fUpperBound, float fLowerBound)
+    if fValue <= fUpperBound && fValue > fLowerBound
+        return true
+    else
+        return false
+    endif
 endFunction
