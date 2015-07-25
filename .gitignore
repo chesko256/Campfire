@@ -100,6 +100,9 @@
 !textures/frostfall/*
 !textures/lastseed/*
 !textures/lastseed/PSDs/*
+!textures/lastseed/food/*
+!textures/lastseed/old_backup/*
+!textures/lastseed/old_backup/PSDs/*
 
 #Working / raw files
 !WorkingFiles/*
