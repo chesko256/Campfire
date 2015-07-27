@@ -49,7 +49,7 @@ float WINE_AMOUNT = 32.0
 float LIQUOR_AMOUNT = 52.0
 float AMOUNT_VARIANCE = 10.0
 
-float SOBER_RATE = 20.0
+float SOBER_RATE = 10.0
 
 float property update_interval = 0.5 auto hidden
 float property last_update_time auto hidden
