@@ -218,6 +218,7 @@ Activator property _Camp_Campfire_Steam auto
 Static property _Camp_CampfireCookPotSnapMarker auto
 Sound property FXFireOut auto
 Message property _Camp_Campfire_Menu auto
+Message property _Camp_Campfire_SkillMenu auto
 Message property _Camp_Campfire_SitError auto
 Actor property PlayerRef auto
 GlobalVariable property _Camp_LastUsedCampfireSize auto
@@ -263,6 +264,9 @@ ObjectReference property mySitFurniture3Future auto hidden
 ObjectReference property mySitFurniture4Future auto hidden
 ObjectReference property myCookPotSnapMarkerFuture auto hidden
 
+;@TODO: Delete
+Activator property _Camp_PerkNodeControllerTest auto
+
 int EMBERS_DURATION = 4
 int ASH_DURATION = 24
 
@@ -285,6 +289,10 @@ function Initialize()
 endFunction
 
 Event OnActivate(ObjectReference akActionRef)
+    DoActivate(akActionRef)
+EndEvent
+
+function DoActivate(ObjectReference akActionRef)
     SetLastUsedCampfire(self)
     _Camp_LastUsedCampfireSize.SetValueInt(campfire_size)
     _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
@@ -339,10 +347,15 @@ Event OnActivate(ObjectReference akActionRef)
             ;Destroy
             TakeDown()
         elseif i == 3
+            bool b = ShowSkills()
+            if !b
+                DoActivate(akActionRef)
+            endif
+        elseif i == 4
             ;Cancel
         endif
     endif
-endEvent
+endFunction
 
 Event OnCellDetach()
     if eligible_for_deletion
@@ -576,6 +589,25 @@ function SitDown()
     else
         ;There is nowhere to sit.
         _Camp_Campfire_SitError.Show()
+    endif
+endFunction
+
+bool function ShowSkills()
+    if campfire_stage == 2
+        int i = _Camp_Campfire_SkillMenu.Show()
+        if i == 0
+            self.PlaceAtMe(_Camp_PerkNodeControllerTest)
+        elseif i == 1
+            ; Endurance
+        elseif i == 2
+            ; Provisioning
+        elseif i == 3
+            ; Fishing
+        endif
+        return true
+    else
+        debug.notification("Your campfire must be lit to use this.")
+        return false
     endif
 endFunction
 

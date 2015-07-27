@@ -1,8 +1,8 @@
 scriptname _Camp_PerkNode extends ObjectReference
 
-int property max_rank auto
 int property current_rank auto hidden
 GlobalVariable property perk_global auto
+GlobalVariable property perk_max_rank_global auto
 message property perk_description_eligible auto
 message property perk_description_ineligible auto
 ObjectReference property downstream_node_1_ref auto hidden
@@ -19,26 +19,30 @@ Event OnInit()
     ; Precache the perk rank.
     current_rank = perk_global.GetValueInt()
     if current_rank > 0
-        ; Play animation
+        self.PlayAnimation("Unlock")
     endif
-
-    (controller as _Camp_PerkNodeControllerBehavior).AssignDownstreamNodes(self)
-    UpdateLines()
 EndEvent
-
-function IncreasePerkRank()
-    current_rank = akNode.perk_global.GetValueInt()
-    if current_rank < akNode.max_rank
-        current_rank += 1
-        akNode.perk_global.SetValueInt(current_rank)
-        ; Play animation
-        UpdateLines()
-    endif
-endFunction
 
 Event OnActivate(ObjectReference akActionRef)
     (controller as _Camp_PerkNodeControllerBehavior).NodeActivated(self)
 EndEvent
+
+function AssignController(ObjectReference akController)
+    controller = akController
+    AssignDownstreamNodes()
+    UpdateLines()
+endFunction
+
+function IncreasePerkRank()
+    current_rank = perk_global.GetValueInt()
+    if current_rank < perk_max_rank_global.GetValueInt()
+        current_rank += 1
+        perk_global.SetValueInt(current_rank)
+        self.PlayAnimation("Unlock")
+        ;@TODO: Play SFX
+        UpdateLines()
+    endif
+endFunction
 
 function UpdateLines()
     if current_rank > 0
@@ -54,58 +58,16 @@ endFunction
 function AssignDownstreamNodes()
     _Camp_PerkNodeController ctrlr = controller as _Camp_PerkNodeController
     if downstream_node_1
-        if downstream_node_1 == ctrlr.PerkNode0
-            downstream_node_1_ref = ctrlr.myPerkNode0
-        elseif downstream_node_1 == ctrlr.PerkNode1
-            downstream_node_1_ref = ctrlr.myPerkNode1
-        elseif downstream_node_1 == ctrlr.PerkNode2
-            downstream_node_1_ref = ctrlr.myPerkNode2
-        elseif downstream_node_1 == ctrlr.PerkNode3
-            downstream_node_1_ref = ctrlr.myPerkNode3
-        elseif downstream_node_1 == ctrlr.PerkNode4
-            downstream_node_1_ref = ctrlr.myPerkNode4
-        elseif downstream_node_1 == ctrlr.PerkNode5
-            downstream_node_1_ref = ctrlr.myPerkNode5
-        elseif downstream_node_1 == ctrlr.PerkNode6
-            downstream_node_1_ref = ctrlr.myPerkNode6
-        elseif downstream_node_1 == ctrlr.PerkNode7
-            downstream_node_1_ref = ctrlr.myPerkNode7
-        elseif downstream_node_1 == ctrlr.PerkNode8
-            downstream_node_1_ref = ctrlr.myPerkNode8
-        elseif downstream_node_1 == ctrlr.PerkNode9
-            downstream_node_1_ref = ctrlr.myPerkNode9
-        elseif downstream_node_1 == ctrlr.PerkNode10
-            downstream_node_1_ref = ctrlr.myPerkNode10
-        elseif downstream_node_1 == ctrlr.PerkNode11
-            downstream_node_1_ref = ctrlr.myPerkNode11
+        int idx = ctrlr.NodeActMap.Find(downstream_node_1)
+        if idx != -1
+            downstream_node_1_ref = ctrlr.NodeRefMap[idx]
         endif
     endif
 
     if downstream_node_2
-        if downstream_node_2 == ctrlr.PerkNode0
-            downstream_node_2_ref = ctrlr.myPerkNode0
-        elseif downstream_node_2 == ctrlr.PerkNode1
-            downstream_node_2_ref = ctrlr.myPerkNode1
-        elseif downstream_node_2 == ctrlr.PerkNode2
-            downstream_node_2_ref = ctrlr.myPerkNode2
-        elseif downstream_node_2 == ctrlr.PerkNode3
-            downstream_node_2_ref = ctrlr.myPerkNode3
-        elseif downstream_node_2 == ctrlr.PerkNode4
-            downstream_node_2_ref = ctrlr.myPerkNode4
-        elseif downstream_node_2 == ctrlr.PerkNode5
-            downstream_node_2_ref = ctrlr.myPerkNode5
-        elseif downstream_node_2 == ctrlr.PerkNode6
-            downstream_node_2_ref = ctrlr.myPerkNode6
-        elseif downstream_node_2 == ctrlr.PerkNode7
-            downstream_node_2_ref = ctrlr.myPerkNode7
-        elseif downstream_node_2 == ctrlr.PerkNode8
-            downstream_node_2_ref = ctrlr.myPerkNode8
-        elseif downstream_node_2 == ctrlr.PerkNode9
-            downstream_node_2_ref = ctrlr.myPerkNode9
-        elseif downstream_node_2 == ctrlr.PerkNode10
-            downstream_node_2_ref = ctrlr.myPerkNode10
-        elseif downstream_node_2 == ctrlr.PerkNode11
-            downstream_node_2_ref = ctrlr.myPerkNode11
+        int idx = ctrlr.NodeActMap.Find(downstream_node_2)
+        if idx != -1
+            downstream_node_2_ref = ctrlr.NodeRefMap[idx]
         endif
     endif
 endFunction

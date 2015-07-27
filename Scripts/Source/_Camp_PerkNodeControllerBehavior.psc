@@ -1,5 +1,7 @@
 scriptname _Camp_PerkNodeControllerBehavior extends _Camp_PerkNodeController
 
+message property _Camp_PerkGeneral_UpgradeVerify auto
+
 function Update()
     CheckPlayerProximity()
 endFunction
@@ -16,10 +18,10 @@ function NodeActivated(ObjectReference akNodeRef)
     _Camp_PerkNode dsnode1 = None
     _Camp_PerkNode dsnode2 = None
     if node.downstream_node_1
-        dsnode1 = node.downstream_node_1 as _Camp_PerkNode
+        dsnode1 = node.downstream_node_1_ref as _Camp_PerkNode
     endif
     if node.downstream_node_2
-        dsnode2 = node.downstream_node_2 as _Camp_PerkNode
+        dsnode2 = node.downstream_node_2_ref as _Camp_PerkNode
     endif
 
     bool is_starting_node = false
@@ -34,7 +36,7 @@ function NodeActivated(ObjectReference akNodeRef)
     endif
 
     bool below_max_rank = false
-    if node.perk_global.GetValueInt() < node.max_rank
+    if node.perk_global.GetValueInt() < node.perk_max_rank_global.GetValueInt()
         below_max_rank = true
     endif
 
@@ -55,12 +57,14 @@ endFunction
 
 function ShowPerkDescription(_Camp_PerkNode akPerkNode, bool abEligibleForIncrease = false)
     if abEligibleForIncrease
-        int i = akPerkNode.perk_description_eligible.Show() ; available_points, current_rank
+        int i = akPerkNode.perk_description_eligible.Show(akPerkNode.perk_global.GetValueInt(), \
+                                                          akPerkNode.perk_max_rank_global.GetValueInt(), \
+                                                          99)
         ; Increase Rank / Back
         if i == 0
-            int i = _Camp_PerkUpgradeVerify.Show()
+            int j = _Camp_PerkGeneral_UpgradeVerify.Show()
             ; Are you sure you want this perk? Ok / Cancel
-            if i == 0
+            if j == 0
                 akPerkNode.IncreasePerkRank() 
             endif
         endif
@@ -68,4 +72,4 @@ function ShowPerkDescription(_Camp_PerkNode akPerkNode, bool abEligibleForIncrea
         akPerkNode.perk_description_ineligible.Show()
         ; Back
     endif
-endif
+endFunction
