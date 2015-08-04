@@ -116,6 +116,16 @@ Activator[] property LineActMap auto hidden
 bool property TakedownInitiated = false auto hidden
 
 function Initialize()
+    int i = 0
+    while !self.Is3DLoaded() && i < 50
+        utility.wait(0.1)
+        i += 1
+    endWhile
+    
+    debug.trace("Current angle " + self.GetAngleZ())
+    self.SetAngle(self.GetAngleX(), self.GetAngleY(), \
+                  self.GetAngleZ() + self.GetHeadingAngle(PlayerRef) + 180.0)
+    debug.trace("new angle " + self.GetAngleZ())
     NodeRefMap = new ObjectReference[12]
     LineRefMap = new ObjectReference[12]
     NodeActMap = new Activator[12]
@@ -148,6 +158,14 @@ function Initialize()
     LineActMap[11] = PerkLine11
 
     parent.Initialize()
+endFunction
+
+function Update()
+    if self.GetDistance(PlayerRef) > 512.0
+        TakeDown()
+    elseif !TakedownInitiated
+        RegisterForSingleUpdate(3.0)
+    endif
 endFunction
 
 ;@Override _Camp_PlaceableObjectBase

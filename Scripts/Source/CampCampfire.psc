@@ -601,6 +601,9 @@ bool function ShowSkills()
         int i = _Camp_Campfire_SkillMenu.Show()
         if i == 0
             myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeControllerTest)
+            myPerkNodeController.SetAngle(myPerkNodeController.GetAngleX(), \
+                                          myPerkNodeController.GetAngleY(), \
+                                          myPerkNodeController.GetAngleZ() + myPerkNodeController.GetHeadingAngle(PlayerRef))
         elseif i == 1
             ; Endurance
         elseif i == 2
