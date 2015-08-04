@@ -266,6 +266,7 @@ ObjectReference property myCookPotSnapMarkerFuture auto hidden
 
 ;@TODO: Delete
 Activator property _Camp_PerkNodeControllerTest auto
+ObjectReference myPerkNodeController
 
 int EMBERS_DURATION = 4
 int ASH_DURATION = 24
@@ -456,6 +457,9 @@ function GetResults()
 endFunction
 
 function TakeDown()
+    if myPerkNodeController
+        (myPerkNodeController as _Camp_PerkNodeController).TakeDown()
+    endif
     TryToDisableAndDeleteRef(mySteam)
     TryToDisableAndDeleteRef(myFuelLit)
     TryToDisableAndDeleteRef(myFuelUnlit)
@@ -596,13 +600,19 @@ bool function ShowSkills()
     if campfire_stage == 2
         int i = _Camp_Campfire_SkillMenu.Show()
         if i == 0
-            self.PlaceAtMe(_Camp_PerkNodeControllerTest)
+            myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeControllerTest)
         elseif i == 1
             ; Endurance
         elseif i == 2
             ; Provisioning
         elseif i == 3
             ; Fishing
+        else
+            ; Cancel
+            return false
+        endif
+        if myPerkNodeController
+            (myPerkNodeController as _Camp_PerkNodeControllerBehavior).AssignCampfire(self)
         endif
         return true
     else

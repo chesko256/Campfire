@@ -3,13 +3,24 @@ scriptname _Camp_PerkNodeControllerBehavior extends _Camp_PerkNodeController
 message property _Camp_PerkGeneral_UpgradeVerify auto
 
 function Update()
-    CheckPlayerProximity()
+    CheckConditions()
 endFunction
 
-function CheckPlayerProximity()
-    if PlayerRef.GetDistance(self) > 1024.0
+function CheckConditions()
+    if PlayerRef.GetDistance(self) > 512.0
         TakeDown()
+    elseif !myCampfire
+        TakeDown()
+    elseif TakedownInitiated
+        ; stop updating
+    else
+        RegisterForSingleUpdate(5)
     endif
+endFunction
+
+function AssignCampfire(ObjectReference akCampfire)
+    myCampfire = akCampfire
+    RegisterForSingleUpdate(5)
 endFunction
 
 function NodeActivated(ObjectReference akNodeRef)
@@ -69,7 +80,9 @@ function ShowPerkDescription(_Camp_PerkNode akPerkNode, bool abEligibleForIncrea
             endif
         endif
     else
-        akPerkNode.perk_description_ineligible.Show()
+        akPerkNode.perk_description_ineligible.Show(akPerkNode.perk_global.GetValueInt(), \
+                                                    akPerkNode.perk_max_rank_global.GetValueInt(), \
+                                                    99)
         ; Back
     endif
 endFunction
