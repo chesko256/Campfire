@@ -50,10 +50,12 @@ int fire_level = 0
 int damage_stage = 0
 
 Event OnInit()
+	CampDebug(0, self + " OnInit()")
 	int i = 0
     while !self.Is3DLoaded() && i < 50
         utility.wait(0.1)
         i += 1
+        CampDebug(0, self + " i = " + i)
     endWhile
 	;We need to get out of OnInit() quickly, so member functions on this object can be called.
 	RegisterForSingleUpdate(0.1)

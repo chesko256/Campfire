@@ -263,10 +263,11 @@ ObjectReference property mySitFurniture2Future auto hidden
 ObjectReference property mySitFurniture3Future auto hidden
 ObjectReference property mySitFurniture4Future auto hidden
 ObjectReference property myCookPotSnapMarkerFuture auto hidden
+ObjectReference property myPerkNodeController auto hidden
 
 ;@TODO: Delete
 Activator property _Camp_PerkNodeControllerTest auto
-ObjectReference myPerkNodeController
+
 
 int EMBERS_DURATION = 4
 int ASH_DURATION = 24
@@ -348,9 +349,11 @@ function DoActivate(ObjectReference akActionRef)
             ;Destroy
             TakeDown()
         elseif i == 3
-            bool b = ShowSkills()
-            if !b
-                DoActivate(akActionRef)
+            if !myPerkNodeController
+                bool b = ShowSkills()
+                if !b
+                    DoActivate(akActionRef)
+                endif
             endif
         elseif i == 4
             ;Cancel
@@ -460,6 +463,7 @@ function TakeDown()
     if myPerkNodeController
         (myPerkNodeController as _Camp_PerkNodeController).TakeDown()
     endif
+    UnregisterForUpdateGameTime()
     TryToDisableAndDeleteRef(mySteam)
     TryToDisableAndDeleteRef(myFuelLit)
     TryToDisableAndDeleteRef(myFuelUnlit)
@@ -601,9 +605,6 @@ bool function ShowSkills()
         int i = _Camp_Campfire_SkillMenu.Show()
         if i == 0
             myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeControllerTest)
-            myPerkNodeController.SetAngle(myPerkNodeController.GetAngleX(), \
-                                          myPerkNodeController.GetAngleY(), \
-                                          myPerkNodeController.GetAngleZ() + myPerkNodeController.GetHeadingAngle(PlayerRef))
         elseif i == 1
             ; Endurance
         elseif i == 2

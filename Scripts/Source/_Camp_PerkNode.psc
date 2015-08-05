@@ -21,11 +21,19 @@ Activator property downstream_line_2 auto
 ObjectReference property controller auto hidden
 
 Event OnInit()
-    ; Precache the perk rank.
+    int i = 0
+    while !self.Is3DLoaded() && i < 50
+        utility.wait(0.1)
+        i += 1
+    endWhile
+    utility.wait(0.1)
+
+    ; Precache the perk rank and set visual state.
     current_rank = perk_global.GetValueInt()
     if current_rank > 0
         self.PlayAnimation("OwnedWild")
     endif
+    UpdateLines()
 EndEvent
 
 Event OnActivate(ObjectReference akActionRef)
@@ -50,14 +58,20 @@ endFunction
 function UpdateLines()
     if current_rank > 0
         if downstream_node_1_ref && downstream_line_1_ref && (downstream_node_1_ref as _Camp_PerkNode).current_rank > 0
+            int i = 0
+            while !downstream_line_1_ref.Is3DLoaded() && i < 50
+                utility.wait(0.1)
+                i += 1
+            endWhile
             downstream_line_1_ref.PlayAnimation("Unlock")
-            ;_Camp_PerkLineActive.Cast(self, downstream_node_1_ref)
-            ;_Camp_PerkLineActive.Play(self, akFacingObject = downstream_node_1_ref)
         endif
         if downstream_node_2_ref && downstream_line_2_ref && (downstream_node_2_ref as _Camp_PerkNode).current_rank > 0
+            int i = 0
+            while !downstream_line_2_ref.Is3DLoaded() && i < 50
+                utility.wait(0.1)
+                i += 1
+            endWhile
             downstream_line_2_ref.PlayAnimation("Unlock")
-            ;_Camp_PerkLineActive.Cast(self, downstream_node_2_ref)
-            ;_Camp_PerkLineActive.Play(self, akFacingObject = downstream_node_2_ref)
         endif
     endif
 endFunction

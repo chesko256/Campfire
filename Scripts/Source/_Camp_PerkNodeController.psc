@@ -31,6 +31,9 @@ ObjectReference property myPerkLine8 auto hidden
 ObjectReference property myPerkLine9 auto hidden
 ObjectReference property myPerkLine10 auto hidden
 ObjectReference property myPerkLine11 auto hidden
+ObjectReference property myPerkNextBug auto hidden
+ObjectReference property myPerkPrevBug auto hidden
+ObjectReference property myPerkExitBug auto hidden
 
 Activator property PerkNode0 auto
 Activator property PerkNode1 auto
@@ -56,6 +59,9 @@ Activator property PerkLine8 auto
 Activator property PerkLine9 auto
 Activator property PerkLine10 auto
 Activator property PerkLine11 auto
+Activator property _Camp_PerkExitBug auto
+Activator property _Camp_PerkNextBug auto
+Activator property _Camp_PerkPrevBug auto
 
 ObjectReference property PerkNode0Future auto hidden
 ObjectReference property PerkNode1Future auto hidden
@@ -81,6 +87,10 @@ ObjectReference property PerkLine8Future auto hidden
 ObjectReference property PerkLine9Future auto hidden
 ObjectReference property PerkLine10Future auto hidden
 ObjectReference property PerkLine11Future auto hidden
+ObjectReference property PerkPrevBugFuture auto hidden
+ObjectReference property PerkNextBugFuture auto hidden
+ObjectReference property PerkExitBugFuture auto hidden
+
 
 ObjectReference property PerkNodeController_PositionRef auto
 ObjectReference property PerkNode0_PositionRef auto
@@ -107,6 +117,9 @@ ObjectReference property PerkLine8_PositionRef auto
 ObjectReference property PerkLine9_PositionRef auto
 ObjectReference property PerkLine10_PositionRef auto
 ObjectReference property PerkLine11_PositionRef auto
+ObjectReference property PerkPrevBug_PositionRef auto
+ObjectReference property PerkNextBug_PositionRef auto
+ObjectReference property PerkExitBug_PositionRef auto
 
 ObjectReference[] property NodeRefMap auto hidden
 ObjectReference[] property LineRefMap auto hidden
@@ -116,14 +129,15 @@ Activator[] property LineActMap auto hidden
 bool property TakedownInitiated = false auto hidden
 
 function Initialize()
-    int i = 0
+    ;/int i = 0
     while !self.Is3DLoaded() && i < 50
         utility.wait(0.1)
         i += 1
     endWhile
-    
+    /;
+
     debug.trace("Current angle " + self.GetAngleZ())
-    self.SetAngle(self.GetAngleX(), self.GetAngleY(), \
+    self.SetAngle(0.0, 0.0, \
                   self.GetAngleZ() + self.GetHeadingAngle(PlayerRef) + 180.0)
     debug.trace("new angle " + self.GetAngleZ())
     NodeRefMap = new ObjectReference[12]
@@ -160,13 +174,16 @@ function Initialize()
     parent.Initialize()
 endFunction
 
+;/
 function Update()
-    if self.GetDistance(PlayerRef) > 512.0
+    if self.GetDistance(PlayerRef) > 480.0
         TakeDown()
     elseif !TakedownInitiated
-        RegisterForSingleUpdate(3.0)
+        debug.trace("Perk node controller registering for update.")
+        RegisterForSingleUpdate(2.0)
     endif
 endFunction
+/;
 
 ;@Override _Camp_PlaceableObjectBase
 function PlaceObjects()
@@ -243,6 +260,8 @@ function PlaceObjects()
     if PerkLine11_PositionRef
         PerkLine11Future = PlaceObject_PerkLine(PerkLine11, PerkLine11_PositionRef)
     endif
+    if PerkPrevBug_PositionRef
+        PerkPrevBugFuture = PlaceObject()
 endFunction
 
 ;@Override _Camp_PlaceableObjectBase
@@ -467,6 +486,8 @@ function GetResults()
 endFunction
 
 function TakeDown()
+    UnregisterForUpdate()
+    (myCampfire as CampCampfire).myPerkNodeController = None
     TakedownInitiated = true
     parent.TakeDown()
     TryToDisableAndDeleteRef(myPerkNode0)
