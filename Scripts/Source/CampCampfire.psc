@@ -212,6 +212,7 @@ ObjectReference property PositionRef_CookPotSnapMarker auto
 
 ; PRIVATE
 ;Common objects
+Activator property _Camp_PerkNavControllerAct auto
 Activator property _Camp_Campfire_Embers auto
 Activator property _Camp_Campfire_Ashes auto
 Activator property _Camp_Campfire_Steam auto
@@ -264,6 +265,7 @@ ObjectReference property mySitFurniture3Future auto hidden
 ObjectReference property mySitFurniture4Future auto hidden
 ObjectReference property myCookPotSnapMarkerFuture auto hidden
 ObjectReference property myPerkNodeController auto hidden
+ObjectReference property myPerkNavController auto hidden
 
 ;@TODO: Delete
 Activator property _Camp_PerkNodeControllerTest auto
@@ -459,9 +461,19 @@ function GetResults()
     endif
 endFunction
 
+; Called by the Nav Controller if necessary
+function TakeDownPerkTree()
+    if myPerkNodeController
+        (myPerkNodeController as _Camp_PerkNodeController).TakeDown()
+    endif
+endFunction
+
 function TakeDown()
     if myPerkNodeController
         (myPerkNodeController as _Camp_PerkNodeController).TakeDown()
+    endif
+    if myPerkNavController
+        (myPerkNavController as _Camp_PerkNavController).TakeDown()
     endif
     UnregisterForUpdateGameTime()
     TryToDisableAndDeleteRef(mySteam)
@@ -604,13 +616,17 @@ bool function ShowSkills()
     if campfire_stage == 2
         int i = _Camp_Campfire_SkillMenu.Show()
         if i == 0
-            myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeControllerTest)
+            ShowBugNav()
+            ShowCampingTree()
         elseif i == 1
-            ; Endurance
+            ShowBugNav()
+            ShowEnduranceTree()
         elseif i == 2
-            ; Provisioning
+            ShowBugNav()
+            ShowProvisioningTree()
         elseif i == 3
-            ; Fishing
+            ShowBugNav()
+            ShowFishingTree()
         else
             ; Cancel
             return false
@@ -618,11 +634,36 @@ bool function ShowSkills()
         if myPerkNodeController
             (myPerkNodeController as _Camp_PerkNodeControllerBehavior).AssignCampfire(self)
         endif
+        if myPerkNavController
+            (myPerkNavController as _Camp_PerkNavController).AssignCampfire(self)
+        endif
         return true
     else
         debug.notification("Your campfire must be lit to use this.")
         return false
     endif
+endFunction
+
+function ShowBugNav()
+    if !myPerkNavController
+        myPerkNavController = self.PlaceAtMe(_Camp_PerkNavControllerAct)
+    endif
+endFunction
+
+function ShowCampingTree()
+    myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeControllerTest)
+endFunction
+
+function ShowEnduranceTree()
+    myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeControllerTest)
+endFunction
+
+function ShowProvisioningTree()
+    myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeControllerTest)
+endFunction
+
+function ShowFishingTree()
+    myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeControllerTest)
 endFunction
 
 function PlaceFuel()

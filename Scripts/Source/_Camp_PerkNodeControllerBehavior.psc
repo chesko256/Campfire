@@ -2,32 +2,8 @@ scriptname _Camp_PerkNodeControllerBehavior extends _Camp_PerkNodeController
 
 message property _Camp_PerkGeneral_UpgradeVerify auto
 
-float UPDATE_INTERVAL = 3.0
-
-function Update()
-    CheckConditions()
-endFunction
-
-function CheckConditions()
-    debug.trace("Controller behavior checking condition.")
-    if PlayerRef.GetDistance(self) > 480.0
-        debug.trace("######## DISTANCE GREATER THAN MAX, TAKE DOWN")
-        TakeDown()
-    elseif !myCampfire
-        debug.trace("######## NO CAMPFIRE, TAKE DOWN")
-        TakeDown()
-    elseif TakedownInitiated
-        debug.trace("######## TAKEDOWN INITIATED, STOP UPDATING")
-        ; stop updating
-    else
-        debug.trace("Controller behavior registered for update.")
-        RegisterForSingleUpdate(UPDATE_INTERVAL)
-    endif
-endFunction
-
 function AssignCampfire(ObjectReference akCampfire)
     myCampfire = akCampfire
-    RegisterForSingleUpdate(UPDATE_INTERVAL)
 endFunction
 
 function NodeActivated(ObjectReference akNodeRef)
