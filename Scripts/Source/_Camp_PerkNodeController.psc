@@ -6,7 +6,7 @@ import _CampInternal
 Actor property PlayerRef auto
 
 ObjectReference property myCampfire auto hidden
-ObjectReference property _Camp_PerkBGColliderRef auto hidden
+ObjectReference property myPerkArtPlane auto hidden
 ObjectReference property myPerkNode0 auto hidden
 ObjectReference property myPerkNode1 auto hidden
 ObjectReference property myPerkNode2 auto hidden
@@ -31,9 +31,6 @@ ObjectReference property myPerkLine8 auto hidden
 ObjectReference property myPerkLine9 auto hidden
 ObjectReference property myPerkLine10 auto hidden
 ObjectReference property myPerkLine11 auto hidden
-ObjectReference property myPerkNextBug auto hidden
-ObjectReference property myPerkPrevBug auto hidden
-ObjectReference property myPerkExitBug auto hidden
 
 Activator property PerkNode0 auto
 Activator property PerkNode1 auto
@@ -59,9 +56,7 @@ Activator property PerkLine8 auto
 Activator property PerkLine9 auto
 Activator property PerkLine10 auto
 Activator property PerkLine11 auto
-Activator property _Camp_PerkExitBug auto
-Activator property _Camp_PerkNextBug auto
-Activator property _Camp_PerkPrevBug auto
+Static property PerkArtPlane auto
 
 ObjectReference property PerkNode0Future auto hidden
 ObjectReference property PerkNode1Future auto hidden
@@ -87,10 +82,7 @@ ObjectReference property PerkLine8Future auto hidden
 ObjectReference property PerkLine9Future auto hidden
 ObjectReference property PerkLine10Future auto hidden
 ObjectReference property PerkLine11Future auto hidden
-ObjectReference property PerkPrevBugFuture auto hidden
-ObjectReference property PerkNextBugFuture auto hidden
-ObjectReference property PerkExitBugFuture auto hidden
-
+ObjectReference property PerkArtPlaneFuture auto hidden
 
 ObjectReference property PerkNodeController_PositionRef auto
 ObjectReference property PerkNode0_PositionRef auto
@@ -117,24 +109,19 @@ ObjectReference property PerkLine8_PositionRef auto
 ObjectReference property PerkLine9_PositionRef auto
 ObjectReference property PerkLine10_PositionRef auto
 ObjectReference property PerkLine11_PositionRef auto
-ObjectReference property PerkPrevBug_PositionRef auto
-ObjectReference property PerkNextBug_PositionRef auto
-ObjectReference property PerkExitBug_PositionRef auto
+ObjectReference property PerkArtPlane_PositionRef auto
 
 ObjectReference[] property NodeRefMap auto hidden
 ObjectReference[] property LineRefMap auto hidden
 Activator[] property NodeActMap auto hidden
 Activator[] property LineActMap auto hidden
 
-bool property TakedownInitiated = false auto hidden
-
 function Initialize()
-    ;/int i = 0
+    int i = 0
     while !self.Is3DLoaded() && i < 50
         utility.wait(0.1)
         i += 1
     endWhile
-    /;
 
     debug.trace("Current angle " + self.GetAngleZ())
     self.SetAngle(0.0, 0.0, \
@@ -173,17 +160,6 @@ function Initialize()
 
     parent.Initialize()
 endFunction
-
-;/
-function Update()
-    if self.GetDistance(PlayerRef) > 480.0
-        TakeDown()
-    elseif !TakedownInitiated
-        debug.trace("Perk node controller registering for update.")
-        RegisterForSingleUpdate(2.0)
-    endif
-endFunction
-/;
 
 ;@Override _Camp_PlaceableObjectBase
 function PlaceObjects()
@@ -260,8 +236,9 @@ function PlaceObjects()
     if PerkLine11_PositionRef
         PerkLine11Future = PlaceObject_PerkLine(PerkLine11, PerkLine11_PositionRef)
     endif
-    if PerkPrevBug_PositionRef
-        PerkPrevBugFuture = PlaceObject()
+    if PerkArtPlane_PositionRef
+        PerkArtPlaneFuture = PlaceObject_ArtPlane(PerkArtPlane, PerkArtPlane_PositionRef)
+    endif
 endFunction
 
 ;@Override _Camp_PlaceableObjectBase
@@ -483,13 +460,15 @@ function GetResults()
     if myPerkNode11
         (myPerkNode11 as _Camp_PerkNode).AssignDownstreamNodes()
     endif
+
+    if PerkArtPlaneFuture
+        myPerkArtPlane = GetFuture(PerkArtPlaneFuture).get_result()
+    endif
 endFunction
 
 function TakeDown()
     UnregisterForUpdate()
     (myCampfire as CampCampfire).myPerkNodeController = None
-    TakedownInitiated = true
-    parent.TakeDown()
     TryToDisableAndDeleteRef(myPerkNode0)
     TryToDisableAndDeleteRef(myPerkNode1)
     TryToDisableAndDeleteRef(myPerkNode2)
@@ -514,6 +493,8 @@ function TakeDown()
     TryToDisableAndDeleteRef(myPerkLine9)
     TryToDisableAndDeleteRef(myPerkLine10)
     TryToDisableAndDeleteRef(myPerkLine11)
+    TryToDisableAndDeleteRef(myPerkArtPlane)
+    TryToDisableAndDeleteRef(self)
 endFunction
 
 ObjectReference function PlaceObject_PerkNode(Activator akPerkNode, ObjectReference akPerkNodePositionRef)
@@ -525,4 +506,8 @@ ObjectReference function PlaceObject_PerkLine(Activator akPerkLine, ObjectRefere
                                        x_local_ang_adjust = akPerkLinePositionRef.GetAngleX(), \
                                        z_local_ang_adjust = akPerkLinePositionRef.GetAngleZ(), \
                                        initially_disabled = true, inverted_local_y = true, is_propped = true)
+endFunction
+
+ObjectReference function PlaceObject_ArtPlane(Static akArtPlane, ObjectReference akArtPlanePositionRef)
+    return PlacementSystem.PlaceObject(self, akArtPlane, akArtPlanePositionRef)
 endFunction
