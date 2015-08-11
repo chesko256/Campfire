@@ -57,6 +57,7 @@ Activator property PerkLine9 auto
 Activator property PerkLine10 auto
 Activator property PerkLine11 auto
 Static property PerkArtPlane auto
+Sound property UISkillsGlow auto
 
 ObjectReference property PerkNode0Future auto hidden
 ObjectReference property PerkNode1Future auto hidden
@@ -115,6 +116,8 @@ ObjectReference[] property NodeRefMap auto hidden
 ObjectReference[] property LineRefMap auto hidden
 Activator[] property NodeActMap auto hidden
 Activator[] property LineActMap auto hidden
+
+bool property Locked = true auto hidden
 
 function Initialize()
     int i = 0
@@ -243,90 +246,18 @@ endFunction
 
 ;@Override _Camp_PlaceableObjectBase
 function GetResults()
-    if PerkNode0Future
-        myPerkNode0 = GetFuture(PerkNode0Future).get_result()
-        if myPerkNode0
-            (myPerkNode0 as _Camp_PerkNode).AssignController(self)
-            NodeRefMap[0] = myPerkNode0
-        endif
+    if PerkArtPlaneFuture
+        myPerkArtPlane = GetFuture(PerkArtPlaneFuture).get_result()
+        myPerkArtPlane.EnableNoWait(true)
+        int i = 0
+        while !myPerkArtPlane.Is3DLoaded() && i < 50
+            utility.wait(0.1)
+            i += 1
+        endWhile
+        UISkillsGlow.Play(myPerkArtPlane)
     endif
-    if PerkNode1Future
-        myPerkNode1 = GetFuture(PerkNode1Future).get_result()
-        if myPerkNode1
-            (myPerkNode1 as _Camp_PerkNode).AssignController(self)
-            NodeRefMap[1] = myPerkNode1
-        endif
-    endif
-    if PerkNode2Future
-        myPerkNode2 = GetFuture(PerkNode2Future).get_result()
-        if myPerkNode2
-            (myPerkNode2 as _Camp_PerkNode).AssignController(self)
-            NodeRefMap[2] = myPerkNode2
-        endif
-    endif
-    if PerkNode3Future
-        myPerkNode3 = GetFuture(PerkNode3Future).get_result()
-        if myPerkNode3
-            (myPerkNode3 as _Camp_PerkNode).AssignController(self)
-            NodeRefMap[3] = myPerkNode3
-        endif
-    endif
-    if PerkNode4Future
-        myPerkNode4 = GetFuture(PerkNode4Future).get_result()
-        if myPerkNode4
-            (myPerkNode4 as _Camp_PerkNode).AssignController(self)
-            NodeRefMap[4] = myPerkNode4
-        endif
-    endif
-    if PerkNode5Future
-        myPerkNode5 = GetFuture(PerkNode5Future).get_result()
-        if myPerkNode5
-            (myPerkNode5 as _Camp_PerkNode).AssignController(self)
-            NodeRefMap[5] = myPerkNode5
-        endif
-    endif
-    if PerkNode6Future
-        myPerkNode6 = GetFuture(PerkNode6Future).get_result()
-        if myPerkNode6
-            (myPerkNode6 as _Camp_PerkNode).AssignController(self)
-            NodeRefMap[6] = myPerkNode6
-        endif
-    endif
-    if PerkNode7Future
-        myPerkNode7 = GetFuture(PerkNode7Future).get_result()
-        if myPerkNode7
-            (myPerkNode7 as _Camp_PerkNode).AssignController(self)
-            NodeRefMap[7] = myPerkNode7
-        endif
-    endif
-    if PerkNode8Future
-        myPerkNode8 = GetFuture(PerkNode8Future).get_result()
-        if myPerkNode8
-            (myPerkNode8 as _Camp_PerkNode).AssignController(self)
-            NodeRefMap[8] = myPerkNode8
-        endif
-    endif
-    if PerkNode9Future
-        myPerkNode9 = GetFuture(PerkNode9Future).get_result()
-        if myPerkNode9
-            (myPerkNode9 as _Camp_PerkNode).AssignController(self)
-            NodeRefMap[9] = myPerkNode9
-        endif
-    endif
-    if PerkNode10Future
-        myPerkNode10 = GetFuture(PerkNode10Future).get_result()
-        if myPerkNode10
-            (myPerkNode10 as _Camp_PerkNode).AssignController(self)
-            NodeRefMap[10] = myPerkNode10
-        endif
-    endif
-    if PerkNode11Future
-        myPerkNode11 = GetFuture(PerkNode11Future).get_result()
-        if myPerkNode11
-            (myPerkNode11 as _Camp_PerkNode).AssignController(self)
-            NodeRefMap[11] = myPerkNode11
-        endif
-    endif
+    ;utility.wait(2.0)
+
     if PerkLine0Future
         myPerkLine0 = GetFuture(PerkLine0Future).get_result()
         if myPerkLine0
@@ -424,6 +355,91 @@ function GetResults()
         endif
     endif
 
+    if PerkNode0Future
+        myPerkNode0 = GetFuture(PerkNode0Future).get_result()
+        if myPerkNode0
+            (myPerkNode0 as _Camp_PerkNode).AssignController(self)
+            NodeRefMap[0] = myPerkNode0
+        endif
+    endif
+    if PerkNode1Future
+        myPerkNode1 = GetFuture(PerkNode1Future).get_result()
+        if myPerkNode1
+            (myPerkNode1 as _Camp_PerkNode).AssignController(self)
+            NodeRefMap[1] = myPerkNode1
+        endif
+    endif
+    if PerkNode2Future
+        myPerkNode2 = GetFuture(PerkNode2Future).get_result()
+        if myPerkNode2
+            (myPerkNode2 as _Camp_PerkNode).AssignController(self)
+            NodeRefMap[2] = myPerkNode2
+        endif
+    endif
+    if PerkNode3Future
+        myPerkNode3 = GetFuture(PerkNode3Future).get_result()
+        if myPerkNode3
+            (myPerkNode3 as _Camp_PerkNode).AssignController(self)
+            NodeRefMap[3] = myPerkNode3
+        endif
+    endif
+    if PerkNode4Future
+        myPerkNode4 = GetFuture(PerkNode4Future).get_result()
+        if myPerkNode4
+            (myPerkNode4 as _Camp_PerkNode).AssignController(self)
+            NodeRefMap[4] = myPerkNode4
+        endif
+    endif
+    if PerkNode5Future
+        myPerkNode5 = GetFuture(PerkNode5Future).get_result()
+        if myPerkNode5
+            (myPerkNode5 as _Camp_PerkNode).AssignController(self)
+            NodeRefMap[5] = myPerkNode5
+        endif
+    endif
+    if PerkNode6Future
+        myPerkNode6 = GetFuture(PerkNode6Future).get_result()
+        if myPerkNode6
+            (myPerkNode6 as _Camp_PerkNode).AssignController(self)
+            NodeRefMap[6] = myPerkNode6
+        endif
+    endif
+    if PerkNode7Future
+        myPerkNode7 = GetFuture(PerkNode7Future).get_result()
+        if myPerkNode7
+            (myPerkNode7 as _Camp_PerkNode).AssignController(self)
+            NodeRefMap[7] = myPerkNode7
+        endif
+    endif
+    if PerkNode8Future
+        myPerkNode8 = GetFuture(PerkNode8Future).get_result()
+        if myPerkNode8
+            (myPerkNode8 as _Camp_PerkNode).AssignController(self)
+            NodeRefMap[8] = myPerkNode8
+        endif
+    endif
+    if PerkNode9Future
+        myPerkNode9 = GetFuture(PerkNode9Future).get_result()
+        if myPerkNode9
+            (myPerkNode9 as _Camp_PerkNode).AssignController(self)
+            NodeRefMap[9] = myPerkNode9
+        endif
+    endif
+    if PerkNode10Future
+        myPerkNode10 = GetFuture(PerkNode10Future).get_result()
+        if myPerkNode10
+            (myPerkNode10 as _Camp_PerkNode).AssignController(self)
+            NodeRefMap[10] = myPerkNode10
+        endif
+    endif
+    if PerkNode11Future
+        myPerkNode11 = GetFuture(PerkNode11Future).get_result()
+        if myPerkNode11
+            (myPerkNode11 as _Camp_PerkNode).AssignController(self)
+            NodeRefMap[11] = myPerkNode11
+        endif
+    endif
+
     if myPerkNode0
         (myPerkNode0 as _Camp_PerkNode).AssignDownstreamNodes()
     endif
@@ -460,14 +476,10 @@ function GetResults()
     if myPerkNode11
         (myPerkNode11 as _Camp_PerkNode).AssignDownstreamNodes()
     endif
-
-    if PerkArtPlaneFuture
-        myPerkArtPlane = GetFuture(PerkArtPlaneFuture).get_result()
-    endif
+    Locked = false
 endFunction
 
 function TakeDown()
-    UnregisterForUpdate()
     (myCampfire as CampCampfire).myPerkNodeController = None
     TryToDisableAndDeleteRef(myPerkNode0)
     TryToDisableAndDeleteRef(myPerkNode1)
@@ -498,7 +510,7 @@ function TakeDown()
 endFunction
 
 ObjectReference function PlaceObject_PerkNode(Activator akPerkNode, ObjectReference akPerkNodePositionRef)
-    return PlacementSystem.PlaceObject(self, akPerkNode, akPerkNodePositionRef)
+    return PlacementSystem.PlaceObject(self, akPerkNode, akPerkNodePositionRef, initially_disabled = true)
 endFunction
 
 ObjectReference function PlaceObject_PerkLine(Activator akPerkLine, ObjectReference akPerkLinePositionRef)
@@ -509,5 +521,5 @@ ObjectReference function PlaceObject_PerkLine(Activator akPerkLine, ObjectRefere
 endFunction
 
 ObjectReference function PlaceObject_ArtPlane(Static akArtPlane, ObjectReference akArtPlanePositionRef)
-    return PlacementSystem.PlaceObject(self, akArtPlane, akArtPlanePositionRef)
+    return PlacementSystem.PlaceObject(self, akArtPlane, akArtPlanePositionRef, initially_disabled = true)
 endFunction

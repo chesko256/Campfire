@@ -21,6 +21,19 @@ Activator property downstream_line_2 auto
 ObjectReference property controller auto hidden
 
 Event OnInit()
+    
+EndEvent
+
+Event OnActivate(ObjectReference akActionRef)
+    (controller as _Camp_PerkNodeControllerBehavior).NodeActivated(self)
+EndEvent
+
+function AssignController(ObjectReference akController)
+    controller = akController
+
+    ; Node spawns initially disabled. We are setting the node up now, so enable it.
+    self.EnableNoWait()
+
     int i = 0
     while !self.Is3DLoaded() && i < 50
         utility.wait(0.1)
@@ -33,15 +46,6 @@ Event OnInit()
     if current_rank > 0
         self.PlayAnimation("OwnedWild")
     endif
-    UpdateLines()
-EndEvent
-
-Event OnActivate(ObjectReference akActionRef)
-    (controller as _Camp_PerkNodeControllerBehavior).NodeActivated(self)
-EndEvent
-
-function AssignController(ObjectReference akController)
-    controller = akController
 endFunction
 
 function IncreasePerkRank()

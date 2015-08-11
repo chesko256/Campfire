@@ -24,6 +24,7 @@ ObjectReference property PerkNextBug_PositionRef auto
 ObjectReference property PerkExitBug_PositionRef auto
 
 bool property TakedownInitiated = false auto hidden
+bool property Locked = true auto hidden
 
 float UPDATE_INTERVAL = 3.0
 
@@ -91,13 +92,15 @@ function GetResults()
 		myPerkNextBug.SetScale(PerkNextBug_PositionRef.GetScale())
 		myPerkNextBug.EnableNoWait()
 	endif
+	Locked = false
 endFunction
 
 function TakeDown()
+	TakedownInitiated = true
+	UnregisterForUpdate()
 	if myCampfire
 		(myCampfire as CampCampfire).myPerkNavController = None
 	endif
-	TakedownInitiated = true
 	TryToDisableAndDeleteRef(myPerkNextBug)
 	TryToDisableAndDeleteRef(myPerkPrevBug)
 	TryToDisableAndDeleteRef(myPerkExitBug)
@@ -105,16 +108,40 @@ function TakeDown()
 endFunction
 
 function NextClicked()
+	CampCampfire cf = myCampfire as CampCampfire
+	_Camp_PerkNodeController nc = cf.myPerkNodeController as _Camp_PerkNodeController
+	if nc.Locked || Locked
+		; pass
+	else
+		Locked = true
 
+		Locked = false
+	endif
 endFunction
 
 function PrevClicked()
+	CampCampfire cf = myCampfire as CampCampfire
+	_Camp_PerkNodeController nc = cf.myPerkNodeController as _Camp_PerkNodeController
+	if nc.Locked || Locked
+		; pass
+	else
+		Locked = true
 
+		Locked = false
+	endif
 endFunction
 
 function ExitClicked()
-	(myCampfire as CampCampfire).TakeDownPerkTree()
-    TakeDown()
+	CampCampfire cf = myCampfire as CampCampfire
+	_Camp_PerkNodeController nc = cf.myPerkNodeController as _Camp_PerkNodeController
+	if nc.Locked || Locked
+		; pass
+	else
+		Locked = true
+		(myCampfire as CampCampfire).TakeDownPerkTree()
+    	TakeDown()
+    	Locked = false
+	endif
 endFunction
 
 ObjectReference function PlaceObject_Bug(Activator akBug, ObjectReference akPositionRef)

@@ -212,6 +212,7 @@ ObjectReference property PositionRef_CookPotSnapMarker auto
 
 ; PRIVATE
 ;Common objects
+Activator property _Camp_PerkNodeController_Camping auto
 Activator property _Camp_PerkNavControllerAct auto
 Activator property _Camp_Campfire_Embers auto
 Activator property _Camp_Campfire_Ashes auto
@@ -266,10 +267,6 @@ ObjectReference property mySitFurniture4Future auto hidden
 ObjectReference property myCookPotSnapMarkerFuture auto hidden
 ObjectReference property myPerkNodeController auto hidden
 ObjectReference property myPerkNavController auto hidden
-
-;@TODO: Delete
-Activator property _Camp_PerkNodeControllerTest auto
-
 
 int EMBERS_DURATION = 4
 int ASH_DURATION = 24
@@ -651,19 +648,19 @@ function ShowBugNav()
 endFunction
 
 function ShowCampingTree()
-    myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeControllerTest)
+    myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeController_Camping)
 endFunction
 
 function ShowEnduranceTree()
-    myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeControllerTest)
+    ;myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeControllerTest)
 endFunction
 
 function ShowProvisioningTree()
-    myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeControllerTest)
+    ;myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeControllerTest)
 endFunction
 
 function ShowFishingTree()
-    myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeControllerTest)
+    ;myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeControllerTest)
 endFunction
 
 function PlaceFuel()
@@ -695,6 +692,12 @@ endFunction
 
 function PutOutFire()
     CampDebug(0, "PutOutFire")
+    if myPerkNodeController
+        (myPerkNodeController as _Camp_PerkNodeController).TakeDown()
+    endif
+    if myPerkNavController
+        (myPerkNavController as _Camp_PerkNavController).TakeDown()
+    endif
     myFuelUnlit.EnableNoWait()
     myFuelLit.DisableNoWait()
     myLight.DisableNoWait()
@@ -712,6 +715,12 @@ endFunction
 
 function BurnToEmbers()
     CampDebug(0, "BurnToEmbers")
+    if myPerkNodeController
+        (myPerkNodeController as _Camp_PerkNodeController).TakeDown()
+    endif
+    if myPerkNavController
+        (myPerkNavController as _Camp_PerkNavController).TakeDown()
+    endif
     myFuelUnlit.DisableNoWait(true)
     myFuelLit.DisableNoWait(true)
     myLight.DisableNoWait(true)
