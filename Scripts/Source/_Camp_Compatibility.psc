@@ -9,6 +9,7 @@ float property SKSE_MIN_VERSION = 1.07 autoReadOnly
 ;#PROPERTIES=====================================================================================================================
 actor property PlayerRef auto
 ReferenceAlias property PlayerAlias auto
+Activator[] property PerkNodeControllers auto
 
 ;#Scripts======================================================================
 _Camp_SkyUIConfigPanelScript property CampConfig Auto 				;SkyUI Configuration script
@@ -76,6 +77,13 @@ Spell property _Camp_FollowerDetectSpell auto
 Message property _Camp_CriticalError_SKSE auto
 Weather property DLC2AshStorm auto hidden
 
+Activator property _Camp_PerkNavControllerAct auto
+Activator property _Camp_PerkNodeController_Camping auto
+
+;#Upgrade Flags====================================================================
+bool Upgraded_1_1 = false
+
+
 Event OnPlayerLoadGame()
 	RunCompatibility()
 	RegisterForKeysOnLoad()
@@ -94,6 +102,10 @@ function RunCompatibility()
 	;@TODO: Add support for Frostfall compatibility
 	;@TODO: Add fatal error for old version of Frostfall
 	isFrostfallLoaded = false
+
+	if !Upgraded_1_1
+		Upgrade_1_1()
+	endif
 
 	bool skse_loaded = SKSE.GetVersion()
 	if skse_loaded
@@ -240,16 +252,20 @@ function RunCompatibility()
 		if !isLastSeedLoaded
 			;Last Seed was removed since the last save.
 			Conditions.IsLastSeedLoaded = false
+			CampfirePerkSystemUnregister(2, "LastSeed.esp")
 		else
 			Conditions.IsLastSeedLoaded = true
+			; CampfirePerkSystemRegister()
 		endif
 	else
 		isLastSeedLoaded = IsPluginLoaded(0x02000D63, "LastSeed.esp")
 		if isLastSeedLoaded
 			;Last Seed was just added.
 			Conditions.IsLastSeedLoaded = true
+			; CampfirePerkSystemRegister()
 		else
 			Conditions.IsLastSeedLoaded = false
+			CampfirePerkSystemUnregister(2, "LastSeed.esp")
 		endif
 	endif
 	
@@ -470,6 +486,24 @@ bool function IsPluginLoaded(int iFormID, string sPluginName)
 			return false
 		endif
 	endif
+endFunction
+
+function Upgrade_1_1()
+	PerkNodeControllers = new Activator[4]
+	CampfirePerkSystemRegister(_Camp_PerkNodeController_Camping, 0, "Campfire.esm")
+	Upgraded_1_1 = true
+endFunction
+
+function CampfirePerkSystemRegister(Activator akNodeController, int aiIndex, string asPluginName)
+	if PerkNodeControllers[aiIndex] == None
+		PerkNodeControllers[aiIndex] = akNodeController
+		debug.trace("[Campfire] Registered Campfire Perk System mod: " + asPluginName)
+	endif
+endFunction
+
+function CampfirePerkSystemUnregister(int aiIndex, string asPluginName)
+	PerkNodeControllers[aiIndex] = None
+	debug.trace("[Campfire] Unregistered Campfire Perk System mod: " + asPluginName)
 endFunction
 
 function VanillaGameLoadUp()
