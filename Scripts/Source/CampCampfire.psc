@@ -219,9 +219,11 @@ Activator property _Camp_Campfire_Ashes auto
 Activator property _Camp_Campfire_Steam auto
 Static property _Camp_CampfireCookPotSnapMarker auto
 Sound property FXFireOut auto
+ImpactDataSet property MAGFlames01ImpactSet auto
 Message property _Camp_Campfire_Menu auto
 Message property _Camp_Campfire_SkillMenu auto
 Message property _Camp_Campfire_SitError auto
+Message property _Camp_Campfire_LightFail auto
 Actor property PlayerRef auto
 GlobalVariable property _Camp_LastUsedCampfireSize auto
 GlobalVariable property _Camp_LastUsedCampfireStage auto
@@ -271,14 +273,22 @@ ObjectReference property myPerkNavController auto hidden
 int EMBERS_DURATION = 4
 int ASH_DURATION = 24
 
+; Track remaining fuel for pick-up later
+int remaining_branches = 0
+int remaining_kindling = 0
+int remaining_books = 0
+int remaining_deadwood = 0
+int remaining_firewood = 0
+
 bool in_use = false
 bool eligible_for_deletion = false
 
-int property campfire_stage = 0 auto hidden     ;0 = empty or ash, 1 = embers, 2 = burning, 3 = unlit fuel
+int property campfire_stage = 0 auto hidden     ;0 = empty or ash, 1 = embers, 2 = burning, 3 = unlit fuel no tinder, 4 = unlit fuel and tinder
 int property campfire_size = 0 auto hidden      ;0 = not built, 1 = fragile, 2 = flickering, 3 = crackling, 4 = roaring
 float last_update_registration_time             ;when this campfire last registered
 int burn_duration                               ;how long this campfire will burn (set by fuel)
 float remaining_time                            ;total time this campfire will last
+float current_light_chance = 0.0
 
 function Initialize()
     self.BlockActivation()
@@ -540,7 +550,7 @@ endFunction
 Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
     if akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11
         CampDebug(0, "Torch bash!")
-        if campfire_size > 0 && campfire_stage == 3
+        if campfire_size > 0 && campfire_stage == 4
             LightFire()
         endif
     endif
@@ -548,7 +558,7 @@ EndEvent
 
 Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
     if akEffect.HasKeyword(GetMagicDamageFireKeyword())
-        if campfire_size > 0 && campfire_stage == 3
+        if campfire_size > 0 && campfire_stage == 4
             LightFire()
         endif
     elseif akEffect.HasKeyword(GetMagicDamageFrostKeyword())
@@ -572,14 +582,21 @@ function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int 
     myFuelLit = self.PlaceAtMe(akFuelLit, abInitiallyDisabled = true)
     myLight = self.PlaceAtMe(akLight, abInitiallyDisabled = true)
     myLight.MoveTo(myLight, afZOffset = 100.0)
-    campfire_stage = 3
 
-    if _Camp_Setting_ManualFireLighting.GetValueInt() == 2
-        PlaceFuel()
-        _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
+    if campfire_stage == 2
+        LightFire(true)
     else
+        PlaceFuel()
+    endif
+endFunction
+
+function SetTinder(float afLightChance)
+    campfire_stage = 4
+    _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
+    current_light_chance = afLightChance
+
+    if _Camp_Setting_ManualFireLighting.GetValueInt() != 2
         LightFire()
-        _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
     endif
 endFunction
 
@@ -674,10 +691,32 @@ function PlaceFuel()
     remaining_time = ASH_DURATION
     CampDebug(1, "Campfire registered for update in " + ASH_DURATION + " hours.")
     campfire_stage = 3
+    _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
 endFunction
 
-function LightFire()
+function LightFire(bool abBypassLightingChance = false)
     CampDebug(0, "LightFire")
+    if !abBypassLightingChance
+        if current_light_chance > 0.0
+            float result = Utility.RandomFloat()
+            if result <= current_light_chance
+                self.PlayImpactEffect(MAGFlames01ImpactSet) 
+            else
+                campfire_stage = 3
+                _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
+                _Camp_Campfire_LightFail.Show()
+                FXFireOut.Play(self)
+                mySteam.Enable()
+                utility.wait(2)
+                mySteam.Disable(true)
+                return
+            endif
+        else
+            return
+        endif
+    endif
+
+    current_light_chance = 0.0
     myFuelUnlit.DisableNoWait()
     myFuelLit.EnableNoWait()
     myLight.EnableNoWait()
@@ -688,6 +727,7 @@ function LightFire()
     remaining_time = burn_duration + EMBERS_DURATION + ASH_DURATION
     CampDebug(1, "Campfire registered for update in " + burn_duration + " hours.")
     campfire_stage = 2
+    _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
 endFunction
 
 function PutOutFire()
