@@ -23,7 +23,7 @@ function SeekTargets()
     seeking = true
     int i = 0
     while seeking && i < seek_count
-        ObjectReference ref = FindRandomReferenceOfAnyTypeInListFromRef(_Camp_SurvivalVision_Targets, PlayerRef, 2048.0)
+        ObjectReference ref = Game.FindRandomReferenceOfAnyTypeInListFromRef(_Camp_SurvivalVision_Targets, PlayerRef, 2048.0)
         int idx = found_targets.Find(ref)
         if idx == -1
             target_found = true
