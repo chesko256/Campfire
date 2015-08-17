@@ -9,7 +9,7 @@ float property SKSE_MIN_VERSION = 1.07 autoReadOnly
 ;#PROPERTIES=====================================================================================================================
 actor property PlayerRef auto
 ReferenceAlias property PlayerAlias auto
-Activator[] property PerkNodeControllers auto
+Activator[] property PerkNodeControllers auto hidden
 
 ;#Scripts======================================================================
 _Camp_SkyUIConfigPanelScript property CampConfig Auto 				;SkyUI Configuration script

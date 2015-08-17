@@ -9,6 +9,7 @@ scriptname CampCampfire extends _Camp_PlaceableObjectBase
 ;*********/;
 
 import _CampInternal
+import CampUtil
 
 ; OPTIONAL PROPERTIES
 
@@ -631,16 +632,16 @@ bool function ShowSkills()
         int i = _Camp_Campfire_SkillMenu.Show()
         if i == 0
             ShowBugNav()
-            ShowCampingTree()
+            ShowPerkTree(0)
         elseif i == 1
             ShowBugNav()
-            ShowEnduranceTree()
+            ShowPerkTree(1)
         elseif i == 2
             ShowBugNav()
-            ShowProvisioningTree()
+            ShowPerkTree(2)
         elseif i == 3
             ShowBugNav()
-            ShowFishingTree()
+            ShowPerkTree(3)
         else
             ; Cancel
             return false
@@ -660,24 +661,27 @@ endFunction
 
 function ShowBugNav()
     if !myPerkNavController
-        myPerkNavController = self.PlaceAtMe(_Camp_PerkNavControllerAct)
+        _Camp_Compatibility cs = GetCompatibilitySystem()
+        Activator nc = GetCompatibilitySystem().PerkNodeControllers[idx]
+        int i = 0
+        int count = 0
+        while i < cs.PerkNodeControllers.Length
+            if cs.PerkNodeControllers[i] != None
+                count += 1
+            endif
+            i += 1
+        endWhile
+        if count > 1
+            myPerkNavController = self.PlaceAtMe(_Camp_PerkNavControllerAct)
+        endif
     endif
 endFunction
 
-function ShowCampingTree()
-    myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeController_Camping)
-endFunction
-
-function ShowEnduranceTree()
-    ;myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeControllerTest)
-endFunction
-
-function ShowProvisioningTree()
-    ;myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeControllerTest)
-endFunction
-
-function ShowFishingTree()
-    ;myPerkNodeController = self.PlaceAtMe(_Camp_PerkNodeControllerTest)
+function ShowPerkTree(int idx)
+    Activator nc = GetCompatibilitySystem().PerkNodeControllers[idx]
+    if nc != None
+        myPerkNodeController = self.PlaceAtMe(nc)
+    endif
 endFunction
 
 function PlaceFuel()
