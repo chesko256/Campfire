@@ -117,7 +117,7 @@ ObjectReference[] property LineRefMap auto hidden
 Activator[] property NodeActMap auto hidden
 Activator[] property LineActMap auto hidden
 
-bool property Locked = true auto hidden
+bool property InteractionLocked = true auto hidden
 
 function Initialize()
     int i = 0
@@ -476,10 +476,15 @@ function GetResults()
     if myPerkNode11
         (myPerkNode11 as _Camp_PerkNode).AssignDownstreamNodes()
     endif
-    Locked = false
+    InteractionLocked = false
 endFunction
 
 function TakeDown()
+    int i = 0
+    while InteractionLocked && i < 100
+        utility.wait(0.1)
+        i += 1
+    endWhile
     (myCampfire as CampCampfire).myPerkNodeController = None
     TryToDisableAndDeleteRef(myPerkNode0)
     TryToDisableAndDeleteRef(myPerkNode1)

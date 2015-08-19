@@ -2,6 +2,7 @@ scriptname _Camp_PerkNavController extends _Camp_PlaceableObjectBase
 {Handles perk tree navigation behavior.}
 
 import _CampInternal
+import CampUtil
 
 Actor property PlayerRef auto
 
@@ -24,7 +25,7 @@ ObjectReference property PerkNextBug_PositionRef auto
 ObjectReference property PerkExitBug_PositionRef auto
 
 bool property TakedownInitiated = false auto hidden
-bool property Locked = true auto hidden
+bool property InteractionLocked = true auto hidden
 
 float UPDATE_INTERVAL = 3.0
 
@@ -65,10 +66,10 @@ endFunction
 function PlaceObjects()
     CenterObject = PerkNavController_PositionRef
 
-    ;@TODO: If more than one registered tree...
+    if GetCompatibilitySystem().multiple_perk_trees
     	PerkPrevBugFuture = PlaceObject_Bug(_Camp_PerkPrevBug, PerkPrevBug_PositionRef)
     	PerkNextBugFuture = PlaceObject_Bug(_Camp_PerkNextBug, PerkNextBug_PositionRef)
-    ;@TODO: endif
+    endif
 
     PerkExitBugFuture = PlaceObject_Bug(_Camp_PerkExitBug, PerkExitBug_PositionRef)
 endFunction
@@ -85,14 +86,16 @@ function GetResults()
 		myPerkPrevBug = GetFuture(PerkPrevBugFuture).get_result()
 		myPerkPrevBug.SetScale(PerkPrevBug_PositionRef.GetScale())
 		myPerkPrevBug.EnableNoWait()
+		(myPerkPrevBug as _Camp_PrevBug).AssignController(self)
 	endif
 	utility.wait(0.3)
 	if PerkNextBugFuture
 		myPerkNextBug = GetFuture(PerkNextBugFuture).get_result()
 		myPerkNextBug.SetScale(PerkNextBug_PositionRef.GetScale())
 		myPerkNextBug.EnableNoWait()
+		(myPerkNextBug as _Camp_NextBug).AssignController(self)
 	endif
-	Locked = false
+	InteractionLocked = false
 endFunction
 
 function TakeDown()
@@ -108,39 +111,33 @@ function TakeDown()
 endFunction
 
 function NextClicked()
-	CampCampfire cf = myCampfire as CampCampfire
-	_Camp_PerkNodeController nc = cf.myPerkNodeController as _Camp_PerkNodeController
-	if nc.Locked || Locked
+	if InteractionLocked
 		; pass
 	else
-		Locked = true
-
-		Locked = false
+		InteractionLocked = true
+		(myCampfire as CampCampfire).ShowNextPerkTree()
+		InteractionLocked = false
 	endif
 endFunction
 
 function PrevClicked()
-	CampCampfire cf = myCampfire as CampCampfire
-	_Camp_PerkNodeController nc = cf.myPerkNodeController as _Camp_PerkNodeController
-	if nc.Locked || Locked
+	if InteractionLocked
 		; pass
 	else
-		Locked = true
-
-		Locked = false
+		InteractionLocked = true
+		(myCampfire as CampCampfire).ShowPrevPerkTree()
+		InteractionLocked = false
 	endif
 endFunction
 
 function ExitClicked()
-	CampCampfire cf = myCampfire as CampCampfire
-	_Camp_PerkNodeController nc = cf.myPerkNodeController as _Camp_PerkNodeController
-	if nc.Locked || Locked
+	if InteractionLocked
 		; pass
 	else
-		Locked = true
+		InteractionLocked = true
 		(myCampfire as CampCampfire).TakeDownPerkTree()
     	TakeDown()
-    	Locked = false
+    	InteractionLocked = false
 	endif
 endFunction
 

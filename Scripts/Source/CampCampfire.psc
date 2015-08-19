@@ -290,6 +290,7 @@ float last_update_registration_time             ;when this campfire last registe
 int burn_duration                               ;how long this campfire will burn (set by fuel)
 float remaining_time                            ;total time this campfire will last
 float current_light_chance = 0.0
+int current_skill_index = 0
 
 function Initialize()
     self.BlockActivation()
@@ -476,6 +477,48 @@ function TakeDownPerkTree()
     endif
 endFunction
 
+function ShowNextPerkTree()
+    _Camp_Compatibility cs = GetCompatibilitySystem()
+    TakeDownPerkTree()
+    bool tree_found = false
+    int i = current_skill_index + 1
+    while !tree_found && i != current_skill_index
+        if i > 3
+            i = 0
+        endif
+        if cs.PerkNodeControllers[i]
+            tree_found = true
+            ShowPerkTree(i)
+            current_skill_index = i
+            if myPerkNodeController
+                (myPerkNodeController as _Camp_PerkNodeControllerBehavior).AssignCampfire(self)
+            endif
+        endif
+        i += 1
+    endWhile
+endFunction
+
+function ShowPrevPerkTree()
+    _Camp_Compatibility cs = GetCompatibilitySystem()
+    TakeDownPerkTree()
+    bool tree_found = false
+    int i = current_skill_index - 1
+    while !tree_found && i != current_skill_index
+        if i < 0
+            i = 3
+        endif
+        if cs.PerkNodeControllers[i]
+            tree_found = true
+            ShowPerkTree(i)
+            current_skill_index = i
+            if myPerkNodeController
+                (myPerkNodeController as _Camp_PerkNodeControllerBehavior).AssignCampfire(self)
+            endif
+        endif
+        i -= 1
+    endWhile
+endFunction
+
 function TakeDown()
     if myPerkNodeController
         (myPerkNodeController as _Camp_PerkNodeController).TakeDown()
@@ -595,6 +638,7 @@ function SetTinder(float afLightChance)
     campfire_stage = 4
     _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
     current_light_chance = afLightChance
+    CampDebug(1, "Set tinder with light chance of " + current_light_chance)
 
     if _Camp_Setting_ManualFireLighting.GetValueInt() != 2
         LightFire()
@@ -630,18 +674,10 @@ endFunction
 bool function ShowSkills()
     if campfire_stage == 2
         int i = _Camp_Campfire_SkillMenu.Show()
-        if i == 0
+        if i <= 3
             ShowBugNav()
-            ShowPerkTree(0)
-        elseif i == 1
-            ShowBugNav()
-            ShowPerkTree(1)
-        elseif i == 2
-            ShowBugNav()
-            ShowPerkTree(2)
-        elseif i == 3
-            ShowBugNav()
-            ShowPerkTree(3)
+            ShowPerkTree(i)
+            current_skill_index = i
         else
             ; Cancel
             return false
@@ -661,19 +697,7 @@ endFunction
 
 function ShowBugNav()
     if !myPerkNavController
-        _Camp_Compatibility cs = GetCompatibilitySystem()
-        Activator nc = GetCompatibilitySystem().PerkNodeControllers[idx]
-        int i = 0
-        int count = 0
-        while i < cs.PerkNodeControllers.Length
-            if cs.PerkNodeControllers[i] != None
-                count += 1
-            endif
-            i += 1
-        endWhile
-        if count > 1
-            myPerkNavController = self.PlaceAtMe(_Camp_PerkNavControllerAct)
-        endif
+        myPerkNavController = self.PlaceAtMe(_Camp_PerkNavControllerAct)
     endif
 endFunction
 

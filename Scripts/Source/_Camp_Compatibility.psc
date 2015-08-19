@@ -10,6 +10,7 @@ float property SKSE_MIN_VERSION = 1.07 autoReadOnly
 actor property PlayerRef auto
 ReferenceAlias property PlayerAlias auto
 Activator[] property PerkNodeControllers auto hidden
+bool property multiple_perk_trees = false auto hidden 				;Flag for perk tree navigation
 
 ;#Scripts======================================================================
 _Camp_SkyUIConfigPanelScript property CampConfig Auto 				;SkyUI Configuration script
@@ -51,7 +52,8 @@ formlist property _Camp_HeatSources_Fire_Large auto
 formlist property _Camp_HeatSources_Other auto
 
 ;#Trees============================================================================
-Tree property TreeReachTreeStump01 auto hidden
+;@TODO: Move to Frostfall
+;TreeObject property TreeReachTreeStump01 auto hidden
 
 ;#DLC / Mod Worldspaces============================================================
 Worldspace property DLC2WS auto hidden						;Solstheim
@@ -79,6 +81,8 @@ Weather property DLC2AshStorm auto hidden
 
 Activator property _Camp_PerkNavControllerAct auto
 Activator property _Camp_PerkNodeController_Camping auto
+; Testing
+Activator property _Camp_PerkNodeControllerTest auto
 
 ;#Upgrade Flags====================================================================
 bool Upgraded_1_1 = false
@@ -466,6 +470,10 @@ function RunCompatibility()
 		RegisterForEventsOnLoad()
 	endif
 	AddStartupSpells()
+
+	; Testing perk trees
+	CampfirePerkSystemRegister(_Camp_PerkNodeControllerTest, 1, "TestPlugin.esp")
+	CountPerkTrees()
 endFunction
 
 bool function IsPluginLoaded(int iFormID, string sPluginName)
@@ -521,7 +529,9 @@ function VanillaGameLoadUp()
 
 	; Grab forms we can't fill as properties
 	PlacementSystem.SmallFire = Game.GetFormFromFile(0x00013B40, "Skyrim.esm")
-	TreeReachTreeStump01 = Game.GetFormFromFile(0x000B8A75, "Skyrim.esm") as Tree
+	
+	;@TODO: Move to Frostfall
+	; TreeReachTreeStump01 = Game.GetFormFromFile(0x000B8A75, "Skyrim.esm") as TreeObject
 endFunction
 
 
@@ -560,6 +570,22 @@ function AddStartupSpells()							;Approved 2.0
 	if _Camp_Setting_TrackFollowers.GetValueInt() == 2
 		PlayerRef.AddSpell(_Camp_FollowerDetectSpell, false)
 	endif
+endFunction
+
+function CountPerkTrees()
+    int i = 0
+    int count = 0
+    while i < PerkNodeControllers.Length
+        if PerkNodeControllers[i] != None
+            count += 1
+        endif
+        i += 1
+    endWhile
+    if count > 1
+    	multiple_perk_trees = true
+    else
+    	multiple_perk_trees = false
+    endif
 endFunction
 
 function RegisterForKeysOnLoad()
