@@ -3,6 +3,7 @@ scriptname _Camp_PerkNode extends ObjectReference
 int property current_rank auto hidden
 GlobalVariable property perk_global auto
 GlobalVariable property perk_max_rank_global auto
+Sound property _Camp_UISkillsPerkSelect auto
 message property perk_description_eligible auto
 message property perk_description_ineligible auto
 ObjectReference property downstream_node_1_ref auto hidden
@@ -13,10 +14,6 @@ Activator property downstream_node_1 auto
 Activator property downstream_node_2 auto
 Activator property downstream_line_1 auto
 Activator property downstream_line_2 auto
-
-
-;Spell property _Camp_PerkLineActive auto
-;Spell property _Camp_PerkLineInactive auto
 
 ObjectReference property controller auto hidden
 
@@ -54,7 +51,7 @@ function IncreasePerkRank()
         current_rank += 1
         perk_global.SetValueInt(current_rank)
         self.PlayAnimation("OwnedWild")
-        ;@TODO: Play SFX
+        _Camp_UISkillsPerkSelect.Play(self)
         UpdateLines()
     endif
 endFunction
@@ -103,7 +100,6 @@ function AssignDownstreamNodes()
             downstream_line_2_ref = ctrlr.LineRefMap[jdx]
         endif
     endif
-
-    debug.trace("downstream_line_1_ref: " + downstream_line_1_ref)
+    
     UpdateLines()
 endFunction
