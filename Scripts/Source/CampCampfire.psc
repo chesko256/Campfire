@@ -276,12 +276,13 @@ ObjectReference property myPerkNavController auto hidden
 int EMBERS_DURATION = 4
 int ASH_DURATION = 24
 
-; Track remaining fuel for pick-up later
-int remaining_branches = 0
-int remaining_kindling = 0
-int remaining_books = 0
-int remaining_deadwood = 0
-int remaining_firewood = 0
+; Fuel refund tracking values
+int supplied_branches = 0
+int supplied_kindling = 0
+int supplied_books = 0
+int supplied_deadwood = 0
+int supplied_firewood = 0
+float last_put_out_time
 
 bool in_use = false
 bool eligible_for_deletion = false
@@ -636,6 +637,58 @@ function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int 
     endif
 endFunction
 
+function RefundRemainingFuel()
+    int hours_burnt = Math.Ceiling(last_put_out_time - ; last_update_registration_time)  ; THIS WON'T WORK
+
+    ; Eat fuel for each hour burned
+    while hours_burnt > 0
+        if supplied_books >= 2
+            supplied_books -= 2
+        elseif supplied_branches >= 2
+            supplied_branches -= 2
+        elseif supplied_kindling >= 2
+            supplied_kindling -= 2
+        endif
+
+        if supplied_firewood >= 1
+            supplied_firewood -= 1
+        elseif supplied_deadwood >= 1
+            supplied_deadwood -= 1
+        endif
+
+        hours_burnt -= 1
+    endWhile
+
+    ; Give back the remaining
+    if supplied_books > 0
+        PlayerRef.AddItem(ruinedbooks, supplied_books)
+    endif
+    if supplied_branches > 0
+        PlayerRef.AddItem(branches, supplied_branches)
+    endif
+    if supplied_kindling > 0
+        PlayerRef.AddItem(kindling, supplied_kindling)
+    endif
+    if supplied_firewood > 0
+        PlayerRef.AddItem(firewood, supplied_firewood)
+    endif
+    if supplied_deadwood > 0
+        PlayerRef.AddItem(deadwood, supplied_deadwood)
+    endif
+
+    ; Clear the counts to start fresh next time
+    DepleteAllRefundFuel()
+    campfire_size = 0
+endFunction
+
+function DepleteAllRefundFuel()
+    supplied_firewood = 0
+    supplied_deadwood = 0
+    supplied_books = 0
+    supplied_kindling = 0
+    supplied_branches = 0
+endFunction
+
 function SetTinder(float afLightChance)
     campfire_stage = 4
     _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
@@ -774,6 +827,7 @@ function PutOutFire()
     myFuelLit.DisableNoWait()
     myLight.DisableNoWait()
     RegisterForSingleUpdateGameTime(ASH_DURATION)
+    last_put_out_time = Utility.GetCurrentGameTime()
     last_update_registration_time = Utility.GetCurrentGameTime()
     remaining_time = ASH_DURATION
     CampDebug(1, "Campfire registered for update in " + remaining_time + " hours.")
@@ -803,6 +857,9 @@ function BurnToEmbers()
     CampDebug(1, "Campfire registered for update in " + (remaining_time - ASH_DURATION) + " hours.")
     campfire_stage = 1
     campfire_size = 0
+
+    DepleteAllRefundFuel()
+    
 endFunction
 
 function BurnToAshes()
@@ -817,6 +874,8 @@ function BurnToAshes()
     CampDebug(1, "Campfire registered for update in " + remaining_time + " hours.")
     campfire_stage = 0
     campfire_size = 0
+    
+    DepleteAllRefundFuel()
 endFunction
 
 Event OnUpdateGameTime()
