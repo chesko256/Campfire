@@ -232,6 +232,11 @@ GlobalVariable property _Camp_LastUsedCampfireSize auto
 GlobalVariable property _Camp_LastUsedCampfireStage auto
 GlobalVariable property _Camp_Setting_ManualFireLighting auto
 MiscObject property _Camp_CampfireItem_GoodWeather auto
+MiscObject property RuinedBook auto
+MiscObject property _Camp_DeadwoodBranch auto
+MiscObject property _Camp_Kindling auto
+MiscObject property Firewood01 auto
+MiscObject property _Camp_DeadwoodLog auto
 
 ;Run-time objects
 ObjectReference property myFuelLit auto hidden
@@ -283,6 +288,7 @@ int supplied_books = 0
 int supplied_deadwood = 0
 int supplied_firewood = 0
 float last_put_out_time
+float last_lit_time
 
 bool in_use = false
 bool eligible_for_deletion = false
@@ -638,7 +644,7 @@ function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int 
 endFunction
 
 function RefundRemainingFuel()
-    int hours_burnt = Math.Ceiling(last_put_out_time - ; last_update_registration_time)  ; THIS WON'T WORK
+    int hours_burnt = Math.Ceiling(last_put_out_time - last_lit_time)
 
     ; Eat fuel for each hour burned
     while hours_burnt > 0
@@ -661,19 +667,19 @@ function RefundRemainingFuel()
 
     ; Give back the remaining
     if supplied_books > 0
-        PlayerRef.AddItem(ruinedbooks, supplied_books)
+        PlayerRef.AddItem(RuinedBook, supplied_books)
     endif
     if supplied_branches > 0
-        PlayerRef.AddItem(branches, supplied_branches)
+        PlayerRef.AddItem(_Camp_DeadwoodBranch, supplied_branches)
     endif
     if supplied_kindling > 0
-        PlayerRef.AddItem(kindling, supplied_kindling)
+        PlayerRef.AddItem(_Camp_Kindling, supplied_kindling)
     endif
     if supplied_firewood > 0
-        PlayerRef.AddItem(firewood, supplied_firewood)
+        PlayerRef.AddItem(Firewood01, supplied_firewood)
     endif
     if supplied_deadwood > 0
-        PlayerRef.AddItem(deadwood, supplied_deadwood)
+        PlayerRef.AddItem(_Camp_DeadwoodLog, supplied_deadwood)
     endif
 
     ; Clear the counts to start fresh next time
@@ -808,6 +814,7 @@ function LightFire(bool abBypassLightingChance = false)
     myEmbers.DisableNoWait()
     myAshes.EnableNoWait(true)
     RegisterForSingleUpdateGameTime(burn_duration)
+    last_lit_time = Utility.GetCurrentGameTime()
     last_update_registration_time = Utility.GetCurrentGameTime()
     remaining_time = burn_duration + EMBERS_DURATION + ASH_DURATION
     CampDebug(1, "Campfire registered for update in " + burn_duration + " hours.")
