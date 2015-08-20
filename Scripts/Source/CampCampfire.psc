@@ -220,6 +220,8 @@ Activator property _Camp_Campfire_Ashes auto
 Activator property _Camp_Campfire_Steam auto
 Static property _Camp_CampfireCookPotSnapMarker auto
 Sound property FXFireOut auto
+Sound property _Camp_UISkillsPerkEnter auto
+Explosion property _Camp_PerkSystemEnterExplosion01 auto
 ImpactDataSet property MAGFlames01ImpactSet auto
 Message property _Camp_Campfire_Menu auto
 Message property _Camp_Campfire_SkillMenu auto
@@ -675,6 +677,8 @@ bool function ShowSkills()
     if campfire_stage == 2
         int i = _Camp_Campfire_SkillMenu.Show()
         if i <= 3
+            self.PlaceAtMe(_Camp_PerkSystemEnterExplosion01)
+            _Camp_UISkillsPerkEnter.Play(self)
             ShowBugNav()
             ShowPerkTree(i)
             current_skill_index = i
