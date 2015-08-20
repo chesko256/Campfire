@@ -21,7 +21,7 @@ Message property _Camp_Inspired1Message auto
 
 Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)
 	if akNewContainer == PlayerRef
-		ObjectReference f = Game.FindClosestReferenceOfTypeFromRef(_Camp_Campfire, PlayerRef, 500.0)
+		ObjectReference f = GetLastUsedCampfire()
 		if f
 			(f as CampCampfire).campfire_size = 3
 			_Camp_LastUsedCampfireSize.SetValueInt(3)
