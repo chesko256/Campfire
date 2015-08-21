@@ -227,6 +227,8 @@ Message property _Camp_Campfire_Menu auto
 Message property _Camp_Campfire_SkillMenu auto
 Message property _Camp_Campfire_SitError auto
 Message property _Camp_Campfire_LightFail auto
+Message property _Camp_Campfire_RefundFuelMsg auto
+Message property _Camp_Campfire_RefundFuelMsgSpent auto
 Actor property PlayerRef auto
 GlobalVariable property _Camp_LastUsedCampfireSize auto
 GlobalVariable property _Camp_LastUsedCampfireStage auto
@@ -282,11 +284,11 @@ int EMBERS_DURATION = 4
 int ASH_DURATION = 24
 
 ; Fuel refund tracking values
-int supplied_branches = 0
-int supplied_kindling = 0
-int supplied_books = 0
-int supplied_deadwood = 0
-int supplied_firewood = 0
+int property supplied_branches = 0 auto hidden
+int property supplied_kindling = 0 auto hidden
+int property supplied_books = 0 auto hidden
+int property supplied_deadwood = 0 auto hidden
+int property supplied_firewood = 0 auto hidden
 float last_put_out_time
 float last_lit_time
 
@@ -316,6 +318,14 @@ EndEvent
 
 function DoActivate(ObjectReference akActionRef)
     SetLastUsedCampfire(self)
+    
+    ; Should we refund the player fuel because it was put out?
+    if campfire_stage == 3 && campfire_size > 1
+        RefundRemainingFuel()
+        remaining_time = ASH_DURATION
+        BurnToAshes()
+    endif
+
     _Camp_LastUsedCampfireSize.SetValueInt(campfire_size)
     _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
 
@@ -644,7 +654,7 @@ function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int 
 endFunction
 
 function RefundRemainingFuel()
-    int hours_burnt = Math.Ceiling(last_put_out_time - last_lit_time)
+    int hours_burnt = Math.Ceiling((last_put_out_time * 24.0) - (last_lit_time * 24.0))
 
     ; Eat fuel for each hour burned
     while hours_burnt > 0
@@ -666,6 +676,13 @@ function RefundRemainingFuel()
     endWhile
 
     ; Give back the remaining
+    bool have_refund = false
+    if supplied_books > 0 || supplied_branches > 0 || supplied_kindling > 0 || supplied_firewood > 0 || supplied_deadwood > 0
+        _Camp_Campfire_RefundFuelMsg.Show()
+    else
+        _Camp_Campfire_RefundFuelMsgSpent.Show()
+    endif
+
     if supplied_books > 0
         PlayerRef.AddItem(RuinedBook, supplied_books)
     endif
@@ -684,7 +701,6 @@ function RefundRemainingFuel()
 
     ; Clear the counts to start fresh next time
     DepleteAllRefundFuel()
-    campfire_size = 0
 endFunction
 
 function DepleteAllRefundFuel()
@@ -866,11 +882,10 @@ function BurnToEmbers()
     campfire_size = 0
 
     DepleteAllRefundFuel()
-    
 endFunction
 
 function BurnToAshes()
-    CampDebug(0, "BurnToAshes")
+    CampDebug(0, "BurnToAshes or Refunding Fuel")
     myFuelUnlit.DisableNoWait(true)
     myFuelLit.DisableNoWait(true)
     myLight.DisableNoWait()
