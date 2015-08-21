@@ -69,11 +69,14 @@ function HarvestWood()
 
 	Game.EnablePlayerControls()
 	
-	_Camp_ChopWoodSM.Play(PlayerRef)
+	int id = _Camp_ChopWoodSM.Play(PlayerRef)
+	Sound.SetInstanceVolume(id, 0.4)
 	wait(1)
-	_Camp_ChopWoodSM.Play(PlayerRef)
+	id = _Camp_ChopWoodSM.Play(PlayerRef)
+	Sound.SetInstanceVolume(id, 0.4)
 	wait(1)
-	_Camp_ChopWoodSM.Play(PlayerRef)
+	id = _Camp_ChopWoodSM.Play(PlayerRef)
+	Sound.SetInstanceVolume(id, 0.4)
 	wait(1)
 	_Camp_Black.PopTo(_Camp_FadeUp)
 
