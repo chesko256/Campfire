@@ -7,6 +7,12 @@ int burn_duration = 6
 bool property isDeadwood = false auto
 bool property isFirewood = false auto
 
+int property count_books = 0 auto
+int property count_branches = 0 auto
+int property count_kindling = 0 auto
+int property count_deadwood = 0 auto
+int property count_firewood = 0 auto
+
 Furniture property _Camp_Campfire auto
 Activator property _Camp_Fuel_Crackling_DeadwoodLit auto
 Activator property _Camp_Fuel_Crackling_FirewoodLit auto
@@ -24,6 +30,11 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
 		ObjectReference f = GetLastUsedCampfire()
 		if f
 			(f as CampCampfire).campfire_size = 3
+			(f as CampCampfire).supplied_branches += count_branches
+			(f as CampCampfire).supplied_kindling += count_kindling
+			(f as CampCampfire).supplied_books += count_books
+			(f as CampCampfire).supplied_deadwood += count_deadwood
+			(f as CampCampfire).supplied_firewood += count_firewood
 			_Camp_LastUsedCampfireSize.SetValueInt(3)
 			if isDeadwood
 				(f as CampCampfire).SetFuel(_Camp_Fuel_Crackling_DeadwoodLit,		\
