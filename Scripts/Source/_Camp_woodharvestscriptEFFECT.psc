@@ -28,6 +28,9 @@ ImageSpaceModifier Property _Camp_Black auto
 globalvariable property TimeScale auto
 globalvariable property GameHour auto
 Sound property _Camp_ChopWoodSM auto
+Sound property _Camp_GatherBranchesSM auto
+Sound property _Camp_GatherStonesSM auto
+
 
 ;Axes
 Weapon property _Camp_StoneWarAxe auto
@@ -70,13 +73,13 @@ function HarvestWood()
 	Game.EnablePlayerControls()
 	
 	int id = _Camp_ChopWoodSM.Play(PlayerRef)
-	Sound.SetInstanceVolume(id, 0.4)
+	Sound.SetInstanceVolume(id, 0.3)
 	wait(1)
 	id = _Camp_ChopWoodSM.Play(PlayerRef)
-	Sound.SetInstanceVolume(id, 0.4)
+	Sound.SetInstanceVolume(id, 0.3)
 	wait(1)
 	id = _Camp_ChopWoodSM.Play(PlayerRef)
-	Sound.SetInstanceVolume(id, 0.4)
+	Sound.SetInstanceVolume(id, 0.3)
 	wait(1)
 	_Camp_Black.PopTo(_Camp_FadeUp)
 
@@ -96,8 +99,16 @@ function HarvestBranches()
 	AdvanceTime()
 
 	Game.EnablePlayerControls()
-	
-	wait(2)
+
+	int id = _Camp_GatherBranchesSM.Play(PlayerRef)
+	Sound.SetInstanceVolume(id, 0.8)
+	wait(1)
+	id = _Camp_GatherBranchesSM.Play(PlayerRef)
+	Sound.SetInstanceVolume(id, 0.8)
+	wait(1)
+	id = _Camp_GatherBranchesSM.Play(PlayerRef)
+	Sound.SetInstanceVolume(id, 0.8)
+	wait(1)
 	_Camp_Black.PopTo(_Camp_FadeUp)
 
 	GiveDeadwoodBranches()
@@ -111,7 +122,15 @@ function HarvestStone()
 
 	Game.EnablePlayerControls()
 
-	wait(2)
+	int id = _Camp_GatherStonesSM.Play(PlayerRef)
+	Sound.SetInstanceVolume(id, 0.7)
+	wait(1)
+	id = _Camp_GatherStonesSM.Play(PlayerRef)
+	Sound.SetInstanceVolume(id, 0.7)
+	wait(1)
+	id = _Camp_GatherStonesSM.Play(PlayerRef)
+	Sound.SetInstanceVolume(id, 0.7)
+	wait(1)
 	_Camp_Black.PopTo(_Camp_FadeUp)
 
 	float stone_roll = RandomFloat(0.1, 1.0)
