@@ -16,12 +16,10 @@ message property _Camp_WoodHarvestErrorTooCold auto
 message property _Camp_DeadwoodHarvestSuccess auto
 message property _Camp_BranchHarvestSuccess auto
 message property _Camp_WoodHarvest_Stone auto
-message property _Camp_StoneError auto
 formlist property _Camp_Trees auto
 formlist property woodChoppingAxes auto
 MiscObject property _Camp_DeadwoodLog auto
 MiscObject property _Camp_DeadwoodBranch auto
-MiscObject property _Camp_Rock auto
 ImageSpaceModifier Property _Camp_FadeDown auto
 ImageSpaceModifier Property _Camp_FadeUp auto
 ImageSpaceModifier Property _Camp_Black auto
@@ -29,8 +27,6 @@ globalvariable property TimeScale auto
 globalvariable property GameHour auto
 Sound property _Camp_ChopWoodSM auto
 Sound property _Camp_GatherBranchesSM auto
-Sound property _Camp_GatherStonesSM auto
-
 
 ;Axes
 Weapon property _Camp_StoneWarAxe auto
@@ -50,6 +46,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 	else
 		Conditions.TreesAreNearby = false
 		_Camp_WoodHarvestErrorNoTrees.Show()
+		return
 	endif
 
 	int i = _Camp_WoodHarvestConfirmMsg.Show()
@@ -57,8 +54,6 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 		HarvestWood()
 	elseif i == 1
 		HarvestBranches()
-	elseif i == 2
-		HarvestStone()
 	else
 		;pass
 	endif
@@ -83,12 +78,10 @@ function HarvestWood()
 	wait(1)
 	_Camp_Black.PopTo(_Camp_FadeUp)
 
-	GiveDeadwoodLogs()
-
 	if PlayerRef.GetItemCount(woodChoppingAxes) > 0
-		; Favor using this instead of stone axe
+		GiveDeadwoodLogs()
 	elseif PlayerRef.GetItemCount(_Camp_StoneWarAxe) > 0
-		PlayerRef.RemoveItem(_Camp_StoneWarAxe, 1)
+		GiveDeadwoodLogs(true)
 	endif
 endFunction
 
@@ -114,36 +107,13 @@ function HarvestBranches()
 	GiveDeadwoodBranches()
 endFunction
 
-function HarvestStone()
-	_Camp_FadeDown.Apply()
-	Wait(1)
-	_Camp_FadeDown.PopTo(_Camp_Black)
-	AdvanceTime()
-
-	Game.EnablePlayerControls()
-
-	int id = _Camp_GatherStonesSM.Play(PlayerRef)
-	Sound.SetInstanceVolume(id, 0.7)
-	wait(1)
-	id = _Camp_GatherStonesSM.Play(PlayerRef)
-	Sound.SetInstanceVolume(id, 0.7)
-	wait(1)
-	id = _Camp_GatherStonesSM.Play(PlayerRef)
-	Sound.SetInstanceVolume(id, 0.7)
-	wait(1)
-	_Camp_Black.PopTo(_Camp_FadeUp)
-
-	float stone_roll = RandomFloat(0.1, 1.0)
-	if stone_roll < 0.7
-		_Camp_WoodHarvest_Stone.Show()
-		PlayerRef.AddItem(_Camp_Rock, 1, true)
+function GiveDeadwoodLogs(bool abUsingStoneAxe = false)
+	int myHarvest
+	if abUsingStoneAxe
+		myHarvest = RandomInt(2, 5)
 	else
-		_Camp_StoneError.Show()
+		myHarvest = RandomInt(4, 7)
 	endif
-endFunction
-
-function GiveDeadwoodLogs()
-	int myHarvest = RandomInt(4, 8)
 
 	if GetTrackedFollowerCount() > 0
 		myHarvest += 2
