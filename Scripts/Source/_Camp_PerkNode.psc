@@ -7,7 +7,9 @@ Sound property _Camp_UISkillsPerkSelect auto
 message property perk_description auto
 bool property double_perk_description_values = false auto
 int property description_value_modifier = 1 auto
+int property description_value_iterator = 1 auto
 int property secondary_description_value_modifier = 1 auto
+int property secondary_description_value_iterator = 1 auto
 ObjectReference property downstream_node_1_ref auto hidden
 ObjectReference property downstream_node_2_ref auto hidden
 ObjectReference property downstream_line_1_ref auto hidden

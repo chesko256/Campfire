@@ -66,12 +66,14 @@ function ShowPerkDescription(_Camp_PerkNode akPerkNode, bool abEligibleForIncrea
 
     int i
     if akPerkNode.double_perk_description_values
-        i = akPerkNode.perk_description.Show((desc_val * akPerkNode.description_value_modifier), (desc_val * akPerkNode.secondary_description_value_modifier), \
+        i = akPerkNode.perk_description.Show((desc_val * akPerkNode.description_value_iterator) + akPerkNode.description_value_modifier, \
+                                             (desc_val * akPerkNode.secondary_description_value_iterator) + akPerkNode.secondary_description_value_modifier, \
                                              akPerkNode.perk_global.GetValueInt(), \    
                                              akPerkNode.perk_max_rank_global.GetValueInt(), \           
                                              99)
     else
-        i = akPerkNode.perk_description.Show((desc_val * akPerkNode.description_value_modifier), akPerkNode.perk_global.GetValueInt(), \    
+        i = akPerkNode.perk_description.Show((desc_val * akPerkNode.description_value_iterator) + akPerkNode.description_value_modifier, \
+                                             akPerkNode.perk_global.GetValueInt(), \    
                                              akPerkNode.perk_max_rank_global.GetValueInt(), \           
                                              99)
     endif
