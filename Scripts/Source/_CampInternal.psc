@@ -120,6 +120,15 @@ float function Get2DDistance(ObjectReference afFirst, ObjectReference afSecond) 
 	return sqrt(pow((a2x - a1x), 2) + pow((a2y - a1y), 2))
 endFunction
 
+_Camp_Strings function GetCampfireStrings() global
+	_CampfireInternalAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+	return (Campfire.CampfireStrings as _Camp_Strings)
+endFunction
+
 function RaiseCampAPIError() global
 	CampDebug(3, "Fatal Internal Campfire API error occurred.")
 endFunction
