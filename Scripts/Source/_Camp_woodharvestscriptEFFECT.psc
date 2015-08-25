@@ -4,6 +4,7 @@ import debug
 import utility
 import math
 import CampUtil
+import _CampInternal
 
 _Camp_Compatibility property Compatibility auto
 _Camp_ConditionValues property Conditions auto
@@ -25,6 +26,7 @@ ImageSpaceModifier Property _Camp_FadeUp auto
 ImageSpaceModifier Property _Camp_Black auto
 globalvariable property TimeScale auto
 globalvariable property GameHour auto
+globalvariable property _Camp_PerkRank_Resourceful auto
 Sound property _Camp_ChopWoodSM auto
 Sound property _Camp_GatherBranchesSM auto
 
@@ -110,27 +112,79 @@ endFunction
 function GiveDeadwoodLogs(bool abUsingStoneAxe = false)
 	int myHarvest
 	if abUsingStoneAxe
-		myHarvest = RandomInt(2, 5)
+		myHarvest = RandomInt(2, 4)
 	else
-		myHarvest = RandomInt(4, 7)
+		myHarvest = RandomInt(3, 6)
 	endif
 
+	if _Camp_PerkRank_Resourceful.GetValueInt() > 0
+		int i = myHarvest
+		while i > 0
+			if Utility.RandomFloat() <= _Camp_PerkRank_Resourceful.GetValueInt() * 0.25
+				myHarvest += 1
+			endif
+			i -= 1
+		endWhile
+	endif
+
+	int follower_harvest = 0
 	if GetTrackedFollowerCount() > 0
-		myHarvest += 2
+		follower_harvest = RandomInt(0, 2)
 	endif
 	
+	string follower_string
+	if follower_harvest > 0
+		_Camp_Strings str = GetCampfireStrings()
+		string fname = PickRandomFollowerOrAnimal()
+		if follower_harvest == 1
+			follower_string = fname + str.Follower_gathered + follower_harvest + str.FollowerHarvestDeadwood
+		elseif follower_harvest > 1
+			follower_string = fname + str.Follower_gathered + follower_harvest + str.FollowerHarvestDeadwoodPlural
+		endif
+	endif
+
 	_Camp_DeadwoodHarvestSuccess.Show(myHarvest)
+	if follower_harvest > 0
+		myHarvest += follower_harvest
+		debug.notification(follower_string)
+	endif
 	PlayerRef.AddItem(_Camp_DeadwoodLog, myHarvest, true)
 endFunction
 
 function GiveDeadwoodBranches()
 	int myHarvest = RandomInt(3, 6)
 
-	if GetTrackedFollowerCount() > 0
-		myHarvest += 2
+	if _Camp_PerkRank_Resourceful.GetValueInt() > 0
+		int i = myHarvest
+		while i > 0
+			if Utility.RandomFloat() <= _Camp_PerkRank_Resourceful.GetValueInt() * 0.25
+				myHarvest += 1
+			endif
+			i -= 1
+		endWhile
+	endif
+
+	int follower_harvest = 0
+	if GetTrackedFollowerCount() > 0 || GetTrackedAnimalCount() > 0
+		follower_harvest = RandomInt(0, 2)
+	endif
+
+	string follower_string
+	if follower_harvest > 0
+		_Camp_Strings str = GetCampfireStrings()
+		string fname = PickRandomFollowerOrAnimal()
+		if follower_harvest == 1
+			follower_string = fname + str.Follower_gathered + follower_harvest + str.FollowerHarvestBranches
+		elseif follower_harvest > 1
+			follower_string = fname + str.Follower_gathered + follower_harvest + str.FollowerHarvestBranchesPlural
+		endif
 	endif
 	
 	_Camp_BranchHarvestSuccess.Show(myHarvest)
+	if follower_harvest > 0
+		myHarvest += follower_harvest
+		debug.notification(follower_string)
+	endif
 	PlayerRef.AddItem(_Camp_DeadwoodBranch, myHarvest, true)
 endFunction
 
@@ -144,4 +198,32 @@ function AdvanceTime()
 	if Compatibility.IsFrostfallLoaded
 		FrostUtil.Event_LegacyWoodHarvest()
 	endif	
+endFunction
+
+string function PickRandomFollowerOrAnimal()
+	if !Compatibility.isSKSELoaded
+		if GetTrackedFollowerCount() > 0
+			return GetCampfireStrings().FollowerNameGeneric
+		else
+			return GetCampfireStrings().AnimalNameGeneric
+		endif
+	endif
+	string[] tmp = new String[4]
+	int i = 1
+	int j = 0
+	while i <= 3
+		Actor af = GetTrackedFollower(i)
+		if af
+			tmp[j] = af.GetBaseObject().GetName()
+			j += 1
+		endif
+		i += 1
+	endWhile
+	Actor aa = GetTrackedAnimal()
+	if aa
+		tmp[j] = aa.GetBaseObject().GetName()
+	endif
+	int len = tmp.Find("") - 1
+	
+	return tmp[Utility.RandomInt(0, len)]
 endFunction

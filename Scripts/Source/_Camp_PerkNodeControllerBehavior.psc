@@ -1,6 +1,7 @@
 scriptname _Camp_PerkNodeControllerBehavior extends _Camp_PerkNodeController
 
 message property _Camp_PerkGeneral_UpgradeVerify auto
+_Camp_ConditionValues property Conditions auto
 
 function AssignCampfire(ObjectReference akCampfire)
     myCampfire = akCampfire
@@ -51,21 +52,27 @@ endFunction
 
 function ShowPerkDescription(_Camp_PerkNode akPerkNode, bool abEligibleForIncrease = false)
     if abEligibleForIncrease
-        int i = akPerkNode.perk_description_eligible.Show(akPerkNode.perk_global.GetValueInt(), \
-                                                          akPerkNode.perk_max_rank_global.GetValueInt(), \
-                                                          99)
-        ; Increase Rank / Back
-        if i == 0
-            int j = _Camp_PerkGeneral_UpgradeVerify.Show()
-            ; Are you sure you want this perk? Ok / Cancel
-            if j == 0
-                akPerkNode.IncreasePerkRank() 
-            endif
-        endif
+        Conditions.IsPerkEligible = true
     else
-        akPerkNode.perk_description_ineligible.Show(akPerkNode.perk_global.GetValueInt(), \
-                                                    akPerkNode.perk_max_rank_global.GetValueInt(), \
-                                                    99)
-        ; Back
+        Conditions.IsPerkEligible = false
+    endif
+
+    int desc_val
+    if akPerkNode.perk_global.GetValueInt() < akPerkNode.perk_max_rank_global.GetValueInt()
+        desc_val = akPerkNode.perk_global.GetValueInt() + 1
+    else
+        desc_val = akPerkNode.perk_max_rank_global.GetValueInt()
+    endif
+
+    int i = akPerkNode.perk_description.Show((desc_val * akPerkNode.description_value_modifier), akPerkNode.perk_global.GetValueInt(), \    
+                                             akPerkNode.perk_max_rank_global.GetValueInt(), \           
+                                             99)
+    ; Increase Rank / Back
+    if i == 0
+        int j = _Camp_PerkGeneral_UpgradeVerify.Show()    
+        ; Are you sure you want this perk? Ok / Cancel    
+        if j == 0        
+            akPerkNode.IncreasePerkRank() 
+        endif
     endif
 endFunction
