@@ -64,9 +64,18 @@ function ShowPerkDescription(_Camp_PerkNode akPerkNode, bool abEligibleForIncrea
         desc_val = akPerkNode.perk_max_rank_global.GetValueInt()
     endif
 
-    int i = akPerkNode.perk_description.Show((desc_val * akPerkNode.description_value_modifier), akPerkNode.perk_global.GetValueInt(), \    
+    int i
+    if akPerkNode.double_perk_description_values
+        i = akPerkNode.perk_description.Show((desc_val * akPerkNode.description_value_modifier), (desc_val * akPerkNode.secondary_description_value_modifier), \
+                                             akPerkNode.perk_global.GetValueInt(), \    
                                              akPerkNode.perk_max_rank_global.GetValueInt(), \           
                                              99)
+    else
+        i = akPerkNode.perk_description.Show((desc_val * akPerkNode.description_value_modifier), akPerkNode.perk_global.GetValueInt(), \    
+                                             akPerkNode.perk_max_rank_global.GetValueInt(), \           
+                                             99)
+    endif
+
     ; Increase Rank / Back
     if i == 0
         int j = _Camp_PerkGeneral_UpgradeVerify.Show()    
