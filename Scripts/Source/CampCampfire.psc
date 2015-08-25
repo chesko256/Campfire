@@ -280,6 +280,8 @@ ObjectReference property myCookPotSnapMarkerFuture auto hidden
 ObjectReference property myPerkNodeController auto hidden
 ObjectReference property myPerkNavController auto hidden
 
+GlobalVariable property _Camp_PerkRank_Firecraft auto
+
 int EMBERS_DURATION = 4
 int ASH_DURATION = 24
 
@@ -298,7 +300,7 @@ bool eligible_for_deletion = false
 int property campfire_stage = 0 auto hidden     ;0 = empty or ash, 1 = embers, 2 = burning, 3 = unlit fuel no tinder, 4 = unlit fuel and tinder
 int property campfire_size = 0 auto hidden      ;0 = not built, 1 = fragile, 2 = flickering, 3 = crackling, 4 = roaring
 float last_update_registration_time             ;when this campfire last registered
-int burn_duration                               ;how long this campfire will burn (set by fuel)
+float burn_duration                             ;how long this campfire will burn (set by fuel)
 float remaining_time                            ;total time this campfire will last
 float current_light_chance = 0.0
 int current_skill_index = 0
@@ -633,7 +635,7 @@ EndEvent
 
 function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int aiBurnDuration)
     CampDebug(1, "Fuel set: " + akFuelLit + "," + akFuelUnlit + "," + akLight)
-    burn_duration = aiBurnDuration
+    burn_duration = aiBurnDuration * ((_Camp_PerkRank_Firecraft.GetValueInt() * 0.25) + 1)
     
     ;If there is pre-existing fuel, get rid of it
     TryToDisableAndDeleteRef(myFuelUnlit)
