@@ -82,6 +82,7 @@ ConstructibleObject property _Camp_RecipeTanningLeatherValeSabreCatHideDLC1 auto
 Spell property _Camp_CreateItemSpell auto
 Spell property _Camp_CampfireSpell auto
 Spell property _Camp_HarvestWoodSpell auto
+Spell property _Camp_SurvivalVisionPower auto
 Spell property _Camp_LegacyConfig_Spell auto
 Spell property _Camp_FollowerDetectSpell auto
 Message property _Camp_CriticalError_SKSE auto
@@ -573,10 +574,12 @@ function AddStartupSpells()							;Approved 2.0
 		else
 			PlayerRef.AddSpell(_Camp_HarvestWoodSpell, false)
 		endif
+		PlayerRef.AddSpell(_Camp_SurvivalVisionPower, false)
 	else
 		PlayerRef.AddSpell(_Camp_CreateItemSpell, false)
 		PlayerRef.AddSpell(_Camp_CampfireSpell, false)
 		PlayerRef.AddSpell(_Camp_HarvestWoodSpell, false)
+		PlayerRef.AddSpell(_Camp_SurvivalVisionPower, false)
 		_Camp_HotkeyCreateItem.SetValueInt(0)
 		_Camp_HotkeyBuildCampfire.SetValueInt(0)
 		_Camp_HotkeyHarvestWood.SetValueInt(0)
