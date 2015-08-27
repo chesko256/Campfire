@@ -1,6 +1,5 @@
 scriptname _Camp_SurvivalVisionSearchMemObjects extends ActiveMagicEffect
 
-
 Actor property PlayerRef auto
 EffectShader property _Camp_VisionStaticShader auto
 FormList property _Camp_VisionObjects_Membrane auto
@@ -30,15 +29,20 @@ function SeekTargets()
         if stop_effect
             return
         endif
-        ObjectReference ref = Game.FindRandomReferenceOfAnyTypeInListFromRef(_Camp_VisionObjects_Membrane, PlayerRef, 1536.0)
-        int idx = found_targets.Find(ref)
-        if idx == -1
-            target_found = true
-             _Camp_VisionStaticShader.Play(ref)
-            ArrayAddRef(found_targets, ref)
+        ObjectReference ref = Game.FindRandomReferenceOfAnyTypeInListFromRef(_Camp_VisionObjects_Membrane, PlayerRef, 2048.0)
+        if ref && ref.IsHarvested()
+            ; pass
+        else
+            int idx = found_targets.Find(ref)
+            if idx == -1
+                target_found = true
+                _Camp_VisionStaticShader.Play(ref)
+                ArrayAddRef(found_targets, ref)
+            endif
+            i += 1
         endif
-        i += 1
     endWhile
+
 endFunction
 
 function StopEffects()
