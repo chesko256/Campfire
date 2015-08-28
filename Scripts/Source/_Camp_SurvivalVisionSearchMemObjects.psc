@@ -3,7 +3,6 @@ scriptname _Camp_SurvivalVisionSearchMemObjects extends ActiveMagicEffect
 Actor property PlayerRef auto
 EffectShader property _Camp_VisionStaticShader auto
 FormList property _Camp_VisionObjects_Membrane auto
-Spell property _Camp_SurvivalVisionPower auto
 
 ObjectReference[] found_targets
 bool seeking = false
@@ -17,7 +16,6 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 EndEvent
 
 Event OnEffectFinish(Actor akTarget, Actor akCaster)
-    PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
     StopEffects()
 EndEvent
 
@@ -48,10 +46,8 @@ endFunction
 function StopEffects()
     stop_effect = true
     int i = 0
-    debug.trace("found_targets.Length: " + found_targets.Length)
     while i < found_targets.Length
         if found_targets[i]
-            debug.trace("Stopping on " + found_targets[i])
             _Camp_VisionStaticShader.Stop(found_targets[i])
         endif
         i += 1
