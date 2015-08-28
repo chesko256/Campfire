@@ -4,6 +4,7 @@ Actor property PlayerRef auto
 Activator property _Camp_VisionDetectItemFX auto
 FormList property _Camp_VisionObjects_Glow auto
 Spell property _Camp_SurvivalVisionPower auto
+Spell property _Camp_SurvivalVisionPowerDetectSpell auto
 
 ObjectReference[] found_targets
 bool seeking = false
@@ -12,6 +13,9 @@ int seek_count = 48
 
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
+    RegisterForModEvent("Campfire_PlayerHit", "PlayerHit")
+    _Camp_SurvivalVisionPowerDetectSpell.Cast(PlayerRef)
+    RegisterForSingleUpdate(4)
     SeekTargets()
 EndEvent
 
@@ -19,6 +23,16 @@ Event OnEffectFinish(Actor akTarget, Actor akCaster)
     PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
     StopEffects()
 EndEvent
+
+Event OnUpdate()
+    ; Keep the detection effects alive
+    _Camp_SurvivalVisionPowerDetectSpell.Cast(PlayerRef)
+    RegisterForSingleUpdate(4)
+EndEvent
+
+Event PlayerHit(Form akAggressor, Form akSource, Form akProjectile)
+    Dispel()
+endEvent
 
 function SeekTargets()
     found_targets = new ObjectReference[24]
