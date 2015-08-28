@@ -3,6 +3,7 @@ scriptname _Camp_SurvivalVisionSearchMemObjects extends ActiveMagicEffect
 Actor property PlayerRef auto
 EffectShader property _Camp_VisionStaticShader auto
 FormList property _Camp_VisionObjects_Membrane auto
+GlobalVariable property _Camp_PerkRank_KeenSenses auto
 
 ObjectReference[] found_targets
 bool seeking = false
@@ -23,6 +24,7 @@ function SeekTargets()
     found_targets = new ObjectReference[24]
     seeking = true
     int i = 0
+    float detection_distance = 2048.0 + (_Camp_PerkRank_KeenSenses.GetValueInt() * 1024.0)
     while seeking && i < seek_count
         if stop_effect
             return
