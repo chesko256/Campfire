@@ -17,6 +17,7 @@ ObjectReference[] found_targets
 bool seeking = false
 bool target_found = false
 bool stop_effect = false
+bool updating = false
 int seek_count = 8
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
@@ -42,14 +43,15 @@ EndEvent
 Event OnAnimationEvent(ObjectReference akSource, string asEventName)
     if akSource == PlayerRef && asEventName == "FootLeft"
         if _Camp_PerkRank_KeenSenses.GetValueInt() == 0
-            PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
+            CancelEffect_Movement()
         elseif !PlayerRef.IsSneaking()
-            PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
+            CancelEffect_Movement()
         endif
     endif
 EndEvent
 
 Event OnUpdate()
+    updating = true
     if self.GetTargetActor()
         if IsRefInInterior(PlayerRef)
             ; Player transitioned cells most likely. Kill the ability silently.
@@ -66,7 +68,23 @@ Event OnUpdate()
     else
         CampDebug(0, "Instincts: self.GetTargetActor() no longer resolving, so stop updating.")
     endif
+    updating = false
 EndEvent
+
+function CancelEffect_Movement()
+    ; The effect is being cancelled because the player moved.
+
+    ; Wait until an update cycle isn't running, or else we could remove the effect
+    ; from the actor and then try to register for an update with no native object bound.
+    int i = 0
+    while updating && i < 50
+        utility.wait(0.1)
+        i += 1
+    endWhile
+
+    UnregisterForUpdate()
+    PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
+endFunction
 
 function RefreshObjects()
     if found_targets.Find(None) == -1
