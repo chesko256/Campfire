@@ -1,5 +1,7 @@
 Scriptname _Camp_SkyUIConfigPanelScript extends SKI_ConfigBase
 
+import _CampInternal
+
 ; External scripts
 _Camp_Compatibility property Compatibility auto
 
@@ -25,6 +27,7 @@ GlobalVariable property _Camp_CurrentlyPlacingObject auto
 GlobalVariable property _Camp_HotkeyCreateItem auto
 GlobalVariable property _Camp_HotkeyBuildCampfire auto
 GlobalVariable property _Camp_HotkeyHarvestWood auto
+GlobalVariable property _Camp_HotkeyInstincts auto
 
 Actor property PlayerRef auto
 ReferenceAlias property Follower1 auto
@@ -34,11 +37,9 @@ ReferenceAlias property Animal auto
 Spell property _Camp_CreateItemSpell auto
 Spell property _Camp_CampfireSpell auto
 Spell property _Camp_HarvestWoodSpell auto
+Spell property _Camp_SurvivalVisionPower auto
 Spell property _Camp_FollowerDetectSpell auto
 Message property _Camp_TroubleshootingConfirmMsg auto
-
-; Toggle states
-bool bPresetChange = false
 
 string[] TroubleshootingList
 int TroubleshootingIndex = 0
@@ -63,6 +64,7 @@ int Gameplay_SettingCampingFollowersRemoveGear_OID
 int Gameplay_HotkeyCreateItem_OID
 int Gameplay_HotkeyBuildCampfire_OID
 int Gameplay_HotkeyHarvestWood_OID
+int Gameplay_HotkeyInstincts_OID
 
 int Advanced_SettingAdvancedPlacement_OID
 int Advanced_SettingMaxThreads_OID
@@ -73,6 +75,8 @@ int Guide_Topic1
 int Guide_Topic2
 int Guide_Topic3
 int Guide_Topic4
+int Guide_Topic5
+int Guide_Topic6
 
 float DEFAULT_THREADS = 20.0
 float MIN_THREADS = 0.0
@@ -128,6 +132,7 @@ function PageReset_Gameplay()
 	Gameplay_HotkeyCreateItem_OID = AddKeyMapOption("$CampfireGameplayHotkeyCreateItem", _Camp_HotkeyCreateItem.GetValueInt())
 	Gameplay_HotkeyBuildCampfire_OID = AddKeyMapOption("$CampfireGameplayHotkeyBuildCampfire", _Camp_HotkeyBuildCampfire.GetValueInt())
 	Gameplay_HotkeyHarvestWood_OID = AddKeyMapOption("$CampfireGameplayHotkeyHarvestWood", _Camp_HotkeyHarvestWood.GetValueInt())
+	Gameplay_HotkeyInstincts_OID = AddKeyMapOption("$CampfireGameplayHotkeyInstincts", _Camp_HotkeyInstincts.GetValueInt())
 	
 	AddEmptyOption()
 
@@ -238,7 +243,9 @@ function PageReset_Help()
 	Guide_Topic1 = AddTextOption("$CampfireGuideTopic1", "")
 	Guide_Topic2 = AddTextOption("$CampfireGuideTopic2", "")
 	Guide_Topic3 = AddTextOption("$CampfireGuideTopic3", "")
+	Guide_Topic6 = AddTextOption("$CampfireGuideTopic6", "")
 	Guide_Topic4 = AddTextOption("$CampfireGuideTopic4", "")
+	Guide_Topic5 = AddTextOption("$CampfireGuideTopic5", "")
 endFunction
 
 event OnPageReset(string page)
@@ -295,6 +302,8 @@ event OnOptionHighlight(int option)
 		SetInfoText("$CampfireOptionHighlightHKBuildCampfire")
 	elseif option == Gameplay_HotkeyHarvestWood_OID
 		SetInfoText("$CampfireOptionHighlightHKHarvestWood")
+	elseif option == Gameplay_HotkeyInstincts_OID
+		SetInfoText("$CampfireOptionHighlightHKInstincts")
 
 	elseif option == Advanced_SettingAdvancedPlacement_OID
 		SetInfoText("$CampfireOptionHighlightAdvancedPlacement")
@@ -452,6 +461,10 @@ event OnOptionSelect(int option)
 		ShowGuideTopic3()
 	elseif option == Guide_Topic4
 		ShowGuideTopic4()
+	elseif option == Guide_Topic5
+		ShowGuideTopic5()
+	elseif option == Guide_Topic6
+		ShowGuideTopic6()
 	endif
 endEvent
 
@@ -524,6 +537,11 @@ event OnOptionDefault(int option)
 		_Camp_HotkeyHarvestWood.SetValue(0)
 		ForcePageReset()
 		Game.GetPlayer().AddSpell(_Camp_HarvestWoodSpell, false)
+	elseif option == Gameplay_HotkeyInstincts_OID
+		UnregisterForKey(_Camp_HotkeyInstincts.GetValueInt())
+		_Camp_HotkeyInstincts.SetValue(0)
+		ForcePageReset()
+		Game.GetPlayer().AddSpell(_Camp_SurvivalVisionPower, false)
 	endif
 endEvent
 
@@ -566,58 +584,39 @@ endEvent
 
 event OnOptionKeyMapChange(int option, int keyCode, string conflictControl, string conflictName)
 	if option == Gameplay_HotkeyBuildCampfire_OID
-		if conflictControl != ""
-			if conflictName != ""
-				ShowMessage("This key is already bound to " + conflictControl + " in " + conflictName + ". Undesirable behavior may occur; use with caution, or assign to a different control.")
-				_Camp_HotkeyBuildCampfire.SetValueInt(keyCode)
-				RegisterForKey(_Camp_HotkeyBuildCampfire.GetValueInt())
-				ForcePageReset()
-				Game.GetPlayer().RemoveSpell(_Camp_CampfireSpell)
-			else
-				ShowMessage("This key is already bound to " + conflictControl + " in Skyrim. Please select a different key.")
-			endif
-		else
-			_Camp_HotkeyBuildCampfire.SetValueInt(keyCode)
-			RegisterForKey(_Camp_HotkeyBuildCampfire.GetValueInt())
-			ForcePageReset()
-			Game.GetPlayer().RemoveSpell(_Camp_CampfireSpell)
-		endif
+		RemapHotkey(option, keyCode, conflictControl, conflictName, _Camp_HotkeyBuildCampfire, _Camp_CampfireSpell)
 	elseif option == Gameplay_HotkeyCreateItem_OID
-		if conflictControl != ""
-			if conflictName != ""
-				ShowMessage("This key is already bound to " + conflictControl + " in " + conflictName + ". Undesirable behavior may occur; use with caution, or assign to a different control.")
-				_Camp_HotkeyCreateItem.SetValueInt(keyCode)
-				RegisterForKey(_Camp_HotkeyCreateItem.GetValueInt())
-				ForcePageReset()
-				Game.GetPlayer().RemoveSpell(_Camp_CreateItemSpell)
-			else
-				ShowMessage("This key is already bound to " + conflictControl + " in Skyrim. Please select a different key.")
-			endif
-		else
-			_Camp_HotkeyCreateItem.SetValueInt(keyCode)
-			RegisterForKey(_Camp_HotkeyCreateItem.GetValueInt())
-			ForcePageReset()
-			Game.GetPlayer().RemoveSpell(_Camp_CreateItemSpell)
-		endif
+		RemapHotkey(option, keyCode, conflictControl, conflictName, _Camp_HotkeyCreateItem, _Camp_CreateItemSpell)
 	elseif option == Gameplay_HotkeyHarvestWood_OID
-		if conflictControl != ""
-			if conflictName != ""
-				ShowMessage("This key is already bound to " + conflictControl + " in " + conflictName + ". Undesirable behavior may occur; use with caution, or assign to a different control.")
-				_Camp_HotkeyHarvestWood.SetValueInt(keyCode)
-				RegisterForKey(_Camp_HotkeyHarvestWood.GetValueInt())
-				ForcePageReset()
-				Game.GetPlayer().RemoveSpell(_Camp_HarvestWoodSpell)
-			else
-				ShowMessage("This key is already bound to " + conflictControl + " in Skyrim. Please select a different key.")
-			endif
-		else
-			_Camp_HotkeyHarvestWood.SetValueInt(keyCode)
-			RegisterForKey(_Camp_HotkeyHarvestWood.GetValueInt())
-			ForcePageReset()
-			Game.GetPlayer().RemoveSpell(_Camp_HarvestWoodSpell)
-		endif
+		RemapHotkey(option, keyCode, conflictControl, conflictName, _Camp_HotkeyHarvestWood, _Camp_HarvestWoodSpell)
+	elseif option == Gameplay_HotkeyInstincts_OID
+		RemapHotkey(option, keyCode, conflictControl, conflictName, _Camp_HotkeyInstincts, _Camp_SurvivalVisionPower)
 	endif
 endEvent
+
+function RemapHotkey(int option, int keyCode, string conflictControl, string conflictName, GlobalVariable akHotkeyGlobal, Spell akHotkeySpell)
+	_Camp_Strings cs = GetCampfireStrings()
+	if conflictControl != ""
+		if conflictName != ""
+			; "This key is already bound to " + conflictControl + " in " + conflictName + ". Undesirable behavior may occur; use with caution, or assign to a different control."
+			bool b = ShowMessage(cs.HotkeyConflict1 + conflictControl + cs.HotkeyConflict2 + conflictName + cs.HotkeyConflict3_mod)
+			if b
+				akHotkeyGlobal.SetValueInt(keyCode)
+				RegisterForKey(akHotkeyGlobal.GetValueInt())
+				ForcePageReset()
+				Game.GetPlayer().RemoveSpell(akHotkeySpell)
+			endif
+		else
+			; "This key is already bound to " + conflictControl + " in Skyrim. Please select a different key."
+			ShowMessage(cs.HotkeyConflict1 + conflictControl + cs.HotkeyConflict3_game, a_withCancel = false)
+		endif
+	else
+		akHotkeyGlobal.SetValueInt(keyCode)
+		RegisterForKey(akHotkeyGlobal.GetValueInt())
+		ForcePageReset()
+		Game.GetPlayer().RemoveSpell(akHotkeySpell)
+	endif
+endFunction
 
 Event OnKeyDown(int KeyCode)
 	if UI.IsMenuOpen("Console") || UI.IsMenuOpen("Book Menu") || UI.IsMenuOpen("BarterMenu") || UI.IsMenuOpen("ContainerMenu") || UI.IsMenuOpen("CraftingMenu") || UI.IsMenuOpen("Dialogue Menu") || UI.IsMenuOpen("FavoritesMenu") || UI.IsMenuOpen("InventoryMenu") || UI.IsMenuOpen("Journal Menu") || UI.IsMenuOpen("Lockpicking Menu") || UI.IsMenuOpen("MagicMenu") || UI.IsMenuOpen("MapMenu") || UI.IsMenuOpen("MessageBoxMenu") || UI.IsMenuOpen("Sleep/Wait Menu") || UI.IsMenuOpen("StatsMenu")
@@ -629,16 +628,21 @@ Event OnKeyDown(int KeyCode)
 		_Camp_CampfireSpell.Cast(PlayerRef)
 	elseif KeyCode == _Camp_HotkeyHarvestWood.GetValueInt()
 		_Camp_HarvestWoodSpell.Cast(PlayerRef)
+	elseif KeyCode == _Camp_HotkeyInstincts.GetValueInt()
+		_Camp_SurvivalVisionPower.Cast(PlayerRef)
 	endif
 endEvent
 	
 string function GetCustomControl(int keyCode)
+	_Camp_Strings cs = GetCampfireStrings()
 	if (keyCode == _Camp_HotkeyCreateItem.GetValueInt())
-		return "Survival Skill: Create Item"
+		return cs.HotkeyDescription_CreateItem
 	elseif (keyCode == _Camp_HotkeyBuildCampfire.GetValueInt())
-		return "Survival Skill: Build Campfire"
+		return cs.HotkeyDescription_BuildCampfire
 	elseif (keyCode == _Camp_HotkeyHarvestWood.GetValueInt())
-		return "Survival Skill: Harvest Wood"
+		return cs.HotkeyDescription_HarvestWood
+	elseif (keyCode == _Camp_HotkeyInstincts.GetValueInt())
+		return cs.HotkeyDescription_Instincts
 	else
 		return ""
 	endIf
@@ -656,6 +660,13 @@ endfunction
 function ShowGuideTopic4()
 	ShowMessage("$CampfireGuideTopic4Text", false)
 endfunction
+function ShowGuideTopic5()
+	ShowMessage("$CampfireGuideTopic5Text", false)
+endFunction
+function ShowGuideTopic6()
+	ShowMessage("$CampfireGuideTopic6Text", false)
+	ShowMessage("$CampfireGuideTopic6TextCont", false)
+endFunction
 
 function TroubleshootingPlacement()
 	utility.wait(1)
