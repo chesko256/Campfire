@@ -1,5 +1,6 @@
 scriptname _Camp_ConditionValues extends Quest conditional
 
+bool property IsPlayerInInterior = false auto conditional hidden
 bool property IsPlayerSittingNearFire = false auto conditional hidden
 bool property IsPlayerSittingInTent = false auto conditional hidden
 bool property IsPlayerLayingInTent = false auto conditional hidden

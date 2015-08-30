@@ -1,4 +1,8 @@
 scriptname _Camp_SurvivalVisionSearchGlowObjects extends ActiveMagicEffect
+{Handles playing glow shader vision effects, and maintains overall power state.}
+
+import math
+import CampUtil
 
 Actor property PlayerRef auto
 Activator property _Camp_VisionDetectItemFX auto
@@ -11,12 +15,17 @@ ObjectReference[] found_targets
 bool seeking = false
 bool target_found = false
 bool stop_effect = false
-int seek_count = 48
-
+int seek_count = 8
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
+    if IsRefInInterior(PlayerRef)
+        debug.notification("You cannot use this ability while indoors.")
+        PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
+    endif
+    RegisterForAnimationEvent(PlayerRef, "FootLeft")
     RegisterForModEvent("Campfire_PlayerHit", "PlayerHit")
     RegisterForMenu("Dialogue Menu")
+    found_targets = new ObjectReference[24]
     _Camp_SurvivalVisionPowerDetectSpell.Cast(PlayerRef)
     RegisterForSingleUpdate(4)
     SendEvent_VisionPowerStart()
@@ -24,15 +33,41 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 EndEvent
 
 Event OnEffectFinish(Actor akTarget, Actor akCaster)
-    PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
     StopEffects()
+EndEvent
+
+Event OnAnimationEvent(ObjectReference akSource, string asEventName)
+    if akSource == PlayerRef && asEventName == "FootLeft"
+        if _Camp_PerkRank_KeenSenses.GetValueInt() == 0
+            PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
+        elseif !PlayerRef.IsSneaking()
+            PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
+        endif
+    endif
 EndEvent
 
 Event OnUpdate()
     ; Keep the detection effects alive
     _Camp_SurvivalVisionPowerDetectSpell.Cast(PlayerRef)
+
+    ; Refresh objects if necessary
+    RefreshObjects()
+
     RegisterForSingleUpdate(4)
 EndEvent
+
+function RefreshObjects()
+    if found_targets.Find(None) == -1
+        ; The array is full, purge and start again.
+        StopEffects()
+        found_targets = new ObjectReference[24]
+        stop_effect = false
+    endif
+
+    if !seeking
+        SeekTargets()
+    endif
+endFunction
 
 Event PlayerHit(Form akAggressor, Form akSource, Form akProjectile)
     Dispel()
@@ -45,7 +80,6 @@ Event OnMenuOpen(string menuName)
 EndEvent
 
 function SeekTargets()
-    found_targets = new ObjectReference[24]
     seeking = true
     int i = 0
     float detection_distance = 2048.0 + (_Camp_PerkRank_KeenSenses.GetValueInt() * 1024.0)
@@ -54,7 +88,7 @@ function SeekTargets()
             return
         endif
         ObjectReference ref = Game.FindRandomReferenceOfAnyTypeInListFromRef(_Camp_VisionObjects_Glow, PlayerRef, detection_distance)
-        if ref && ref.IsHarvested()
+        if ref && (ref.IsHarvested() || !ref.Is3DLoaded())
             ; pass
         else
             int idx = found_targets.Find(ref)
@@ -66,9 +100,10 @@ function SeekTargets()
                 
                 ArrayAddRef(found_targets, ref)
             endif
-            i += 1
         endif
+        i += 1
     endWhile
+    seeking = false
 endFunction
 
 function StopEffects()
