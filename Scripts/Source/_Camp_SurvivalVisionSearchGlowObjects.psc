@@ -1,14 +1,16 @@
 scriptname _Camp_SurvivalVisionSearchGlowObjects extends ActiveMagicEffect
 {Handles playing glow shader vision effects, and maintains overall power state.}
 
-import math
+import _CampInternal
 import CampUtil
+import math
 
 Actor property PlayerRef auto
 Activator property _Camp_VisionDetectItemFX auto
 FormList property _Camp_VisionObjects_Glow auto
 Spell property _Camp_SurvivalVisionPower auto
 Spell property _Camp_SurvivalVisionPowerDetectSpell auto
+Message property _Camp_VisionPowerErrorIndoors auto
 GlobalVariable property _Camp_PerkRank_KeenSenses auto
 
 ObjectReference[] found_targets
@@ -19,8 +21,9 @@ int seek_count = 8
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
     if IsRefInInterior(PlayerRef)
-        debug.notification("You cannot use this ability while indoors.")
+        _Camp_VisionPowerErrorIndoors.Show()
         PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
+        return
     endif
     RegisterForAnimationEvent(PlayerRef, "FootLeft")
     RegisterForModEvent("Campfire_PlayerHit", "PlayerHit")
@@ -47,13 +50,22 @@ Event OnAnimationEvent(ObjectReference akSource, string asEventName)
 EndEvent
 
 Event OnUpdate()
-    ; Keep the detection effects alive
-    _Camp_SurvivalVisionPowerDetectSpell.Cast(PlayerRef)
+    if self.GetTargetActor()
+        if IsRefInInterior(PlayerRef)
+            ; Player transitioned cells most likely. Kill the ability silently.
+            PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
+            return
+        endif
+        ; Keep the detection effects alive
+        _Camp_SurvivalVisionPowerDetectSpell.Cast(PlayerRef)
 
-    ; Refresh objects if necessary
-    RefreshObjects()
+        ; Refresh objects if necessary
+        RefreshObjects()
 
-    RegisterForSingleUpdate(4)
+        RegisterForSingleUpdate(4)
+    else
+        CampDebug(0, "Instincts: self.GetTargetActor() no longer resolving, so stop updating.")
+    endif
 EndEvent
 
 function RefreshObjects()
@@ -80,6 +92,7 @@ Event OnMenuOpen(string menuName)
 EndEvent
 
 function SeekTargets()
+    CampDebug(0, "Instincts Glow shader searching for new targets.")
     seeking = true
     int i = 0
     float detection_distance = 2048.0 + (_Camp_PerkRank_KeenSenses.GetValueInt() * 1024.0)
@@ -94,6 +107,7 @@ function SeekTargets()
             int idx = found_targets.Find(ref)
             if idx == -1
                 target_found = true
+                CampDebug(0, "Found " + ref)
                 ObjectReference fx = ref.PlaceAtMe(_Camp_VisionDetectItemFX, abInitiallyDisabled = true)
                 fx.SetPosition(fx.GetPositionX(), fx.GetPositionY(), fx.GetPositionZ() + 16.0)
                 fx.EnableNoWait(true)
@@ -104,6 +118,7 @@ function SeekTargets()
         i += 1
     endWhile
     seeking = false
+    CampDebug(0, "Instincts Glow shader searching for new targets. ...done.")
 endFunction
 
 function StopEffects()
@@ -112,6 +127,7 @@ function StopEffects()
 endFunction
 
 function SendEvent_VisionPowerStart()
+    CampDebug(0, "Sending event Campfire_VisionPowerStart")
     int handle = ModEvent.Create("Campfire_VisionPowerStart")
     if handle
         ModEvent.Send(handle)
@@ -119,6 +135,7 @@ function SendEvent_VisionPowerStart()
 endFunction
 
 function SendEvent_VisionPowerFinished()
+    CampDebug(0, "Sending event Campfire_VisionPowerFinished")
     int handle = ModEvent.Create("Campfire_VisionPowerFinished")
     if handle
         ModEvent.Send(handle)
