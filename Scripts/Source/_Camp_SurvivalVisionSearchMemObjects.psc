@@ -1,6 +1,7 @@
 scriptname _Camp_SurvivalVisionSearchMemObjects extends ActiveMagicEffect
 {Handles playing membrane shader vision effects.}
 
+import _CampInternal
 import math
 
 Actor property PlayerRef auto
@@ -37,7 +38,7 @@ function RefreshObjects()
 endFunction
 
 function SeekTargets()
-    debug.trace("[Campfire] Seeking new targets")
+    CampDebug(0, "Instincts Membrane shader searching for new targets.")
     seeking = true
     int i = 0
     float detection_distance = 2048.0 + (_Camp_PerkRank_KeenSenses.GetValueInt() * 1024.0)
@@ -51,8 +52,8 @@ function SeekTargets()
         else
             int idx = found_targets.Find(ref)
             if idx == -1
-                debug.trace("[Campfire] Found " + ref)
                 target_found = true
+                CampDebug(0, "Found " + ref)
                 _Camp_VisionStaticShader.Play(ref)
                 ArrayAddRef(found_targets, ref)
             endif
@@ -60,7 +61,7 @@ function SeekTargets()
         i += 1
     endWhile
     seeking = false
-    debug.trace("[Campfire] seek targets...done")
+    CampDebug(0, "Instincts Membrane shader searching for new targets. ...done.")
 endFunction
 
 ; Registered on _Camp_SurvivalVisionSearchGlowObjects.psc
@@ -69,7 +70,7 @@ Event OnUpdate()
 EndEvent
 
 function StopEffects()
-    debug.trace("[Campfire] Stopping all membrane shaders.")
+    CampDebug(0, "Instincts: Stopping all membrane shaders.")
     stop_effect = true
     int i = 0
     while i < found_targets.Length
@@ -78,7 +79,7 @@ function StopEffects()
         endif
         i += 1
     endWhile
-    debug.trace("[Campfire] stopping...done")
+    CampDebug(0, "Instincts: Stopping all membrane shaders. ...done.")
 endFunction
 
 function ArrayAddRef(ObjectReference[] myArray, ObjectReference akValue)

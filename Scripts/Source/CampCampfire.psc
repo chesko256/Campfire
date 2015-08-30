@@ -218,7 +218,6 @@ Activator property _Camp_PerkNavControllerAct auto
 Activator property _Camp_Campfire_Embers auto
 Activator property _Camp_Campfire_Ashes auto
 Activator property _Camp_Campfire_Steam auto
-Activator property _Camp_CampfireDetectionPillarACT auto
 Static property _Camp_CampfireCookPotSnapMarker auto
 Sound property FXFireOut auto
 Sound property _Camp_UISkillsPerkEnter auto
@@ -259,7 +258,6 @@ ObjectReference property mySitFurniture2 auto hidden
 ObjectReference property mySitFurniture3 auto hidden
 ObjectReference property mySitFurniture4 auto hidden
 ObjectReference property myCookPotSnapMarker auto hidden
-ObjectReference property myCampfireDetectionPillar auto hidden
 
 ;Futures
 ObjectReference property myFuelLitFuture auto hidden
@@ -279,7 +277,6 @@ ObjectReference property mySitFurniture2Future auto hidden
 ObjectReference property mySitFurniture3Future auto hidden
 ObjectReference property mySitFurniture4Future auto hidden
 ObjectReference property myCookPotSnapMarkerFuture auto hidden
-ObjectReference property myCampfireDetectionPillarFuture auto hidden
 
 ObjectReference property myPerkNodeController auto hidden
 ObjectReference property myPerkNavController auto hidden
@@ -447,7 +444,6 @@ function PlaceObjects()
     PlaceObject_myEmbers()
     PlaceObject_myAshes()
     PlaceObject_myCookPotSnapMarker()
-    PlaceObject_myCampfireDetectionPillar()
 endFunction
 
 function GetResults()
@@ -498,9 +494,6 @@ function GetResults()
     endif
     if myCookPotSnapMarkerFuture
         myCookPotSnapMarker = GetFuture(myCookPotSnapMarkerFuture).get_result()
-    endif
-    if myCampfireDetectionPillarFuture
-        myCampfireDetectionPillar = GetFuture(myCampfireDetectionPillarFuture).get_result()
     endif
 endFunction
 
@@ -578,7 +571,6 @@ function TakeDown()
     TryToDisableAndDeleteRef(mySitFurniture2)
     TryToDisableAndDeleteRef(mySitFurniture3)
     TryToDisableAndDeleteRef(mySitFurniture4)
-    TryToDisableAndDeleteRef(myCampfireDetectionPillar)
     ClearEquipmentFromCrimeAlias(self)
     TryToDisableAndDeleteRef(self)
 endFunction
@@ -624,9 +616,6 @@ function PlaceObject_myAshes()
 endFunction
 function PlaceObject_myCookPotSnapMarker()
     myCookPotSnapMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_CampfireCookPotSnapMarker, PositionRef_CookPotSnapMarker)
-endFunction
-function PlaceObject_myCampfireDetectionPillar()
-    myCampfireDetectionPillarFuture = PlacementSystem.PlaceObject(self, _Camp_CampfireDetectionPillarACT, RequiredPositionRef_CampfireBase, initially_disabled=true, is_hanging=true)
 endFunction
 
 Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
@@ -934,22 +923,6 @@ Event OnUpdateGameTime()
         elseif remaining_time <= (ASH_DURATION + EMBERS_DURATION)
             BurnToEmbers()
         endif
-    endif
-endEvent
-
-; Survival Skill: Instincts detection
-Event VisionPowerStart()
-    debug.trace("I heard the Start event")
-    debug.trace("pillar " + myCampfireDetectionPillar)
-    if myCampfireDetectionPillar
-        myCampfireDetectionPillar.EnableNoWait(true)
-    endif
-endEvent
-
-Event VisionPowerFinished()
-    debug.trace("I heard the Finished event")
-    if myCampfireDetectionPillar
-        myCampfireDetectionPillar.DisableNoWait(true)
     endif
 endEvent
 
