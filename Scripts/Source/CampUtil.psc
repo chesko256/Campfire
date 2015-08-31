@@ -855,82 +855,6 @@ bool function IsTent(Form akBaseObject) global
 	endif
 endFunction
 
-
-
-function RaiseEvent_OnObjectPlaced(ObjectReference akObjectReference) global
-	CampfireAPI Campfire = GetAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return
-	endif
-
-	if akObjectReference
-		if GetCompatibilitySystem().isSKSELoaded
-			float px = akObjectReference.GetPositionX()
-			float py = akObjectReference.GetPositionY()
-			float pz = akObjectReference.GetPositionZ()
-			float ax = akObjectReference.GetAngleX()
-			float ay = akObjectReference.GetAngleY()
-			float az = akObjectReference.GetAngleZ()
-			int handle = ModEvent.Create("Campfire_OnObjectPlaced")
-			if handle
-				ModEvent.PushForm(handle, akObjectReference as Form)
-				ModEvent.PushFloat(handle, px)
-				ModEvent.PushFloat(handle, py)
-				ModEvent.PushFloat(handle, pz)
-				ModEvent.PushFloat(handle, ax)
-				ModEvent.PushFloat(handle, ay)
-				ModEvent.PushFloat(handle, az)
-				ModEvent.PushBool(handle, IsTent(akObjectReference.GetBaseObject()))
-				ModEvent.Send(handle)
-			endif
-		endif
-	endif
-endFunction
-
-function RaiseEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ) global
-	CampfireAPI Campfire = GetAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return
-	endif
-
-	if akBaseObject
-		if GetCompatibilitySystem().isSKSELoaded
-			int handle = ModEvent.Create("Campfire_OnObjectRemoved")
-			if handle
-				ModEvent.PushForm(handle, akBaseObject)
-				ModEvent.PushFloat(handle, afPositionX)
-				ModEvent.PushFloat(handle, afPositionY)
-				ModEvent.PushFloat(handle, afPositionZ)
-				ModEvent.PushFloat(handle, afAngleX)
-				ModEvent.PushFloat(handle, afAngleY)
-				ModEvent.PushFloat(handle, afAngleZ)
-				ModEvent.PushBool(handle, IsTent(akBaseObject))
-				ModEvent.Send(handle)
-			endif
-		endif
-	endif
-endFunction
-
-function ExitMenus() global
-	Game.DisablePlayerControls()
-	Game.EnablePlayerControls()
-endFunction
-
-function RaiseCampAPIError() global
-	debug.trace("[Campfire][ERROR] Fatal Campfire API error occurred.")
-endFunction
-
-
-
-
-
-
-
-
-
-
 ;/********f* CampUtil/GetCampfireSettingBool
 * DESCRIPTION
 * Returns the state of the given Campfire setting.
@@ -1078,4 +1002,102 @@ endif
 	else
 		return false
 	endif
+endFunction
+
+;/********f* CampUtil/GetCampfireSettingInt
+* DESCRIPTION
+* Returns the value of the given Campfire setting.
+*
+* SYNTAX
+*/;
+int function GetCampfireSettingInt(string setting) global
+;/*
+* PARAMETERS
+* setting: The setting which you would like to retrieve. Accepted values (case-sensitive):
+* * MaxPlacementThreads
+*
+* RETURN VALUE
+* The value of the setting, or -1 if the setting string was invalid.
+*
+* EXAMPLES
+if GetCampfireSettingInt("MaxPlacementThreads") > 5
+	debug.trace("Campfire is configured to use over 5 threads for placing objects.")
+endif
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+
+	if setting == "MaxPlacementThreads"
+		return Campfire._Camp_Setting_MaxThreads.GetValueInt()
+	else
+		return -1
+	endif
+endFunction
+
+function RaiseEvent_OnObjectPlaced(ObjectReference akObjectReference) global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return
+	endif
+
+	if akObjectReference
+		if GetCompatibilitySystem().isSKSELoaded
+			float px = akObjectReference.GetPositionX()
+			float py = akObjectReference.GetPositionY()
+			float pz = akObjectReference.GetPositionZ()
+			float ax = akObjectReference.GetAngleX()
+			float ay = akObjectReference.GetAngleY()
+			float az = akObjectReference.GetAngleZ()
+			int handle = ModEvent.Create("Campfire_OnObjectPlaced")
+			if handle
+				ModEvent.PushForm(handle, akObjectReference as Form)
+				ModEvent.PushFloat(handle, px)
+				ModEvent.PushFloat(handle, py)
+				ModEvent.PushFloat(handle, pz)
+				ModEvent.PushFloat(handle, ax)
+				ModEvent.PushFloat(handle, ay)
+				ModEvent.PushFloat(handle, az)
+				ModEvent.PushBool(handle, IsTent(akObjectReference.GetBaseObject()))
+				ModEvent.Send(handle)
+			endif
+		endif
+	endif
+endFunction
+
+function RaiseEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ) global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return
+	endif
+
+	if akBaseObject
+		if GetCompatibilitySystem().isSKSELoaded
+			int handle = ModEvent.Create("Campfire_OnObjectRemoved")
+			if handle
+				ModEvent.PushForm(handle, akBaseObject)
+				ModEvent.PushFloat(handle, afPositionX)
+				ModEvent.PushFloat(handle, afPositionY)
+				ModEvent.PushFloat(handle, afPositionZ)
+				ModEvent.PushFloat(handle, afAngleX)
+				ModEvent.PushFloat(handle, afAngleY)
+				ModEvent.PushFloat(handle, afAngleZ)
+				ModEvent.PushBool(handle, IsTent(akBaseObject))
+				ModEvent.Send(handle)
+			endif
+		endif
+	endif
+endFunction
+
+function ExitMenus() global
+	Game.DisablePlayerControls()
+	Game.EnablePlayerControls()
+endFunction
+
+function RaiseCampAPIError() global
+	debug.trace("[Campfire][ERROR] Fatal Campfire API error occurred.")
 endFunction
