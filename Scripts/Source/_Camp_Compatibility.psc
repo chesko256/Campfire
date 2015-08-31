@@ -477,9 +477,9 @@ function RunCompatibility()
 
 
 	if isArtOfTheCatchLoaded
-		FishingPerkPoints = Game.GetFormFromFile(0x00000000, "ArtOfTheCatch.esp") as GlobalVariable
-		FishingPerkPointProgress = Game.GetFormFromFile(0x00000000, "ArtOfTheCatch.esp") as GlobalVariable
-		Activator node_controller = Game.GetFormFromFile(0x00000000, "ArtOfTheCatch.esp") as Activator
+		FishingPerkPoints = Game.GetFormFromFile(0x0000233F, "ArtOfTheCatch.esp") as GlobalVariable
+		FishingPerkPointProgress = Game.GetFormFromFile(0x00002340, "ArtOfTheCatch.esp") as GlobalVariable
+		Activator node_controller = Game.GetFormFromFile(0x00002341, "ArtOfTheCatch.esp") as Activator
 		CampfirePerkSystemRegister(node_controller, 3, "ArtOfTheCatch.esp")
 	else
 		CampfirePerkSystemUnregister(3, "ArtOfTheCatch.esp")
