@@ -101,9 +101,6 @@ Spell property _Camp_FollowerDetectSpell auto
 Message property _Camp_CriticalError_SKSE auto
 Weather property DLC2AshStorm auto hidden
 
-; Testing
-Activator property _Camp_PerkNodeControllerTest auto
-
 ;#Upgrade Flags====================================================================
 bool Upgraded_1_1 = false
 
@@ -517,9 +514,6 @@ function RunCompatibility()
 		RegisterForEventsOnLoad()
 	endif
 	AddStartupSpells()
-
-	; Testing perk trees
-	CampfirePerkSystemRegister(_Camp_PerkNodeControllerTest, 1, "TestPlugin.esp")
 	CountPerkTrees()
 endFunction
 

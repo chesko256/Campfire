@@ -199,7 +199,7 @@ Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
 EndEvent
 
 function ProcessOnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abBashAttack)
-	if CampUtil.GetSettingEquipmentFlammable().GetValueInt() == 2 && Setting_Flammable
+	if CampUtil.GetCampfireSettingBool("CampingGearFlammable") == true && Setting_Flammable
 		if block_spell_hits == false
 			block_spell_hits = true
 			if akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11
@@ -213,7 +213,7 @@ function ProcessOnHit(ObjectReference akAggressor, Form akSource, Projectile akP
 endFunction
 
 function ProcessMagicEffect(ObjectReference akCaster, MagicEffect akEffect)
-	if CampUtil.GetSettingEquipmentFlammable().GetValueInt() == 2 && Setting_Flammable
+	if CampUtil.GetCampfireSettingBool("CampingGearFlammable") == true && Setting_Flammable
 		if block_spell_hits == false
 			block_spell_hits = true
 			if akEffect.HasKeyword(_CampInternal.GetMagicDamageFireKeyword())
