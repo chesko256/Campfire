@@ -73,6 +73,31 @@ float ver = CampUtil.GetAPIVersion()
 	return Campfire._Camp_APIVersion.GetValue()
 endFunction
 
+;/********f* CampUtil/GetCampfireVersion
+* DESCRIPTION
+* Get the Campfire mod version number.
+*
+* SYNTAX
+*/;
+float function GetCampfireVersion() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The Campfire version number.
+*
+* EXAMPLES
+float ver = CampUtil.GetCampfireVersion()
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return -1.0
+	endif
+	return Campfire._Camp_CampfireVersion.GetValue()
+endFunction
+
 ;/********f* CampUtil/GetPlayerEquippedHead
 * DESCRIPTION
 * Gets the player's currently equipped head armor.
