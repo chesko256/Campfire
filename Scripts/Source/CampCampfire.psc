@@ -779,9 +779,8 @@ endFunction
 ; Camping Skill
 function AdvanceCampingSkill()
     if CampingPerkPointsEarned.GetValueInt() < CampingPerkPointsTotal.GetValueInt()
+        CampDebug(1, "Advancing Camping skill.")
         int next_level = CampingPerkPointsEarned.GetValueInt() + 1
-        debug.trace("Next level is " + next_level)
-
 
         ; 3, 5, 7, 9, 10, 11, 12, 13...
         float fires_required
@@ -790,15 +789,13 @@ function AdvanceCampingSkill()
         else
             fires_required = (9 + (next_level - 4))
         endif
-        debug.trace("Fires required is " + fires_required)
 
         float progress_value = (1.0 / fires_required)
-        debug.trace("Progress value: " + progress_value)
         CampingPerkPointProgress.SetValue(CampingPerkPointProgress.GetValue() + progress_value)
-        debug.trace("Current progress value is now: " + CampingPerkPointProgress.GetValue())
+        CampDebug(1, "Camping perk progress value: " + CampingPerkPointProgress.GetValue())
 
         if (CampingPerkPointProgress.GetValue() + 0.01) >= 1.0
-            debug.trace("Granting a perk point.")
+            CampDebug(1, "Granting a Camping perk point.")
             ; Grant perk point
             _Camp_PerkEarned.Show()
             CampingPerkPointsEarned.SetValueInt(CampingPerkPointsEarned.GetValueInt() + 1)
