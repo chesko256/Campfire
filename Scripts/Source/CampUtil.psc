@@ -688,7 +688,7 @@ ObjectReference function GetCurrentTent() global
 * The current tent being used, or None if the player is not using a tent.
 *
 * NOTES
-* Return value used as input to IsCurrentTentWaterproof() and IsCurrentTentWarm().
+* Return value used as input to IsTentWaterproof() and IsTentWarm().
 ;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
@@ -696,17 +696,12 @@ ObjectReference function GetCurrentTent() global
 		return None
 	endif
 
-	ObjectReference myTent = Game.FindClosestReferenceOfAnyTypeInListFromRef(Campfire._Camp_TentActivators, Campfire.PlayerRef, 235.0)
-	if myTent
-		return myTent
-	else
-		return none
-	endif
+	return Campfire.CurrentTent
 endFunction
 
 ;/********f* CampUtil/IsTentWaterproof
 * DESCRIPTION
-* Is the current tent waterproof?
+* Is this tent waterproof?
 *
 * SYNTAX
 */;
@@ -716,11 +711,15 @@ bool function IsTentWaterproof(ObjectReference akTent) global
 * akTent: The Tent ObjectReference to check. Use the return value of GetCurrentTent().
 *
 * RETURN VALUE
-* True if the current tent is flagged as being waterproof, or false if not.
+* True if the tent is flagged as being waterproof, or false if not.
 ;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
+		return false
+	endif
+
+	if !akTent
 		return false
 	endif
 
@@ -734,7 +733,7 @@ endFunction
 
 ;/********f* CampUtil/IsTentWarm
 * DESCRIPTION
-* Is the current tent warm?
+* Is this tent warm?
 *
 * SYNTAX
 */;
@@ -744,7 +743,7 @@ bool function IsTentWarm(ObjectReference akTent) global
 * akTent: The Tent ObjectReference to check. Use the return value of GetCurrentTent().
 *
 * RETURN VALUE
-* True if the current tent is flagged as being warm, or false if not.
+* True if the tent is flagged as being warm, or false if not.
 ;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
@@ -752,8 +751,66 @@ bool function IsTentWarm(ObjectReference akTent) global
 		return false
 	endif
 
+	if !akTent
+		return false
+	endif
+
 	Form TentForm = akTent.GetBaseObject()
 	if TentForm.HasKeyword(Campfire.isCampfireTentWarm)
+		return true
+	else
+		return false
+	endif
+endFunction
+
+;/********f* CampUtil/IsCurrentTentWaterproof
+* DESCRIPTION
+* Is the current tent waterproof?
+*
+* SYNTAX
+*/;
+bool function IsCurrentTentWaterproof() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* True if the current tent is flagged as being waterproof, or false if not or if there is no tent in use by the player.
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+
+	if Campfire.CurrentTent && Campfire.CurrentTent.GetBaseObject().HasKeyword(Campfire.isCampfireTentWaterproof)
+		return true
+	else
+		return false
+	endif
+endFunction
+
+;/********f* CampUtil/IsCurrentTentWarm
+* DESCRIPTION
+* Is the current tent warm?
+*
+* SYNTAX
+*/;
+bool function IsCurrentTentWarm() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* True if the current tent is flagged as being warm, or false if not or if there is no tent in use by the player.
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+
+	if Campfire.CurrentTent && Campfire.CurrentTent.GetBaseObject().HasKeyword(Campfire.isCampfireTentWarm)
 		return true
 	else
 		return false
@@ -797,6 +854,8 @@ bool function IsTent(Form akBaseObject) global
 		return false
 	endif
 endFunction
+
+
 
 function RaiseEvent_OnObjectPlaced(ObjectReference akObjectReference) global
 	CampfireAPI Campfire = GetAPI()
@@ -861,4 +920,162 @@ endFunction
 
 function RaiseCampAPIError() global
 	debug.trace("[Campfire][ERROR] Fatal Campfire API error occurred.")
+endFunction
+
+
+
+
+
+
+
+
+
+
+;/********f* CampUtil/GetCampfireSettingBool
+* DESCRIPTION
+* Returns the state of the given Campfire setting.
+*
+* SYNTAX
+*/;
+bool function GetCampfireSettingBool(string setting) global
+;/*
+* PARAMETERS
+* setting: The setting which you would like to retrieve. Accepted values (case-sensitive):
+* * ManualFireLighting
+* * CampingGearFlammable
+* * TentRemovePlayerEquipment 	; The master setting for whether or not to remove player gear in tents
+* * TentRemovePlayerCuirass
+* * TentRemovePlayerHelm
+* * TentRemovePlayerGauntlets
+* * TentRemovePlayerBoots
+* * TentRemovePlayerBackpack
+* * TentRemovePlayerWeapons
+* * TentRemovePlayerShield
+* * TentRemovePlayerAmmo
+* * TentRemoveFollowerEquipment
+* * FollowerTracking
+* * FollowersUseCampsite
+* * PlayerEquipTentOutfit 	; Not currently used
+* * CampingIllegalInTowns
+* * AdvancedPlacementMode
+*
+* RETURN VALUE
+* True if the feature is enabled, false if disabled or if the setting string is invalid.
+*
+* EXAMPLES
+if GetCampfireSettingBool("FollowerTracking") == true
+	debug.trace("Campfire is tracking followers.")
+endif
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+
+	if setting == "FollowerTracking"
+		if _Camp_Setting_TrackFollowers.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "CampingIllegalInTowns"
+		if _Camp_Setting_Legality.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "ManualFireLighting"
+		if _Camp_Setting_ManualFireLighting.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "FollowersUseCampsite"
+		if _Camp_Setting_FollowersUseCampsite.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "CampingGearFlammable"
+		if _Camp_Setting_EquipmentFlammable.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemovePlayerEquipment"
+		if _Camp_Setting_CampingArmorTakeOff.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemovePlayerCuirass"
+		if _Camp_Setting_TakeOff_Cuirass.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemovePlayerHelm"
+		if _Camp_Setting_TakeOff_Helm.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemovePlayerGauntlets"
+		if _Camp_Setting_TakeOff_Gauntlets.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemovePlayerBoots"
+		if _Camp_Setting_TakeOff_Boots.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemovePlayerBackpack"
+		if _Camp_Setting_TakeOff_Backpack.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemovePlayerWeapons"
+		if _Camp_Setting_TakeOff_Weapons.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemovePlayerShield"
+		if _Camp_Setting_TakeOff_Shield.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemovePlayerAmmo"
+		if _Camp_Setting_TakeOff_Ammo.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemoveFollowerEquipment"
+		if _Camp_Setting_FollowersRemoveGearInTents.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "AdvancedPlacementMode"
+		if _Camp_Setting_AdvancedPlacement.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "PlayerEquipTentOutfit"
+		if _Camp_Setting_EquipTentOutfit.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	else
+		return false
+	endif
 endFunction
