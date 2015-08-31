@@ -467,14 +467,13 @@ function RunCompatibility()
 	endif
 	
 	if isLastSeedLoaded
-		ProvisioningPerkPoints = Game.GetFormFromFile(0x00000000, "LastSeed.esp") as GlobalVariable
-		ProvisioningPerkPointProgress = Game.GetFormFromFile(0x00000000, "LastSeed.esp") as GlobalVariable
-		Activator node_controller = Game.GetFormFromFile(0x00000000, "LastSeed.esp") as Activator
+		ProvisioningPerkPoints = Game.GetFormFromFile(0x00006B0F, "LastSeed.esp") as GlobalVariable
+		ProvisioningPerkPointProgress = Game.GetFormFromFile(0x00006B10, "LastSeed.esp") as GlobalVariable
+		Activator node_controller = Game.GetFormFromFile(0x00006B0E, "LastSeed.esp") as Activator
 		CampfirePerkSystemRegister(node_controller, 2, "LastSeed.esp")
 	else
 		CampfirePerkSystemUnregister(2, "LastSeed.esp")
 	endif
-
 
 	if isArtOfTheCatchLoaded
 		FishingPerkPoints = Game.GetFormFromFile(0x0000233F, "ArtOfTheCatch.esp") as GlobalVariable
