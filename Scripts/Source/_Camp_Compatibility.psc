@@ -458,9 +458,9 @@ function RunCompatibility()
 	endif
 
 	if isFrostfallLoaded
-		EndurancePerkPoints = Game.GetFormFromFile(0x00000000, "Frostfall.esp") as GlobalVariable
-		EndurancePerkPointProgress = Game.GetFormFromFile(0x00000000, "Frostfall.esp") as GlobalVariable
-		Activator node_controller = Game.GetFormFromFile(0x00000000, "Frostfall.esp") as Activator
+		EndurancePerkPoints = Game.GetFormFromFile(0x00064027, "Frostfall.esp") as GlobalVariable
+		EndurancePerkPointProgress = Game.GetFormFromFile(0x00064028, "Frostfall.esp") as GlobalVariable
+		Activator node_controller = Game.GetFormFromFile(0x00064026, "Frostfall.esp") as Activator
 		CampfirePerkSystemRegister(node_controller, 1, "Frostfall.esp")
 	else
 		CampfirePerkSystemUnregister(1, "Frostfall.esp")
