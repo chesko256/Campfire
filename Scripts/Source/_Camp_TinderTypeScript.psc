@@ -13,7 +13,7 @@ GlobalVariable property _Camp_LastUsedCampfireSize auto
 
 Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)
 	if akNewContainer == PlayerRef
-		ObjectReference f = Game.FindClosestReferenceOfTypeFromRef(_Camp_Campfire, PlayerRef, 500.0)
+		ObjectReference f = GetLastUsedCampfire()
 		if f
 			(f as CampCampfire).SetTinder(light_chance)
 		endif
