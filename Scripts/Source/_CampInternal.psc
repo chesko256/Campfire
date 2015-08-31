@@ -102,6 +102,15 @@ function SetLastUsedCampfire(ObjectReference akCampfire) global
 	Campfire.LastUsedCampfire = akCampfire
 endFunction
 
+function SetCurrentTent(ObjectReference akTent) global
+	CampfireAPI Campfire = GetPublicAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return
+	endif
+	Campfire.CurrentTent = akTent
+endFunction
+
 Message function GetObjectMainMenu() global
 	_CampfireInternalAPI Campfire = GetAPI()
 	if Campfire == none

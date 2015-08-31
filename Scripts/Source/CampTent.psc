@@ -45,6 +45,15 @@ ObjectReference property RequiredPositionRef_PlayerBed auto
 { Required: The player's bed roll (main interactible) position reference. }
 ;*********/;
 
+;/********p* CampTent/TentAsset_LargeTentTriggerVolume
+* SYNTAX
+*/;
+Activator property TentAsset_LargeTentTriggerVolume auto
+{
+* DESCRIPTION
+* Optional: A trigger box activator for walk-in tents that lets the system know that you are standing inside of it. If not included, the system will only consider the player to be "inside" the tent when sitting or lying down in it. }
+;*********/;
+
 ;/********p* CampTent/TentAsset_ShelterModel
 * SYNTAX
 */;
@@ -340,6 +349,7 @@ ObjectReference property myTentExterior auto hidden
 ObjectReference property myNormalTent auto hidden
 ObjectReference property mySnowTent auto hidden
 ObjectReference property myAshTent auto hidden
+ObjectReference property myLargeTentTriggerVolume auto hidden
 ObjectReference property myLanternLit auto hidden
 ObjectReference property myLanternUnlit auto hidden
 ObjectReference property myLanternLight auto hidden
@@ -474,6 +484,7 @@ ObjectReference property mySpareBedRoll2SitMarkerFuture auto hidden
 ObjectReference property mySpareBedRoll3SitMarkerFuture auto hidden
 ObjectReference property myWardFuture auto hidden
 ObjectReference property myShelterColliderFuture auto hidden
+ObjectReference property myLargeTentTriggerVolumeFuture auto hidden
 
 Ammo property myQuiver auto hidden
 Armor property myShield auto hidden
@@ -597,6 +608,9 @@ function PlaceObjects()
 	endif
 	if TentAsset_ShelterModelMaterialAsh && PositionRef_Shelter
 		PlaceObject_AshTent()
+	endif
+	if TentAsset_LargeTentTriggerVolume
+		PlaceObject_LargeTentTriggerVolume()
 	endif
 	if PositionRef_Ward
 		PlaceObject_Ward()
@@ -786,6 +800,13 @@ function GetResults()
 		myAshTent = GetFuture(myAshTentFuture).get_result()
 	endif
 	TentSystem.SelectExterior(self, false)
+
+	if myLargeTentTriggerVolumeFuture
+		myLargeTentTriggerVolume = GetFuture(myLargeTentTriggerVolumeFuture).get_result()
+		if myLargeTentTriggerVolume
+			(myLargeTentTriggerVolume as CampLargeTentTriggerVolumeScript).ParentTent = self
+		endif
+	endif
 
 	if myFire1Future
 		myFire1 = GetFuture(myFire1Future).get_result()
@@ -1036,7 +1057,7 @@ function GetResults()
         mySpareBedRoll3SitMarker = GetFuture(mySpareBedRoll3SitMarkerFuture).get_result()
 	endif
 
-	;GenerateDebugReport()
+	; GenerateDebugReport()
 endFunction
 
 function TakeDown()
@@ -1094,6 +1115,7 @@ function TakeDown()
 	TryToDisableAndDeleteRef(myNormalTent)
 	TryToDisableAndDeleteRef(myTent)
 	TryToDisableAndDeleteRef(myShelterCollider)
+	TryToDisableAndDeleteRef(myLargeTentTriggerVolume)
 	TryToDisableAndDeleteRef(myFollowerAMarker_MainWeapon)
 	TryToDisableAndDeleteRef(myFollowerAMarker_OffHandWeapon)
 	TryToDisableAndDeleteRef(myFollowerAMarker_BigWeapon)
@@ -1119,6 +1141,7 @@ function GenerateDebugReport()
 	CampDebug(1, "myNormalTent: " + myNormalTent)
 	CampDebug(1, "mySnowTent: " + mySnowTent)
 	CampDebug(1, "myAshTent: " + myAshTent)
+	CampDebug(1, "myLargeTentTriggerVolume: " + myLargeTentTriggerVolume)
 	CampDebug(1, "myLanternLit: " + myLanternLit)
 	CampDebug(1, "myLanternUnlit: " + myLanternUnlit)
 	CampDebug(1, "myLanternLight: " + myLanternLight)
@@ -1193,6 +1216,10 @@ endFunction
 
 function PlaceObject_AshTent()
 	myAshTentFuture = PlacementSystem.PlaceObject(self, TentAsset_ShelterModelMaterialAsh, PositionRef_Shelter, initially_disabled = true)
+endFunction
+
+function PlaceObject_LargeTentTriggerVolume()
+	myLargeTentTriggerVolumeFuture = PlacementSystem.PlaceObject(self, TentAsset_LargeTentTriggerVolume, PositionRef_Shelter)
 endFunction
 
 ;@Overrides _Camp_PlaceableObjectBase
