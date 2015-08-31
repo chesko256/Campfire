@@ -229,10 +229,22 @@ Message property _Camp_Campfire_SitError auto
 Message property _Camp_Campfire_LightFail auto
 Message property _Camp_Campfire_RefundFuelMsg auto
 Message property _Camp_Campfire_RefundFuelMsgSpent auto
+Message property _Camp_Campfire_Skill_Camping auto
+Message property _Camp_Campfire_Skill_Endurance auto
+Message property _Camp_Campfire_Skill_Provisioning auto
+Message property _Camp_Campfire_Skill_Fishing auto
+Message property _Camp_Campfire_LitError auto
+Message property _Camp_PerkAdvancement auto
+Message property _Camp_PerkEarned auto
 Actor property PlayerRef auto
 GlobalVariable property _Camp_LastUsedCampfireSize auto
 GlobalVariable property _Camp_LastUsedCampfireStage auto
 GlobalVariable property _Camp_Setting_ManualFireLighting auto
+GlobalVariable property _Camp_LastSelectedSkill auto
+GlobalVariable property CampingPerkPoints auto
+GlobalVariable property CampingPerkPointsEarned auto
+GlobalVariable property CampingPerkPointsTotal auto
+GlobalVariable property CampingPerkPointProgress auto
 MiscObject property _Camp_CampfireItem_GoodWeather auto
 MiscObject property RuinedBook auto
 MiscObject property _Camp_DeadwoodBranch auto
@@ -309,11 +321,6 @@ int current_skill_index = 0
 function Initialize()
     self.BlockActivation()
     parent.Initialize()
-    if GetCompatibilitySystem().isSKSELoaded
-        debug.trace("Registering campfire for mod events.")
-        RegisterForModEvent("Campfire_VisionPowerStart", "VisionPowerStart")
-        RegisterForModEvent("Campfire_VisionPowerFinished", "VisionPowerFinished")
-    endif
     last_update_registration_time = Utility.GetCurrentGameTime()
     remaining_time = ASH_DURATION
     RegisterForSingleUpdateGameTime(remaining_time)
@@ -497,55 +504,6 @@ function GetResults()
     endif
 endFunction
 
-; Called by the Nav Controller if necessary
-function TakeDownPerkTree()
-    if myPerkNodeController
-        (myPerkNodeController as _Camp_PerkNodeController).TakeDown()
-    endif
-endFunction
-
-function ShowNextPerkTree()
-    _Camp_Compatibility cs = GetCompatibilitySystem()
-    TakeDownPerkTree()
-    bool tree_found = false
-    int i = current_skill_index + 1
-    while !tree_found && i != current_skill_index
-        if i > 3
-            i = 0
-        endif
-        if cs.PerkNodeControllers[i]
-            tree_found = true
-            ShowPerkTree(i)
-            current_skill_index = i
-            if myPerkNodeController
-                (myPerkNodeController as _Camp_PerkNodeControllerBehavior).AssignCampfire(self)
-            endif
-        endif
-        i += 1
-    endWhile
-endFunction
-
-function ShowPrevPerkTree()
-    _Camp_Compatibility cs = GetCompatibilitySystem()
-    TakeDownPerkTree()
-    bool tree_found = false
-    int i = current_skill_index - 1
-    while !tree_found && i != current_skill_index
-        if i < 0
-            i = 3
-        endif
-        if cs.PerkNodeControllers[i]
-            tree_found = true
-            ShowPerkTree(i)
-            current_skill_index = i
-            if myPerkNodeController
-                (myPerkNodeController as _Camp_PerkNodeControllerBehavior).AssignCampfire(self)
-            endif
-        endif
-        i -= 1
-    endWhile
-endFunction
-
 function TakeDown()
     if myPerkNodeController
         (myPerkNodeController as _Camp_PerkNodeController).TakeDown()
@@ -661,6 +619,204 @@ function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int 
     endif
 endFunction
 
+function SitDown()
+    ObjectReference[] mySitMarkers = new ObjectReference[4]
+    mySitMarkers[0] = mySitFurniture1
+    mySitMarkers[1] = mySitFurniture2
+    mySitMarkers[2] = mySitFurniture3
+    mySitMarkers[3] = mySitFurniture4
+    mySitMarkers = SelectionSort(mySitMarkers)
+
+    if !(mySitMarkers[0].IsFurnitureInUse())
+        Game.ForceThirdPerson()
+        mySitMarkers[0].Activate(PlayerRef)
+    elseif !(mySitMarkers[1].IsFurnitureInUse())
+        Game.ForceThirdPerson()
+        mySitMarkers[1].Activate(PlayerRef)
+    elseif !(mySitMarkers[2].IsFurnitureInUse())
+        Game.ForceThirdPerson()
+        mySitMarkers[2].Activate(PlayerRef)
+    elseif !(mySitMarkers[3].IsFurnitureInUse())
+        Game.ForceThirdPerson()
+        mySitMarkers[3].Activate(PlayerRef)
+    else
+        ;There is nowhere to sit.
+        _Camp_Campfire_SitError.Show()
+    endif
+endFunction
+
+; ========== Campfire Perk System
+
+bool function ShowSkills()
+    if campfire_stage == 2
+        int i = _Camp_Campfire_SkillMenu.Show()
+        if i <= 4
+            if i == 0
+                EnterTreeSystem(_Camp_LastSelectedSkill.GetValueInt())
+            else
+                i -= 1
+                bool enter = ShowPerkDesc(i)
+                if enter
+                    EnterTreeSystem(i)
+                else
+                    ; Go back
+                    bool b = ShowSkills()
+                    return b
+                endif
+            endif
+        else
+            ; Cancel
+            return false
+        endif
+        return true
+    else
+        ; "Your campfire must be lit to use this."
+        _Camp_Campfire_LitError.Show()
+        return false
+    endif
+endFunction
+
+function EnterTreeSystem(int idx)
+    self.PlaceAtMe(_Camp_PerkSystemEnterExplosion01)
+    _Camp_UISkillsPerkEnter.Play(self)
+    ShowBugNav()
+    ShowPerkTree(idx)
+    current_skill_index = idx
+    _Camp_LastSelectedSkill.SetValueInt(idx)
+    if myPerkNodeController
+        (myPerkNodeController as _Camp_PerkNodeControllerBehavior).AssignCampfire(self)
+    endif
+    if myPerkNavController
+        (myPerkNavController as _Camp_PerkNavController).AssignCampfire(self)
+    endif
+endFunction
+
+function ShowBugNav()
+    if !myPerkNavController
+        myPerkNavController = self.PlaceAtMe(_Camp_PerkNavControllerAct)
+    endif
+endFunction
+
+function ShowPerkTree(int idx)
+    Activator nc = GetCompatibilitySystem().PerkNodeControllers[idx]
+    if nc != None
+        myPerkNodeController = self.PlaceAtMe(nc)
+        _Camp_LastSelectedSkill.SetValue(idx)
+    endif
+endFunction
+
+bool function ShowPerkDesc(int idx)
+    _Camp_Compatibility cp = GetCompatibilitySystem()
+    int i = 0
+    if idx == 0
+        i = _Camp_Campfire_Skill_Camping.Show(CampingPerkPoints.GetValueInt(), CampingPerkPointProgress.GetValue() * 100.0)
+    elseif idx == 1
+        i = _Camp_Campfire_Skill_Endurance.Show(cp.EndurancePerkPoints.GetValueInt(), cp.EndurancePerkPointProgress.GetValue() * 100.0)
+    elseif idx == 2
+        i = _Camp_Campfire_Skill_Provisioning.Show(cp.ProvisioningPerkPoints.GetValueInt(), cp.ProvisioningPerkPointProgress.GetValue() * 100.0)
+    elseif idx == 3
+        i = _Camp_Campfire_Skill_Fishing.Show(cp.FishingPerkPoints.GetValueInt(), cp.FishingPerkPointProgress.GetValue() * 100.0)
+    endif
+
+    if i == 0
+        return true
+    else
+        return false
+    endif
+endFunction
+
+; Called by the Nav Controller if necessary
+function TakeDownPerkTree()
+    if myPerkNodeController
+        (myPerkNodeController as _Camp_PerkNodeController).TakeDown()
+    endif
+endFunction
+
+function ShowNextPerkTree()
+    _Camp_Compatibility cs = GetCompatibilitySystem()
+    TakeDownPerkTree()
+    bool tree_found = false
+    int i = current_skill_index + 1
+    while !tree_found && i != current_skill_index
+        if i > 3
+            i = 0
+        endif
+        if cs.PerkNodeControllers[i]
+            tree_found = true
+            ShowPerkTree(i)
+            current_skill_index = i
+            _Camp_LastSelectedSkill.SetValueInt(i)
+            if myPerkNodeController
+                (myPerkNodeController as _Camp_PerkNodeControllerBehavior).AssignCampfire(self)
+            endif
+        endif
+        i += 1
+    endWhile
+endFunction
+
+function ShowPrevPerkTree()
+    _Camp_Compatibility cs = GetCompatibilitySystem()
+    TakeDownPerkTree()
+    bool tree_found = false
+    int i = current_skill_index - 1
+    while !tree_found && i != current_skill_index
+        if i < 0
+            i = 3
+        endif
+        if cs.PerkNodeControllers[i]
+            tree_found = true
+            ShowPerkTree(i)
+            current_skill_index = i
+            _Camp_LastSelectedSkill.SetValueInt(i)
+            if myPerkNodeController
+                (myPerkNodeController as _Camp_PerkNodeControllerBehavior).AssignCampfire(self)
+            endif
+        endif
+        i -= 1
+    endWhile
+endFunction
+
+; Camping Skill
+function AdvanceCampingSkill()
+    if CampingPerkPointsEarned.GetValueInt() < CampingPerkPointsTotal.GetValueInt()
+        int next_level = CampingPerkPointsEarned.GetValueInt() + 1
+        debug.trace("Next level is " + next_level)
+
+
+        ; 3, 5, 7, 9, 10, 11, 12, 13...
+        float fires_required
+        if next_level <= 4
+            fires_required = (2 * next_level) + 1
+        else
+            fires_required = (9 + (next_level - 4))
+        endif
+        debug.trace("Fires required is " + fires_required)
+
+        float progress_value = (1.0 / fires_required)
+        debug.trace("Progress value: " + progress_value)
+        CampingPerkPointProgress.SetValue(CampingPerkPointProgress.GetValue() + progress_value)
+        debug.trace("Current progress value is now: " + CampingPerkPointProgress.GetValue())
+
+        if (CampingPerkPointProgress.GetValue() + 0.01) >= 1.0
+            debug.trace("Granting a perk point.")
+            ; Grant perk point
+            _Camp_PerkEarned.Show()
+            CampingPerkPointsEarned.SetValueInt(CampingPerkPointsEarned.GetValueInt() + 1)
+            CampingPerkPoints.SetValueInt(CampingPerkPoints.GetValueInt() + 1)
+
+            if CampingPerkPointsEarned.GetValueInt() >= CampingPerkPointsTotal.GetValueInt()
+                CampingPerkPointProgress.SetValue(1.0)
+            else
+                CampingPerkPointProgress.SetValue(0.0)
+            endif
+        else
+            _Camp_PerkAdvancement.Show()
+        endif
+    endif
+endFunction
+
+; ========== Fuel Placement and Management
+
 function RefundRemainingFuel()
     int hours_burnt = Math.Ceiling((last_put_out_time * 24.0) - (last_lit_time * 24.0))
 
@@ -730,71 +886,6 @@ function SetTinder(float afLightChance)
     endif
 endFunction
 
-function SitDown()
-    ObjectReference[] mySitMarkers = new ObjectReference[4]
-    mySitMarkers[0] = mySitFurniture1
-    mySitMarkers[1] = mySitFurniture2
-    mySitMarkers[2] = mySitFurniture3
-    mySitMarkers[3] = mySitFurniture4
-    mySitMarkers = SelectionSort(mySitMarkers)
-
-    if !(mySitMarkers[0].IsFurnitureInUse())
-        Game.ForceThirdPerson()
-        mySitMarkers[0].Activate(PlayerRef)
-    elseif !(mySitMarkers[1].IsFurnitureInUse())
-        Game.ForceThirdPerson()
-        mySitMarkers[1].Activate(PlayerRef)
-    elseif !(mySitMarkers[2].IsFurnitureInUse())
-        Game.ForceThirdPerson()
-        mySitMarkers[2].Activate(PlayerRef)
-    elseif !(mySitMarkers[3].IsFurnitureInUse())
-        Game.ForceThirdPerson()
-        mySitMarkers[3].Activate(PlayerRef)
-    else
-        ;There is nowhere to sit.
-        _Camp_Campfire_SitError.Show()
-    endif
-endFunction
-
-bool function ShowSkills()
-    if campfire_stage == 2
-        int i = _Camp_Campfire_SkillMenu.Show()
-        if i <= 3
-            self.PlaceAtMe(_Camp_PerkSystemEnterExplosion01)
-            _Camp_UISkillsPerkEnter.Play(self)
-            ShowBugNav()
-            ShowPerkTree(i)
-            current_skill_index = i
-        else
-            ; Cancel
-            return false
-        endif
-        if myPerkNodeController
-            (myPerkNodeController as _Camp_PerkNodeControllerBehavior).AssignCampfire(self)
-        endif
-        if myPerkNavController
-            (myPerkNavController as _Camp_PerkNavController).AssignCampfire(self)
-        endif
-        return true
-    else
-        debug.notification("Your campfire must be lit to use this.")
-        return false
-    endif
-endFunction
-
-function ShowBugNav()
-    if !myPerkNavController
-        myPerkNavController = self.PlaceAtMe(_Camp_PerkNavControllerAct)
-    endif
-endFunction
-
-function ShowPerkTree(int idx)
-    Activator nc = GetCompatibilitySystem().PerkNodeControllers[idx]
-    if nc != None
-        myPerkNodeController = self.PlaceAtMe(nc)
-    endif
-endFunction
-
 function PlaceFuel()
     CampDebug(0, "PlaceFuel")
     myFuelUnlit.EnableNoWait()
@@ -815,7 +906,8 @@ function LightFire(bool abBypassLightingChance = false)
         if current_light_chance > 0.0
             float result = Utility.RandomFloat()
             if result <= current_light_chance
-                self.PlayImpactEffect(MAGFlames01ImpactSet) 
+                self.PlayImpactEffect(MAGFlames01ImpactSet)
+                AdvanceCampingSkill()
             else
                 campfire_stage = 3
                 _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)

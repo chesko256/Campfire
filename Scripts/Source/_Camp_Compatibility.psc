@@ -33,6 +33,7 @@ bool property isSKSELoaded auto hidden						;SKSE
 bool property isSKYUILoaded auto hidden						;SkyUI 3.4+
 bool property isFrostfallLoaded auto hidden					;Frostfall
 bool property isLastSeedLoaded auto hidden					;Last Seed
+bool property isArtOfTheCatchLoaded auto hidden 			;Art of the Catch
 bool property isIMCNLoaded auto hidden						;Imp's More Complex Needs
 bool property isRNDLoaded auto hidden			 			;Realistic Needs and Diseases
 bool property isINEEDLoaded auto hidden						;iNeed
@@ -58,10 +59,22 @@ formlist property _Camp_HeatSources_Other auto
 ;#DLC / Mod Worldspaces============================================================
 Worldspace property DLC2WS auto hidden						;Solstheim
 
+;#Campfire Perk System=============================================================
+Activator property _Camp_PerkNavControllerAct auto
+Activator property _Camp_PerkNodeController_Camping auto
+
+GlobalVariable property EndurancePerkPoints auto hidden
+GlobalVariable property EndurancePerkPointProgress auto hidden
+GlobalVariable property ProvisioningPerkPoints auto hidden
+GlobalVariable property ProvisioningPerkPointProgress auto hidden
+GlobalVariable property FishingPerkPoints auto hidden
+GlobalVariable property FishingPerkPointProgress auto hidden
+
 ;#Misc=============================================================================
 GlobalVariable property _Camp_HotkeyCreateItem auto
 GlobalVariable property _Camp_HotkeyBuildCampfire auto
 GlobalVariable property _Camp_HotkeyHarvestWood auto
+GlobalVariable property _Camp_HotkeyInstincts auto
 GlobalVariable property _Camp_Setting_TrackFollowers auto
 
 ConstructibleObject property _Camp_FireMiscRecipe_TinderStraw auto
@@ -88,8 +101,6 @@ Spell property _Camp_FollowerDetectSpell auto
 Message property _Camp_CriticalError_SKSE auto
 Weather property DLC2AshStorm auto hidden
 
-Activator property _Camp_PerkNavControllerAct auto
-Activator property _Camp_PerkNodeController_Camping auto
 ; Testing
 Activator property _Camp_PerkNodeControllerTest auto
 
@@ -265,20 +276,17 @@ function RunCompatibility()
 		if !isLastSeedLoaded
 			;Last Seed was removed since the last save.
 			Conditions.IsLastSeedLoaded = false
-			CampfirePerkSystemUnregister(2, "LastSeed.esp")
 		else
 			Conditions.IsLastSeedLoaded = true
-			; CampfirePerkSystemRegister()
 		endif
 	else
 		isLastSeedLoaded = IsPluginLoaded(0x02000D63, "LastSeed.esp")
 		if isLastSeedLoaded
 			;Last Seed was just added.
 			Conditions.IsLastSeedLoaded = true
-			; CampfirePerkSystemRegister()
 		else
 			Conditions.IsLastSeedLoaded = false
-			CampfirePerkSystemUnregister(2, "LastSeed.esp")
+			
 		endif
 	endif
 	
@@ -448,11 +456,37 @@ function RunCompatibility()
 		endif
 		
 	endif
+
+	if isFrostfallLoaded
+		EndurancePerkPoints = Game.GetFormFromFile(0x00000000, "Frostfall.esp") as GlobalVariable
+		EndurancePerkPointProgress = Game.GetFormFromFile(0x00000000, "Frostfall.esp") as GlobalVariable
+		Activator node_controller = Game.GetFormFromFile(0x00000000, "Frostfall.esp") as Activator
+		CampfirePerkSystemRegister(node_controller, 1, "Frostfall.esp")
+	else
+		CampfirePerkSystemUnregister(1, "Frostfall.esp")
+	endif
 	
+	if isLastSeedLoaded
+		ProvisioningPerkPoints = Game.GetFormFromFile(0x00000000, "LastSeed.esp") as GlobalVariable
+		ProvisioningPerkPointProgress = Game.GetFormFromFile(0x00000000, "LastSeed.esp") as GlobalVariable
+		Activator node_controller = Game.GetFormFromFile(0x00000000, "LastSeed.esp") as Activator
+		CampfirePerkSystemRegister(node_controller, 2, "LastSeed.esp")
+	else
+		CampfirePerkSystemUnregister(2, "LastSeed.esp")
+	endif
+
+
+	if isArtOfTheCatchLoaded
+		FishingPerkPoints = Game.GetFormFromFile(0x00000000, "ArtOfTheCatch.esp") as GlobalVariable
+		FishingPerkPointProgress = Game.GetFormFromFile(0x00000000, "ArtOfTheCatch.esp") as GlobalVariable
+		Activator node_controller = Game.GetFormFromFile(0x00000000, "ArtOfTheCatch.esp") as Activator
+		CampfirePerkSystemRegister(node_controller, 3, "ArtOfTheCatch.esp")
+	else
+		CampfirePerkSystemUnregister(3, "ArtOfTheCatch.esp")
+	endif
+
 	;#Region SKSE + Mod Support Section
 	if isHFLoaded && isSKSELoaded
-		
-		form QuarriedStone = Game.GetFormFromFile(0x0200306C, "HearthFires.esm")		;Quarried Stone
 		form Straw = Game.GetFormFromFile(0x00005A68, "HearthFires.esm")				;Straw
 		_Camp_FireMiscRecipe_TinderStraw.SetNthIngredient(Straw, 0)
 		_Camp_FireMiscRecipe_TinderStraw_perk1.SetNthIngredient(Straw, 0)
@@ -467,10 +501,8 @@ function RunCompatibility()
 	endif
 	
 	if isDLC1Loaded && isSKSELoaded
-	
 		form ValeDeerHide = Game.GetFormFromFile(0x02011999, "Dawnguard.esm")			;Vale Deer Hide
 		form ValeSabreCatHide = Game.GetFormFromFile(0x0201199A, "Dawnguard.esm")		;Vale Sabre Cat Hide
-		
 		_Camp_RecipeLeatherValeDeerHideDLC1.SetNthIngredient(ValeDeerHide, 0)
 		_Camp_RecipeLeatherValeSabreCatHideDLC1.SetNthIngredient(ValeSabreCatHide, 0)
 		_Camp_RecipeTanningLeatherValeDeerHideDLC1.SetNthIngredient(ValeDeerHide, 0)
@@ -574,15 +606,22 @@ function AddStartupSpells()							;Approved 2.0
 		else
 			PlayerRef.AddSpell(_Camp_HarvestWoodSpell, false)
 		endif
-		PlayerRef.AddSpell(_Camp_SurvivalVisionPower, false)
+		if _Camp_HotkeyInstincts.GetValueInt() != 0
+			PlayerRef.RemoveSpell(_Camp_SurvivalVisionPower)
+		else
+			PlayerRef.AddSpell(_Camp_SurvivalVisionPower, false)
+		endif
 	else
 		PlayerRef.AddSpell(_Camp_CreateItemSpell, false)
 		PlayerRef.AddSpell(_Camp_CampfireSpell, false)
 		PlayerRef.AddSpell(_Camp_HarvestWoodSpell, false)
-		PlayerRef.AddSpell(_Camp_SurvivalVisionPower, false)
+		if isSKSELoaded
+			PlayerRef.AddSpell(_Camp_SurvivalVisionPower, false)
+		endif
 		_Camp_HotkeyCreateItem.SetValueInt(0)
 		_Camp_HotkeyBuildCampfire.SetValueInt(0)
 		_Camp_HotkeyHarvestWood.SetValueInt(0)
+		_Camp_HotkeyInstincts.SetValueInt(0)
 	endif
 
 	if _Camp_Setting_TrackFollowers.GetValueInt() == 2

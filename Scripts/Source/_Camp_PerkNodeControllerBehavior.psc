@@ -1,6 +1,8 @@
 scriptname _Camp_PerkNodeControllerBehavior extends _Camp_PerkNodeController
 
 message property _Camp_PerkGeneral_UpgradeVerify auto
+GlobalVariable property required_perk_points_available auto
+GlobalVariable property required_perk_point_progress auto
 _Camp_ConditionValues property Conditions auto
 
 function AssignCampfire(ObjectReference akCampfire)
@@ -35,7 +37,12 @@ function NodeActivated(ObjectReference akNodeRef)
         below_max_rank = true
     endif
 
-    if (is_starting_node || downstream_node_purchased) && below_max_rank
+    bool points_available = false
+    if required_perk_points_available.GetValueInt() > 0
+        points_available = true
+    endif
+
+    if (is_starting_node || downstream_node_purchased) && below_max_rank && points_available
         eligible_for_increase = true
     endif
 
@@ -70,12 +77,14 @@ function ShowPerkDescription(_Camp_PerkNode akPerkNode, bool abEligibleForIncrea
                                              (desc_val * akPerkNode.secondary_description_value_iterator) + akPerkNode.secondary_description_value_modifier, \
                                              akPerkNode.perk_global.GetValueInt(), \    
                                              akPerkNode.perk_max_rank_global.GetValueInt(), \           
-                                             99)
+                                             required_perk_points_available.GetValueInt(), \
+                                             (required_perk_point_progress.GetValue() * 100.0))
     else
         i = akPerkNode.perk_description.Show((desc_val * akPerkNode.description_value_iterator) + akPerkNode.description_value_modifier, \
                                              akPerkNode.perk_global.GetValueInt(), \    
                                              akPerkNode.perk_max_rank_global.GetValueInt(), \           
-                                             99)
+                                             required_perk_points_available.GetValueInt(), \
+                                             (required_perk_point_progress.GetValue() * 100.0))
     endif
 
     ; Increase Rank / Back
@@ -83,7 +92,8 @@ function ShowPerkDescription(_Camp_PerkNode akPerkNode, bool abEligibleForIncrea
         int j = _Camp_PerkGeneral_UpgradeVerify.Show()    
         ; Are you sure you want this perk? Ok / Cancel    
         if j == 0        
-            akPerkNode.IncreasePerkRank() 
+            akPerkNode.IncreasePerkRank()
+            required_perk_points_available.SetValueInt(required_perk_points_available.GetValueInt() - 1)
         endif
     endif
 endFunction
