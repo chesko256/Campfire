@@ -16,3 +16,4 @@ bool property IsDawnguardLoaded = false auto conditional hidden
 bool property IsDragonbornLoaded = false auto conditional hidden
 bool property IsFrostfallLoaded = false auto conditional hidden
 bool property IsLastSeedLoaded = false auto conditional hidden
+bool property IsArtOfTheCatchLoaded = false auto conditional hidden

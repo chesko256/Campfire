@@ -126,10 +126,9 @@ function Initialize()
         i += 1
     endWhile
 
-    debug.trace("Current angle " + self.GetAngleZ())
     self.SetAngle(0.0, 0.0, \
                   self.GetAngleZ() + self.GetHeadingAngle(PlayerRef) + 180.0)
-    debug.trace("new angle " + self.GetAngleZ())
+
     NodeRefMap = new ObjectReference[12]
     LineRefMap = new ObjectReference[12]
     NodeActMap = new Activator[12]
