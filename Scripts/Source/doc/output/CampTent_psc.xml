@@ -18,7 +18,7 @@ scriptname CampTent extends _Camp_PlaceableObjectBase
  the player's bed roll. Attaching this script and filling out properties in the Creation Kit is 
  how new tents are created; please see the tutorials for more information. Only 3 properties 
  are required in order for the tent to function, with the rest optional. This script supports 
- creating a tent with a single bed roll, a lantern, clutter, and more. See <link linkend="robo33">CampTentEx</link> for even 
+ creating a tent with a single bed roll, a lantern, clutter, and more. See <link linkend="robo38">CampTentEx</link> for even 
  more capability.
 </para>
 </section>
@@ -53,6 +53,18 @@ CampTent/RequiredPositionRef_PlayerBed</title>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 ObjectReference property RequiredPositionRef_PlayerBed auto
+</literallayout>
+</section>
+<section>
+<title>
+CampTent/TentAsset_LargeTentTriggerVolume</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Optional: A trigger box activator for walk-in tents that lets the system know that you are standing inside of it. If not included, the system will only consider the player to be "inside" the tent when sitting or lying down in it. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Activator property TentAsset_LargeTentTriggerVolume auto
 </literallayout>
 </section>
 <section>

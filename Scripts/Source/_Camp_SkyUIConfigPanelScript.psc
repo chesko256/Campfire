@@ -2,6 +2,8 @@ Scriptname _Camp_SkyUIConfigPanelScript extends SKI_ConfigBase
 
 import _CampInternal
 
+string CONFIG_PATH = "../CampfireData/"
+
 ; External scripts
 _Camp_Compatibility property Compatibility auto
 
@@ -23,6 +25,7 @@ GlobalVariable property _Camp_Setting_MaxThreads auto
 GlobalVariable property _Camp_Setting_EquipTentOutfit auto
 GlobalVariable property _Camp_Setting_Legality auto
 GlobalVariable property _Camp_Setting_AdvancedPlacement auto
+GlobalVariable property _Camp_Setting_CurrentProfile auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 GlobalVariable property _Camp_HotkeyCreateItem auto
 GlobalVariable property _Camp_HotkeyBuildCampfire auto
@@ -41,6 +44,7 @@ Spell property _Camp_SurvivalVisionPower auto
 Spell property _Camp_FollowerDetectSpell auto
 Message property _Camp_TroubleshootingConfirmMsg auto
 
+string[] ProfileList
 string[] TroubleshootingList
 int TroubleshootingIndex = 0
 
@@ -83,10 +87,11 @@ float MIN_THREADS = 0.0
 float MAX_THREADS = 30.0
 
 Event OnConfigInit()
-	Pages = new string[3]
+	Pages = new string[4]
 	Pages[0] = "$CampfireGameplayPage"
 	Pages[1] = "$CampfireAdvancedPage"
 	Pages[2] = "$CampfireHelpPage"
+	Pages[3] = "$CampfireSaveLoadPage"
 	
 	TroubleshootingList = new string[2]
 	TroubleshootingList[0] = "$CampfireTroubleshooting0"
@@ -94,10 +99,6 @@ Event OnConfigInit()
 endEvent
 
 function PageReset_Gameplay()
-	if !TroubleshootingList
-		OnConfigInit()
-	endif
-
 	SetCursorFillMode(TOP_TO_BOTTOM)
 
 	AddHeaderOption("$CampfireGameplayHeaderCamping")
@@ -231,6 +232,15 @@ function PageReset_Advanced()
 	endif
 endFunction
 
+function PageReset_SaveLoad()
+	SetCursorFillMode(TOP_TO_BOTTOM)
+
+	AddHeaderOption("$CampfireSaveLoadHeaderProfile")
+	AddMenuOption("$CampfireSaveLoadCurrentProfile", GetProfileName(_Camp_Setting_CurrentProfile.GetValueInt()))
+
+
+endFunction
+
 function PageReset_Help()
 	SetCursorFillMode(TOP_TO_BOTTOM)
 	
@@ -253,6 +263,10 @@ event OnPageReset(string page)
 		LoadCustomContent("campfire/logo.dds")
 	else
 		UnloadCustomContent()
+	endif
+
+	if !Pages || !TroubleshootingList
+		OnConfigInit()
 	endif
 	
 	if page == "$CampfireGameplayPage"
@@ -520,6 +534,7 @@ event OnOptionDefault(int option)
 		SetSliderOptionValue(Advanced_SettingMaxThreads_OID, DEFAULT_THREADS, "{0}")
 	elseif option == Advanced_SettingTrackFollowers_OID
 		_Camp_Setting_TrackFollowers.SetValueInt(2)
+		PlayerRef.AddSpell(_Camp_FollowerDetectSpell, false)
 		SetToggleOptionValue(Advanced_SettingTrackFollowers_OID, true)
 	endif
 	if option == Gameplay_HotkeyCreateItem_OID
@@ -684,4 +699,141 @@ function RegisterForKeysOnLoad()
 	if _Camp_HotkeyHarvestWood.GetValueInt() != 0
 		RegisterForKey(_Camp_HotkeyHarvestWood.GetValueInt())
 	endIf
+endFunction
+
+string function GetProfileName(int aiProfileIndex)
+	;bool b = JsonUtil.Load(CONFIG_PATH + "profile" + aiProfileIndex)
+	return JsonUtil.GetStringValue(CONFIG_PATH + "profile" + aiProfileIndex, "profile_name", missing = "Profile " + aiProfileIndex)
+endFunction
+
+function SetProfileName(int aiProfileIndex, string asProfileName)
+	JsonUtil.SetStringValue(CONFIG_PATH + "profile" + aiProfileIndex, "profile_name", asProfileName)
+endFunction
+
+function SaveSettingToCurrentProfile(string asKeyName, int aiValue)
+	int current_profile_index = _Camp_Setting_CurrentProfile.GetValueInt()
+	JsonUtil.SetIntValue(CONFIG_PATH + "profile" + current_profile_index, asKeyName, aiValue)
+	JsonUtil.Save(CONFIG_PATH + "profile" + current_profile_index)
+endFunction
+
+int function LoadSettingFromProfile(int aiProfileIndex, string asKeyName)
+	return JsonUtil.GetIntValue(CONFIG_PATH + "profile" + aiProfileIndex, asKeyName, -1)
+endFunction
+
+function SwitchToProfile(int aiProfileIndex)
+	_Camp_Setting_CurrentProfile.SetValueInt(aiProfileIndex)
+
+	int val = LoadSettingFromProfile(aiProfileIndex, "ManualFireLighting")
+	if val != -1
+		_Camp_Setting_ManualFireLighting.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "CampingGearFlammable")
+	if val != -1
+		_Camp_Setting_EquipmentFlammable.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "TentRemovePlayerEquipment")
+	if val != -1
+		_Camp_Setting_CampingArmorTakeOff.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "TentRemovePlayerCuirass")
+	if val != -1
+		_Camp_Setting_TakeOff_Cuirass.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "TentRemovePlayerHelm")
+	if val != -1
+		_Camp_Setting_TakeOff_Helm.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "TentRemovePlayerGauntlets")
+	if val != -1
+		_Camp_Setting_TakeOff_Gauntlets.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "TentRemovePlayerBoots")
+	if val != -1
+		_Camp_Setting_TakeOff_Boots.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "TentRemovePlayerBackpack")
+	if val != -1
+		_Camp_Setting_TakeOff_Backpack.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "TentRemovePlayerWeapons")
+	if val != -1
+		_Camp_Setting_TakeOff_Weapons.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "TentRemovePlayerShield")
+	if val != -1
+		_Camp_Setting_TakeOff_Shield.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "TentRemovePlayerAmmo")
+	if val != -1
+		_Camp_Setting_TakeOff_Ammo.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "TentRemoveFollowerEquipment")
+	if val != -1
+		_Camp_Setting_FollowersRemoveGearInTents.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "FollowerTracking")
+	if val != -1
+		_Camp_Setting_TrackFollowers.SetValueInt(val)
+		if val == 2
+			PlayerRef.AddSpell(_Camp_FollowerDetectSpell, false)
+		else
+			PlayerRef.RemoveSpell(_Camp_FollowerDetectSpell)
+			Follower1.Clear()
+			Follower2.Clear()
+			Follower3.Clear()
+			Animal.Clear()
+		endif
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "FollowersUseCampsite")
+	if val != -1
+		_Camp_Setting_FollowersUseCampsite.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "CampingIllegalInTowns")
+	if val != -1
+		_Camp_Setting_Legality.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "AdvancedPlacementMode")
+	if val != -1
+		_Camp_Setting_AdvancedPlacement.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "MaxPlacementThreads")
+	if val != -1
+		_Camp_Setting_MaxThreads.SetValueInt(val)
+	endif
+
+	;@TODO: Handle startup load hotkey conflicts
+	val = LoadSettingFromProfile(aiProfileIndex, "HotkeyCreateItem")
+	if val != -1 && val != 0
+
+	else
+		UnregisterForKey(_Camp_HotkeyCreateItem.GetValueInt())
+		_Camp_HotkeyCreateItem.SetValue(0)
+		Game.GetPlayer().AddSpell(_Camp_CreateItemSpell, false)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "HotkeyBuildCampfire")
+	if val != -1 && val != 0
+
+	else
+		UnregisterForKey(_Camp_HotkeyBuildCampfire.GetValueInt())
+		_Camp_HotkeyBuildCampfire.SetValue(0)
+		Game.GetPlayer().AddSpell(_Camp_CampfireSpell, false)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "HotkeyHarvestWood")
+	if val != -1 && val != 0
+
+	else
+		UnregisterForKey(_Camp_HotkeyHarvestWood.GetValueInt())
+		_Camp_HotkeyHarvestWood.SetValue(0)
+		ForcePageReset()
+		Game.GetPlayer().AddSpell(_Camp_HarvestWoodSpell, false)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "HotkeyInstincts")
+	if val != -1 && val != 0
+
+	else
+		UnregisterForKey(_Camp_HotkeyInstincts.GetValueInt())
+		_Camp_HotkeyInstincts.SetValue(0)
+		ForcePageReset()
+		Game.GetPlayer().AddSpell(_Camp_SurvivalVisionPower, false)
+	endif
 endFunction

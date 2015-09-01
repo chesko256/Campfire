@@ -576,7 +576,15 @@ function PlaceObject_myCookPotSnapMarker()
     myCookPotSnapMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_CampfireCookPotSnapMarker, PositionRef_CookPotSnapMarker)
 endFunction
 
+; @TODO: Testing
 Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
+    bool b = JsonUtil.Load("../CampfireData/config")
+    debug.trace("I loaded the previous file: " + b)
+    bool a = JsonUtil.Load("../NonExistant/NonExistant")
+    debug.trace("I loaded the non-existant file: " + b)
+    JsonUtil.SetStringValue("../CampfireData/config", "TestKey", "This is my new value.")
+    JsonUtil.Save("../CampfireData/config")
+    debug.trace("The file has been written.")
     if akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11
         CampDebug(0, "Torch bash!")
         if campfire_size > 0 && campfire_stage == 4

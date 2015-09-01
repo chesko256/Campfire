@@ -10,6 +10,10 @@ The \`CampUtil\` script is the primary way most mods should interact with Campfi
 
 ### CampUtil/GetAPIVersion
 
+**API VERSION.**
+
+1
+
 **DESCRIPTION.**
 
 Get the [CampUtil](#robo0) API version number.
@@ -30,7 +34,37 @@ The [CampUtil](#robo0) API version number. This is NOT the same thing as the ver
 
     float ver = CampUtil.GetAPIVersion()
 
+### CampUtil/GetCampfireVersion
+
+**API VERSION.**
+
+2
+
+**DESCRIPTION.**
+
+Get the Campfire mod version number.
+
+**SYNTAX.**
+
+    float function GetCampfireVersion() global
+
+**PARAMETERS.**
+
+None
+
+**RETURN VALUE.**
+
+The Campfire version number.
+
+**EXAMPLES.**
+
+    float ver = CampUtil.GetCampfireVersion()
+
 ### CampUtil/GetPlayerEquippedHead
+
+**API VERSION.**
+
+1
 
 **DESCRIPTION.**
 
@@ -54,6 +88,10 @@ The player's currently equipped head armor.
 
 ### CampUtil/GetPlayerEquippedBody
 
+**API VERSION.**
+
+1
+
 **DESCRIPTION.**
 
 Gets the player's currently equipped body armor.
@@ -75,6 +113,10 @@ The player's currently equipped body armor.
     Armor PlayerArmor = GetPlayerEquippedBody()
 
 ### CampUtil/GetPlayerEquippedHands
+
+**API VERSION.**
+
+1
 
 **DESCRIPTION.**
 
@@ -98,6 +140,10 @@ The player's currently equipped hand armor.
 
 ### CampUtil/GetPlayerEquippedFeet
 
+**API VERSION.**
+
+1
+
 **DESCRIPTION.**
 
 Gets the player's currently equipped foot armor.
@@ -119,6 +165,10 @@ The player's currently equipped foot armor.
     Armor PlayerBoots = GetPlayerEquippedFeet()
 
 ### CampUtil/GetPlayerEquippedBackpack
+
+**API VERSION.**
+
+1
 
 **DESCRIPTION.**
 
@@ -146,6 +196,10 @@ An Armor item is considered to be a backpack if it is in the \_Camp\_Backpacks F
 
 ### CampUtil/GetPlayerEquippedAmmo
 
+**API VERSION.**
+
+1
+
 **DESCRIPTION.**
 
 Gets the player's currently equipped ammo.
@@ -167,6 +221,10 @@ The player's currently equipped ammo.
     Armor PlayerArrows = GetPlayerEquippedAmmo()
 
 ### CampUtil/IsRefInInterior
+
+**API VERSION.**
+
+1
 
 **DESCRIPTION.**
 
@@ -197,6 +255,10 @@ The standard IsInInterior() function can only return whether or not the current 
 
 ### CampUtil/GetTrackedFollower
 
+**API VERSION.**
+
+1
+
 **DESCRIPTION.**
 
 Returns the tracked follower at the specified index.
@@ -225,6 +287,10 @@ The Actor occupying this index, or None if no tracked follower in this index.
 
 ### CampUtil/IsTrackedFollower
 
+**API VERSION.**
+
+1
+
 **DESCRIPTION.**
 
 Whether or not this actor is a tracked follower.
@@ -249,6 +315,10 @@ True if this actor is a tracked follower; false if not.
 
 ### CampUtil/GetTrackedFollowerCount
 
+**API VERSION.**
+
+1
+
 **DESCRIPTION.**
 
 Return the number of tracked followers.
@@ -270,6 +340,10 @@ The number of followers currently being tracked, from 0 to 3.
     debug.trace("I have " + CampUtil.GetTrackedFollowerCount() + " followers.")
 
 ### CampUtil/GetTrackedAnimal
+
+**API VERSION.**
+
+1
 
 **DESCRIPTION.**
 
@@ -293,6 +367,10 @@ The tracked animal Actor currently in the player's service, or None if no animal
 
 ### CampUtil/IsTrackedAnimal
 
+**API VERSION.**
+
+1
+
 **DESCRIPTION.**
 
 Whether or not the Actor is a tracked animal.
@@ -310,6 +388,10 @@ None
 True if the Actor is a tracked animal; False if not.
 
 ### CampUtil/GetTrackedAnimalCount
+
+**API VERSION.**
+
+1
 
 **DESCRIPTION.**
 
@@ -332,6 +414,10 @@ The number of animals currently being tracked, from 0 to 1.
     debug.trace("I have " + CampUtil.GetTrackedAnimalCount() + " doggies.")
 
 ### CampUtil/PlayerCanPlaceObjects
+
+**API VERSION.**
+
+1
 
 **DESCRIPTION.**
 
@@ -377,6 +463,10 @@ Reasons that this function might return false are:
 
 ### CampUtil/IsPlayerPlacingObject
 
+**API VERSION.**
+
+1
+
 **DESCRIPTION.**
 
 Whether or not the player is currently placing a Placeable Object (tent, etc).
@@ -400,6 +490,10 @@ True if the player is currently placing a Placeable Object, false otherwise.
     endif
 
 ### CampUtil/LegalToCampHere
+
+**API VERSION.**
+
+1
 
 **DESCRIPTION.**
 
@@ -429,6 +523,10 @@ In Campfire, it is illegal for the player to place Placeable Objects inside hous
 
 ### CampUtil/GetAreaCampingFaction
 
+**API VERSION.**
+
+1
+
 **DESCRIPTION.**
 
 Returns the faction that dictates camping legality in this area.
@@ -454,6 +552,10 @@ If akCenter is in an illegal camping area, returns the faction responsible for m
 
 ### CampUtil/GetLastUsedCampfire
 
+**API VERSION.**
+
+1
+
 **DESCRIPTION.**
 
 Returns the last campfire used by the player.
@@ -471,6 +573,10 @@ None
 The last campfire used by the player, or None if it no longer exists.
 
 ### CampUtil/GetCurrentTent
+
+**API VERSION.**
+
+1
 
 **DESCRIPTION.**
 
@@ -490,9 +596,57 @@ The current tent being used, or None if the player is not using a tent.
 
 **NOTES.**
 
-Return value used as input to [IsCurrentTentWaterproof](#robo21)() and [IsCurrentTentWarm](#robo22)().
+Return value used as input to [IsTentWaterproof](#robo22)() and [IsTentWarm](#robo23)().
+
+### CampUtil/IsTentWaterproof
+
+**API VERSION.**
+
+1
+
+**DESCRIPTION.**
+
+Is this tent waterproof?
+
+**SYNTAX.**
+
+    bool function IsTentWaterproof(ObjectReference akTent) global
+
+**PARAMETERS.**
+
+akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo21)().
+
+**RETURN VALUE.**
+
+True if the tent is flagged as being waterproof, or false if not.
+
+### CampUtil/IsTentWarm
+
+**API VERSION.**
+
+1
+
+**DESCRIPTION.**
+
+Is this tent warm?
+
+**SYNTAX.**
+
+    bool function IsTentWarm(ObjectReference akTent) global
+
+**PARAMETERS.**
+
+akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo21)().
+
+**RETURN VALUE.**
+
+True if the tent is flagged as being warm, or false if not.
 
 ### CampUtil/IsCurrentTentWaterproof
+
+**API VERSION.**
+
+2
 
 **DESCRIPTION.**
 
@@ -500,17 +654,21 @@ Is the current tent waterproof?
 
 **SYNTAX.**
 
-    bool function IsCurrentTentWaterproof(ObjectReference akTent) global
+    bool function IsCurrentTentWaterproof() global
 
 **PARAMETERS.**
 
-akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo20)().
+None
 
 **RETURN VALUE.**
 
-True if the current tent is flagged as being waterproof, or false if not.
+True if the current tent is flagged as being waterproof, or false if not or if there is no tent in use by the player.
 
 ### CampUtil/IsCurrentTentWarm
+
+**API VERSION.**
+
+2
 
 **DESCRIPTION.**
 
@@ -518,17 +676,21 @@ Is the current tent warm?
 
 **SYNTAX.**
 
-    bool function IsCurrentTentWarm(ObjectReference akTent) global
+    bool function IsCurrentTentWarm() global
 
 **PARAMETERS.**
 
-akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo20)().
+None
 
 **RETURN VALUE.**
 
-True if the current tent is flagged as being warm, or false if not.
+True if the current tent is flagged as being warm, or false if not or if there is no tent in use by the player.
 
 ### CampUtil/IsCrimeToPlaceInTowns
+
+**API VERSION.**
+
+1
 
 **DESCRIPTION.**
 
@@ -549,3 +711,93 @@ True if the Form is illegal to place in settled areas, or False if not.
 **NOTES.**
 
 This function returns true or false without regard to the current legality setting.
+
+### CampUtil/GetCampfireSettingBool
+
+**API VERSION.**
+
+2
+
+**DESCRIPTION.**
+
+Returns the state of the given Campfire setting.
+
+**SYNTAX.**
+
+    bool function GetCampfireSettingBool(string setting) global
+
+**PARAMETERS.**
+
+setting: The setting which you would like to retrieve. Accepted values (case-sensitive):
+
+-   ManualFireLighting
+
+-   CampingGearFlammable
+
+-   TentRemovePlayerEquipment ; The master setting for whether or not to remove player gear in tents
+
+-   TentRemovePlayerCuirass
+
+-   TentRemovePlayerHelm
+
+-   TentRemovePlayerGauntlets
+
+-   TentRemovePlayerBoots
+
+-   TentRemovePlayerBackpack
+
+-   TentRemovePlayerWeapons
+
+-   TentRemovePlayerShield
+
+-   TentRemovePlayerAmmo
+
+-   TentRemoveFollowerEquipment
+
+-   FollowerTracking
+
+-   FollowersUseCampsite
+
+-   CampingIllegalInTowns
+
+-   AdvancedPlacementMode
+
+**RETURN VALUE.**
+
+True if the feature is enabled, false if disabled or if the setting string is invalid.
+
+**EXAMPLES.**
+
+    if GetCampfireSettingBool("FollowerTracking") == true
+            debug.trace("Campfire is tracking followers.")
+    endif
+
+### CampUtil/GetCampfireSettingInt
+
+**API VERSION.**
+
+2
+
+**DESCRIPTION.**
+
+Returns the value of the given Campfire setting.
+
+**SYNTAX.**
+
+    int function GetCampfireSettingInt(string setting) global
+
+**PARAMETERS.**
+
+setting: The setting which you would like to retrieve. Accepted values (case-sensitive):
+
+-   MaxPlacementThreads
+
+**RETURN VALUE.**
+
+The value of the setting, or -1 if the setting string was invalid.
+
+**EXAMPLES.**
+
+    if GetCampfireSettingInt("MaxPlacementThreads") > 5
+            debug.trace("Campfire is configured to use over 5 threads for placing objects.")
+    endif
