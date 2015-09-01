@@ -243,7 +243,11 @@ function PageReset_SaveLoad()
 
 	AddHeaderOption("$CampfireSaveLoadHeaderProfile")
 	SaveLoad_SelectProfile_OID = AddMenuOption("$CampfireSaveLoadCurrentProfile", GetProfileName(_Camp_Setting_CurrentProfile.GetValueInt()))
-	SaveLoad_RenameProfile_OID = AddInputOption("test", "$CampfireSaveLoadRenameProfile")
+	if GetVersion() >= 4
+		SaveLoad_RenameProfile_OID = AddInputOption("test", "$CampfireSaveLoadRenameProfile")
+	else
+		SaveLoad_RenameProfile_OID = AddTextOption("SkyUI 5.1+ Required", "$CampfireSaveLoadRenameProfile", OPTION_FLAG_DISABLED)
+	endif
 	AddEmptyOption()
 	AddEmptyOption()
 	AddEmptyOption()
