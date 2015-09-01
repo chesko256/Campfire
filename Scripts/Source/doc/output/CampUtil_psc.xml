@@ -22,6 +22,10 @@ scriptname CampUtil hidden
 <section>
 <title>
 CampUtil/GetAPIVersion</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Get the <link linkend="robo0">CampUtil</link> API version number.
@@ -46,7 +50,39 @@ float ver = <link linkend="robo0">CampUtil</link>.GetAPIVersion()
 </section>
 <section>
 <title>
+CampUtil/GetCampfireVersion</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Get the Campfire mod version number.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+float function GetCampfireVersion() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The Campfire version number.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+float ver = <link linkend="robo0">CampUtil</link>.GetCampfireVersion()
+</literallayout>
+</section>
+<section>
+<title>
 CampUtil/GetPlayerEquippedHead</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Gets the player's currently equipped head armor.
@@ -71,6 +107,10 @@ Armor PlayerHelm = GetPlayerEquippedHead()
 <section>
 <title>
 CampUtil/GetPlayerEquippedBody</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Gets the player's currently equipped body armor.
@@ -95,6 +135,10 @@ Armor PlayerArmor = GetPlayerEquippedBody()
 <section>
 <title>
 CampUtil/GetPlayerEquippedHands</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Gets the player's currently equipped hand armor.
@@ -119,6 +163,10 @@ Armor PlayerGauntlets = GetPlayerEquippedHands()
 <section>
 <title>
 CampUtil/GetPlayerEquippedFeet</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Gets the player's currently equipped foot armor.
@@ -143,6 +191,10 @@ Armor PlayerBoots = GetPlayerEquippedFeet()
 <section>
 <title>
 CampUtil/GetPlayerEquippedBackpack</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Gets the player's currently equipped backpack.
@@ -171,6 +223,10 @@ Armor PlayerBackpack = GetPlayerEquippedBackpack()
 <section>
 <title>
 CampUtil/GetPlayerEquippedAmmo</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Gets the player's currently equipped ammo.
@@ -195,6 +251,10 @@ Armor PlayerArrows = GetPlayerEquippedAmmo()
 <section>
 <title>
 CampUtil/IsRefInInterior</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Whether or not the reference is in an interior cell, or a cell that "looks like" an interior.
@@ -231,6 +291,10 @@ endif
 <section>
 <title>
 CampUtil/GetTrackedFollower</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Returns the tracked follower at the specified index.
@@ -260,6 +324,10 @@ endWhile
 <section>
 <title>
 CampUtil/IsTrackedFollower</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Whether or not this actor is a tracked follower.
@@ -286,6 +354,10 @@ endif
 <section>
 <title>
 CampUtil/GetTrackedFollowerCount</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Return the number of tracked followers.
@@ -310,6 +382,10 @@ debug.trace("I have " + <link linkend="robo0">CampUtil</link>.GetTrackedFollower
 <section>
 <title>
 CampUtil/GetTrackedAnimal</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Returns the tracked animal in the player's service.
@@ -335,6 +411,10 @@ debug.trace("My dog is " + <link linkend="robo0">CampUtil</link>.GetTrackedAnima
 <section>
 <title>
 CampUtil/IsTrackedAnimal</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Whether or not the Actor is a tracked animal.
@@ -355,6 +435,10 @@ bool function IsTrackedAnimal(Actor akActor) global
 <section>
 <title>
 CampUtil/GetTrackedAnimalCount</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Get the number of animals currently in the player's service.
@@ -379,6 +463,10 @@ debug.trace("I have " + <link linkend="robo0">CampUtil</link>.GetTrackedAnimalCo
 <section>
 <title>
 CampUtil/PlayerCanPlaceObjects</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Whether or not the player can currently place Placeable Objects (tents, etc).
@@ -419,6 +507,10 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true, bool abPlayerBusy
 <section>
 <title>
 CampUtil/IsPlayerPlacingObject</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Whether or not the player is currently placing a Placeable Object (tent, etc).
@@ -445,6 +537,10 @@ endif
 <section>
 <title>
 CampUtil/LegalToCampHere</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Whether or not the player's current location is considered a legal camping area.
@@ -475,6 +571,10 @@ endif
 <section>
 <title>
 CampUtil/GetAreaCampingFaction</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Returns the faction that dictates camping legality in this area.
@@ -502,6 +602,10 @@ endif
 <section>
 <title>
 CampUtil/GetLastUsedCampfire</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Returns the last campfire used by the player.
@@ -522,6 +626,10 @@ ObjectReference function GetLastUsedCampfire() global
 <section>
 <title>
 CampUtil/GetCurrentTent</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Returns the current tent being used.
@@ -540,52 +648,112 @@ ObjectReference function GetCurrentTent() global
 </para>
 <formalpara><title>NOTES</title><para></para></formalpara>
 <para>
- Return value used as input to <link linkend="robo21">IsCurrentTentWaterproof</link>() and <link linkend="robo22">IsCurrentTentWarm</link>().
+ Return value used as input to <link linkend="robo22">IsTentWaterproof</link>() and <link linkend="robo23">IsTentWarm</link>().
+</para>
+</section>
+<section>
+<title>
+CampUtil/IsTentWaterproof</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Is this tent waterproof?
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsTentWaterproof(ObjectReference akTent) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo21">GetCurrentTent</link>().
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if the tent is flagged as being waterproof, or false if not.
+</para>
+</section>
+<section>
+<title>
+CampUtil/IsTentWarm</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Is this tent warm?
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsTentWarm(ObjectReference akTent) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo21">GetCurrentTent</link>().
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if the tent is flagged as being warm, or false if not.
 </para>
 </section>
 <section>
 <title>
 CampUtil/IsCurrentTentWaterproof</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 2
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Is the current tent waterproof?
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-bool function IsCurrentTentWaterproof(ObjectReference akTent) global
+bool function IsCurrentTentWaterproof() global
 </literallayout>
 <formalpara><title>PARAMETERS</title><para></para></formalpara>
 <para>
- akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo20">GetCurrentTent</link>().
+ None
 </para>
 <formalpara><title>RETURN VALUE</title><para></para></formalpara>
 <para>
- True if the current tent is flagged as being waterproof, or false if not.
+ True if the current tent is flagged as being waterproof, or false if not or if there is no tent in use by the player.
 </para>
 </section>
 <section>
 <title>
 CampUtil/IsCurrentTentWarm</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 2
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Is the current tent warm?
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-bool function IsCurrentTentWarm(ObjectReference akTent) global
+bool function IsCurrentTentWarm() global
 </literallayout>
 <formalpara><title>PARAMETERS</title><para></para></formalpara>
 <para>
- akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo20">GetCurrentTent</link>().
+ None
 </para>
 <formalpara><title>RETURN VALUE</title><para></para></formalpara>
 <para>
- True if the current tent is flagged as being warm, or false if not.
+ True if the current tent is flagged as being warm, or false if not or if there is no tent in use by the player.
 </para>
 </section>
 <section>
 <title>
 CampUtil/IsCrimeToPlaceInTowns</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 1
+</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Is it a crime to place this base object in towns, inside owned houses, etc?
@@ -606,5 +774,86 @@ bool function IsCrimeToPlaceInTowns(Form akBaseObject) global
 <para>
  This function returns true or false without regard to the current legality setting.
 </para>
+</section>
+<section>
+<title>
+CampUtil/GetCampfireSettingBool</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Returns the state of the given Campfire setting.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function GetCampfireSettingBool(string setting) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ setting: The setting which you would like to retrieve. Accepted values (case-sensitive):
+</para>
+<itemizedlist><listitem><para> ManualFireLighting
+</para></listitem><listitem><para> CampingGearFlammable
+</para></listitem><listitem><para> TentRemovePlayerEquipment   ; The master setting for whether or not to remove player gear in tents
+</para></listitem><listitem><para> TentRemovePlayerCuirass
+</para></listitem><listitem><para> TentRemovePlayerHelm
+</para></listitem><listitem><para> TentRemovePlayerGauntlets
+</para></listitem><listitem><para> TentRemovePlayerBoots
+</para></listitem><listitem><para> TentRemovePlayerBackpack
+</para></listitem><listitem><para> TentRemovePlayerWeapons
+</para></listitem><listitem><para> TentRemovePlayerShield
+</para></listitem><listitem><para> TentRemovePlayerAmmo
+</para></listitem><listitem><para> TentRemoveFollowerEquipment
+</para></listitem><listitem><para> FollowerTracking
+</para></listitem><listitem><para> FollowersUseCampsite
+</para></listitem><listitem><para> CampingIllegalInTowns
+</para></listitem><listitem><para> AdvancedPlacementMode
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if the feature is enabled, false if disabled or if the setting string is invalid.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+if GetCampfireSettingBool("FollowerTracking") == true
+        debug.trace("Campfire is tracking followers.")
+endif
+</literallayout>
+</section>
+<section>
+<title>
+CampUtil/GetCampfireSettingInt</title>
+<formalpara><title>API VERSION</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Returns the value of the given Campfire setting.
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+int function GetCampfireSettingInt(string setting) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ setting: The setting which you would like to retrieve. Accepted values (case-sensitive):
+</para>
+<itemizedlist><listitem><para> MaxPlacementThreads
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The value of the setting, or -1 if the setting string was invalid.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+if GetCampfireSettingInt("MaxPlacementThreads") &gt; 5
+        debug.trace("Campfire is configured to use over 5 threads for placing objects.")
+endif
+</literallayout>
 </section>
 </article>

@@ -1,5 +1,5 @@
 
-C:\Program Files (x86)\Steam\steamapps\common\skyrim\Data\Scripts\Source\doc>robodoc.exe
+E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>robodoc.exe
 robodoc.exe:
 ./../CampUsableMiscItem.psc(68) : Warning R1:
   A header with the name "CampUsableMiscItem/consumable_ingredient_name" already exists.
@@ -21,36 +21,52 @@ robodoc.exe:
   A header with the name "CampPlaceableMiscItem/consumable_ingredient_name" already exists.
   See ./../CampPlaceableMiscItem.psc(75)
 
-C:\Program Files (x86)\Steam\steamapps\common\skyrim\Data\Scripts\Source\doc>pandoc.exe "./output/CampUtil_psc.xml" -f docbook -t markdown_github -o "./output/CampUtil_psc.txt" --base-header-level=3 
+E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>pandoc.exe "./output/CampUtil_psc.xml" -f docbook -t markdown_github -o "./output/CampUtil_psc.txt" --base-header-level=3 
 
-C:\Program Files (x86)\Steam\steamapps\common\skyrim\Data\Scripts\Source\doc>pandoc.exe "./output/_Camp_PlaceableObjectBase_psc.xml" -f docbook -t markdown_github -o "./output/_Camp_PlaceableObjectBase_psc.txt" --base-header-level=3 
+E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>pandoc.exe "./output/_Camp_PlaceableObjectBase_psc.xml" -f docbook -t markdown_github -o "./output/_Camp_PlaceableObjectBase_psc.txt" --base-header-level=3 
 
-C:\Program Files (x86)\Steam\steamapps\common\skyrim\Data\Scripts\Source\doc>pandoc.exe "./output/CampTent_psc.xml" -f docbook -t markdown_github -o "./output/CampTent_psc.txt" --base-header-level=3 
+E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>pandoc.exe "./output/CampTent_psc.xml" -f docbook -t markdown_github -o "./output/CampTent_psc.txt" --base-header-level=3 
 
-C:\Program Files (x86)\Steam\steamapps\common\skyrim\Data\Scripts\Source\doc>pandoc.exe "./output/CampTentEx_psc.xml" -f docbook -t markdown_github -o "./output/CampTentEx_psc.txt" --base-header-level=3 
+E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>pandoc.exe "./output/CampTentEx_psc.xml" -f docbook -t markdown_github -o "./output/CampTentEx_psc.txt" --base-header-level=3 
 
-C:\Program Files (x86)\Steam\steamapps\common\skyrim\Data\Scripts\Source\doc>pandoc.exe "./output/CampPlaceableObject_psc.xml" -f docbook -t markdown_github -o "./output/CampPlaceableObject_psc.txt" --base-header-level=3 
+E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>pandoc.exe "./output/CampPlaceableObject_psc.xml" -f docbook -t markdown_github -o "./output/CampPlaceableObject_psc.txt" --base-header-level=3 
 
-C:\Program Files (x86)\Steam\steamapps\common\skyrim\Data\Scripts\Source\doc>pandoc.exe "./output/CampPlaceableObjectEx_psc.xml" -f docbook -t markdown_github -o "./output/CampPlaceableObjectEx_psc.txt" --base-header-level=3 
+E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>pandoc.exe "./output/CampPlaceableObjectEx_psc.xml" -f docbook -t markdown_github -o "./output/CampPlaceableObjectEx_psc.txt" --base-header-level=3 
 
-C:\Program Files (x86)\Steam\steamapps\common\skyrim\Data\Scripts\Source\doc>pandoc.exe "./output/CampPlaceableMiscItem_psc.xml" -f docbook -t markdown_github -o "./output/CampPlaceableMiscItem_psc.txt" --base-header-level=3 
+E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>pandoc.exe "./output/CampPlaceableMiscItem_psc.xml" -f docbook -t markdown_github -o "./output/CampPlaceableMiscItem_psc.txt" --base-header-level=3 
 
-C:\Program Files (x86)\Steam\steamapps\common\skyrim\Data\Scripts\Source\doc>pandoc.exe "./output/CampUsableMiscItem_psc.xml" -f docbook -t markdown_github -o "./output/CampUsableMiscItem_psc.txt" --base-header-level=3 
+E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>pandoc.exe "./output/CampUsableMiscItem_psc.xml" -f docbook -t markdown_github -o "./output/CampUsableMiscItem_psc.txt" --base-header-level=3 
 
-C:\Program Files (x86)\Steam\steamapps\common\skyrim\Data\Scripts\Source\doc>pandoc.exe "./output/CampPlacementIndicator_psc.xml" -f docbook -t markdown_github -o "./output/CampPlacementIndicator_psc.txt" --base-header-level=3 
+E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>pandoc.exe "./output/CampPlacementIndicator_psc.xml" -f docbook -t markdown_github -o "./output/CampPlacementIndicator_psc.txt" --base-header-level=3 
 
-C:\Program Files (x86)\Steam\steamapps\common\skyrim\Data\Scripts\Source\doc>python githubber.py "CampUtil_psc.txt" "../../../campwiki/CampUtil-API-Reference.md" 
+E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>python githubber.py "CampUtil_psc.txt" "../../../campwiki/CampUtil-API-Reference.md" 
+'python' is not recognized as an internal or external command,
+operable program or batch file.
 
-C:\Program Files (x86)\Steam\steamapps\common\skyrim\Data\Scripts\Source\doc>python githubber.py "CampTent_psc.txt" "../../../campwiki/CampTent-Script.md" 
+E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>python githubber.py "CampTent_psc.txt" "../../../campwiki/CampTent-Script.md" 
+'python' is not recognized as an internal or external command,
+operable program or batch file.
 
-C:\Program Files (x86)\Steam\steamapps\common\skyrim\Data\Scripts\Source\doc>python githubber.py "CampTentEx_psc.txt" "../../../campwiki/CampTentEx-Script.md" 
+E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>python githubber.py "CampTentEx_psc.txt" "../../../campwiki/CampTentEx-Script.md" 
+'python' is not recognized as an internal or external command,
+operable program or batch file.
 
-C:\Program Files (x86)\Steam\steamapps\common\skyrim\Data\Scripts\Source\doc>python githubber.py "CampPlaceableObject_psc.txt" "../../../campwiki/CampPlaceableObject-Script.md" 
+E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>python githubber.py "CampPlaceableObject_psc.txt" "../../../campwiki/CampPlaceableObject-Script.md" 
+'python' is not recognized as an internal or external command,
+operable program or batch file.
 
-C:\Program Files (x86)\Steam\steamapps\common\skyrim\Data\Scripts\Source\doc>python githubber.py "CampPlaceableObjectEx_psc.txt" "../../../campwiki/CampPlaceableObjectEx-Script.md" 
+E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>python githubber.py "CampPlaceableObjectEx_psc.txt" "../../../campwiki/CampPlaceableObjectEx-Script.md" 
+'python' is not recognized as an internal or external command,
+operable program or batch file.
 
-C:\Program Files (x86)\Steam\steamapps\common\skyrim\Data\Scripts\Source\doc>python githubber.py "CampPlaceableMiscItem_psc.txt" "../../../campwiki/CampPlaceableMiscItem-Script.md" 
+E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>python githubber.py "CampPlaceableMiscItem_psc.txt" "../../../campwiki/CampPlaceableMiscItem-Script.md" 
+'python' is not recognized as an internal or external command,
+operable program or batch file.
 
-C:\Program Files (x86)\Steam\steamapps\common\skyrim\Data\Scripts\Source\doc>python githubber.py "CampUsableMiscItem_psc.txt" "../../../campwiki/CampUsableMiscItem-Script.md" 
+E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>python githubber.py "CampUsableMiscItem_psc.txt" "../../../campwiki/CampUsableMiscItem-Script.md" 
+'python' is not recognized as an internal or external command,
+operable program or batch file.
 
-C:\Program Files (x86)\Steam\steamapps\common\skyrim\Data\Scripts\Source\doc>python githubber.py "CampPlacementIndicator_psc.txt" "../../../campwiki/CampPlacementIndicator-Script.md" 
+E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>python githubber.py "CampPlacementIndicator_psc.txt" "../../../campwiki/CampPlacementIndicator-Script.md" 
+'python' is not recognized as an internal or external command,
+operable program or batch file.
