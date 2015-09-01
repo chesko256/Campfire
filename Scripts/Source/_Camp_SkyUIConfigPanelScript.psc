@@ -139,7 +139,11 @@ function PageReset_Gameplay()
 	Gameplay_HotkeyCreateItem_OID = AddKeyMapOption("$CampfireGameplayHotkeyCreateItem", _Camp_HotkeyCreateItem.GetValueInt())
 	Gameplay_HotkeyBuildCampfire_OID = AddKeyMapOption("$CampfireGameplayHotkeyBuildCampfire", _Camp_HotkeyBuildCampfire.GetValueInt())
 	Gameplay_HotkeyHarvestWood_OID = AddKeyMapOption("$CampfireGameplayHotkeyHarvestWood", _Camp_HotkeyHarvestWood.GetValueInt())
-	Gameplay_HotkeyInstincts_OID = AddKeyMapOption("$CampfireGameplayHotkeyInstincts", _Camp_HotkeyInstincts.GetValueInt())
+	if Compatibility.isSKSELoaded
+		Gameplay_HotkeyInstincts_OID = AddKeyMapOption("$CampfireGameplayHotkeyInstincts", _Camp_HotkeyInstincts.GetValueInt())
+	else
+		Gameplay_HotkeyInstincts_OID = AddKeyMapOption("Survival Skill: Instincts (SKSE 1.7.3+ Req.)", _Camp_HotkeyInstincts.GetValueInt(), OPTION_FLAG_DISABLED)
+	endif
 	
 	AddEmptyOption()
 
@@ -242,12 +246,34 @@ function PageReset_SaveLoad()
 	SetCursorFillMode(TOP_TO_BOTTOM)
 
 	AddHeaderOption("$CampfireSaveLoadHeaderProfile")
-	SaveLoad_SelectProfile_OID = AddMenuOption("$CampfireSaveLoadCurrentProfile", GetProfileName(_Camp_Setting_CurrentProfile.GetValueInt()))
-	if GetVersion() >= 4
-		SaveLoad_RenameProfile_OID = AddInputOption("test", "$CampfireSaveLoadRenameProfile")
+	if Compatibility.isSKSELoaded
+		SaveLoad_SelectProfile_OID = AddMenuOption("$CampfireSaveLoadCurrentProfile", GetProfileName(_Camp_Setting_CurrentProfile.GetValueInt()))
+		SKI_Main skyui = Game.GetFormFromFile(0x00000814, "SkyUI.esp") as SKI_Main
+		int version = skyui.ReqSWFRelease
+		if version >= 1026 	; SkyUI 5.1+
+			SaveLoad_RenameProfile_OID = AddInputOption("", "$CampfireSaveLoadRenameProfile")
+		else
+			SaveLoad_RenameProfile_OID = AddTextOption("SkyUI 5.1+ Required", "$CampfireSaveLoadRenameProfile", OPTION_FLAG_DISABLED)
+		endif
+		AddEmptyOption()
+		AddEmptyOption()
+		AddEmptyOption()
+		AddEmptyOption()
+		AddEmptyOption()
+		AddEmptyOption()
+		AddEmptyOption()
+		SaveLoad_ProfileHelp_OID = AddTextOption("$CampfireSaveLoadAboutProfiles", "")
+		if _Camp_Setting_AutoSaveLoad.GetValueInt() == 2
+			SaveLoad_Enable_OID = AddToggleOption("$CampfireSaveLoadEnable", true)
+		else
+			SaveLoad_Enable_OID = AddToggleOption("$CampfireSaveLoadEnable", false)
+		endif
 	else
-		SaveLoad_RenameProfile_OID = AddTextOption("SkyUI 5.1+ Required", "$CampfireSaveLoadRenameProfile", OPTION_FLAG_DISABLED)
+		AddTextOption("SKSE 1.7.3+ Required to use this feature.", "", OPTION_FLAG_DISABLED)
 	endif
+
+	SetCursorPosition(1) ; Move cursor to top right position
+
 	AddEmptyOption()
 	AddEmptyOption()
 	AddEmptyOption()
@@ -255,11 +281,12 @@ function PageReset_SaveLoad()
 	AddEmptyOption()
 	AddEmptyOption()
 	AddEmptyOption()
-	SaveLoad_ProfileHelp_OID = AddTextOption("$CampfireSaveLoadAboutProfiles", "")
-	if _Camp_Setting_AutoSaveLoad.GetValueInt() == 2
-		SaveLoad_Enable_OID = AddToggleOption("$CampfireSaveLoadEnable", true)
-	else
-		SaveLoad_Enable_OID = AddToggleOption("$CampfireSaveLoadEnable", false)
+	AddEmptyOption()
+	AddEmptyOption()
+	AddEmptyOption()
+	AddEmptyOption()
+	if Compatibility.isSKSELoaded && _Camp_Setting_AutoSaveLoad.GetValueInt() == 2
+		AddTextOption("$CampfireSaveLoadSettingsSaved", "", OPTION_FLAG_DISABLED)
 	endif
 endFunction
 
@@ -297,6 +324,8 @@ event OnPageReset(string page)
 		PageReset_Advanced()
 	elseif page == "$CampfireHelpPage"
 		PageReset_Help()
+	elseif page == "$CampfireSaveLoadPage"
+		PageReset_SaveLoad()
 	endif
 endEvent
 
