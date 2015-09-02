@@ -107,9 +107,15 @@ bool Upgraded_1_1 = false
 
 Event OnPlayerLoadGame()
 	RunCompatibility()
-	RegisterForKeysOnLoad()
-	RegisterForControlsOnLoad()
-	RegisterForEventsOnLoad()
+	if isSKYUILoaded && isSKSELoaded
+		CampConfig.LoadProfileOnStartup()
+	else
+		RegisterForKeysOnLoad()
+	endif
+	if isSKSELoaded
+		RegisterForControlsOnLoad()
+		RegisterForEventsOnLoad()
+	endif
 endEvent
 
 function RunCompatibility()
@@ -508,6 +514,10 @@ function RunCompatibility()
 	trace("[Campfire]======================================================================================================")
 	trace("[Campfire]                            Campfire compatibility check complete.   		                           ")
 	trace("[Campfire]======================================================================================================")
+
+	if isSKYUILoaded && isSKSELoaded
+		CampConfig.LoadProfileOnStartup()
+	endif
 
 	if isSKSELoaded
 		RegisterForControlsOnLoad()
