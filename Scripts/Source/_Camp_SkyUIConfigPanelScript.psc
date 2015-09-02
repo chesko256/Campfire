@@ -136,11 +136,11 @@ function PageReset_Gameplay()
 	AddEmptyOption()
 	
 	AddHeaderOption("$CampfireGameplayHeaderHotkeys")
-	Gameplay_HotkeyCreateItem_OID = AddKeyMapOption("$CampfireGameplayHotkeyCreateItem", _Camp_HotkeyCreateItem.GetValueInt())
-	Gameplay_HotkeyBuildCampfire_OID = AddKeyMapOption("$CampfireGameplayHotkeyBuildCampfire", _Camp_HotkeyBuildCampfire.GetValueInt())
-	Gameplay_HotkeyHarvestWood_OID = AddKeyMapOption("$CampfireGameplayHotkeyHarvestWood", _Camp_HotkeyHarvestWood.GetValueInt())
+	Gameplay_HotkeyCreateItem_OID = AddKeyMapOption("$CampfireGameplayHotkeyCreateItem", _Camp_HotkeyCreateItem.GetValueInt(), OPTION_FLAG_WITH_UNMAP)
+	Gameplay_HotkeyBuildCampfire_OID = AddKeyMapOption("$CampfireGameplayHotkeyBuildCampfire", _Camp_HotkeyBuildCampfire.GetValueInt(), OPTION_FLAG_WITH_UNMAP)
+	Gameplay_HotkeyHarvestWood_OID = AddKeyMapOption("$CampfireGameplayHotkeyHarvestWood", _Camp_HotkeyHarvestWood.GetValueInt(), OPTION_FLAG_WITH_UNMAP)
 	if Compatibility.isSKSELoaded
-		Gameplay_HotkeyInstincts_OID = AddKeyMapOption("$CampfireGameplayHotkeyInstincts", _Camp_HotkeyInstincts.GetValueInt())
+		Gameplay_HotkeyInstincts_OID = AddKeyMapOption("$CampfireGameplayHotkeyInstincts", _Camp_HotkeyInstincts.GetValueInt(), OPTION_FLAG_WITH_UNMAP)
 	else
 		Gameplay_HotkeyInstincts_OID = AddKeyMapOption("Survival Skill: Instincts (SKSE 1.7.3+ Req.)", _Camp_HotkeyInstincts.GetValueInt(), OPTION_FLAG_DISABLED)
 	endif
@@ -247,13 +247,18 @@ function PageReset_SaveLoad()
 
 	AddHeaderOption("$CampfireSaveLoadHeaderProfile")
 	if Compatibility.isSKSELoaded
-		SaveLoad_SelectProfile_OID = AddMenuOption("$CampfireSaveLoadCurrentProfile", GetProfileName(_Camp_Setting_CurrentProfile.GetValueInt()))
-		SKI_Main skyui = Game.GetFormFromFile(0x00000814, "SkyUI.esp") as SKI_Main
-		int version = skyui.ReqSWFRelease
-		if version >= 1026 	; SkyUI 5.1+
-			SaveLoad_RenameProfile_OID = AddInputOption("", "$CampfireSaveLoadRenameProfile")
+		if _Camp_Setting_AutoSaveLoad.GetValueInt() == 2
+			SaveLoad_SelectProfile_OID = AddMenuOption("$CampfireSaveLoadCurrentProfile", GetProfileName(_Camp_Setting_CurrentProfile.GetValueInt()))
+			SKI_Main skyui = Game.GetFormFromFile(0x00000814, "SkyUI.esp") as SKI_Main
+			int version = skyui.ReqSWFRelease
+			if version >= 1026 	; SkyUI 5.1+
+				SaveLoad_RenameProfile_OID = AddInputOption("", "$CampfireSaveLoadRenameProfile")
+			else
+				SaveLoad_RenameProfile_OID = AddTextOption("SkyUI 5.1+ Required", "$CampfireSaveLoadRenameProfile", OPTION_FLAG_DISABLED)
+			endif
 		else
-			SaveLoad_RenameProfile_OID = AddTextOption("SkyUI 5.1+ Required", "$CampfireSaveLoadRenameProfile", OPTION_FLAG_DISABLED)
+			SaveLoad_SelectProfile_OID = AddMenuOption("$CampfireSaveLoadCurrentProfile", GetProfileName(_Camp_Setting_CurrentProfile.GetValueInt()), OPTION_FLAG_DISABLED)
+			AddEmptyOption()
 		endif
 		AddEmptyOption()
 		AddEmptyOption()
@@ -376,6 +381,13 @@ event OnOptionHighlight(int option)
 		SetInfoText("$CampfireOptionHighlightSettingMaxThreads")
 	elseif option == Advanced_SettingTrackFollowers_OID
 		SetInfoText("$CampfireOptionHighlightSettingTrackFollowers")
+
+	elseif option == SaveLoad_SelectProfile_OID
+		SetInfoText("$CampfireOptionHighlightSettingSelectProfile")
+	elseif option == SaveLoad_RenameProfile_OID
+		SetInfoText("$CampfireOptionHighlightSettingRenameProfile")
+	elseif option == SaveLoad_Enable_OID
+		SetInfoText("$CampfireOptionHighlightSettingEnableSaveLoad")
 	endif
 endEvent
 
@@ -417,7 +429,7 @@ event OnOptionSelect(int option)
 			_Camp_Setting_EquipmentFlammable.SetValueInt(2)
 			SetToggleOptionValue(Gameplay_SettingCampingFlammabilityToggle_OID, true)
 		endif
-		SaveSettingToCurrentProfile("CampingGearFlammable", _Camp_Setting_EquipmentFlammable.GetValueInt())
+		SaveSettingToCurrentProfile("camping_gear_flammable", _Camp_Setting_EquipmentFlammable.GetValueInt())
 	elseif option == Gameplay_SettingCampingPlaceHelm_OID
 		if _Camp_Setting_TakeOff_Helm.GetValueInt() == 2
 			_Camp_Setting_TakeOff_Helm.SetValueInt(1)
@@ -532,6 +544,20 @@ event OnOptionSelect(int option)
 			PlayerRef.AddSpell(_Camp_FollowerDetectSpell, false)
 		endif
 		SaveSettingToCurrentProfile("follower_tracking", _Camp_Setting_TrackFollowers.GetValueInt())
+	elseif option == SaveLoad_Enable_OID
+		if _Camp_Setting_AutoSaveLoad.GetValueInt() == 2
+			_Camp_Setting_AutoSaveLoad.SetValueInt(1)
+			SetToggleOptionValue(SaveLoad_Enable_OID, false)
+			JsonUtil.SetIntValue(CONFIG_PATH + "common", "auto_load", 1)
+			JsonUtil.Save(CONFIG_PATH + "common")
+		elseif _Camp_Setting_AutoSaveLoad.GetValueInt() == 1
+			_Camp_Setting_AutoSaveLoad.SetValueInt(2)
+			SetToggleOptionValue(SaveLoad_Enable_OID, true)
+			JsonUtil.SetIntValue(CONFIG_PATH + "common", "auto_load", 2)
+			JsonUtil.Save(CONFIG_PATH + "common")
+			SaveAllSettings(_Camp_Setting_CurrentProfile.GetValueInt())
+		endIf
+		ForcePageReset()
 	endif
 
 	if option == Guide_Topic1
@@ -546,6 +572,8 @@ event OnOptionSelect(int option)
 		ShowGuideTopic5()
 	elseif option == Guide_Topic6
 		ShowGuideTopic6()
+	elseif option == SaveLoad_ProfileHelp_OID
+		ShowProfileHelp()
 	endif
 endEvent
 
@@ -566,7 +594,7 @@ event OnOptionDefault(int option)
 	elseif option == Gameplay_SettingCampingFlammabilityToggle_OID
 		_Camp_Setting_EquipmentFlammable.SetValueInt(2)
 		SetToggleOptionValue(Gameplay_SettingCampingFlammabilityToggle_OID, true)
-		SaveSettingToCurrentProfile("CampingGearFlammable", _Camp_Setting_EquipmentFlammable.GetValueInt())
+		SaveSettingToCurrentProfile("camping_gear_flammable", _Camp_Setting_EquipmentFlammable.GetValueInt())
 	elseif option == Gameplay_SettingCampingPlaceCuirass_OID
 		_Camp_Setting_TakeOff_Cuirass.SetValueInt(1)
 		SetToggleOptionValue(Gameplay_SettingCampingPlaceCuirass_OID, false)
@@ -654,6 +682,19 @@ event OnOptionMenuOpen(int option)
 		SetMenuDialogStartIndex(TroubleshootingIndex)
 		SetMenuDialogDefaultIndex(0)
 	endif
+
+	if option == SaveLoad_SelectProfile_OID
+		string[] profile_list = new string[10]
+		int i = 0
+		while i < 10
+			string pname = GetProfileName(i + 1)
+			profile_list[i] = pname
+			i += 1
+		endWhile
+		SetMenuDialogOptions(profile_list)
+		SetMenuDialogStartIndex(_Camp_Setting_CurrentProfile.GetValueInt() - 1)
+		SetMenuDialogDefaultIndex(0)
+	endif
 endEvent
 
 event OnOptionMenuAccept(int option, int index)
@@ -665,6 +706,11 @@ event OnOptionMenuAccept(int option, int index)
 			if bChoice
 				TroubleshootingPlacement()
 			endif
+		endif
+	elseif option == SaveLoad_SelectProfile_OID
+		bool b = ShowMessage("$CampfireSaveLoadConfirm")
+		if b
+			SwitchToProfile(index + 1)
 		endif
 	endif
 endEvent
@@ -683,6 +729,25 @@ event OnOptionSliderAccept(int option, float value)
 		_Camp_Setting_MaxThreads.SetValueInt(value as Int)
 		SetSliderOptionValue(Advanced_SettingMaxThreads_OID, value, "{0}")
 		SaveSettingToCurrentProfile("max_placement_threads", _Camp_Setting_MaxThreads.GetValueInt())
+	endif
+endEvent
+
+event OnOptionInputOpen(int option)
+	if option == SaveLoad_RenameProfile_OID
+		SetInputDialogStartText(GetProfileName(_Camp_Setting_CurrentProfile.GetValueInt()))
+	endif
+endEvent
+
+event OnOptionInputAccept(int option, string str)
+	if option == SaveLoad_RenameProfile_OID
+		if str != ""
+			string profile_path = CONFIG_PATH + "profile" + _Camp_Setting_CurrentProfile.GetValueInt()
+			JsonUtil.SetStringValue(profile_path, "profile_name", str)
+			JsonUtil.Save(profile_path)
+			ForcePageReset()
+		else
+			ShowMessage("$CampfireSaveLoadRenameErrorBlank", false)
+		endif
 	endif
 endEvent
 
@@ -787,6 +852,11 @@ function ShowGuideTopic6()
 	ShowMessage("$CampfireGuideTopic6Text", false)
 	ShowMessage("$CampfireGuideTopic6TextCont", false)
 endFunction
+function ShowProfileHelp()
+	ShowMessage("$CampfireSaveLoadTopic", false)
+	ShowMessage("$CampfireSaveLoadTopicCont", false)
+	ShowMessage("$CampfireSaveLoadTopicCont2", false)
+endFunction
 
 function TroubleshootingPlacement()
 	utility.wait(1)
@@ -820,9 +890,11 @@ function SetProfileName(int aiProfileIndex, string asProfileName)
 endFunction
 
 function SaveSettingToCurrentProfile(string asKeyName, int aiValue)
-	int current_profile_index = _Camp_Setting_CurrentProfile.GetValueInt()
-	JsonUtil.SetIntValue(CONFIG_PATH + "profile" + current_profile_index, asKeyName, aiValue)
-	JsonUtil.Save(CONFIG_PATH + "profile" + current_profile_index)
+	if _Camp_Setting_AutoSaveLoad.GetValueInt() == 2
+		int current_profile_index = _Camp_Setting_CurrentProfile.GetValueInt()
+		JsonUtil.SetIntValue(CONFIG_PATH + "profile" + current_profile_index, asKeyName, aiValue)
+		JsonUtil.Save(CONFIG_PATH + "profile" + current_profile_index)
+	endif
 endFunction
 
 int function LoadSettingFromProfile(int aiProfileIndex, string asKeyName)
@@ -832,6 +904,7 @@ endFunction
 function LoadProfileOnStartup()
 	int auto_load = JsonUtil.GetIntValue(CONFIG_PATH + "common", "auto_load", 0)
 	if auto_load == 2
+		_Camp_Setting_AutoSaveLoad.SetValueInt(2)
 		int last_profile = JsonUtil.GetIntValue(CONFIG_PATH + "common", "last_profile", 0)
 		if last_profile != 0
 			_Camp_Setting_CurrentProfile.SetValueInt(last_profile)
@@ -843,7 +916,8 @@ function LoadProfileOnStartup()
 			JsonUtil.Save(CONFIG_PATH + "common")
 			SwitchToProfile(1)
 		endif
-	; elseif auto_load == 1, pass (auto_load off)
+	elseif auto_load == 1
+		_Camp_Setting_AutoSaveLoad.SetValueInt(1)
 	elseif auto_load == 0
 		; The file or setting does not exist, create it and default to auto-loading.
 		; default to Profile 1 and write the file
@@ -861,11 +935,16 @@ function SwitchToProfile(int aiProfileIndex)
 	JsonUtil.SetIntValue(CONFIG_PATH + "common", "last_profile", aiProfileIndex)
 	JsonUtil.Save(CONFIG_PATH + "common")
 
+	string pname = JsonUtil.GetStringValue(CONFIG_PATH + "profile" + aiProfileIndex, "profile_name", "")
+	if pname == ""
+		GenerateDefaultProfile(aiProfileIndex)
+	endif
+
 	int val = LoadSettingFromProfile(aiProfileIndex, "manual_fire_lighting")
 	if val != -1
 		_Camp_Setting_ManualFireLighting.SetValueInt(val)
 	endif
-	val = LoadSettingFromProfile(aiProfileIndex, "CampingGearFlammable")
+	val = LoadSettingFromProfile(aiProfileIndex, "camping_gear_flammable")
 	if val != -1
 		_Camp_Setting_EquipmentFlammable.SetValueInt(val)
 	endif
@@ -941,7 +1020,8 @@ function SwitchToProfile(int aiProfileIndex)
 
 	val = LoadSettingFromProfile(aiProfileIndex, "hotkey_create_item")
 	if val != -1 && val != 0
-		RegisterForKey(_Camp_HotkeyCreateItem.GetValueInt())
+		RegisterForKey(val)
+		_Camp_HotkeyCreateItem.SetValueInt(val)
 		PlayerRef.RemoveSpell(_Camp_CreateItemSpell)
 	else
 		UnregisterForKey(_Camp_HotkeyCreateItem.GetValueInt())
@@ -950,7 +1030,8 @@ function SwitchToProfile(int aiProfileIndex)
 	endif
 	val = LoadSettingFromProfile(aiProfileIndex, "hotkey_build_campfire")
 	if val != -1 && val != 0
-		RegisterForKey(_Camp_HotkeyBuildCampfire.GetValueInt())
+		RegisterForKey(val)
+		_Camp_HotkeyBuildCampfire.SetValueInt(val)
 		PlayerRef.RemoveSpell(_Camp_CampfireSpell)
 	else
 		UnregisterForKey(_Camp_HotkeyBuildCampfire.GetValueInt())
@@ -959,7 +1040,8 @@ function SwitchToProfile(int aiProfileIndex)
 	endif
 	val = LoadSettingFromProfile(aiProfileIndex, "hotkey_harvest_wood")
 	if val != -1 && val != 0
-		RegisterForKey(_Camp_HotkeyHarvestWood.GetValueInt())
+		RegisterForKey(val)
+		_Camp_HotkeyHarvestWood.SetValueInt(val)
 		PlayerRef.RemoveSpell(_Camp_HarvestWoodSpell)
 	else
 		UnregisterForKey(_Camp_HotkeyHarvestWood.GetValueInt())
@@ -968,7 +1050,8 @@ function SwitchToProfile(int aiProfileIndex)
 	endif
 	val = LoadSettingFromProfile(aiProfileIndex, "hotkey_instincts")
 	if val != -1 && val != 0
-		RegisterForKey(_Camp_HotkeyInstincts.GetValueInt())
+		RegisterForKey(val)
+		_Camp_HotkeyInstincts.SetValueInt(val)
 		PlayerRef.RemoveSpell(_Camp_SurvivalVisionPower)
 	else
 		UnregisterForKey(_Camp_HotkeyInstincts.GetValueInt())
@@ -976,4 +1059,57 @@ function SwitchToProfile(int aiProfileIndex)
 		ForcePageReset()
 		PlayerRef.AddSpell(_Camp_SurvivalVisionPower, false)
 	endif
+endFunction
+
+function GenerateDefaultProfile(int aiProfileIndex)
+	string profile_path = CONFIG_PATH + "profile" + aiProfileIndex
+	JsonUtil.SetStringValue(profile_path, "profile_name", "Profile " + aiProfileIndex)
+	JsonUtil.SetIntValue(profile_path, "manual_fire_lighting", 1)
+	JsonUtil.SetIntValue(profile_path, "camping_gear_flammable", 2)
+	JsonUtil.SetIntValue(profile_path, "tent_remove_player_equipment", 2)
+	JsonUtil.SetIntValue(profile_path, "tent_remove_player_cuirass", 1)
+	JsonUtil.SetIntValue(profile_path, "tent_remove_player_helm", 2)
+	JsonUtil.SetIntValue(profile_path, "tent_remove_player_gauntlets", 2)
+	JsonUtil.SetIntValue(profile_path, "tent_remove_player_boots", 2)
+	JsonUtil.SetIntValue(profile_path, "tent_remove_player_backpack", 2)
+	JsonUtil.SetIntValue(profile_path, "tent_remove_player_weapons", 2)
+	JsonUtil.SetIntValue(profile_path, "tent_remove_player_shield", 2)
+	JsonUtil.SetIntValue(profile_path, "tent_remove_player_ammo", 2)
+	JsonUtil.SetIntValue(profile_path, "tent_remove_follower_equipment", 2)
+	JsonUtil.SetIntValue(profile_path, "follower_tracking", 2)
+	JsonUtil.SetIntValue(profile_path, "followers_use_campsite", 2)
+	JsonUtil.SetIntValue(profile_path, "camping_illegal_in_towns", 2)
+	JsonUtil.SetIntValue(profile_path, "advanced_placement_mode", 2)
+	JsonUtil.SetIntValue(profile_path, "max_placement_threads", 20)
+	JsonUtil.SetIntValue(profile_path, "hotkey_create_item", 0)
+	JsonUtil.SetIntValue(profile_path, "hotkey_build_campfire", 0)
+	JsonUtil.SetIntValue(profile_path, "hotkey_harvest_wood", 0)
+	JsonUtil.SetIntValue(profile_path, "hotkey_instincts", 0)
+	JsonUtil.Save(profile_path)
+endFunction
+
+function SaveAllSettings(int aiProfileIndex)
+	string profile_path = CONFIG_PATH + "profile" + aiProfileIndex
+	JsonUtil.SetIntValue(profile_path, "manual_fire_lighting", _Camp_Setting_ManualFireLighting.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "camping_gear_flammable", _Camp_Setting_EquipmentFlammable.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "tent_remove_player_equipment", _Camp_Setting_CampingArmorTakeOff.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "tent_remove_player_cuirass", _Camp_Setting_TakeOff_Cuirass.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "tent_remove_player_helm", _Camp_Setting_TakeOff_Helm.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "tent_remove_player_gauntlets", _Camp_Setting_TakeOff_Gauntlets.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "tent_remove_player_boots", _Camp_Setting_TakeOff_Boots.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "tent_remove_player_backpack", _Camp_Setting_TakeOff_Backpack.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "tent_remove_player_weapons", _Camp_Setting_TakeOff_Weapons.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "tent_remove_player_shield", _Camp_Setting_TakeOff_Shield.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "tent_remove_player_ammo", _Camp_Setting_TakeOff_Ammo.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "tent_remove_follower_equipment", _Camp_Setting_FollowersRemoveGearInTents.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "follower_tracking", _Camp_Setting_TrackFollowers.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "followers_use_campsite", _Camp_Setting_FollowersUseCampsite.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "camping_illegal_in_towns", _Camp_Setting_Legality.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "advanced_placement_mode", _Camp_Setting_AdvancedPlacement.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "max_placement_threads", _Camp_Setting_MaxThreads.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "hotkey_create_item", _Camp_HotkeyCreateItem.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "hotkey_build_campfire", _Camp_HotkeyBuildCampfire.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "hotkey_harvest_wood", _Camp_HotkeyHarvestWood.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "hotkey_instincts", _Camp_HotkeyInstincts.GetValueInt())
+	JsonUtil.Save(profile_path)
 endFunction
