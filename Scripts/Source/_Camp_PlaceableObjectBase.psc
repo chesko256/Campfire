@@ -28,6 +28,7 @@ bool property Setting_Flammable = False auto
 MiscObject property Required_InventoryItem auto hidden
 _Camp_ObjectPlacementThreadManager property PlacementSystem auto hidden
 bool property initialized = false auto hidden
+bool property is_temporary = false auto hidden
 float[] property OriginAng auto hidden
 ObjectReference property CenterObject auto hidden
 ObjectReference property myFire1 auto hidden
@@ -77,6 +78,7 @@ function Initialize()
 	PlacementSystem = CampUtil.GetPlacementSystem()
 	RotateOnStartUp()
 	OriginAng = GetAngleData(self)
+	is_temporary = IsPlaceableObjectTemporary(self.GetBaseObject())
 	PlaceBaseObjects()
 	PlaceObjects()
 	PlacementSystem.wait_all()

@@ -219,58 +219,58 @@ function RotateOnStartUp()
 endFunction
 
 function PlaceObject_ExtraStatic1(CampPlaceableObjectEx Extended)
-	myExtraStatic1Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraStatic1, Extended.PositionRef_ExtraStatic1)
+	myExtraStatic1Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraStatic1, Extended.PositionRef_ExtraStatic1, is_temp = is_temporary)
 endFunction
 function PlaceObject_ExtraStatic2(CampPlaceableObjectEx Extended)
-	myExtraStatic2Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraStatic2, Extended.PositionRef_ExtraStatic2)
+	myExtraStatic2Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraStatic2, Extended.PositionRef_ExtraStatic2, is_temp = is_temporary)
 endFunction
 function PlaceObject_ExtraStatic3(CampPlaceableObjectEx Extended)
-	myExtraStatic3Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraStatic3, Extended.PositionRef_ExtraStatic3)
+	myExtraStatic3Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraStatic3, Extended.PositionRef_ExtraStatic3, is_temp = is_temporary)
 endFunction
 function PlaceObject_ExtraStatic4(CampPlaceableObjectEx Extended)
-	myExtraStatic4Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraStatic4, Extended.PositionRef_ExtraStatic4)
+	myExtraStatic4Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraStatic4, Extended.PositionRef_ExtraStatic4, is_temp = is_temporary)
 endFunction
 function PlaceObject_ExtraStatic5(CampPlaceableObjectEx Extended)
-	myExtraStatic5Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraStatic5, Extended.PositionRef_ExtraStatic5)
+	myExtraStatic5Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraStatic5, Extended.PositionRef_ExtraStatic5, is_temp = is_temporary)
 endFunction
 function PlaceObject_ExtraActivator1(CampPlaceableObjectEx Extended)
-	myExtraActivator1Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraActivator1, Extended.PositionRef_ExtraActivator1)
+	myExtraActivator1Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraActivator1, Extended.PositionRef_ExtraActivator1, is_temp = is_temporary)
 endFunction
 function PlaceObject_ExtraActivator2(CampPlaceableObjectEx Extended)
-	myExtraActivator2Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraActivator2, Extended.PositionRef_ExtraActivator2)
+	myExtraActivator2Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraActivator2, Extended.PositionRef_ExtraActivator2, is_temp = is_temporary)
 endFunction
 function PlaceObject_ExtraActivator3(CampPlaceableObjectEx Extended)
-	myExtraActivator3Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraActivator3, Extended.PositionRef_ExtraActivator3)
+	myExtraActivator3Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraActivator3, Extended.PositionRef_ExtraActivator3, is_temp = is_temporary)
 endFunction
 function PlaceObject_ExtraActivator4(CampPlaceableObjectEx Extended)
-	myExtraActivator4Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraActivator4, Extended.PositionRef_ExtraActivator4)
+	myExtraActivator4Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraActivator4, Extended.PositionRef_ExtraActivator4, is_temp = is_temporary)
 endFunction
 function PlaceObject_ExtraActivator5(CampPlaceableObjectEx Extended)
-	myExtraActivator5Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraActivator5, Extended.PositionRef_ExtraActivator5)
+	myExtraActivator5Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraActivator5, Extended.PositionRef_ExtraActivator5, is_temp = is_temporary)
 endFunction
 function PlaceObject_ExtraFurniture1(CampPlaceableObjectEx Extended)
-	myExtraFurniture1Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraFurniture1, Extended.PositionRef_ExtraFurniture1)
+	myExtraFurniture1Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraFurniture1, Extended.PositionRef_ExtraFurniture1, is_temp = is_temporary)
 endFunction
 function PlaceObject_ExtraFurniture2(CampPlaceableObjectEx Extended)
-	myExtraFurniture2Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraFurniture2, Extended.PositionRef_ExtraFurniture2)
+	myExtraFurniture2Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraFurniture2, Extended.PositionRef_ExtraFurniture2, is_temp = is_temporary)
 endFunction
 function PlaceObject_ExtraFurniture3(CampPlaceableObjectEx Extended)
-	myExtraFurniture3Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraFurniture3, Extended.PositionRef_ExtraFurniture3)
+	myExtraFurniture3Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraFurniture3, Extended.PositionRef_ExtraFurniture3, is_temp = is_temporary)
 endFunction
 function PlaceObject_ExtraFurniture4(CampPlaceableObjectEx Extended)
-	myExtraFurniture4Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraFurniture4, Extended.PositionRef_ExtraFurniture4)
+	myExtraFurniture4Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraFurniture4, Extended.PositionRef_ExtraFurniture4, is_temp = is_temporary)
 endFunction
 function PlaceObject_ExtraFurniture5(CampPlaceableObjectEx Extended)
-	myExtraFurniture5Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraFurniture5, Extended.PositionRef_ExtraFurniture5)
+	myExtraFurniture5Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraFurniture5, Extended.PositionRef_ExtraFurniture5, is_temp = is_temporary)
 endFunction
 function PlaceObject_ExtraLight1(CampPlaceableObjectEx Extended)
-	myExtraLight1Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraLight1, Extended.PositionRef_ExtraLight1)
+	myExtraLight1Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraLight1, Extended.PositionRef_ExtraLight1, is_temp = is_temporary)
 endFunction
 function PlaceObject_ExtraLight2(CampPlaceableObjectEx Extended)
-	myExtraLight2Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraLight2, Extended.PositionRef_ExtraLight2)
+	myExtraLight2Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraLight2, Extended.PositionRef_ExtraLight2, is_temp = is_temporary)
 endFunction
 function PlaceObject_ExtraLight3(CampPlaceableObjectEx Extended)
-	myExtraLight3Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraLight3, Extended.PositionRef_ExtraLight3)
+	myExtraLight3Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraLight3, Extended.PositionRef_ExtraLight3, is_temp = is_temporary)
 endFunction
 
 function TakeDown()

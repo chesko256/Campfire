@@ -11,6 +11,7 @@ Formlist property _Camp_WorldspacesInteriors auto
 Keyword property isCampfireCrimeToPlaceInTowns auto
 Keyword property isCampfireTentWaterproof auto
 Keyword property isCampfireTentWarm auto
+Keyword property isCampfireObjectTemporary auto
 Keyword property ActorTypeCreature auto
 Keyword property ImmuneParalysis auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto

@@ -948,6 +948,35 @@ bool function IsTent(Form akBaseObject) global
 	endif
 endFunction
 
+;/********f* CampUtil/IsPlaceableObjectTemporary
+* API VERSION
+* 2
+*
+* DESCRIPTION
+* Returns whether or not this placeable object does not spawn persistently (i.e. won't be cleaned up by a cell reset).
+*
+* SYNTAX
+*/;
+bool function IsPlaceableObjectTemporary(Form akBaseObject) global
+;/*
+* PARAMETERS
+* akBaseObject: The base object to check.
+*
+* RETURN VALUE
+* True if the Form will spawn non-persistently, False if not.
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+	if akBaseObject.HasKeyword(Campfire.isCampfireObjectTemporary)
+		return true
+	else
+		return false
+	endif
+endFunction
+
 ;/********f* CampUtil/GetCampfireSettingBool
 * API VERSION
 * 2

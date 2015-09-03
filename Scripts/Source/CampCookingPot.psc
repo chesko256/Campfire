@@ -64,5 +64,5 @@ endFunction
 ; myExtraActivator1 = _Camp_CookingPot_Steam
 ;@Overrides CampPlaceableObject
 function PlaceObject_ExtraActivator1(CampPlaceableObjectEx Extended)
-	myExtraActivator1Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraActivator1, Extended.PositionRef_ExtraActivator1, initially_disabled = true)
+	myExtraActivator1Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraActivator1, Extended.PositionRef_ExtraActivator1, initially_disabled = true, is_temp = is_temporary)
 endFunction
