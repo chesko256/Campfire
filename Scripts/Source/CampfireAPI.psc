@@ -41,8 +41,6 @@ ReferenceAlias property Follower2 auto
 ReferenceAlias property Follower3 auto
 ReferenceAlias property Animal auto
 
-Formlist property _Camp_TentActivators auto
-
 Message property _Camp_GeneralError_Placement auto
 Message property _Camp_GeneralError_Swimming auto
 Message property _Camp_GeneralError_Mounted auto
