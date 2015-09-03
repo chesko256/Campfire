@@ -1,4 +1,4 @@
-Scriptname _Camp_TinderTypeScript extends ObjectReference  
+Scriptname _Camp_TinderTypeScript extends ObjectReference
 
 import CampUtil
 

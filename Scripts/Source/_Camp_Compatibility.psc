@@ -38,6 +38,7 @@ bool property isIMCNLoaded auto hidden						;Imp's More Complex Needs
 bool property isRNDLoaded auto hidden			 			;Realistic Needs and Diseases
 bool property isINEEDLoaded auto hidden						;iNeed
 
+
 ;#Merchant Containers==========================================================
 ObjectReference property MerchantRiverwoodTraderContainer auto
 

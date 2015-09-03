@@ -514,16 +514,16 @@ function TakeDown()
 endFunction
 
 ObjectReference function PlaceObject_PerkNode(Activator akPerkNode, ObjectReference akPerkNodePositionRef)
-    return PlacementSystem.PlaceObject(self, akPerkNode, akPerkNodePositionRef, initially_disabled = true)
+    return PlacementSystem.PlaceObject(self, akPerkNode, akPerkNodePositionRef, initially_disabled = true, is_temp = is_temporary)
 endFunction
 
 ObjectReference function PlaceObject_PerkLine(Activator akPerkLine, ObjectReference akPerkLinePositionRef)
     return PlacementSystem.PlaceObject(self, akPerkLine, akPerkLinePositionRef,                \
                                        x_local_ang_adjust = akPerkLinePositionRef.GetAngleX(), \
                                        z_local_ang_adjust = akPerkLinePositionRef.GetAngleZ(), \
-                                       initially_disabled = true, inverted_local_y = true, is_propped = true)
+                                       initially_disabled = true, inverted_local_y = true, is_propped = true, is_temp = is_temporary)
 endFunction
 
 ObjectReference function PlaceObject_ArtPlane(Static akArtPlane, ObjectReference akArtPlanePositionRef)
-    return PlacementSystem.PlaceObject(self, akArtPlane, akArtPlanePositionRef, initially_disabled = true)
+    return PlacementSystem.PlaceObject(self, akArtPlane, akArtPlanePositionRef, initially_disabled = true, is_temp = is_temporary)
 endFunction

@@ -142,5 +142,5 @@ function ExitClicked()
 endFunction
 
 ObjectReference function PlaceObject_Bug(Activator akBug, ObjectReference akPositionRef)
-	return PlacementSystem.PlaceObject(self, akBug, akPositionRef, initially_disabled = true)
+	return PlacementSystem.PlaceObject(self, akBug, akPositionRef, initially_disabled = true, is_temp = is_temporary)
 endFunction
