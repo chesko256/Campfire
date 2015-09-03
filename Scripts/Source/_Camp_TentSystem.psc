@@ -79,6 +79,16 @@ function UpdateTentUseState(ObjectReference akTent)
 			; The large tent trigger volume is not provided, so treat as a small tent
 			SetCurrentTent(None)
 		endif
+
+		; @TODO: Experimental
+		ddUnequipMCMScript EO_MCM = Game.GetFormFromFile(0x00001827, "Equipping Overhaul.esp") as ddUnequipMCMScript
+		ddUnequipHandlerScript EO_HS = (Game.GetFormFromFile(0x00000D62, "Equipping Overhaul.esp") as Quest).GetAlias(0) as ddUnequipHandlerScript
+		int EO_HK = EO_MCM.keyGearedHotkey
+		if EO_HK && !EO_MCM.bTempGearedEnabled
+			EO_HS.OnKeyDown(EO_HK)
+		endif
+		; @TODO: Experimental
+
 		if TentObject.myExitFront && TentObject.myExitFront.IsEnabled() && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
 			PlayerRef.SplineTranslateToRef(TentObject.myExitFront, 1.0, 65.0)
 		endif
@@ -231,6 +241,18 @@ function PlayerSit(ObjectReference akTent)
 		; The large tent trigger volume is not provided, so treat as a small tent
 		SetCurrentTent(akTent)
 	endif
+
+
+	; @TODO: Experimental
+	ddUnequipMCMScript EO_MCM = Game.GetFormFromFile(0x00001827, "Equipping Overhaul.esp") as ddUnequipMCMScript
+	ddUnequipHandlerScript EO_HS = (Game.GetFormFromFile(0x00000D62, "Equipping Overhaul.esp") as Quest).GetAlias(0) as ddUnequipHandlerScript
+	int EO_HK = EO_MCM.keyGearedHotkey
+	if EO_HK && EO_MCM.bTempGearedEnabled
+		EO_HS.OnKeyDown(EO_HK)
+	endif
+	; @TODO: Experimental
+
+
 	ConditionVars.IsPlayerSittingInTent = true
 	Game.ForceThirdPerson()
 	TentObject.myPlayerSitMarker.Activate(PlayerRef)
