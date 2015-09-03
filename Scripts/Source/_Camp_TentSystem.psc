@@ -59,6 +59,10 @@ function UpdateTentUseState(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
 	if was_hit
 		;Player was hit, kick them out of the tent
+		if !TentObject.TentAsset_LargeTentTriggerVolume
+			; The large tent trigger volume is not provided, so treat as a small tent
+			SetCurrentTent(None)
+		endif
 		_Camp_FadeDown.Apply()
 		wait(0.5)
 		_Camp_FadeDown.PopTo(_Camp_Black)
@@ -71,6 +75,10 @@ function UpdateTentUseState(ObjectReference akTent)
 		CleanUpTent(akTent)
 	elseif !(PlayerRef.GetSitState() == 2 || PlayerRef.GetSitState() == 3) && !TentObject.bGettingUp
 		;Player getting up from sitting or lying down
+		if !TentObject.TentAsset_LargeTentTriggerVolume
+			; The large tent trigger volume is not provided, so treat as a small tent
+			SetCurrentTent(None)
+		endif
 		if TentObject.myExitFront && TentObject.myExitFront.IsEnabled() && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
 			PlayerRef.SplineTranslateToRef(TentObject.myExitFront, 1.0, 65.0)
 		endif
@@ -219,6 +227,10 @@ endFunction
 
 function PlayerSit(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
+	if !TentObject.TentAsset_LargeTentTriggerVolume
+		; The large tent trigger volume is not provided, so treat as a small tent
+		SetCurrentTent(akTent)
+	endif
 	ConditionVars.IsPlayerSittingInTent = true
 	Game.ForceThirdPerson()
 	TentObject.myPlayerSitMarker.Activate(PlayerRef)
@@ -248,7 +260,6 @@ function PlayerSit(ObjectReference akTent)
 endFunction
 
 function PlayerLieDown(ObjectReference akTent)
-
 	CampTent TentObject = akTent as CampTent
 	; Skyrim 1.9 has broken the player's eyes from re-opening if you lie down (sleepstate = 4).
 	; An alternative animation must be used.
@@ -273,6 +284,10 @@ function PlayerLieDown(ObjectReference akTent)
 		endif
 	endif
 
+	if !TentObject.TentAsset_LargeTentTriggerVolume
+		; The large tent trigger volume is not provided, so treat as a small tent
+		SetCurrentTent(akTent)
+	endif
 	ConditionVars.IsPlayerLayingInTent = true
 	Game.ForceThirdPerson()
 	(TentObject.myPlayerLayDownMarker as ObjectReference).Activate(PlayerRef)
