@@ -767,9 +767,6 @@ ObjectReference function GetCurrentTent() global
 *
 * RETURN VALUE
 * The current tent being used, or None if the player is not using a tent.
-*
-* NOTES
-* Return value used as input to IsTentWaterproof() and IsTentWarm().
 ;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
@@ -792,7 +789,7 @@ endFunction
 bool function IsTentWaterproof(ObjectReference akTent) global
 ;/*
 * PARAMETERS
-* akTent: The Tent ObjectReference to check. Use the return value of GetCurrentTent().
+* akTent: The Tent ObjectReference to check. Use the return value of GetCurrentTent(), or use IsCurrentTentWaterproof() instead.
 *
 * RETURN VALUE
 * True if the tent is flagged as being waterproof, or false if not.
@@ -827,7 +824,7 @@ endFunction
 bool function IsTentWarm(ObjectReference akTent) global
 ;/*
 * PARAMETERS
-* akTent: The Tent ObjectReference to check. Use the return value of GetCurrentTent().
+* akTent: The Tent ObjectReference to check. Use the return value of GetCurrentTent(), or use IsCurrentTentWarm() instead.
 *
 * RETURN VALUE
 * True if the tent is flagged as being warm, or false if not.

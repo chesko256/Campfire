@@ -1061,6 +1061,7 @@ function GetResults()
 endFunction
 
 function TakeDown()
+	SetCurrentTent(None)
 	parent.TakeDown()
 	TryToDisableAndDeleteRef(myPlayerMarker_MainWeapon)
 	TryToDisableAndDeleteRef(myPlayerMarker_OffHandWeapon)
