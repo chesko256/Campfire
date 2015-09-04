@@ -29,6 +29,7 @@ globalvariable property GameHour auto
 globalvariable property _Camp_PerkRank_Resourceful auto
 Sound property _Camp_ChopWoodSM auto
 Sound property _Camp_GatherBranchesSM auto
+VisualEffect property _Camp_ForceBlackVFX auto
 
 ;Axes
 Weapon property _Camp_StoneWarAxe auto
@@ -64,7 +65,9 @@ endEvent
 function HarvestWood()
 	_Camp_FadeDown.Apply()
 	Wait(1)
+	_Camp_ForceBlackVFX.Play(PlayerRef)
 	_Camp_FadeDown.PopTo(_Camp_Black)
+	
 	AdvanceTime()
 
 	Game.EnablePlayerControls()
@@ -78,6 +81,7 @@ function HarvestWood()
 	id = _Camp_ChopWoodSM.Play(PlayerRef)
 	Sound.SetInstanceVolume(id, 0.3)
 	wait(1)
+	_Camp_ForceBlackVFX.Stop(PlayerRef)
 	_Camp_Black.PopTo(_Camp_FadeUp)
 
 	if PlayerRef.GetItemCount(woodChoppingAxes) > 0
@@ -90,7 +94,9 @@ endFunction
 function HarvestBranches()
 	_Camp_FadeDown.Apply()
 	Wait(1)
+	_Camp_ForceBlackVFX.Play(PlayerRef)
 	_Camp_FadeDown.PopTo(_Camp_Black)
+
 	AdvanceTime()
 
 	Game.EnablePlayerControls()
@@ -104,6 +110,7 @@ function HarvestBranches()
 	id = _Camp_GatherBranchesSM.Play(PlayerRef)
 	Sound.SetInstanceVolume(id, 0.8)
 	wait(1)
+	_Camp_ForceBlackVFX.Stop(PlayerRef)
 	_Camp_Black.PopTo(_Camp_FadeUp)
 
 	GiveDeadwoodBranches()

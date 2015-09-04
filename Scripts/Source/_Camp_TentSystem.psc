@@ -21,6 +21,7 @@ GlobalVariable property _Camp_Setting_TakeOff_Backpack auto
 GlobalVariable property _Camp_Setting_TakeOff_Weapons auto
 GlobalVariable property _Camp_Setting_TakeOff_Shield auto
 GlobalVariable property _Camp_Setting_TakeOff_Ammo auto
+GlobalVariable property _Camp_Setting_CompatibilityEO auto
 ;GlobalVariable property _DE_CurrentTemp auto
 ;GlobalVariable property _DE_ExposurePoints auto
 GlobalVariable property _Camp_TentSeeThru auto
@@ -49,10 +50,12 @@ ImageSpaceModifier property _Camp_Black auto
 Sound property ITMGenericArmorUp auto
 Weapon property _Camp_DummyWeapon auto
 Form property BFXFireVol01 auto
+VisualEffect property _Camp_ForceBlackVFX auto
 
 ReferenceAlias property Follower1 auto
 ReferenceAlias property Follower2 auto
 ReferenceAlias property Follower3 auto
+
 
 ; From OnUpdate on CampTent / CampTentEx
 function UpdateTentUseState(ObjectReference akTent)
@@ -63,14 +66,18 @@ function UpdateTentUseState(ObjectReference akTent)
 			; The large tent trigger volume is not provided, so treat as a small tent
 			SetCurrentTent(None)
 		endif
+		EO_TurnOn()
+
 		_Camp_FadeDown.Apply()
 		wait(0.5)
+		_Camp_ForceBlackVFX.Play(PlayerRef)
 		_Camp_FadeDown.PopTo(_Camp_Black)
 		if TentObject.myExitFront && TentObject.myExitFront.IsEnabled() && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
 			PlayerRef.MoveTo(TentObject.myExitFront)
 		else
 			PlayerRef.MoveTo(PlayerRef)
 		endif
+		_Camp_ForceBlackVFX.Stop(PlayerRef)
 		_Camp_Black.PopTo(_Camp_FadeUp)
 		CleanUpTent(akTent)
 	elseif !(PlayerRef.GetSitState() == 2 || PlayerRef.GetSitState() == 3) && !TentObject.bGettingUp
@@ -79,15 +86,7 @@ function UpdateTentUseState(ObjectReference akTent)
 			; The large tent trigger volume is not provided, so treat as a small tent
 			SetCurrentTent(None)
 		endif
-
-		; @TODO: Experimental
-		ddUnequipMCMScript EO_MCM = Game.GetFormFromFile(0x00001827, "Equipping Overhaul.esp") as ddUnequipMCMScript
-		ddUnequipHandlerScript EO_HS = (Game.GetFormFromFile(0x00000D62, "Equipping Overhaul.esp") as Quest).GetAlias(0) as ddUnequipHandlerScript
-		int EO_HK = EO_MCM.keyGearedHotkey
-		if EO_HK && !EO_MCM.bTempGearedEnabled
-			EO_HS.OnKeyDown(EO_HK)
-		endif
-		; @TODO: Experimental
+		EO_TurnOn()
 
 		if TentObject.myExitFront && TentObject.myExitFront.IsEnabled() && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
 			PlayerRef.SplineTranslateToRef(TentObject.myExitFront, 1.0, 65.0)
@@ -166,6 +165,7 @@ function ShowLayMenu(ObjectReference akTent)
 		TentObject.bGettingUp = true
 		_Camp_FadeDown.Apply()
 		wait(1.0)
+		_Camp_ForceBlackVFX.Play(PlayerRef)
 		_Camp_FadeDown.PopTo(_Camp_Black)
 		if PlayerRef
 			PlayerRef.MoveTo(akTent)			;Get up
@@ -175,9 +175,11 @@ function ShowLayMenu(ObjectReference akTent)
 			TentObject.myPlayerLayDownMarker.Activate(PlayerRef)				
 			wait(3.5)
 			SelectExterior(akTent, true)
+			_Camp_ForceBlackVFX.Stop(PlayerRef)
 			_Camp_Black.PopTo(_Camp_FadeUp)
 		else
 			;Something went wrong, make sure that the player's vision is restored!
+			_Camp_ForceBlackVFX.Stop(PlayerRef)
 			_Camp_Black.PopTo(_Camp_FadeUp)
 		endif
 		TentObject.bGettingUp = false
@@ -241,17 +243,7 @@ function PlayerSit(ObjectReference akTent)
 		; The large tent trigger volume is not provided, so treat as a small tent
 		SetCurrentTent(akTent)
 	endif
-
-
-	; @TODO: Experimental
-	ddUnequipMCMScript EO_MCM = Game.GetFormFromFile(0x00001827, "Equipping Overhaul.esp") as ddUnequipMCMScript
-	ddUnequipHandlerScript EO_HS = (Game.GetFormFromFile(0x00000D62, "Equipping Overhaul.esp") as Quest).GetAlias(0) as ddUnequipHandlerScript
-	int EO_HK = EO_MCM.keyGearedHotkey
-	if EO_HK && EO_MCM.bTempGearedEnabled
-		EO_HS.OnKeyDown(EO_HK)
-	endif
-	; @TODO: Experimental
-
+	EO_TurnOff()
 
 	ConditionVars.IsPlayerSittingInTent = true
 	Game.ForceThirdPerson()
@@ -310,6 +302,8 @@ function PlayerLieDown(ObjectReference akTent)
 		; The large tent trigger volume is not provided, so treat as a small tent
 		SetCurrentTent(akTent)
 	endif
+	EO_TurnOff()
+
 	ConditionVars.IsPlayerLayingInTent = true
 	Game.ForceThirdPerson()
 	(TentObject.myPlayerLayDownMarker as ObjectReference).Activate(PlayerRef)
@@ -1029,4 +1023,26 @@ function UnequipUsingDummyWeapon()
 	PlayerRef.EquipItem(_Camp_DummyWeapon, abSilent = true)
 	PlayerRef.UnEquipItem(_Camp_DummyWeapon, abSilent = true)
 	PlayerRef.RemoveItem(_Camp_DummyWeapon, abSilent = true)
+endFunction
+
+function EO_TurnOff()
+	if Compatibility.isEOLoaded && _Camp_Setting_CompatibilityEO.GetValueInt() == 2
+		ddUnequipMCMScript EO_ConfigScript = Game.GetFormFromFile(0x00001827, "Equipping Overhaul.esp") as ddUnequipMCMScript
+		ddUnequipHandlerScript EO_HandlerScript = (Game.GetFormFromFile(0x00000D62, "Equipping Overhaul.esp") as Quest).GetAlias(0) as ddUnequipHandlerScript
+		int EO_Hotkey = EO_ConfigScript.keyGearedHotkey
+		if EO_Hotkey != 0 && EO_ConfigScript.bTempGearedEnabled
+			EO_HandlerScript.OnKeyDown(EO_Hotkey)
+		endif
+	endif
+endFunction
+
+function EO_TurnOn()
+	if Compatibility.isEOLoaded && _Camp_Setting_CompatibilityEO.GetValueInt() == 2
+		ddUnequipMCMScript EO_ConfigScript = Game.GetFormFromFile(0x00001827, "Equipping Overhaul.esp") as ddUnequipMCMScript
+		ddUnequipHandlerScript EO_HandlerScript = (Game.GetFormFromFile(0x00000D62, "Equipping Overhaul.esp") as Quest).GetAlias(0) as ddUnequipHandlerScript
+		int EO_Hotkey = EO_ConfigScript.keyGearedHotkey
+		if EO_Hotkey != 0 && !EO_ConfigScript.bTempGearedEnabled
+			EO_HandlerScript.OnKeyDown(EO_Hotkey)
+		endif
+	endif
 endFunction
