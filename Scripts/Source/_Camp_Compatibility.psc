@@ -37,7 +37,7 @@ bool property isArtOfTheCatchLoaded auto hidden 			;Art of the Catch
 bool property isIMCNLoaded auto hidden						;Imp's More Complex Needs
 bool property isRNDLoaded auto hidden			 			;Realistic Needs and Diseases
 bool property isINEEDLoaded auto hidden						;iNeed
-
+bool property isEOLoaded auto hidden						;Equipping Overhaul
 
 ;#Merchant Containers==========================================================
 ObjectReference property MerchantRiverwoodTraderContainer auto
@@ -510,6 +510,19 @@ function RunCompatibility()
 		_Camp_RecipeLeatherValeSabreCatHideDLC1.SetNthIngredient(ValeSabreCatHide, 0)
 		_Camp_RecipeTanningLeatherValeDeerHideDLC1.SetNthIngredient(ValeDeerHide, 0)
 		_Camp_RecipeTanningLeatherValeSabreCatHideDLC1.SetNthIngredient(ValeSabreCatHide, 0)
+	endif
+
+	if isEOLoaded
+		isEOLoaded = IsPluginLoaded(0x00001827, "Equipping Overhaul.esp")
+		if !isEOLoaded
+			;Equipping Overhaul was removed since the last save.
+		endif
+	else
+		isEOLoaded = IsPluginLoaded(0x00001827, "Equipping Overhaul.esp")
+		if isEOLoaded
+			;Equipping Overhaul was just added.
+			
+		endif
 	endif
 	
 	trace("[Campfire]======================================================================================================")

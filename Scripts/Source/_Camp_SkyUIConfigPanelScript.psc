@@ -25,6 +25,7 @@ GlobalVariable property _Camp_Setting_MaxThreads auto
 GlobalVariable property _Camp_Setting_EquipTentOutfit auto
 GlobalVariable property _Camp_Setting_Legality auto
 GlobalVariable property _Camp_Setting_AdvancedPlacement auto
+GlobalVariable property _Camp_Setting_CompatibilityEO auto
 GlobalVariable property _Camp_Setting_AutoSaveLoad auto
 GlobalVariable property _Camp_Setting_CurrentProfile auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
@@ -74,6 +75,7 @@ int Gameplay_HotkeyInstincts_OID
 int Advanced_SettingAdvancedPlacement_OID
 int Advanced_SettingMaxThreads_OID
 int Advanced_SettingTrackFollowers_OID
+int Advanced_SettingEOCompatibility_OID
 
 int Help_TroubleshootingMenu_OID
 int Guide_Topic1
@@ -240,6 +242,21 @@ function PageReset_Advanced()
 	else
 		Advanced_SettingTrackFollowers_OID = AddToggleOption("$CampfireGameplaySettingTrackFollowers", false)
 	endif
+	AddEmptyOption()
+	AddEmptyOption()
+	AddEmptyOption()
+	AddEmptyOption()
+	AddHeaderOption("$CampfireAdvancedHeaderCompatibility")
+	if Compatibility.isEOLoaded
+		if _Camp_Setting_CompatibilityEO.GetValueInt() == 2
+			Advanced_SettingEOCompatibility_OID = AddToggleOption("$CampfireAdvancedSettingEOCompatibility", true)
+		else
+			Advanced_SettingEOCompatibility_OID = AddToggleOption("$CampfireAdvancedSettingEOCompatibility", false)
+		endif
+	else
+		AddToggleOption("$CampfireAdvancedSettingEOCompatibility", false, OPTION_FLAG_DISABLED)
+	endif
+
 endFunction
 
 function PageReset_SaveLoad()
@@ -381,6 +398,8 @@ event OnOptionHighlight(int option)
 		SetInfoText("$CampfireOptionHighlightSettingMaxThreads")
 	elseif option == Advanced_SettingTrackFollowers_OID
 		SetInfoText("$CampfireOptionHighlightSettingTrackFollowers")
+	elseif option == Advanced_SettingEOCompatibility_OID
+		SetInfoText("$CampfireOptionHighlightSettingEOCompatibility")
 
 	elseif option == SaveLoad_SelectProfile_OID
 		SetInfoText("$CampfireOptionHighlightSettingSelectProfile")
@@ -529,6 +548,18 @@ event OnOptionSelect(int option)
 			SetToggleOptionValue(Advanced_SettingAdvancedPlacement_OID, true)
 		endif
 		SaveSettingToCurrentProfile("advanced_placement_mode", _Camp_Setting_AdvancedPlacement.GetValueInt())
+	elseif option == Advanced_SettingEOCompatibility_OID
+		if _Camp_Setting_CompatibilityEO.GetValueInt() == 2
+			_Camp_Setting_CompatibilityEO.SetValueInt(1)
+			SetToggleOptionValue(Advanced_SettingEOCompatibility_OID, false)
+		else
+			bool b = ShowMessage("$CampfireEOCompatibilityDetailPrompt")
+			if b
+				_Camp_Setting_CompatibilityEO.SetValueInt(2)
+				SetToggleOptionValue(Advanced_SettingEOCompatibility_OID, true)
+			endif
+		endif
+		SaveSettingToCurrentProfile("eo_compatibility", _Camp_Setting_CompatibilityEO.GetValueInt())
 	elseif option == Advanced_SettingTrackFollowers_OID
 		if _Camp_Setting_TrackFollowers.GetValueInt() == 2
 			_Camp_Setting_TrackFollowers.SetValueInt(1)
@@ -648,6 +679,9 @@ event OnOptionDefault(int option)
 		PlayerRef.AddSpell(_Camp_FollowerDetectSpell, false)
 		SetToggleOptionValue(Advanced_SettingTrackFollowers_OID, true)
 		SaveSettingToCurrentProfile("follower_tracking", _Camp_Setting_TrackFollowers.GetValueInt())
+	elseif option == Advanced_SettingEOCompatibility_OID
+		_Camp_Setting_CompatibilityEO.SetValueInt(1)
+		SetToggleOptionValue(Advanced_SettingEOCompatibility_OID, false)
 	endif
 	if option == Gameplay_HotkeyCreateItem_OID
 		UnregisterForKey(_Camp_HotkeyCreateItem.GetValueInt())
@@ -1017,6 +1051,10 @@ function SwitchToProfile(int aiProfileIndex)
 	if val != -1
 		_Camp_Setting_MaxThreads.SetValueInt(val)
 	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "eo_compatibility")
+	if val != -1
+		_Camp_Setting_CompatibilityEO.SetValueInt(val)
+	endif
 
 	val = LoadSettingFromProfile(aiProfileIndex, "hotkey_create_item")
 	if val != -1 && val != 0
@@ -1081,6 +1119,7 @@ function GenerateDefaultProfile(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "camping_illegal_in_towns", 2)
 	JsonUtil.SetIntValue(profile_path, "advanced_placement_mode", 2)
 	JsonUtil.SetIntValue(profile_path, "max_placement_threads", 20)
+	JsonUtil.SetIntValue(profile_path, "eo_compatibility", 1)
 	JsonUtil.SetIntValue(profile_path, "hotkey_create_item", 0)
 	JsonUtil.SetIntValue(profile_path, "hotkey_build_campfire", 0)
 	JsonUtil.SetIntValue(profile_path, "hotkey_harvest_wood", 0)
@@ -1107,6 +1146,7 @@ function SaveAllSettings(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "camping_illegal_in_towns", _Camp_Setting_Legality.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "advanced_placement_mode", _Camp_Setting_AdvancedPlacement.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "max_placement_threads", _Camp_Setting_MaxThreads.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "eo_compatibility", _Camp_Setting_CompatibilityEO.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "hotkey_create_item", _Camp_HotkeyCreateItem.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "hotkey_build_campfire", _Camp_HotkeyBuildCampfire.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "hotkey_harvest_wood", _Camp_HotkeyHarvestWood.GetValueInt())
