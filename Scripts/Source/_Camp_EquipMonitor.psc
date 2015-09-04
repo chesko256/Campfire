@@ -42,38 +42,38 @@ Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 
 		if akBaseObject.HasKeyword(ArmorCuirass) || akBaseObject.HasKeyword(ClothingBody)
 			CampDebug(1, "Unequipped body armor!")
-			bEventRaised = RaiseEventOnGearUnequipped(akBaseObject, 1)
+			bEventRaised = SendEvent_OnGearUnequipped(akBaseObject, 1)
 			CampData.CurrentBody = none
 		endif
 		if akBaseObject.HasKeyword(ArmorGauntlets) || akBaseObject.HasKeyword(ClothingHands)
 			CampDebug(1, "Unequipped gloves!")
-			bEventRaised = RaiseEventOnGearUnequipped(akBaseObject, 2)
+			bEventRaised = SendEvent_OnGearUnequipped(akBaseObject, 2)
 			CampData.CurrentHands = none
 		endif
 		if akBaseObject.HasKeyword(ArmorHelmet) || akBaseObject.HasKeyword(ClothingHead) || akBaseObject == ClothesMGRobesArchmage1Hooded
 			CampDebug(1, "Unequipped helmet!")
-			bEventRaised = RaiseEventOnGearUnequipped(akBaseObject, 3)
+			bEventRaised = SendEvent_OnGearUnequipped(akBaseObject, 3)
 			CampData.CurrentHead = none
 		endif
 		if akBaseObject.HasKeyword(ArmorBoots) || akBaseObject.HasKeyword(ClothingFeet)
 			CampDebug(1, "Unequipped boots!")
-			bEventRaised = RaiseEventOnGearUnequipped(akBaseObject, 4)
+			bEventRaised = SendEvent_OnGearUnequipped(akBaseObject, 4)
 			CampData.CurrentFeet = none
 		endif
 		if _Camp_Backpacks.HasForm(akBaseObject)
-			bEventRaised = RaiseEventOnGearUnequipped(akBaseObject, 5)
+			bEventRaised = SendEvent_OnGearUnequipped(akBaseObject, 5)
 			CampData.CurrentBackpack = none
 		endif
 		
 		;Cloak check
 		if !bEventRaised
-			bool b = RaiseEventOnGearUnequipped(akBaseObject, 7)
+			bool b = SendEvent_OnGearUnequipped(akBaseObject, 7)
 		endif
 		
 	elseif akBaseObject as Ammo
 		CampDebug(1, "Setting ammo to none")
 		CampData.CurrentAmmo = none
-		bool b = RaiseEventOnGearUnequipped(akBaseObject, 6)
+		bool b = SendEvent_OnGearUnequipped(akBaseObject, 6)
 	endif
 	processing_unequip = false
 endEvent
@@ -91,42 +91,42 @@ function ProcessEquippedObject(Form akBaseObject)
 	if akBaseObject.HasKeyword(ArmorCuirass) || akBaseObject.HasKeyword(ClothingBody)
 		CampDebug(1, "The player equipped a piece of body armor.")
 		CampData.CurrentBody = akBaseObject as Armor
-		bEventRaised = RaiseEventOnGearEquipped(akBaseObject, 1)
+		bEventRaised = SendEvent_OnGearEquipped(akBaseObject, 1)
 		
 	endif
 	if akBaseObject.HasKeyword(ArmorGauntlets) || akBaseObject.HasKeyword(ClothingHands)
 		CampDebug(1, "The player equipped a piece of hand armor.")
 		CampData.CurrentHands = akBaseObject as Armor
-		bEventRaised = RaiseEventOnGearEquipped(akBaseObject, 2)
+		bEventRaised = SendEvent_OnGearEquipped(akBaseObject, 2)
 	endif
 	if akBaseObject.HasKeyword(ArmorHelmet) || akBaseObject.HasKeyword(ClothingHead) || akBaseObject == ClothesMGRobesArchmage1Hooded
 		CampDebug(1, "The player equipped a piece of head armor.")
 		CampData.CurrentHead = akBaseObject as Armor
-		bEventRaised = RaiseEventOnGearEquipped(akBaseObject, 3)
+		bEventRaised = SendEvent_OnGearEquipped(akBaseObject, 3)
 	endif
 	if akBaseObject.HasKeyword(ArmorBoots) || akBaseObject.HasKeyword(ClothingFeet)	
 		CampDebug(1, "The player equipped a piece of feet armor.")
 		CampData.CurrentFeet = akBaseObject as Armor
-		bEventRaised = RaiseEventOnGearEquipped(akBaseObject, 4)
+		bEventRaised = SendEvent_OnGearEquipped(akBaseObject, 4)
 	endif
 	if !bEventRaised
 		if _Camp_Backpacks.HasForm(akBaseObject)
 			CampDebug(1, "The player equipped a backpack.")
 			CampData.CurrentBackpack = akBaseObject as Armor
-			bool b = RaiseEventOnGearEquipped(akBaseObject, 5)
+			bool b = SendEvent_OnGearEquipped(akBaseObject, 5)
 		elseif akBaseObject as Ammo
 			CampDebug(1, "The player equipped ammo.")
 			CampData.CurrentAmmo = akBaseObject as Ammo
-			bool b = RaiseEventOnGearEquipped(akBaseObject, 6)
+			bool b = SendEvent_OnGearEquipped(akBaseObject, 6)
 		else
 			;This object might be what Frostfall considers a cloak.
 			CampDebug(1, "The player equipped a cloak." + akBaseObject)
-			bool b = RaiseEventOnGearEquipped(akBaseObject, 7)
+			bool b = SendEvent_OnGearEquipped(akBaseObject, 7)
 		endif
 	endif
 endFunction
 
-bool function RaiseEventOnGearEquipped(Form akBaseObject, int iGearType)
+bool function SendEvent_OnGearEquipped(Form akBaseObject, int iGearType)
 	;===========
 	;Parameters
 	;===========
@@ -168,7 +168,7 @@ bool function RaiseEventOnGearEquipped(Form akBaseObject, int iGearType)
 	return true
 endFunction
 
-bool function RaiseEventOnGearUnequipped(Form akBaseObject, int iGearType)
+bool function SendEvent_OnGearUnequipped(Form akBaseObject, int iGearType)
 	;===========
 	;Parameters
 	;===========
