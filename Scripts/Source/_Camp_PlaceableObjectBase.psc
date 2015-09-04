@@ -159,7 +159,7 @@ function TakeDown()
 	TryToDisableAndDeleteRef(mySmoke)
 	ClearEquipmentFromCrimeAlias(self)
 	; Raise optional SKSE event
-	RaiseEvent_OnObjectRemoved(self.GetBaseObject(), self.GetPositionX(), self.GetPositionY(), self.GetPositionZ(), self.GetAngleX(), self.GetAngleY(), self.GetAngleZ())
+	SendEvent_OnObjectRemoved(self.GetBaseObject(), self.GetPositionX(), self.GetPositionY(), self.GetPositionZ(), self.GetAngleX(), self.GetAngleY(), self.GetAngleZ())
 endFunction
 
 function PlaceObject_FireMarkers()

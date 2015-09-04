@@ -3,10 +3,10 @@ scriptname _Camp_PlayerHitMonitor extends ReferenceAlias
 import CampUtil
 
 Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
-	RaiseEvent_PlayerHit(akAggressor, akSource, akProjectile)
+	SendEvent_PlayerHit(akAggressor, akSource, akProjectile)
 EndEvent
 
-function RaiseEvent_PlayerHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile)
+function SendEvent_PlayerHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile)
 	GetPlacementSystem().PlayerHitEvent(akAggressor, akSource, akProjectile)
 	GetTentSystem().PlayerHitEvent(akAggressor, akSource, akProjectile)
 	if GetCompatibilitySystem().isSKSELoaded

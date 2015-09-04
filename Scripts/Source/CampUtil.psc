@@ -1006,6 +1006,7 @@ bool function GetCampfireSettingBool(string setting) global
 * * FollowersUseCampsite
 * * CampingIllegalInTowns
 * * AdvancedPlacementMode
+* * EquippingOverhaulCompatibility
 *
 * RETURN VALUE
 * True if the feature is enabled, false if disabled or if the setting string is invalid.
@@ -1117,6 +1118,12 @@ endif
 		else
 			return false
 		endif
+	elseif setting == "EquippingOverhaulCompatibility"
+		if Campfire._Camp_Setting_CompatibilityEO.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
 	else
 		return false
 	endif
@@ -1158,7 +1165,7 @@ endif
 	endif
 endFunction
 
-function RaiseEvent_OnObjectPlaced(ObjectReference akObjectReference) global
+function SendEvent_OnObjectPlaced(ObjectReference akObjectReference) global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -1189,7 +1196,7 @@ function RaiseEvent_OnObjectPlaced(ObjectReference akObjectReference) global
 	endif
 endFunction
 
-function RaiseEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ) global
+function SendEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ) global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -1214,10 +1221,23 @@ function RaiseEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float 
 	endif
 endFunction
 
-;@TODO: Move
-function ExitMenus() global
-	Game.DisablePlayerControls()
-	Game.EnablePlayerControls()
+function SendEvent_OnBedrollSitLay(ObjectReference akTent, bool abGettingUp = false)
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return
+	endif
+
+	if akTent
+		if GetCompatibilitySystem().isSKSELoaded
+			int handle = ModEvent.Create("Campfire_OnBedrollSitLay")
+			if handle
+				ModEvent.PushForm(handle, akTent as Form)
+				ModEvent.PushBool(handle, abGettingUp)
+				ModEvent.Send(handle)
+			endif
+		endif
+	endif
 endFunction
 
 function RaiseCampAPIError() global

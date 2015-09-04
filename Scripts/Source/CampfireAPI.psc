@@ -32,6 +32,7 @@ GlobalVariable property _Camp_Setting_FollowersRemoveGearInTents auto
 GlobalVariable property _Camp_Setting_MaxThreads auto
 GlobalVariable property _Camp_Setting_Legality auto
 GlobalVariable property _Camp_Setting_AdvancedPlacement auto
+GlobalVariable property _Camp_Setting_CompatibilityEO auto
 GlobalVariable property _Camp_CampfireVersion auto
 Quest property CampfireObjectPlacementSystem auto
 Quest property CampfireTentSystem auto

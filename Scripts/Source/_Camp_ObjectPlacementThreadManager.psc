@@ -568,7 +568,7 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
                 akIndicator.Disable()
                 ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace, abForcePersist = !(IsPlaceableObjectTemporary(akFormToPlace)))
                 ; Raise optional SKSE event
-                RaiseEvent_OnObjectPlaced(campitem)
+                SendEvent_OnObjectPlaced(campitem)
 
                 if akInventoryItem
                     (campitem as _Camp_PlaceableObjectBase).Required_InventoryItem = akInventoryItem
@@ -624,7 +624,7 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
                 akIndicator.Disable()
                 ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace, abForcePersist = !(IsPlaceableObjectTemporary(akFormToPlace)))
                 ; Raise optional SKSE event
-                RaiseEvent_OnObjectPlaced(campitem)
+                SendEvent_OnObjectPlaced(campitem)
 
                 if akInventoryItem
                     (campitem as _Camp_PlaceableObjectBase).Required_InventoryItem = akInventoryItem
@@ -670,7 +670,7 @@ function UpdateIndicatorPosition(ObjectReference akIndicator, float afDistance, 
     PlacementIndicatorThread1.get_async(center_point[0], center_point[1], 0.0, -43.3)
     PlacementIndicatorThread2.get_async(center_point[0], center_point[1], -50.0, 43.3)
     PlacementIndicatorThread3.get_async(center_point[0], center_point[1], 50.0, 43.3)
-    RaiseEvent_OnIndicatorUpdateStart()
+    SendEvent_OnIndicatorUpdateStart()
 
     bool waiting = true
     int i = 0
@@ -812,12 +812,12 @@ bool function MeetsRequirements(Ingredient akIngredient, MiscObject akMiscItem, 
     return true
 endFunction
 
-function RaiseEvent_OnIndicatorUpdateStart()
+function SendEvent_OnIndicatorUpdateStart()
     RegisterForSingleUpdate(0.1)
 endFunction
 
 function wait_all()
-    RaiseEvent_OnObjectPlacementStart()
+    SendEvent_OnObjectPlacementStart()
     begin_waiting()
 endFunction
 
@@ -918,7 +918,8 @@ function TryToUnlockThread(ObjectReference akFuture)
     endif
 endFunction
 
-function RaiseEvent_OnObjectPlacementStart()
+function SendEvent_OnObjectPlacementStart()
+    ; Thread scripts on this object will receive this OnUpdate event and begin placement.
     RegisterForSingleUpdate(0.1)
 endFunction
 

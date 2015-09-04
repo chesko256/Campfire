@@ -159,6 +159,11 @@ _Camp_Strings function GetCampfireStrings() global
 	return (Campfire.CampfireStrings as _Camp_Strings)
 endFunction
 
+function ExitMenus() global
+	Game.DisablePlayerControls()
+	Game.EnablePlayerControls()
+endFunction
+
 function RaiseCampAPIError() global
 	CampDebug(3, "Fatal Internal Campfire API error occurred.")
 endFunction

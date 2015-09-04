@@ -163,6 +163,7 @@ float[] function GetPosXYZRotateAroundRef(ObjectReference akOrigin, ObjectRefere
 		CampDebug(1, "new y: " + new_opp)
 	endif/;
 
+	;@TODO: Put the offset values here???
 	float fInitialX = akObject.GetPositionX() - myOriginPosX
 	float fInitialY = akObject.GetPositionY() - myOriginPosY
 	float fInitialZ = akObject.GetPositionZ() - myOriginPosZ
