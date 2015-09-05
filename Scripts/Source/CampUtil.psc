@@ -1221,7 +1221,7 @@ function SendEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float a
 	endif
 endFunction
 
-function SendEvent_OnBedrollSitLay(ObjectReference akTent, bool abGettingUp = false)
+function SendEvent_OnBedrollSitLay(ObjectReference akTent, bool abGettingUp = false) global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()

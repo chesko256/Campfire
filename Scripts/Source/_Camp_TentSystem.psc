@@ -22,8 +22,6 @@ GlobalVariable property _Camp_Setting_TakeOff_Weapons auto
 GlobalVariable property _Camp_Setting_TakeOff_Shield auto
 GlobalVariable property _Camp_Setting_TakeOff_Ammo auto
 GlobalVariable property _Camp_Setting_CompatibilityEO auto
-;GlobalVariable property _DE_CurrentTemp auto
-;GlobalVariable property _DE_ExposurePoints auto
 GlobalVariable property _Camp_TentSeeThru auto
 Message property _Camp_TentMainMenu auto
 Message property _Camp_TentSitMenu auto
@@ -55,6 +53,7 @@ VisualEffect property _Camp_ForceBlackVFX auto
 ReferenceAlias property Follower1 auto
 ReferenceAlias property Follower2 auto
 ReferenceAlias property Follower3 auto
+ReferenceAlias property Spouse auto
 
 
 ; From OnUpdate on CampTent / CampTentEx
@@ -67,6 +66,7 @@ function UpdateTentUseState(ObjectReference akTent)
 			SetCurrentTent(None)
 		endif
 		EO_TurnOn()
+		SendEvent_OnBedrollSitLay(TentObject, true)
 
 		_Camp_FadeDown.Apply()
 		wait(0.5)
@@ -87,6 +87,7 @@ function UpdateTentUseState(ObjectReference akTent)
 			SetCurrentTent(None)
 		endif
 		EO_TurnOn()
+		SendEvent_OnBedrollSitLay(TentObject, true)
 
 		if TentObject.myExitFront && TentObject.myExitFront.IsEnabled() && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
 			PlayerRef.SplineTranslateToRef(TentObject.myExitFront, 1.0, 65.0)
@@ -107,9 +108,23 @@ function ActivateTent(ObjectReference akActionRef, ObjectReference akTent)
 			ShowMainMenu(akTent)
 		elseif iSitState == 3 && TentObject.myPlayerSitMarker.IsFurnitureInUse()
 			ShowSitMenu(akTent)
-		elseif iSitState == 3 && TentObject.myPlayerLayDownMarker.IsFurnitureInUse()
+		elseif iSitState == 3 && (TentObject.myPlayerLayDownMarker.IsFurnitureInUse() || TentObject.myPlayerWithSpouseLayDownMarker.IsFurnitureInUse())
 			ShowLayMenu(akTent)
 		endif
+	endif
+endFunction
+
+function ActivateLayDownMarker(CampTent TentObject)
+	Actor f1 = Follower1.GetReference() as Actor
+	Actor f2 = Follower2.GetReference() as Actor
+	Actor f3 = Follower3.GetReference() as Actor
+	Actor sp = Spouse.GetReference() as Actor
+	if (f1 == sp || f2 == sp || f3 == sp)
+		debug.trace("I detected a spouse, so positioning player appropriately")
+		(TentObject.myPlayerWithSpouseLayDownMarker as ObjectReference).Activate(PlayerRef)
+	else
+		debug.trace("I detected no spouse")
+		(TentObject.myPlayerLayDownMarker as ObjectReference).Activate(PlayerRef)
 	endif
 endFunction
 
@@ -172,7 +187,7 @@ function ShowLayMenu(ObjectReference akTent)
 			wait(0.4)
 			TentObject.myBedRoll.Activate(PlayerRef)		;Spawns sleep menu
 			wait(0.4)
-			TentObject.myPlayerLayDownMarker.Activate(PlayerRef)				
+			ActivateLayDownMarker(TentObject)
 			wait(3.5)
 			SelectExterior(akTent, true)
 			_Camp_ForceBlackVFX.Stop(PlayerRef)
@@ -194,7 +209,7 @@ function ShowLayMenu(ObjectReference akTent)
 			TryToDisableRef(TentObject.myTentExterior, true)
 		endif
 	elseif i == 3									;Get Up
-		TentObject.myPlayerLayDownMarker.Activate(PlayerRef)
+		ActivateLayDownMarker(TentObject)
 		;StopFollowerUse(akTent)
 	elseif i == 3									;Nothing
 		;do nothing
@@ -244,6 +259,7 @@ function PlayerSit(ObjectReference akTent)
 		SetCurrentTent(akTent)
 	endif
 	EO_TurnOff()
+	SendEvent_OnBedrollSitLay(TentObject)
 
 	ConditionVars.IsPlayerSittingInTent = true
 	Game.ForceThirdPerson()
@@ -276,7 +292,6 @@ endFunction
 function PlayerLieDown(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
 	; Skyrim 1.9 has broken the player's eyes from re-opening if you lie down (sleepstate = 4).
-	; An alternative animation must be used.
 	
 	;Don't lie down in tent if on the Dark Brotherhood entrance quest
 	if DBEntranceQuest.GetStage() == 20 && DBEntranceQuestScript.pSleepyTime == 1
@@ -303,10 +318,17 @@ function PlayerLieDown(ObjectReference akTent)
 		SetCurrentTent(akTent)
 	endif
 	EO_TurnOff()
+	SendEvent_OnBedrollSitLay(TentObject)
 
 	ConditionVars.IsPlayerLayingInTent = true
 	Game.ForceThirdPerson()
-	(TentObject.myPlayerLayDownMarker as ObjectReference).Activate(PlayerRef)
+
+	; Start the quest so that the aliases fill and follower packages run.
+	self.Start()
+	Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
+	
+	ActivateLayDownMarker(TentObject)
+
 	if _Camp_Setting_CampingArmorTakeOff.GetValueInt() == 2
 		if Compatibility.IsFrostfallLoaded && FrostUtil.IsWarmEnoughToRemoveGearInTent()
 			DisplayPlayerTentEquipment(akTent)
@@ -319,10 +341,6 @@ function PlayerLieDown(ObjectReference akTent)
 	if _Camp_TentSeeThru.GetValueInt() == 2 && (TentObject.myTent && TentObject.myNormalTent)
 		TryToDisableRef(TentObject.myTentExterior, true)
 	endif
-
-	; Start the quest so that the aliases fill and follower packages run.
-	self.Start()
-	Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
 	
 	; Fall back to persistent trigger without SKSE
 	if !Compatibility.isSKSELoaded
