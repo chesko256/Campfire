@@ -163,7 +163,6 @@ float[] function GetPosXYZRotateAroundRef(ObjectReference akOrigin, ObjectRefere
 		CampDebug(1, "new y: " + new_opp)
 	endif/;
 
-	;@TODO: Put the offset values here???
 	float fInitialX = akObject.GetPositionX() - myOriginPosX
 	float fInitialY = akObject.GetPositionY() - myOriginPosY
 	float fInitialZ = akObject.GetPositionZ() - myOriginPosZ
@@ -208,7 +207,8 @@ endFunction
 
 float[] function GetRelativePosition(ObjectReference akOrigin, ObjectReference akObject, float afXPosOffset, float afYPosOffset)
 	float[] myRelativePosition = new float[6]
-	float theta = 0.0
+	; 2D rotation matrix - https://en.wikipedia.org/wiki/Rotation_matrix#In_two_dimensions
+	;/float theta = 0.0
 	float x_prime = 0.0
 	float y_prime = 0.0
 	if afXPosOffset != 0.0 
@@ -217,10 +217,13 @@ float[] function GetRelativePosition(ObjectReference akOrigin, ObjectReference a
 		theta = -(akObject.GetAngleZ())
 	endif
 	x_prime = (afXPosOffset * cos(theta)) - (afYPosOffset * sin(theta))
-	y_prime = (afYPosOffset * cos(theta)) - (afXPosOffset * sin(theta))
-
+	y_prime = (afXPosOffset * sin(theta)) + (afYPosOffset * cos(theta))
+	
 	myRelativePosition[0] = (akObject.GetPositionX() + x_prime) - akOrigin.GetPositionX()
 	myRelativePosition[1] = (akObject.GetPositionY() + y_prime) - akOrigin.GetPositionY()
+	/;
+	myRelativePosition[0] = (akObject.GetPositionX() + afXPosOffset) - akOrigin.GetPositionX()
+	myRelativePosition[1] = (akObject.GetPositionY() + afYPosOffset) - akOrigin.GetPositionY()
 	myRelativePosition[2] = akObject.GetPositionZ() - akOrigin.GetPositionZ()
 	myRelativePosition[3] = akObject.GetAngleX()
 	myRelativePosition[4] = akObject.GetAngleY()

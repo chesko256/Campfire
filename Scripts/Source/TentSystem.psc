@@ -1,5 +1,5 @@
 scriptname TentSystem hidden
-{Interface between _Camp_TentAPI and mods that implement Campfire tents.}
+{Interface between _Camp_TentSystem and mods that implement Campfire tents.}
 
 import _CampInternal
 

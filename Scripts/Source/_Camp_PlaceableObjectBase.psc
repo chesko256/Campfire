@@ -82,7 +82,9 @@ function Initialize()
 	PlaceBaseObjects()
 	PlaceObjects()
 	PlacementSystem.wait_all()
-	GetResults()
+	PlaceSecondaryObjects()
+	PlacementSystem.wait_all()
+	GetSecondaryResults()
 	initialized = true
 	CampDebug(0, "Base initialized")
 endFunction
@@ -92,7 +94,11 @@ function RotateOnStartUp()
 endFunction
 
 function PlaceObjects()
-	;Pass
+	; Pass
+endFunction
+
+function PlaceSecondaryObjects()
+	; Pass
 endFunction
 
 function PlaceBaseObjects()
@@ -139,6 +145,10 @@ function GetResults()
 		endif
 		mySmoke.SetScale(size / 900)
 	endif
+endFunction
+
+function GetSecondaryResults()
+	; Pass
 endFunction
 
 function GuardDestroy()
