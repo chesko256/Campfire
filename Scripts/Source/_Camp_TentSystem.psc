@@ -43,6 +43,7 @@ Static property _Camp_Tent_BedrollHayNoGround03 auto
 Static property _Camp_TentWard auto
 Keyword property ClothingBody auto
 Keyword property ArmorCuirass auto
+Keyword property isCampfireTentNoShelter auto
 ImageSpaceModifier property _Camp_FadeDown auto
 ImageSpaceModifier property _Camp_FadeUp auto
 ImageSpaceModifier property _Camp_Black auto
@@ -62,7 +63,7 @@ function UpdateTentUseState(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
 	if was_hit
 		;Player was hit, kick them out of the tent
-		if !TentObject.TentAsset_LargeTentTriggerVolume
+		if !TentObject.TentAsset_LargeTentTriggerVolume && !akTent.GetBaseObject().HasKeyword(isCampfireTentNoShelter)
 			; The large tent trigger volume is not provided, so treat as a small tent
 			SetCurrentTent(None)
 		endif
@@ -83,8 +84,8 @@ function UpdateTentUseState(ObjectReference akTent)
 		CleanUpTent(akTent)
 	elseif !(PlayerRef.GetSitState() == 2 || PlayerRef.GetSitState() == 3) && !TentObject.bGettingUp
 		;Player getting up from sitting or lying down
-		if !TentObject.TentAsset_LargeTentTriggerVolume
-			; The large tent trigger volume is not provided, so treat as a small tent
+		if !TentObject.TentAsset_LargeTentTriggerVolume && !akTent.GetBaseObject().HasKeyword(isCampfireTentNoShelter)
+			; The tent trigger volume is not provided, so treat as a small tent
 			SetCurrentTent(None)
 		endif
 		EO_TurnOn()
@@ -298,7 +299,7 @@ endFunction
 
 function PlayerSit(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
-	if !TentObject.TentAsset_LargeTentTriggerVolume
+	if !TentObject.TentAsset_LargeTentTriggerVolume && !akTent.GetBaseObject().HasKeyword(isCampfireTentNoShelter)
 		; The large tent trigger volume is not provided, so treat as a small tent
 		SetCurrentTent(akTent)
 	endif
@@ -357,7 +358,7 @@ function PlayerLieDown(ObjectReference akTent)
 		endif
 	endif
 
-	if !TentObject.TentAsset_LargeTentTriggerVolume
+	if !TentObject.TentAsset_LargeTentTriggerVolume && !akTent.GetBaseObject().HasKeyword(isCampfireTentNoShelter)
 		; The large tent trigger volume is not provided, so treat as a small tent
 		SetCurrentTent(akTent)
 	endif
