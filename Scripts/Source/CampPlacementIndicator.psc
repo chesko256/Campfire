@@ -98,5 +98,5 @@ Event OnUpdate()
 		self.Delete()
 	endif
 	;float tdiff = utility.GetCurrentRealTime() - t
-	;debug.trace("[Campfire] Update speed: " + tdiff)
+	;CampDebug(0, "Update speed: " + tdiff)
 endEvent
