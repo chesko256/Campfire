@@ -234,6 +234,7 @@ Message property _Camp_Campfire_Skill_Endurance auto
 Message property _Camp_Campfire_Skill_Provisioning auto
 Message property _Camp_Campfire_Skill_Fishing auto
 Message property _Camp_Campfire_LitError auto
+Message property _Camp_TalkMenu auto
 Message property _Camp_PerkAdvancement auto
 Message property _Camp_PerkEarned auto
 Actor property PlayerRef auto
@@ -391,18 +392,39 @@ function DoActivate(ObjectReference akActionRef)
             ;Sit
             SitDown()
         elseif i == 2
+            ;Talk To...
+            ShowTalkMenu()
+        elseif i == 3
             ;Destroy
             TakeDown()
-        elseif i == 3
+        elseif i == 4
             if !myPerkNodeController
                 bool b = ShowSkills()
                 if !b
                     DoActivate(akActionRef)
                 endif
             endif
-        elseif i == 4
+        elseif i == 5
             ;Cancel
         endif
+    endif
+endFunction
+
+function ShowTalkMenu()
+    int i = _Camp_TalkMenu.Show()
+    Actor follower
+    if i == 0           ;Follower 1
+        follower = GetTrackedFollower(1)
+    elseif i == 1       ;Follower 2
+        follower = GetTrackedFollower(2)
+    elseif i == 2       ;Follower 3
+        follower = GetTrackedFollower(3)
+    elseif i == 3       ;No one
+        return
+    endif
+
+    if follower
+        follower.Activate(PlayerRef)
     endif
 endFunction
 
@@ -620,25 +642,9 @@ function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int 
 endFunction
 
 function SitDown()
-    ObjectReference[] mySitMarkers = new ObjectReference[4]
-    mySitMarkers[0] = mySitFurniture1
-    mySitMarkers[1] = mySitFurniture2
-    mySitMarkers[2] = mySitFurniture3
-    mySitMarkers[3] = mySitFurniture4
-    mySitMarkers = SelectionSort(mySitMarkers)
-
-    if !(mySitMarkers[0].IsFurnitureInUse())
+    if !(mySitFurniture2.IsFurnitureInUse())
         Game.ForceThirdPerson()
-        mySitMarkers[0].Activate(PlayerRef)
-    elseif !(mySitMarkers[1].IsFurnitureInUse())
-        Game.ForceThirdPerson()
-        mySitMarkers[1].Activate(PlayerRef)
-    elseif !(mySitMarkers[2].IsFurnitureInUse())
-        Game.ForceThirdPerson()
-        mySitMarkers[2].Activate(PlayerRef)
-    elseif !(mySitMarkers[3].IsFurnitureInUse())
-        Game.ForceThirdPerson()
-        mySitMarkers[3].Activate(PlayerRef)
+        mySitFurniture2.Activate(PlayerRef)
     else
         ;There is nowhere to sit.
         _Camp_Campfire_SitError.Show()
@@ -1014,28 +1020,3 @@ Event OnUpdateGameTime()
         endif
     endif
 endEvent
-
-ObjectReference[] function SelectionSort(ObjectReference[] array)
-    ;From https://en.wikipedia.org/wiki/Selection_sort, converted to Papyrus
-    int i
-    int j = 0
-    int iMin
-    int n = array.Length
-    while j < n - 1
-        iMin = j
-        i = j + 1
-        while i < n
-            if array[i].GetDistance(PlayerRef) < array[iMin].GetDistance(PlayerRef)
-                iMin = i
-            endif
-            i += 1
-        endWhile
-        if iMin != j
-            ObjectReference temp = array[j]
-            array[j] = array[iMin]
-            array[iMin] = temp
-        endif
-        j += 1
-    endWhile
-    return array
-endFunction

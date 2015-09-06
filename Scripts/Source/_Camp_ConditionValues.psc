@@ -3,6 +3,15 @@ scriptname _Camp_ConditionValues extends Quest conditional
 ; Condition version of CampUtil.IsRefInInterior(PlayerRef)
 bool property IsPlayerInInterior = false auto conditional hidden
 
+; Tent conditions
+bool property CurrentTentHasLantern = false auto conditional hidden
+bool property CurrentTentHasVisualShelter = false auto conditional hidden
+
+; Follower conditions
+bool property Follower1Registered = false auto conditional hidden
+bool property Follower2Registered = false auto conditional hidden
+bool property Follower3Registered = false auto conditional hidden
+
 ; For follower packages
 bool property IsPlayerSittingNearFire = false auto conditional hidden
 bool property IsPlayerSittingInTent = false auto conditional hidden

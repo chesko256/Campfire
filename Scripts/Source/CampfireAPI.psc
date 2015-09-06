@@ -36,6 +36,7 @@ GlobalVariable property _Camp_Setting_CompatibilityEO auto
 GlobalVariable property _Camp_CampfireVersion auto
 Quest property CampfireObjectPlacementSystem auto
 Quest property CampfireTentSystem auto
+Quest property _Camp_MainQuest auto
 ObjectReference property LastUsedCampfire auto hidden
 ObjectReference property CurrentTent auto hidden
 ReferenceAlias property Follower1 auto
