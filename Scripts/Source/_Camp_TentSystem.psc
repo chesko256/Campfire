@@ -28,6 +28,7 @@ Message property _Camp_TentSitMenu auto
 Message property _Camp_TentLayMenu auto
 Message property _Camp_TentPickUpError auto
 Message property _Camp_Help_TentActivate auto
+Message property _Camp_TalkMenu auto
 ObjectReference property _Camp_Anchor auto
 ObjectReference property _Camp_Tent_InteractTriggerREF auto
 Light property _Camp_LanternLight auto
@@ -128,7 +129,24 @@ function ActivateLayDownMarker(CampTent TentObject)
 	endif
 endFunction
 
+function CheckTentFeatures(CampTent TentObject)
+	; Set lantern capability
+    if TentObject.myLanternUnlit
+    	ConditionVars.CurrentTentHasLantern = true
+    else
+    	ConditionVars.CurrentTentHasLantern = false
+    endif
+    ; Set toggle view capability
+    if TentObject.myTent || TentObject.myNormalTent
+    	ConditionVars.CurrentTentHasVisualShelter = true
+    else
+    	ConditionVars.CurrentTentHasVisualShelter = false
+    endif
+endFunction
+
 function ShowMainMenu(ObjectReference akTent)
+	CampTent TentObject = akTent as CampTent
+	CheckTentFeatures(TentObject)
 	int i = _Camp_TentMainMenu.Show()
 	if i == 0										;Sit
 		if Compatibility.isSKSELoaded
@@ -142,10 +160,10 @@ function ShowMainMenu(ObjectReference akTent)
 			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
 		endif
 		PlayerLieDown(akTent)
-	elseif i == 2									;Pack
-		PackTent(akTent)
-	elseif i == 3									;Lantern
+	elseif i == 2									;Lantern
 		ToggleLantern(akTent)
+	elseif i == 3									;Pack
+		PackTent(akTent)
 	else
 		;exit
 	endif
@@ -153,11 +171,14 @@ endFunction
 
 function ShowSitMenu(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
+	CheckTentFeatures(TentObject)
 	int i
 	i = _Camp_TentSitMenu.Show(0, 0)
-	if i == 0										;Wait
+	if i == 0										;Lantern
 		ToggleLantern(akTent)
-	elseif i == 1
+	elseif i == 1									;Talk To...
+		ShowTalkMenu()
+	elseif i == 2 									;Toggle View
 		if TentObject.myTentExterior.IsDisabled()
 			_Camp_TentSeeThru.SetValue(1)
 			TryToEnableRef(TentObject.myTentExterior, true)
@@ -165,15 +186,17 @@ function ShowSitMenu(ObjectReference akTent)
 			_Camp_TentSeeThru.SetValue(2)
 			TryToDisableRef(TentObject.myTentExterior, true)
 		endif
-	elseif i == 2
+
+	elseif i == 3 									;Get Up
 		TentObject.myPlayerSitMarker.Activate(PlayerRef)
-	elseif i == 3
+	elseif i == 4
 		;do nothing
 	endif
 endFunction
 
 function ShowLayMenu(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
+	CheckTentFeatures(TentObject)
 	int i
 	i = _Camp_TentLayMenu.Show(0, 0)
 	if i == 0										;Sleep
@@ -183,9 +206,9 @@ function ShowLayMenu(ObjectReference akTent)
 		_Camp_ForceBlackVFX.Play(PlayerRef)
 		_Camp_FadeDown.PopTo(_Camp_Black)
 		if PlayerRef
-			PlayerRef.MoveTo(akTent)			;Get up
+			PlayerRef.MoveTo(akTent)				;  //Get up
 			wait(0.4)
-			TentObject.myBedRoll.Activate(PlayerRef)		;Spawns sleep menu
+			TentObject.myBedRoll.Activate(PlayerRef);  //Spawns sleep menu
 			wait(0.4)
 			ActivateLayDownMarker(TentObject)
 			wait(3.5)
@@ -200,7 +223,9 @@ function ShowLayMenu(ObjectReference akTent)
 		TentObject.bGettingUp = false
 	elseif i == 1									;Lantern
 		ToggleLantern(akTent)
-	elseif i == 2 									;Toggle View
+	elseif i == 2 									;Talk To...
+		ShowTalkMenu()
+	elseif i == 3 									;Toggle View
 		if TentObject.myTentExterior.IsDisabled()
 			_Camp_TentSeeThru.SetValue(1)
 			TryToEnableRef(TentObject.myTentExterior, true)
@@ -208,11 +233,30 @@ function ShowLayMenu(ObjectReference akTent)
 			_Camp_TentSeeThru.SetValue(2)
 			TryToDisableRef(TentObject.myTentExterior, true)
 		endif
-	elseif i == 3									;Get Up
+
+	elseif i == 4									;Get Up
 		ActivateLayDownMarker(TentObject)
 		;StopFollowerUse(akTent)
-	elseif i == 3									;Nothing
+	elseif i == 5									;Nothing
 		;do nothing
+	endif
+endFunction
+
+function ShowTalkMenu()
+	int i = _Camp_TalkMenu.Show()
+	Actor follower
+	if i == 0			;Follower 1
+		follower = GetTrackedFollower(1)
+	elseif i == 1		;Follower 2
+		follower = GetTrackedFollower(2)
+	elseif i == 2		;Follower 3
+		follower = GetTrackedFollower(3)
+	elseif i == 3		;No one
+		return
+	endif
+
+	if follower
+		follower.Activate(PlayerRef)
 	endif
 endFunction
 
