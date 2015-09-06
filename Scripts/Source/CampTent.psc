@@ -755,6 +755,10 @@ function PlaceObjects()
 			PlaceObject_Follower3Shield(Extended)
 		endif
 	endif
+	PlaceObject_PlayerSitMarker()
+	PlaceObject_PlayerLayDownMarker()
+	PlaceObject_PlayerWithSpouseLayDownMarker()
+	PlaceObject_SpouseLayDownMarker()
 	if PositionRef_AnimalLayDownMarker
 		PlaceObject_AnimalLayDownMarker()
 	endif
@@ -776,15 +780,6 @@ function PlaceObjects()
 			PlaceObject_SpareBedRoll3SitMarker(Extended)
 		endif
 	endif
-endFunction
-
-function PlaceSecondaryObjects()
-	CenterObject = self
-	; Placed relative to self
-	PlaceObject_PlayerSitMarker()
-	PlaceObject_PlayerLayDownMarker()
-	PlaceObject_PlayerWithSpouseLayDownMarker()
-	PlaceObject_SpouseLayDownMarker()
 endFunction
 
 ;@Override _Camp_PlaceableObjectBase
@@ -1019,6 +1014,21 @@ function GetResults()
 	if myFollowerCMarker_ShieldFuture
 		myFollowerCMarker_Shield = GetFuture(myFollowerCMarker_ShieldFuture).get_result()
 	endif
+	if myPlayerSitMarkerFuture
+		myPlayerSitMarker = GetFuture(myPlayerSitMarkerFuture).get_result()
+	endif
+	if myPlayerLayDownMarkerFuture
+		myPlayerLayDownMarker = GetFuture(myPlayerLayDownMarkerFuture).get_result()
+	endif
+	if myPlayerWithSpouseLayDownMarkerFuture
+		myPlayerWithSpouseLayDownMarker = GetFuture(myPlayerWithSpouseLayDownMarkerFuture).get_result()
+	endif
+	if mySpouseLayDownMarkerFuture
+		mySpouseLayDownMarker = GetFuture(mySpouseLayDownMarkerFuture).get_result()
+		if Setting_BedRollScale != 1.0
+			mySpouseLayDownMarker.SetScale(Setting_BedRollScale)
+		endif
+	endif
 	if myBedRollFuture
 		myBedRoll = GetFuture(myBedRollFuture).get_result()
 		if Get2DDistance(self, myBedRoll) > 50.0
@@ -1054,24 +1064,6 @@ function GetResults()
 	endif
 
 	; GenerateDebugReport()
-endFunction
-
-function GetSecondaryResults()
-	if myPlayerSitMarkerFuture
-		myPlayerSitMarker = GetFuture(myPlayerSitMarkerFuture).get_result()
-	endif
-	if myPlayerLayDownMarkerFuture
-		myPlayerLayDownMarker = GetFuture(myPlayerLayDownMarkerFuture).get_result()
-	endif
-	if myPlayerWithSpouseLayDownMarkerFuture
-		myPlayerWithSpouseLayDownMarker = GetFuture(myPlayerWithSpouseLayDownMarkerFuture).get_result()
-	endif
-	if mySpouseLayDownMarkerFuture
-		mySpouseLayDownMarker = GetFuture(mySpouseLayDownMarkerFuture).get_result()
-		if Setting_BedRollScale != 1.0
-			mySpouseLayDownMarker.SetScale(Setting_BedRollScale)
-		endif
-	endif
 endFunction
 
 function TakeDown()
@@ -1363,19 +1355,19 @@ function PlaceObject_PlayerShieldInterior()
 endFunction
 
 function PlaceObject_PlayerSitMarker()
-	myPlayerSitMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_TentSitMarker, self, x_pos_offset = 12.1647, y_pos_offset = -22.7978, z_pos_offset = 5.1221, z_local_ang_adjust = 180.0 + Setting_PlayerSitAngle, is_temp = is_temporary)
+	myPlayerSitMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_TentSitMarker, RequiredPositionRef_PlayerBed, x_pos_offset = 12.1647, y_pos_offset = -22.7978, z_pos_offset = 5.1221, z_local_ang_adjust = 180.0 + Setting_PlayerSitAngle, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_PlayerLayDownMarker()
-	myPlayerLayDownMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_TentLayDownMarker, self, z_pos_offset = 2.1221, z_local_ang_adjust = 180.0, is_temp = is_temporary)
+	myPlayerLayDownMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_TentLayDownMarker, RequiredPositionRef_PlayerBed, z_pos_offset = 2.1221, z_local_ang_adjust = 180.0, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_PlayerWithSpouseLayDownMarker()
-	myPlayerWithSpouseLayDownMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_TentLayDownMarker, self, x_pos_offset = 11.4984, z_pos_offset = 2.1221, z_local_ang_adjust = 180.0, is_temp = is_temporary)
+	myPlayerWithSpouseLayDownMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_TentLayDownMarker, RequiredPositionRef_PlayerBed, x_pos_offset = 11.4984, z_pos_offset = 2.1221, z_local_ang_adjust = 180.0, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_SpouseLayDownMarker()
-	mySpouseLayDownMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_Bedroll_SpouseF, self, x_pos_offset = -27.3813, y_pos_offset = -7.3676, z_local_ang_adjust = 0.46, is_temp = is_temporary)
+	mySpouseLayDownMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_Bedroll_SpouseF, RequiredPositionRef_PlayerBed, x_pos_offset = -24.3813, y_pos_offset = -7.3676, z_local_ang_adjust = -4.46, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_AnimalLayDownMarker()

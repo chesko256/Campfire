@@ -119,11 +119,11 @@ function ActivateLayDownMarker(CampTent TentObject)
 	Actor f2 = Follower2.GetReference() as Actor
 	Actor f3 = Follower3.GetReference() as Actor
 	Actor sp = Spouse.GetReference() as Actor
-	if (f1 == sp || f2 == sp || f3 == sp)
-		debug.trace("I detected a spouse, so positioning player appropriately")
+	if (sp) && (f1 == sp || f2 == sp || f3 == sp)
+		; Husband/wife follower found
 		(TentObject.myPlayerWithSpouseLayDownMarker as ObjectReference).Activate(PlayerRef)
 	else
-		debug.trace("I detected no spouse")
+		; No husband/wife follower
 		(TentObject.myPlayerLayDownMarker as ObjectReference).Activate(PlayerRef)
 	endif
 endFunction
