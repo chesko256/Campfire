@@ -82,9 +82,7 @@ function Initialize()
 	PlaceBaseObjects()
 	PlaceObjects()
 	PlacementSystem.wait_all()
-	PlaceSecondaryObjects()
-	PlacementSystem.wait_all()
-	GetSecondaryResults()
+	GetResults()
 	initialized = true
 	CampDebug(0, "Base initialized")
 endFunction

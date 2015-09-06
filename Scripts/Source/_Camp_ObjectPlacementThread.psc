@@ -74,7 +74,6 @@ Event OnUpdate()
 	if thread_queued
 		float[] relative_position = new float[6]
 		relative_position = GetRelativePosition(_RelativeCenterObject, _ObjectPositionReference, _XPosOffset, _YPosOffset)
-		CampDebug(0, "position reference " + _ObjectPositionReference)
 		ObjectReference result = PlaceAtMeRelative(_Origin, _FormToPlace, _OriginAngle, relative_position, \
 				_ZGlobalAngAdjust, _XLocalAngAdjust, _YLocalAngAdjust, _ZLocalAngAdjust, \
 				_ZHangingOffset, _InvertedLocalY, _XPosOffset, _YPosOffset, _ZPosOffset, _InitiallyDisabled, _IsPropped, _IsHanging, _IsTemp)
@@ -208,22 +207,17 @@ endFunction
 float[] function GetRelativePosition(ObjectReference akOrigin, ObjectReference akObject, float afXPosOffset, float afYPosOffset)
 	float[] myRelativePosition = new float[6]
 	; 2D rotation matrix - https://en.wikipedia.org/wiki/Rotation_matrix#In_two_dimensions
-	;/float theta = 0.0
+	float theta = 0.0
 	float x_prime = 0.0
 	float y_prime = 0.0
-	if afXPosOffset != 0.0 
-		theta = (atan(afYPosOffset / afXPosOffset) - 270.0) + -(akObject.GetAngleZ())
-	else
-		theta = -(akObject.GetAngleZ())
-	endif
+	
+	theta = -(akObject.GetAngleZ())
+
 	x_prime = (afXPosOffset * cos(theta)) - (afYPosOffset * sin(theta))
 	y_prime = (afXPosOffset * sin(theta)) + (afYPosOffset * cos(theta))
 	
 	myRelativePosition[0] = (akObject.GetPositionX() + x_prime) - akOrigin.GetPositionX()
 	myRelativePosition[1] = (akObject.GetPositionY() + y_prime) - akOrigin.GetPositionY()
-	/;
-	myRelativePosition[0] = (akObject.GetPositionX() + afXPosOffset) - akOrigin.GetPositionX()
-	myRelativePosition[1] = (akObject.GetPositionY() + afYPosOffset) - akOrigin.GetPositionY()
 	myRelativePosition[2] = akObject.GetPositionZ() - akOrigin.GetPositionZ()
 	myRelativePosition[3] = akObject.GetAngleX()
 	myRelativePosition[4] = akObject.GetAngleY()
