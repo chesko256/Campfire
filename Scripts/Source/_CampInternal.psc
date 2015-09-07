@@ -62,7 +62,7 @@ endFunction
 function TryToDisableAndDeleteRef(ObjectReference akReference, bool bFadeOut = false) global
 	;A more concise way to disable and delete references without checking for None first (to avoid Papyrus log errors, etc)
 	if akReference
-		akReference.DisableNoWait(bFadeOut)
+		akReference.Disable(bFadeOut)
 		akReference.Delete()
 	endif
 endFunction
