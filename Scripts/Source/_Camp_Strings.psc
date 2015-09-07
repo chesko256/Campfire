@@ -9,6 +9,9 @@ string property FollowerHarvestBranchesPlural auto
 string property FollowerNameGeneric auto
 string property AnimalNameGeneric auto
 
+; Placement strings
+string property IngredientRequired auto
+
 ; SkyUI MCM strings
 string property HotkeyConflict1 auto
 string property HotkeyConflict2 auto

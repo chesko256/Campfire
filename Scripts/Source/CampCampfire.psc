@@ -1008,14 +1008,15 @@ Event OnUpdateGameTime()
     float this_time = (Utility.GetCurrentGameTime() * 24.0)
     float time_delta = this_time - (last_update_registration_time * 24.0)
     remaining_time -= time_delta
-    CampDebug(0, "Campfire remaining time " + remaining_time)
+    ; Floor the time to smooth inaccuracy of when the update actually occurs
+    CampDebug(0, "Campfire remaining time " + Math.Floor(remaining_time))
 
     if remaining_time < 1
         TakeDown()
     else
         if remaining_time <= ASH_DURATION
             BurnToAshes()
-        elseif remaining_time <= (ASH_DURATION + EMBERS_DURATION)
+        elseif Math.Floor(remaining_time) <= (ASH_DURATION + EMBERS_DURATION)
             BurnToEmbers()
         endif
     endif
