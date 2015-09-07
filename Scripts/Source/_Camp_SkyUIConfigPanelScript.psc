@@ -106,6 +106,17 @@ Event OnConfigInit()
 	TroubleshootingList[1] = "$CampfireTroubleshooting1"
 endEvent
 
+int function GetVersion()
+	return 2
+endFunction
+
+Event OnVersionUpdate(int a_version)
+	if (a_version >= 2 && CurrentVersion < 2)
+		debug.trace("[Campfire][Info] Upgrading MCM script to version " + a_version)
+		OnConfigInit()
+	endif
+EndEvent
+
 function PageReset_Gameplay()
 	SetCursorFillMode(TOP_TO_BOTTOM)
 

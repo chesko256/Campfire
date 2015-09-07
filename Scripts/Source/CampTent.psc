@@ -1517,8 +1517,8 @@ state BurningDown
 			xs = PositionRef_Shelter.GetWidth()
 			ys = PositionRef_Shelter.GetLength()
 		else
-			xs = self.GetWidth()
-			ys = self.GetLength()
+			xs = 200.0
+			ys = 200.0
 		endif
 		float size
 		if xs > ys
