@@ -567,6 +567,14 @@ function Update()
 	UpdateTentUseState(self)
 endFunction
 
+Event OnCellAttach()
+	debug.trace("OnCellAttach################# " + self)
+EndEvent
+
+Event OnCellDetach()
+	debug.trace("OnCellDetach################# " + self)
+EndEvent
+
 Event OnActivate(ObjectReference akActionRef)
 	ActivateTent(akActionRef, self)
 endEvent
@@ -1063,12 +1071,13 @@ function GetResults()
         mySpareBedRoll3SitMarker = GetFuture(mySpareBedRoll3SitMarkerFuture).get_result()
 	endif
 
-	; GenerateDebugReport()
+	GenerateDebugReport()
 endFunction
 
 function TakeDown()
 	SetCurrentTent(None)
 	parent.TakeDown()
+
 	TryToDisableAndDeleteRef(myPlayerMarker_MainWeapon)
 	TryToDisableAndDeleteRef(myPlayerMarker_OffHandWeapon)
 	TryToDisableAndDeleteRef(myPlayerMarker_BigWeapon)
@@ -1139,6 +1148,7 @@ function TakeDown()
 	TryToDisableAndDeleteRef(myFollowerCMarker_BigWeapon)
 	TryToDisableAndDeleteRef(myFollowerCMarker_Bow)
 	TryToDisableAndDeleteRef(myFollowerCMarker_Shield)
+	TryToDisableAndDeleteRef(self)
 endFunction
 
 function GenerateDebugReport()
@@ -1197,6 +1207,9 @@ function GenerateDebugReport()
 	CampDebug(1, "myClutterActivator5: " + myClutterActivator5)
 	CampDebug(1, "myPlayerSitMarker: " + myPlayerSitMarker)
 	CampDebug(1, "myPlayerLayDownMarker: " + myPlayerLayDownMarker)
+	CampDebug(1, "mySpouseLayDownMarker: " + mySpouseLayDownMarker)
+	CampDebug(1, "myPlayerWithSpouseLayDownMarker: " + myPlayerWithSpouseLayDownMarker)
+	CampDebug(1, "myAnimalLayDownMarker: " + myAnimalLayDownMarker)
 	CampDebug(1, "myExitFront: " + myExitFront)
 	CampDebug(1, "myBedRoll: " + myBedRoll)
 	CampDebug(1, "mySpareBedRoll1: " + mySpareBedRoll1)

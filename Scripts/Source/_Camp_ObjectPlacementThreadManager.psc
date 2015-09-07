@@ -566,7 +566,8 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
                 endif
 
                 akIndicator.Disable()
-                ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace, abForcePersist = !(IsPlaceableObjectTemporary(akFormToPlace)))
+                ;ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace, abForcePersist = !(IsPlaceableObjectTemporary(akFormToPlace)))
+                ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace)
                 ; Raise optional SKSE event
                 SendEvent_OnObjectPlaced(campitem)
 
@@ -622,7 +623,9 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
                 endif
 
                 akIndicator.Disable()
-                ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace, abForcePersist = !(IsPlaceableObjectTemporary(akFormToPlace)))
+                ;debug.trace("IsPlaceableObjectTemporary " + IsPlaceableObjectTemporary(akFormToPlace))
+                ;ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace, abForcePersist = !(IsPlaceableObjectTemporary(akFormToPlace)))
+                ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace)
                 ; Raise optional SKSE event
                 SendEvent_OnObjectPlaced(campitem)
 
@@ -780,11 +783,12 @@ endFunction
 
 bool function MeetsRequirements(Ingredient akIngredient, MiscObject akMiscItem, Int aiCost, Perk akPerk, string asIngredientName, string asMiscItemName, string asPerkName)
     if PlayerCanPlaceObjects()
+        _Camp_Strings str = GetCampfireStrings()
         if akPerk
             if !PlayerRef.HasPerk(akPerk)
                 _Camp_PlaceObjectError_Perk.Show()
                 if Compatibility.isSKSELoaded
-                    debug.notification(akPerk.GetName() + " required.")
+                    debug.notification(akPerk.GetName() + str.IngredientRequired)
                 endif
                 return false
             endif
@@ -793,7 +797,7 @@ bool function MeetsRequirements(Ingredient akIngredient, MiscObject akMiscItem, 
             if !(PlayerRef.GetItemCount(akIngredient) >= aiCost)
                 _Camp_PlaceObjectError_Item.Show()
                 if Compatibility.isSKSELoaded
-                    debug.notification(aiCost + " " + akIngredient.GetName() + " required.")
+                    debug.notification(aiCost + " " + akIngredient.GetName() + str.IngredientRequired)
                 endif
                 return false
             endif
@@ -801,7 +805,7 @@ bool function MeetsRequirements(Ingredient akIngredient, MiscObject akMiscItem, 
             if !(PlayerRef.GetItemCount(akMiscItem) >= aiCost)
                 _Camp_PlaceObjectError_Item.Show()
                 if Compatibility.isSKSELoaded
-                    debug.notification(aiCost + " " + akMiscItem.GetName() + " required.")
+                    debug.notification(aiCost + " " + akMiscItem.GetName() + str.IngredientRequired)
                 endif
                 return false
             endif
