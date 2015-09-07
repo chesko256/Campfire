@@ -11,6 +11,7 @@ bool property CurrentTentHasVisualShelter = false auto conditional hidden
 bool property Follower1Registered = false auto conditional hidden
 bool property Follower2Registered = false auto conditional hidden
 bool property Follower3Registered = false auto conditional hidden
+bool property AnimalRegistered = false auto conditional hidden
 
 ; For follower packages
 bool property IsPlayerSittingNearFire = false auto conditional hidden

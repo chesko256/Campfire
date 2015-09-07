@@ -252,7 +252,9 @@ function ShowTalkMenu()
 		follower = GetTrackedFollower(2)
 	elseif i == 2		;Follower 3
 		follower = GetTrackedFollower(3)
-	elseif i == 3		;No one
+	elseif i == 3
+		follower = GetTrackedAnimal()
+	elseif i == 4		;No one
 		return
 	endif
 
@@ -324,6 +326,7 @@ function PlayerSit(ObjectReference akTent)
 
 	; Start the quest so that the aliases fill and follower packages run.
 	self.Start()
+	; Disable fighting, camswitch, sneaking
 	Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
 	
 	; Fall back to persistent trigger without SKSE
@@ -370,6 +373,7 @@ function PlayerLieDown(ObjectReference akTent)
 
 	; Start the quest so that the aliases fill and follower packages run.
 	self.Start()
+	; Disable fighting, camswitch, sneaking
 	Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
 	
 	ActivateLayDownMarker(TentObject)

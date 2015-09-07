@@ -74,6 +74,7 @@ function RegisterAnimal(Actor akAnimal)
     ;Register this animal in the first available alias
     if !first_animal_ref
         Animal.ForceRefTo(akAnimal)
+        (_Camp_MainQuest as _Camp_ConditionValues).AnimalRegistered = true
     endif
 endFunction
 
@@ -93,5 +94,6 @@ endFunction
 function UnregisterAnimal(Actor akAnimal)
     if Animal.GetActorRef() == akAnimal
         Animal.Clear()
+        (_Camp_MainQuest as _Camp_ConditionValues).AnimalRegistered = false
     endif
 endFunction
