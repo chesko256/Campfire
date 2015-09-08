@@ -87,6 +87,7 @@ int Guide_Topic6
 
 int SaveLoad_SelectProfile_OID
 int SaveLoad_RenameProfile_OID
+int SaveLoad_DefaultProfile_OID
 int SaveLoad_ProfileHelp_OID
 int SaveLoad_Enable_OID
 
@@ -277,17 +278,10 @@ function PageReset_SaveLoad()
 	if Compatibility.isSKSELoaded
 		if _Camp_Setting_AutoSaveLoad.GetValueInt() == 2
 			SaveLoad_SelectProfile_OID = AddMenuOption("$CampfireSaveLoadCurrentProfile", GetProfileName(_Camp_Setting_CurrentProfile.GetValueInt()))
-			SKI_Main skyui = Game.GetFormFromFile(0x00000814, "SkyUI.esp") as SKI_Main
-			int version = skyui.ReqSWFRelease
-			if version >= 1026 	; SkyUI 5.1+
-				SaveLoad_RenameProfile_OID = AddInputOption("", "$CampfireSaveLoadRenameProfile")
-			else
-				SaveLoad_RenameProfile_OID = AddTextOption("SkyUI 5.1+ Required", "$CampfireSaveLoadRenameProfile", OPTION_FLAG_DISABLED)
-			endif
 		else
 			SaveLoad_SelectProfile_OID = AddMenuOption("$CampfireSaveLoadCurrentProfile", GetProfileName(_Camp_Setting_CurrentProfile.GetValueInt()), OPTION_FLAG_DISABLED)
-			AddEmptyOption()
 		endif
+		AddEmptyOption()
 		AddEmptyOption()
 		AddEmptyOption()
 		AddEmptyOption()
@@ -302,14 +296,24 @@ function PageReset_SaveLoad()
 			SaveLoad_Enable_OID = AddToggleOption("$CampfireSaveLoadEnable", false)
 		endif
 	else
-		AddTextOption("SKSE 1.7.3+ Required to use this feature.", "", OPTION_FLAG_DISABLED)
+		AddTextOption("$CampfireSKSE173Required", "", OPTION_FLAG_DISABLED)
 	endif
 
 	SetCursorPosition(1) ; Move cursor to top right position
 
 	AddEmptyOption()
-	AddEmptyOption()
-	AddEmptyOption()
+	if Compatibility.isSKSELoaded
+		if _Camp_Setting_AutoSaveLoad.GetValueInt() == 2
+			SKI_Main skyui = Game.GetFormFromFile(0x00000814, "SkyUI.esp") as SKI_Main
+			int version = skyui.ReqSWFRelease
+			if version >= 1026 	; SkyUI 5.1+
+				SaveLoad_RenameProfile_OID = AddInputOption("", "$CampfireSaveLoadRenameProfile")
+			else
+				SaveLoad_RenameProfile_OID = AddTextOption("$CampfireSkyUI51Required", "$CampfireSaveLoadRenameProfile", OPTION_FLAG_DISABLED)
+			endif
+			SaveLoad_DefaultProfile_OID = AddTextOption("", "$CampfireSaveLoadDefaultProfile")
+		endif
+	endif
 	AddEmptyOption()
 	AddEmptyOption()
 	AddEmptyOption()
@@ -416,6 +420,8 @@ event OnOptionHighlight(int option)
 		SetInfoText("$CampfireOptionHighlightSettingSelectProfile")
 	elseif option == SaveLoad_RenameProfile_OID
 		SetInfoText("$CampfireOptionHighlightSettingRenameProfile")
+	elseif option == SaveLoad_DefaultProfile_OID
+		SetInfoText("$CampfireOptionHighlightSettingDefaultProfile")
 	elseif option == SaveLoad_Enable_OID
 		SetInfoText("$CampfireOptionHighlightSettingEnableSaveLoad")
 	endif
@@ -600,6 +606,13 @@ event OnOptionSelect(int option)
 			SaveAllSettings(_Camp_Setting_CurrentProfile.GetValueInt())
 		endIf
 		ForcePageReset()
+	elseif option == SaveLoad_DefaultProfile_OID
+		bool b = ShowMessage("$CampfireSaveLoadDefaultProfileConfirm")
+		if b
+			GenerateDefaultProfile(_Camp_Setting_CurrentProfile.GetValueInt())
+			SwitchToProfile(_Camp_Setting_CurrentProfile.GetValueInt())
+			ForcePageReset()
+		endif
 	endif
 
 	if option == Guide_Topic1

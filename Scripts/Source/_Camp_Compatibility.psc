@@ -4,7 +4,7 @@ import debug
 import CampUtil
 import _CampInternal
 
-float property SKSE_MIN_VERSION = 1.0703 autoReadOnly
+int property SKSE_MIN_VERSION = 10703 autoReadOnly
 
 ;#PROPERTIES=====================================================================================================================
 actor property PlayerRef auto
@@ -137,14 +137,16 @@ function RunCompatibility()
 
 	bool skse_loaded = SKSE.GetVersion()
 	if skse_loaded
-		float skse_version = SKSE.GetVersion() + SKSE.GetVersionMinor() * 0.01 + SKSE.GetVersionBeta() * 0.0001
+		int skse_version = (SKSE.GetVersion() * 10000) + (SKSE.GetVersionMinor() * 1000) + SKSE.GetVersionBeta()
 		if skse_version < SKSE_MIN_VERSION
-			_Camp_CriticalError_SKSE.Show(skse_version, SKSE_MIN_VERSION)
+			_Camp_CriticalError_SKSE.Show((skse_version / 10000), (SKSE_MIN_VERSION / 10000))
 			isSKSELoaded = false
 			Conditions.IsSKSELoaded = false
+			trace("[Campfire][Warning] Detected SKSE version " + (skse_version / 10000) + ", out of date! Expected " + (SKSE_MIN_VERSION / 10000) + " or newer.")
 		else
 			isSKSELoaded = true
 			Conditions.IsSKSELoaded = true
+			trace("[Campfire] Detected SKSE version " + skse_version + "(expected " + (SKSE_MIN_VERSION / 10000) + " or newer, success!)")
 		endif
 	endif
 	
