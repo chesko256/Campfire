@@ -229,6 +229,35 @@ function GetResults()
 		myExtraLight3 = GetFuture(myExtraLight3Future).get_result()
 		myExtraLight3Future = None
 	endif
+
+	if GetLogLevel() <= 1
+		GenerateDebugReport()
+	endif
+endFunction
+
+function GenerateDebugReport()
+	CampDebug(1, "Placement complete. Placed object report:")
+	CampDebug(1, "======================================================================")
+	CampDebug(1, "**SELF**: " + self)
+	CampDebug(1, "myExtraStatic1: " + myExtraStatic1)
+	CampDebug(1, "myExtraStatic2: " + myExtraStatic2)
+	CampDebug(1, "myExtraStatic3: " + myExtraStatic3)
+	CampDebug(1, "myExtraStatic4: " + myExtraStatic4)
+	CampDebug(1, "myExtraStatic5: " + myExtraStatic5)
+	CampDebug(1, "myExtraActivator1: " + myExtraActivator1)
+	CampDebug(1, "myExtraActivator2: " + myExtraActivator2)
+	CampDebug(1, "myExtraActivator3: " + myExtraActivator3)
+	CampDebug(1, "myExtraActivator4: " + myExtraActivator4)
+	CampDebug(1, "myExtraActivator5: " + myExtraActivator5)
+	CampDebug(1, "myExtraFurniture1: " + myExtraFurniture1)
+	CampDebug(1, "myExtraFurniture2: " + myExtraFurniture2)
+	CampDebug(1, "myExtraFurniture3: " + myExtraFurniture3)
+	CampDebug(1, "myExtraFurniture4: " + myExtraFurniture4)
+	CampDebug(1, "myExtraFurniture5: " + myExtraFurniture5)
+	CampDebug(1, "myExtraLight1: " + myExtraLight1)
+	CampDebug(1, "myExtraLight2: " + myExtraLight2)
+	CampDebug(1, "myExtraLight3: " + myExtraLight3)
+	CampDebug(1, "======================================================================")
 endFunction
 
 function RotateOnStartUp()
