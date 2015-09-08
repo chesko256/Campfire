@@ -255,13 +255,10 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
 							  myTempMarker.GetAngleZ() + fRelativePos[5] + fZLocalAngAdjust)
 	endif
 	
-	; @TODO: Debug and profile this before enabling in release.
-	;bool spawn_persistent = true
-	;if abIsTemp
-	;	spawn_persistent = false
-	;endif
-
-	bool spawn_persistent = false
+	bool spawn_persistent = true
+	if abIsTemp
+		spawn_persistent = false
+	endif
 	
 	myObject = myTempMarker.PlaceAtMe(akFormToPlace, abForcePersist = spawn_persistent, abInitiallyDisabled = bInitiallyDisabled)
     
