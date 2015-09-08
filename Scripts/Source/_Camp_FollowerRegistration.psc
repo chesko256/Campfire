@@ -6,6 +6,8 @@ Quest property _Camp_FollowerQuest auto
 Quest property _Camp_MainQuest auto
 
 Race property DogCompanionRace auto
+Faction property PlayerPotentialAnimalFaction auto
+Faction property DogFaction auto
 
 ReferenceAlias property Follower1 auto
 ReferenceAlias property Follower2 auto
@@ -13,10 +15,12 @@ ReferenceAlias property Follower3 auto
 ReferenceAlias property Animal auto
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
-	CampDebug(1, "Registering actor: " + akTarget.GetBaseObject().GetName() + " self " + self)
-    if akTarget.GetRace() != DogCompanionRace
+	
+    if akTarget.GetRace() != DogCompanionRace && !akTarget.IsInFaction(PlayerPotentialAnimalFaction) && !akTarget.IsInFaction(DogFaction)
+        CampDebug(1, "Registering follower:" + self)
         RegisterFollower(akTarget)
     else
+        CampDebug(1, "Registering animal: " + self)
         RegisterAnimal(akTarget)
     endif
 EndEvent
