@@ -566,8 +566,7 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
                 endif
 
                 akIndicator.Disable()
-                ;ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace, abForcePersist = !(IsPlaceableObjectTemporary(akFormToPlace)))
-                ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace)
+                ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace, abForcePersist = !(IsPlaceableObjectTemporary(akFormToPlace)))
                 ; Raise optional SKSE event
                 SendEvent_OnObjectPlaced(campitem)
 
@@ -623,9 +622,7 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
                 endif
 
                 akIndicator.Disable()
-                ;debug.trace("IsPlaceableObjectTemporary " + IsPlaceableObjectTemporary(akFormToPlace))
-                ;ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace, abForcePersist = !(IsPlaceableObjectTemporary(akFormToPlace)))
-                ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace)
+                ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace, abForcePersist = !(IsPlaceableObjectTemporary(akFormToPlace)))
                 ; Raise optional SKSE event
                 SendEvent_OnObjectPlaced(campitem)
 
