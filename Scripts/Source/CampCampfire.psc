@@ -540,6 +540,34 @@ function GetResults()
         myCookPotSnapMarker = GetFuture(myCookPotSnapMarkerFuture).get_result()
         myCookPotSnapMarkerFuture = None
     endif
+
+    if GetLogLevel() <= 1
+        GenerateDebugReport()
+    endif
+endFunction
+
+function GenerateDebugReport()
+    CampDebug(1, "Placement complete. Placed object report:")
+    CampDebug(1, "======================================================================")
+    CampDebug(1, "**SELF**: " + self)
+    CampDebug(1, "myFuelLit: " + myFuelLit)
+    CampDebug(1, "myFuelUnlit: " + myFuelUnlit)
+    CampDebug(1, "myEmbers: " + myEmbers)
+    CampDebug(1, "myAshes: " + myAshes)
+    CampDebug(1, "myLight: " + myLight)
+    CampDebug(1, "mySteam: " + mySteam)
+    CampDebug(1, "myClutterStatic1: " + myClutterStatic1)
+    CampDebug(1, "myClutterStatic2: " + myClutterStatic2)
+    CampDebug(1, "myClutterActivator1: " + myClutterActivator1)
+    CampDebug(1, "myClutterActivator2: " + myClutterActivator2)
+    CampDebug(1, "myClutterFurniture1: " + myClutterFurniture1)
+    CampDebug(1, "myClutterFurniture2: " + myClutterFurniture2)
+    CampDebug(1, "mySitFurniture1: " + mySitFurniture1)
+    CampDebug(1, "mySitFurniture2: " + mySitFurniture2)
+    CampDebug(1, "mySitFurniture3: " + mySitFurniture3)
+    CampDebug(1, "mySitFurniture4: " + mySitFurniture4)
+    CampDebug(1, "myCookPotSnapMarker: " + myCookPotSnapMarker)
+    CampDebug(1, "======================================================================")
 endFunction
 
 function TakeDown()
