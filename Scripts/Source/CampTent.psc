@@ -794,21 +794,26 @@ endFunction
 function GetResults()
 	if myTentFuture
 		myTent = GetFuture(myTentFuture).get_result()
+		myTentFuture = None
 	endif
 	if myShelterColliderFuture
 		myShelterCollider = GetFuture(myShelterColliderFuture).get_result()
 		if myShelterCollider
 			(myShelterCollider as CampTentShelterCollider).ParentTent = self
 		endif
+		myShelterColliderFuture = None
 	endif
 	if myNormalTentFuture
 		myNormalTent = GetFuture(myNormalTentFuture).get_result()
+		myNormalTentFuture = None
 	endif
 	if mySnowTentFuture
 		mySnowTent = GetFuture(mySnowTentFuture).get_result()
+		mySnowTentFuture = None
 	endif
 	if myAshTentFuture
 		myAshTent = GetFuture(myAshTentFuture).get_result()
+		myAshTentFuture = None
 	endif
 	TentSystem.SelectExterior(self, false)
 
@@ -817,25 +822,32 @@ function GetResults()
 		if myLargeTentTriggerVolume
 			(myLargeTentTriggerVolume as CampLargeTentTriggerVolumeScript).ParentTent = self
 		endif
+		myLargeTentTriggerVolumeFuture = None
 	endif
 
 	if myFire1Future
 		myFire1 = GetFuture(myFire1Future).get_result()
+		myFire1Future = None
 	endif
 	if myFire2Future
 		myFire2 = GetFuture(myFire2Future).get_result()
+		myFire2Future = None
 	endif
 	if myFire3Future
 		myFire3 = GetFuture(myFire3Future).get_result()
+		myFire3Future = None
 	endif
 	if myFire4Future
 		myFire4 = GetFuture(myFire4Future).get_result()
+		myFire4Future = None
 	endif
 	if myFire5Future
 		myFire5 = GetFuture(myFire5Future).get_result()
+		myFire5Future = None
 	endif
 	if myFire6Future
 		myFire6 = GetFuture(myFire6Future).get_result()
+		myFire6Future = None
 	endif
 	if mySmokeFuture
 		mySmoke = GetFuture(mySmokeFuture).get_result()
@@ -855,187 +867,245 @@ function GetResults()
 			size = ys
 		endif
 		mySmoke.SetScale(size / 900)
+		mySmokeFuture = None
 	endif
 
 	if myPlayerMarker_MainWeaponFuture
 		myPlayerMarker_MainWeapon = GetFuture(myPlayerMarker_MainWeaponFuture).get_result()
+		myPlayerMarker_MainWeaponFuture = None
 	endif
 	if myPlayerMarker_OffHandWeaponFuture
 		myPlayerMarker_OffHandWeapon = GetFuture(myPlayerMarker_OffHandWeaponFuture).get_result()
+		myPlayerMarker_OffHandWeaponFuture = None
 	endif
 	if myPlayerMarker_BigWeaponFuture
 		myPlayerMarker_BigWeapon = GetFuture(myPlayerMarker_BigWeaponFuture).get_result()
+		myPlayerMarker_BigWeaponFuture = None
 	endif
 	if myPlayerMarker_BowFuture
 		myPlayerMarker_Bow = GetFuture(myPlayerMarker_BowFuture).get_result()
+		myPlayerMarker_BowFuture = None
 	endif
 	if myPlayerMarker_ShieldFuture
 		myPlayerMarker_Shield = GetFuture(myPlayerMarker_ShieldFuture).get_result()
+		myPlayerMarker_ShieldFuture = None
 	endif
 	if myPlayerMarker_CuirassFuture
 		myPlayerMarker_Cuirass = GetFuture(myPlayerMarker_CuirassFuture).get_result()
+		myPlayerMarker_CuirassFuture = None
 	endif
 	if myPlayerMarker_HelmFuture
 		myPlayerMarker_Helm = GetFuture(myPlayerMarker_HelmFuture).get_result()
+		myPlayerMarker_HelmFuture = None
 	endif
 	if myPlayerMarker_BootsFuture
 		myPlayerMarker_Boots = GetFuture(myPlayerMarker_BootsFuture).get_result()
+		myPlayerMarker_BootsFuture = None
 	endif
 	if myPlayerMarker_GauntletsFuture
 		myPlayerMarker_Gauntlets = GetFuture(myPlayerMarker_GauntletsFuture).get_result()
+		myPlayerMarker_GauntletsFuture = None
 	endif
 	if myPlayerMarker_BackpackFuture
 		myPlayerMarker_Backpack = GetFuture(myPlayerMarker_BackpackFuture).get_result()
+		myPlayerMarker_BackpackFuture = None
 	endif
 	if myPlayerMarker_ShieldInteriorFuture
 		myPlayerMarker_ShieldInterior = GetFuture(myPlayerMarker_ShieldInteriorFuture).get_result()
+		myPlayerMarker_ShieldInteriorFuture = None
 	endif
 	if myAnimalLayDownMarkerFuture
 		myAnimalLayDownMarker = GetFuture(myAnimalLayDownMarkerFuture).get_result()
+		myAnimalLayDownMarkerFuture = None
 	endif
 	if myExitFrontFuture
 		myExitFront = GetFuture(myExitFrontFuture).get_result()
 		if !IsRefInInterior(Game.GetPlayer())
 			TryToEnableRef(myExitFront)
 		endif
+		myExitFrontFuture = None
 	endif
 	if myWardFuture
 		myWard = GetFuture(myWardFuture).get_result()
 		if !IsRefInInterior(Game.GetPlayer())
 			TryToEnableRef(myWard)
-		endif	
+		endif
+		myWardFuture = None
 	endif
 	if myClutterStatic1Future
 		myClutterStatic1 = GetFuture(myClutterStatic1Future).get_result()
+		myClutterStatic1Future = None
 	endif
 	if myClutterStatic2Future
 		myClutterStatic2 = GetFuture(myClutterStatic2Future).get_result()
+		myClutterStatic2Future = None
 	endif
 	if myClutterStatic3Future
 		myClutterStatic3 = GetFuture(myClutterStatic3Future).get_result()
+		myClutterStatic3Future = None
 	endif
 	if myClutterStatic4Future
 		myClutterStatic4 = GetFuture(myClutterStatic4Future).get_result()
+		myClutterStatic4Future = None
 	endif
 	if myClutterStatic5Future
 		myClutterStatic5 = GetFuture(myClutterStatic5Future).get_result()
+		myClutterStatic5Future = None
 	endif
 	if myClutterActivator1Future
 		myClutterActivator1 = GetFuture(myClutterActivator1Future).get_result()
+		myClutterActivator1Future = None
 	endif
 	if myClutterActivator2Future
 		myClutterActivator2 = GetFuture(myClutterActivator2Future).get_result()
+		myClutterActivator2Future = None
 	endif
 	if myClutterActivator3Future
 		myClutterActivator3 = GetFuture(myClutterActivator3Future).get_result()
+		myClutterActivator3Future = None
 	endif
 	if myClutterActivator4Future
 		myClutterActivator4 = GetFuture(myClutterActivator4Future).get_result()
+		myClutterActivator4Future = None
 	endif
 	if myClutterActivator5Future
 		myClutterActivator5 = GetFuture(myClutterActivator5Future).get_result()
+		myClutterActivator5Future = None
 	endif
 	if myClutterFurniture1Future
 		myClutterFurniture1 = GetFuture(myClutterFurniture1Future).get_result()
+		myClutterFurniture1Future = None
 	endif
 	if myClutterFurniture2Future
 		myClutterFurniture2 = GetFuture(myClutterFurniture2Future).get_result()
+		myClutterFurniture2Future = None
 	endif
 	if myClutterFurniture3Future
 		myClutterFurniture3 = GetFuture(myClutterFurniture3Future).get_result()
+		myClutterFurniture3Future = None
 	endif
 	if myClutterFurniture4Future
 		myClutterFurniture4 = GetFuture(myClutterFurniture4Future).get_result()
+		myClutterFurniture4Future = None
 	endif
 	if myClutterFurniture5Future
 		myClutterFurniture5 = GetFuture(myClutterFurniture5Future).get_result()
+		myClutterFurniture5Future = None
 	endif
 	if myLanternUnlitFuture
 		myLanternUnlit = GetFuture(myLanternUnlitFuture).get_result()
+		myLanternUnlitFuture = None
 	endif
 	if myLanternLitFuture
 		myLanternLit = GetFuture(myLanternLitFuture).get_result()
+		myLanternLitFuture = None
 	endif
 	if myLanternLightFuture
 		myLanternLight = GetFuture(myLanternLightFuture).get_result()
+		myLanternLightFuture = None
 	endif
 	if myLanternUnlit2Future
 		myLanternUnlit2 = GetFuture(myLanternUnlit2Future).get_result()
+		myLanternUnlit2Future = None
 	endif
 	if myLanternLit2Future
 		myLanternLit2 = GetFuture(myLanternLit2Future).get_result()
+		myLanternLit2Future = None
 	endif
 	if myLanternLight2Future
 		myLanternLight2 = GetFuture(myLanternLight2Future).get_result()
+		myLanternLight2Future = None
 	endif
 	if myLanternUnlit3Future
 		myLanternUnlit3 = GetFuture(myLanternUnlit3Future).get_result()
+		myLanternUnlit3Future = None
 	endif
 	if myLanternLit3Future
 		myLanternLit3 = GetFuture(myLanternLit3Future).get_result()
+		myLanternLit3Future = None
 	endif
 	if myLanternLight3Future
 		myLanternLight3 = GetFuture(myLanternLight3Future).get_result()
+		myLanternLight3Future = None
 	endif
 	if myFollowerAMarker_MainWeaponFuture
 		myFollowerAMarker_MainWeapon = GetFuture(myFollowerAMarker_MainWeaponFuture).get_result()
+		myFollowerAMarker_MainWeaponFuture = None
 	endif
 	if myFollowerAMarker_OffHandWeaponFuture
 		myFollowerAMarker_OffHandWeapon = GetFuture(myFollowerAMarker_OffHandWeaponFuture).get_result()
+		myFollowerAMarker_OffHandWeaponFuture = None
 	endif
 	if myFollowerAMarker_BigWeaponFuture
 		myFollowerAMarker_BigWeapon = GetFuture(myFollowerAMarker_BigWeaponFuture).get_result()
+		myFollowerAMarker_BigWeaponFuture = None
 	endif
 	if myFollowerAMarker_BowFuture
 		myFollowerAMarker_Bow = GetFuture(myFollowerAMarker_BowFuture).get_result()
+		myFollowerAMarker_BowFuture = None
 	endif
 	if myFollowerAMarker_ShieldFuture
 		myFollowerAMarker_Shield = GetFuture(myFollowerAMarker_ShieldFuture).get_result()
+		myFollowerAMarker_ShieldFuture = None
 	endif
 	if myFollowerBMarker_MainWeaponFuture
 		myFollowerBMarker_MainWeapon = GetFuture(myFollowerBMarker_MainWeaponFuture).get_result()
+		myFollowerBMarker_MainWeaponFuture = None
 	endif
 	if myFollowerBMarker_OffHandWeaponFuture
 		myFollowerBMarker_OffHandWeapon = GetFuture(myFollowerBMarker_OffHandWeaponFuture).get_result()
+		myFollowerBMarker_OffHandWeaponFuture = None
 	endif
 	if myFollowerBMarker_BigWeaponFuture
 		myFollowerBMarker_BigWeapon = GetFuture(myFollowerBMarker_BigWeaponFuture).get_result()
+		myFollowerBMarker_BigWeaponFuture = None
 	endif
 	if myFollowerBMarker_BowFuture
 		myFollowerBMarker_Bow = GetFuture(myFollowerBMarker_BowFuture).get_result()
+		myFollowerBMarker_BowFuture = None
 	endif
 	if myFollowerBMarker_ShieldFuture
 		myFollowerBMarker_Shield = GetFuture(myFollowerBMarker_ShieldFuture).get_result()
+		myFollowerBMarker_ShieldFuture = None
 	endif
 	if myFollowerCMarker_MainWeaponFuture
 		myFollowerCMarker_MainWeapon = GetFuture(myFollowerCMarker_MainWeaponFuture).get_result()
+		myFollowerCMarker_MainWeaponFuture = None
 	endif
 	if myFollowerCMarker_OffHandWeaponFuture
 		myFollowerCMarker_OffHandWeapon = GetFuture(myFollowerCMarker_OffHandWeaponFuture).get_result()
+		myFollowerCMarker_OffHandWeaponFuture = None
 	endif
 	if myFollowerCMarker_BigWeaponFuture
 		myFollowerCMarker_BigWeapon = GetFuture(myFollowerCMarker_BigWeaponFuture).get_result()
+		myFollowerCMarker_BigWeaponFuture = None
 	endif
 	if myFollowerCMarker_BowFuture
 		myFollowerCMarker_Bow = GetFuture(myFollowerCMarker_BowFuture).get_result()
+		myFollowerCMarker_BowFuture = None
 	endif
 	if myFollowerCMarker_ShieldFuture
 		myFollowerCMarker_Shield = GetFuture(myFollowerCMarker_ShieldFuture).get_result()
+		myFollowerCMarker_ShieldFuture = None
 	endif
 	if myPlayerSitMarkerFuture
 		myPlayerSitMarker = GetFuture(myPlayerSitMarkerFuture).get_result()
+		myPlayerSitMarkerFuture = None
 	endif
 	if myPlayerLayDownMarkerFuture
 		myPlayerLayDownMarker = GetFuture(myPlayerLayDownMarkerFuture).get_result()
+		myPlayerLayDownMarkerFuture = None
 	endif
 	if myPlayerWithSpouseLayDownMarkerFuture
 		myPlayerWithSpouseLayDownMarker = GetFuture(myPlayerWithSpouseLayDownMarkerFuture).get_result()
+		myPlayerWithSpouseLayDownMarkerFuture = None
 	endif
 	if mySpouseLayDownMarkerFuture
 		mySpouseLayDownMarker = GetFuture(mySpouseLayDownMarkerFuture).get_result()
 		if Setting_BedRollScale != 1.0
 			mySpouseLayDownMarker.SetScale(Setting_BedRollScale)
 		endif
+		mySpouseLayDownMarkerFuture = None
 	endif
 	if myBedRollFuture
 		myBedRoll = GetFuture(myBedRollFuture).get_result()
@@ -1045,6 +1115,7 @@ function GetResults()
 		if Setting_BedRollScale != 1.0
 			self.SetScale(Setting_BedRollScale)
 		endif
+		myBedRollFuture = None
 	endif
 	if mySpareBedRoll1Future
 		mySpareBedRoll1 = GetFuture(mySpareBedRoll1Future).get_result()
@@ -1053,6 +1124,8 @@ function GetResults()
 		endif
         (mySpareBedRoll1 as _Camp_CampTentNPCBedrollScript).Setup(self as CampTent, 1)
         mySpareBedRoll1SitMarker = GetFuture(mySpareBedRoll1SitMarkerFuture).get_result()
+        mySpareBedRoll1SitMarkerFuture = None
+        mySpareBedRoll1Future = None
 	endif
 	if mySpareBedRoll2Future
 		mySpareBedRoll2 = GetFuture(mySpareBedRoll2Future).get_result()
@@ -1061,6 +1134,8 @@ function GetResults()
 		endif
         (mySpareBedRoll2 as _Camp_CampTentNPCBedrollScript).Setup(self as CampTent, 2)
         mySpareBedRoll2SitMarker = GetFuture(mySpareBedRoll2SitMarkerFuture).get_result()
+        mySpareBedRoll2SitMarkerFuture = None
+        mySpareBedRoll2Future = None
 	endif
 	if mySpareBedRoll3Future
 		mySpareBedRoll3 = GetFuture(mySpareBedRoll3Future).get_result()
@@ -1069,6 +1144,8 @@ function GetResults()
 		endif
         (mySpareBedRoll3 as _Camp_CampTentNPCBedrollScript).Setup(self as CampTent, 3)
         mySpareBedRoll3SitMarker = GetFuture(mySpareBedRoll3SitMarkerFuture).get_result()
+        mySpareBedRoll3SitMarkerFuture = None
+        mySpareBedRoll3Future = None
 	endif
 
 	GenerateDebugReport()
@@ -1148,6 +1225,130 @@ function TakeDown()
 	TryToDisableAndDeleteRef(myFollowerCMarker_BigWeapon)
 	TryToDisableAndDeleteRef(myFollowerCMarker_Bow)
 	TryToDisableAndDeleteRef(myFollowerCMarker_Shield)
+	TryToDisableAndDeleteRef(myDisplayQuiver)
+	TryToDisableAndDeleteRef(myDisplayShield)
+	TryToDisableAndDeleteRef(myDisplayHelm)
+	TryToDisableAndDeleteRef(myDisplayBackpack)
+	TryToDisableAndDeleteRef(myDisplayBoots)
+	TryToDisableAndDeleteRef(myDisplayGauntlets)
+	TryToDisableAndDeleteRef(myDisplayCuirass)
+	TryToDisableAndDeleteRef(myDisplayMainWeapon)
+	TryToDisableAndDeleteRef(myDisplayOffHandWeapon)
+	TryToDisableAndDeleteRef(myDisplayBigWeapon)
+	TryToDisableAndDeleteRef(myDisplayBow)
+	TryToDisableAndDeleteRef(myDisplayFollowerAShield)
+	TryToDisableAndDeleteRef(myDisplayFollowerAMainWeapon)
+	TryToDisableAndDeleteRef(myDisplayFollowerAOffHandWeapon)
+	TryToDisableAndDeleteRef(myDisplayFollowerABigWeapon)
+	TryToDisableAndDeleteRef(myDisplayFollowerABow)
+	TryToDisableAndDeleteRef(myDisplayFollowerBShield)
+	TryToDisableAndDeleteRef(myDisplayFollowerBMainWeapon)
+	TryToDisableAndDeleteRef(myDisplayFollowerBOffHandWeapon)
+	TryToDisableAndDeleteRef(myDisplayFollowerBBigWeapon)
+	TryToDisableAndDeleteRef(myDisplayFollowerBBow)
+	TryToDisableAndDeleteRef(myDisplayFollowerCShield)
+	TryToDisableAndDeleteRef(myDisplayFollowerCMainWeapon)
+	TryToDisableAndDeleteRef(myDisplayFollowerCOffHandWeapon)
+	TryToDisableAndDeleteRef(myDisplayFollowerCBigWeapon)
+	TryToDisableAndDeleteRef(myDisplayFollowerCBow)
+
+	myPlayerMarker_MainWeapon = None
+	myPlayerMarker_OffHandWeapon = None
+	myPlayerMarker_BigWeapon = None
+	myPlayerMarker_Bow = None
+	myPlayerMarker_Cuirass = None
+	myPlayerMarker_Helm = None
+	myPlayerMarker_Boots = None
+	myPlayerMarker_Gauntlets = None
+	myPlayerMarker_Backpack = None
+	myPlayerMarker_Shield = None
+	myPlayerMarker_ShieldInterior = None
+	myClutterStatic1 = None
+	myClutterStatic2 = None
+	myClutterStatic3 = None
+	myClutterStatic4 = None
+	myClutterStatic5 = None
+	myClutterActivator1 = None
+	myClutterActivator2 = None
+	myClutterActivator3 = None
+	myClutterActivator4 = None
+	myClutterActivator5 = None
+	myClutterFurniture1 = None
+	myClutterFurniture2 = None
+	myClutterFurniture3 = None
+	myClutterFurniture4 = None
+	myClutterFurniture5 = None
+	myPlayerSitMarker = None
+	myPlayerLayDownMarker = None
+	myPlayerWithSpouseLayDownMarker = None
+	mySpouseLayDownMarker = None
+	myAnimalLayDownMarker = None
+	myExitFront = None
+	myBedRoll = None
+	myWard = None
+	myLanternLit = None
+	myLanternUnlit = None
+	myLanternLight = None
+	myLanternLit2 = None
+	myLanternUnlit2 = None
+	myLanternLight2 = None
+	myLanternLit3 = None
+	myLanternUnlit3 = None
+	myLanternLight3 = None
+	mySpareBedRoll1 = None
+	mySpareBedRoll2 = None
+	mySpareBedRoll3 = None
+	mySpareBedRoll1SitMarker = None
+	mySpareBedRoll2SitMarker = None
+	mySpareBedRoll3SitMarker = None
+	mySnowTent = None
+	myAshTent = None
+	myNormalTent = None
+	myTent = None
+	myShelterCollider = None
+	myLargeTentTriggerVolume = None
+	myFollowerAMarker_MainWeapon = None
+	myFollowerAMarker_OffHandWeapon = None
+	myFollowerAMarker_BigWeapon = None
+	myFollowerAMarker_Bow = None
+	myFollowerAMarker_Shield = None
+	myFollowerBMarker_MainWeapon = None
+	myFollowerBMarker_OffHandWeapon = None
+	myFollowerBMarker_BigWeapon = None
+	myFollowerBMarker_Bow = None
+	myFollowerBMarker_Shield = None
+	myFollowerCMarker_MainWeapon = None
+	myFollowerCMarker_OffHandWeapon = None
+	myFollowerCMarker_BigWeapon = None
+	myFollowerCMarker_Bow = None
+	myFollowerCMarker_Shield = None
+	myDisplayQuiver = None
+	myDisplayShield = None
+	myDisplayHelm = None
+	myDisplayBackpack = None
+	myDisplayBoots = None
+	myDisplayGauntlets = None
+	myDisplayCuirass = None
+	myDisplayMainWeapon = None
+	myDisplayOffHandWeapon = None
+	myDisplayBigWeapon = None
+	myDisplayBow = None
+	myDisplayFollowerAShield = None
+	myDisplayFollowerAMainWeapon = None
+	myDisplayFollowerAOffHandWeapon = None
+	myDisplayFollowerABigWeapon = None
+	myDisplayFollowerABow = None
+	myDisplayFollowerBShield = None
+	myDisplayFollowerBMainWeapon = None
+	myDisplayFollowerBOffHandWeapon = None
+	myDisplayFollowerBBigWeapon = None
+	myDisplayFollowerBBow = None
+	myDisplayFollowerCShield = None
+	myDisplayFollowerCMainWeapon = None
+	myDisplayFollowerCOffHandWeapon = None
+	myDisplayFollowerCBigWeapon = None
+	myDisplayFollowerCBow = None
+
 	TryToDisableAndDeleteRef(self)
 endFunction
 

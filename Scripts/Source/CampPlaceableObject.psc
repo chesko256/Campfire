@@ -159,57 +159,75 @@ function GetResults()
 	parent.GetResults()
 	if myExtraStatic1Future
 		myExtraStatic1 = GetFuture(myExtraStatic1Future).get_result()
+		myExtraStatic1Future = None
 	endif
 	if myExtraStatic2Future
 		myExtraStatic2 = GetFuture(myExtraStatic2Future).get_result()
+		myExtraStatic2Future = None
 	endif
 	if myExtraStatic3Future
 		myExtraStatic3 = GetFuture(myExtraStatic3Future).get_result()
+		myExtraStatic3Future = None
 	endif
 	if myExtraStatic4Future
 		myExtraStatic4 = GetFuture(myExtraStatic4Future).get_result()
+		myExtraStatic4Future = None
 	endif
 	if myExtraStatic5Future
 		myExtraStatic5 = GetFuture(myExtraStatic5Future).get_result()
+		myExtraStatic5Future = None
 	endif
 	if myExtraActivator1Future
 		myExtraActivator1 = GetFuture(myExtraActivator1Future).get_result()
+		myExtraActivator1Future = None
 	endif
 	if myExtraActivator2Future
 		myExtraActivator2 = GetFuture(myExtraActivator2Future).get_result()
+		myExtraActivator2Future = None
 	endif
 	if myExtraActivator3Future
 		myExtraActivator3 = GetFuture(myExtraActivator3Future).get_result()
+		myExtraActivator3Future = None
 	endif
 	if myExtraActivator4Future
 		myExtraActivator4 = GetFuture(myExtraActivator4Future).get_result()
+		myExtraActivator4Future = None
 	endif
 	if myExtraActivator5Future
 		myExtraActivator5 = GetFuture(myExtraActivator5Future).get_result()
+		myExtraActivator5Future = None
 	endif
 	if myExtraFurniture1Future
 		myExtraFurniture1 = GetFuture(myExtraFurniture1Future).get_result()
+		myExtraFurniture1Future = None
 	endif
 	if myExtraFurniture2Future
 		myExtraFurniture2 = GetFuture(myExtraFurniture2Future).get_result()
+		myExtraFurniture2Future = None
 	endif
 	if myExtraFurniture3Future
 		myExtraFurniture3 = GetFuture(myExtraFurniture3Future).get_result()
+		myExtraFurniture3Future = None
 	endif
 	if myExtraFurniture4Future
 		myExtraFurniture4 = GetFuture(myExtraFurniture4Future).get_result()
+		myExtraFurniture4Future = None
 	endif
 	if myExtraFurniture5Future
 		myExtraFurniture5 = GetFuture(myExtraFurniture5Future).get_result()
+		myExtraFurniture5Future = None
 	endif
 	if myExtraLight1Future
 		myExtraLight1 = GetFuture(myExtraLight1Future).get_result()
+		myExtraLight1Future = None
 	endif
 	if myExtraLight2Future
 		myExtraLight2 = GetFuture(myExtraLight2Future).get_result()
+		myExtraLight2Future = None
 	endif
 	if myExtraLight3Future
 		myExtraLight3 = GetFuture(myExtraLight3Future).get_result()
+		myExtraLight3Future = None
 	endif
 endFunction
 
@@ -292,6 +310,26 @@ function TakeDown()
 	TryToDisableAndDeleteRef(myExtraLight1)
 	TryToDisableAndDeleteRef(myExtraLight2)
 	TryToDisableAndDeleteRef(myExtraLight3)
+
+	myExtraStatic1 = None
+	myExtraStatic2 = None
+	myExtraStatic3 = None
+	myExtraStatic4 = None
+	myExtraStatic5 = None
+	myExtraActivator1 = None
+	myExtraActivator2 = None
+	myExtraActivator3 = None
+	myExtraActivator4 = None
+	myExtraActivator5 = None
+	myExtraFurniture1 = None
+	myExtraFurniture2 = None
+	myExtraFurniture3 = None
+	myExtraFurniture4 = None
+	myExtraFurniture5 = None
+	myExtraLight1 = None
+	myExtraLight2 = None
+	myExtraLight3 = None
+
 	TryToDisableAndDeleteRef(self)
 endFunction
 
