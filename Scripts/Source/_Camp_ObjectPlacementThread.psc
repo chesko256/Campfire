@@ -66,7 +66,7 @@ ObjectReference function get_async(Activator akFuture, ObjectReference akFutureA
 	_IsTemp = is_temp
 	
 	future = akFutureAnchor.PlaceAtMe(akFuture)
-	CampDebug(0, "Returning future " + future)
+	CampDebug(0, "Returning future: " + future)
 	return future
 endFunction
 
