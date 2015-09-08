@@ -616,6 +616,10 @@ function TakeDown()
     mySitFurniture3 = None
     mySitFurniture4 = None
 
+    if GetLastUsedCampfire() == self
+        SetLastUsedCampfire(None)
+    endif
+
     ClearEquipmentFromCrimeAlias(self)
     TryToDisableAndDeleteRef(self)
 endFunction
