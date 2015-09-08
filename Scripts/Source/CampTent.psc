@@ -1355,6 +1355,7 @@ endFunction
 function GenerateDebugReport()
 	CampDebug(1, "Placement complete. Placed object report:")
 	CampDebug(1, "======================================================================")
+	CampDebug(1, "**SELF**: " + self)
 	CampDebug(1, "myTent: " + myTent)
 	CampDebug(1, "myTentExterior: " + myTentExterior)
 	CampDebug(1, "myNormalTent: " + myNormalTent)
@@ -1585,7 +1586,7 @@ function PlaceObject_SpouseLayDownMarker()
 endFunction
 
 function PlaceObject_AnimalLayDownMarker()
-	mySpouseLayDownMarkerFuture = PlacementSystem.PlaceObject(self, DogLayingDownIdleMarker, PositionRef_AnimalLayDownMarker, is_temp = is_temporary)
+	myAnimalLayDownMarkerFuture = PlacementSystem.PlaceObject(self, DogLayingDownIdleMarker, PositionRef_AnimalLayDownMarker, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ExitFront()
