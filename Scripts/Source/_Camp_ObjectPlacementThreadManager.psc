@@ -567,6 +567,7 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
 
                 akIndicator.Disable()
                 ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace, abForcePersist = !(IsPlaceableObjectTemporary(akFormToPlace)))
+                
                 ; Raise optional SKSE event
                 SendEvent_OnObjectPlaced(campitem)
 
