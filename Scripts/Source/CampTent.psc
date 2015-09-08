@@ -1148,7 +1148,9 @@ function GetResults()
         mySpareBedRoll3Future = None
 	endif
 
-	GenerateDebugReport()
+	if GetLogLevel() <= 1
+		GenerateDebugReport()
+	endif
 endFunction
 
 function TakeDown()

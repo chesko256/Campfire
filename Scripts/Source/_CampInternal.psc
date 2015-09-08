@@ -182,3 +182,7 @@ function CampDebug(int aiSeverity, string asLogMessage) global
 		endif
 	endif
 endFunction
+
+int function GetLogLevel() global
+	return (Game.GetFormFromFile(0x0203AB34, "Campfire.esm") as GlobalVariable).GetValueInt()
+endFunction
