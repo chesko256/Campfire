@@ -127,7 +127,6 @@ function RunCompatibility()
 	trace("[Campfire]             unloaded files may follow. This is NORMAL and can be ignored.   		                   ")
 	trace("[Campfire]======================================================================================================")
 	
-	;@TODO: Add support for Frostfall compatibility
 	;@TODO: Add fatal error for old version of Frostfall
 	isFrostfallLoaded = false
 
@@ -137,16 +136,16 @@ function RunCompatibility()
 
 	bool skse_loaded = SKSE.GetVersion()
 	if skse_loaded
-		int skse_version = (SKSE.GetVersion() * 10000) + (SKSE.GetVersionMinor() * 1000) + SKSE.GetVersionBeta()
+		int skse_version = (SKSE.GetVersion() * 10000) + (SKSE.GetVersionMinor() * 100) + SKSE.GetVersionBeta()
 		if skse_version < SKSE_MIN_VERSION
-			_Camp_CriticalError_SKSE.Show((skse_version / 10000), (SKSE_MIN_VERSION / 10000))
+			_Camp_CriticalError_SKSE.Show(((skse_version as float) / 10000), ((SKSE_MIN_VERSION as float) / 10000))
 			isSKSELoaded = false
 			Conditions.IsSKSELoaded = false
-			trace("[Campfire][Warning] Detected SKSE version " + (skse_version / 10000) + ", out of date! Expected " + (SKSE_MIN_VERSION / 10000) + " or newer.")
+			trace("[Campfire][Warning] Detected SKSE version " + ((skse_version as float) / 10000) + ", out of date! Expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer.")
 		else
 			isSKSELoaded = true
 			Conditions.IsSKSELoaded = true
-			trace("[Campfire] Detected SKSE version " + skse_version + "(expected " + (SKSE_MIN_VERSION / 10000) + " or newer, success!)")
+			trace("[Campfire] Detected SKSE version " + ((skse_version as float) / 10000) + " (expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer, success!)")
 		endif
 	endif
 	
