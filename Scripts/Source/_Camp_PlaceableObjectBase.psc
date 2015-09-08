@@ -95,10 +95,6 @@ function PlaceObjects()
 	; Pass
 endFunction
 
-function PlaceSecondaryObjects()
-	; Pass
-endFunction
-
 function PlaceBaseObjects()
 	if Setting_Flammable
 		PlaceObject_FireMarkers()
@@ -109,21 +105,27 @@ function GetResults()
 	CampDebug(0, "Base get results")
 	if myFire1Future
 		myFire1 = GetFuture(myFire1Future).get_result()
+		myFire1Future = None
 	endif
 	if myFire2Future
 		myFire2 = GetFuture(myFire2Future).get_result()
+		myFire2Future = None
 	endif
 	if myFire3Future
 		myFire3 = GetFuture(myFire3Future).get_result()
+		myFire3Future = None
 	endif
 	if myFire4Future
 		myFire4 = GetFuture(myFire4Future).get_result()
+		myFire4Future = None
 	endif
 	if myFire5Future
 		myFire5 = GetFuture(myFire5Future).get_result()
+		myFire5Future = None
 	endif
 	if myFire6Future
 		myFire6 = GetFuture(myFire6Future).get_result()
+		myFire6Future = None
 	endif
 	if mySmokeFuture
 		mySmoke = GetFuture(mySmokeFuture).get_result()
@@ -142,11 +144,8 @@ function GetResults()
 			size = ys
 		endif
 		mySmoke.SetScale(size / 900)
+		mySmokeFuture = None
 	endif
-endFunction
-
-function GetSecondaryResults()
-	; Pass
 endFunction
 
 function GuardDestroy()
@@ -165,6 +164,15 @@ function TakeDown()
 	TryToDisableAndDeleteRef(myFire5)
 	TryToDisableAndDeleteRef(myFire6)
 	TryToDisableAndDeleteRef(mySmoke)
+
+	myFire1 = None
+	myFire2 = None
+	myFire3 = None
+	myFire4 = None
+	myFire5 = None
+	myFire6 = None
+	mySmoke = None
+
 	ClearEquipmentFromCrimeAlias(self)
 	; Raise optional SKSE event
 	SendEvent_OnObjectRemoved(self.GetBaseObject(), self.GetPositionX(), self.GetPositionY(), self.GetPositionZ(), self.GetAngleX(), self.GetAngleY(), self.GetAngleZ())

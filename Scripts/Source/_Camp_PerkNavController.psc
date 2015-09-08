@@ -80,6 +80,7 @@ function GetResults()
 		myPerkExitBug.SetScale(PerkExitBug_PositionRef.GetScale())
 		myPerkExitBug.EnableNoWait()
 		(myPerkExitBug as _Camp_ExitBug).AssignController(self)
+		PerkExitBugFuture = None
 	endif
 	utility.wait(0.5)
 	if PerkPrevBugFuture
@@ -87,6 +88,7 @@ function GetResults()
 		myPerkPrevBug.SetScale(PerkPrevBug_PositionRef.GetScale())
 		myPerkPrevBug.EnableNoWait()
 		(myPerkPrevBug as _Camp_PrevBug).AssignController(self)
+		PerkPrevBugFuture = None
 	endif
 	utility.wait(0.3)
 	if PerkNextBugFuture
@@ -94,6 +96,7 @@ function GetResults()
 		myPerkNextBug.SetScale(PerkNextBug_PositionRef.GetScale())
 		myPerkNextBug.EnableNoWait()
 		(myPerkNextBug as _Camp_NextBug).AssignController(self)
+		PerkNextBugFuture = None
 	endif
 	InteractionLocked = false
 endFunction
@@ -107,6 +110,11 @@ function TakeDown()
 	TryToDisableAndDeleteRef(myPerkNextBug)
 	TryToDisableAndDeleteRef(myPerkPrevBug)
 	TryToDisableAndDeleteRef(myPerkExitBug)
+
+	myPerkNextBug = None
+	myPerkPrevBug = None
+	myPerkExitBug = None
+
 	TryToDisableAndDeleteRef(self)
 endFunction
 

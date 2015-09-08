@@ -32,6 +32,8 @@ ObjectReference function get_result()
 endFunction
 
 Event OnUpdate()
+	r = None
+	result = None
 	self.Disable()
 	self.Delete()
 endEvent

@@ -263,6 +263,7 @@ function GetResults()
             myPerkLine0.SetScale(PerkLine0_PositionRef.GetScale())
             myPerkLine0.EnableNoWait()
             LineRefMap[0] = myPerkLine0
+            PerkLine0Future = None
         endif
     endif
     if PerkLine1Future
@@ -271,6 +272,7 @@ function GetResults()
             myPerkLine1.SetScale(PerkLine1_PositionRef.GetScale())
             myPerkLine1.EnableNoWait()
             LineRefMap[1] = myPerkLine1
+            PerkLine1Future = None
         endif
     endif
     if PerkLine2Future
@@ -279,6 +281,7 @@ function GetResults()
             myPerkLine2.SetScale(PerkLine2_PositionRef.GetScale())
             myPerkLine2.EnableNoWait()
             LineRefMap[2] = myPerkLine2
+            PerkLine2Future = None
         endif
     endif
     if PerkLine3Future
@@ -287,6 +290,7 @@ function GetResults()
             myPerkLine3.SetScale(PerkLine3_PositionRef.GetScale())
             myPerkLine3.EnableNoWait()
             LineRefMap[3] = myPerkLine3
+            PerkLine3Future = None
         endif
     endif
     if PerkLine4Future
@@ -295,6 +299,7 @@ function GetResults()
             myPerkLine4.SetScale(PerkLine4_PositionRef.GetScale())
             myPerkLine4.EnableNoWait()
             LineRefMap[4] = myPerkLine4
+            PerkLine4Future = None
         endif
     endif
     if PerkLine5Future
@@ -303,6 +308,7 @@ function GetResults()
             myPerkLine5.SetScale(PerkLine5_PositionRef.GetScale())
             myPerkLine5.EnableNoWait()
             LineRefMap[5] = myPerkLine5
+            PerkLine5Future = None
         endif
     endif
     if PerkLine6Future
@@ -311,6 +317,7 @@ function GetResults()
             myPerkLine6.SetScale(PerkLine6_PositionRef.GetScale())
             myPerkLine6.EnableNoWait()
             LineRefMap[6] = myPerkLine6
+            PerkLine6Future = None
         endif
     endif
     if PerkLine7Future
@@ -319,6 +326,7 @@ function GetResults()
             myPerkLine7.SetScale(PerkLine7_PositionRef.GetScale())
             myPerkLine7.EnableNoWait()
             LineRefMap[7] = myPerkLine7
+            PerkLine7Future = None
         endif
     endif
     if PerkLine8Future
@@ -327,6 +335,7 @@ function GetResults()
             myPerkLine8.SetScale(PerkLine8_PositionRef.GetScale())
             myPerkLine8.EnableNoWait()
             LineRefMap[8] = myPerkLine8
+            PerkLine8Future = None
         endif
     endif
     if PerkLine9Future
@@ -335,6 +344,7 @@ function GetResults()
             myPerkLine9.SetScale(PerkLine9_PositionRef.GetScale())
             myPerkLine9.EnableNoWait()
             LineRefMap[9] = myPerkLine9
+            PerkLine9Future = None
         endif
     endif
     if PerkLine10Future
@@ -343,6 +353,7 @@ function GetResults()
             myPerkLine10.SetScale(PerkLine10_PositionRef.GetScale())
             myPerkLine10.EnableNoWait()
             LineRefMap[10] = myPerkLine10
+            PerkLine10Future = None
         endif
     endif
     if PerkLine11Future
@@ -351,6 +362,7 @@ function GetResults()
             myPerkLine11.SetScale(PerkLine11_PositionRef.GetScale())
             myPerkLine11.EnableNoWait()
             LineRefMap[11] = myPerkLine11
+            PerkLine11Future = None
         endif
     endif
 
@@ -359,6 +371,7 @@ function GetResults()
         if myPerkNode0
             (myPerkNode0 as _Camp_PerkNode).AssignController(self)
             NodeRefMap[0] = myPerkNode0
+            PerkNode0Future = None
         endif
     endif
     if PerkNode1Future
@@ -366,6 +379,7 @@ function GetResults()
         if myPerkNode1
             (myPerkNode1 as _Camp_PerkNode).AssignController(self)
             NodeRefMap[1] = myPerkNode1
+            PerkNode1Future = None
         endif
     endif
     if PerkNode2Future
@@ -373,6 +387,7 @@ function GetResults()
         if myPerkNode2
             (myPerkNode2 as _Camp_PerkNode).AssignController(self)
             NodeRefMap[2] = myPerkNode2
+            PerkNode2Future = None
         endif
     endif
     if PerkNode3Future
@@ -380,6 +395,7 @@ function GetResults()
         if myPerkNode3
             (myPerkNode3 as _Camp_PerkNode).AssignController(self)
             NodeRefMap[3] = myPerkNode3
+            PerkNode3Future = None
         endif
     endif
     if PerkNode4Future
@@ -387,6 +403,7 @@ function GetResults()
         if myPerkNode4
             (myPerkNode4 as _Camp_PerkNode).AssignController(self)
             NodeRefMap[4] = myPerkNode4
+            PerkNode4Future = None
         endif
     endif
     if PerkNode5Future
@@ -394,6 +411,7 @@ function GetResults()
         if myPerkNode5
             (myPerkNode5 as _Camp_PerkNode).AssignController(self)
             NodeRefMap[5] = myPerkNode5
+            PerkNode5Future = None
         endif
     endif
     if PerkNode6Future
@@ -401,6 +419,7 @@ function GetResults()
         if myPerkNode6
             (myPerkNode6 as _Camp_PerkNode).AssignController(self)
             NodeRefMap[6] = myPerkNode6
+            PerkNode6Future = None
         endif
     endif
     if PerkNode7Future
@@ -408,6 +427,7 @@ function GetResults()
         if myPerkNode7
             (myPerkNode7 as _Camp_PerkNode).AssignController(self)
             NodeRefMap[7] = myPerkNode7
+            PerkNode7Future = None
         endif
     endif
     if PerkNode8Future
@@ -415,6 +435,7 @@ function GetResults()
         if myPerkNode8
             (myPerkNode8 as _Camp_PerkNode).AssignController(self)
             NodeRefMap[8] = myPerkNode8
+            PerkNode8Future = None
         endif
     endif
     if PerkNode9Future
@@ -422,6 +443,7 @@ function GetResults()
         if myPerkNode9
             (myPerkNode9 as _Camp_PerkNode).AssignController(self)
             NodeRefMap[9] = myPerkNode9
+            PerkNode9Future = None
         endif
     endif
     if PerkNode10Future
@@ -429,6 +451,7 @@ function GetResults()
         if myPerkNode10
             (myPerkNode10 as _Camp_PerkNode).AssignController(self)
             NodeRefMap[10] = myPerkNode10
+            PerkNode10Future = None
         endif
     endif
     if PerkNode11Future
@@ -436,6 +459,7 @@ function GetResults()
         if myPerkNode11
             (myPerkNode11 as _Camp_PerkNode).AssignController(self)
             NodeRefMap[11] = myPerkNode11
+            PerkNode11Future = None
         endif
     endif
 
@@ -510,6 +534,34 @@ function TakeDown()
     TryToDisableAndDeleteRef(myPerkLine10)
     TryToDisableAndDeleteRef(myPerkLine11)
     TryToDisableAndDeleteRef(myPerkArtPlane)
+
+    myCampfire = None
+    myPerkNode0 = None
+    myPerkNode1 = None
+    myPerkNode2 = None
+    myPerkNode3 = None
+    myPerkNode4 = None
+    myPerkNode5 = None
+    myPerkNode6 = None
+    myPerkNode7 = None
+    myPerkNode8 = None
+    myPerkNode9 = None
+    myPerkNode10 = None
+    myPerkNode11 = None
+    myPerkLine0 = None
+    myPerkLine1 = None
+    myPerkLine2 = None
+    myPerkLine3 = None
+    myPerkLine4 = None
+    myPerkLine5 = None
+    myPerkLine6 = None
+    myPerkLine7 = None
+    myPerkLine8 = None
+    myPerkLine9 = None
+    myPerkLine10 = None
+    myPerkLine11 = None
+    myPerkArtPlane = None
+
     TryToDisableAndDeleteRef(self)
 endFunction
 

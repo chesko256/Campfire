@@ -478,51 +478,67 @@ endFunction
 function GetResults()
     if mySteamFuture
         mySteam = GetFuture(mySteamFuture).get_result()
+        mySteamFuture = None
     endif
     if myFuelLitFuture
         myFuelLit = GetFuture(myFuelLitFuture).get_result()
+        myFuelLitFuture = None
     endif
     if myFuelUnlitFuture
         myFuelUnlit = GetFuture(myFuelUnlitFuture).get_result()
+        myFuelUnlitFuture = None
     endif
     if myEmbersFuture
         myEmbers = GetFuture(myEmbersFuture).get_result()
+        myEmbersFuture = None
     endif
     if myAshesFuture
         myAshes = GetFuture(myAshesFuture).get_result()
+        myAshesFuture = None
     endif
     if mySitFurniture1Future
         mySitFurniture1 = GetFuture(mySitFurniture1Future).get_result()
+        mySitFurniture1Future = None
     endif
     if mySitFurniture2Future
         mySitFurniture2 = GetFuture(mySitFurniture2Future).get_result()
+        mySitFurniture2Future = None
     endif
     if mySitFurniture3Future
         mySitFurniture3 = GetFuture(mySitFurniture3Future).get_result()
+        mySitFurniture3Future = None
     endif
     if mySitFurniture4Future
         mySitFurniture4 = GetFuture(mySitFurniture4Future).get_result()
+        mySitFurniture4Future = None
     endif
     if myClutterStatic1Future
         myClutterStatic1 = GetFuture(myClutterStatic1Future).get_result()
+        myClutterStatic1Future = None
     endif
     if myClutterStatic2Future
         myClutterStatic2 = GetFuture(myClutterStatic2Future).get_result()
+        myClutterStatic2Future = None
     endif
     if myClutterActivator1Future
         myClutterActivator1 = GetFuture(myClutterActivator1Future).get_result()
+        myClutterActivator1Future = None
     endif
     if myClutterActivator2Future
         myClutterActivator2 = GetFuture(myClutterActivator2Future).get_result()
+        myClutterActivator2Future = None
     endif
     if myClutterFurniture1Future
         myClutterFurniture1 = GetFuture(myClutterFurniture1Future).get_result()
+        myClutterFurniture1Future = None
     endif
     if myClutterFurniture2Future
         myClutterFurniture2 = GetFuture(myClutterFurniture2Future).get_result()
+        myClutterFurniture2Future = None
     endif
     if myCookPotSnapMarkerFuture
         myCookPotSnapMarker = GetFuture(myCookPotSnapMarkerFuture).get_result()
+        myCookPotSnapMarkerFuture = None
     endif
 endFunction
 
@@ -551,6 +567,27 @@ function TakeDown()
     TryToDisableAndDeleteRef(mySitFurniture2)
     TryToDisableAndDeleteRef(mySitFurniture3)
     TryToDisableAndDeleteRef(mySitFurniture4)
+
+    myPerkNodeController = None
+    myPerkNavController = None
+    mySteam = None
+    myFuelLit = None
+    myFuelUnlit = None
+    myEmbers = None
+    myAshes = None
+    myLight = None
+    myClutterStatic1 = None
+    myClutterStatic2 = None
+    myClutterActivator1 = None
+    myClutterActivator2 = None
+    myClutterFurniture1 = None
+    myClutterFurniture2 = None
+    myCookPotSnapMarker = None
+    mySitFurniture1 = None
+    mySitFurniture2 = None
+    mySitFurniture3 = None
+    mySitFurniture4 = None
+
     ClearEquipmentFromCrimeAlias(self)
     TryToDisableAndDeleteRef(self)
 endFunction
