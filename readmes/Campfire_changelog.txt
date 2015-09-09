@@ -7,6 +7,87 @@ Complete Camping System
 Change Log
 
 ===================================================
+Release 1.1 (9/10/2015)
+Features
+
+    Survival Skill: Instincts - A new vision ability that allows you to detect many things in your surroundings. Detect moving creatures, the dead (and undead), and items that can be used as tinder in your campfire. This feature requires SKSE 1.7.3+ and is optional.
+
+    Campfire Perk System - A new stand-alone perk system has been introduced and is accessible from any lit campfire you have built. Campfire introduces the Camping skill, and offers 5 perks with 13 ranks total. Earn perks by successfully lighting campfires Frostfall, Last Seed, and Art of the Catch will introduce their own perk trees into this system as well, providing a new growth path for players.  As this new system is completely stand-alone, it will not conflict with any existing perk overhaul mod.
+
+    Settings Profiles - Your Campfire mod settings can now be automatically saved to a Profile. Settings Profiles are written to a file, and persist across saves, loads, characters, and new games. If enabled, any settings changes you make are automatically saved to your current Profile, and your last used Profile will be loaded any time you load your game or start a new one, ensuring that you spend less time configuring mods and more time playing the game. There are 10 Profile slots to switch between, and can be renamed.
+        This feature requires SkyUI and SKSE 1.7.3+ and is optional. This feature can be disabled.
+        Renaming profiles requires SkyUI 5.1+. SkyUI 4+ is supported, but you will not be able to rename profiles.
+
+    New Craftable: Rough Bedding - A simple pelt and hay for the player to sleep on. Requires only a single Cleaned Pelt, so the player can acquire this almost immediately.  Has no lantern and affords no shelter in Frostfall or Last Seed, however.
+
+    "Talk To..." Option - When sitting or laying down in a tent or sitting near a fire, you can easily choose one of up to 3 tracked followers to talk to, even if they're too far away to select. Especially helpful for Immersive First Person View users since targeting followers in that mode can sometimes be very difficult.
+
+    Frostfall 3.0 and Last Seed Support - The stage has been set for this version of Campfire to support the next iteration of Frostfall, and Last Seed, when they are complete. 
+
+
+Changes
+
+    The minimum SKSE version has been increased to 1.7.3+. SKSE continues to be optional. But if you do use it, Campfire will expect this version or higher or certain features (Instincts, Settings Profiles) will not work.
+    
+    Different kinds of tinder now have different chances of successfully lighting the fire. (Example: Dwarven Oil has a 100% chance in clear weather, but Canis Root might only have 55% chance. This means that, yes, there is now a chance of failing to light the fire.) Lighting a fire in bad weather is much more difficult than clear weather. The chance each tinder has of lighting the fire successfully is displayed when building the campfire. If the campfire fails to be lit, the tinder is lost, but any fuel will remain ready for you to try again.
+
+    Tinder items are now used directly as part of the campfire building process and are no longer a separate item. This should reduce the number of steps necessary to build a fire.
+
+    If a fire is put out because of a frost spell or shout, it must be rebuilt and relit using new tinder. You will be given any unused fuel items when you interact with the campfire again.
+        Pro tip: When camping a short time, it may make sense to put your fire out and reclaim the fuel before destroying it. It might mean time less searching for fuel later.
+
+    Camping equipment should now de-spawn when picked up much faster.
+
+    Removed the Dense Stone item and removed its use from all recipes. Stone Hatchets and Arrows can be crafted solely from wood components.
+
+    Stone Hatchets no longer break when used to harvest deadwood; instead, they gather much less deadwood per harvest than a Woodcutter's Axe.
+
+    Added a Tanning Rack recipe that uses Deadwood.
+
+    Added a Walking Stick recipe that uses Deadwood.
+
+    Gathering Branches now has a sound effect.
+
+    The sound effect volume when gathering Deadwood has been reduced.
+
+    The size of the Small Leather Tent and Small Fur Tent have been increased slightly (20%) in order to be more accommodating to NPCs.
+
+    The sitting distance between the player and NPCs at a campfire has been tightened. The player now always sits at the same location around a campfire. (For use with Immersive First Person View to talk to followers while seated around the campfire.)
+
+
+Bug Fixes
+
+    Camping equipment items that were intended to be permanent in the world now spawn as persistent. (Tents, etc) This should mean that your tents should not risk disappearing if you leave them in a cell for a very long time and the cell resets.
+
+    Camping equipment should now be completely deleted immediately when picked up. Previously, it might have taken a very long time for objects to be deleted from the system after pickup.
+
+    Implemented a work-around for a case where using an ENB meant that the screen never truly fades to black in some cases, leading to being able to see certain things that were never intended to be visible.
+
+    Improved the laying down position of the player and their spouse (if present).
+
+    Fixed an issue where the bed roll of a small leather tent would clip out of the back of the tent.
+
+    Fixed a bug when placing a new campfire very close to the location of an old destroyed campfire.
+
+    Fixed a number of Papyrus log errors that could occur on start-up citing missing files. An error referencing FrostUtil will continue to appear if Frostfall 3.0 is not installed and is harmless and only appears once on start-up.
+
+    Followers activated when using a bed roll or sitting near a fire no longer immediately stand up when talked to.
+
+
+Compatibility
+
+    Requiem: Fixed a glowing NPC effect issue when using Campfire's Follower Tracking feature.
+
+    Equipping Overhaul: Added an option in the MCM to enable a work-around to get rid of visual duplicate weapons when inside a tent. This is not official support from Campfire or Equipping Overhaul, and is disabled by default.
+
+Translation
+
+    All strings now live either in the SkyUI MCM Translation files (skyrim/Data/Interface/Translations/Campfire_*.txt) or in the plug-in itself. There is a new CampfireStrings quest that holds some specific strings as script properties that can be modified for translation purposes if necessary.
+
+Notes
+
+    For those of you that have asked me about better Inigo support: I have heard that 2.1 (which is supposed to be released soon) works great with Campfire. Please look for that soon from Smartbluecat!
+
 Release 1.0.2 (4/21/2015)
 	Added support for the Campfire Dev Kit. Please see http://skyrimsurvival.com/home/campfire/mod-developers/ for more info.
 
