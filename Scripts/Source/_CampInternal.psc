@@ -112,20 +112,20 @@ function SetCurrentTent(ObjectReference akTent) global
 	if CampUtil.GetCompatibilitySystem().isSKSELoaded
 		if akTent
 			CampDebug(0, "Sending event Campfire_OnTentEnter")
-			; * Event OnTentEnter(Form akTent)
+			; * Event OnTentEnter(Form akTent, bool abHasShelter)
 			; * akTent: The tent ObjectReference entered.
+			; * abHasShelter: Whether or not this tent has any overhead shelter.
     		int handle = ModEvent.Create("Campfire_OnTentEnter")
     		if handle
     			ModEvent.PushForm(handle, akTent)
+    			ModEvent.PushBool(handle, !akTent.GetBaseObject().HasKeyword(Campfire.isCampfireTentNoShelter))
         		ModEvent.Send(handle)
     		endif
 		else
 			CampDebug(0, "Sending event Campfire_OnTentLeave")
-			; * Event OnTentLeave(Form akTent)
-			; * akTent: The tent ObjectReference left.
+			; * Event OnTentLeave()
     		int handle = ModEvent.Create("Campfire_OnTentLeave")
     		if handle
-    			ModEvent.PushForm(handle, akTent)
         		ModEvent.Send(handle)
     		endif
 		endif
