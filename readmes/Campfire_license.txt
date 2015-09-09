@@ -14,7 +14,7 @@ License Agreement
 
 	* You can’t copy and distribute it on other websites or include it in a package.
 
-	* You can make translations of Campfire, and you don’t have to ask for permission; you already have permission. You can’t translate and redistribute the entire mod; you can only create and distribute a Campfire.esm-dependent plug-in and translate the message forms in the plug-in. You can also translate and distribute the Campfire_<LANGUAGE>.txt files used by SkyUI’s Mod Configuration Menu.
+	* You can make translations of Campfire, and you don’t have to ask for permission; you already have permission. You can’t translate and redistribute the entire mod; you can only create and distribute a translated version of Campfire.esm. You can also translate and distribute the Campfire_<LANGUAGE>.txt files used by SkyUI’s Mod Configuration Menu. Please see the Quest "CampfireStrings", attached script "_Camp_Strings" for string properties that should also be translated. There should be no strings in need of translation in any script files.
 
 	* You can create Campfire-dependent mods and distribute them. You don’t need permission to do this; you already have permission. As above, you can’t redistribute the entire mod with your mod.
 
@@ -70,11 +70,5 @@ e) Mod Developer grants you the non-transferable and non-exclusive right to modi
 10. No Liability for Consequential Damages. In no event shall Mod Developer or its suppliers be liable for any damages whatsoever (including, without limitation, incidental, direct, indirect special and consequential damages, damages for loss of business profits, business interruption, loss of business information, or other pecuniary loss) arising out of the use or inability to use this Mod Developer product, even if Mod Developer has been advised of the possibility of such damages. Because some states/countries do not allow the exclusion or limitation of liability for consequential or incidental damages, the above limitation may not apply to you.
 
 11. Indemnification By You. If you distribute the Software in violation of this Agreement, you agree to indemnify, hold harmless and defend Mod Developer and its suppliers from and against any claims or lawsuits, including attorney’s fees that arise or result from the use or distribution of the Software in violation of this Agreement.
-
-TheoryForm, LLC
-
-P.O. Box 367
-
-Harvest, AL
 
 chesko.tesmod@gmail.com
