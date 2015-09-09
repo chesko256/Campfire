@@ -44,6 +44,10 @@ Message property _Camp_legacyconfig_detectfollowers_on auto
 Message property _Camp_legacyconfig_detectfollowers_off auto
 Message property _Camp_legacyconfig_helpstuckplacement auto
 Message property _Camp_TroubleshootingConfirmMsg auto
+Message property _Camp_legacyconfig_campingskill auto
+Message property _Camp_legacyconfig_campingskillrespec auto
+Message property _Camp_legacyconfig_campingskillrestore auto
+Message property _Camp_legacyconfig_campingskillrestoredone auto
 
 ;Globals
 GlobalVariable property _Camp_Setting_CampingArmorTakeOff auto
@@ -64,6 +68,16 @@ GlobalVariable property _Camp_Setting_AdvancedPlacement auto
 GlobalVariable property _Camp_Setting_MaxThreads auto
 GlobalVariable property _Camp_Setting_TrackFollowers auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
+GlobalVariable property _Camp_LegacyConfigCampingRestore auto
+GlobalVariable property CampingPerkPoints auto
+GlobalVariable property CampingPerkPointsEarned auto
+GlobalVariable property CampingPerkPointsTotal auto
+GlobalVariable property CampingPerkPointProgress auto
+GlobalVariable property _Camp_PerkRank_Firecraft auto
+GlobalVariable property _Camp_PerkRank_HighSpirits auto
+GlobalVariable property _Camp_PerkRank_KeenSenses auto
+GlobalVariable property _Camp_PerkRank_Resourceful auto
+GlobalVariable property _Camp_PerkRank_Trailblazer auto
 
 ;References
 Actor property PlayerRef auto
@@ -197,7 +211,34 @@ function menu_advanced()
         endif
         menu_advanced()
     elseif i == 3
+        menu_campingskill()
+    elseif i == 4
         menu_root()
+    endif
+endFunction
+
+function menu_campingskill()
+    int i = _Camp_legacyconfig_campingskill.Show()
+    if i == 0     ;Respec
+        bool b = MenuHandler_Execute(_Camp_legacyconfig_campingskillrespec)
+        if b
+            RefundCampingSkillPoints()
+            _Camp_legacyconfig_campingskillrestoredone.Show()
+        endif
+        menu_campingskill()
+    elseif i == 1 ;Restore
+        MenuHandler_UpDown(_Camp_legacyconfig_campingskillrestore, _Camp_LegacyConfigCampingRestore, 0.0, CampingPerkPointsTotal.GetValue(), 1)
+        if _Camp_LegacyConfigCampingRestore.GetValueInt() > 0
+            CampingPerkPointProgress.SetValue(0.0)
+            CampingPerkPoints.SetValue(_Camp_LegacyConfigCampingRestore.GetValueInt())
+            CampingPerkPointsEarned.SetValue(_Camp_LegacyConfigCampingRestore.GetValueInt())
+            ClearCampingPerks()
+            _Camp_LegacyConfigCampingRestore.SetValueInt(0)
+            _Camp_legacyconfig_campingskillrestoredone.Show()
+        endif
+        menu_campingskill()
+    else
+        menu_advanced()
     endif
 endFunction
 
@@ -288,4 +329,18 @@ function MenuHandler_UpDown(Message akMessage, GlobalVariable akSetting, float a
     else
         ;return
     endif
+endFunction
+
+function ClearCampingPerks()
+    _Camp_PerkRank_Resourceful.SetValueInt(0)
+    _Camp_PerkRank_Trailblazer.SetValueInt(0)
+    _Camp_PerkRank_Firecraft.SetValueInt(0)
+    _Camp_PerkRank_KeenSenses.SetValueInt(0)
+    _Camp_PerkRank_HighSpirits.SetValueInt(0)
+endFunction
+
+function RefundCampingSkillPoints()
+    ClearCampingPerks()
+    CampingPerkPoints.SetValueInt(CampingPerkPointsEarned.GetValueInt())
+    CampingPerkPointProgress.SetValue(0.0)
 endFunction
