@@ -63,7 +63,7 @@ function UpdateTentUseState(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
 	if was_hit
 		;Player was hit, kick them out of the tent
-		if !TentObject.TentAsset_LargeTentTriggerVolume && !akTent.GetBaseObject().HasKeyword(isCampfireTentNoShelter)
+		if !TentObject.TentAsset_LargeTentTriggerVolume
 			; The large tent trigger volume is not provided, so treat as a small tent
 			SetCurrentTent(None)
 		endif
@@ -84,7 +84,7 @@ function UpdateTentUseState(ObjectReference akTent)
 		CleanUpTent(akTent)
 	elseif !(PlayerRef.GetSitState() == 2 || PlayerRef.GetSitState() == 3) && !TentObject.bGettingUp
 		;Player getting up from sitting or lying down
-		if !TentObject.TentAsset_LargeTentTriggerVolume && !akTent.GetBaseObject().HasKeyword(isCampfireTentNoShelter)
+		if !TentObject.TentAsset_LargeTentTriggerVolume
 			; The tent trigger volume is not provided, so treat as a small tent
 			SetCurrentTent(None)
 		endif
@@ -301,7 +301,7 @@ endFunction
 
 function PlayerSit(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
-	if !TentObject.TentAsset_LargeTentTriggerVolume && !akTent.GetBaseObject().HasKeyword(isCampfireTentNoShelter)
+	if !TentObject.TentAsset_LargeTentTriggerVolume
 		; The large tent trigger volume is not provided, so treat as a small tent
 		SetCurrentTent(akTent)
 	endif
@@ -361,7 +361,7 @@ function PlayerLieDown(ObjectReference akTent)
 		endif
 	endif
 
-	if !TentObject.TentAsset_LargeTentTriggerVolume && !akTent.GetBaseObject().HasKeyword(isCampfireTentNoShelter)
+	if !TentObject.TentAsset_LargeTentTriggerVolume
 		; The large tent trigger volume is not provided, so treat as a small tent
 		SetCurrentTent(akTent)
 	endif
