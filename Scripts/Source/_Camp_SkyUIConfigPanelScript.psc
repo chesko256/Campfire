@@ -34,6 +34,16 @@ GlobalVariable property _Camp_HotkeyBuildCampfire auto
 GlobalVariable property _Camp_HotkeyHarvestWood auto
 GlobalVariable property _Camp_HotkeyInstincts auto
 
+GlobalVariable property CampingPerkPoints auto
+GlobalVariable property CampingPerkPointsEarned auto
+GlobalVariable property CampingPerkPointProgress auto
+GlobalVariable property CampingPerkPointsTotal auto
+GlobalVariable property _Camp_PerkRank_Firecraft auto
+GlobalVariable property _Camp_PerkRank_HighSpirits auto
+GlobalVariable property _Camp_PerkRank_KeenSenses auto
+GlobalVariable property _Camp_PerkRank_Resourceful auto
+GlobalVariable property _Camp_PerkRank_Trailblazer auto
+
 Actor property PlayerRef auto
 ReferenceAlias property Follower1 auto
 ReferenceAlias property Follower2 auto
@@ -76,6 +86,9 @@ int Advanced_SettingAdvancedPlacement_OID
 int Advanced_SettingMaxThreads_OID
 int Advanced_SettingTrackFollowers_OID
 int Advanced_SettingEOCompatibility_OID
+int Advanced_CampingSkillRespec_OID
+int Advanced_CampingSkillRestore_OID
+int Advanced_CampingSkillRestoreSlider_OID
 
 int Help_TroubleshootingMenu_OID
 int Guide_Topic1
@@ -150,13 +163,13 @@ function PageReset_Gameplay()
 	AddEmptyOption()
 	
 	AddHeaderOption("$CampfireGameplayHeaderHotkeys")
-	Gameplay_HotkeyCreateItem_OID = AddKeyMapOption("$CampfireGameplayHotkeyCreateItem", _Camp_HotkeyCreateItem.GetValueInt(), OPTION_FLAG_WITH_UNMAP)
-	Gameplay_HotkeyBuildCampfire_OID = AddKeyMapOption("$CampfireGameplayHotkeyBuildCampfire", _Camp_HotkeyBuildCampfire.GetValueInt(), OPTION_FLAG_WITH_UNMAP)
-	Gameplay_HotkeyHarvestWood_OID = AddKeyMapOption("$CampfireGameplayHotkeyHarvestWood", _Camp_HotkeyHarvestWood.GetValueInt(), OPTION_FLAG_WITH_UNMAP)
+	Gameplay_HotkeyCreateItem_OID = AddKeyMapOption("$CampfireGameplayHotkeyCreateItem", _Camp_HotkeyCreateItem.GetValueInt())
+	Gameplay_HotkeyBuildCampfire_OID = AddKeyMapOption("$CampfireGameplayHotkeyBuildCampfire", _Camp_HotkeyBuildCampfire.GetValueInt())
+	Gameplay_HotkeyHarvestWood_OID = AddKeyMapOption("$CampfireGameplayHotkeyHarvestWood", _Camp_HotkeyHarvestWood.GetValueInt())
 	if Compatibility.isSKSELoaded
-		Gameplay_HotkeyInstincts_OID = AddKeyMapOption("$CampfireGameplayHotkeyInstincts", _Camp_HotkeyInstincts.GetValueInt(), OPTION_FLAG_WITH_UNMAP)
+		Gameplay_HotkeyInstincts_OID = AddKeyMapOption("$CampfireGameplayHotkeyInstincts", _Camp_HotkeyInstincts.GetValueInt())
 	else
-		Gameplay_HotkeyInstincts_OID = AddKeyMapOption("Survival Skill: Instincts (SKSE 1.7.3+ Req.)", _Camp_HotkeyInstincts.GetValueInt(), OPTION_FLAG_DISABLED)
+		Gameplay_HotkeyInstincts_OID = AddKeyMapOption("$CampfireGameplayHotkeyInstinctsSKSERequired", _Camp_HotkeyInstincts.GetValueInt())
 	endif
 	
 	AddEmptyOption()
@@ -246,7 +259,14 @@ function PageReset_Advanced()
 		Advanced_SettingAdvancedPlacement_OID = AddToggleOption("$CampfireAdvancedSettingAdvancedPlacement", false)
 	endif
 	Advanced_SettingMaxThreads_OID = AddSliderOption("$CampfireAdvancedSettingMaxThreads", _Camp_Setting_MaxThreads.GetValueInt(), "{0}")
-	
+	AddEmptyOption()
+	AddEmptyOption()
+	AddEmptyOption()
+	AddHeaderOption("$CampfireAdvancedHeaderCampingSkill")
+	Advanced_CampingSkillRespec_OID = AddTextOption("$CampfireAdvancedCampingSkillRespec", "")
+	Advanced_CampingSkillRestore_OID = AddToggleOption("$CampfireAdvancedCampingSkillRestore", false)
+	Advanced_CampingSkillRestoreSlider_OID = AddSliderOption("$CampfireAdvancedCampingSkillRestoreAmount", 0, "{0}", OPTION_FLAG_DISABLED)
+
 	SetCursorPosition(1) ; Move cursor to top right position
 	AddHeaderOption("$CampfireAdvancedHeaderSystem")
 	if _Camp_Setting_TrackFollowers.GetValueInt() == 2
@@ -266,7 +286,7 @@ function PageReset_Advanced()
 			Advanced_SettingEOCompatibility_OID = AddToggleOption("$CampfireAdvancedSettingEOCompatibility", false)
 		endif
 	else
-		AddToggleOption("$CampfireAdvancedSettingEOCompatibility", false, OPTION_FLAG_DISABLED)
+		AddToggleOption("$CampfireAdvancedSettingEOCompatibilityNotInstalled", false, OPTION_FLAG_DISABLED)
 	endif
 
 endFunction
@@ -415,6 +435,10 @@ event OnOptionHighlight(int option)
 		SetInfoText("$CampfireOptionHighlightSettingTrackFollowers")
 	elseif option == Advanced_SettingEOCompatibility_OID
 		SetInfoText("$CampfireOptionHighlightSettingEOCompatibility")
+	elseif option == Advanced_CampingSkillRespec_OID
+		SetInfoText("$CampfireOptionHighlightSettingRespec")
+	elseif option == Advanced_CampingSkillRestore_OID
+		SetInfoText("$CampfireOptionHighlightSettingRestore")
 
 	elseif option == SaveLoad_SelectProfile_OID
 		SetInfoText("$CampfireOptionHighlightSettingSelectProfile")
@@ -577,6 +601,19 @@ event OnOptionSelect(int option)
 			endif
 		endif
 		SaveSettingToCurrentProfile("eo_compatibility", _Camp_Setting_CompatibilityEO.GetValueInt())
+	elseif option == Advanced_CampingSkillRestore_OID
+		bool b = ShowMessage("$CampfireAdvancedCampingSkillRestoreConfirm")
+		if b
+			ShowMessage("$CampfireAdvancedCampingSkillRestoreSelect")
+			SetToggleOptionValue(Advanced_CampingSkillRestore_OID, true, true)
+			SetOptionFlags(Advanced_CampingSkillRestoreSlider_OID, OPTION_FLAG_NONE)
+		endif
+	elseif option == Advanced_CampingSkillRespec_OID
+		bool b = ShowMessage("$CampfireAdvancedCampingSkillRespecConfirm")
+		if b
+			RefundCampingSkillPoints()
+			ShowMessage("$CampfireAdvancedCampingSkillRestoreDone", false)
+		endif
 	elseif option == Advanced_SettingTrackFollowers_OID
 		if _Camp_Setting_TrackFollowers.GetValueInt() == 2
 			_Camp_Setting_TrackFollowers.SetValueInt(1)
@@ -779,6 +816,11 @@ event OnOptionSliderOpen(int option)
 		SetSliderDialogDefaultValue(DEFAULT_THREADS)
 		SetSliderDialogRange(MIN_THREADS, MAX_THREADS)
 		SetSliderDialogInterval(1.0)
+	elseif option == Advanced_CampingSkillRestoreSlider_OID
+		SetSliderDialogStartValue(0.0)
+		SetSliderDialogDefaultValue(0.0)
+		SetSliderDialogRange(0, CampingPerkPointsTotal.GetValue())
+		SetSliderDialogInterval(1.0)
 	endif
 endEvent
 
@@ -787,6 +829,14 @@ event OnOptionSliderAccept(int option, float value)
 		_Camp_Setting_MaxThreads.SetValueInt(value as Int)
 		SetSliderOptionValue(Advanced_SettingMaxThreads_OID, value, "{0}")
 		SaveSettingToCurrentProfile("max_placement_threads", _Camp_Setting_MaxThreads.GetValueInt())
+	elseif option == Advanced_CampingSkillRestoreSlider_OID
+		CampingPerkPointProgress.SetValue(0.0)
+		CampingPerkPoints.SetValue(value)
+		CampingPerkPointsEarned.SetValue(value)
+		ClearCampingPerks()
+		ShowMessage("$CampfireAdvancedCampingSkillRestoreDone", false)
+		SetOptionFlags(Advanced_CampingSkillRestoreSlider_OID, OPTION_FLAG_DISABLED, true)
+		SetToggleOptionValue(Advanced_CampingSkillRestore_OID, false)
 	endif
 endEvent
 
@@ -1176,4 +1226,18 @@ function SaveAllSettings(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "hotkey_harvest_wood", _Camp_HotkeyHarvestWood.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "hotkey_instincts", _Camp_HotkeyInstincts.GetValueInt())
 	JsonUtil.Save(profile_path)
+endFunction
+
+function ClearCampingPerks()
+	_Camp_PerkRank_Resourceful.SetValueInt(0)
+	_Camp_PerkRank_Trailblazer.SetValueInt(0)
+	_Camp_PerkRank_Firecraft.SetValueInt(0)
+	_Camp_PerkRank_KeenSenses.SetValueInt(0)
+	_Camp_PerkRank_HighSpirits.SetValueInt(0)
+endFunction
+
+function RefundCampingSkillPoints()
+	ClearCampingPerks()
+	CampingPerkPoints.SetValueInt(CampingPerkPointsEarned.GetValueInt())
+	CampingPerkPointProgress.SetValue(0.0)
 endFunction
