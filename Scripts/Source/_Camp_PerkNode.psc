@@ -5,6 +5,7 @@ GlobalVariable property perk_global auto
 GlobalVariable property perk_max_rank_global auto
 Sound property _Camp_UISkillsPerkSelect auto
 message property perk_description auto
+message property skill_description auto
 bool property double_perk_description_values = false auto
 int property description_value_modifier = 1 auto
 int property description_value_iterator = 1 auto

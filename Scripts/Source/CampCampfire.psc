@@ -224,7 +224,6 @@ Sound property _Camp_UISkillsPerkEnter auto
 Explosion property _Camp_PerkSystemEnterExplosion01 auto
 ImpactDataSet property MAGFlames01ImpactSet auto
 Message property _Camp_Campfire_Menu auto
-Message property _Camp_Campfire_SkillMenu auto
 Message property _Camp_Campfire_SitError auto
 Message property _Camp_Campfire_LightFail auto
 Message property _Camp_Campfire_RefundFuelMsg auto
@@ -724,25 +723,7 @@ endFunction
 
 bool function ShowSkills()
     if campfire_stage == 2
-        int i = _Camp_Campfire_SkillMenu.Show()
-        if i <= 4
-            if i == 0
-                EnterTreeSystem(_Camp_LastSelectedSkill.GetValueInt())
-            else
-                i -= 1
-                bool enter = ShowPerkDesc(i)
-                if enter
-                    EnterTreeSystem(i)
-                else
-                    ; Go back
-                    bool b = ShowSkills()
-                    return b
-                endif
-            endif
-        else
-            ; Cancel
-            return false
-        endif
+        EnterTreeSystem(_Camp_LastSelectedSkill.GetValueInt())
         return true
     else
         ; "Your campfire must be lit to use this."

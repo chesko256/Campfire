@@ -95,5 +95,9 @@ function ShowPerkDescription(_Camp_PerkNode akPerkNode, bool abEligibleForIncrea
             akPerkNode.IncreasePerkRank()
             required_perk_points_available.SetValueInt(required_perk_points_available.GetValueInt() - 1)
         endif
+    elseif i == 1
+        akPerkNode.skill_description.Show(required_perk_points_available.GetValueInt(), \
+                                             (required_perk_point_progress.GetValue() * 100.0))
+        ShowPerkDescription(akPerkNode, abEligibleForIncrease)
     endif
 endFunction
