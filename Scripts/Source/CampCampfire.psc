@@ -620,6 +620,8 @@ function TakeDown()
     endif
 
     ClearEquipmentFromCrimeAlias(self)
+    SendEvent_OnObjectRemoved(self.GetBaseObject(), self.GetPositionX(), self.GetPositionY(), self.GetPositionZ(), \
+                              self.GetAngleX(), self.GetAngleY(), self.GetAngleZ())
     TryToDisableAndDeleteRef(self)
 endFunction
 
