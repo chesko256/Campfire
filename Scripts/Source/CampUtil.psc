@@ -1174,6 +1174,7 @@ function SendEvent_OnObjectPlaced(ObjectReference akObjectReference) global
 
 	if akObjectReference
 		if GetCompatibilitySystem().isSKSELoaded
+			_CampInternal.CampDebug(0, "Sending event Campfire_OnObjectPlaced")
 			float px = akObjectReference.GetPositionX()
 			float py = akObjectReference.GetPositionY()
 			float pz = akObjectReference.GetPositionZ()
@@ -1205,6 +1206,7 @@ function SendEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float a
 
 	if akBaseObject
 		if GetCompatibilitySystem().isSKSELoaded
+			_CampInternal.CampDebug(0, "Sending event Campfire_OnObjectRemoved")
 			int handle = ModEvent.Create("Campfire_OnObjectRemoved")
 			if handle
 				ModEvent.PushForm(handle, akBaseObject)
