@@ -48,6 +48,9 @@ _Camp_TentSystem function GetTentSystem() global
 endFunction
 
 ;/********f* CampUtil/GetAPIVersion
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Get the CampUtil API version number.
 *
@@ -73,7 +76,38 @@ float ver = CampUtil.GetAPIVersion()
 	return Campfire._Camp_APIVersion.GetValue()
 endFunction
 
+;/********f* CampUtil/GetCampfireVersion
+* API VERSION
+* 2
+*
+* DESCRIPTION
+* Get the Campfire mod version number.
+*
+* SYNTAX
+*/;
+float function GetCampfireVersion() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The Campfire version number.
+*
+* EXAMPLES
+float ver = CampUtil.GetCampfireVersion()
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return -1.0
+	endif
+	return Campfire._Camp_CampfireVersion.GetValue()
+endFunction
+
 ;/********f* CampUtil/GetPlayerEquippedHead
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Gets the player's currently equipped head armor.
 *
@@ -100,6 +134,9 @@ Armor PlayerHelm = GetPlayerEquippedHead()
 endFunction
 
 ;/********f* CampUtil/GetPlayerEquippedBody
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Gets the player's currently equipped body armor.
 *
@@ -126,6 +163,9 @@ Armor PlayerArmor = GetPlayerEquippedBody()
 endFunction
 
 ;/********f* CampUtil/GetPlayerEquippedHands
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Gets the player's currently equipped hand armor.
 *
@@ -152,6 +192,9 @@ Armor PlayerGauntlets = GetPlayerEquippedHands()
 endFunction
 
 ;/********f* CampUtil/GetPlayerEquippedFeet
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Gets the player's currently equipped foot armor.
 *
@@ -178,6 +221,9 @@ Armor PlayerBoots = GetPlayerEquippedFeet()
 endFunction
 
 ;/********f* CampUtil/GetPlayerEquippedBackpack
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Gets the player's currently equipped backpack.
 *
@@ -206,6 +252,9 @@ Armor PlayerBackpack = GetPlayerEquippedBackpack()
 endFunction
 
 ;/********f* CampUtil/GetPlayerEquippedAmmo
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Gets the player's currently equipped ammo.
 *
@@ -231,16 +280,12 @@ Armor PlayerArrows = GetPlayerEquippedAmmo()
 	return Campfire.CampData.CurrentAmmo
 endFunction
 
-GlobalVariable function GetSettingEquipmentFlammable() global
-	CampfireAPI Campfire = GetAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return None
-	endif
-	return Campfire._Camp_Setting_EquipmentFlammable
-endFunction
+; @TODO: REMOVE
 
 ;/********f* CampUtil/IsRefInInterior
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Whether or not the reference is in an interior cell, or a cell that "looks like" an interior.
 *
@@ -285,6 +330,9 @@ endif
 endFunction
 
 ;/********f* CampUtil/GetTrackedFollower
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Returns the tracked follower at the specified index.
 *
@@ -323,6 +371,9 @@ endWhile
 endFunction
 
 ;/********f* CampUtil/IsTrackedFollower
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Whether or not this actor is a tracked follower.
 *
@@ -358,6 +409,9 @@ endif
 endFunction
 
 ;/********f* CampUtil/GetTrackedFollowerCount
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Return the number of tracked followers.
 *
@@ -393,6 +447,9 @@ debug.trace("I have " + CampUtil.GetTrackedFollowerCount() + " followers.")
 endFunction
 
 ;/********f* CampUtil/GetTrackedAnimal
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Returns the tracked animal in the player's service.
 *
@@ -419,6 +476,9 @@ debug.trace("My dog is " + CampUtil.GetTrackedAnimal())
 endFunction
 
 ;/********f* CampUtil/IsTrackedAnimal
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Whether or not the Actor is a tracked animal.
 *
@@ -445,6 +505,9 @@ bool function IsTrackedAnimal(Actor akActor) global
 endFunction
 
 ;/********f* CampUtil/GetTrackedAnimalCount
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Get the number of animals currently in the player's service.
 *
@@ -490,6 +553,9 @@ float[] function GetPositionData(ObjectReference akObjectReference) global
 endFunction
 
 ;/********f* CampUtil/PlayerCanPlaceObjects
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Whether or not the player can currently place Placeable Objects (tents, etc).
 *
@@ -560,6 +626,9 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true, bool abPlayerBusy
 endFunction
 
 ;/********f* CampUtil/IsPlayerPlacingObject
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Whether or not the player is currently placing a Placeable Object (tent, etc).
 *
@@ -592,6 +661,9 @@ endif
 endFunction
 
 ;/********f* CampUtil/LegalToCampHere
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Whether or not the player's current location is considered a legal camping area.
 *
@@ -622,6 +694,9 @@ endif
 endFunction
 
 ;/********f* CampUtil/GetAreaCampingFaction
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Returns the faction that dictates camping legality in this area.
 *
@@ -651,6 +726,9 @@ endif
 endFunction
 
 ;/********f* CampUtil/GetLastUsedCampfire
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Returns the last campfire used by the player.
 *
@@ -674,6 +752,9 @@ ObjectReference function GetLastUsedCampfire() global
 endFunction
 
 ;/********f* CampUtil/GetCurrentTent
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Returns the current tent being used.
 *
@@ -686,9 +767,6 @@ ObjectReference function GetCurrentTent() global
 *
 * RETURN VALUE
 * The current tent being used, or None if the player is not using a tent.
-*
-* NOTES
-* Return value used as input to IsCurrentTentWaterproof() and IsCurrentTentWarm().
 ;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
@@ -696,31 +774,33 @@ ObjectReference function GetCurrentTent() global
 		return None
 	endif
 
-	ObjectReference myTent = Game.FindClosestReferenceOfAnyTypeInListFromRef(Campfire._Camp_TentActivators, Campfire.PlayerRef, 235.0)
-	if myTent
-		return myTent
-	else
-		return none
-	endif
+	return Campfire.CurrentTent
 endFunction
 
 ;/********f* CampUtil/IsTentWaterproof
+* API VERSION
+* 1
+*
 * DESCRIPTION
-* Is the current tent waterproof?
+* Is this tent waterproof?
 *
 * SYNTAX
 */;
 bool function IsTentWaterproof(ObjectReference akTent) global
 ;/*
 * PARAMETERS
-* akTent: The Tent ObjectReference to check. Use the return value of GetCurrentTent().
+* akTent: The Tent ObjectReference to check. Use the return value of GetCurrentTent(), or use IsCurrentTentWaterproof() instead.
 *
 * RETURN VALUE
-* True if the current tent is flagged as being waterproof, or false if not.
+* True if the tent is flagged as being waterproof, or false if not.
 ;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
+		return false
+	endif
+
+	if !akTent
 		return false
 	endif
 
@@ -733,22 +813,29 @@ bool function IsTentWaterproof(ObjectReference akTent) global
 endFunction
 
 ;/********f* CampUtil/IsTentWarm
+* API VERSION
+* 1
+*
 * DESCRIPTION
-* Is the current tent warm?
+* Is this tent warm?
 *
 * SYNTAX
 */;
 bool function IsTentWarm(ObjectReference akTent) global
 ;/*
 * PARAMETERS
-* akTent: The Tent ObjectReference to check. Use the return value of GetCurrentTent().
+* akTent: The Tent ObjectReference to check. Use the return value of GetCurrentTent(), or use IsCurrentTentWarm() instead.
 *
 * RETURN VALUE
-* True if the current tent is flagged as being warm, or false if not.
+* True if the tent is flagged as being warm, or false if not.
 ;*********/;
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
+		return false
+	endif
+
+	if !akTent
 		return false
 	endif
 
@@ -760,7 +847,70 @@ bool function IsTentWarm(ObjectReference akTent) global
 	endif
 endFunction
 
+;/********f* CampUtil/IsCurrentTentWaterproof
+* API VERSION
+* 2
+*
+* DESCRIPTION
+* Is the current tent waterproof?
+*
+* SYNTAX
+*/;
+bool function IsCurrentTentWaterproof() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* True if the current tent is flagged as being waterproof, or false if not or if there is no tent in use by the player.
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+
+	if Campfire.CurrentTent && Campfire.CurrentTent.GetBaseObject().HasKeyword(Campfire.isCampfireTentWaterproof)
+		return true
+	else
+		return false
+	endif
+endFunction
+
+;/********f* CampUtil/IsCurrentTentWarm
+* API VERSION
+* 2
+*
+* DESCRIPTION
+* Is the current tent warm?
+*
+* SYNTAX
+*/;
+bool function IsCurrentTentWarm() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* True if the current tent is flagged as being warm, or false if not or if there is no tent in use by the player.
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+
+	if Campfire.CurrentTent && Campfire.CurrentTent.GetBaseObject().HasKeyword(Campfire.isCampfireTentWarm)
+		return true
+	else
+		return false
+	endif
+endFunction
+
 ;/********f* CampUtil/IsCrimeToPlaceInTowns
+* API VERSION
+* 1
+*
 * DESCRIPTION
 * Is it a crime to place this base object in towns, inside owned houses, etc?
 *
@@ -798,7 +948,224 @@ bool function IsTent(Form akBaseObject) global
 	endif
 endFunction
 
-function RaiseEvent_OnObjectPlaced(ObjectReference akObjectReference) global
+;/********f* CampUtil/IsPlaceableObjectTemporary
+* API VERSION
+* 2
+*
+* DESCRIPTION
+* Returns whether or not this placeable object does not spawn persistently (i.e. won't be cleaned up by a cell reset).
+*
+* SYNTAX
+*/;
+bool function IsPlaceableObjectTemporary(Form akBaseObject) global
+;/*
+* PARAMETERS
+* akBaseObject: The base object to check.
+*
+* RETURN VALUE
+* True if the Form will spawn non-persistently, False if not.
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+	if akBaseObject.HasKeyword(Campfire.isCampfireObjectTemporary)
+		return true
+	else
+		return false
+	endif
+endFunction
+
+;/********f* CampUtil/GetCampfireSettingBool
+* API VERSION
+* 2
+*
+* DESCRIPTION
+* Returns the state of the given Campfire setting.
+*
+* SYNTAX
+*/;
+bool function GetCampfireSettingBool(string setting) global
+;/*
+* PARAMETERS
+* setting: The setting which you would like to retrieve. Accepted values (case-sensitive):
+* * ManualFireLighting
+* * CampingGearFlammable
+* * TentRemovePlayerEquipment 	; The master setting for whether or not to remove player gear in tents
+* * TentRemovePlayerCuirass
+* * TentRemovePlayerHelm
+* * TentRemovePlayerGauntlets
+* * TentRemovePlayerBoots
+* * TentRemovePlayerBackpack
+* * TentRemovePlayerWeapons
+* * TentRemovePlayerShield
+* * TentRemovePlayerAmmo
+* * TentRemoveFollowerEquipment
+* * FollowerTracking
+* * FollowersUseCampsite
+* * CampingIllegalInTowns
+* * AdvancedPlacementMode
+* * EquippingOverhaulCompatibility
+*
+* RETURN VALUE
+* True if the feature is enabled, false if disabled or if the setting string is invalid.
+*
+* EXAMPLES
+if GetCampfireSettingBool("FollowerTracking") == true
+	debug.trace("Campfire is tracking followers.")
+endif
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+
+	if setting == "CampingGearFlammable"
+		if Campfire._Camp_Setting_EquipmentFlammable.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "FollowerTracking"
+		if Campfire._Camp_Setting_TrackFollowers.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "CampingIllegalInTowns"
+		if Campfire._Camp_Setting_Legality.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "ManualFireLighting"
+		if Campfire._Camp_Setting_ManualFireLighting.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "FollowersUseCampsite"
+		if Campfire._Camp_Setting_FollowersUseCampsite.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemovePlayerEquipment"
+		if Campfire._Camp_Setting_CampingArmorTakeOff.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemovePlayerCuirass"
+		if Campfire._Camp_Setting_TakeOff_Cuirass.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemovePlayerHelm"
+		if Campfire._Camp_Setting_TakeOff_Helm.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemovePlayerGauntlets"
+		if Campfire._Camp_Setting_TakeOff_Gauntlets.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemovePlayerBoots"
+		if Campfire._Camp_Setting_TakeOff_Boots.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemovePlayerBackpack"
+		if Campfire._Camp_Setting_TakeOff_Backpack.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemovePlayerWeapons"
+		if Campfire._Camp_Setting_TakeOff_Weapons.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemovePlayerShield"
+		if Campfire._Camp_Setting_TakeOff_Shield.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemovePlayerAmmo"
+		if Campfire._Camp_Setting_TakeOff_Ammo.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "TentRemoveFollowerEquipment"
+		if Campfire._Camp_Setting_FollowersRemoveGearInTents.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "AdvancedPlacementMode"
+		if Campfire._Camp_Setting_AdvancedPlacement.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	elseif setting == "EquippingOverhaulCompatibility"
+		if Campfire._Camp_Setting_CompatibilityEO.GetValueInt() == 2
+			return true
+		else
+			return false
+		endif
+	else
+		return false
+	endif
+endFunction
+
+;/********f* CampUtil/GetCampfireSettingInt
+* API VERSION
+* 2
+*
+* DESCRIPTION
+* Returns the value of the given Campfire setting.
+*
+* SYNTAX
+*/;
+int function GetCampfireSettingInt(string setting) global
+;/*
+* PARAMETERS
+* setting: The setting which you would like to retrieve. Accepted values (case-sensitive):
+* * MaxPlacementThreads
+*
+* RETURN VALUE
+* The value of the setting, or -1 if the setting string was invalid.
+*
+* EXAMPLES
+if GetCampfireSettingInt("MaxPlacementThreads") > 5
+	debug.trace("Campfire is configured to use over 5 threads for placing objects.")
+endif
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return -1
+	endif
+
+	if setting == "MaxPlacementThreads"
+		return Campfire._Camp_Setting_MaxThreads.GetValueInt()
+	else
+		return -1
+	endif
+endFunction
+
+function SendEvent_OnObjectPlaced(ObjectReference akObjectReference) global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -807,6 +1174,7 @@ function RaiseEvent_OnObjectPlaced(ObjectReference akObjectReference) global
 
 	if akObjectReference
 		if GetCompatibilitySystem().isSKSELoaded
+			_CampInternal.CampDebug(0, "Sending event Campfire_OnObjectPlaced")
 			float px = akObjectReference.GetPositionX()
 			float py = akObjectReference.GetPositionY()
 			float pz = akObjectReference.GetPositionZ()
@@ -829,7 +1197,7 @@ function RaiseEvent_OnObjectPlaced(ObjectReference akObjectReference) global
 	endif
 endFunction
 
-function RaiseEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ) global
+function SendEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ) global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -838,6 +1206,7 @@ function RaiseEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float 
 
 	if akBaseObject
 		if GetCompatibilitySystem().isSKSELoaded
+			_CampInternal.CampDebug(0, "Sending event Campfire_OnObjectRemoved")
 			int handle = ModEvent.Create("Campfire_OnObjectRemoved")
 			if handle
 				ModEvent.PushForm(handle, akBaseObject)
@@ -854,9 +1223,23 @@ function RaiseEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float 
 	endif
 endFunction
 
-function ExitMenus() global
-	Game.DisablePlayerControls()
-	Game.EnablePlayerControls()
+function SendEvent_OnBedrollSitLay(ObjectReference akTent, bool abGettingUp = false) global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return
+	endif
+
+	if akTent
+		if GetCompatibilitySystem().isSKSELoaded
+			int handle = ModEvent.Create("Campfire_OnBedrollSitLay")
+			if handle
+				ModEvent.PushForm(handle, akTent as Form)
+				ModEvent.PushBool(handle, abGettingUp)
+				ModEvent.Send(handle)
+			endif
+		endif
+	endif
 endFunction
 
 function RaiseCampAPIError() global
