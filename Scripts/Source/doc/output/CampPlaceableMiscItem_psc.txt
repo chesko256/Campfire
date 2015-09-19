@@ -88,7 +88,7 @@ Optional: The name of any required ingredient. Used if user does not have SKSE i
 
     string property consumable_ingredient_name auto
 
-### CampPlaceableMiscItem/consumable\_ingredient\_name
+### CampPlaceableMiscItem/consumable\_miscitem\_name
 
 **DESCRIPTION.**
 
@@ -98,7 +98,7 @@ Optional: The name of any required misc item. Used if user does not have SKSE in
 
     string property consumable_miscitem_name auto
 
-### CampPlaceableMiscItem/consumable\_ingredient\_name
+### CampPlaceableMiscItem/necessary\_perk\_name
 
 **DESCRIPTION.**
 

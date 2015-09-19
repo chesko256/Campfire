@@ -48,7 +48,7 @@ _Camp_TentSystem function GetTentSystem() global
 endFunction
 
 ;/********f* CampUtil/GetAPIVersion
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -77,7 +77,7 @@ float ver = CampUtil.GetAPIVersion()
 endFunction
 
 ;/********f* CampUtil/GetCampfireVersion
-* API VERSION
+* API VERSION ADDED
 * 2
 *
 * DESCRIPTION
@@ -105,7 +105,7 @@ float ver = CampUtil.GetCampfireVersion()
 endFunction
 
 ;/********f* CampUtil/GetPlayerEquippedHead
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -134,7 +134,7 @@ Armor PlayerHelm = GetPlayerEquippedHead()
 endFunction
 
 ;/********f* CampUtil/GetPlayerEquippedBody
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -163,7 +163,7 @@ Armor PlayerArmor = GetPlayerEquippedBody()
 endFunction
 
 ;/********f* CampUtil/GetPlayerEquippedHands
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -192,7 +192,7 @@ Armor PlayerGauntlets = GetPlayerEquippedHands()
 endFunction
 
 ;/********f* CampUtil/GetPlayerEquippedFeet
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -221,7 +221,7 @@ Armor PlayerBoots = GetPlayerEquippedFeet()
 endFunction
 
 ;/********f* CampUtil/GetPlayerEquippedBackpack
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -252,7 +252,7 @@ Armor PlayerBackpack = GetPlayerEquippedBackpack()
 endFunction
 
 ;/********f* CampUtil/GetPlayerEquippedAmmo
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -283,7 +283,7 @@ endFunction
 ; @TODO: REMOVE
 
 ;/********f* CampUtil/IsRefInInterior
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -330,7 +330,7 @@ endif
 endFunction
 
 ;/********f* CampUtil/GetTrackedFollower
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -371,7 +371,7 @@ endWhile
 endFunction
 
 ;/********f* CampUtil/IsTrackedFollower
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -409,7 +409,7 @@ endif
 endFunction
 
 ;/********f* CampUtil/GetTrackedFollowerCount
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -447,7 +447,7 @@ debug.trace("I have " + CampUtil.GetTrackedFollowerCount() + " followers.")
 endFunction
 
 ;/********f* CampUtil/GetTrackedAnimal
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -476,7 +476,7 @@ debug.trace("My dog is " + CampUtil.GetTrackedAnimal())
 endFunction
 
 ;/********f* CampUtil/IsTrackedAnimal
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -505,7 +505,7 @@ bool function IsTrackedAnimal(Actor akActor) global
 endFunction
 
 ;/********f* CampUtil/GetTrackedAnimalCount
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -553,7 +553,7 @@ float[] function GetPositionData(ObjectReference akObjectReference) global
 endFunction
 
 ;/********f* CampUtil/PlayerCanPlaceObjects
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -626,7 +626,7 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true, bool abPlayerBusy
 endFunction
 
 ;/********f* CampUtil/IsPlayerPlacingObject
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -661,7 +661,7 @@ endif
 endFunction
 
 ;/********f* CampUtil/LegalToCampHere
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -694,7 +694,7 @@ endif
 endFunction
 
 ;/********f* CampUtil/GetAreaCampingFaction
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -726,7 +726,7 @@ endif
 endFunction
 
 ;/********f* CampUtil/GetLastUsedCampfire
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -752,7 +752,7 @@ ObjectReference function GetLastUsedCampfire() global
 endFunction
 
 ;/********f* CampUtil/GetCurrentTent
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -778,7 +778,7 @@ ObjectReference function GetCurrentTent() global
 endFunction
 
 ;/********f* CampUtil/IsTentWaterproof
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -813,7 +813,7 @@ bool function IsTentWaterproof(ObjectReference akTent) global
 endFunction
 
 ;/********f* CampUtil/IsTentWarm
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -848,7 +848,7 @@ bool function IsTentWarm(ObjectReference akTent) global
 endFunction
 
 ;/********f* CampUtil/IsCurrentTentWaterproof
-* API VERSION
+* API VERSION ADDED
 * 2
 *
 * DESCRIPTION
@@ -878,7 +878,7 @@ bool function IsCurrentTentWaterproof() global
 endFunction
 
 ;/********f* CampUtil/IsCurrentTentWarm
-* API VERSION
+* API VERSION ADDED
 * 2
 *
 * DESCRIPTION
@@ -908,7 +908,7 @@ bool function IsCurrentTentWarm() global
 endFunction
 
 ;/********f* CampUtil/IsCrimeToPlaceInTowns
-* API VERSION
+* API VERSION ADDED
 * 1
 *
 * DESCRIPTION
@@ -949,7 +949,7 @@ bool function IsTent(Form akBaseObject) global
 endFunction
 
 ;/********f* CampUtil/IsPlaceableObjectTemporary
-* API VERSION
+* API VERSION ADDED
 * 2
 *
 * DESCRIPTION
@@ -978,7 +978,7 @@ bool function IsPlaceableObjectTemporary(Form akBaseObject) global
 endFunction
 
 ;/********f* CampUtil/GetCampfireSettingBool
-* API VERSION
+* API VERSION ADDED
 * 2
 *
 * DESCRIPTION
@@ -1130,7 +1130,7 @@ endif
 endFunction
 
 ;/********f* CampUtil/GetCampfireSettingInt
-* API VERSION
+* API VERSION ADDED
 * 2
 *
 * DESCRIPTION
@@ -1165,6 +1165,40 @@ endif
 	endif
 endFunction
 
+;/********e* CampUtil/Campfire_OnObjectPlaced
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* An SKSE Mod Event that fires when the player places any Campfire placeable object (tents, containers, furniture, etc).
+*
+* SYNTAX
+Event Campfire_OnObjectRemoved(Form akPlacedObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
+* 
+* PARAMETERS
+* akPlacedObject: The ObjectReference that was placed. Cast to an ObjectReference (i.e. akPlacedObject as ObjectReference).
+* afXPos: The X position of the object.
+* afYPos: The Y position of the object.
+* afZPos: The Z position of the object.
+* afXAng: The X angle of the object.
+* afYAng: The Y angle of the object.
+* afZAng: The Z angle of the object.
+* abIsTent: Whether or not this object is a Campfire-based tent.
+*
+* NOTES
+* This event will also be sent when a Campfire Perk Tree is displayed.
+*
+* EXAMPLES
+Event OnInit()
+    RegisterForModEvent("Campfire_OnObjectPlaced", "Campfire_OnObjectPlaced")
+endEvent
+
+Event Campfire_OnObjectRemoved(Form akPlacedObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
+	if abIsTent
+		debug.trace("The player just placed a tent!")
+	endif
+endEvent
+;*********/;
 function SendEvent_OnObjectPlaced(ObjectReference akObjectReference) global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
@@ -1197,6 +1231,41 @@ function SendEvent_OnObjectPlaced(ObjectReference akObjectReference) global
 	endif
 endFunction
 
+;/********e* CampUtil/Campfire_OnObjectRemoved
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* An SKSE Mod Event that fires when the player picks up any Campfire placeable object (tents, containers, furniture, etc), or if that object is destroyed by fire.
+*
+* SYNTAX
+Event Campfire_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
+* 
+* PARAMETERS
+* akPlacedObject: The base object of the object that was removed.
+* afPositionX: The X position of the object.
+* afPositionY: The Y position of the object.
+* afPositionZ: The Z position of the object.
+* afAngleX: The X angle of the object.
+* afAngleY: The Y angle of the object.
+* afAngleZ: The Z angle of the object.
+* abIsTent: Whether or not this object is a Campfire-based tent.
+*
+* NOTES
+* This event does not send the object reference of the object picked up as a parameter because, by the time this event is sent, the reference no longer exists.
+* This event will also be sent when a Campfire Perk Tree is exited. 
+*
+* EXAMPLES
+Event OnInit()
+    RegisterForModEvent("Campfire_OnObjectRemoved", "Campfire_OnObjectRemoved")
+endEvent
+
+Event Campfire_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
+	if abIsTent
+		debug.trace("The player just placed a tent!")
+	endif
+endEvent
+;*********/;
 function SendEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ) global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
@@ -1223,6 +1292,31 @@ function SendEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float a
 	endif
 endFunction
 
+;/********e* CampUtil/Campfire_OnBedrollSitLay
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* An SKSE Mod Event that fires when the player sits down, lies down, or gets up from sitting or laying in a Campfire tent or bed roll.
+*
+* SYNTAX
+Event Campfire_OnBedrollSitLay(Form akTent, bool abGettingUp)
+* 
+* PARAMETERS
+* akTent: The tent the player is sitting on, laying on, or getting up from. Cast to an ObjectReference (i.e. akTent as ObjectReference).
+* abGettingUp: Whether or not the player is getting up from this tent or bed roll.
+*
+* EXAMPLES
+Event OnInit()
+    RegisterForModEvent("Campfire_OnBedrollSitLay", "Campfire_OnBedrollSitLay")
+endEvent
+
+Event Campfire_OnBedrollSitLay(Form akTent, bool abGettingUp)
+	if abGettingUp
+		debug.trace("The player just got up!")
+	endif
+endEvent
+;*********/;
 function SendEvent_OnBedrollSitLay(ObjectReference akTent, bool abGettingUp = false) global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
@@ -1245,3 +1339,59 @@ endFunction
 function RaiseCampAPIError() global
 	debug.trace("[Campfire][ERROR] Fatal Campfire API error occurred.")
 endFunction
+
+;/********e* CampUtil/Campfire_OnTentEnter
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* An SKSE Mod Event that fires when the player "enters" a tent.
+*
+* SYNTAX
+Event Campfire_OnTentEnter(Form akTent, bool abHasShelter)
+* 
+* PARAMETERS
+* akTent: The tent the player just "entered". Cast to an ObjectReference (i.e. akTent as ObjectReference).
+* abHasShelter: Whether or not the tent the player entered has overhead shelter of some kind.
+*
+* NOTES
+* For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player sits or lies down on their bed roll. (Reason: TentAsset_LargeTentTriggerVolume has not been set.)
+*
+* EXAMPLES
+Event OnInit()
+    RegisterForModEvent("Campfire_OnTentEnter", "Campfire_OnTentEnter")
+endEvent
+
+Event Campfire_OnTentEnter(Form akTent, bool abHasShelter)
+	if abHasShelter
+		debug.trace("It's going to be a cold night...")
+	endif
+endEvent
+;*********/;
+
+;/********e* CampUtil/Campfire_OnTentLeave
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* An SKSE Mod Event that fires when the player "leaves" a tent.
+*
+* SYNTAX
+Event Campfire_OnTentLeave()
+* 
+* PARAMETERS
+* None.
+*
+* NOTES
+* This event may fire multiple times for the same tent. This can happen for a number of reasons, such as if the player is standing inside the tent when picking it up.
+* For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player gets up from sitting or lying down on their bed roll. (Reason: TentAsset_LargeTentTriggerVolume has not been set.)
+*
+* EXAMPLES
+Event OnInit()
+    RegisterForModEvent("Campfire_OnTentLeave", "Campfire_OnTentLeave")
+endEvent
+
+Event Campfire_OnTentLeave()
+	debug.trace("Back to adventuring!")
+endEvent
+;*********/;

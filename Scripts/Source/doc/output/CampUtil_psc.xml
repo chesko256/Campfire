@@ -22,13 +22,13 @@ scriptname CampUtil hidden
 <section>
 <title>
 CampUtil/GetAPIVersion</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Get the <link linkend="robo0">CampUtil</link> API version number.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -51,13 +51,13 @@ float ver = <link linkend="robo0">CampUtil</link>.GetAPIVersion()
 <section>
 <title>
 CampUtil/GetCampfireVersion</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 2
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Get the Campfire mod version number.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -79,13 +79,13 @@ float ver = <link linkend="robo0">CampUtil</link>.GetCampfireVersion()
 <section>
 <title>
 CampUtil/GetPlayerEquippedHead</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Gets the player's currently equipped head armor.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -107,13 +107,13 @@ Armor PlayerHelm = GetPlayerEquippedHead()
 <section>
 <title>
 CampUtil/GetPlayerEquippedBody</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Gets the player's currently equipped body armor.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -135,13 +135,13 @@ Armor PlayerArmor = GetPlayerEquippedBody()
 <section>
 <title>
 CampUtil/GetPlayerEquippedHands</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Gets the player's currently equipped hand armor.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -163,13 +163,13 @@ Armor PlayerGauntlets = GetPlayerEquippedHands()
 <section>
 <title>
 CampUtil/GetPlayerEquippedFeet</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Gets the player's currently equipped foot armor.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -191,13 +191,13 @@ Armor PlayerBoots = GetPlayerEquippedFeet()
 <section>
 <title>
 CampUtil/GetPlayerEquippedBackpack</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Gets the player's currently equipped backpack.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -223,13 +223,13 @@ Armor PlayerBackpack = GetPlayerEquippedBackpack()
 <section>
 <title>
 CampUtil/GetPlayerEquippedAmmo</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Gets the player's currently equipped ammo.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -251,13 +251,13 @@ Armor PlayerArrows = GetPlayerEquippedAmmo()
 <section>
 <title>
 CampUtil/IsRefInInterior</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Whether or not the reference is in an interior cell, or a cell that "looks like" an interior.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -291,13 +291,13 @@ endif
 <section>
 <title>
 CampUtil/GetTrackedFollower</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Returns the tracked follower at the specified index.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -324,13 +324,13 @@ endWhile
 <section>
 <title>
 CampUtil/IsTrackedFollower</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Whether or not this actor is a tracked follower.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -354,13 +354,13 @@ endif
 <section>
 <title>
 CampUtil/GetTrackedFollowerCount</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Return the number of tracked followers.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -382,13 +382,13 @@ debug.trace("I have " + <link linkend="robo0">CampUtil</link>.GetTrackedFollower
 <section>
 <title>
 CampUtil/GetTrackedAnimal</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Returns the tracked animal in the player's service.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -411,13 +411,13 @@ debug.trace("My dog is " + <link linkend="robo0">CampUtil</link>.GetTrackedAnima
 <section>
 <title>
 CampUtil/IsTrackedAnimal</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Whether or not the Actor is a tracked animal.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -435,13 +435,13 @@ bool function IsTrackedAnimal(Actor akActor) global
 <section>
 <title>
 CampUtil/GetTrackedAnimalCount</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Get the number of animals currently in the player's service.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -463,13 +463,13 @@ debug.trace("I have " + <link linkend="robo0">CampUtil</link>.GetTrackedAnimalCo
 <section>
 <title>
 CampUtil/PlayerCanPlaceObjects</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Whether or not the player can currently place Placeable Objects (tents, etc).
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -507,13 +507,13 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true, bool abPlayerBusy
 <section>
 <title>
 CampUtil/IsPlayerPlacingObject</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Whether or not the player is currently placing a Placeable Object (tent, etc).
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -537,13 +537,13 @@ endif
 <section>
 <title>
 CampUtil/LegalToCampHere</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Whether or not the player's current location is considered a legal camping area.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -571,13 +571,13 @@ endif
 <section>
 <title>
 CampUtil/GetAreaCampingFaction</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Returns the faction that dictates camping legality in this area.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -602,13 +602,13 @@ endif
 <section>
 <title>
 CampUtil/GetLastUsedCampfire</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Returns the last campfire used by the player.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -626,13 +626,13 @@ ObjectReference function GetLastUsedCampfire() global
 <section>
 <title>
 CampUtil/GetCurrentTent</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Returns the current tent being used.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -646,21 +646,17 @@ ObjectReference function GetCurrentTent() global
 <para>
  The current tent being used, or None if the player is not using a tent.
 </para>
-<formalpara><title>NOTES</title><para></para></formalpara>
-<para>
- Return value used as input to <link linkend="robo22">IsTentWaterproof</link>() and <link linkend="robo23">IsTentWarm</link>().
-</para>
 </section>
 <section>
 <title>
 CampUtil/IsTentWaterproof</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Is this tent waterproof?
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -668,7 +664,7 @@ bool function IsTentWaterproof(ObjectReference akTent) global
 </literallayout>
 <formalpara><title>PARAMETERS</title><para></para></formalpara>
 <para>
- akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo21">GetCurrentTent</link>().
+ akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo21">GetCurrentTent</link>(), or use <link linkend="robo24">IsCurrentTentWaterproof</link>() instead.
 </para>
 <formalpara><title>RETURN VALUE</title><para></para></formalpara>
 <para>
@@ -678,13 +674,13 @@ bool function IsTentWaterproof(ObjectReference akTent) global
 <section>
 <title>
 CampUtil/IsTentWarm</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Is this tent warm?
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -692,7 +688,7 @@ bool function IsTentWarm(ObjectReference akTent) global
 </literallayout>
 <formalpara><title>PARAMETERS</title><para></para></formalpara>
 <para>
- akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo21">GetCurrentTent</link>().
+ akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo21">GetCurrentTent</link>(), or use <link linkend="robo25">IsCurrentTentWarm</link>() instead.
 </para>
 <formalpara><title>RETURN VALUE</title><para></para></formalpara>
 <para>
@@ -702,13 +698,13 @@ bool function IsTentWarm(ObjectReference akTent) global
 <section>
 <title>
 CampUtil/IsCurrentTentWaterproof</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 2
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Is the current tent waterproof?
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -726,13 +722,13 @@ bool function IsCurrentTentWaterproof() global
 <section>
 <title>
 CampUtil/IsCurrentTentWarm</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 2
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Is the current tent warm?
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -750,13 +746,13 @@ bool function IsCurrentTentWarm() global
 <section>
 <title>
 CampUtil/IsCrimeToPlaceInTowns</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 1
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Is it a crime to place this base object in towns, inside owned houses, etc?
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -777,14 +773,38 @@ bool function IsCrimeToPlaceInTowns(Form akBaseObject) global
 </section>
 <section>
 <title>
-CampUtil/GetCampfireSettingBool</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
+CampUtil/IsPlaceableObjectTemporary</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Returns whether or not this placeable object does not spawn persistently (i.e. won't be cleaned up by a cell reset).
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
 <para>
  2
 </para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsPlaceableObjectTemporary(Form akBaseObject) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ akBaseObject: The base object to check.
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if the Form will spawn non-persistently, False if not.
+</para>
+</section>
+<section>
+<title>
+CampUtil/GetCampfireSettingBool</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Returns the state of the given Campfire setting.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -810,6 +830,7 @@ bool function GetCampfireSettingBool(string setting) global
 </para></listitem><listitem><para> FollowersUseCampsite
 </para></listitem><listitem><para> CampingIllegalInTowns
 </para></listitem><listitem><para> AdvancedPlacementMode
+</para></listitem><listitem><para> EquippingOverhaulCompatibility
 </para></listitem></itemizedlist><para>
 </para>
 <formalpara><title>RETURN VALUE</title><para></para></formalpara>
@@ -826,13 +847,13 @@ endif
 <section>
 <title>
 CampUtil/GetCampfireSettingInt</title>
-<formalpara><title>API VERSION</title><para></para></formalpara>
-<para>
- 2
-</para>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Returns the value of the given Campfire setting.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -855,5 +876,197 @@ if GetCampfireSettingInt("MaxPlacementThreads") &gt; 5
         debug.trace("Campfire is configured to use over 5 threads for placing objects.")
 endif
 </literallayout>
+</section>
+<section>
+<title>
+CampUtil/Campfire_OnObjectPlaced</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ An SKSE Mod Event that fires when the player places any Campfire placeable object (tents, containers, furniture, etc).
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Event <link linkend="robo31">Campfire_OnObjectRemoved</link>(Form akPlacedObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ akPlacedObject: The ObjectReference that was placed. Cast to an ObjectReference (i.e. akPlacedObject as ObjectReference).
+ afXPos: The X position of the object.
+ afYPos: The Y position of the object.
+ afZPos: The Z position of the object.
+ afXAng: The X angle of the object.
+ afYAng: The Y angle of the object.
+ afZAng: The Z angle of the object.
+ abIsTent: Whether or not this object is a Campfire-based tent.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+Event OnInit()
+    RegisterForModEvent("Campfire_OnObjectPlaced", "Campfire_OnObjectPlaced")
+endEvent
+
+Event <link linkend="robo31">Campfire_OnObjectRemoved</link>(Form akPlacedObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
+        if abIsTent
+                debug.trace("The player just placed a tent!")
+        endif
+endEvent
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ This event will also be sent when a Campfire Perk Tree is displayed.
+</para>
+</section>
+<section>
+<title>
+CampUtil/Campfire_OnObjectRemoved</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ An SKSE Mod Event that fires when the player picks up any Campfire placeable object (tents, containers, furniture, etc), or if that object is destroyed by fire.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Event Campfire_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ akPlacedObject: The base object of the object that was removed.
+ afPositionX: The X position of the object.
+ afPositionY: The Y position of the object.
+ afPositionZ: The Z position of the object.
+ afAngleX: The X angle of the object.
+ afAngleY: The Y angle of the object.
+ afAngleZ: The Z angle of the object.
+ abIsTent: Whether or not this object is a Campfire-based tent.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+Event OnInit()
+    RegisterForModEvent("Campfire_OnObjectRemoved", "Campfire_OnObjectRemoved")
+endEvent
+
+Event Campfire_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
+        if abIsTent
+                debug.trace("The player just placed a tent!")
+        endif
+endEvent
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ This event does not send the object reference of the object picked up as a parameter because, by the time this event is sent, the reference no longer exists.
+ This event will also be sent when a Campfire Perk Tree is exited. 
+</para>
+</section>
+<section>
+<title>
+CampUtil/Campfire_OnBedrollSitLay</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ An SKSE Mod Event that fires when the player sits down, lies down, or gets up from sitting or laying in a Campfire tent or bed roll.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Event Campfire_OnBedrollSitLay(Form akTent, bool abGettingUp)
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ akTent: The tent the player is sitting on, laying on, or getting up from. Cast to an ObjectReference (i.e. akTent as ObjectReference).
+ abGettingUp: Whether or not the player is getting up from this tent or bed roll.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+Event OnInit()
+    RegisterForModEvent("Campfire_OnBedrollSitLay", "Campfire_OnBedrollSitLay")
+endEvent
+
+Event Campfire_OnBedrollSitLay(Form akTent, bool abGettingUp)
+        if abGettingUp
+                debug.trace("The player just got up!")
+        endif
+endEvent
+</literallayout>
+</section>
+<section>
+<title>
+CampUtil/Campfire_OnTentEnter</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ An SKSE Mod Event that fires when the player "enters" a tent.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Event Campfire_OnTentEnter(Form akTent, bool abHasShelter)
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ akTent: The tent the player just "entered". Cast to an ObjectReference (i.e. akTent as ObjectReference).
+ abHasShelter: Whether or not the tent the player entered has overhead shelter of some kind.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+Event OnInit()
+    RegisterForModEvent("Campfire_OnTentEnter", "Campfire_OnTentEnter")
+endEvent
+
+Event Campfire_OnTentEnter(Form akTent, bool abHasShelter)
+        if abHasShelter
+                debug.trace("It's going to be a cold night...")
+        endif
+endEvent
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player sits or lies down on their bed roll. (Reason: <link linkend="robo89">TentAsset_LargeTentTriggerVolume</link> has not been set.)
+</para>
+</section>
+<section>
+<title>
+CampUtil/Campfire_OnTentLeave</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ An SKSE Mod Event that fires when the player "leaves" a tent.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Event Campfire_OnTentLeave()
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+Event OnInit()
+    RegisterForModEvent("Campfire_OnTentLeave", "Campfire_OnTentLeave")
+endEvent
+
+Event Campfire_OnTentLeave()
+        debug.trace("Back to adventuring!")
+endEvent
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ This event may fire multiple times for the same tent. This can happen for a number of reasons, such as if the player is standing inside the tent when picking it up.
+ For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player gets up from sitting or lying down on their bed roll. (Reason: <link linkend="robo89">TentAsset_LargeTentTriggerVolume</link> has not been set.)
+</para>
 </section>
 </article>

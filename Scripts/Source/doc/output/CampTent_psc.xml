@@ -18,7 +18,7 @@ scriptname CampTent extends _Camp_PlaceableObjectBase
  the player's bed roll. Attaching this script and filling out properties in the Creation Kit is 
  how new tents are created; please see the tutorials for more information. Only 3 properties 
  are required in order for the tent to function, with the rest optional. This script supports 
- creating a tent with a single bed roll, a lantern, clutter, and more. See <link linkend="robo38">CampTentEx</link> for even 
+ creating a tent with a single bed roll, a lantern, clutter, and more. See <link linkend="robo44">CampTentEx</link> for even 
  more capability.
 </para>
 </section>
@@ -36,7 +36,7 @@ Float property Setting_BedRollScale = 1.0 auto
 </section>
 <section>
 <title>
-CampTent/Setting_BedRollScale</title>
+CampTent/Setting_PlayerSitAngle</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Optional: The compass direction adjustment applied to the player's sitting position. 0.0 by default. }

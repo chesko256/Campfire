@@ -10,13 +10,13 @@ The \`CampUtil\` script is the primary way most mods should interact with Campfi
 
 ### CampUtil/GetAPIVersion
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Get the [CampUtil](#robo0) API version number.
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -36,13 +36,13 @@ The [CampUtil](#robo0) API version number. This is NOT the same thing as the ver
 
 ### CampUtil/GetCampfireVersion
 
-**API VERSION.**
-
-2
-
 **DESCRIPTION.**
 
 Get the Campfire mod version number.
+
+**API VERSION ADDED.**
+
+2
 
 **SYNTAX.**
 
@@ -62,13 +62,13 @@ The Campfire version number.
 
 ### CampUtil/GetPlayerEquippedHead
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Gets the player's currently equipped head armor.
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -88,13 +88,13 @@ The player's currently equipped head armor.
 
 ### CampUtil/GetPlayerEquippedBody
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Gets the player's currently equipped body armor.
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -114,13 +114,13 @@ The player's currently equipped body armor.
 
 ### CampUtil/GetPlayerEquippedHands
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Gets the player's currently equipped hand armor.
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -140,13 +140,13 @@ The player's currently equipped hand armor.
 
 ### CampUtil/GetPlayerEquippedFeet
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Gets the player's currently equipped foot armor.
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -166,13 +166,13 @@ The player's currently equipped foot armor.
 
 ### CampUtil/GetPlayerEquippedBackpack
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Gets the player's currently equipped backpack.
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -196,13 +196,13 @@ An Armor item is considered to be a backpack if it is in the \_Camp\_Backpacks F
 
 ### CampUtil/GetPlayerEquippedAmmo
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Gets the player's currently equipped ammo.
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -222,13 +222,13 @@ The player's currently equipped ammo.
 
 ### CampUtil/IsRefInInterior
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Whether or not the reference is in an interior cell, or a cell that "looks like" an interior.
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -255,13 +255,13 @@ The standard IsInInterior() function can only return whether or not the current 
 
 ### CampUtil/GetTrackedFollower
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Returns the tracked follower at the specified index.
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -287,13 +287,13 @@ The Actor occupying this index, or None if no tracked follower in this index.
 
 ### CampUtil/IsTrackedFollower
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Whether or not this actor is a tracked follower.
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -315,13 +315,13 @@ True if this actor is a tracked follower; false if not.
 
 ### CampUtil/GetTrackedFollowerCount
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Return the number of tracked followers.
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -341,13 +341,13 @@ The number of followers currently being tracked, from 0 to 3.
 
 ### CampUtil/GetTrackedAnimal
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Returns the tracked animal in the player's service.
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -367,13 +367,13 @@ The tracked animal Actor currently in the player's service, or None if no animal
 
 ### CampUtil/IsTrackedAnimal
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Whether or not the Actor is a tracked animal.
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -389,13 +389,13 @@ True if the Actor is a tracked animal; False if not.
 
 ### CampUtil/GetTrackedAnimalCount
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Get the number of animals currently in the player's service.
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -415,13 +415,13 @@ The number of animals currently being tracked, from 0 to 1.
 
 ### CampUtil/PlayerCanPlaceObjects
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Whether or not the player can currently place Placeable Objects (tents, etc).
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -463,13 +463,13 @@ Reasons that this function might return false are:
 
 ### CampUtil/IsPlayerPlacingObject
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Whether or not the player is currently placing a Placeable Object (tent, etc).
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -491,13 +491,13 @@ True if the player is currently placing a Placeable Object, false otherwise.
 
 ### CampUtil/LegalToCampHere
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Whether or not the player's current location is considered a legal camping area.
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -523,13 +523,13 @@ In Campfire, it is illegal for the player to place Placeable Objects inside hous
 
 ### CampUtil/GetAreaCampingFaction
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Returns the faction that dictates camping legality in this area.
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -552,13 +552,13 @@ If akCenter is in an illegal camping area, returns the faction responsible for m
 
 ### CampUtil/GetLastUsedCampfire
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Returns the last campfire used by the player.
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -574,13 +574,13 @@ The last campfire used by the player, or None if it no longer exists.
 
 ### CampUtil/GetCurrentTent
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Returns the current tent being used.
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -594,19 +594,15 @@ None
 
 The current tent being used, or None if the player is not using a tent.
 
-**NOTES.**
-
-Return value used as input to [IsTentWaterproof](#robo22)() and [IsTentWarm](#robo23)().
-
 ### CampUtil/IsTentWaterproof
-
-**API VERSION.**
-
-1
 
 **DESCRIPTION.**
 
 Is this tent waterproof?
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -614,7 +610,7 @@ Is this tent waterproof?
 
 **PARAMETERS.**
 
-akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo21)().
+akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo21)(), or use [IsCurrentTentWaterproof](#robo24)() instead.
 
 **RETURN VALUE.**
 
@@ -622,13 +618,13 @@ True if the tent is flagged as being waterproof, or false if not.
 
 ### CampUtil/IsTentWarm
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Is this tent warm?
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -636,7 +632,7 @@ Is this tent warm?
 
 **PARAMETERS.**
 
-akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo21)().
+akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo21)(), or use [IsCurrentTentWarm](#robo25)() instead.
 
 **RETURN VALUE.**
 
@@ -644,13 +640,13 @@ True if the tent is flagged as being warm, or false if not.
 
 ### CampUtil/IsCurrentTentWaterproof
 
-**API VERSION.**
-
-2
-
 **DESCRIPTION.**
 
 Is the current tent waterproof?
+
+**API VERSION ADDED.**
+
+2
 
 **SYNTAX.**
 
@@ -666,13 +662,13 @@ True if the current tent is flagged as being waterproof, or false if not or if t
 
 ### CampUtil/IsCurrentTentWarm
 
-**API VERSION.**
-
-2
-
 **DESCRIPTION.**
 
 Is the current tent warm?
+
+**API VERSION ADDED.**
+
+2
 
 **SYNTAX.**
 
@@ -688,13 +684,13 @@ True if the current tent is flagged as being warm, or false if not or if there i
 
 ### CampUtil/IsCrimeToPlaceInTowns
 
-**API VERSION.**
-
-1
-
 **DESCRIPTION.**
 
 Is it a crime to place this base object in towns, inside owned houses, etc?
+
+**API VERSION ADDED.**
+
+1
 
 **SYNTAX.**
 
@@ -712,15 +708,37 @@ True if the Form is illegal to place in settled areas, or False if not.
 
 This function returns true or false without regard to the current legality setting.
 
-### CampUtil/GetCampfireSettingBool
+### CampUtil/IsPlaceableObjectTemporary
 
-**API VERSION.**
+**DESCRIPTION.**
+
+Returns whether or not this placeable object does not spawn persistently (i.e. won't be cleaned up by a cell reset).
+
+**API VERSION ADDED.**
 
 2
+
+**SYNTAX.**
+
+    bool function IsPlaceableObjectTemporary(Form akBaseObject) global
+
+**PARAMETERS.**
+
+akBaseObject: The base object to check.
+
+**RETURN VALUE.**
+
+True if the Form will spawn non-persistently, False if not.
+
+### CampUtil/GetCampfireSettingBool
 
 **DESCRIPTION.**
 
 Returns the state of the given Campfire setting.
+
+**API VERSION ADDED.**
+
+2
 
 **SYNTAX.**
 
@@ -762,6 +780,8 @@ setting: The setting which you would like to retrieve. Accepted values (case-sen
 
 -   AdvancedPlacementMode
 
+-   EquippingOverhaulCompatibility
+
 **RETURN VALUE.**
 
 True if the feature is enabled, false if disabled or if the setting string is invalid.
@@ -774,13 +794,13 @@ True if the feature is enabled, false if disabled or if the setting string is in
 
 ### CampUtil/GetCampfireSettingInt
 
-**API VERSION.**
-
-2
-
 **DESCRIPTION.**
 
 Returns the value of the given Campfire setting.
+
+**API VERSION ADDED.**
+
+2
 
 **SYNTAX.**
 
@@ -801,3 +821,167 @@ The value of the setting, or -1 if the setting string was invalid.
     if GetCampfireSettingInt("MaxPlacementThreads") > 5
             debug.trace("Campfire is configured to use over 5 threads for placing objects.")
     endif
+
+### CampUtil/Campfire\_OnObjectPlaced
+
+**DESCRIPTION.**
+
+An SKSE Mod Event that fires when the player places any Campfire placeable object (tents, containers, furniture, etc).
+
+**API VERSION ADDED.**
+
+2
+
+**SYNTAX.**
+
+    Event Campfire_OnObjectRemoved(Form akPlacedObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
+
+**PARAMETERS.**
+
+akPlacedObject: The ObjectReference that was placed. Cast to an ObjectReference (i.e. akPlacedObject as ObjectReference). afXPos: The X position of the object. afYPos: The Y position of the object. afZPos: The Z position of the object. afXAng: The X angle of the object. afYAng: The Y angle of the object. afZAng: The Z angle of the object. abIsTent: Whether or not this object is a Campfire-based tent.
+
+**EXAMPLES.**
+
+    Event OnInit()
+        RegisterForModEvent("Campfire_OnObjectPlaced", "Campfire_OnObjectPlaced")
+    endEvent
+
+    Event Campfire_OnObjectRemoved(Form akPlacedObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
+            if abIsTent
+                    debug.trace("The player just placed a tent!")
+            endif
+    endEvent
+
+**NOTES.**
+
+This event will also be sent when a Campfire Perk Tree is displayed.
+
+### CampUtil/Campfire\_OnObjectRemoved
+
+**DESCRIPTION.**
+
+An SKSE Mod Event that fires when the player picks up any Campfire placeable object (tents, containers, furniture, etc), or if that object is destroyed by fire.
+
+**API VERSION ADDED.**
+
+2
+
+**SYNTAX.**
+
+    Event Campfire_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
+
+**PARAMETERS.**
+
+akPlacedObject: The base object of the object that was removed. afPositionX: The X position of the object. afPositionY: The Y position of the object. afPositionZ: The Z position of the object. afAngleX: The X angle of the object. afAngleY: The Y angle of the object. afAngleZ: The Z angle of the object. abIsTent: Whether or not this object is a Campfire-based tent.
+
+**EXAMPLES.**
+
+    Event OnInit()
+        RegisterForModEvent("Campfire_OnObjectRemoved", "Campfire_OnObjectRemoved")
+    endEvent
+
+    Event Campfire_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
+            if abIsTent
+                    debug.trace("The player just placed a tent!")
+            endif
+    endEvent
+
+**NOTES.**
+
+This event does not send the object reference of the object picked up as a parameter because, by the time this event is sent, the reference no longer exists. This event will also be sent when a Campfire Perk Tree is exited.
+
+### CampUtil/Campfire\_OnBedrollSitLay
+
+**DESCRIPTION.**
+
+An SKSE Mod Event that fires when the player sits down, lies down, or gets up from sitting or laying in a Campfire tent or bed roll.
+
+**API VERSION ADDED.**
+
+2
+
+**SYNTAX.**
+
+    Event Campfire_OnBedrollSitLay(Form akTent, bool abGettingUp)
+
+**PARAMETERS.**
+
+akTent: The tent the player is sitting on, laying on, or getting up from. Cast to an ObjectReference (i.e. akTent as ObjectReference). abGettingUp: Whether or not the player is getting up from this tent or bed roll.
+
+**EXAMPLES.**
+
+    Event OnInit()
+        RegisterForModEvent("Campfire_OnBedrollSitLay", "Campfire_OnBedrollSitLay")
+    endEvent
+
+    Event Campfire_OnBedrollSitLay(Form akTent, bool abGettingUp)
+            if abGettingUp
+                    debug.trace("The player just got up!")
+            endif
+    endEvent
+
+### CampUtil/Campfire\_OnTentEnter
+
+**DESCRIPTION.**
+
+An SKSE Mod Event that fires when the player "enters" a tent.
+
+**API VERSION ADDED.**
+
+2
+
+**SYNTAX.**
+
+    Event Campfire_OnTentEnter(Form akTent, bool abHasShelter)
+
+**PARAMETERS.**
+
+akTent: The tent the player just "entered". Cast to an ObjectReference (i.e. akTent as ObjectReference). abHasShelter: Whether or not the tent the player entered has overhead shelter of some kind.
+
+**EXAMPLES.**
+
+    Event OnInit()
+        RegisterForModEvent("Campfire_OnTentEnter", "Campfire_OnTentEnter")
+    endEvent
+
+    Event Campfire_OnTentEnter(Form akTent, bool abHasShelter)
+            if abHasShelter
+                    debug.trace("It's going to be a cold night...")
+            endif
+    endEvent
+
+**NOTES.**
+
+For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player sits or lies down on their bed roll. (Reason: [TentAsset\_LargeTentTriggerVolume](#robo89) has not been set.)
+
+### CampUtil/Campfire\_OnTentLeave
+
+**DESCRIPTION.**
+
+An SKSE Mod Event that fires when the player "leaves" a tent.
+
+**API VERSION ADDED.**
+
+2
+
+**SYNTAX.**
+
+    Event Campfire_OnTentLeave()
+
+**PARAMETERS.**
+
+None.
+
+**EXAMPLES.**
+
+    Event OnInit()
+        RegisterForModEvent("Campfire_OnTentLeave", "Campfire_OnTentLeave")
+    endEvent
+
+    Event Campfire_OnTentLeave()
+            debug.trace("Back to adventuring!")
+    endEvent
+
+**NOTES.**
+
+This event may fire multiple times for the same tent. This can happen for a number of reasons, such as if the player is standing inside the tent when picking it up. For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player gets up from sitting or lying down on their bed roll. (Reason: [TentAsset\_LargeTentTriggerVolume](#robo89) has not been set.)

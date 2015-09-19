@@ -65,7 +65,7 @@ string property consumable_ingredient_name auto
 * Optional: The name of any required ingredient. Used if user does not have SKSE installed. }
 ;********/;
 
-;/********p* CampUsableMiscItem/consumable_ingredient_name
+;/********p* CampUsableMiscItem/consumable_miscitem_name
 * SYNTAX
 */;
 string property consumable_miscitem_name auto
@@ -74,7 +74,7 @@ string property consumable_miscitem_name auto
 * Optional: The name of any required misc item. Used if user does not have SKSE installed. }
 ;********/;
 
-;/********p* CampUsableMiscItem/consumable_ingredient_name
+;/********p* CampUsableMiscItem/necessary_perk_name
 * SYNTAX
 */;
 string property necessary_perk_name auto
