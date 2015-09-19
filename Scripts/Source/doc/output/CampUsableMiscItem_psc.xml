@@ -91,7 +91,7 @@ string property consumable_ingredient_name auto
 </section>
 <section>
 <title>
-CampUsableMiscItem/consumable_ingredient_name</title>
+CampUsableMiscItem/consumable_miscitem_name</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Optional: The name of any required misc item. Used if user does not have SKSE installed. }
@@ -103,7 +103,7 @@ string property consumable_miscitem_name auto
 </section>
 <section>
 <title>
-CampUsableMiscItem/consumable_ingredient_name</title>
+CampUsableMiscItem/necessary_perk_name</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
  Optional: The name of any required perk. Used if user does not have SKSE installed. }

@@ -1,0 +1,578 @@
+<h2 id="overview">Overview</h2>
+<p>The <code>CampUtil</code> script is the primary way most mods should interact with Campfire and contains many helpful functions. To call any of the following functions, download the SDK and in your script include the line: <pre>import CampUtil</pre> Alternatively, you can call <code>CampUtil.FunctionName()</code> without importing CampUtil. }</p>
+<h4 id="global-functions">Functions</h4>
+<ul>
+<li><a href="#CampUtil_GetAPIVersion">GetAPIVersion</a></li>
+<li><a href="#CampUtil_GetCampfireVersion">GetCampfireVersion</a></li>
+<li><a href="#CampUtil_GetPlayerEquippedHead">GetPlayerEquippedHead</a></li>
+<li><a href="#CampUtil_GetPlayerEquippedBody">GetPlayerEquippedBody</a></li>
+<li><a href="#CampUtil_GetPlayerEquippedHands">GetPlayerEquippedHands</a></li>
+<li><a href="#CampUtil_GetPlayerEquippedFeet">GetPlayerEquippedFeet</a></li>
+<li><a href="#CampUtil_GetPlayerEquippedBackpack">GetPlayerEquippedBackpack</a></li>
+<li><a href="#CampUtil_GetPlayerEquippedAmmo">GetPlayerEquippedAmmo</a></li>
+<li><a href="#CampUtil_IsRefInInterior">IsRefInInterior</a></li>
+<li><a href="#CampUtil_GetTrackedFollower">GetTrackedFollower</a></li>
+<li><a href="#CampUtil_IsTrackedFollower">IsTrackedFollower</a></li>
+<li><a href="#CampUtil_GetTrackedFollowerCount">GetTrackedFollowerCount</a></li>
+<li><a href="#CampUtil_GetTrackedAnimal">GetTrackedAnimal</a></li>
+<li><a href="#CampUtil_IsTrackedAnimal">IsTrackedAnimal</a></li>
+<li><a href="#CampUtil_GetTrackedAnimalCount">GetTrackedAnimalCount</a></li>
+<li><a href="#CampUtil_PlayerCanPlaceObjects">PlayerCanPlaceObjects</a></li>
+<li><a href="#CampUtil_IsPlayerPlacingObject">IsPlayerPlacingObject</a></li>
+<li><a href="#CampUtil_LegalToCampHere">LegalToCampHere</a></li>
+<li><a href="#CampUtil_GetAreaCampingFaction">GetAreaCampingFaction</a></li>
+<li><a href="#CampUtil_GetLastUsedCampfire">GetLastUsedCampfire</a></li>
+<li><a href="#CampUtil_GetCurrentTent">GetCurrentTent</a></li>
+<li><a href="#CampUtil_IsTentWaterproof">IsTentWaterproof</a></li>
+<li><a href="#CampUtil_IsTentWarm">IsTentWarm</a></li>
+<li><a href="#CampUtil_IsCurrentTentWaterproof">IsCurrentTentWaterproof</a></li>
+<li><a href="#CampUtil_IsCurrentTentWarm">IsCurrentTentWarm</a></li>
+<li><a href="#CampUtil_IsCrimeToPlaceInTowns">IsCrimeToPlaceInTowns</a></li>
+<li><a href="#CampUtil_IsPlaceableObjectTemporary">IsPlaceableObjectTemporary</a></li>
+<li><a href="#CampUtil_GetCampfireSettingBool">GetCampfireSettingBool</a></li>
+<li><a href="#CampUtil_GetCampfireSettingInt">GetCampfireSettingInt</a></li>
+</ul>
+<h4 id="member-functions">Events</h4>
+<ul>
+<li><a href="#CampUtil_Campfire_OnObjectPlaced">Campfire_OnObjectPlaced</a></li>
+<li><a href="#CampUtil_Campfire_OnObjectRemoved">Campfire_OnObjectRemoved</a></li>
+<li><a href="#CampUtil_Campfire_OnBedrollSitLay">Campfire_OnBedrollSitLay</a></li>
+<li><a href="#CampUtil_Campfire_OnTentEnter">Campfire_OnTentEnter</a></li>
+<li><a href="#CampUtil_Campfire_OnTentLeave">Campfire_OnTentLeave</a></li>
+</ul>
+<h3 id="global-functions-1">Functions</h3>
+<h4 id="getapiversion"><a name="CampUtil_GetAPIVersion"></a>GetAPIVersion</h4>
+<p>Get the <a href="#robo0">CampUtil</a> API version number.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>float function GetAPIVersion() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The <a href="#robo0">CampUtil</a> API version number. This is NOT the same thing as the version number of Campfire. <a href="#robo0">CampUtil</a>'s version number will increment only when changes have been made to the API itself.</p>
+<p><strong>Examples</strong></p>
+<pre><code>float ver = CampUtil.GetAPIVersion()</code></pre>
+<hr />
+<h4 id="getcampfireversion"><a name="CampUtil_GetCampfireVersion"></a>GetCampfireVersion</h4>
+<p>Get the Campfire mod version number.</p>
+<p><strong>Api version added</strong></p>
+<p>2</p>
+<p><strong>Syntax</strong></p>
+<pre><code>float function GetCampfireVersion() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The Campfire version number.</p>
+<p><strong>Examples</strong></p>
+<pre><code>float ver = CampUtil.GetCampfireVersion()</code></pre>
+<hr />
+<h4 id="getplayerequippedhead"><a name="CampUtil_GetPlayerEquippedHead"></a>GetPlayerEquippedHead</h4>
+<p>Gets the player's currently equipped head armor.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>Armor function GetPlayerEquippedHead() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The player's currently equipped head armor.</p>
+<p><strong>Examples</strong></p>
+<pre><code>Armor PlayerHelm = GetPlayerEquippedHead()</code></pre>
+<hr />
+<h4 id="getplayerequippedbody"><a name="CampUtil_GetPlayerEquippedBody"></a>GetPlayerEquippedBody</h4>
+<p>Gets the player's currently equipped body armor.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>Armor function GetPlayerEquippedBody() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The player's currently equipped body armor.</p>
+<p><strong>Examples</strong></p>
+<pre><code>Armor PlayerArmor = GetPlayerEquippedBody()</code></pre>
+<hr />
+<h4 id="getplayerequippedhands"><a name="CampUtil_GetPlayerEquippedHands"></a>GetPlayerEquippedHands</h4>
+<p>Gets the player's currently equipped hand armor.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>Armor function GetPlayerEquippedHands() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The player's currently equipped hand armor.</p>
+<p><strong>Examples</strong></p>
+<pre><code>Armor PlayerGauntlets = GetPlayerEquippedHands()</code></pre>
+<hr />
+<h4 id="getplayerequippedfeet"><a name="CampUtil_GetPlayerEquippedFeet"></a>GetPlayerEquippedFeet</h4>
+<p>Gets the player's currently equipped foot armor.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>Armor function GetPlayerEquippedFeet() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The player's currently equipped foot armor.</p>
+<p><strong>Examples</strong></p>
+<pre><code>Armor PlayerBoots = GetPlayerEquippedFeet()</code></pre>
+<hr />
+<h4 id="getplayerequippedbackpack"><a name="CampUtil_GetPlayerEquippedBackpack"></a>GetPlayerEquippedBackpack</h4>
+<p>Gets the player's currently equipped backpack.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>Armor function GetPlayerEquippedBackpack() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The player's currently equipped backpack.</p>
+<p><strong>Examples</strong></p>
+<pre><code>Armor PlayerBackpack = GetPlayerEquippedBackpack()</code></pre>
+<p><strong>Notes</strong></p>
+<p>An Armor item is considered to be a backpack if it is in the _Camp_Backpacks FormList.</p>
+<hr />
+<h4 id="getplayerequippedammo"><a name="CampUtil_GetPlayerEquippedAmmo"></a>GetPlayerEquippedAmmo</h4>
+<p>Gets the player's currently equipped ammo.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>Ammo function GetPlayerEquippedAmmo() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The player's currently equipped ammo.</p>
+<p><strong>Examples</strong></p>
+<pre><code>Armor PlayerArrows = GetPlayerEquippedAmmo()</code></pre>
+<hr />
+<h4 id="isrefininterior"><a name="CampUtil_IsRefInInterior"></a>IsRefInInterior</h4>
+<p>Whether or not the reference is in an interior cell, or a cell that &quot;looks like&quot; an interior.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function IsRefInInterior(ObjectReference akReference) global</code></pre>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>akReference: The object reference to check.</li>
+</ul>
+<p><strong>Return Value</strong></p>
+<p>True if the reference is in an interior or &quot;interior-like&quot; cell, false otherwise.</p>
+<p><strong>Examples</strong></p>
+<pre><code>;Is the box in an interior?
+if IsRefInInterior(Box)
+        Debug.Trace(&quot;Box is inside!&quot;)
+endif</code></pre>
+<p><strong>Notes</strong></p>
+<p>The standard IsInInterior() function can only return whether or not the current cell is marked as an Interior. There are numerous worldspaces (such as AlftandWorld, Blackreach, BlindCliffCaveWorld, etc) that look and act like interiors, but are set as external worldspaces. This can cause IsInInterior() to return undesirable results. This function takes these known base game (and DLC) worldspaces into account when evaluating the object reference's location.</p>
+<hr />
+<h4 id="gettrackedfollower"><a name="CampUtil_GetTrackedFollower"></a>GetTrackedFollower</h4>
+<p>Returns the tracked follower at the specified index.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>Actor function GetTrackedFollower(int aiIndex) global</code></pre>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>aiIndex: The index (1 - 3) to check. Returns None if index is out of range or there</li>
+</ul>
+<p>is no follower filling the specified index.</p>
+<p><strong>Return Value</strong></p>
+<p>The Actor occupying this index, or None if no tracked follower in this index.</p>
+<p><strong>Examples</strong></p>
+<pre><code>int i = 1
+while i &lt; 4
+        debug.trace(&quot;Follower &quot; + i + &quot; is &quot; + CampUtil.GetTrackedFollower(i))
+        i += 1
+endWhile</code></pre>
+<hr />
+<h4 id="istrackedfollower"><a name="CampUtil_IsTrackedFollower"></a>IsTrackedFollower</h4>
+<p>Whether or not this actor is a tracked follower.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function IsTrackedFollower(Actor akActor) global</code></pre>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>akActor: The actor to check.</li>
+</ul>
+<p><strong>Return Value</strong></p>
+<p>True if this actor is a tracked follower; false if not.</p>
+<p><strong>Examples</strong></p>
+<pre><code>if CampUtil.IsTrackedFollower(myActor)
+        debug.trace(myActor + &quot; is a follower!&quot;)
+endif</code></pre>
+<hr />
+<h4 id="gettrackedfollowercount"><a name="CampUtil_GetTrackedFollowerCount"></a>GetTrackedFollowerCount</h4>
+<p>Return the number of tracked followers.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>int function GetTrackedFollowerCount() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The number of followers currently being tracked, from 0 to 3.</p>
+<p><strong>Examples</strong></p>
+<pre><code>debug.trace(&quot;I have &quot; + CampUtil.GetTrackedFollowerCount() + &quot; followers.&quot;)</code></pre>
+<hr />
+<h4 id="gettrackedanimal"><a name="CampUtil_GetTrackedAnimal"></a>GetTrackedAnimal</h4>
+<p>Returns the tracked animal in the player's service.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>Actor function GetTrackedAnimal() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The tracked animal Actor currently in the player's service, or None if no animal currently following the player.</p>
+<p><strong>Examples</strong></p>
+<pre><code>debug.trace(&quot;My dog is &quot; + CampUtil.GetTrackedAnimal())</code></pre>
+<hr />
+<h4 id="istrackedanimal"><a name="CampUtil_IsTrackedAnimal"></a>IsTrackedAnimal</h4>
+<p>Whether or not the Actor is a tracked animal.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function IsTrackedAnimal(Actor akActor) global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>True if the Actor is a tracked animal; False if not.</p>
+<hr />
+<h4 id="gettrackedanimalcount"><a name="CampUtil_GetTrackedAnimalCount"></a>GetTrackedAnimalCount</h4>
+<p>Get the number of animals currently in the player's service.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>int function GetTrackedAnimalCount() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The number of animals currently being tracked, from 0 to 1.</p>
+<p><strong>Examples</strong></p>
+<pre><code>debug.trace(&quot;I have &quot; + CampUtil.GetTrackedAnimalCount() + &quot; doggies.&quot;)</code></pre>
+<hr />
+<h4 id="playercanplaceobjects"><a name="CampUtil_PlayerCanPlaceObjects"></a>PlayerCanPlaceObjects</h4>
+<p>Whether or not the player can currently place Placeable Objects (tents, etc).</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function PlayerCanPlaceObjects(bool abShowMessage = true, bool abPlayerBusyCheck = true) global</code></pre>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><p>abShowMessage: Whether to show an informative message detailing why the player can't place a Placeable Object right now if returning false.</p></li>
+<li><p>abPlayerBusyCheck: Whether or not to check if the player is already placing an object.</p></li>
+</ul>
+<p><strong>Return Value</strong></p>
+<p>True if the player can currently place Placeable Objects, false otherwise.</p>
+<p><strong>Examples</strong></p>
+<pre><code>        if PlayerCanPlaceObjects()
+                debug.trace(&quot;The player can place objects!&quot;)
+        endif</code></pre>
+<p><strong>Notes</strong></p>
+<p>Reasons that this function might return false are:</p>
+<ul>
+<li><p>The player is already trying to place something.</p></li>
+<li><p>The player is swimming.</p></li>
+<li><p>The player is mounted.</p></li>
+<li><p>The player is sleeping.</p></li>
+<li><p>The player is sitting down.</p></li>
+<li><p>The player is using another object (crafting bench, etc).</p></li>
+<li><p>The player is currently transformed into a Vampire Lord or Werewolf.</p></li>
+</ul>
+<hr />
+<h4 id="isplayerplacingobject"><a name="CampUtil_IsPlayerPlacingObject"></a>IsPlayerPlacingObject</h4>
+<p>Whether or not the player is currently placing a Placeable Object (tent, etc).</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function IsPlayerPlacingObject() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>True if the player is currently placing a Placeable Object, false otherwise.</p>
+<p><strong>Examples</strong></p>
+<pre><code>if IsPlayerPlacingObject()
+        debug.trace(&quot;The player is placing an object right now!&quot;)
+endif</code></pre>
+<hr />
+<h4 id="legaltocamphere"><a name="CampUtil_LegalToCampHere"></a>LegalToCampHere</h4>
+<p>Whether or not the player's current location is considered a legal camping area.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function LegalToCampHere(bool abIgnoreSetting = false) global</code></pre>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>abIgnoreSetting: Whether or not to ignore Campfire's &quot;Camping Illegal in Settled Areas&quot; setting. If true, returns the legality of the player's current position regardless of the setting.</li>
+</ul>
+<p><strong>Return Value</strong></p>
+<p>True if player's location is a legal camping area; false otherwise.</p>
+<p><strong>Examples</strong></p>
+<pre><code>if !LegalToCampHere()
+        debug.trace(&quot;We can&#39;t stop here. This is bat country.&quot;)
+endif</code></pre>
+<p><strong>Notes</strong></p>
+<p>In Campfire, it is illegal for the player to place Placeable Objects inside houses, other owned buildings (inns, taverns), and within range of / inside settled areas like towns and cities.</p>
+<hr />
+<h4 id="getareacampingfaction"><a name="CampUtil_GetAreaCampingFaction"></a>GetAreaCampingFaction</h4>
+<p>Returns the faction that dictates camping legality in this area.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>Faction function GetAreaCampingFaction(ObjectReference akCenter) global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>akCenter: The object whose surroundings to check.</p>
+<p><strong>Return Value</strong></p>
+<p>If akCenter is in an illegal camping area, returns the faction responsible for making it illegal, else, returns None.</p>
+<p><strong>Examples</strong></p>
+<pre><code>Faction property MyCoolFaction auto
+if GetAreaCampingFaction() == MyCoolFaction
+        debug.trace(&quot;MyCoolFaction are a bunch of facists for not letting me camp here!&quot;)
+endif</code></pre>
+<hr />
+<h4 id="getlastusedcampfire"><a name="CampUtil_GetLastUsedCampfire"></a>GetLastUsedCampfire</h4>
+<p>Returns the last campfire used by the player.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>ObjectReference function GetLastUsedCampfire() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The last campfire used by the player, or None if it no longer exists.</p>
+<hr />
+<h4 id="getcurrenttent"><a name="CampUtil_GetCurrentTent"></a>GetCurrentTent</h4>
+<p>Returns the current tent being used.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>ObjectReference function GetCurrentTent() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The current tent being used, or None if the player is not using a tent.</p>
+<hr />
+<h4 id="istentwaterproof"><a name="CampUtil_IsTentWaterproof"></a>IsTentWaterproof</h4>
+<p>Is this tent waterproof?</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function IsTentWaterproof(ObjectReference akTent) global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>akTent: The Tent ObjectReference to check. Use the return value of <a href="#robo21">GetCurrentTent</a>(), or use <a href="#robo24">IsCurrentTentWaterproof</a>() instead.</p>
+<p><strong>Return Value</strong></p>
+<p>True if the tent is flagged as being waterproof, or false if not.</p>
+<hr />
+<h4 id="istentwarm"><a name="CampUtil_IsTentWarm"></a>IsTentWarm</h4>
+<p>Is this tent warm?</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function IsTentWarm(ObjectReference akTent) global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>akTent: The Tent ObjectReference to check. Use the return value of <a href="#robo21">GetCurrentTent</a>(), or use <a href="#robo25">IsCurrentTentWarm</a>() instead.</p>
+<p><strong>Return Value</strong></p>
+<p>True if the tent is flagged as being warm, or false if not.</p>
+<hr />
+<h4 id="iscurrenttentwaterproof"><a name="CampUtil_IsCurrentTentWaterproof"></a>IsCurrentTentWaterproof</h4>
+<p>Is the current tent waterproof?</p>
+<p><strong>Api version added</strong></p>
+<p>2</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function IsCurrentTentWaterproof() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>True if the current tent is flagged as being waterproof, or false if not or if there is no tent in use by the player.</p>
+<hr />
+<h4 id="iscurrenttentwarm"><a name="CampUtil_IsCurrentTentWarm"></a>IsCurrentTentWarm</h4>
+<p>Is the current tent warm?</p>
+<p><strong>Api version added</strong></p>
+<p>2</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function IsCurrentTentWarm() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>True if the current tent is flagged as being warm, or false if not or if there is no tent in use by the player.</p>
+<hr />
+<h4 id="iscrimetoplaceintowns"><a name="CampUtil_IsCrimeToPlaceInTowns"></a>IsCrimeToPlaceInTowns</h4>
+<p>Is it a crime to place this base object in towns, inside owned houses, etc?</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function IsCrimeToPlaceInTowns(Form akBaseObject) global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>akBaseObject: The base object to check.</p>
+<p><strong>Return Value</strong></p>
+<p>True if the Form is illegal to place in settled areas, or False if not.</p>
+<p><strong>Notes</strong></p>
+<p>This function returns true or false without regard to the current legality setting.</p>
+<hr />
+<h4 id="isplaceableobjecttemporary"><a name="CampUtil_IsPlaceableObjectTemporary"></a>IsPlaceableObjectTemporary</h4>
+<p>Returns whether or not this placeable object does not spawn persistently (i.e. won't be cleaned up by a cell reset).</p>
+<p><strong>Api version added</strong></p>
+<p>2</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function IsPlaceableObjectTemporary(Form akBaseObject) global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>akBaseObject: The base object to check.</p>
+<p><strong>Return Value</strong></p>
+<p>True if the Form will spawn non-persistently, False if not.</p>
+<hr />
+<h4 id="getcampfiresettingbool"><a name="CampUtil_GetCampfireSettingBool"></a>GetCampfireSettingBool</h4>
+<p>Returns the state of the given Campfire setting.</p>
+<p><strong>Api version added</strong></p>
+<p>2</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function GetCampfireSettingBool(string setting) global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>setting: The setting which you would like to retrieve. Accepted values (case-sensitive):</p>
+<ul>
+<li><p>ManualFireLighting</p></li>
+<li><p>CampingGearFlammable</p></li>
+<li><p>TentRemovePlayerEquipment ; The master setting for whether or not to remove player gear in tents</p></li>
+<li><p>TentRemovePlayerCuirass</p></li>
+<li><p>TentRemovePlayerHelm</p></li>
+<li><p>TentRemovePlayerGauntlets</p></li>
+<li><p>TentRemovePlayerBoots</p></li>
+<li><p>TentRemovePlayerBackpack</p></li>
+<li><p>TentRemovePlayerWeapons</p></li>
+<li><p>TentRemovePlayerShield</p></li>
+<li><p>TentRemovePlayerAmmo</p></li>
+<li><p>TentRemoveFollowerEquipment</p></li>
+<li><p>FollowerTracking</p></li>
+<li><p>FollowersUseCampsite</p></li>
+<li><p>CampingIllegalInTowns</p></li>
+<li><p>AdvancedPlacementMode</p></li>
+<li><p>EquippingOverhaulCompatibility</p></li>
+</ul>
+<p><strong>Return Value</strong></p>
+<p>True if the feature is enabled, false if disabled or if the setting string is invalid.</p>
+<p><strong>Examples</strong></p>
+<pre><code>if GetCampfireSettingBool(&quot;FollowerTracking&quot;) == true
+        debug.trace(&quot;Campfire is tracking followers.&quot;)
+endif</code></pre>
+<hr />
+<h4 id="getcampfiresettingint"><a name="CampUtil_GetCampfireSettingInt"></a>GetCampfireSettingInt</h4>
+<p>Returns the value of the given Campfire setting.</p>
+<p><strong>Api version added</strong></p>
+<p>2</p>
+<p><strong>Syntax</strong></p>
+<pre><code>int function GetCampfireSettingInt(string setting) global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>setting: The setting which you would like to retrieve. Accepted values (case-sensitive):</p>
+<ul>
+<li>MaxPlacementThreads</li>
+</ul>
+<p><strong>Return Value</strong></p>
+<p>The value of the setting, or -1 if the setting string was invalid.</p>
+<p><strong>Examples</strong></p>
+<pre><code>if GetCampfireSettingInt(&quot;MaxPlacementThreads&quot;) &gt; 5
+        debug.trace(&quot;Campfire is configured to use over 5 threads for placing objects.&quot;)
+endif</code></pre>
+<hr />
+<h3 id="member-functions-1">Events</h3>
+<h4 id="campfire_onobjectplaced"><a name="CampUtil_Campfire_OnObjectPlaced"></a>Campfire_OnObjectPlaced</h4>
+<p>An SKSE Mod Event that fires when the player places any Campfire placeable object (tents, containers, furniture, etc).</p>
+<p><strong>Api version added</strong></p>
+<p>2</p>
+<p><strong>Syntax</strong></p>
+<pre><code>Event Campfire_OnObjectRemoved(Form akPlacedObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)</code></pre>
+<p><strong>Parameters</strong></p>
+<p>akPlacedObject: The ObjectReference that was placed. Cast to an ObjectReference (i.e. akPlacedObject as ObjectReference). afXPos: The X position of the object. afYPos: The Y position of the object. afZPos: The Z position of the object. afXAng: The X angle of the object. afYAng: The Y angle of the object. afZAng: The Z angle of the object. abIsTent: Whether or not this object is a Campfire-based tent.</p>
+<p><strong>Examples</strong></p>
+<pre><code>Event OnInit()
+    RegisterForModEvent(&quot;Campfire_OnObjectPlaced&quot;, &quot;Campfire_OnObjectPlaced&quot;)
+endEvent
+
+Event Campfire_OnObjectRemoved(Form akPlacedObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
+        if abIsTent
+                debug.trace(&quot;The player just placed a tent!&quot;)
+        endif
+endEvent</code></pre>
+<p><strong>Notes</strong></p>
+<p>This event will also be sent when a Campfire Perk Tree is displayed.</p>
+<hr />
+<h4 id="campfire_onobjectremoved"><a name="CampUtil_Campfire_OnObjectRemoved"></a>Campfire_OnObjectRemoved</h4>
+<p>An SKSE Mod Event that fires when the player picks up any Campfire placeable object (tents, containers, furniture, etc), or if that object is destroyed by fire.</p>
+<p><strong>Api version added</strong></p>
+<p>2</p>
+<p><strong>Syntax</strong></p>
+<pre><code>Event Campfire_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)</code></pre>
+<p><strong>Parameters</strong></p>
+<p>akPlacedObject: The base object of the object that was removed. afPositionX: The X position of the object. afPositionY: The Y position of the object. afPositionZ: The Z position of the object. afAngleX: The X angle of the object. afAngleY: The Y angle of the object. afAngleZ: The Z angle of the object. abIsTent: Whether or not this object is a Campfire-based tent.</p>
+<p><strong>Examples</strong></p>
+<pre><code>Event OnInit()
+    RegisterForModEvent(&quot;Campfire_OnObjectRemoved&quot;, &quot;Campfire_OnObjectRemoved&quot;)
+endEvent
+
+Event Campfire_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
+        if abIsTent
+                debug.trace(&quot;The player just placed a tent!&quot;)
+        endif
+endEvent</code></pre>
+<p><strong>Notes</strong></p>
+<p>This event does not send the object reference of the object picked up as a parameter because, by the time this event is sent, the reference no longer exists. This event will also be sent when a Campfire Perk Tree is exited.</p>
+<hr />
+<h4 id="campfire_onbedrollsitlay"><a name="CampUtil_Campfire_OnBedrollSitLay"></a>Campfire_OnBedrollSitLay</h4>
+<p>An SKSE Mod Event that fires when the player sits down, lies down, or gets up from sitting or laying in a Campfire tent or bed roll.</p>
+<p><strong>Api version added</strong></p>
+<p>2</p>
+<p><strong>Syntax</strong></p>
+<pre><code>Event Campfire_OnBedrollSitLay(Form akTent, bool abGettingUp)</code></pre>
+<p><strong>Parameters</strong></p>
+<p>akTent: The tent the player is sitting on, laying on, or getting up from. Cast to an ObjectReference (i.e. akTent as ObjectReference). abGettingUp: Whether or not the player is getting up from this tent or bed roll.</p>
+<p><strong>Examples</strong></p>
+<pre><code>Event OnInit()
+    RegisterForModEvent(&quot;Campfire_OnBedrollSitLay&quot;, &quot;Campfire_OnBedrollSitLay&quot;)
+endEvent
+
+Event Campfire_OnBedrollSitLay(Form akTent, bool abGettingUp)
+        if abGettingUp
+                debug.trace(&quot;The player just got up!&quot;)
+        endif
+endEvent</code></pre>
+<hr />
+<h4 id="campfire_ontententer"><a name="CampUtil_Campfire_OnTentEnter"></a>Campfire_OnTentEnter</h4>
+<p>An SKSE Mod Event that fires when the player &quot;enters&quot; a tent.</p>
+<p><strong>Api version added</strong></p>
+<p>2</p>
+<p><strong>Syntax</strong></p>
+<pre><code>Event Campfire_OnTentEnter(Form akTent, bool abHasShelter)</code></pre>
+<p><strong>Parameters</strong></p>
+<p>akTent: The tent the player just &quot;entered&quot;. Cast to an ObjectReference (i.e. akTent as ObjectReference). abHasShelter: Whether or not the tent the player entered has overhead shelter of some kind.</p>
+<p><strong>Examples</strong></p>
+<pre><code>Event OnInit()
+    RegisterForModEvent(&quot;Campfire_OnTentEnter&quot;, &quot;Campfire_OnTentEnter&quot;)
+endEvent
+
+Event Campfire_OnTentEnter(Form akTent, bool abHasShelter)
+        if abHasShelter
+                debug.trace(&quot;It&#39;s going to be a cold night...&quot;)
+        endif
+endEvent</code></pre>
+<p><strong>Notes</strong></p>
+<p>For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player sits or lies down on their bed roll. (Reason: <a href="#robo89">TentAsset_LargeTentTriggerVolume</a> has not been set.)</p>
+<hr />
+<h4 id="campfire_ontentleave"><a name="CampUtil_Campfire_OnTentLeave"></a>Campfire_OnTentLeave</h4>
+<p>An SKSE Mod Event that fires when the player &quot;leaves&quot; a tent.</p>
+<p><strong>Api version added</strong></p>
+<p>2</p>
+<p><strong>Syntax</strong></p>
+<pre><code>Event Campfire_OnTentLeave()</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None.</p>
+<p><strong>Examples</strong></p>
+<pre><code>Event OnInit()
+    RegisterForModEvent(&quot;Campfire_OnTentLeave&quot;, &quot;Campfire_OnTentLeave&quot;)
+endEvent
+
+Event Campfire_OnTentLeave()
+        debug.trace(&quot;Back to adventuring!&quot;)
+endEvent</code></pre>
+<p><strong>Notes</strong></p>
+<p>This event may fire multiple times for the same tent. This can happen for a number of reasons, such as if the player is standing inside the tent when picking it up. For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player gets up from sitting or lying down on their bed roll. (Reason: <a href="#robo89">TentAsset_LargeTentTriggerVolume</a> has not been set.)</p>

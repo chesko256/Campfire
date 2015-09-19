@@ -27,7 +27,7 @@ Float property Setting_BedRollScale = 1.0 auto
 * Optional: The scale to render the player's and follower's bed rolls. 1.0 by default. }
 ;*********/;
 
-;/********p* CampTent/Setting_BedRollScale
+;/********p* CampTent/Setting_PlayerSitAngle
 * SYNTAX
 */;
 Float property Setting_PlayerSitAngle = 0.0 auto

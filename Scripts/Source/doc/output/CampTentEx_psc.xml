@@ -10,13 +10,13 @@
 CampTent/CampTentEx</title>
 <formalpara><title>SCRIPTNAME</title><para></para></formalpara>
 <literallayout class="monospaced">
-scriptname CampTentEx extends <link linkend="robo79">CampTent</link>
+scriptname CampTentEx extends <link linkend="robo85">CampTent</link>
 </literallayout>
 <formalpara><title>OVERVIEW</title><para></para></formalpara>
 <para>
- This script is an expanded version of <link linkend="robo79">CampTent</link>, and includes a larger number of optional properties 
+ This script is an expanded version of <link linkend="robo85">CampTent</link>, and includes a larger number of optional properties 
  in order to create more elaborate tents. CampTentEx includes support for up to 3 follower bed rolls,
- 2 additional lanterns, new clutter options, and more. As with <link linkend="robo79">CampTent</link>, only the PlayerBed, 
+ 2 additional lanterns, new clutter options, and more. As with <link linkend="robo85">CampTent</link>, only the PlayerBed, 
  SitFurniture, and LieDownFurniture Position References are required for the tent to work.
 </para>
 </section>

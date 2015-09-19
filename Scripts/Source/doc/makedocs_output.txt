@@ -1,25 +1,5 @@
 
 E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>robodoc.exe
-robodoc.exe:
-./../CampUsableMiscItem.psc(68) : Warning R1:
-  A header with the name "CampUsableMiscItem/consumable_ingredient_name" already exists.
-  See ./../CampUsableMiscItem.psc(59)
-robodoc.exe:
-./../CampUsableMiscItem.psc(77) : Warning R2:
-  A header with the name "CampUsableMiscItem/consumable_ingredient_name" already exists.
-  See ./../CampUsableMiscItem.psc(59)
-robodoc.exe:
-./../CampTent.psc(30) : Warning R3:
-  A header with the name "CampTent/Setting_BedRollScale" already exists.
-  See ./../CampTent.psc(21)
-robodoc.exe:
-./../CampPlaceableMiscItem.psc(84) : Warning R4:
-  A header with the name "CampPlaceableMiscItem/consumable_ingredient_name" already exists.
-  See ./../CampPlaceableMiscItem.psc(75)
-robodoc.exe:
-./../CampPlaceableMiscItem.psc(93) : Warning R5:
-  A header with the name "CampPlaceableMiscItem/consumable_ingredient_name" already exists.
-  See ./../CampPlaceableMiscItem.psc(75)
 
 E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>pandoc.exe "./output/CampUtil_psc.xml" -f docbook -t markdown_github -o "./output/CampUtil_psc.txt" --base-header-level=3 
 
@@ -40,33 +20,17 @@ E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>pandoc.exe "./output/CampUs
 E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>pandoc.exe "./output/CampPlacementIndicator_psc.xml" -f docbook -t markdown_github -o "./output/CampPlacementIndicator_psc.txt" --base-header-level=3 
 
 E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>python githubber.py "CampUtil_psc.txt" "../../../campwiki/CampUtil-API-Reference.md" 
-'python' is not recognized as an internal or external command,
-operable program or batch file.
 
 E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>python githubber.py "CampTent_psc.txt" "../../../campwiki/CampTent-Script.md" 
-'python' is not recognized as an internal or external command,
-operable program or batch file.
 
 E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>python githubber.py "CampTentEx_psc.txt" "../../../campwiki/CampTentEx-Script.md" 
-'python' is not recognized as an internal or external command,
-operable program or batch file.
 
 E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>python githubber.py "CampPlaceableObject_psc.txt" "../../../campwiki/CampPlaceableObject-Script.md" 
-'python' is not recognized as an internal or external command,
-operable program or batch file.
 
 E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>python githubber.py "CampPlaceableObjectEx_psc.txt" "../../../campwiki/CampPlaceableObjectEx-Script.md" 
-'python' is not recognized as an internal or external command,
-operable program or batch file.
 
 E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>python githubber.py "CampPlaceableMiscItem_psc.txt" "../../../campwiki/CampPlaceableMiscItem-Script.md" 
-'python' is not recognized as an internal or external command,
-operable program or batch file.
 
 E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>python githubber.py "CampUsableMiscItem_psc.txt" "../../../campwiki/CampUsableMiscItem-Script.md" 
-'python' is not recognized as an internal or external command,
-operable program or batch file.
 
 E:\ModOrganizerData\mods\Campfire\Scripts\Source\doc>python githubber.py "CampPlacementIndicator_psc.txt" "../../../campwiki/CampPlacementIndicator-Script.md" 
-'python' is not recognized as an internal or external command,
-operable program or batch file.
