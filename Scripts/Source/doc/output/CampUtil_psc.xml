@@ -890,7 +890,7 @@ CampUtil/Campfire_OnObjectPlaced</title>
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
-Event <link linkend="robo31">Campfire_OnObjectRemoved</link>(Form akPlacedObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
+Event Campfire_OnObjectPlaced(Form akPlacedObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
 </literallayout>
 <formalpara><title>PARAMETERS</title><para></para></formalpara>
 <para>
@@ -909,7 +909,7 @@ Event OnInit()
     RegisterForModEvent("Campfire_OnObjectPlaced", "Campfire_OnObjectPlaced")
 endEvent
 
-Event <link linkend="robo31">Campfire_OnObjectRemoved</link>(Form akPlacedObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
+Event Campfire_OnObjectPlaced(Form akPlacedObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
         if abIsTent
                 debug.trace("The player just placed a tent!")
         endif

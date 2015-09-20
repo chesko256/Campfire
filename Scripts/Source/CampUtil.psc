@@ -1173,7 +1173,7 @@ endFunction
 * An SKSE Mod Event that fires when the player places any Campfire placeable object (tents, containers, furniture, etc).
 *
 * SYNTAX
-Event Campfire_OnObjectRemoved(Form akPlacedObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
+Event Campfire_OnObjectPlaced(Form akPlacedObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
 * 
 * PARAMETERS
 * akPlacedObject: The ObjectReference that was placed. Cast to an ObjectReference (i.e. akPlacedObject as ObjectReference).
@@ -1193,7 +1193,7 @@ Event OnInit()
     RegisterForModEvent("Campfire_OnObjectPlaced", "Campfire_OnObjectPlaced")
 endEvent
 
-Event Campfire_OnObjectRemoved(Form akPlacedObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
+Event Campfire_OnObjectPlaced(Form akPlacedObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
 	if abIsTent
 		debug.trace("The player just placed a tent!")
 	endif
