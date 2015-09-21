@@ -25,9 +25,13 @@ function StartSystem()
 
 endFunction
 
-Event OnInit()
-	
+function StopSystem()
+	if self.IsRunning()
+		self.Stop()
+	endif
+endFunction
 
+Event OnInit()
 	RegisterForSingleUpdate(1)
 EndEvent
 

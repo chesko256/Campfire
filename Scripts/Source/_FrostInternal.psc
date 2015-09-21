@@ -9,7 +9,7 @@ bool function IsBetweenInclusive(float Value, float Beginning, float End) global
 endFunction
 
 function FrostDebug(int aiSeverity, string asLogMessage) global
-	int LOG_LEVEL = (Game.GetFormFromFile(0, "Chesko_Frostfall.esp") as GlobalVariable).GetValueInt()
+	int LOG_LEVEL = (Game.GetFormFromFile(0, "Frostfall.esp") as GlobalVariable).GetValueInt()
 	if LOG_LEVEL <= aiSeverity
 		if aiSeverity == 0
 			debug.trace("[Frostfall][Debug] " + asLogMessage)
