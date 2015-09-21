@@ -11,6 +11,7 @@ int property WARM_TENT_BONUS = 1 autoReadOnly
 Actor property PlayerRef auto
 
 float distance_moved = 0.0
+bool in_interior = false
 
 function StartSystem()
 	if !self.IsRunning()
@@ -53,12 +54,12 @@ function UpdateExposure()
 	endif
 
 	; Gather data
-	FastTravelStateUpdate()
-	;###### CURRENT PROGRESS
-	PlayerStateUpdate()
+	RefreshAbleToFastTravel()
+	RefreshPlayerStateData()
 
 	; Super cereal
 	int WetPenalty = GetWetPenalty(bNearFire)
+	;###### CURRENT PROGRESS
 	int FoodBonus = GetFoodState()
 	int ClothingBonus = GetClothingState()
 	int HeldHeatBonus = GetHeldHeatState()
@@ -84,7 +85,7 @@ function UpdateExposure()
 	StoreLastPlayerState()
 endFunction
 
-function PlayerStateUpdate()
+function RefreshPlayerStateData()
 	this_worldspace = PlayerRef.GetWorldSpace()
 	in_interior = CampUtil.IsRefInInterior(PlayerRef)
 	distance_moved = GetDistanceMoved()
@@ -117,8 +118,27 @@ endFunction
 /;
 
 ;@TODO: Possibly wrap in FrostUtil IsAbleToFastTravel() or similar
-function FastTravelStateUpdate()
+function RefreshAbleToFastTravel()
+	; Can the player fast-travel?
 
+	if Compatibility.isDLC2Loaded
+		WorldSpace my_ws = PlayerRef.GetWorldspace()
+		if _Frost_WorldspacesExteriorOblivion.HasForm(my_ws)
+			Game.EnableFastTravel()
+			return
+		endif
+	endif
+	; Is the player riding a dragon?
+	if (_Frost_Main as _Frost_ConditionValues).IsRidingFlyingMount
+		Game.EnableFastTravel()
+		return
+	endif
+
+	if _Frost_Setting_NoFastTravel.GetValueInt() == 2
+		Game.EnableFastTravel(false)
+	else																;Fast Travel Cost = Off
+		Game.EnableFastTravel()
+	endif
 endFunction
 
 float function GetDistanceMoved()
