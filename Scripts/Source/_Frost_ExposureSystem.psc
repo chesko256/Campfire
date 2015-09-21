@@ -22,7 +22,6 @@ function StartSystem()
 	endif
 
 	; Add exposure mechanic spells
-
 endFunction
 
 function StopSystem()
@@ -40,15 +39,16 @@ Event OnUpdate()
 		UpdateExposure()
 		RegisterForSingleUpdate(EXPOSURE_UPDATE_FREQUENCY)
 	else
-		self.Stop()
+		StopSystem()
 	endif
 endEvent
 
 function UpdateExposure()
-	
 	if PlayerIsInDialogue()
 		return
 	endif
+
+	;###### CURRENT PROGRESS
 
 	; Gather data
 	WaitStateUpdate()
