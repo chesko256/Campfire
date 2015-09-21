@@ -94,6 +94,7 @@ function PlayerStateUpdate()
 endFunction
 
 function StoreLastPlayerState()
+	; Store the player's last known position and vampire state.
 	last_worldspace = this_worldspace
 	last_interior_state = in_interior
 	last_x = player_x
