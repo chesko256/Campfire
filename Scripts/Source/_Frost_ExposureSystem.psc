@@ -1,10 +1,14 @@
 Scriptname _Frost_ExposureSystem extends Quest
 
+import CampUtil
+
 float property EXPOSURE_UPDATE_FREQUENCY = 5.0 autoReadOnly
 int property FIRE_FACTOR = 8 autoReadOnly
 int property HEAT_FACTOR = 6 autoReadOnly
 int property TENT_FACTOR = 1 autoReadOnly
 int property WARM_TENT_BONUS = 1 autoReadOnly
+
+Actor property PlayerRef auto
 
 float distance_moved = 0.0
 
@@ -48,11 +52,9 @@ function UpdateExposure()
 		return
 	endif
 
-	;###### CURRENT PROGRESS
-
 	; Gather data
-	WaitStateUpdate()
 	FastTravelStateUpdate()
+	;###### CURRENT PROGRESS
 	PlayerStateUpdate()
 
 	; Super cereal
@@ -106,19 +108,13 @@ function StoreLastPlayerState()
 	last_vampire_state = this_vampire_state
 endFunction
 
-;@TODO: Possibly wrap in FrostUtil IsAbleToWait() or similar
-function WaitStateUpdate()
-	if pSetting_NoWait == true
-		;If the player is inside, or near a bedroll, disable the spell
-		if bInInterior || Game.FindClosestReferenceOfAnyTypeInListFromRef(_DE_SleepObjects, pPlayer,  600.0) != None
-			pPlayer.RemoveSpell(_DE_NoWait_Spell)
-		else
-			pPlayer.AddSpell(_DE_NoWait_Spell, false)
-		endif
-	else
-		pPlayer.RemoveSpell(_DE_NoWait_Spell)
-	endif
+;/function WaitStateUpdate()
+	;@TODO: Drive this with a reference alias instead, add all vanilla bed rolls + _Camp_TentLayDownMarker to _Frost_SleepObjects
+	; and condition against _Frost_Setting_NoWaitingOutdoors and _Camp_ConditionValues.IsPlayerInInterior
+
+	;@TODO: Provide FrostUtil.PlayerAbleToWait()
 endFunction
+/;
 
 ;@TODO: Possibly wrap in FrostUtil IsAbleToFastTravel() or similar
 function FastTravelStateUpdate()
