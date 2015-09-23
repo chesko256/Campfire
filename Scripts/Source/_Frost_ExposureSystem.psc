@@ -60,7 +60,7 @@ function UpdateExposure()
 	; Super cereal
 	int WetPenalty = GetWetPenalty(bNearFire)
 	;###### CURRENT PROGRESS
-	int FoodBonus = GetFoodState()
+	;/int FoodBonus = GetFoodState()
 	int ClothingBonus = GetClothingState()
 	int HeldHeatBonus = GetHeldHeatState()
 	int CloakBonus = GetCloakState()
@@ -83,6 +83,7 @@ function UpdateExposure()
 	ExposureEffectsUpdate()
 
 	StoreLastPlayerState()
+	/;
 endFunction
 
 function RefreshPlayerStateData()
@@ -239,9 +240,9 @@ endFunction
 function ExposureEffectsUpdate()
 	float myCurrentEP = _DE_ExposurePoints.GetValue()
 	
-	elseif myCurrentEP >= 81
+	if myCurrentEP >= 81
 		SetExposureEffects(0)
-	if myCurrentEP < 81 && myCurrentEP >= 61
+	elseif myCurrentEP < 81 && myCurrentEP >= 61
 		SetExposureEffects(1)
 	elseif myCurrentEP < 61 && myCurrentEP >= 41
 		SetExposureEffects(2)

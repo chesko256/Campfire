@@ -1262,7 +1262,7 @@ endEvent
 
 Event Campfire_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
 	if abIsTent
-		debug.trace("The player just placed a tent!")
+		debug.trace("The player just removed a tent!")
 	endif
 endEvent
 ;*********/;

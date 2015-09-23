@@ -1,5 +1,9 @@
 scriptname _FrostInternal hidden
 
+int property WEATHERCLASS_CLEAR = 1 autoReadOnly
+int property WEATHERCLASS_RAIN = 2 autoReadOnly
+int property WEATHERCLASS_SNOW = 3 autoReadOnly
+
 bool function IsBetweenInclusive(float Value, float Beginning, float End) global
 	if Value >= Beginning && Value <= End
 		return true
