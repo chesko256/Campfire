@@ -18,12 +18,6 @@ Message property _Frost_WetStateMsg_Dry auto
 
 int last_wet_level = 0
 
-int CASE_INTERIOR = 1
-int CASE_PLEASANT = 2
-int CASE_RAINY = 3
-int CASE_SNOWY = 4
-int CASE_OTHER = 5
-
 function StartSystem()
 
 endFunction
@@ -54,11 +48,23 @@ endFunction
 
 function ModAttributeWetness(float amount)
 	float wetness = _Frost_AttributeWetness.GetValue() + amount
+	
 	; Clamp
-	if wetness > MAX_WETNESS
-		wetness = MAX_WETNESS
-	elseif wetness < 0.0
-		wetness = 0.0
+	; account for coming in to tent already soaking wet
+	bool inside_tent = GetCurrentTent()
+	bool inside_waterproof_tent = IsCurrentTentWaterproof()
+	bool taking_shelter = IsTakingShelter()
+	float max
+	if inside_tent && !inside_waterproof_tent
+
+	else
+		max = MAX_WETNESS
+	endif
+
+	if wetness > max
+		wetness = max
+	elseif wetness < MIN_WETNESS
+		wetness = MIN_WETNESS
 	endif
 	_Frost_AttributeWetness.SetValue(wetness)
 endFunction
@@ -111,9 +117,8 @@ bool function IsNearWaterfall()
 	endif
 endFunction
 
-function UpdateWetState(bool bNearFire)			;Approved 2.5
+function UpdateWetState()
 	int WetFactor = 0
-	int iSwimState = _DE_SwimState.GetValueInt()
 	int iWeatherClass = 0
 
 	if PlayerRef.IsSwimming()
@@ -130,42 +135,27 @@ function UpdateWetState(bool bNearFire)			;Approved 2.5
 	if wMyWeather
 		weather_class = GetWeatherClassificationActual(wMyWeather)
 	endif
-	
-	;What is currently happening?
-	;#Region DETERMINE SITUATION
-	int case = 0
-	if CampUtil.IsRefInInterior(PlayerRef)
-		case = CASE_INTERIOR
-	else
-		if weather_class <= WEATHERCLASS_CLEAR
-			case = CASE_PLEASANT
-		elseif weather_class == WEATHERCLASS_RAIN && Weather.GetOutgoingWeather() == none && !IsRefInOblivion(PlayerRef)
-			case = CASE_RAINY
-		elseif weather_class == WEATHERCLASS_SNOW
-			case = CASE_SNOWY
-		else
-			case = CASE_OTHER
-		endif
+
+	bool wet_conditions = false
+	if weather_class == WEATHERCLASS_RAIN && Weather.GetOutgoingWeather() == none && \
+	   !IsRefInOblivion(PlayerRef) && !IsRefInInterior(PlayerRef)
+		wet_conditions == true
 	endif
 
-	if case == CASE_INTERIOR
-		ApplyWetConditionGetDrier(bNearFire)
-	elseif case == CASE_PLEASANT
-		ApplyWetConditionGetDrier(bNearFire)
-	elseif case == CASE_RAINY
-		if iIsInTent == 0 && !bTakingShelter					;No Tent, no shelter
-			ApplyWetConditionGetWetter()
-		elseif iIsInTent == 1									;Hide Tent
-			ApplyWetConditionGetWetterConditional(300.0, bNearFire)
-		elseif iIsInTent >= 2 || bTakingShelter					;Leather Tent OR Conjured Shelter OR taking shelter
-			ApplyWetConditionGetDrier(bNearFire)
+	bool inside_tent = GetCurrentTent()
+	bool inside_waterproof_tent = IsCurrentTentWaterproof()
+	bool taking_shelter = IsTakingShelter()
+	if wet_conditions && !inside_waterproof_tent && !taking_shelter
+		if inside_waterproof_tent || taking_shelter
+			DryOff()
+		elseif inside_tent && !inside_waterproof_tent
+			GetWetterConditional(300.0, bNearFire)
+		elseif !inside_tent && !taking_shelter
+			GetWetter()
 		endif
-	elseif case == CASE_SNOWY
-		ApplyWetConditionGetDrier(bNearFire)
-	elseif case == CASE_OTHER
-		ApplyWetConditionGetDrier(bNearFire)
+	else
+		DryOff()
 	endif
-	;#EndRegion
 	
 	;Less exposure drain in warmer weather.
 	;/ int theTemp = _DE_CurrentTemp.GetValueInt()
@@ -177,23 +167,26 @@ function UpdateWetState(bool bNearFire)			;Approved 2.5
 	/;
 endFunction
 
-function ApplyWetConditionGetDrier(bool bNearFire)	;Approved 2.5
-	if bNearFire
-		pWetPoints -= 150.0 * CloakDryRateMod
+;@TODO: Make realtime-independent
+function DryOff()
+	if IsRefNearFire(PlayerRef)
+		float amount = -(37.5 * GetCurrentHeatLevel(PlayerRef))
+		ModAttributeWetness(amount)
 	else
-		pWetPoints -= 6.25 * CloakDryRateMod
+		ModAttributeWetness(-6.25)
 	endif
 endFunction
 
-function ApplyWetConditionGetWetter()				;Approved 2.5
-	if pPlayer.HasPerk(Compatibility.Windbreaker)
-		pWetPoints += 27.0 * ( CloakWetRateMod - ( CloakWetRateMod * 0.25  ) )
-	else
-		pWetPoints += 27.0 * CloakWetRateMod
-	endif
+function GetWetter()
+	;@TODO: Windbreaker Perk
+	;if pPlayer.HasPerk(Compatibility.Windbreaker)
+	;	pWetPoints += 27.0 * ( CloakWetRateMod - ( CloakWetRateMod * 0.25  ) )
+	
+	float amount = 27.0 * CloakWetRateMod
+	ModAttributeWetness(amount)
 endFunction
 
-function ApplyWetConditionGetWetterConditional(float WPCap, bool bNearFire)								;Approved 2.5
+function GetWetterConditional(float WPCap, bool bNearFire)								;Approved 2.5
 	if bNearFire
 		if ( pWetPoints <= WPCap && pWetPoints >= WPCap - 50.0 )
 			if ( pWetPoints < WPCap )
