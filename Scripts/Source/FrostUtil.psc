@@ -1,5 +1,9 @@
 scriptname FrostUtil hidden
 
+CampfireAPI function GetAPI() global
+    ;return (Game.GetFormFromFile(0x00024095, "Campfire.esm") as Quest) as CampfireAPI
+endFunction
+
 _Frost_ClothingSystem function GetClothingSystem() global
     Quest delete_me = none
     return (delete_me as _Frost_ClothingSystem)
@@ -22,7 +26,7 @@ bool function IsRefNearFire(ObjectReference akReference)
     return false
 endFunction
 
-int function GetCurrentHeatLevel()
+int function GetCurrentHeatLevel(ObjectReference akReference)
     return 0
 endFunction
 
@@ -88,7 +92,7 @@ endif
 * Soul Cairn
 * Apocrypha
 ;*********/;
-    FrostfallAPI Frostfall = GetAPI()
+    ;/FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
         return False
@@ -99,4 +103,6 @@ endif
     else
         return false
     endif
+    /;
+    return false
 endFunction
