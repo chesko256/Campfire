@@ -1,6 +1,5 @@
 scriptname _Frost_WetnessSystem extends Quest
 
-;@TODO: implement WEATHERCLASS
 import FrostUtil
 import _FrostInternal
 
