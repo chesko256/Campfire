@@ -175,7 +175,7 @@ function TakeDown()
 
 	ClearEquipmentFromCrimeAlias(self)
 	; Raise optional SKSE event
-	SendEvent_OnObjectRemoved(self.GetBaseObject(), self.GetPositionX(), self.GetPositionY(), self.GetPositionZ(), self.GetAngleX(), self.GetAngleY(), self.GetAngleZ())
+	SendEvent_OnObjectRemoved(self.GetBaseObject(), self.GetPositionX(), self.GetPositionY(), self.GetPositionZ(), self.GetAngleX(), self.GetAngleY(), self.GetAngleZ(), IsTent(self))
 endFunction
 
 function PlaceObject_FireMarkers()

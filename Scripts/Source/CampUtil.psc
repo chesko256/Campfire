@@ -940,8 +940,8 @@ bool function IsCrimeToPlaceInTowns(Form akBaseObject) global
 	endif
 endFunction
 
-bool function IsTent(Form akBaseObject) global
-	if (akBaseObject as CampTent)
+bool function IsTent(ObjectReference akReference) global
+	if (akReference as CampTent)
 		return true
 	else
 		return false
@@ -1224,7 +1224,7 @@ function SendEvent_OnObjectPlaced(ObjectReference akObjectReference) global
 				ModEvent.PushFloat(handle, ax)
 				ModEvent.PushFloat(handle, ay)
 				ModEvent.PushFloat(handle, az)
-				ModEvent.PushBool(handle, IsTent(akObjectReference.GetBaseObject()))
+				ModEvent.PushBool(handle, IsTent(akObjectReference))
 				ModEvent.Send(handle)
 			endif
 		endif
@@ -1266,7 +1266,7 @@ Event Campfire_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPos
 	endif
 endEvent
 ;*********/;
-function SendEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ) global
+function SendEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent) global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
@@ -1285,7 +1285,7 @@ function SendEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float a
 				ModEvent.PushFloat(handle, afAngleX)
 				ModEvent.PushFloat(handle, afAngleY)
 				ModEvent.PushFloat(handle, afAngleZ)
-				ModEvent.PushBool(handle, IsTent(akBaseObject))
+				ModEvent.PushBool(handle, abIsTent)
 				ModEvent.Send(handle)
 			endif
 		endif
