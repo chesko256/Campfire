@@ -251,6 +251,8 @@ MiscObject property _Camp_DeadwoodBranch auto
 MiscObject property _Camp_Kindling auto
 MiscObject property Firewood01 auto
 MiscObject property _Camp_DeadwoodLog auto
+MiscObject property _Camp_CookingPot_MISC auto
+Furniture property _Camp_CookingPot auto
 
 ;Run-time objects
 ObjectReference property myFuelLit auto hidden
@@ -397,13 +399,20 @@ function DoActivate(ObjectReference akActionRef)
             ;Destroy
             TakeDown()
         elseif i == 4
+            ;Place Cooking Pot
+            if PlayerRef.GetItemCount(_Camp_CookingPot_MISC) > 0
+                myCookPotSnapMarker.PlaceAtMe(_Camp_CookingPot, abForcePersist = !(IsPlaceableObjectTemporary(_Camp_CookingPot)))
+                PlayerRef.RemoveItem(_Camp_CookingPot_MISC, 1, true)
+            endif
+        elseif i == 5
+            ;Skills
             if !myPerkNodeController
                 bool b = ShowSkills()
                 if !b
                     DoActivate(akActionRef)
                 endif
             endif
-        elseif i == 5
+        elseif i == 6
             ;Cancel
         endif
     endif
@@ -621,7 +630,7 @@ function TakeDown()
 
     ClearEquipmentFromCrimeAlias(self)
     SendEvent_OnObjectRemoved(self.GetBaseObject(), self.GetPositionX(), self.GetPositionY(), self.GetPositionZ(), \
-                              self.GetAngleX(), self.GetAngleY(), self.GetAngleZ())
+                              self.GetAngleX(), self.GetAngleY(), self.GetAngleZ(), false)
     TryToDisableAndDeleteRef(self)
 endFunction
 
