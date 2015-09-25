@@ -1,5 +1,17 @@
-Log: Logs\Archives\CampfireArchiveLog.txt
+Log: Campfire\CampfireArchiveLog.txt
 New Archive
-Set File Group Root: .\
-Add File Group: CampfireArchiveManifest.txt
-Save Archive: .\tmp\Campfire.bsa
+Check: Meshes
+Check: Textures
+Check: Menus
+Check: Sounds
+Check: Voices
+Check: Shaders
+Check: Trees
+Check: Fonts
+Check: Misc
+Check: Retain Directory Names
+Check: Retain File Names
+Check: Compress Archive
+Set File Group Root: 
+Add File Group: ./Campfire/CampfireArchiveManifest.txt
+Save Archive: ./tmp/Campfire.bsa
