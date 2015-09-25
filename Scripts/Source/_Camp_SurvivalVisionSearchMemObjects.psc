@@ -72,6 +72,14 @@ EndEvent
 function StopEffects()
     CampDebug(0, "Instincts: Stopping all membrane shaders.")
     stop_effect = true
+    
+    ; Wait for seeking to stop
+    int j = 10
+    while seeking && j > 0
+        utility.wait(0.2)
+        j -= 1
+    endWhile
+
     int i = 0
     while i < found_targets.Length
         if found_targets[i]
