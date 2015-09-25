@@ -1,0 +1,5 @@
+Log: Logs\Archives\CampfireArchiveLog.txt
+New Archive
+Set File Group Root: .\
+Add File Group: CampfireArchiveManifest.txt
+Save Archive: .\tmp\Campfire.bsa

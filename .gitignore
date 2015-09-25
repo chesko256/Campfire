@@ -9,6 +9,12 @@
 #Whitelist directories:
 !*/
 
+#Build files
+!Campfire_BuildRelease.py
+!Archive.exe
+!CampfireArchiveBuilder.txt
+!CampfireArchiveManifest.txt
+
 #Top-level files
 !Campfire.esp
 !Campfire.esm
@@ -111,3 +117,4 @@
 
 #Ignore working files
 Scripts/Source/_Camp_SkyUIConfigPanelScript - Copy.psc
+Releases/*
