@@ -140,14 +140,14 @@ function UpdateWetState()
 	bool wet_conditions = false
 	if weather_class == WEATHERCLASS_RAIN && Weather.GetOutgoingWeather() == none && \
 	   !IsRefInOblivion(PlayerRef) && !IsRefInInterior(PlayerRef)
-		wet_conditions == true
+		wet_conditions = true
 	endif
+
 
 	bool inside_tent = GetCurrentTent()
 	bool inside_waterproof_tent = IsCurrentTentWaterproof()
 	bool taking_shelter = IsPlayerTakingShelter()
-	FrostDebug(0, "~~~~ WetSystem ::: inside tent " + inside_tent + ", waterproof " + inside_waterproof_tent + ", taking shelter: " + taking_shelter)
-
+	FrostDebug(0, "~~~~ WetSystem ::: wet conditions: " + wet_conditions + ", inside tent " + inside_tent + ", waterproof " + inside_waterproof_tent + ", taking shelter: " + taking_shelter)
 	if wet_conditions
 		if inside_waterproof_tent || taking_shelter
 			DryOff(MIN_WETNESS)
