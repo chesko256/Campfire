@@ -1,8 +1,7 @@
-Scriptname _Frost_ExposureSystem extends Quest
+Scriptname _Frost_ExposureSystem extends _Frost_BaseSystem
 
 import CampUtil
 
-float property EXPOSURE_UPDATE_FREQUENCY = 5.0 autoReadOnly
 int property FIRE_FACTOR = 8 autoReadOnly
 int property HEAT_FACTOR = 6 autoReadOnly
 int property TENT_FACTOR = 1 autoReadOnly
@@ -14,10 +13,7 @@ float distance_moved = 0.0
 bool in_interior = false
 
 function StartSystem()
-	if !self.IsRunning()
-		self.Start()
-	endif
-
+	parent.StartSystem()
 	; Exposure-related helper quests
 	if !ShelterQuest.IsRunning()
 		ShelterQuest.Start()
@@ -30,23 +26,16 @@ function StartSystem()
 endFunction
 
 function StopSystem()
-	if self.IsRunning()
-		self.Stop()
-	endif
+	parent.StopSystem()
 endFunction
 
-Event OnInit()
-	RegisterForSingleUpdate(1)
-EndEvent
-
-Event OnUpdate()
+function Update()
 	if _Frost_Setting_ExposureOn.GetValueInt() == 2
 		UpdateExposure()
-		RegisterForSingleUpdate(EXPOSURE_UPDATE_FREQUENCY)
 	else
 		StopSystem()
 	endif
-endEvent
+endFunction
 
 function UpdateExposure()
 	if PlayerIsInDialogue()
