@@ -1,7 +1,7 @@
 scriptname FrostUtil hidden
 
-CampfireAPI function GetAPI() global
-    ;return (Game.GetFormFromFile(0x00024095, "Campfire.esm") as Quest) as CampfireAPI
+FrostfallAPI function GetAPI() global
+    return (Game.GetFormFromFile(0x00064590, "Frostfall.esp") as Quest) as FrostfallAPI
 endFunction
 
 _Frost_ClothingSystem function GetClothingSystem() global
@@ -43,30 +43,33 @@ bool function IsNearFastTravelException() global
 endFunction
 
 int function GetWeatherClassificationActual(Weather akWeather) global
-    ;/if !akWeather
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return -1
+    endif
+
+    if !akWeather
         return -1
     endif
     
-    if FrostAPI._Frost_OvercastWeatherList.HasForm(akWeather)
+    if Frostfall._Frost_OvercastWeatherList.HasForm(akWeather)
         return 0
     endif
     
     int classification = akWeather.GetClassification()
     
-    _Frost_Compatibility Compatibility = GetCompatibilitySystem()
+    ;@TODO
+    ;_Frost_Compatibility Compatibility = GetCompatibilitySystem()
     if classification == 3
-        if Compatibility.isDLC2Loaded
-            if akWeather == Compatibility.DLC2AshStorm
-                return 1
-            else
-                return 3
-            endif
-        else
+        ;if Compatibility.isDLC2Loaded && akWeather == Compatibility.DLC2AshStorm
+        ;    return 1
+        ;else
             return 3
-        endif
+        ;endif
     else
         return classification
-    endif/;
+    endif
     return 0
 endFunction
 
@@ -97,7 +100,7 @@ endif
 * Soul Cairn
 * Apocrypha
 ;*********/;
-    ;/FrostfallAPI Frostfall = GetAPI()
+    FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
         return False
@@ -108,7 +111,6 @@ endif
     else
         return false
     endif
-    /;
     return false
 endFunction
 
@@ -153,4 +155,8 @@ endif
     endif
     /;
     return false
+endFunction
+
+function RaiseFrostAPIError() global
+    debug.trace("[Frostfall][ERROR] Fatal Frostfall API error occurred.")
 endFunction
