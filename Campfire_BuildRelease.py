@@ -17,13 +17,30 @@ user_input = raw_input("Enter the release version: ")
 os.chdir("..\\")
 print os.getcwd()
 
+
+# Build the temp directory
+tempdir = ".\\tmp\\Data\\"
+if not os.path.isdir("./tmp"):
+    os.mkdir("./tmp")
+else:
+    shutil.rmtree("./tmp")
+    os.mkdir("./tmp")
+
+os.mkdir("./tmp/Data")
+
+# Copy the project files
+with open("./Campfire/CampfireArchiveManifest.txt") as manifest:
+    lines = manifest.readlines()
+    for line in lines:
+        shutil.copyfile(".\\Campfire\\" + line, tempdir + line.rstrip('\n'))
+
 # Build the directories
 dirname = "./Campfire " + user_input + " Release"
 if not os.path.isdir(dirname):
     os.mkdir(dirname)
 else:
-	shutil.rmtree(dirname)
-	os.mkdir(dirname)
+    shutil.rmtree(dirname)
+    os.mkdir(dirname)
 
 os.mkdir(dirname + "/readmes")
 os.mkdir(dirname + "/SKSE")
