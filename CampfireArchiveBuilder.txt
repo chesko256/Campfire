@@ -12,6 +12,6 @@ Check: Misc
 Check: Retain Directory Names
 Check: Retain File Names
 Check: Compress Archive
-Set File Group Root: 
+Set File Group Root: Data\
 Add File Group: ./Campfire/CampfireArchiveManifest.txt
 Save Archive: ./tmp/Campfire.bsa
