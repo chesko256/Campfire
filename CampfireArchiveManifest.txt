@@ -1,3 +1,6 @@
+readmes\Campfire_changelog.txt
+readmes\Campfire_license.txt
+readmes\Campfire_readme.txt
 Interface\campfire\logo.dds
 Interface\Translations\Campfire_CZECH.txt
 Interface\Translations\Campfire_ENGLISH.txt

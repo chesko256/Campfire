@@ -7,6 +7,16 @@ Complete Camping System
 Change Log
 
 ===================================================
+Release 1.1.1 (9/25/2015)
+Features
+    You can now select a campfire and choose "Place Cooking Pot", which will automatically place your cooking pot for you near your campfire.
+
+Changes
+    Objects in the world that glow when using Survival Skill: Instincts should now get stuck glowing much less frequently.
+
+Bug Fixes
+    Fixed an issue with Campfire_OnObjectPlaced and Campfire_OnObjectRemoved events not setting the value of abIsTent correctly.
+
 Release 1.1 (9/10/2015)
 Features
 
