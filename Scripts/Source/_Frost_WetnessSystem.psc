@@ -70,6 +70,7 @@ function ModAttributeWetness(float amount, float limit)
 		endif
 	endif
 	_Frost_AttributeWetness.SetValue(wetness)
+	FrostDebug(0, "~~~~ Current Wetness: " + wetness)
 endFunction
 
 ;@TODO: Use a single spell and have the effects apply based on conditions. No spell swapping.
@@ -145,6 +146,7 @@ function UpdateWetState()
 	bool inside_tent = GetCurrentTent()
 	bool inside_waterproof_tent = IsCurrentTentWaterproof()
 	bool taking_shelter = IsPlayerTakingShelter()
+	FrostDebug(0, "~~~~ WetSystem ::: inside tent " + inside_tent + ", waterproof " + inside_waterproof_tent + ", taking shelter: " + taking_shelter)
 
 	if wet_conditions
 		if inside_waterproof_tent || taking_shelter
@@ -172,6 +174,7 @@ endFunction
 
 ;@TODO: Make realtime-independent
 function DryOff(float limit)
+	FrostDebug(0, "~~~~ DryOff ::: Limit " + limit)
 	if IsRefNearFire(PlayerRef)
 		float amount = -(37.5 * GetCurrentHeatLevel(PlayerRef))
 		ModAttributeWetness(amount, limit)
@@ -184,6 +187,7 @@ endFunction
 float cloak_wetrate_modifier = 1.0
 
 function GetWetter(float limit)
+	FrostDebug(0, "~~~~ GetWetter ::: Limit " + limit)
 	;@TODO: Windbreaker Perk
 	;if pPlayer.HasPerk(Compatibility.Windbreaker)
 	;	pWetPoints += 27.0 * ( CloakWetRateMod - ( CloakWetRateMod * 0.25  ) )
