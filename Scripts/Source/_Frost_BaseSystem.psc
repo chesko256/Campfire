@@ -1,5 +1,7 @@
 scriptname _Frost_BaseSystem extends Quest
 
+import _FrostInternal
+
 GlobalVariable property Required_UpdateFrequencyGlobal auto
 {The global variable that determines how often this system should update.}
 
@@ -10,6 +12,7 @@ Event OnInit()
 endEvent
 
 function StartSystem()
+	FrostDebug(0, "StartSystem " + self)
 	if !self.IsRunning()
 		self.Start()
 	endif
