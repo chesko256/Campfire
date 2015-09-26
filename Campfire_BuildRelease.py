@@ -15,45 +15,45 @@ print " "
 user_input = raw_input("Enter the release version: ")
 
 os.chdir("..\\")
-print os.getcwd()
-
 
 # Build the temp directory
+print "Creating temp directories..."
 tempdir = ".\\tmp\\Data\\"
-if not os.path.isdir("./tmp"):
-    os.mkdir("./tmp")
-else:
-    shutil.rmtree("./tmp")
-    os.mkdir("./tmp")
-
-os.mkdir("./tmp/Data")
+os.makedirs('./tmp/Data/readmes')
+os.makedirs('./tmp/Data/Interface/campfire')
+os.makedirs('./tmp/Data/Interface/Translations')
+os.makedirs('./tmp/Data/meshes/campfire')
+os.makedirs('./tmp/Data/Scripts/Source')
+os.makedirs('./tmp/Data/textures/campfire')
 
 # Copy the project files
+print "Copying project files..."
 with open("./Campfire/CampfireArchiveManifest.txt") as manifest:
     lines = manifest.readlines()
     for line in lines:
-        shutil.copyfile(".\\Campfire\\" + line, tempdir + line.rstrip('\n'))
+        shutil.copy(".\\Campfire\\" + line.rstrip('\n'), tempdir + line.rstrip('\n'))
 
 # Build the directories
 dirname = "./Campfire " + user_input + " Release"
 if not os.path.isdir(dirname):
+    print "Creating new build..."
     os.mkdir(dirname)
 else:
+    print "Removing old build of same version..."
     shutil.rmtree(dirname)
     os.mkdir(dirname)
 
 os.mkdir(dirname + "/readmes")
-os.mkdir(dirname + "/SKSE")
-os.mkdir(dirname + "/SKSE/Plugins")
-
-if not os.path.isdir("./tmp"):
-    os.mkdir("./tmp")
-else:
-    shutil.rmtree("./tmp")
-    os.mkdir("./tmp")
+os.makedirs(dirname + "/SKSE/Plugins")
 
 # Generate BSA archive
-subprocess.call(['./Archive.exe', './Campfire/CampfireArchiveBuilder.txt'])
+print "Generating BSA archive..."
+shutil.copy('./Campfire/Archive.exe', './tmp/Archive.exe')
+shutil.copy('./Campfire/CampfireArchiveBuilder.txt', './tmp/CampfireArchiveBuilder.txt')
+shutil.copy('./Campfire/CampfireArchiveManifest.txt', './tmp/CampfireArchiveManifest.txt')
+os.chdir("./tmp")
+subprocess.call(['./Archive.exe', './CampfireArchiveBuilder.txt'])
+os.chdir("..\\")
 
 # Copy files
 shutil.copyfile("./Campfire/Campfire.esm", dirname + "/Campfire.esm")
@@ -64,10 +64,12 @@ shutil.copyfile("./Campfire/readmes/Campfire_license.txt", dirname + "/readmes/C
 shutil.copyfile("./Campfire/readmes/Campfire_changelog.txt", dirname + "/readmes/Campfire_changelog.txt")
 
 # Clean Up
+print "Removing temp files..."
 shutil.rmtree("./tmp")
 
 # Create release zip
 zip_name_ver = user_input.replace(".", "_")
 shutil.make_archive("./Campfire_" + zip_name_ver + "_Release", format="zip", root_dir=dirname)
 shutil.move("./Campfire_" + zip_name_ver + "_Release.zip", dirname + "/Campfire_" + zip_name_ver + "_Release.zip")
+print "Created " + dirname + "/Campfire_" + zip_name_ver + "_Release.zip"
 print "Done!"
