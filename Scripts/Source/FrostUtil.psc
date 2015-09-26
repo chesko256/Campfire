@@ -22,11 +22,15 @@ function Event_LegacyWoodHarvest() global
     ;pass
 endFunction
 
-bool function IsRefNearFire(ObjectReference akReference)
+bool function IsRefNearFire(ObjectReference akReference) global
     return false
 endFunction
 
-int function GetCurrentHeatLevel(ObjectReference akReference)
+bool function IsPlayerTakingShelter() global
+    return false
+endFunction
+
+int function GetCurrentHeatLevel(ObjectReference akReference) global
     return 0
 endFunction
 
@@ -63,6 +67,7 @@ int function GetWeatherClassificationActual(Weather akWeather) global
     else
         return classification
     endif/;
+    return 0
 endFunction
 
 ;/********f* FrostUtil/IsRefInOblivion
@@ -75,6 +80,49 @@ endFunction
 * SYNTAX
 */;
 bool function IsRefInOblivion(ObjectReference akReference) global
+;/*
+* PARAMETERS
+* * akReference: The object reference to check.
+*
+* RETURN VALUE
+* True if the reference is in Oblivion.
+*
+* EXAMPLES
+;Is the box in Oblivion?
+if IsRefInOblivion(Box)
+    Debug.Trace("Box is in Oblivion!")
+endif
+* NOTES
+* The following Worldspaces are considered Oblivion worldspaces:
+* Soul Cairn
+* Apocrypha
+;*********/;
+    ;/FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return False
+    endif
+
+    if Frostfall._Frost_WorldspacesExteriorOblivion.HasForm(akReference.GetWorldSpace())
+        return true
+    else
+        return false
+    endif
+    /;
+    return false
+endFunction
+
+
+;/********f* FrostUtil/IsPlayerVampire
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Whether or not the reference is in a base game or DLC Oblivion worldspace.
+*
+* SYNTAX
+*/;
+bool function IsPlayerVampire() global
 ;/*
 * PARAMETERS
 * * akReference: The object reference to check.

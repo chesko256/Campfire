@@ -1,5 +1,6 @@
-scriptname _Frost_WetnessSystem extends Quest
+scriptname _Frost_WetnessSystem extends _Frost_BaseSystem
 
+import CampUtil
 import FrostUtil
 import _FrostInternal
 
@@ -8,30 +9,25 @@ float property WETNESS_LEVEL_3 = 700.0 autoReadOnly
 float property WETNESS_LEVEL_2 = 550.0 autoReadOnly
 float property WETNESS_LEVEL_1 = 200.0 autoReadOnly
 float property MIN_WETNESS = 0.0 autoReadOnly
+int property WEATHERCLASS_RAIN = 2 autoReadOnly
 
+Actor property PlayerRef auto
 GlobalVariable property _Frost_AttributeWetness auto
 GlobalVariable property _Frost_WetLevel auto
+GlobalVariable property _Frost_Setting_ConditionMessages auto
 Message property _Frost_WetStateMsg_Wet3 auto
 Message property _Frost_WetStateMsg_Wet2 auto
 Message property _Frost_WetStateMsg_Wet1 auto
 Message property _Frost_WetStateMsg_Dry auto
+Message property _Frost_WetStateMsg_LeakingWater auto
+Formlist property _Frost_Waterfalls auto
 
 int last_wet_level = 0
 
-function StartSystem()
-
+function Update()
+	UpdateWetState()
+	UpdateWetLevel()
 endFunction
-
-function StopSystem()
-
-endFunction
-
-Event OnUpdate()
-	;@TODO: if global is true
-		UpdateWetState()
-		UpdateWetLevel()
-	; endif
-EndEvent
 
 int function GetWetFactor()
 	int wet_level = _Frost_WetLevel.GetValueInt()
@@ -46,25 +42,32 @@ int function GetWetFactor()
 	endif
 endFunction
 
-function ModAttributeWetness(float amount)
-	float wetness = _Frost_AttributeWetness.GetValue() + amount
-	
-	; Clamp
-	; account for coming in to tent already soaking wet
-	bool inside_tent = GetCurrentTent()
-	bool inside_waterproof_tent = IsCurrentTentWaterproof()
-	bool taking_shelter = IsTakingShelter()
-	float max
-	if inside_tent && !inside_waterproof_tent
+function ModAttributeWetness(float amount, float limit)
+	; Note: Limit values above 0 will result in the system "pushing up" (increasing) against
+	; it once it clamps to the limit.
 
-	else
-		max = MAX_WETNESS
+	float wet_attr = _Frost_AttributeWetness.GetValue()
+	if wet_attr == limit
+		if limit == MIN_WETNESS && amount < 0
+			; Already at minimum
+			return
+		elseif limit > MIN_WETNESS && amount > 0
+			; Already at maximum
+			return
+		endif
 	endif
 
-	if wetness > max
-		wetness = max
-	elseif wetness < MIN_WETNESS
-		wetness = MIN_WETNESS
+	float wetness = wet_attr + amount
+	if wetness > limit && amount > 0
+		wetness = limit
+		if limit < MAX_WETNESS
+			_Frost_WetStateMsg_LeakingWater.Show()
+		endif
+	elseif wetness < limit && amount < 0
+		wetness = limit
+		if limit < MAX_WETNESS
+			_Frost_WetStateMsg_LeakingWater.Show()
+		endif
 	endif
 	_Frost_AttributeWetness.SetValue(wetness)
 endFunction
@@ -118,23 +121,20 @@ bool function IsNearWaterfall()
 endFunction
 
 function UpdateWetState()
-	int WetFactor = 0
-	int iWeatherClass = 0
-
+	; @TODO: Wrap this in a player event monitor instead for instant feedback.
 	if PlayerRef.IsSwimming()
-		ModAttributeWetness(MAX_WETNESS)
+		ModAttributeWetness(MAX_WETNESS, MAX_WETNESS)
 		return
 	endif
 	
 	bool near_waterfall = IsNearWaterfall()
 	if near_waterfall
-		ModAttributeWetness(MAX_WETNESS)
+		ModAttributeWetness(MAX_WETNESS, MAX_WETNESS)
 		return
 	endif
 
-	if wMyWeather
-		weather_class = GetWeatherClassificationActual(wMyWeather)
-	endif
+	;@TODO: Possibly pull from Weather System
+	int weather_class = GetWeatherClassificationActual(Weather.GetCurrentWeather())
 
 	bool wet_conditions = false
 	if weather_class == WEATHERCLASS_RAIN && Weather.GetOutgoingWeather() == none && \
@@ -144,17 +144,20 @@ function UpdateWetState()
 
 	bool inside_tent = GetCurrentTent()
 	bool inside_waterproof_tent = IsCurrentTentWaterproof()
-	bool taking_shelter = IsTakingShelter()
-	if wet_conditions && !inside_waterproof_tent && !taking_shelter
+	bool taking_shelter = IsPlayerTakingShelter()
+
+	if wet_conditions
 		if inside_waterproof_tent || taking_shelter
-			DryOff()
+			DryOff(MIN_WETNESS)
 		elseif inside_tent && !inside_waterproof_tent
-			GetWetterConditional(300.0, bNearFire)
+			GetWetter(300.0)
 		elseif !inside_tent && !taking_shelter
-			GetWetter()
+			GetWetter(MAX_WETNESS)
+		else
+			DryOff(MIN_WETNESS)
 		endif
 	else
-		DryOff()
+		DryOff(MIN_WETNESS)
 	endif
 	
 	;Less exposure drain in warmer weather.
@@ -168,76 +171,27 @@ function UpdateWetState()
 endFunction
 
 ;@TODO: Make realtime-independent
-function DryOff()
+function DryOff(float limit)
 	if IsRefNearFire(PlayerRef)
 		float amount = -(37.5 * GetCurrentHeatLevel(PlayerRef))
-		ModAttributeWetness(amount)
+		ModAttributeWetness(amount, limit)
 	else
-		ModAttributeWetness(-6.25)
+		ModAttributeWetness(-6.25, limit)
 	endif
 endFunction
 
-function GetWetter()
+;@TODO: Figure out where to put this
+float cloak_wetrate_modifier = 1.0
+
+function GetWetter(float limit)
 	;@TODO: Windbreaker Perk
 	;if pPlayer.HasPerk(Compatibility.Windbreaker)
 	;	pWetPoints += 27.0 * ( CloakWetRateMod - ( CloakWetRateMod * 0.25  ) )
 	
-	float amount = 27.0 * CloakWetRateMod
-	ModAttributeWetness(amount)
-endFunction
-
-function GetWetterConditional(float WPCap, bool bNearFire)								;Approved 2.5
-	if bNearFire
-		if ( pWetPoints <= WPCap && pWetPoints >= WPCap - 50.0 )
-			if ( pWetPoints < WPCap )
-				;Catch the bounce to show the player that they are completely dry
-				if WPCap == 0.0
-					if !bIsVampire
-						_DE_WetStateMsg_Dry.Show()
-					endif
-				else
-					if !bIsVampire
-						_DE_Tent_LeakingWater.Show()
-					endif
-				endif
-			endif
-			pWetPoints = WPCap
-		elseif pWetPoints < WPCap - 50.0
-			;Get wetter normally
-			pWetPoints += 27.0 * CloakWetRateMod
-		else
-			;Get dryer
-			if bIsVampire
-				pWetPoints -= 250.0
-			else
-				pWetPoints -= 37.0 * CloakDryRateMod
-			endif
-		endif
+	if _Frost_AttributeWetness.GetValue() > limit
+		DryOff(limit)
 	else
-		if ( pWetPoints <= WPCap && pWetPoints >= WPCap - 50.0 )
-			if ( pWetPoints < WPCap )
-				;Catch the bounce to show the player that they are completely dry
-				if WPCap == 0.0
-					if !bIsVampire
-						_DE_WetStateMsg_Dry.Show()
-					endif
-				else
-					if !bIsVampire
-						_DE_Tent_LeakingWater.Show()
-					endif
-				endif
-			endif
-			pWetPoints = WPCap
-		elseif pWetPoints < WPCap - 50.0
-			;Get wetter normally
-			pWetPoints += 6.75 * CloakWetRateMod
-		else
-			;Get dryer
-			if bIsVampire
-				pWetPoints -= 250.0
-			else
-				pWetPoints -= 6.25 * CloakDryRateMod
-			endif
-		endif
+		float amount = 27.0 * cloak_wetrate_modifier
+		ModAttributeWetness(amount, limit)
 	endif
-endfunction
+endFunction
