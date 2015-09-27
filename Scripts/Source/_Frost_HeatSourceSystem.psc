@@ -23,7 +23,7 @@ endFunction
 function GetHeatSourceData()
     ObjectReference current_heat_source = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_HeatSources_All, PlayerRef, 600.0)
 
-    if current_heat_source
+    if current_heat_source && current_heat_source.IsEnabled()
         Form heat_source_object = current_heat_source.GetBaseObject()
         float distance_from_heat = PlayerRef.GetDistance(current_heat_source)
         
