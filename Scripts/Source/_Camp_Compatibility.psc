@@ -629,7 +629,7 @@ function VanillaGameLoadUp()
 	endif
 
 	; Grab forms we can't fill as properties
-	PlacementSystem.SmallFire = Game.GetFormFromFile(0x00013B40, "Skyrim.esm")
+	PlacementSystem.SmallFire = Game.GetFormFromFile(0x00056204, "Campfire.esm")
 	
 	;@TODO: Move to Frostfall
 	; TreeReachTreeStump01 = Game.GetFormFromFile(0x000B8A75, "Skyrim.esm") as TreeObject
