@@ -1,7 +1,7 @@
 scriptname _Frost_Compatibility extends ReferenceAlias
 
 import debug
-;import CampUtil
+import FrostUtil
 ;import _CampInternal
 
 int property SKSE_MIN_VERSION = 10703 autoReadOnly
@@ -240,5 +240,5 @@ function RegisterForControlsOnLoad()
 endFunction
 
 function RegisterForEventsOnLoad()
-	;Campfire.RegisterForEventsOnLoad()
+	GetWetnessSystem().RegisterForEvents()
 endFunction

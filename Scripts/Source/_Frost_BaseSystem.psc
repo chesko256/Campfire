@@ -2,8 +2,8 @@ scriptname _Frost_BaseSystem extends Quest
 
 import _FrostInternal
 
-GlobalVariable property Required_UpdateFrequencyGlobal auto
-{The global variable that determines how often this system should update.}
+GlobalVariable property UpdateFrequencyGlobal auto
+{The global variable that determines how often this system should update. If left blank, this system is event-driven.}
 
 ; @TODO: DEBUG TESTING ONLY
 Event OnInit()
@@ -16,7 +16,9 @@ function StartSystem()
 	if !self.IsRunning()
 		self.Start()
 	endif
-	RegisterForSingleUpdate(1)
+	if UpdateFrequencyGlobal
+		RegisterForSingleUpdate(1)
+	endif
 endFunction
 
 function StopSystem()
@@ -29,8 +31,10 @@ endFunction
 Event OnUpdate()
 	float start_time = Game.GetRealHoursPassed()
 	Update()
-	RegisterForSingleUpdate(Required_UpdateFrequencyGlobal.GetValue())
-	FrostDebug(0, self + " update finished in " + ((Game.GetRealHoursPassed() - start_time) * 3600.0) + " seconds.")
+	if UpdateFrequencyGlobal
+		RegisterForSingleUpdate(UpdateFrequencyGlobal.GetValue())
+		FrostDebug(0, self + " update finished in " + ((Game.GetRealHoursPassed() - start_time) * 3600.0) + " seconds.")
+	endif
 endEvent
 
 ; @Overridden by system

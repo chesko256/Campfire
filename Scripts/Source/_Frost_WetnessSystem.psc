@@ -42,6 +42,15 @@ function Update()
 	last_update_time = this_update_time
 endFunction
 
+function RegisterForEvents()
+	RegisterForModEvent("Frostfall_OnPlayerStartSwimming", "OnPlayerStartSwimming")
+endFunction
+
+Event OnPlayerStartSwimming()
+	ModAttributeWetness(MAX_WETNESS, MAX_WETNESS)
+	UpdateWetLevel()
+endEvent
+
 function ModAttributeWetness(float amount, float limit)
 	; Note: Limit values above 0 will result in the system "pushing up" (increasing) against
 	; it once it clamps to the limit.
@@ -105,7 +114,6 @@ endFunction
 
 function ShowWetStateMessage(int wet_level)
 	if _Frost_Setting_ConditionMessages.GetValueInt() == 2 && FrostUtil.IsPlayerVampire() == false
-		debug.trace("wet level " + wet_level + ", last_wet_level " + last_wet_level)
 		if wet_level == 3 && last_wet_level != 3
 			_Frost_WetStateMsg_Wet3.Show()
 		elseif wet_level == 2 && last_wet_level != 2
@@ -128,9 +136,7 @@ bool function IsNearWaterfall()
 endFunction
 
 function UpdateWetState()
-	; @TODO: Wrap this in a player event monitor instead for instant feedback.
 	if PlayerRef.IsSwimming()
-		ModAttributeWetness(MAX_WETNESS, MAX_WETNESS)
 		return
 	endif
 	
