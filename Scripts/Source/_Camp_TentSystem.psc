@@ -96,7 +96,7 @@ function UpdateTentUseState(ObjectReference akTent)
 		endif
 		CleanUpTent(akTent)
 	else
-		TentObject.RegisterForSingleUpdate(0.5)
+		TentObject.RegisterForSingleUpdate(1.0)
 	endif
 endFunction
 
@@ -116,16 +116,22 @@ function ActivateTent(ObjectReference akActionRef, ObjectReference akTent)
 	endif
 endFunction
 
-function ActivateLayDownMarker(CampTent TentObject)
+function ActivateLayDownMarker(CampTent TentObject, bool abLayingDown = true)
 	Actor f1 = Follower1.GetReference() as Actor
 	Actor f2 = Follower2.GetReference() as Actor
 	Actor f3 = Follower3.GetReference() as Actor
 	Actor sp = Spouse.GetReference() as Actor
 	if (sp) && (f1 == sp || f2 == sp || f3 == sp)
 		; Husband/wife follower found
+		if abLayingDown
+			Game.ForceThirdPerson()
+		endif
 		(TentObject.myPlayerWithSpouseLayDownMarker as ObjectReference).Activate(PlayerRef)
 	else
 		; No husband/wife follower
+		if abLayingDown
+			Game.ForceThirdPerson()
+		endif
 		(TentObject.myPlayerLayDownMarker as ObjectReference).Activate(PlayerRef)
 	endif
 endFunction
@@ -236,7 +242,7 @@ function ShowLayMenu(ObjectReference akTent)
 		endif
 
 	elseif i == 4									;Get Up
-		ActivateLayDownMarker(TentObject)
+		ActivateLayDownMarker(TentObject, false)
 		;StopFollowerUse(akTent)
 	elseif i == 5									;Nothing
 		;do nothing
@@ -327,14 +333,14 @@ function PlayerSit(ObjectReference akTent)
 	; Start the quest so that the aliases fill and follower packages run.
 	self.Start()
 	; Disable fighting, camswitch, sneaking
-	Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
+	;Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
 	
 	; Fall back to persistent trigger without SKSE
 	if !Compatibility.isSKSELoaded
 		_Camp_Tent_InteractTriggerREF.MoveTo(PlayerRef)
 	endif
 	
-	TentObject.RegisterForSingleUpdate(0.5)
+	TentObject.RegisterForSingleUpdate(1.0)
 endFunction
 
 function PlayerLieDown(ObjectReference akTent)
@@ -369,12 +375,8 @@ function PlayerLieDown(ObjectReference akTent)
 	SendEvent_OnBedrollSitLay(TentObject)
 
 	ConditionVars.IsPlayerLayingInTent = true
-	Game.ForceThirdPerson()
-
-	; Start the quest so that the aliases fill and follower packages run.
-	self.Start()
 	; Disable fighting, camswitch, sneaking
-	Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
+	;Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
 	
 	ActivateLayDownMarker(TentObject)
 
@@ -390,13 +392,16 @@ function PlayerLieDown(ObjectReference akTent)
 	if _Camp_TentSeeThru.GetValueInt() == 2 && (TentObject.myTent && TentObject.myNormalTent)
 		TryToDisableRef(TentObject.myTentExterior, true)
 	endif
+
+	; Start the quest so that the aliases fill and follower packages run.
+	self.Start()
 	
 	; Fall back to persistent trigger without SKSE
 	if !Compatibility.isSKSELoaded
 		_Camp_Tent_InteractTriggerREF.MoveTo(PlayerRef)
 	endif
 	
-	TentObject.RegisterForSingleUpdate(0.5)
+	TentObject.RegisterForSingleUpdate(1.0)
 endFunction
 
 function DisplayPlayerTentEquipment(ObjectReference akTent, bool bLimited = false)
@@ -1059,7 +1064,7 @@ function CleanUpTent(ObjectReference akTent)
 	ConditionVars.IsPlayerLayingInTent = false
 	self.Stop()
 	
-	Game.EnablePlayerControls()
+	;Game.EnablePlayerControls()
 	UnDisplayShield_Player(TentObject)
 	UnDisplayWeapons_Player(TentObject)
 	UnDisplayCuirass_Player(TentObject)
