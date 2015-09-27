@@ -602,7 +602,7 @@ function VanillaGameLoadUp()
 endFunction
 
 
-function AddStartupSpells()							;Approved 2.0
+function AddStartupSpells()
 	if isSKYUILoaded
 		PlayerRef.RemoveSpell(_Camp_LegacyConfig_Spell)
 	else
