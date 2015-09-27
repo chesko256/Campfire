@@ -7,6 +7,17 @@ Complete Camping System
 Change Log
 
 ===================================================
+Release 1.2 (9/27/2015)
+
+Changes
+    Frostfall 3.0 is now correctly detected by Campfire.
+
+    Loading Frostfall 2.6 or below will now cause Campfire to display an error message that will not go away until you exit the game and disable it.
+
+Bug Fixes
+    You can no longer use Build Campfire, Instincts, Harvest Wood, or Create Item while mounted and in several other cases (transformed, swimming, etc) when using a hotkey. Doing so caused errors that would require the player to exit the game.
+
+
 Release 1.1.1 (9/25/2015)
 Features
     You can now select a campfire and choose "Place Cooking Pot", which will automatically place your cooking pot for you near your campfire.

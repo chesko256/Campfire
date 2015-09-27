@@ -35,12 +35,16 @@ VisualEffect property _Camp_ForceBlackVFX auto
 Weapon property _Camp_StoneWarAxe auto
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
-	if Compatibility.IsFrostfallLoaded && !FrostUtil.IsWarmEnoughToHarvestWood()
+	if Compatibility.isFrostfallLoaded && !FrostUtil.IsWarmEnoughToHarvestWood()
 		return
 	endif
 	
 	if PlayerRef.IsInCombat()
 		_Camp_WoodHarvestErrorCombat.Show()
+		return
+	endif
+
+	if !PlayerCanPlaceObjects()
 		return
 	endif
 

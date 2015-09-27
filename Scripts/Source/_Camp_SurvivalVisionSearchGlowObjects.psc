@@ -11,6 +11,7 @@ FormList property _Camp_VisionObjects_Glow auto
 Spell property _Camp_SurvivalVisionPower auto
 Spell property _Camp_SurvivalVisionPowerDetectSpell auto
 Message property _Camp_VisionPowerErrorIndoors auto
+Message property _Camp_VisionPowerErrorMounted auto
 GlobalVariable property _Camp_PerkRank_KeenSenses auto
 
 ObjectReference[] found_targets
@@ -23,6 +24,11 @@ int seek_count = 8
 Event OnEffectStart(Actor akTarget, Actor akCaster)
     if IsRefInInterior(PlayerRef)
         _Camp_VisionPowerErrorIndoors.Show()
+        PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
+        return
+    endif
+    if PlayerRef.IsOnMount()
+        _Camp_VisionPowerErrorMounted.Show()
         PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
         return
     endif
@@ -55,6 +61,11 @@ Event OnUpdate()
     if self.GetTargetActor()
         if IsRefInInterior(PlayerRef)
             ; Player transitioned cells most likely. Kill the ability silently.
+            PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
+            return
+        endif
+        if PlayerRef.IsOnMount()
+            _Camp_VisionPowerErrorMounted.Show()
             PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
             return
         endif
