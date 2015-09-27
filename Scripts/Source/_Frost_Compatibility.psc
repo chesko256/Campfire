@@ -91,6 +91,9 @@ function RunCompatibility()
 	else
 		FatalErrorSKSE(0)
 	endif
+
+	float campfire_loaded = CampUtil.GetCampfireVersion()
+	debug.trace("FROSTFALL FOUND CAMPFIRE " + campfire_loaded)
 	
 	if isSKYUILoaded
 		isSKYUILoaded = IsPluginLoaded(0x01000814, "SkyUI.esp")

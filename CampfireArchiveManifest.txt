@@ -296,6 +296,7 @@ Scripts\_Camp_woodharvestscriptEFFECT.pex
 Scripts\_Camp_ZReporterAScript.pex
 Scripts\_Camp_ZReporterBScript.pex
 Scripts\_Camp_ZReporterCScript.pex
+Scripts\_Camp_TentSitLayScript.pex
 Scripts\Source\BladesSparringScript.psc
 Scripts\Source\C00TrainerScript.psc
 Scripts\Source\C00VilkasScript.psc
@@ -420,6 +421,7 @@ Scripts\Source\_Camp_woodharvestscriptEFFECT.psc
 Scripts\Source\_Camp_ZReporterAScript.psc
 Scripts\Source\_Camp_ZReporterBScript.psc
 Scripts\Source\_Camp_ZReporterCScript.psc
+Scripts\Source\_Camp_TentSitLayScript.psc
 textures\campfire\errorshadergrad.dds
 textures\campfire\placementshadergrad.dds
 textures\campfire\visionshadergrad.dds
