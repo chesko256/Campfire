@@ -332,8 +332,6 @@ function PlayerSit(ObjectReference akTent)
 
 	; Start the quest so that the aliases fill and follower packages run.
 	self.Start()
-	; Disable fighting, camswitch, sneaking
-	;Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
 	
 	; Fall back to persistent trigger without SKSE
 	if !Compatibility.isSKSELoaded
@@ -374,10 +372,7 @@ function PlayerLieDown(ObjectReference akTent)
 	EO_TurnOff()
 	SendEvent_OnBedrollSitLay(TentObject)
 
-	ConditionVars.IsPlayerLayingInTent = true
-	; Disable fighting, camswitch, sneaking
-	;Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
-	
+	ConditionVars.IsPlayerLayingInTent = true	
 	ActivateLayDownMarker(TentObject)
 
 	if _Camp_Setting_CampingArmorTakeOff.GetValueInt() == 2
