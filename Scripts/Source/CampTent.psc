@@ -1449,6 +1449,7 @@ endFunction
 
 ;@Overrides _Camp_PlaceableObjectBase
 function PlaceObject_FireMarkers()
+	float fire_z_offset = (Game.GetFormFromFile(0x0005573D, "Campfire.esm") as GlobalVariable).GetValue() * -1.0
 	float xr
 	float yr
 	if PositionRef_Shelter
@@ -1458,13 +1459,13 @@ function PlaceObject_FireMarkers()
 		xr = (self.GetWidth() / 2)
 		yr = (self.GetLength() / 2)
 	endif
-	myFire1Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_temp = is_temporary)
-	myFire2Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_temp = is_temporary)
-	myFire3Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_temp = is_temporary)
-	myFire4Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_temp = is_temporary)
-	myFire5Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_temp = is_temporary)
-	myFire6Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_temp = is_temporary)
-	mySmokeFuture = PlacementSystem.PlaceObject(self, PlacementSystem._Camp_LargeFireSmoke, self, initially_disabled = true, is_hanging = True, z_hanging_offset = 10.0)
+	myFire1Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_hanging = True, z_hanging_offset = fire_z_offset, is_temp = is_temporary)
+	myFire2Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_hanging = True, z_hanging_offset = fire_z_offset, is_temp = is_temporary)
+	myFire3Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_hanging = True, z_hanging_offset = fire_z_offset, is_temp = is_temporary)
+	myFire4Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_hanging = True, z_hanging_offset = fire_z_offset, is_temp = is_temporary)
+	myFire5Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_hanging = True, z_hanging_offset = fire_z_offset, is_temp = is_temporary)
+	myFire6Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_hanging = True, z_hanging_offset = fire_z_offset, is_temp = is_temporary)
+	mySmokeFuture = PlacementSystem.PlaceObject(self, PlacementSystem._Camp_LargeFireSmoke, self, initially_disabled = true, is_hanging = True, z_hanging_offset = 10.0 + fire_z_offset, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterStatic1()
@@ -1760,9 +1761,11 @@ state BurningDown
 		utility.wait(10.5)
 
 		if myTent && myTent.IsEnabled()
+			float fire_z_offset = (Game.GetFormFromFile(0x0005573D, "Campfire.esm") as GlobalVariable).GetValue() * -1.0
 			ObjectReference rubble = myTent.PlaceAtMe(PlacementSystem._Camp_ObjectRubbleFire, abInitiallyDisabled = true)
 			rubble.SetScale(0.8)
 			rubble.SetAngle(rubble.GetAngleX(), rubble.GetAngleY(), Utility.RandomFloat(0.0, 359.0))
+			rubble.MoveTo(rubble, afZOffset = fire_z_offset)
 			rubble.EnableNoWait()
 			myTent.PlaceAtMe(PlacementSystem._Camp_CollapseFireball)
 		endif

@@ -11,6 +11,7 @@ Quest property CampfireObjectPlacementSystem auto
 Activator property _Camp_ObjectPlacementFutureActivator auto
 ObjectReference property _Camp_ObjectPlacementFutureAnchor auto
 GlobalVariable property _Camp_Setting_MaxThreads auto
+GlobalVariable property _Camp_LastPlacementHeightOffset auto
 
 ;Fire
 Form property SmallFire auto hidden
@@ -545,6 +546,9 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
     else
         CampDebug(0, "LegalToCampHere: " + LegalToCampHere())
         CampDebug(0, "IsCrimeToPlaceInTowns: " + IsCrimeToPlaceInTowns(akFormToPlace))
+
+        _Camp_LastPlacementHeightOffset.SetValue(afHeightOffset)
+
         if !LegalToCampHere() && IsCrimeToPlaceInTowns(akFormToPlace)
             int ibutton = _Camp_PlacementIllegal.Show()
             if ibutton == 0

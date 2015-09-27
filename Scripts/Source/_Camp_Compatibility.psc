@@ -32,6 +32,7 @@ bool property isHFLoaded auto hidden						;Hearthfire
 bool property isSKSELoaded auto hidden						;SKSE
 bool property isSKYUILoaded auto hidden						;SkyUI 3.4+
 bool property isFrostfallLoaded auto hidden					;Frostfall
+bool property isFrostfallLegacyLoaded auto hidden			;Frostfall 2.6 or below
 bool property isLastSeedLoaded auto hidden					;Last Seed
 bool property isArtOfTheCatchLoaded auto hidden 			;Art of the Catch
 bool property isIMCNLoaded auto hidden						;Imp's More Complex Needs
@@ -100,6 +101,7 @@ Spell property _Camp_SurvivalVisionPower auto
 Spell property _Camp_LegacyConfig_Spell auto
 Spell property _Camp_FollowerDetectSpell auto
 Message property _Camp_CriticalError_SKSE auto
+Message property _Camp_CriticalError_FrostfallLegacy auto
 Weather property DLC2AshStorm auto hidden
 
 ;#Upgrade Flags====================================================================
@@ -118,6 +120,14 @@ Event OnPlayerLoadGame()
 		RegisterForEventsOnLoad()
 	endif
 endEvent
+
+function FatalErrorFrostfallLegacy()
+	trace("[Campfire][ERROR] Detected Frostfall legacy version (2.6 or less). Expected 3.0 or newer.")
+	while true
+		_Camp_CriticalError_FrostfallLegacy.Show()
+		utility.wait(3.0)
+	endWhile
+endFunction
 
 function RunCompatibility()
 	VanillaGameLoadUp()
@@ -273,6 +283,30 @@ function RunCompatibility()
 			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0003B2C8, "iNeed.esp"))
 			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0003B2CC, "iNeed.esp"))
 			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0003AD62, "iNeed.esp"))
+		endif
+	endif
+
+	isFrostfallLegacyLoaded = IsPluginLoaded(0x02000D63, "Chesko_Frostfall.esp")
+	if isFrostfallLegacyLoaded
+		FatalErrorFrostfallLegacy()
+	endif
+
+	if isFrostfallLoaded
+		isFrostfallLoaded = IsPluginLoaded(0x00064027, "Frostfall.esp")
+		if !isFrostfallLoaded
+			;Frostfall was removed since the last save.
+			Conditions.isFrostfallLoaded = false
+		else
+			Conditions.isFrostfallLoaded = true
+		endif
+	else
+		isFrostfallLoaded = IsPluginLoaded(0x00064027, "Frostfall.esp")
+		if isFrostfallLoaded
+			;Frostfall was just added.
+			Conditions.isFrostfallLoaded = true
+		else
+			Conditions.isFrostfallLoaded = false
+			
 		endif
 	endif
 
