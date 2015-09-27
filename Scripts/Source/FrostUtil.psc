@@ -9,6 +9,15 @@ _Frost_ClothingSystem function GetClothingSystem() global
     return (delete_me as _Frost_ClothingSystem)
 endFunction
 
+_Frost_Compatibility function GetCompatibilitySystem() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.Compatibility
+endFunction
+
 bool function IsWarmEnoughToRemoveGearInTent() global
     return true
 endFunction
@@ -115,32 +124,31 @@ endif
 endFunction
 
 
+;@TODO: Convert to Undead
 ;/********f* FrostUtil/IsPlayerVampire
 * API VERSION ADDED
 * 1
 *
 * DESCRIPTION
-* Whether or not the reference is in a base game or DLC Oblivion worldspace.
+* Whether or not the player is a vampire.
 *
 * SYNTAX
 */;
 bool function IsPlayerVampire() global
 ;/*
 * PARAMETERS
-* * akReference: The object reference to check.
+* * None.
 *
 * RETURN VALUE
-* True if the reference is in Oblivion.
+* True if the player is a vampire, false otherwise.
 *
 * EXAMPLES
-;Is the box in Oblivion?
-if IsRefInOblivion(Box)
-    Debug.Trace("Box is in Oblivion!")
+;Is the player a vampire?
+if IsPlayerVampire()
+    Debug.Trace("Player is a bloodsucker!")
 endif
 * NOTES
-* The following Worldspaces are considered Oblivion worldspaces:
-* Soul Cairn
-* Apocrypha
+* This function returns true for blah blah blah
 ;*********/;
     ;/FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
@@ -155,6 +163,26 @@ endif
     endif
     /;
     return false
+endFunction
+
+int function GetPlayerWetnessLevel()
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return -1
+    endif
+
+    return Frostfall._Frost_WetLevel.GetValueInt()
+endFunction
+
+int function GetPlayerExposureLevel()
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return -1
+    endif
+
+    return Frostfall._Frost_ExposureLevel.GetValueInt()
 endFunction
 
 function RaiseFrostAPIError() global
