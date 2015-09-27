@@ -1059,7 +1059,6 @@ function CleanUpTent(ObjectReference akTent)
 	ConditionVars.IsPlayerLayingInTent = false
 	self.Stop()
 	
-	;Game.EnablePlayerControls()
 	UnDisplayShield_Player(TentObject)
 	UnDisplayWeapons_Player(TentObject)
 	UnDisplayCuirass_Player(TentObject)
