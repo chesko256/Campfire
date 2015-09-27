@@ -7,6 +7,23 @@ Complete Camping System
 Change Log
 
 ===================================================
+Release 1.3 (9/27/2015)
+
+Changes
+    You can now sit and lie down in a tent in first-person when using Enhanced Camera.
+
+    Changed the idle animation for enchanting supplies. These should be much better for Enhanced Camera / Immersive First Person users.
+
+    Using campfires now puts the camera in 3rd person view when using Enhanced Camera in order to avoid a nausea-inducing head wobble. Setting bForceFirstPersonCamera=1 and bForceFirstPersonSitting=1 in SKSE_EnhancedCamera.ini will keep the camera in first-person view, but the effect is not pleasant.
+
+    Made the script update speed when sitting or laying in a tent or sitting near a campfire less aggressive.
+
+Bug Fixes
+    When catching a large leather tent on fire, the flames and rubble no longer spawn under the ground.
+
+    Set some missing parameters on the fires that spawn when catching objects on fire.
+
+
 Release 1.2 (9/27/2015)
 
 Changes
