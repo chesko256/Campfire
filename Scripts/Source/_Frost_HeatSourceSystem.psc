@@ -56,8 +56,10 @@ function GetHeatSourceData()
         endif
     else
         ; If the player is in an inn, they are warm everywhere inside it.
+        ; We check this second because we want the animation system to find a fire first, if nearby.
         Location current_location = PlayerRef.GetCurrentLocation()
         if current_location && current_location.HasKeyword(LocTypeInn)
+            FrostDebug(1, "%%%% Heat ::: Inside Inn")
             CurrentHeatSourceSize = 2
              CurrentHeatSourceDistance = -1.0
             NearFire = true
