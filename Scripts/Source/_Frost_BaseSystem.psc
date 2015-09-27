@@ -27,8 +27,10 @@ function StopSystem()
 endFunction
 
 Event OnUpdate()
+	float start_time = Game.GetRealHoursPassed()
 	Update()
 	RegisterForSingleUpdate(Required_UpdateFrequencyGlobal.GetValue())
+	FrostDebug(0, self + " update finished in " + ((Game.GetRealHoursPassed() - start_time) * 3600.0) + " seconds.")
 endEvent
 
 ; @Overridden by system
