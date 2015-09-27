@@ -43,19 +43,6 @@ function Update()
 	FrostDebug(0, "~~~~ Wetness update finished in " + ((Game.GetRealHoursPassed() - this_update_time) * 3600.0) + " seconds.")
 endFunction
 
-int function GetWetLevel()
-	int wet_level = _Frost_WetLevel.GetValueInt()
-	if wet_level == 3
-		return 16
-	elseif wet_level == 2
-		return 8
-	elseif wet_level == 1
-		return 4
-	elseif wet_level == 0
-		return 0
-	endif
-endFunction
-
 function ModAttributeWetness(float amount, float limit)
 	; Note: Limit values above 0 will result in the system "pushing up" (increasing) against
 	; it once it clamps to the limit.

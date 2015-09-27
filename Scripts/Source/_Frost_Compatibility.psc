@@ -25,7 +25,6 @@ bool property isDLC2Loaded auto hidden						;Dragonborn
 bool property isHFLoaded auto hidden						;Hearthfire
 
 ;#Supported Mods===============================================================
-bool property isSKSELoaded auto hidden						;SKSE
 bool property isSKYUILoaded auto hidden						;SkyUI 3.4+
 bool property isLastSeedLoaded auto hidden					;Last Seed
 
@@ -45,7 +44,6 @@ Worldspace property DLC2WS auto hidden						;Solstheim
 
 
 ;#Misc=============================================================================
-Spell property _Frost_WetVFXSpell auto
 Message property _Frost_CriticalError_SKSE auto
 Weather property DLC2AshStorm auto hidden
 
@@ -64,6 +62,14 @@ Event OnPlayerLoadGame()
 	RegisterForEventsOnLoad()
 endEvent
 
+function FatalErrorSKSE(int version)
+	trace("[Frostfall][ERROR] Detected SKSE version " + ((version as float) / 10000) + ", out of date! Expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer.")
+	while true
+		_Frost_CriticalError_SKSE.Show(((version as float) / 10000), ((SKSE_MIN_VERSION as float) / 10000))
+		utility.wait(3.0)
+	endWhile
+endFunction
+
 function RunCompatibility()
 	VanillaGameLoadUp()
 
@@ -78,17 +84,12 @@ function RunCompatibility()
 	if skse_loaded
 		int skse_version = (SKSE.GetVersion() * 10000) + (SKSE.GetVersionMinor() * 100) + SKSE.GetVersionBeta()
 		if skse_version < SKSE_MIN_VERSION
-			trace("[Frostfall][ERROR] Detected SKSE version " + ((skse_version as float) / 10000) + ", out of date! Expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer.")
-			while true
-				; Fatal error, do not continue.
-				_Camp_CriticalError_SKSE.Show(((skse_version as float) / 10000), ((SKSE_MIN_VERSION as float) / 10000))
-				wait(3.0)
-			endWhile
+			FatalErrorSKSE(skse_version)
 		else
-			isSKSELoaded = true
-			Conditions.IsSKSELoaded = true
 			trace("[Frostfall] Detected SKSE version " + ((skse_version as float) / 10000) + " (expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer, success!)")
 		endif
+	else
+		FatalErrorSKSE(0)
 	endif
 	
 	if isSKYUILoaded
@@ -190,22 +191,12 @@ function RunCompatibility()
 endFunction
 
 bool function IsPluginLoaded(int iFormID, string sPluginName)
-	if isSKSELoaded
-		int i = Game.GetModByName(sPluginName)
-		if i != 255
-			debug.trace("[Frostfall] Loaded: " + sPluginName)
-			return true
-		else
-			return false
-		endif
+	int i = Game.GetModByName(sPluginName)
+	if i != 255
+		debug.trace("[Frostfall] Loaded: " + sPluginName)
+		return true
 	else
-		bool b = Game.GetFormFromFile(iFormID, sPluginName)
-		if b
-			debug.trace("[Frostfall] Loaded: " + sPluginName)
-			return true
-		else
-			return false
-		endif
+		return false
 	endif
 endFunction
 
@@ -236,7 +227,7 @@ function AddStartupSpells()
 	endif
 	/;
 
-	PlayerRef.AddSpell(_Frost_WetVFXSpell, false)
+	;PlayerRef.AddSpell(_Frost_WetVFXSpell, false)
 endFunction
 
 function RegisterForKeysOnLoad()

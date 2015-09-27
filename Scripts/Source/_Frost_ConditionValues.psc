@@ -5,3 +5,9 @@ bool property PlayerAbleToWait = true auto conditional hidden
 
 ; Condition version of FrostUtil.IsRidingFlyingMount()
 bool property IsRidingFlyingMount = false auto conditional hidden
+
+; Compatibility
+bool property IsHearthfireLoaded = false auto conditional hidden
+bool property IsDawnguardLoaded = false auto conditional hidden
+bool property IsDragonbornLoaded = false auto conditional hidden
+bool property IsLastSeedLoaded = false auto conditional hidden
