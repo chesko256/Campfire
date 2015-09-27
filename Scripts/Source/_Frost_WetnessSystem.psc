@@ -6,7 +6,7 @@ import _FrostInternal
 
 float property WET_SPEED 		= 27.0 autoReadOnly 		; Wetness gained when standing in rain.
 float property DRY_SPEED 		= -6.25 autoReadOnly 		; Wetness lost ambiently.
-float property DRYFIRE_SPEED 	= -37.5 autoReadOnly 		; Wetness lost near fires.
+float property DRYFIRE_SPEED 	= -75.0 autoReadOnly 		; Wetness lost near fires.
 float property MAX_WETNESS 		= 750.0 autoReadOnly
 float property WETNESS_LEVEL_3 	= 700.0 autoReadOnly
 float property WETNESS_LEVEL_2 	= 550.0 autoReadOnly
@@ -60,17 +60,17 @@ function ModAttributeWetness(float amount, float limit)
 	float wetness = wet_attr + amount
 	if wetness > limit && amount > 0
 		wetness = limit
-		if limit < MAX_WETNESS
+		if limit < MAX_WETNESS && limit > MIN_WETNESS
 			_Frost_WetStateMsg_LeakingWater.Show()
 		endif
 	elseif wetness < limit && amount < 0
 		wetness = limit
-		if limit < MAX_WETNESS
+		if limit < MAX_WETNESS && limit > MIN_WETNESS
 			_Frost_WetStateMsg_LeakingWater.Show()
 		endif
 	endif
 	_Frost_AttributeWetness.SetValue(wetness)
-	FrostDebug(1, "~~~~ Current Wetness: " + wetness + " (" + amount + ")")
+	FrostDebug(1, "~~~~ Wetness ::: Current Wetness: " + wetness + " (" + amount + ")")
 endFunction
 
 ;@TODO: Use a single spell and have the effects apply based on conditions. No spell swapping.
@@ -87,17 +87,25 @@ function UpdateWetLevel()
 	elseif wetness > WETNESS_LEVEL_1
 		wet_level = 1
 		ShowWetStateMessage(1)
-	elseif wetness == MIN_WETNESS
+	elseif wetness >= MIN_WETNESS
 		wet_level = 0
-		ShowWetStateMessage(0)
+		if wetness == MIN_WETNESS
+			ShowWetStateMessage(0)
+		endif
 	endif
 
 	_Frost_WetLevel.SetValueInt(wet_level)
-	last_wet_level = _Frost_WetLevel.GetValueInt()
+	
+	if wet_level > 0
+		last_wet_level = _Frost_WetLevel.GetValueInt()
+	elseif wetness == MIN_WETNESS
+		last_wet_level = 0
+	endif
 endFunction
 
 function ShowWetStateMessage(int wet_level)
 	if _Frost_Setting_ConditionMessages.GetValueInt() == 2 && FrostUtil.IsPlayerVampire() == false
+		debug.trace("wet level " + wet_level + ", last_wet_level " + last_wet_level)
 		if wet_level == 3 && last_wet_level != 3
 			_Frost_WetStateMsg_Wet3.Show()
 		elseif wet_level == 2 && last_wet_level != 2
@@ -170,7 +178,7 @@ function UpdateWetState()
 endFunction
 
 function DryOff(float limit)
-	FrostDebug(1, "~~~~ DryOff ::: Limit " + limit)
+	FrostDebug(1, "~~~~ Wetness ::: DryOff : Limit " + limit)
 	if IsPlayerNearFire()
 		float time_delta_seconds = (this_update_time - last_update_time) * 3600.0
 		float amount = (((DRYFIRE_SPEED * GetPlayerHeatSourceLevel()) * time_delta_seconds) / 5.0)
@@ -186,13 +194,13 @@ endFunction
 float cloak_wetrate_modifier = 1.0
 
 function GetWetter(float limit)
-	FrostDebug(1, "~~~~ GetWetter ::: Limit " + limit)
+	FrostDebug(1, "~~~~ Wetness ::: GetWetter : Limit " + limit)
 	;@TODO: Windbreaker Perk
 	;if pPlayer.HasPerk(Compatibility.Windbreaker)
 	;	pWetPoints += 27.0 * ( CloakWetRateMod - ( CloakWetRateMod * 0.25  ) )
 	
 	if _Frost_AttributeWetness.GetValue() > limit
-		FrostDebug(1, "~~~~ Wetness greater than limit, drying off.")
+		FrostDebug(1, "~~~~ Wetness ::: Wetness greater than limit, drying off.")
 		DryOff(limit)
 	else
 		float time_delta_seconds = (this_update_time - last_update_time) * 3600.0
