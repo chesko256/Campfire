@@ -2,9 +2,9 @@ scriptname _Frost_HeatSourceSystem extends _Frost_BaseSystem
 
 import _FrostInternal
 
-int property CurrentHeatSourceSize = 0 auto hidden
-float property CurrentHeatSourceDistance = -1.0 auto hidden
-bool property NearFire = false auto hidden
+GlobalVariable property _Frost_CurrentHeatSourceSize auto
+GlobalVariable property _Frost_CurrentHeatSourceDistance auto
+GlobalVariable property _Frost_NearFire auto
 
 Actor property PlayerRef auto
 Formlist property _Camp_HeatSources_All auto
@@ -27,31 +27,33 @@ function GetHeatSourceData()
         Form heat_source_object = current_heat_source.GetBaseObject()
         float distance_from_heat = PlayerRef.GetDistance(current_heat_source)
         
+        int current_heat_size = 0
         if _Camp_HeatSources_Fire_Small.HasForm(heat_source_object) && distance_from_heat <= 300.0
-            CurrentHeatSourceSize = 1
+            current_heat_size = SetHeatSourceSize(1)
         elseif _Camp_HeatSources_Fire_Medium.HasForm(heat_source_object) && distance_from_heat <= 450.0
-            CurrentHeatSourceSize = 2
+            current_heat_size = SetHeatSourceSize(2)
         elseif _Camp_HeatSources_Fire_Large.HasForm(heat_source_object)
-            CurrentHeatSourceSize = 3
+            current_heat_size = SetHeatSourceSize(3)
         else
             if distance_from_heat <= 450.0
-                CurrentHeatSourceSize = 2
+                current_heat_size = SetHeatSourceSize(2)
             else
-                CurrentHeatSourceSize = 0
+                current_heat_size = SetHeatSourceSize(0)
             endif
         endif
 
-
-        if CurrentHeatSourceSize > 0 && _Camp_HeatSources_Fire.HasForm(heat_source_object)
-            NearFire = true
+        bool near_fire
+        if current_heat_size > 0 && _Camp_HeatSources_Fire.HasForm(heat_source_object)
+            near_fire = SetNearFire(true)
         else
-            NearFire = false
+            near_fire = SetNearFire(false)
         endif
         
-        if CurrentHeatSourceSize > 0
+        float current_heat_distance
+        if current_heat_size > 0
             ; We successfully found a heat source.
-            CurrentHeatSourceDistance = distance_from_heat
-            FrostDebug(1, "%%%% Heat ::: Size " + CurrentHeatSourceSize + ", Distance " + CurrentHeatSourceDistance + ", Fire " + NearFire + ", Ref " + current_heat_source)
+            current_heat_distance = SetHeatSourceDistance(distance_from_heat)
+            FrostDebug(1, "%%%% Heat ::: Size " + current_heat_size + ", Distance " + current_heat_distance + ", Fire " + near_fire + ", Ref " + current_heat_source)
             return
         endif
     else
@@ -60,32 +62,37 @@ function GetHeatSourceData()
         Location current_location = PlayerRef.GetCurrentLocation()
         if current_location && current_location.HasKeyword(LocTypeInn)
             FrostDebug(1, "%%%% Heat ::: Inside Inn")
-            CurrentHeatSourceSize = 2
-             CurrentHeatSourceDistance = -1.0
-            NearFire = true
+            SetHeatSourceSize(2)
+            SetHeatSourceDistance(-1.0)
+            SetNearFire(true)
             return
         endif
     endif
     
     ; We didn't find any heat sources.
-    CurrentHeatSourceSize = 0
-    CurrentHeatSourceDistance = -1.0
-    NearFire = false
+    SetHeatSourceSize(0)
+    SetHeatSourceDistance(-1.0)
+    SetNearFire(false)
 endFunction
 
-function SetHeatSourceSize(int size)
-    CurrentHeatSourceSize = size
-    (_Frost_MainQuest as _Frost_ConditionValues).PlayerHeatSourceSize = size
+int function SetHeatSourceSize(int size)
+    _Frost_CurrentHeatSourceSize.SetValueInt(size)
+    return size
 endFunction
 
-function SetHeatSourceDistance(float distance)
-    CurrentHeatSourceDistance = distance
-    (_Frost_MainQuest as _Frost_ConditionValues).PlayerHeatSourceDistance = distance
+float function SetHeatSourceDistance(float distance)
+    _Frost_CurrentHeatSourceDistance.SetValue(distance)
+    return distance
 endFunction
 
-function SetNearFire(bool near_fire)
-    NearFire = near_fire
-    (_Frost_MainQuest as _Frost_ConditionValues).PlayerNearFire = near_fire
+bool function SetNearFire(bool near_fire)
+    if near_fire
+        _Frost_NearFire.SetValueInt(2)
+        return true
+    else
+        _Frost_NearFire.SetValueInt(1)
+        return false
+    endif
 endFunction
 
 ; Outstanding questions:

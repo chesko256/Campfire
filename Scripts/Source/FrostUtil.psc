@@ -5,8 +5,12 @@ FrostfallAPI function GetAPI() global
 endFunction
 
 _Frost_ClothingSystem function GetClothingSystem() global
-    Quest delete_me = none
-    return (delete_me as _Frost_ClothingSystem)
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.Clothing
 endFunction
 
 _Frost_Compatibility function GetCompatibilitySystem() global
@@ -25,6 +29,15 @@ _Frost_HeatSourceSystem function GetHeatSourceSystem() global
         return none
     endif
     return Frostfall.HeatSource
+endFunction
+
+_Frost_WetnessSystem function GetWetnessSystem() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.Wetness
 endFunction
 
 bool function IsWarmEnoughToRemoveGearInTent() global
@@ -47,7 +60,12 @@ bool function IsPlayerNearFire() global
         return false
     endif
 
-    return GetHeatSourceSystem().NearFire
+    int near_fire = GetHeatSourceSystem()._Frost_NearFire.GetValueInt()
+    if near_fire == 2
+        return true
+    else
+        return false
+    endif
 endFunction
 
 int function GetPlayerHeatSourceLevel() global
@@ -57,7 +75,7 @@ int function GetPlayerHeatSourceLevel() global
         return -1
     endif
 
-    return GetHeatSourceSystem().CurrentHeatSourceSize
+    return GetHeatSourceSystem()._Frost_CurrentHeatSourceSize.GetValueInt()
 endFunction
 
 float function GetPlayerHeatSourceDistance() global
@@ -67,7 +85,7 @@ float function GetPlayerHeatSourceDistance() global
         return -1.0
     endif
 
-    return GetHeatSourceSystem().CurrentHeatSourceDistance
+    return GetHeatSourceSystem()._Frost_CurrentHeatSourceDistance.GetValue()
 endFunction
 
 bool function IsPlayerTakingShelter() global
@@ -197,7 +215,7 @@ endif
     return false
 endFunction
 
-int function GetPlayerWetnessLevel()
+int function GetPlayerWetnessLevel() global
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
@@ -207,7 +225,7 @@ int function GetPlayerWetnessLevel()
     return Frostfall._Frost_WetLevel.GetValueInt()
 endFunction
 
-int function GetPlayerExposureLevel()
+int function GetPlayerExposureLevel() global
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
@@ -215,6 +233,22 @@ int function GetPlayerExposureLevel()
     endif
 
     return Frostfall._Frost_ExposureLevel.GetValueInt()
+endFunction
+
+function SendEvent_OnPlayerStartSwimming() global
+    _FrostInternal.FrostDebug(0, "Sending event Frostfall_OnPlayerStartSwimming")
+    int handle = ModEvent.Create("Frostfall_OnPlayerStartSwimming")
+    if handle
+        ModEvent.Send(handle)
+    endif
+endFunction
+
+function SendEvent_OnPlayerStopSwimming() global
+    _FrostInternal.FrostDebug(0, "Sending event Frostfall_OnPlayerStopSwimming")
+    int handle = ModEvent.Create("Frostfall_OnPlayerStopSwimming")
+    if handle
+        ModEvent.Send(handle)
+    endif
 endFunction
 
 function RaiseFrostAPIError() global

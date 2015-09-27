@@ -1,7 +1,7 @@
-scriptname _Frost_ClothingSystem extends Quest
+scriptname _Frost_ClothingSystem extends _Frost_BaseSystem
 
 function RaceChanged()
-
+    debug.trace("Got call from Campfire: RaceChanged")
 endFunction
 
 function ObjectEquipped(Form akBaseObject, int iGearType)
@@ -17,6 +17,7 @@ function ObjectEquipped(Form akBaseObject, int iGearType)
     ;       5: Backpack
     ;       6: Ammo
     ;       7: Other (could be shield, cloak, etc)
+    debug.trace("Got call from Campfire: ObjectEquipped")
 
 endFunction
 
@@ -33,5 +34,6 @@ function ObjectUnequipped(Form akBaseObject, int iGearType)
     ;       5: Backpack
     ;       6: Ammo
     ;       7: Other (could be shield, cloak, etc)
+    debug.trace("Got call from Campfire: ObjectUnequipped")
 
 endFunction
