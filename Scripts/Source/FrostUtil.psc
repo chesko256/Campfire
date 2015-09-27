@@ -18,6 +18,15 @@ _Frost_Compatibility function GetCompatibilitySystem() global
     return Frostfall.Compatibility
 endFunction
 
+_Frost_HeatSourceSystem function GetHeatSourceSystem() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.HeatSource
+endFunction
+
 bool function IsWarmEnoughToRemoveGearInTent() global
     return true
 endFunction
@@ -31,17 +40,40 @@ function Event_LegacyWoodHarvest() global
     ;pass
 endFunction
 
-bool function IsRefNearFire(ObjectReference akReference) global
-    return false
+bool function IsPlayerNearFire() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return false
+    endif
+
+    return GetHeatSourceSystem().NearFire
+endFunction
+
+int function GetPlayerHeatSourceLevel() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return -1
+    endif
+
+    return GetHeatSourceSystem().CurrentHeatSourceSize
+endFunction
+
+float function GetPlayerHeatSourceDistance() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return -1.0
+    endif
+
+    return GetHeatSourceSystem().CurrentHeatSourceDistance
 endFunction
 
 bool function IsPlayerTakingShelter() global
     return false
 endFunction
 
-int function GetCurrentHeatLevel(ObjectReference akReference) global
-    return 0
-endFunction
 
 bool function IsNearFastTravelException() global
 	;if Game.FindClosestReferenceOfAnyTypeInListFromRef(_DE_FastTravelExceptions, pPlayer,  600.0) != None

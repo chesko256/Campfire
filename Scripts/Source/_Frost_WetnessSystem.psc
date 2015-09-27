@@ -40,7 +40,6 @@ function Update()
 	UpdateWetState()
 	UpdateWetLevel()
 	last_update_time = this_update_time
-	FrostDebug(0, "~~~~ Wetness update finished in " + ((Game.GetRealHoursPassed() - this_update_time) * 3600.0) + " seconds.")
 endFunction
 
 function ModAttributeWetness(float amount, float limit)
@@ -172,9 +171,9 @@ endFunction
 
 function DryOff(float limit)
 	FrostDebug(1, "~~~~ DryOff ::: Limit " + limit)
-	if IsRefNearFire(PlayerRef)
+	if IsPlayerNearFire()
 		float time_delta_seconds = (this_update_time - last_update_time) * 3600.0
-		float amount = (((DRYFIRE_SPEED * GetCurrentHeatLevel(PlayerRef)) * time_delta_seconds) / 5.0)
+		float amount = (((DRYFIRE_SPEED * GetPlayerHeatSourceLevel()) * time_delta_seconds) / 5.0)
 		ModAttributeWetness(amount, limit)
 	else
 		float time_delta_seconds = (this_update_time - last_update_time) * 3600.0

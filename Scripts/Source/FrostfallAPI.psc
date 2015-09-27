@@ -1,6 +1,7 @@
 scriptname FrostfallAPI extends Quest
 
 _Frost_Compatibility property Compatibility auto
+_Frost_HeatSourceSystem property HeatSource auto
 Actor property PlayerRef auto
 Formlist property _Frost_WorldspacesExteriorOblivion auto
 Formlist property _Frost_OvercastWeatherList auto

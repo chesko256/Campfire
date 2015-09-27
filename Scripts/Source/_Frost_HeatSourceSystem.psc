@@ -1,5 +1,7 @@
 scriptname _Frost_HeatSourceSystem extends _Frost_BaseSystem
 
+import _FrostInternal
+
 int property CurrentHeatSourceSize = 0 auto hidden
 float property CurrentHeatSourceDistance = -1.0 auto hidden
 bool property NearFire = false auto hidden
@@ -11,6 +13,8 @@ Formlist property _Camp_HeatSources_Fire_Small auto
 Formlist property _Camp_HeatSources_Fire_Medium auto
 Formlist property _Camp_HeatSources_Fire_Large auto
 Keyword property LocTypeInn auto
+
+Quest property _Frost_MainQuest auto
 
 function Update()
     GetHeatSourceData()
@@ -47,6 +51,7 @@ function GetHeatSourceData()
         if CurrentHeatSourceSize > 0
             ; We successfully found a heat source.
             CurrentHeatSourceDistance = distance_from_heat
+            FrostDebug(1, "%%%% Heat ::: Size " + CurrentHeatSourceSize + ", Distance " + CurrentHeatSourceDistance + ", Fire " + NearFire + ", Ref " + current_heat_source)
             return
         endif
     else
@@ -66,6 +71,20 @@ function GetHeatSourceData()
     NearFire = false
 endFunction
 
+function SetHeatSourceSize(int size)
+    CurrentHeatSourceSize = size
+    (_Frost_MainQuest as _Frost_ConditionValues).PlayerHeatSourceSize = size
+endFunction
+
+function SetHeatSourceDistance(float distance)
+    CurrentHeatSourceDistance = distance
+    (_Frost_MainQuest as _Frost_ConditionValues).PlayerHeatSourceDistance = distance
+endFunction
+
+function SetNearFire(bool near_fire)
+    NearFire = near_fire
+    (_Frost_MainQuest as _Frost_ConditionValues).PlayerNearFire = near_fire
+endFunction
+
 ; Outstanding questions:
 ;    ??? if large fire, _DE_FireDistance.SetValue(220.0)    ;Set artificially low so things will trigger
-;    Also encapsulate GetOtherHeatSource()
