@@ -115,6 +115,8 @@
 !WorkingFiles/FLA/*
 !WorkingFiles/Images/*
 !Skyrim_Eids.csv
+!proccessed_forms.txt
+!unprocessed_forms.txt
 
 #Ignore working files
 Scripts/Source/_Camp_SkyUIConfigPanelScript - Copy.psc
