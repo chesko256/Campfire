@@ -1,0 +1,475 @@
+AddDatastoreEntryByKey("80145___Skyrim.esm", X, Y, Z) ; ArmorHideCuirass
+AddDatastoreEntryByKey("1101736___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassAlteration01
+AddDatastoreEntryByKey("1101737___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassAlteration02
+AddDatastoreEntryByKey("1101738___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassAlteration03
+AddDatastoreEntryByKey("1101739___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassConjuration01
+AddDatastoreEntryByKey("1101740___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassConjuration02
+AddDatastoreEntryByKey("1101741___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassConjuration03
+AddDatastoreEntryByKey("1101742___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassDestruction01
+AddDatastoreEntryByKey("1101743___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassDestruction02
+AddDatastoreEntryByKey("1101744___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassDestruction03
+AddDatastoreEntryByKey("500027___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassHealth01
+AddDatastoreEntryByKey("709777___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassHealth02
+AddDatastoreEntryByKey("709778___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassHealth03
+AddDatastoreEntryByKey("1101745___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassIllusion01
+AddDatastoreEntryByKey("1101746___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassIllusion02
+AddDatastoreEntryByKey("1101747___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassIllusion03
+AddDatastoreEntryByKey("500028___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassLightArmor01
+AddDatastoreEntryByKey("709780___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassLightArmor02
+AddDatastoreEntryByKey("709781___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassLightArmor03
+AddDatastoreEntryByKey("1101748___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassRestoration01
+AddDatastoreEntryByKey("1101749___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassRestoration02
+AddDatastoreEntryByKey("1101750___Skyrim.esm", X, Y, Z) ; EnchArmorHideCuirassRestoration03
+
+AddDatastoreEntryByKey("1071435___Skyrim.esm", X, Y, Z) ; ArmorBanditCuirass1
+AddDatastoreEntryByKey("1071437___Skyrim.esm", X, Y, Z) ; ArmorBanditCuirass2
+AddDatastoreEntryByKey("1071439___Skyrim.esm", X, Y, Z) ; ArmorBanditCuirass3
+AddDatastoreEntryByKey("455571___Skyrim.esm", X, Y, Z) ; ArmorBanditCuirass
+
+AddDatastoreEntryByKey("111522___Skyrim.esm", X, Y, Z) ; ArmorStuddedCuirass
+AddDatastoreEntryByKey("707731___Skyrim.esm", X, Y, Z) ; EnchArmorStuddedCuirassHealth01
+AddDatastoreEntryByKey("709843___Skyrim.esm", X, Y, Z) ; EnchArmorStuddedCuirassHealth02
+AddDatastoreEntryByKey("709844___Skyrim.esm", X, Y, Z) ; EnchArmorStuddedCuirassHealth03
+AddDatastoreEntryByKey("707732___Skyrim.esm", X, Y, Z) ; EnchArmorStuddedCuirassLightArmor01
+AddDatastoreEntryByKey("709845___Skyrim.esm", X, Y, Z) ; EnchArmorStuddedCuirassLightArmor02
+AddDatastoreEntryByKey("709846___Skyrim.esm", X, Y, Z) ; EnchArmorStuddedCuirassLightArmor03
+
+AddDatastoreEntryByKey("221598___Skyrim.esm", X, Y, Z) ; ArmorLeatherCuirass
+AddDatastoreEntryByKey("1105605___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassAlteration01
+AddDatastoreEntryByKey("1105606___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassAlteration02
+AddDatastoreEntryByKey("1105607___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassAlteration03
+AddDatastoreEntryByKey("1105608___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassConjuration01
+AddDatastoreEntryByKey("1105609___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassConjuration02
+AddDatastoreEntryByKey("1105610___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassConjuration03
+AddDatastoreEntryByKey("1105611___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassDestruction01
+AddDatastoreEntryByKey("1105612___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassDestruction02
+AddDatastoreEntryByKey("1105613___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassDestruction03
+AddDatastoreEntryByKey("737844___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassHealth01
+AddDatastoreEntryByKey("737845___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassHealth02
+AddDatastoreEntryByKey("737846___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassHealth03
+AddDatastoreEntryByKey("1105614___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassIllusion01
+AddDatastoreEntryByKey("1105615___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassIllusion02
+AddDatastoreEntryByKey("1105616___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassIllusion03
+AddDatastoreEntryByKey("737847___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassLightArmor01
+AddDatastoreEntryByKey("737848___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassLightArmor02
+AddDatastoreEntryByKey("737849___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassLightArmor03
+AddDatastoreEntryByKey("1105617___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassRestoration01
+AddDatastoreEntryByKey("1105618___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassRestoration02
+AddDatastoreEntryByKey("1105619___Skyrim.esm", X, Y, Z) ; EnchArmorLeatherCuirassRestoration03
+
+AddDatastoreEntryByKey("562851___Skyrim.esm", X, Y, Z) ; ArmorElvenCuirass
+AddDatastoreEntryByKey("1072914___Skyrim.esm", X, Y, Z) ; ArmorElvenLightCuirass
+AddDatastoreEntryByKey("1101690___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassAlteration02
+AddDatastoreEntryByKey("1101691___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassAlteration03
+AddDatastoreEntryByKey("1101692___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassAlteration04
+AddDatastoreEntryByKey("1101693___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassConjuration02
+AddDatastoreEntryByKey("1101694___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassConjuration03
+AddDatastoreEntryByKey("1101695___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassConjuration04
+AddDatastoreEntryByKey("1101696___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassDestruction02
+AddDatastoreEntryByKey("1101697___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassDestruction03
+AddDatastoreEntryByKey("1101698___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassDestruction04
+AddDatastoreEntryByKey("778180___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassHealth02
+AddDatastoreEntryByKey("778181___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassHealth03
+AddDatastoreEntryByKey("778301___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassHealth04
+AddDatastoreEntryByKey("1101699___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassIllusion02
+AddDatastoreEntryByKey("1101700___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassIllusion03
+AddDatastoreEntryByKey("1101701___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassIllusion04
+AddDatastoreEntryByKey("778182___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassLightArmor02
+AddDatastoreEntryByKey("778183___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassLightArmor03
+AddDatastoreEntryByKey("778302___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassLightArmor04
+AddDatastoreEntryByKey("1101702___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassRestoration02
+AddDatastoreEntryByKey("1101703___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassRestoration03
+AddDatastoreEntryByKey("1101704___Skyrim.esm", X, Y, Z) ; EnchArmorElvenCuirassRestoration04
+AddDatastoreEntryByKey("1101705___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassAlteration03
+AddDatastoreEntryByKey("1101706___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassAlteration04
+AddDatastoreEntryByKey("1101715___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassAlteration05
+AddDatastoreEntryByKey("1101707___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassConjuration03
+AddDatastoreEntryByKey("1101708___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassConjuration04
+AddDatastoreEntryByKey("1101716___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassConjuration05
+AddDatastoreEntryByKey("1101709___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassDestruction03
+AddDatastoreEntryByKey("1101710___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassDestruction04
+AddDatastoreEntryByKey("1101717___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassDestruction05
+AddDatastoreEntryByKey("1038874___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassHealRate03
+AddDatastoreEntryByKey("1038875___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassHealRate04
+AddDatastoreEntryByKey("1038876___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassHealRate05
+AddDatastoreEntryByKey("844205___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassHealth03
+AddDatastoreEntryByKey("844206___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassHealth04
+AddDatastoreEntryByKey("844207___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassHealth05
+AddDatastoreEntryByKey("1101711___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassIllusion03
+AddDatastoreEntryByKey("1101712___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassIllusion04
+AddDatastoreEntryByKey("1101718___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassIllusion05
+AddDatastoreEntryByKey("844208___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassLightArmor03
+AddDatastoreEntryByKey("844209___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassLightArmor04
+AddDatastoreEntryByKey("844210___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassLightArmor05
+AddDatastoreEntryByKey("1101713___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassRestoration03
+AddDatastoreEntryByKey("1101714___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassRestoration04
+AddDatastoreEntryByKey("1101719___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassRestoration05
+AddDatastoreEntryByKey("1038877___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassStaminaRate03
+AddDatastoreEntryByKey("1038878___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassStaminaRate04
+AddDatastoreEntryByKey("1038879___Skyrim.esm", X, Y, Z) ; EnchArmorElvenGildedCuirassStaminaRate05
+
+AddDatastoreEntryByKey("111523___Skyrim.esm", X, Y, 10) ; ArmorScaledCuirass
+AddDatastoreEntryByKey("111524___Skyrim.esm", X, Y, 15) ; ArmorScaledCuirassB
+AddDatastoreEntryByKey("1105635___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassAlteration02
+AddDatastoreEntryByKey("1105636___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassAlteration03
+AddDatastoreEntryByKey("1105637___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassAlteration04
+AddDatastoreEntryByKey("1105638___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassConjuration02
+AddDatastoreEntryByKey("1105639___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassConjuration03
+AddDatastoreEntryByKey("1105640___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassConjuration04
+AddDatastoreEntryByKey("1105641___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassDestruction02
+AddDatastoreEntryByKey("1105642___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassDestruction03
+AddDatastoreEntryByKey("1105643___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassDestruction04
+AddDatastoreEntryByKey("873461___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassHealth02
+AddDatastoreEntryByKey("873462___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassHealth03
+AddDatastoreEntryByKey("873463___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassHealth04
+AddDatastoreEntryByKey("1105644___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassIllusion02
+AddDatastoreEntryByKey("1105645___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassIllusion03
+AddDatastoreEntryByKey("1105646___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassIllusion04
+AddDatastoreEntryByKey("873464___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassLightArmor02
+AddDatastoreEntryByKey("873465___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassLightArmor03
+AddDatastoreEntryByKey("873466___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassLightArmor04
+AddDatastoreEntryByKey("1105647___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassRestoration02
+AddDatastoreEntryByKey("1105648___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassRestoration03
+AddDatastoreEntryByKey("1105649___Skyrim.esm", X, Y, Z) ; EnchArmorScaledCuirassRestoration04
+
+AddDatastoreEntryByKey("80185___Skyrim.esm", X, Y, Z) ; ArmorGlassCuirass
+AddDatastoreEntryByKey("1101720___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassAlteration03
+AddDatastoreEntryByKey("1101721___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassAlteration04
+AddDatastoreEntryByKey("1101722___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassAlteration05
+AddDatastoreEntryByKey("1101723___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassConjuration03
+AddDatastoreEntryByKey("1101724___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassConjuration04
+AddDatastoreEntryByKey("1101725___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassConjuration05
+AddDatastoreEntryByKey("1101726___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassDestruction03
+AddDatastoreEntryByKey("1101728___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassDestruction04
+AddDatastoreEntryByKey("1101729___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassDestruction05
+AddDatastoreEntryByKey("1041111___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassHealRate03
+AddDatastoreEntryByKey("1041112___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassHealRate04
+AddDatastoreEntryByKey("1041113___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassHealRate05
+AddDatastoreEntryByKey("873345___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassHealth03
+AddDatastoreEntryByKey("873346___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassHealth04
+AddDatastoreEntryByKey("873347___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassHealth05
+AddDatastoreEntryByKey("1101730___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassIllusion03
+AddDatastoreEntryByKey("1101731___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassIllusion04
+AddDatastoreEntryByKey("1101732___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassIllusion05
+AddDatastoreEntryByKey("873348___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassLightArmor03
+AddDatastoreEntryByKey("873349___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassLightArmor04
+AddDatastoreEntryByKey("873350___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassLightArmor05
+AddDatastoreEntryByKey("1101733___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassRestoration03
+AddDatastoreEntryByKey("1101734___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassRestoration04
+AddDatastoreEntryByKey("1101735___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassRestoration05
+AddDatastoreEntryByKey("1041116___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassStaminaRate03
+AddDatastoreEntryByKey("1041117___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassStaminaRate04
+AddDatastoreEntryByKey("1041118___Skyrim.esm", X, Y, Z) ; EnchArmorGlassCuirassStaminaRate05
+
+AddDatastoreEntryByKey("80190___Skyrim.esm", X, Y, Z) ; ArmorDragonscaleCuirass
+AddDatastoreEntryByKey("1101646___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassAlteration04
+AddDatastoreEntryByKey("1101647___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassAlteration05
+AddDatastoreEntryByKey("1101648___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassAlteration06
+AddDatastoreEntryByKey("1101649___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassConjuration04
+AddDatastoreEntryByKey("1101650___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassConjuration05
+AddDatastoreEntryByKey("1101651___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassConjuration06
+AddDatastoreEntryByKey("1101652___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassDestruction04
+AddDatastoreEntryByKey("1101653___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassDestruction05
+AddDatastoreEntryByKey("1101654___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassDestruction06
+AddDatastoreEntryByKey("1041120___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassHealRate04
+AddDatastoreEntryByKey("1041121___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassHealRate05
+AddDatastoreEntryByKey("1041122___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassHealRate06
+AddDatastoreEntryByKey("883130___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassHealth04
+AddDatastoreEntryByKey("883131___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassHealth05
+AddDatastoreEntryByKey("883132___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassHealth06
+AddDatastoreEntryByKey("1101655___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassIllusion04
+AddDatastoreEntryByKey("1101656___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassIllusion05
+AddDatastoreEntryByKey("1101657___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassIllusion06
+AddDatastoreEntryByKey("883133___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassLightArmor04
+AddDatastoreEntryByKey("883134___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassLightArmor05
+AddDatastoreEntryByKey("883135___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassLightArmor06
+AddDatastoreEntryByKey("1101658___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassRestoration04
+AddDatastoreEntryByKey("1101660___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassRestoration05
+AddDatastoreEntryByKey("1101659___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassRestoration06
+AddDatastoreEntryByKey("1041123___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassStaminaRate04
+AddDatastoreEntryByKey("1041124___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassStaminaRate05
+AddDatastoreEntryByKey("1041125___Skyrim.esm", X, Y, Z) ; EnchArmorDragonscaleCuirassStaminaRate06
+
+AddDatastoreEntryByKey("77385___Skyrim.esm", X, Y, Z) ; ArmorIronCuirass
+AddDatastoreEntryByKey("1101752___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassAlteration01
+AddDatastoreEntryByKey("1101753___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassAlteration02
+AddDatastoreEntryByKey("1101755___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassAlteration03
+AddDatastoreEntryByKey("1101756___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassConjuration01
+AddDatastoreEntryByKey("1101757___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassConjuration02
+AddDatastoreEntryByKey("1101758___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassConjuration03
+AddDatastoreEntryByKey("1101759___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassDestruction01
+AddDatastoreEntryByKey("1101760___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassDestruction02
+AddDatastoreEntryByKey("1101761___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassDestruction03
+AddDatastoreEntryByKey("300302___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassHealth01
+AddDatastoreEntryByKey("709987___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassHealth02
+AddDatastoreEntryByKey("709988___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassHealth03
+AddDatastoreEntryByKey("500008___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassHeavyArmor01
+AddDatastoreEntryByKey("709989___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassHeavyArmor02
+AddDatastoreEntryByKey("709990___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassHeavyArmor03
+AddDatastoreEntryByKey("1101762___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassIllusion01
+AddDatastoreEntryByKey("1101763___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassIllusion02
+AddDatastoreEntryByKey("1101764___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassIllusion03
+AddDatastoreEntryByKey("1101765___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassRestoration01
+AddDatastoreEntryByKey("1101766___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassRestoration02
+AddDatastoreEntryByKey("1101767___Skyrim.esm", X, Y, Z) ; EnchArmorIronCuirassRestoration03
+
+AddDatastoreEntryByKey("80200___Skyrim.esm", X, Y, Z) ; ArmorIronBandedCuirass
+AddDatastoreEntryByKey("1101768___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassAlteration01
+AddDatastoreEntryByKey("1101769___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassAlteration02
+AddDatastoreEntryByKey("1101770___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassAlteration03
+AddDatastoreEntryByKey("1101771___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassConjuration01
+AddDatastoreEntryByKey("1101772___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassConjuration02
+AddDatastoreEntryByKey("1101773___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassConjuration03
+AddDatastoreEntryByKey("1101774___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassDestruction01
+AddDatastoreEntryByKey("1101775___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassDestruction02
+AddDatastoreEntryByKey("1101776___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassDestruction03
+AddDatastoreEntryByKey("707741___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassHealth01
+AddDatastoreEntryByKey("709919___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassHealth02
+AddDatastoreEntryByKey("709920___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassHealth03
+AddDatastoreEntryByKey("707742___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassHeavyArmor01
+AddDatastoreEntryByKey("709921___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassHeavyArmor02
+AddDatastoreEntryByKey("709922___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassHeavyArmor03
+AddDatastoreEntryByKey("1101777___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassIllusion01
+AddDatastoreEntryByKey("1101778___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassIllusion02
+AddDatastoreEntryByKey("1101779___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassIllusion03
+AddDatastoreEntryByKey("1101780___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassRestoration01
+AddDatastoreEntryByKey("1101781___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassRestoration02
+AddDatastoreEntryByKey("1101782___Skyrim.esm", X, Y, Z) ; EnchArmorIronBandedCuirassRestoration03
+
+AddDatastoreEntryByKey("80210___Skyrim.esm", X, Y, Z) ; ArmorSteelCuirassA
+AddDatastoreEntryByKey("1011490___Skyrim.esm", X, Y, Z) ; ArmorSteelCuirassB
+AddDatastoreEntryByKey("1105650___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassAlteration01
+AddDatastoreEntryByKey("1105651___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassAlteration02
+AddDatastoreEntryByKey("1105652___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassAlteration03
+AddDatastoreEntryByKey("1105653___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassConjuration01
+AddDatastoreEntryByKey("1105654___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassConjuration02
+AddDatastoreEntryByKey("1105655___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassConjuration03
+AddDatastoreEntryByKey("1105656___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassDestruction01
+AddDatastoreEntryByKey("1105657___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassDestruction02
+AddDatastoreEntryByKey("1105658___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassDestruction03
+AddDatastoreEntryByKey("741541___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassHealth01
+AddDatastoreEntryByKey("741542___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassHealth02
+AddDatastoreEntryByKey("741543___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassHealth03
+AddDatastoreEntryByKey("741544___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassHeavyArmor01
+AddDatastoreEntryByKey("741545___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassHeavyArmor02
+AddDatastoreEntryByKey("741546___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassHeavyArmor03
+AddDatastoreEntryByKey("1105659___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassIllusion01
+AddDatastoreEntryByKey("1105660___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassIllusion02
+AddDatastoreEntryByKey("1105661___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassIllusion03
+AddDatastoreEntryByKey("1105662___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassRestoration01
+AddDatastoreEntryByKey("1105663___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassRestoration02
+AddDatastoreEntryByKey("1105664___Skyrim.esm", X, Y, Z) ; EnchArmorSteelCuirassRestoration03
+
+AddDatastoreEntryByKey("80205___Skyrim.esm", X, Y, Z) ; ArmorDwarvenCuirass
+AddDatastoreEntryByKey("1101661___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassAlteration02
+AddDatastoreEntryByKey("571002___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassAlteration03
+AddDatastoreEntryByKey("1101662___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassAlteration04
+AddDatastoreEntryByKey("1101663___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassConjuration02
+AddDatastoreEntryByKey("1101664___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassConjuration03
+AddDatastoreEntryByKey("1101665___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassConjuration04
+AddDatastoreEntryByKey("1101666___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassDestruction02
+AddDatastoreEntryByKey("1101667___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassDestruction03
+AddDatastoreEntryByKey("1101668___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassDestruction04
+AddDatastoreEntryByKey("111576___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassHealth02
+AddDatastoreEntryByKey("111577___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassHealth03
+AddDatastoreEntryByKey("111578___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassHealth04
+AddDatastoreEntryByKey("111579___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassHeavyArmor02
+AddDatastoreEntryByKey("111631___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassHeavyArmor03
+AddDatastoreEntryByKey("111680___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassHeavyArmor04
+AddDatastoreEntryByKey("1101669___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassIllusion02
+AddDatastoreEntryByKey("1101670___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassIllusion03
+AddDatastoreEntryByKey("1101671___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassIllusion04
+AddDatastoreEntryByKey("1101672___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassRestoration02
+AddDatastoreEntryByKey("1101673___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassRestoration03
+AddDatastoreEntryByKey("1101674___Skyrim.esm", X, Y, Z) ; EnchArmorDwarvenCuirassRestoration04
+
+AddDatastoreEntryByKey("80220___Skyrim.esm", X, Y, Z) ; ArmorSteelPlateCuirass
+AddDatastoreEntryByKey("1105665___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassAlteration02
+AddDatastoreEntryByKey("1105666___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassAlteration03
+AddDatastoreEntryByKey("1105667___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassAlteration04
+AddDatastoreEntryByKey("1105668___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassConjuration02
+AddDatastoreEntryByKey("1105669___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassConjuration03
+AddDatastoreEntryByKey("1105670___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassConjuration04
+AddDatastoreEntryByKey("1105671___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassDestruction02
+AddDatastoreEntryByKey("1105672___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassDestruction03
+AddDatastoreEntryByKey("1105673___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassDestruction04
+AddDatastoreEntryByKey("111628___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassHealth02
+AddDatastoreEntryByKey("111629___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassHealth03
+AddDatastoreEntryByKey("111630___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassHealth04
+AddDatastoreEntryByKey("111686___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassHeavyArmor02
+AddDatastoreEntryByKey("111950___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassHeavyArmor03
+AddDatastoreEntryByKey("111957___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassHeavyArmor04
+AddDatastoreEntryByKey("1105674___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassIllusion02
+AddDatastoreEntryByKey("1105675___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassIllusion03
+AddDatastoreEntryByKey("1105676___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassIllusion04
+AddDatastoreEntryByKey("1105677___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassRestoration02
+AddDatastoreEntryByKey("1105678___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassRestoration03
+AddDatastoreEntryByKey("1105679___Skyrim.esm", X, Y, Z) ; EnchArmorSteelPlateCuirassRestoration04
+
+AddDatastoreEntryByKey("80215___Skyrim.esm", X, Y, Z) ; ArmorOrcishCuirass
+AddDatastoreEntryByKey("1105620___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassAlteration03
+AddDatastoreEntryByKey("1105621___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassAlteration04
+AddDatastoreEntryByKey("1105622___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassAlteration05
+AddDatastoreEntryByKey("1105623___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassConjuration03
+AddDatastoreEntryByKey("1105624___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassConjuration04
+AddDatastoreEntryByKey("1105625___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassConjuration05
+AddDatastoreEntryByKey("1105626___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassDestruction03
+AddDatastoreEntryByKey("1105627___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassDestruction04
+AddDatastoreEntryByKey("1105628___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassDestruction05
+AddDatastoreEntryByKey("849858___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassHealth03
+AddDatastoreEntryByKey("849859___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassHealth04
+AddDatastoreEntryByKey("849860___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassHealth05
+AddDatastoreEntryByKey("849861___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassHeavyArmor03
+AddDatastoreEntryByKey("849862___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassHeavyArmor04
+AddDatastoreEntryByKey("849863___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassHeavyArmor05
+AddDatastoreEntryByKey("1105629___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassIllusion03
+AddDatastoreEntryByKey("1105630___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassIllusion04
+AddDatastoreEntryByKey("1105631___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassIllusion05
+AddDatastoreEntryByKey("1105632___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassRestoration03
+AddDatastoreEntryByKey("1105633___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassRestoration04
+AddDatastoreEntryByKey("1105634___Skyrim.esm", X, Y, Z) ; EnchArmorOrcishCuirassRestoration05
+
+AddDatastoreEntryByKey("80225___Skyrim.esm", X, Y, Z) ; ArmorEbonyCuirass
+AddDatastoreEntryByKey("1101675___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassAlteration03
+AddDatastoreEntryByKey("1101676___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassAlteration04
+AddDatastoreEntryByKey("1101677___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassAlteration05
+AddDatastoreEntryByKey("1101678___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassConjuration03
+AddDatastoreEntryByKey("1101679___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassConjuration04
+AddDatastoreEntryByKey("1101680___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassConjuration05
+AddDatastoreEntryByKey("1101681___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassDestruction03
+AddDatastoreEntryByKey("1101682___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassDestruction04
+AddDatastoreEntryByKey("1101688___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassDestruction05
+AddDatastoreEntryByKey("849975___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassHealth03
+AddDatastoreEntryByKey("849976___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassHealth04
+AddDatastoreEntryByKey("849977___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassHealth05
+AddDatastoreEntryByKey("1041129___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassHealthRate03
+AddDatastoreEntryByKey("1041130___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassHealthRate04
+AddDatastoreEntryByKey("1041131___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassHealthRate05
+AddDatastoreEntryByKey("849978___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassHeavyArmor03
+AddDatastoreEntryByKey("849979___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassHeavyArmor04
+AddDatastoreEntryByKey("849980___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassHeavyArmor05
+AddDatastoreEntryByKey("1101683___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassIllusion03
+AddDatastoreEntryByKey("1101684___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassIllusion04
+AddDatastoreEntryByKey("1101689___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassIllusion05
+AddDatastoreEntryByKey("1101685___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassRestoration03
+AddDatastoreEntryByKey("1101686___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassRestoration04
+AddDatastoreEntryByKey("1101687___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassRestoration05
+AddDatastoreEntryByKey("1041132___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassStaminaRate03
+AddDatastoreEntryByKey("1041133___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassStaminaRate04
+AddDatastoreEntryByKey("1041134___Skyrim.esm", X, Y, Z) ; EnchArmorEbonyCuirassStaminaRate05
+
+AddDatastoreEntryByKey("80230___Skyrim.esm", X, Y, Z) ; ArmorDragonplateCuirass
+AddDatastoreEntryByKey("1101631___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassAlteration04
+AddDatastoreEntryByKey("1101644___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassAlteration05
+AddDatastoreEntryByKey("1101632___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassAlteration06
+AddDatastoreEntryByKey("1101633___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassConjuration04
+AddDatastoreEntryByKey("1101634___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassConjuration05
+AddDatastoreEntryByKey("1101635___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassConjuration06
+AddDatastoreEntryByKey("1101636___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassDestruction04
+AddDatastoreEntryByKey("1101645___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassDestruction05
+AddDatastoreEntryByKey("1101637___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassDestruction06
+AddDatastoreEntryByKey("883238___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassHealth04
+AddDatastoreEntryByKey("883239___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassHealth05
+AddDatastoreEntryByKey("883240___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassHealth06
+AddDatastoreEntryByKey("1041141___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassHealthRate04
+AddDatastoreEntryByKey("1041142___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassHealthRate05
+AddDatastoreEntryByKey("1041143___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassHealthRate06
+AddDatastoreEntryByKey("883241___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassHeavyArmor04
+AddDatastoreEntryByKey("883242___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassHeavyArmor05
+AddDatastoreEntryByKey("883243___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassHeavyArmor06
+AddDatastoreEntryByKey("1101638___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassIllusion04
+AddDatastoreEntryByKey("1101639___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassIllusion05
+AddDatastoreEntryByKey("1101640___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassIllusion06
+AddDatastoreEntryByKey("1101641___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassRestoration04
+AddDatastoreEntryByKey("1101642___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassRestoration05
+AddDatastoreEntryByKey("1101643___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassRestoration06
+AddDatastoreEntryByKey("1041144___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassStaminaRate04
+AddDatastoreEntryByKey("1041145___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassStaminaRate05
+AddDatastoreEntryByKey("1041146___Skyrim.esm", X, Y, Z) ; EnchArmorDragonplateCuirassStaminaRate06
+
+AddDatastoreEntryByKey("80235___Skyrim.esm", X, Y, Z) ; ArmorDaedricCuirass
+AddDatastoreEntryByKey("1101616___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassAlteration04
+AddDatastoreEntryByKey("1101617___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassAlteration05
+AddDatastoreEntryByKey("1101618___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassAlteration06
+AddDatastoreEntryByKey("1101619___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassConjuration04
+AddDatastoreEntryByKey("1101620___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassConjuration05
+AddDatastoreEntryByKey("1101621___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassConjuration06
+AddDatastoreEntryByKey("1101622___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassDestruction04
+AddDatastoreEntryByKey("1101623___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassDestruction05
+AddDatastoreEntryByKey("1101624___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassDestruction06
+AddDatastoreEntryByKey("1041150___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassHealRate04
+AddDatastoreEntryByKey("1041151___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassHealRate05
+AddDatastoreEntryByKey("1041152___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassHealRate06
+AddDatastoreEntryByKey("883352___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassHealth04
+AddDatastoreEntryByKey("883353___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassHealth05
+AddDatastoreEntryByKey("883354___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassHealth06
+AddDatastoreEntryByKey("883355___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassHeavyArmor04
+AddDatastoreEntryByKey("883356___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassHeavyArmor05
+AddDatastoreEntryByKey("883357___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassHeavyArmor06
+AddDatastoreEntryByKey("1101625___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassIllusion04
+AddDatastoreEntryByKey("1101626___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassIllusion05
+AddDatastoreEntryByKey("1101627___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassIllusion06
+AddDatastoreEntryByKey("1101628___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassRestoration04
+AddDatastoreEntryByKey("1101629___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassRestoration05
+AddDatastoreEntryByKey("1101630___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassRestoration06
+AddDatastoreEntryByKey("1041147___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassStaminaRate04
+AddDatastoreEntryByKey("1041148___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassStaminaRate05
+AddDatastoreEntryByKey("1041149___Skyrim.esm", X, Y, Z) ; EnchArmorDaedricCuirassStaminaRate06
+
+AddDatastoreEntryByKey("586138___Skyrim.esm", X, Y, Z) ; ClothesPrisonerRags
+AddDatastoreEntryByKey("248320___Skyrim.esm", X, Y, Z) ; ClothesPrisonerShoes
+AddDatastoreEntryByKey("248318___Skyrim.esm", X, Y, Z) ; ClothesPrisonerTunic
+
+AddDatastoreEntryByKey("307851___Skyrim.esm", X, Y, Z) ; ArmorBladesCuirass
+
+AddDatastoreEntryByKey("830997___Skyrim.esm", X, Y, Z) ; ArmorCompanionsCuirass
+
+
+
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+
+

@@ -18,41 +18,78 @@ Event OnInit()
 	test_setabunchofvalues()
 EndEvent
 
-function RevertDataStore()
-
-endFunction
-
 int[] function GetArmorProtectionData()
 	
 endFunction
 
+string function GetDatastoreKeyFromForm(Armor akArmor)
+	int form_id = akArmor.GetFormID()
+	int mod_index = form_id/16777216
+	if mod_index < 0
+		mod_index = 0
+	endif
 
+	return (form_id % 16777216) + "___" + Game.GetModName(mod_index)
+endFunction
 
+string function GetDatastoreKeyFromID(int aiFormID)
+	int mod_index = aiFormID/16777216
+	if mod_index < 0
+		mod_index = 0
+	endif
+	return (aiFormID % 16777216) + "___" + Game.GetModName(mod_index)
+endFunction
 
+function AddDatastoreEntryByKey(string asKey, int aiGearType, int aiExposureProtection, int aiRainProtection)
+	Keyword Datastore
+	if aiGearType == 1
+		Datastore = _FrostData_ArmorBody
+	elseif aiGearType == 2
+		Datastore = _FrostData_ArmorHands
+	elseif aiGearType == 3
+		Datastore = _FrostData_ArmorHead
+	elseif aiGearType == 4
+		Datastore = _FrostData_ArmorFeet
+	elseif aiGearType == 7
+		Datastore = _FrostData_ArmorCloak
+	endif
 
+	; Do we know if the entry exists already? Assume 'yes, we know it doesn't' for now.
+	IntListAdd(Datastore, asKey, aiExposureProtection)
+	IntListAdd(Datastore, asKey, aiRainProtection)
+endFunction
 
+function AddDatastoreEntryByForm(Armor akArmor, int aiGearType, int aiExposureProtection, int aiRainProtection)
+	string ds_key = GetDatastoreKeyFromForm(akArmor)
+	Keyword Datastore
+	if aiGearType == 1
+		Datastore = _FrostData_ArmorBody
+	elseif aiGearType == 2
+		Datastore = _FrostData_ArmorHands
+	elseif aiGearType == 3
+		Datastore = _FrostData_ArmorHead
+	elseif aiGearType == 4
+		Datastore = _FrostData_ArmorFeet
+	elseif aiGearType == 7
+		Datastore = _FrostData_ArmorCloak
+	endif
 
+	; Do we know if the entry exists already? Assume 'yes, we know it doesn't' for now.
+	IntListAdd(Datastore, ds_key, aiExposureProtection)
+	IntListAdd(Datastore, ds_key, aiRainProtection)
+endFunction
 
+function UpdateDatastoreEntry(string asKey, int aiExposureProtection, int aiRainProtection)
 
+endFunction
 
+function RevertDatastore()
 
+endFunction
 
+function RevertDatastoreEntry(string asKey)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+endFunction
 
 function test_setabunchofvalues()
 	int a_id = ArmorIronCuirass.GetFormID()
