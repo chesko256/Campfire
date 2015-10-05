@@ -97,7 +97,7 @@ AddDatastoreEntryByKey("80189___Skyrim.esm", X, Y, Z) ; ArmorDragonscaleBoots
 AddDatastoreEntryByKey("80191___Skyrim.esm", X, Y, Z) ; ArmorDragonscaleGauntlets
 AddDatastoreEntryByKey("80192___Skyrim.esm", X, Y, Z) ; ArmorDragonscaleHelmet
 AddDatastoreEntryByKey("354973___Skyrim.esm", X, Y, Z) ; ArmorDraugrBoots
-AddDatastoreEntryByKey("99208___Skyrim.esm", X, Y, Z) ; ArmorDraugrCuirass
+
 AddDatastoreEntryByKey("355095___Skyrim.esm", X, Y, Z) ; ArmorDraugrGauntlets
 AddDatastoreEntryByKey("354974___Skyrim.esm", X, Y, Z) ; ArmorDraugrHelmet
 AddDatastoreEntryByKey("80204___Skyrim.esm", X, Y, Z) ; ArmorDwarvenBoots
@@ -127,14 +127,7 @@ AddDatastoreEntryByKey("80184___Skyrim.esm", X, Y, Z) ; ArmorGlassBoots
 
 AddDatastoreEntryByKey("80186___Skyrim.esm", X, Y, Z) ; ArmorGlassGauntlets
 AddDatastoreEntryByKey("80187___Skyrim.esm", X, Y, Z) ; ArmorGlassHelmet
-AddDatastoreEntryByKey("136478___Skyrim.esm", X, Y, Z) ; ArmorGuardCuirassFalkreath
-AddDatastoreEntryByKey("136480___Skyrim.esm", X, Y, Z) ; ArmorGuardCuirassHjaalmarch
-AddDatastoreEntryByKey("136456___Skyrim.esm", X, Y, Z) ; ArmorGuardCuirassMarkarth
-AddDatastoreEntryByKey("136455___Skyrim.esm", X, Y, Z) ; ArmorGuardCuirassRiften
-AddDatastoreEntryByKey("819035___Skyrim.esm", X, Y, Z) ; ArmorGuardCuirassSolitude
-AddDatastoreEntryByKey("136485___Skyrim.esm", X, Y, Z) ; ArmorGuardCuirassThePale
-AddDatastoreEntryByKey("136461___Skyrim.esm", X, Y, Z) ; ArmorGuardCuirassWhiterun
-AddDatastoreEntryByKey("136482___Skyrim.esm", X, Y, Z) ; ArmorGuardCuirassWinterhold
+
 AddDatastoreEntryByKey("136729___Skyrim.esm", X, Y, Z) ; ArmorGuardHelmetFullFalkreath
 AddDatastoreEntryByKey("819036___Skyrim.esm", X, Y, Z) ; ArmorGuardHelmetFullHaafingar
 AddDatastoreEntryByKey("136731___Skyrim.esm", X, Y, Z) ; ArmorGuardHelmetFullHjaalmarch
@@ -148,16 +141,16 @@ AddDatastoreEntryByKey("80144___Skyrim.esm", X, Y, Z) ; ArmorHideBoots
 AddDatastoreEntryByKey("80146___Skyrim.esm", X, Y, Z) ; ArmorHideGauntlets
 AddDatastoreEntryByKey("80147___Skyrim.esm", X, Y, Z) ; ArmorHideHelmet
 AddDatastoreEntryByKey("79574___Skyrim.esm", X, Y, Z) ; ArmorImperialBoots
-AddDatastoreEntryByKey("79573___Skyrim.esm", X, Y, Z) ; ArmorImperialCuirass
+
 AddDatastoreEntryByKey("79572___Skyrim.esm", X, Y, Z) ; ArmorImperialGauntlets
 AddDatastoreEntryByKey("81628___Skyrim.esm", X, Y, Z) ; ArmorImperialHelmet
 AddDatastoreEntryByKey("614669___Skyrim.esm", X, Y, Z) ; ArmorImperialHelmetFull
 AddDatastoreEntryByKey("79567___Skyrim.esm", X, Y, Z) ; ArmorImperialHelmetOfficer
 AddDatastoreEntryByKey("81623___Skyrim.esm", X, Y, Z) ; ArmorImperialLightBoots
-AddDatastoreEntryByKey("81625___Skyrim.esm", X, Y, Z) ; ArmorImperialLightCuirass
+
 AddDatastoreEntryByKey("81626___Skyrim.esm", X, Y, Z) ; ArmorImperialLightGauntlets
 AddDatastoreEntryByKey("81627___Skyrim.esm", X, Y, Z) ; ArmorImperialLightHelmet
-AddDatastoreEntryByKey("81624___Skyrim.esm", X, Y, Z) ; ArmorImperialStuddedCuirass
+
 
 AddDatastoreEntryByKey("77387___Skyrim.esm", X, Y, Z) ; ArmorIronBoots
 
@@ -207,19 +200,14 @@ AddDatastoreEntryByKey("80219___Skyrim.esm", X, Y, Z) ; ArmorSteelPlateBoots
 AddDatastoreEntryByKey("80221___Skyrim.esm", X, Y, Z) ; ArmorSteelPlateGauntlets
 AddDatastoreEntryByKey("80222___Skyrim.esm", X, Y, Z) ; ArmorSteelPlateHelmet
 AddDatastoreEntryByKey("551297___Skyrim.esm", X, Y, Z) ; ArmorStormcloakBearBoots
-AddDatastoreEntryByKey("551294___Skyrim.esm", X, Y, Z) ; ArmorStormcloakBearCuirass
+
 AddDatastoreEntryByKey("551299___Skyrim.esm", X, Y, Z) ; ArmorStormcloakBearGauntlets
 AddDatastoreEntryByKey("551301___Skyrim.esm", X, Y, Z) ; ArmorStormcloakBearHelmet
 AddDatastoreEntryByKey("683391___Skyrim.esm", X, Y, Z) ; ArmorStormcloakBoots
-AddDatastoreEntryByKey("683387___Skyrim.esm", X, Y, Z) ; ArmorStormcloakCuirass
-AddDatastoreEntryByKey("710048___Skyrim.esm", X, Y, Z) ; ArmorStormcloakCuirassSleeves
+
 AddDatastoreEntryByKey("683389___Skyrim.esm", X, Y, Z) ; ArmorStormcloakGauntlets
 AddDatastoreEntryByKey("683385___Skyrim.esm", X, Y, Z) ; ArmorStormcloakHelmetFull
 
-AddDatastoreEntryByKey("1082687___Skyrim.esm", X, Y, Z) ; ArmorSummersetShadowsGuildBoots
-AddDatastoreEntryByKey("1082688___Skyrim.esm", X, Y, Z) ; ArmorSummersetShadowsGuildCuirass
-AddDatastoreEntryByKey("1082689___Skyrim.esm", X, Y, Z) ; ArmorSummersetShadowsGuildGauntlets
-AddDatastoreEntryByKey("1082690___Skyrim.esm", X, Y, Z) ; ArmorSummersetShadowsGuildHelmet
 AddDatastoreEntryByKey("222595___Skyrim.esm", X, Y, Z) ; ArmorThievesGuildBoots
 AddDatastoreEntryByKey("867010___Skyrim.esm", X, Y, Z) ; ArmorThievesGuildBootsPlayer
 AddDatastoreEntryByKey("867019___Skyrim.esm", X, Y, Z) ; ArmorThievesGuildBootsPlayerImproved
@@ -404,22 +392,18 @@ AddDatastoreEntryByKey("947099___Skyrim.esm", X, Y, Z) ; DA16VaerminaRobes
 AddDatastoreEntryByKey("862276___Skyrim.esm", X, Y, Z) ; DBArmor
 AddDatastoreEntryByKey("862277___Skyrim.esm", X, Y, Z) ; DBArmorBoots
 AddDatastoreEntryByKey("925460___Skyrim.esm", X, Y, Z) ; DBArmorBootsSP
-AddDatastoreEntryByKey("1071463___Skyrim.esm", X, Y, Z) ; DBArmorBootsWorn
 AddDatastoreEntryByKey("1108828___Skyrim.esm", X, Y, Z) ; DBArmorBootsWornPlayable
 AddDatastoreEntryByKey("862275___Skyrim.esm", X, Y, Z) ; DBArmorGloves
 AddDatastoreEntryByKey("1005953___Skyrim.esm", X, Y, Z) ; DBArmorGlovesReward
 AddDatastoreEntryByKey("925462___Skyrim.esm", X, Y, Z) ; DBArmorGlovesSP
-AddDatastoreEntryByKey("1071464___Skyrim.esm", X, Y, Z) ; DBArmorGlovesWorn
 AddDatastoreEntryByKey("1108830___Skyrim.esm", X, Y, Z) ; DBArmorGlovesWornPlayable
 AddDatastoreEntryByKey("862274___Skyrim.esm", X, Y, Z) ; DBArmorHelmet
 AddDatastoreEntryByKey("371652___Skyrim.esm", X, Y, Z) ; DBArmorHelmetMaskLess
 AddDatastoreEntryByKey("925463___Skyrim.esm", X, Y, Z) ; DBArmorHelmetSP
-AddDatastoreEntryByKey("1071465___Skyrim.esm", X, Y, Z) ; DBArmorHelmetWorn
 AddDatastoreEntryByKey("1108829___Skyrim.esm", X, Y, Z) ; DBArmorHelmetWornPlayable
 AddDatastoreEntryByKey("371651___Skyrim.esm", X, Y, Z) ; DBArmorShortSleeve
 AddDatastoreEntryByKey("925461___Skyrim.esm", X, Y, Z) ; DBArmorSP
-AddDatastoreEntryByKey("1071462___Skyrim.esm", X, Y, Z) ; DBArmorWorn
-AddDatastoreEntryByKey("1108827___Skyrim.esm", X, Y, Z) ; DBArmorWornPlayable
+
 AddDatastoreEntryByKey("850089___Skyrim.esm", X, Y, Z) ; DBClothesHandWraps
 AddDatastoreEntryByKey("850081___Skyrim.esm", X, Y, Z) ; DBClothesHood
 AddDatastoreEntryByKey("847470___Skyrim.esm", X, Y, Z) ; DBClothesJester
@@ -960,13 +944,7 @@ AddDatastoreEntryByKey("709862___Skyrim.esm", X, Y, Z) ; EnchArmorImperialBootsR
 AddDatastoreEntryByKey("707775___Skyrim.esm", X, Y, Z) ; EnchArmorImperialBootsSneak01
 AddDatastoreEntryByKey("709863___Skyrim.esm", X, Y, Z) ; EnchArmorImperialBootsSneak02
 AddDatastoreEntryByKey("709864___Skyrim.esm", X, Y, Z) ; EnchArmorImperialBootsSneak03
-AddDatastoreEntryByKey("707776___Skyrim.esm", X, Y, Z) ; EnchArmorImperialCuirassHealth01
-AddDatastoreEntryByKey("709865___Skyrim.esm", X, Y, Z) ; EnchArmorImperialCuirassHealth02
-AddDatastoreEntryByKey("709866___Skyrim.esm", X, Y, Z) ; EnchArmorImperialCuirassHealth03
-AddDatastoreEntryByKey("707777___Skyrim.esm", X, Y, Z) ; EnchArmorImperialCuirassHeavyArmor01
-AddDatastoreEntryByKey("709867___Skyrim.esm", X, Y, Z) ; EnchArmorImperialCuirassHeavyArmor02
-AddDatastoreEntryByKey("709868___Skyrim.esm", X, Y, Z) ; EnchArmorImperialCuirassHeavyArmor03
-AddDatastoreEntryByKey("709872___Skyrim.esm", X, Y, Z) ; EnchArmorImperialCuirassResistFrost03
+
 AddDatastoreEntryByKey("571010___Skyrim.esm", X, Y, Z) ; EnchArmorImperialGauntletsAlchemy01
 AddDatastoreEntryByKey("571011___Skyrim.esm", X, Y, Z) ; EnchArmorImperialGauntletsAlchemy02
 AddDatastoreEntryByKey("571012___Skyrim.esm", X, Y, Z) ; EnchArmorImperialGauntletsAlchemy03
@@ -1029,12 +1007,7 @@ AddDatastoreEntryByKey("759576___Skyrim.esm", X, Y, Z) ; EnchArmorImperialLightB
 AddDatastoreEntryByKey("759577___Skyrim.esm", X, Y, Z) ; EnchArmorImperialLightBootsSneak01
 AddDatastoreEntryByKey("759578___Skyrim.esm", X, Y, Z) ; EnchArmorImperialLightBootsSneak02
 AddDatastoreEntryByKey("759579___Skyrim.esm", X, Y, Z) ; EnchArmorImperialLightBootsSneak03
-AddDatastoreEntryByKey("759580___Skyrim.esm", X, Y, Z) ; EnchArmorImperialLightCuirassHealth01
-AddDatastoreEntryByKey("759581___Skyrim.esm", X, Y, Z) ; EnchArmorImperialLightCuirassHealth02
-AddDatastoreEntryByKey("759582___Skyrim.esm", X, Y, Z) ; EnchArmorImperialLightCuirassHealth03
-AddDatastoreEntryByKey("759583___Skyrim.esm", X, Y, Z) ; EnchArmorImperialLightCuirassLightArmor01
-AddDatastoreEntryByKey("759584___Skyrim.esm", X, Y, Z) ; EnchArmorImperialLightCuirassLightArmor02
-AddDatastoreEntryByKey("759585___Skyrim.esm", X, Y, Z) ; EnchArmorImperialLightCuirassLightArmor03
+
 AddDatastoreEntryByKey("571013___Skyrim.esm", X, Y, Z) ; EnchArmorImperialLightGauntletsAlchemy01
 AddDatastoreEntryByKey("571014___Skyrim.esm", X, Y, Z) ; EnchArmorImperialLightGauntletsAlchemy02
 AddDatastoreEntryByKey("571015___Skyrim.esm", X, Y, Z) ; EnchArmorImperialLightGauntletsAlchemy03
@@ -1083,13 +1056,8 @@ AddDatastoreEntryByKey("571086___Skyrim.esm", X, Y, Z) ; EnchArmorImperialLightH
 AddDatastoreEntryByKey("571087___Skyrim.esm", X, Y, Z) ; EnchArmorImperialLightHelmetMagicka01
 AddDatastoreEntryByKey("571088___Skyrim.esm", X, Y, Z) ; EnchArmorImperialLightHelmetMagicka02
 AddDatastoreEntryByKey("571062___Skyrim.esm", X, Y, Z) ; EnchArmorImperialLightHelmetMagicka03
-AddDatastoreEntryByKey("289716___Skyrim.esm", X, Y, Z) ; EnchArmorImperialStuddedCuirassHealth01
-AddDatastoreEntryByKey("289717___Skyrim.esm", X, Y, Z) ; EnchArmorImperialStuddedCuirassHealth02
-AddDatastoreEntryByKey("289718___Skyrim.esm", X, Y, Z) ; EnchArmorImperialStuddedCuirassHealth03
-AddDatastoreEntryByKey("289719___Skyrim.esm", X, Y, Z) ; EnchArmorImperialStuddedCuirassLightArmor01
-AddDatastoreEntryByKey("289720___Skyrim.esm", X, Y, Z) ; EnchArmorImperialStuddedCuirassLightArmor02
-AddDatastoreEntryByKey("289721___Skyrim.esm", X, Y, Z) ; EnchArmorImperialStuddedCuirassLightArmor03
-AddDatastoreEntryByKey("1101754___Skyrim.esm", X, Y, Z) ; EnchArmorIronArmorAlteration03
+
+
 
 AddDatastoreEntryByKey("500000___Skyrim.esm", X, Y, Z) ; EnchArmorIronBootsCarry01
 AddDatastoreEntryByKey("709979___Skyrim.esm", X, Y, Z) ; EnchArmorIronBootsCarry02
@@ -1653,17 +1621,10 @@ AddDatastoreEntryByKey("799677___Skyrim.esm", X, Y, Z) ; MS05TempGeneralTulliusC
 AddDatastoreEntryByKey("1074066___Skyrim.esm", X, Y, Z) ; MS11WoundArivanya
 AddDatastoreEntryByKey("1074064___Skyrim.esm", X, Y, Z) ; MS11WoundSusanna
 AddDatastoreEntryByKey("872439___Skyrim.esm", X, Y, Z) ; POIMageYisrasNecklace
-AddDatastoreEntryByKey("1063233___Skyrim.esm", X, Y, Z) ; PrisonerCuffs
-AddDatastoreEntryByKey("1105977___Skyrim.esm", X, Y, Z) ; PrisonerCuffsPlayer
-AddDatastoreEntryByKey("1106648___Skyrim.esm", X, Y, Z) ; PrisonerCuffsSolitude
-AddDatastoreEntryByKey("821521___Skyrim.esm", X, Y, Z) ; ReligiousAkatoshTime
-AddDatastoreEntryByKey("837704___Skyrim.esm", X, Y, Z) ; ReligiousArkayLifeDeath
-AddDatastoreEntryByKey("821525___Skyrim.esm", X, Y, Z) ; ReligiousDibellaBeauty
-AddDatastoreEntryByKey("821527___Skyrim.esm", X, Y, Z) ; ReligiousJulianosMagic
-AddDatastoreEntryByKey("821529___Skyrim.esm", X, Y, Z) ; ReligiousKynarethAir
-AddDatastoreEntryByKey("821531___Skyrim.esm", X, Y, Z) ; ReligiousMaraLove
-AddDatastoreEntryByKey("837700___Skyrim.esm", X, Y, Z) ; ReligiousStendarrMercy
-AddDatastoreEntryByKey("837702___Skyrim.esm", X, Y, Z) ; ReligiousTalosMankind
-AddDatastoreEntryByKey("555195___Skyrim.esm", X, Y, Z) ; ReligiousZenitharCommerce
+
 AddDatastoreEntryByKey("818365___Skyrim.esm", X, Y, Z) ; SheogorathBoots
 AddDatastoreEntryByKey("818363___Skyrim.esm", X, Y, Z) ; SheogorathOutfit
+
+
+AddDatastoreEntryByKey("1105977___Skyrim.esm", 2, 0, 0) ; PrisonerCuffsPlayer
+AddDatastoreEntryByKey("248320___Skyrim.esm", 4, 3, 0) ; ClothesPrisonerShoes

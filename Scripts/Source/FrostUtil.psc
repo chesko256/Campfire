@@ -13,6 +13,15 @@ _Frost_ClothingSystem function GetClothingSystem() global
     return Frostfall.Clothing
 endFunction
 
+_Frost_ArmorProtectionDatastoreHandler function GetClothingDatastoreHandler() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.ClothingDatastoreHandler
+endFunction
+
 _Frost_Compatibility function GetCompatibilitySystem() global
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
@@ -233,6 +242,12 @@ int function GetPlayerExposureLevel() global
     endif
 
     return Frostfall._Frost_ExposureLevel.GetValueInt()
+endFunction
+
+int[] function GetArmorProtectionData() global
+    _Frost_ClothingSystem clothing_system = GetClothingSystem()
+    
+
 endFunction
 
 function SendEvent_OnPlayerStartSwimming() global

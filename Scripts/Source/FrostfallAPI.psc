@@ -4,6 +4,7 @@ _Frost_Compatibility property Compatibility auto
 _Frost_HeatSourceSystem property HeatSource auto
 _Frost_WetnessSystem property Wetness auto
 _Frost_ClothingSystem property Clothing auto
+_Frost_ArmorProtectionDatastoreHandler property ClothingDatastoreHandler auto
 Actor property PlayerRef auto
 Formlist property _Frost_WorldspacesExteriorOblivion auto
 Formlist property _Frost_OvercastWeatherList auto
