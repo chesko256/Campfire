@@ -3,7 +3,7 @@ scriptname _Frost_APDatastoreDefaultData extends Quest
 import _FrostInternal
 
 function SetDefaults_Body()
-	FrostDebug(1, "Setting default settings for body armor...")
+	
 
 	;####################
 	;
@@ -497,7 +497,10 @@ function SetDefaults_Body()
 	AddDatastoreEntryByKey("888144___Skyrim.esm", 1, 60, 0) ; ForswornCuirass
 
 	AddDatastoreEntryByKey("379902___Skyrim.esm", 1, 140, 20) ; GeneralTulliusArmor
+	AddDatastoreEntryByKey("868000___Skyrim.esm", 1, 140, 20) ; ArmorPenitusCuirass
 	
+	AddDatastoreEntryByKey("754635___Skyrim.esm", 1, 60, 0) ; ArmorFalmerCuirass
+
 	;##############################
 	;
 	;    Dawnguard
@@ -894,6 +897,8 @@ function SetDefaults_Hands()
 
 	AddDatastoreEntryByKey("962514___Skyrim.esm", 2, 3, 2) ; MS02ForswornGauntlets
 	AddDatastoreEntryByKey("888149___Skyrim.esm", 2, 3, 2) ; ForswornGauntlets
+
+	AddDatastoreEntryByKey("868011___Skyrim.esm", 2, 15, 6) ; ArmorPenitusGauntlets
 
 	;##############################
 	;
@@ -1419,7 +1424,7 @@ function SetDefaults_Head()
 	AddDatastoreEntryByKey("400598___Skyrim.esm", 3, 10, 0) ; ArmorDragonPriestMaskUltraHelmet
 	AddDatastoreEntryByKey("400586___Skyrim.esm", 3, 10, 0) ; ArmorDragonPriestMaskWoodHelmet
 
-
+	AddDatastoreEntryByKey("868010___Skyrim.esm", 3, 40, 8) ; ArmorPenitusHelmet
 
 
 	;##############################
@@ -1787,6 +1792,8 @@ function SetDefaults_Feet()
 
 	AddDatastoreEntryByKey("962515___Skyrim.esm", 4, 3, 0) ; MS02ForswornBoots
 	AddDatastoreEntryByKey("888142___Skyrim.esm", 4, 3, 0) ; ForswornBoots
+
+	AddDatastoreEntryByKey("868007___Skyrim.esm", 4, 15, 6) ; ArmorPenitusBoots
 
 	;##############################
 	;
