@@ -2,6 +2,7 @@ scriptname _Frost_ArmorProtectionDatastoreHandler extends _Frost_APDatastoreDefa
 
 import StorageUtil
 import StringUtil
+import _FrostInternal
 
 Keyword property _FrostData_ArmorBody auto
 Keyword property _FrostData_ArmorHead auto
@@ -10,6 +11,10 @@ Keyword property _FrostData_ArmorFeet auto
 Keyword property _FrostData_ArmorCloak auto
 
 Event OnInit()
+	if !self.IsRunning()
+		self.Start()
+		return
+	endif
 	RevertDatastore()
 EndEvent
 
@@ -96,11 +101,21 @@ function UpdateDatastoreEntry(string asKey, int aiExposureProtection, int aiRain
 endFunction
 
 function RevertDatastore()
+	FrostDebug(1, "Setting default settings for body armor...")
 	SetDefaults_Body()
+	FrostDebug(1, "Setting default settings for body armor...done.")
+	FrostDebug(1, "Setting default settings for hands armor...")
 	SetDefaults_Hands()
+	FrostDebug(1, "Setting default settings for hands armor...done.")
+	FrostDebug(1, "Setting default settings for head armor...")
 	SetDefaults_Head()
+	FrostDebug(1, "Setting default settings for head armor...done.")
+	FrostDebug(1, "Setting default settings for feet armor...")
 	SetDefaults_Feet()
+	FrostDebug(1, "Setting default settings for feet armor...done.")
+	FrostDebug(1, "Setting default settings for cloak armor...")
 	SetDefaults_Cloak()
+	FrostDebug(1, "Setting default settings for cloak armor...done.")
 endFunction
 
 function RevertDatastoreEntry(string asKey)
