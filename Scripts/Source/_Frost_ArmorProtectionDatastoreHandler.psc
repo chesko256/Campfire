@@ -97,6 +97,10 @@ endFunction
 
 function RevertDatastore()
 	SetDefaults_Body()
+	SetDefaults_Hands()
+	SetDefaults_Head()
+	SetDefaults_Feet()
+	SetDefaults_Cloak()
 endFunction
 
 function RevertDatastoreEntry(string asKey)
