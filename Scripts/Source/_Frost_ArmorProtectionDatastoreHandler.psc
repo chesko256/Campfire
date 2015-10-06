@@ -20,51 +20,77 @@ Event OnInit()
 	RevertDatastore()
 EndEvent
 
-int[] function GetArmorProtectionData(Armor akArmor, int aiGearType)
-	int[] result = new int[2]
-	string ds_key = GetDatastoreKeyFromForm(akArmor)
-	Keyword Datastore
-	if aiGearType == 1
-		Datastore = _FrostData_ArmorBody
-	elseif aiGearType == 2
-		Datastore = _FrostData_ArmorHands
-	elseif aiGearType == 3
-		Datastore = _FrostData_ArmorHead
-	elseif aiGearType == 4
-		Datastore = _FrostData_ArmorFeet
-	elseif aiGearType == 7
-		Datastore = _FrostData_ArmorCloak
-	endif
-
-	; Subtract 1 to return a falsey -1 on failure
-	result[0] = (IntListGet(Datastore, ds_key, 0) - 1)
-	result[1] = (IntListGet(Datastore, ds_key, 1) - 1)
-
-	if result[0] == -1 || result[1] == -1
-		; Try to set sane default values
-		if aiGearType == 1
+int[] function GetArmorProtectionData(Armor akArmor, int aiGearType, bool abCheckAll = false)
+	if abCheckAll
+		int[] result = new int[10]
+		string ds_key = GetDatastoreKeyFromForm(akArmor)
+		; Body
+		result[0] = (IntListGet(_FrostData_ArmorBody, ds_key, 0) - 1)
+		result[1] = (IntListGet(_FrostData_ArmorBody, ds_key, 1) - 1)
+		; Try to set sane default values for the body
+		if result[0] == -1
 			result[0] = 110
 			result[1] = 10
+		endif
+		; Hands
+		result[2] = (IntListGet(_FrostData_ArmorHands, ds_key, 0) - 1)
+		result[3] = (IntListGet(_FrostData_ArmorHands, ds_key, 1) - 1)
+		; Head
+		result[4] = (IntListGet(_FrostData_ArmorHead, ds_key, 0) - 1)
+		result[5] = (IntListGet(_FrostData_ArmorHead, ds_key, 1) - 1)
+		; Feet
+		result[6] = (IntListGet(_FrostData_ArmorFeet, ds_key, 0) - 1)
+		result[7] = (IntListGet(_FrostData_ArmorFeet, ds_key, 1) - 1)
+		; Cloak
+		result[8] = (IntListGet(_FrostData_ArmorCloak, ds_key, 0) - 1)
+		result[9] = (IntListGet(_FrostData_ArmorCloak, ds_key, 1) - 1)
+		return result
+	else
+		int[] result = new int[2]
+		string ds_key = GetDatastoreKeyFromForm(akArmor)
+		Keyword Datastore
+		if aiGearType == 1
+			Datastore = _FrostData_ArmorBody
 		elseif aiGearType == 2
-			result[0] = 12
-			result[1] = 2
+			Datastore = _FrostData_ArmorHands
 		elseif aiGearType == 3
-			if akArmor.HasKeyword(ClothingCirclet)
-				result[0] = 0
-				result[1] = 0
-			elseif StringUtil.Find(akArmor.GetName(), "hood") != -1
-				result[0] = 25
-				result[1] = 12
-			else
-				result[0] = 30
+			Datastore = _FrostData_ArmorHead
+		elseif aiGearType == 4
+			Datastore = _FrostData_ArmorFeet
+		elseif aiGearType == 7
+			Datastore = _FrostData_ArmorCloak
+		endif
+	
+		; Subtract 1 to return a falsey -1 on failure
+		result[0] = (IntListGet(Datastore, ds_key, 0) - 1)
+		result[1] = (IntListGet(Datastore, ds_key, 1) - 1)
+	
+		if result[0] == -1
+			; Try to set sane default values
+			if aiGearType == 1
+				result[0] = 110
+				result[1] = 10
+			elseif aiGearType == 2
+				result[0] = 12
+				result[1] = 2
+			elseif aiGearType == 3
+				if akArmor.HasKeyword(ClothingCirclet)
+					result[0] = 0
+					result[1] = 0
+				elseif StringUtil.Find(akArmor.GetName(), "hood") != -1
+					result[0] = 25
+					result[1] = 12
+				else
+					result[0] = 30
+					result[1] = 4
+				endif
+			elseif aiGearType == 4
+				result[0] = 12
 				result[1] = 4
 			endif
-		elseif aiGearType == 4
-			result[0] = 12
-			result[1] = 4
 		endif
+		return result
 	endif
-	return result
 endFunction
 
 string function GetDatastoreKeyFromForm(Armor akArmor)
