@@ -57,7 +57,7 @@ endFunction
 function HandleEquippedObject(Form akBaseObject, int iGearType)
     int i = 20
     while unequip_lock == true && i > 0
-        utility.wait(0.1)
+        utility.wait(0.2)
         i -= 1
     endWhile
 
@@ -67,37 +67,31 @@ function HandleEquippedObject(Form akBaseObject, int iGearType)
 
     if iGearType == 1
         protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
-        if protection_data[0] != -1 && protection_data[1] != -1
-            equipped_body = armor_object
-            body_exposure_protection = protection_data[0]
-            body_rain_protection = protection_data[1]
-            ; Is this a multi-part gear set?
-            HandleEquippedObject(akBaseObject, 7)
-            HandleEquippedObject(akBaseObject, 3)
-            HandleEquippedObject(akBaseObject, 2)
-            HandleEquippedObject(akBaseObject, 4)
-        endif
+        equipped_body = armor_object
+        body_exposure_protection = protection_data[0]
+        body_rain_protection = protection_data[1]
+        ; Is this a multi-part gear set?
+        HandleEquippedObject(akBaseObject, 7)
+        HandleEquippedObject(akBaseObject, 3)
+        HandleEquippedObject(akBaseObject, 2)
+        HandleEquippedObject(akBaseObject, 4)
+
+    ; CHECK TO MAKE SURE I HAVE THE FORM FIRST FOR RECURSIVE CALLS
     elseif iGearType == 2
         protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
-        if protection_data[0] != -1 && protection_data[1] != -1
-            equipped_hands = armor_object
-            hands_exposure_protection = protection_data[0]
-            hands_rain_protection = protection_data[1]
-        endif
+        equipped_hands = armor_object
+        hands_exposure_protection = protection_data[0]
+        hands_rain_protection = protection_data[1]
     elseif iGearType == 3
         protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
-        if protection_data[0] != -1 && protection_data[1] != -1
-            equipped_head = armor_object
-            head_exposure_protection = protection_data[0]
-            head_rain_protection = protection_data[1]
-        endif
+        equipped_head = armor_object
+        head_exposure_protection = protection_data[0]
+        head_rain_protection = protection_data[1]
     elseif iGearType == 4
         protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
-        if protection_data[0] != -1 && protection_data[1] != -1
-            equipped_feet = armor_object
-            feet_exposure_protection = protection_data[0]
-            feet_rain_protection = protection_data[1]
-        endif
+        equipped_feet = armor_object
+        feet_exposure_protection = protection_data[0]
+        feet_rain_protection = protection_data[1]
     elseif iGearType == 7
         protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
         if protection_data[0] != -1 && protection_data[1] != -1
