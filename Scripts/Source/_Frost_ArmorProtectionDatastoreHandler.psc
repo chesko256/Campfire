@@ -10,6 +10,8 @@ Keyword property _FrostData_ArmorHands auto
 Keyword property _FrostData_ArmorFeet auto
 Keyword property _FrostData_ArmorCloak auto
 
+Keyword property ClothingCirclet auto
+
 Event OnInit()
 	if !self.IsRunning()
 		self.Start()
@@ -37,6 +39,31 @@ int[] function GetArmorProtectionData(Armor akArmor, int aiGearType)
 	; Subtract 1 to return a falsey -1 on failure
 	result[0] = (IntListGet(Datastore, ds_key, 0) - 1)
 	result[1] = (IntListGet(Datastore, ds_key, 1) - 1)
+
+	if result[0] == -1 || result[1] == -1
+		; Try to set sane default values
+		if aiGearType == 1
+			result[0] = 110
+			result[1] = 10
+		elseif aiGearType == 2
+			result[0] = 12
+			result[1] = 2
+		elseif aiGearType == 3
+			if akArmor.HasKeyword(ClothingCirclet)
+				result[0] = 0
+				result[1] = 0
+			elseif StringUtil.Find(akArmor.GetName(), "hood") != -1
+				result[0] = 25
+				result[1] = 12
+			else
+				result[0] = 30
+				result[1] = 4
+			endif
+		elseif aiGearType == 4
+			result[0] = 12
+			result[1] = 4
+		endif
+	endif
 	return result
 endFunction
 
