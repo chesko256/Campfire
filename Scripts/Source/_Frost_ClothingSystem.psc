@@ -66,17 +66,30 @@ function HandleEquippedObject(Form akBaseObject, int iGearType)
     int[] protection_data
 
     if iGearType == 1
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
+        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType, abCheckAll = true)
         equipped_body = armor_object
         body_exposure_protection = protection_data[0]
         body_rain_protection = protection_data[1]
-        ; Is this a multi-part gear set?
-        HandleEquippedObject(akBaseObject, 7)
-        HandleEquippedObject(akBaseObject, 3)
-        HandleEquippedObject(akBaseObject, 2)
-        HandleEquippedObject(akBaseObject, 4)
-
-    ; CHECK TO MAKE SURE I HAVE THE FORM FIRST FOR RECURSIVE CALLS
+        if protection_data[2] != -1
+            equipped_hands = armor_object
+            hands_exposure_protection = protection_data[2]
+            hands_rain_protection = protection_data[3]
+        endif
+        if protection_data[4] != -1
+            equipped_head = armor_object
+            head_exposure_protection = protection_data[4]
+            head_rain_protection = protection_data[5]
+        endif
+        if protection_data[6] != -1
+            equipped_feet = armor_object
+            feet_exposure_protection = protection_data[6]
+            feet_rain_protection = protection_data[7]
+        endif
+        if protection_data[8] != -1
+            equipped_cloak = armor_object
+            cloak_exposure_protection = protection_data[8]
+            cloak_rain_protection = protection_data[9]
+        endif
     elseif iGearType == 2
         protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
         equipped_hands = armor_object
@@ -94,7 +107,7 @@ function HandleEquippedObject(Form akBaseObject, int iGearType)
         feet_rain_protection = protection_data[1]
     elseif iGearType == 7
         protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
-        if protection_data[0] != -1 && protection_data[1] != -1
+        if protection_data[0] != -1
             equipped_cloak = armor_object
             cloak_exposure_protection = protection_data[0]
             cloak_rain_protection = protection_data[1]
