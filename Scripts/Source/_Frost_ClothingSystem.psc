@@ -43,46 +43,8 @@ function ObjectEquipped(Form akBaseObject, int iGearType)
     ;       5: Backpack
     ;       6: Ammo
     ;       7: Other (could be shield, cloak, etc)
-    int i = 20
-    while unequip_lock == true && i > 0
-        utility.wait(0.1)
-        i -= 1
-    endWhile
-    FrostDebug(1, "ObjectEquipped " + akBaseObject + ", " + iGearType)
-
-    Armor armor_object = akBaseObject as Armor
-    _Frost_ArmorProtectionDatastoreHandler DSHandler = GetClothingDatastoreHandler()
-    int[] protection_data
-
-    if iGearType == 1
-        equipped_body = armor_object
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
-        body_exposure_protection = protection_data[0]
-        body_rain_protection = protection_data[1]
-    elseif iGearType == 2
-        equipped_hands = armor_object
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
-        hands_exposure_protection = protection_data[0]
-        hands_rain_protection = protection_data[1]
-    elseif iGearType == 3
-        equipped_head = armor_object
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
-        head_exposure_protection = protection_data[0]
-        head_rain_protection = protection_data[1]
-    elseif iGearType == 4
-        equipped_feet = armor_object
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
-        feet_exposure_protection = protection_data[0]
-        feet_rain_protection = protection_data[1]
-    elseif iGearType == 7
-        bool is_cloak = IsCloak(armor_object)
-        if is_cloak
-            equipped_cloak = armor_object
-            protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
-            cloak_exposure_protection = protection_data[0]
-            cloak_rain_protection = protection_data[1]
-        endif
-    endif
+    
+    HandleEquippedObject(akBaseObject, iGearType)
 
     FrostDebug(0, "Armor protection report: ")
     FrostDebug(0, "BODY: " + body_exposure_protection + ", " + body_rain_protection)
@@ -90,6 +52,60 @@ function ObjectEquipped(Form akBaseObject, int iGearType)
     FrostDebug(0, "HEAD: " + head_exposure_protection + ", " + head_rain_protection)
     FrostDebug(0, "FEET: " + feet_exposure_protection + ", " + feet_rain_protection)
     FrostDebug(0, "CLOAK: " + cloak_exposure_protection + ", " + cloak_rain_protection)
+endFunction
+
+function HandleEquippedObject(Form akBaseObject, int iGearType)
+    int i = 20
+    while unequip_lock == true && i > 0
+        utility.wait(0.1)
+        i -= 1
+    endWhile
+
+    Armor armor_object = akBaseObject as Armor
+    _Frost_ArmorProtectionDatastoreHandler DSHandler = GetClothingDatastoreHandler()
+    int[] protection_data
+
+    if iGearType == 1
+        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
+        if protection_data[0] != -1 && protection_data[1] != -1
+            equipped_body = armor_object
+            body_exposure_protection = protection_data[0]
+            body_rain_protection = protection_data[1]
+            ; Is this a multi-part gear set?
+            HandleEquippedObject(akBaseObject, 7)
+            HandleEquippedObject(akBaseObject, 3)
+            HandleEquippedObject(akBaseObject, 2)
+            HandleEquippedObject(akBaseObject, 4)
+        endif
+    elseif iGearType == 2
+        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
+        if protection_data[0] != -1 && protection_data[1] != -1
+            equipped_hands = armor_object
+            hands_exposure_protection = protection_data[0]
+            hands_rain_protection = protection_data[1]
+        endif
+    elseif iGearType == 3
+        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
+        if protection_data[0] != -1 && protection_data[1] != -1
+            equipped_head = armor_object
+            head_exposure_protection = protection_data[0]
+            head_rain_protection = protection_data[1]
+        endif
+    elseif iGearType == 4
+        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
+        if protection_data[0] != -1 && protection_data[1] != -1
+            equipped_feet = armor_object
+            feet_exposure_protection = protection_data[0]
+            feet_rain_protection = protection_data[1]
+        endif
+    elseif iGearType == 7
+        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
+        if protection_data[0] != -1 && protection_data[1] != -1
+            equipped_cloak = armor_object
+            cloak_exposure_protection = protection_data[0]
+            cloak_rain_protection = protection_data[1]
+        endif
+    endif
 endFunction
 
 function ObjectUnequipped(Form akBaseObject, int iGearType)
@@ -106,8 +122,18 @@ function ObjectUnequipped(Form akBaseObject, int iGearType)
     ;       6: Ammo
     ;       7: Other (could be shield, cloak, etc)
     unequip_lock = true
-    FrostDebug(1, "ObjectUnequipped " + akBaseObject + ", " + iGearType)
-    
+    HandleUnequippedObject(akBaseObject, iGearType)
+    unequip_lock = false
+
+    FrostDebug(0, "Armor protection report: ")
+    FrostDebug(0, "BODY: " + body_exposure_protection + ", " + body_rain_protection)
+    FrostDebug(0, "HANDS: " + hands_exposure_protection + ", " + hands_rain_protection)
+    FrostDebug(0, "HEAD: " + head_exposure_protection + ", " + head_rain_protection)
+    FrostDebug(0, "FEET: " + feet_exposure_protection + ", " + feet_rain_protection)
+    FrostDebug(0, "CLOAK: " + cloak_exposure_protection + ", " + cloak_rain_protection)
+endFunction
+
+function HandleUnequippedObject(Form akBaseObject, int iGearType)
     Armor armor_object = akBaseObject as Armor
 
     if iGearType == 1
@@ -115,6 +141,11 @@ function ObjectUnequipped(Form akBaseObject, int iGearType)
             equipped_body = None
             body_exposure_protection = 0
             body_rain_protection = 0
+            ; Is this a multi-part gear set?
+            HandleUnequippedObject(akBaseObject, 2)
+            HandleUnequippedObject(akBaseObject, 3)
+            HandleUnequippedObject(akBaseObject, 4)
+            HandleUnequippedObject(akBaseObject, 7)
         endif
     elseif iGearType == 2
         if equipped_hands == armor_object
@@ -141,19 +172,6 @@ function ObjectUnequipped(Form akBaseObject, int iGearType)
             cloak_rain_protection = 0
         endif
     endif
-
-    unequip_lock = false
-
-    FrostDebug(0, "Armor protection report: ")
-    FrostDebug(0, "BODY: " + body_exposure_protection + ", " + body_rain_protection)
-    FrostDebug(0, "HANDS: " + hands_exposure_protection + ", " + hands_rain_protection)
-    FrostDebug(0, "HEAD: " + head_exposure_protection + ", " + head_rain_protection)
-    FrostDebug(0, "FEET: " + feet_exposure_protection + ", " + feet_rain_protection)
-    FrostDebug(0, "CLOAK: " + cloak_exposure_protection + ", " + cloak_rain_protection)
-endFunction
-
-bool function IsCloak(Armor akBaseObject)
-    return false
 endFunction
 
 int function GetArmorExposureProtection()
