@@ -12,13 +12,57 @@ Keyword property _FrostData_ArmorCloak auto
 
 Keyword property ClothingCirclet auto
 
+int k1 = -1
+int k2 = -1
+int k3 = -1
+
 Event OnInit()
 	if !self.IsRunning()
 		self.Start()
 		return
 	endif
+	test_getinvdata()
 	RevertDatastore()
 EndEvent
+
+function test_getinvdata()
+	RegisterForMenu("InventoryMenu")
+endFunction
+
+Event OnMenuOpen(string menuName)
+    if menuName == "InventoryMenu"
+        k1 = Input.GetMappedKey("Move")
+        k2 = Input.GetMappedKey("Forward")
+        k3 = Input.GetMappedKey("Back")
+        if k1 != -1
+            RegisterForKey(k1)
+        endif
+        if k2 != -1
+            RegisterForKey(k2)
+        endif
+        if k3 != -1
+            RegisterForKey(k3)
+        endif
+    endif
+EndEvent
+
+Event OnMenuClose(string menuName)
+    if menuName == "InventoryMenu"
+        UnregisterForKey(k1)
+        UnregisterForKey(k2)
+        UnregisterForKey(k3)
+    endif
+EndEvent
+
+Event OnKeyUp(int keyCode, float holdTime)
+    if UI.IsMenuOpen("InventoryMenu")
+        utility.WaitMenuMode(0.1)
+        debug.trace("[Frost] ItemCard item form " + UI.GetInt("InventoryMenu", "_root.Menu_mc.itemCard.itemInfo.id"))
+        debug.trace("[Frost] ItemCard item form " + UI.GetInt("InventoryMenu", "_root.Menu_mc.itemCard.itemInfo.form"))
+        debug.trace("[Frost] ItemCard item name " + UI.GetString("InventoryMenu", "_root.Menu_mc.itemCard.ItemName.text"))
+
+    endif
+endEvent
 
 int[] function GetArmorProtectionData(Armor akArmor, int aiGearType, bool abCheckAll = false)
 	if abCheckAll

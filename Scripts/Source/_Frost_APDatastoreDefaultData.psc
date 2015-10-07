@@ -2484,7 +2484,7 @@ function AddDatastoreEntryByKey(string asKey, int aiGearType, int aiExposureProt
 endFunction
 
 ; Stuff to add
-AddDatastoreEntryByKey("9205___Dawnguard.esm", X, Y, Z) ; DLC1SkinNakedVampireLord
+;AddDatastoreEntryByKey("9205___Dawnguard.esm", X, Y, Z) ; DLC1SkinNakedVampireLord
 
 ;@TODO: Add immersive armors
 ;@TODO: Add any armor forms from Campfire
