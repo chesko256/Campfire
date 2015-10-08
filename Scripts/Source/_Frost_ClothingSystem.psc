@@ -66,7 +66,7 @@ function HandleEquippedObject(Form akBaseObject, int iGearType)
     int[] protection_data
 
     if iGearType == 1
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType, abCheckAll = true)
+        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType, aiMode = 1)
         equipped_body = armor_object
         body_exposure_protection = protection_data[0]
         body_rain_protection = protection_data[1]
@@ -96,10 +96,15 @@ function HandleEquippedObject(Form akBaseObject, int iGearType)
         hands_exposure_protection = protection_data[0]
         hands_rain_protection = protection_data[1]
     elseif iGearType == 3
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
+        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType, aiMode = 2)
         equipped_head = armor_object
         head_exposure_protection = protection_data[0]
         head_rain_protection = protection_data[1]
+        if protection_data[2] != -1
+            equipped_cloak = armor_object
+            cloak_exposure_protection = protection_data[2]
+            cloak_rain_protection = protection_data[3]
+        endif
     elseif iGearType == 4
         protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
         equipped_feet = armor_object
@@ -188,9 +193,10 @@ int function GetArmorExposureProtection()
     return total
 endFunction
 
-int function GetArmorRainProtection()
-    int total = body_rain_protection + hands_rain_protection + \
+float function GetArmorRainProtection()
+    float total = body_rain_protection + hands_rain_protection + \
                 head_rain_protection + feet_rain_protection + \
                 cloak_rain_protection
+    total /= 100.0
     return total
 endFunction

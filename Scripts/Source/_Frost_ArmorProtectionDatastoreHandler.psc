@@ -21,51 +21,12 @@ Event OnInit()
 		self.Start()
 		return
 	endif
-	test_getinvdata()
 	RevertDatastore()
 EndEvent
 
-function test_getinvdata()
-	RegisterForMenu("InventoryMenu")
-endFunction
-
-Event OnMenuOpen(string menuName)
-    if menuName == "InventoryMenu"
-        k1 = Input.GetMappedKey("Move")
-        k2 = Input.GetMappedKey("Forward")
-        k3 = Input.GetMappedKey("Back")
-        if k1 != -1
-            RegisterForKey(k1)
-        endif
-        if k2 != -1
-            RegisterForKey(k2)
-        endif
-        if k3 != -1
-            RegisterForKey(k3)
-        endif
-    endif
-EndEvent
-
-Event OnMenuClose(string menuName)
-    if menuName == "InventoryMenu"
-        UnregisterForKey(k1)
-        UnregisterForKey(k2)
-        UnregisterForKey(k3)
-    endif
-EndEvent
-
-Event OnKeyUp(int keyCode, float holdTime)
-    if UI.IsMenuOpen("InventoryMenu")
-        utility.WaitMenuMode(0.1)
-        debug.trace("[Frost] ItemCard item form " + UI.GetInt("InventoryMenu", "_root.Menu_mc.itemCard.itemInfo.id"))
-        debug.trace("[Frost] ItemCard item form " + UI.GetInt("InventoryMenu", "_root.Menu_mc.itemCard.itemInfo.form"))
-        debug.trace("[Frost] ItemCard item name " + UI.GetString("InventoryMenu", "_root.Menu_mc.itemCard.ItemName.text"))
-
-    endif
-endEvent
-
-int[] function GetArmorProtectionData(Armor akArmor, int aiGearType, bool abCheckAll = false)
-	if abCheckAll
+int[] function GetArmorProtectionData(Armor akArmor, int aiGearType, int aiMode = 0)
+	if aiMode == 1
+		; Body mode - check body and all other slots, return int[10]
 		int[] result = new int[10]
 		string ds_key = GetDatastoreKeyFromForm(akArmor)
 		; Body
@@ -89,7 +50,32 @@ int[] function GetArmorProtectionData(Armor akArmor, int aiGearType, bool abChec
 		result[8] = (IntListGet(_FrostData_ArmorCloak, ds_key, 0) - 1)
 		result[9] = (IntListGet(_FrostData_ArmorCloak, ds_key, 1) - 1)
 		return result
+	elseif aiMode == 2 
+		; Head mode - check head and cloak slots, return int[4]
+		int[] result = new int[4]
+		string ds_key = GetDatastoreKeyFromForm(akArmor)
+		; Body
+		result[0] = (IntListGet(_FrostData_ArmorHead, ds_key, 0) - 1)
+		result[1] = (IntListGet(_FrostData_ArmorHead, ds_key, 1) - 1)
+		; Try to set sane default values for the head
+		if result[0] == -1
+			if akArmor.HasKeyword(ClothingCirclet)
+				result[0] = 0
+				result[1] = 0
+			elseif StringUtil.Find(akArmor.GetName(), "hood") != -1
+				result[0] = 25
+				result[1] = 12
+			else
+				result[0] = 30
+				result[1] = 4
+			endif
+		endif
+		; Cloak
+		result[2] = (IntListGet(_FrostData_ArmorCloak, ds_key, 0) - 1)
+		result[3] = (IntListGet(_FrostData_ArmorCloak, ds_key, 1) - 1)
+		return result
 	else
+		; Normal mode - check single slot, return int[2]
 		int[] result = new int[2]
 		string ds_key = GetDatastoreKeyFromForm(akArmor)
 		Keyword Datastore
@@ -220,3 +206,13 @@ endFunction
 function RevertDatastoreEntry(string asKey)
 
 endFunction
+
+;@TODO
+;/Event OnKeyUp(int keyCode, float holdTime)
+    if UI.IsMenuOpen("InventoryMenu")
+        utility.WaitMenuMode(0.1)
+        debug.trace("[Frost] ItemCard item formid " + UI.GetInt("InventoryMenu", "_root.Menu_mc.inventoryLists.itemList.selectedEntry.formId"))
+        debug.trace("[Frost] ItemCard item name " + UI.GetString("InventoryMenu", "_root.Menu_mc.itemCard.ItemName.text"))
+    endif
+endEvent
+/;
