@@ -1,72 +1,133 @@
 scriptname _Frost_ClimateSystem extends _Frost_BaseSystem
 
+import _FrostInternal
+
+Actor property PlayerRef auto
+
+GlobalVariable property _Frost_CurrentTemperature auto hidden
+FormList property _Frost_WorldspacesExteriorPineForest auto
+FormList property _Frost_WorldspacesExteriorVolcanicTundra auto
+FormList property _Frost_WorldspacesExteriorFallForest auto
+FormList property _Frost_WorldspacesExteriorWhiterun auto
+FormList property _Frost_WorldspacesExteriorTundraMarsh auto
+FormList property _Frost_WorldspacesExteriorCoast auto
+FormList property _Frost_WorldspacesExteriorSnowy auto
+FormList property _Frost_WorldspacesExteriorOblivion auto
+
+bool in_region_1 = false
+bool in_region_2 = false
+bool in_region_3 = false
+bool in_region_4 = false
+bool in_region_5 = false
+bool in_region_6 = false
+bool in_region_7 = false
+bool in_region_8 = false
+
+float pos_x
+float pos_y
+float pos_z
+Worldspace ws
 
 ; Old code
-int function GetExceptionBlockTemp()				;Approved 2.5
-	;Location exception check
-	float myX = flvLastPosX							;Re-used from GetDistanceMoved()
-	float myY = flvLastPosY							;Re-used from GetDistanceMoved()
-	float myZ = pPlayer.GetPositionZ()
-	int maxTemp = 100
+
+function UpdateClimateState()
+	if CampUtil.IsRefInInterior(PlayerRef)
+		return
+	endif
+
+	pos_x = PlayerRef.GetPositionX()
+	pos_y = PlayerRef.GetPositionY()
+	pos_z = PlayerRef.GetPositionZ()
+	ws = PlayerRef.GetWorldSpace()
+
+	int region = GetPlayerRegion()
+	int maxtemp = GetMaxTemperatureOverride()
+
+
+
+	if temp == -1
+		int base_temp = GetBaseTemperature()
+		temp = GetWeatherTemperature(base_temp)
+	endif
+endFunction
+
+Event OnTamrielRegionChange(int region, bool in_region)
+	if region == 1
+		in_region_1 = in_region
+	elseif region == 2
+		in_region_2 = in_region
+	elseif region == 3
+		in_region_3 = in_region
+	elseif region == 4
+		in_region_4 = in_region
+	elseif region == 5
+		in_region_5 = in_region
+	elseif region == 6
+		in_region_6 = in_region
+	elseif region == 7
+		in_region_7 = in_region
+	elseif region == 8
+		in_region_8 = in_region
+	endif
+endEvent
+
+int function GetMaxTemperatureOverride()
+	int max_temp = 100
+	if ws != Tamriel
+		return max_temp
+	endif	
 	
-	;notification("Found weather!")
-	;Ensure that the player is in the Tamriel WorldSpace so we can check for location blocks
-	if pPlayer.GetWorldSpace() == Tamriel
-	
-		;High Hrothgar
-		if (myX <= 74340 &&  myX >= 32000) && (myY <= -21000 && myY >= -66600)
-			;I am near High Hrothgar, set maximum temperature values based on altitude
+	; High Hrothgar
+	if (pos_x <= 74340 && pos_x >= 32000) && (pos_y <= -21000 && pos_y >= -66600)
 								;						~~~~    _  ~~~~
-			if myZ >= 34000			;Elevation 4                ~~/~~\~~~~~~
-				maxTemp = -20       ;                        ~~~ /  ~~\~~~
-			elseif myZ >= 27500		;Elevation 3               /   ??  \
-				maxTemp = -15       ;                        / . ~~   ?? \
-			elseif myZ >= 21300		;Elevation 2           .  .  ~~~~   ??\        			<----High Hrothgar
-				maxTemp = -10		;					  /  .  .  ~~ ??   \
-			elseif myZ >= 15750		;Elevation 1		 / .   .    ??      \
-				maxTemp = -5		;					/########  ??########\
-			endif					;							o    ))))FUS RO DAH))))
-									;						 [ ]|/={===>           			<----Dovahkiin
-									;						   / \
-									;
-		;The Rift Block
-		elseif (myX <= 210000 &&  myX >= 53800) && (myY <= -66600 && myY >= -150000)
-			;notification("I'm in The Rift Block")
-			if myZ >= 16600
-				maxTemp = -10
-			endif
-		;Falkreath Hold Block
-		elseif (myX <= 53800 &&  myX >= -42500) && (myY <= -66600 && myY >= -150000)
-			;notification("I'm in Falkreath Hold Block")
-			if myZ >= 7300
-				maxTemp = -10
-			endif
-		;Bleak Falls Barrow Block
-		elseif (myX <= 19400 &&  myX >= -42500) && (myY <= -15000 && myY >= -60900)
-			;notification("I'm in Black Falls Barrow Block")
-			if myZ >= 1500
-				maxTemp = -10
-			endif
-		;Brittleshin Pass Block
-		elseif (myX <= 15300 &&  myX >= -42500) && (myY <= -60900 && myY >= -80000)
-			;notification("I'm in Brittleshin Pass Block")
-			if myZ >= 2000
-				maxTemp = -10
-			endif
-		;Haafingar Block (Dawnguard: catches Castle Volkihar)
-		elseif (myX <= -71000 &&  myX >= -185000) && (myY <= 163000 && myY >= 78000)
-			;notification("I'm in Haafingar Block")
-			if myZ >= -7000
-				maxTemp = -10
-			else
-				maxTemp = -5
-			endif
+		if pos_z >= 34000		;Elevation 4                ~~/~~\~~~~~~
+			max_temp = -20      ;                        ~~~ /  ~~\~~~
+		elseif pos_z >= 27500	;Elevation 3               /   ??  \
+			max_temp = -15      ;                        / . ~~   ?? \
+		elseif pos_z >= 21300	;Elevation 2           .  .  ~~~~   ??\        			<----High Hrothgar
+			max_temp = -10		;					  /  .  .  ~~ ??   \
+		elseif pos_z >= 15750	;Elevation 1		 / .   .    ??      \
+			max_temp = -5		;					/########  ??########\
+		endif					;							o    ))))FUS RO DAH))))
+								;						 [ ]|/={===>           			<----Dovahkiin
+								;						   / \
+								;
+		FrostDebug(0, "%%%% Climate ::: Override Area: High Hrothgar | Max Temp: " + max_temp)
+	; The Rift
+	elseif (pos_x <= 210000 &&  pos_x >= 53800) && (pos_y <= -66600 && pos_y >= -150000)
+		if pos_z >= 16600
+			max_temp = -10
 		endif
-	else
-		;notification("I'm not in Tamriel")
+		FrostDebug(0, "%%%% Climate ::: Override Area: Rift | Max Temp: " + max_temp)
+	; Falkreath Hold
+	elseif (pos_x <= 53800 &&  pos_x >= -42500) && (pos_y <= -66600 && pos_y >= -150000)
+		if pos_z >= 7300
+			max_temp = -10
+		endif
+		FrostDebug(0, "%%%% Climate ::: Override Area: Falkreath Hold | Max Temp: " + max_temp)
+	; Bleak Falls Barrow
+	elseif (pos_x <= 19400 &&  pos_x >= -42500) && (pos_y <= -15000 && pos_y >= -60900)
+		if pos_z >= 1500
+			max_temp = -10
+		endif
+		FrostDebug(0, "%%%% Climate ::: Override Area: Bleak Falls Barrow | Max Temp: " + max_temp)
+	; Brittleshin Pass
+	elseif (pos_x <= 15300 &&  pos_x >= -42500) && (pos_y <= -60900 && pos_y >= -80000)
+		if pos_z >= 2000
+			max_temp = -10
+		endif
+		FrostDebug(0, "%%%% Climate ::: Override Area: Brittleshin Pass | Max Temp: " + max_temp)
+	; Haafingar (Dawnguard: catches Castle Volkihar)
+	elseif (pos_x <= -71000 &&  pos_x >= -185000) && (pos_y <= 163000 && pos_y >= 78000)
+		if pos_z >= -7000
+			max_temp = -10
+		else
+			max_temp = -5
+		endif
+		FrostDebug(0, "%%%% Climate ::: Override Area: Haafingar | Max Temp: " + max_temp)
 	endif
 	
-	return maxTemp
+	return max_temp
 endFunction
 
 int Function GetWeatherTemp(int myMaxTemp)			;Approved 2.5
@@ -217,34 +278,6 @@ int function GetBaseTemp(int myRegion)
 		return Compatibility.GetPlayerRegionTempMod5(flvLastPosX, flvLastPosY)
 	elseif myRegion == 25
 		return Compatibility.GetPlayerRegionTempMod6(flvLastPosX, flvLastPosY)
-	elseif myRegion == 26
-		return Compatibility.GetPlayerRegionTempMod7(flvLastPosX, flvLastPosY)
-	elseif myRegion == 27
-		return Compatibility.GetPlayerRegionTempMod8(flvLastPosX, flvLastPosY)
-	elseif myRegion == 28
-		return Compatibility.GetPlayerRegionTempMod9(flvLastPosX, flvLastPosY)
-	elseif myRegion == 29
-		return Compatibility.GetPlayerRegionTempMod10(flvLastPosX, flvLastPosY)
-	elseif myRegion == 30
-		return Compatibility.GetPlayerRegionTempMod11(flvLastPosX, flvLastPosY)
-	elseif myRegion == 31
-		return Compatibility.GetPlayerRegionTempMod12(flvLastPosX, flvLastPosY)
-	elseif myRegion == 32
-		return Compatibility.GetPlayerRegionTempMod13(flvLastPosX, flvLastPosY)
-	elseif myRegion == 33
-		return Compatibility.GetPlayerRegionTempMod14(flvLastPosX, flvLastPosY)
-	elseif myRegion == 34
-		return Compatibility.GetPlayerRegionTempMod15(flvLastPosX, flvLastPosY)
-	elseif myRegion == 35
-		return Compatibility.GetPlayerRegionTempMod16(flvLastPosX, flvLastPosY)
-	elseif myRegion == 36
-		return Compatibility.GetPlayerRegionTempMod17(flvLastPosX, flvLastPosY)
-	elseif myRegion == 37
-		return Compatibility.GetPlayerRegionTempMod18(flvLastPosX, flvLastPosY)
-	elseif myRegion == 38
-		return Compatibility.GetPlayerRegionTempMod19(flvLastPosX, flvLastPosY)
-	elseif myRegion == 39
-		return Compatibility.GetPlayerRegionTempMod20(flvLastPosX, flvLastPosY)
 	endif
 endFunction
 
@@ -350,89 +383,59 @@ function ShowWeatherTransitionMsg(int myCurrWeatherClass, int myIncomingWeatherC
 	endif
 endFunction
 
-int function GetPlayerRegion()						;Approved 2.5	
-	WorldSpace myWS = pPlayer.GetWorldspace()
-	
-	if IsInRegion1
+int function GetPlayerRegion()
+	if in_region_1
 		return 1
-	elseif IsInRegion2
+	elseif in_region_2
 		return 2
-	elseif IsInRegion3
+	elseif in_region_3
 		return 3
-	elseif IsInRegion4
+	elseif in_region_4
 		return 4
-	elseif IsInRegion5
+	elseif in_region_5
 		return 5
-	elseif IsInRegion6
+	elseif in_region_6
 		return 6
-	elseif IsInRegion7
+	elseif in_region_7
 		return 7
-	elseif IsInRegion8
+	elseif in_region_8
 		return 8
-	elseif _DE_WorldspacesExteriorPineForest.HasForm(myWS)
+	elseif _Frost_WorldspacesExteriorPineForest.HasForm(ws)
 		return 1
-	elseif _DE_WorldspacesExteriorVolcanicTundra.HasForm(myWS)
+	elseif _Frost_WorldspacesExteriorVolcanicTundra.HasForm(ws)
 		return 2
-	elseif _DE_WorldspacesExteriorFallForest.HasForm(myWS)
+	elseif _Frost_WorldspacesExteriorFallForest.HasForm(ws)
 		return 3
-	elseif _DE_WorldspacesExteriorWhiterun.HasForm(myWS)
+	elseif _Frost_WorldspacesExteriorWhiterun.HasForm(ws)
 		return 4
-	elseif _DE_WorldspacesExteriorTundraMarsh.HasForm(myWS)
+	elseif _Frost_WorldspacesExteriorTundraMarsh.HasForm(ws)
 		return 6
-	elseif _DE_WorldspacesExteriorCoast.HasForm(myWS)
+	elseif _Frost_WorldspacesExteriorCoast.HasForm(ws)
 		return 7
-	elseif _DE_WorldspacesExteriorSnowy.HasForm(myWS)
+	elseif _Frost_WorldspacesExteriorSnowy.HasForm(ws)
 		return 8
-	elseif _DE_WorldspacesExteriorOblivion.HasForm(myWS)
+	elseif _Frost_WorldspacesExteriorOblivion.HasForm(ws)
 		return 9
-	elseif Compatibility.isDLC1Loaded && myWS == Compatibility.DLC1WS
+	elseif Compatibility.isDLC1Loaded && ws == Compatibility.DLC1WS
 		return 10
-	elseif Compatibility.isDLC2Loaded && myWS == Compatibility.DLC2WS
+	elseif Compatibility.isDLC2Loaded && ws == Compatibility.DLC2WS
 		return 11
-	elseif Compatibility.isDLC3Loaded && myWS == Compatibility.DLC3WS
+	elseif Compatibility.isDLC3Loaded && ws == Compatibility.DLC3WS
 		return 12
-	elseif Compatibility.isDLC4Loaded && myWS == Compatibility.DLC4WS
+	elseif Compatibility.isDLC4Loaded && ws == Compatibility.DLC4WS
 		return 13
-	elseif Compatibility.isMod1Loaded && myWS == Compatibility.Mod1WS
+	elseif Compatibility.isMod1Loaded && ws == Compatibility.Mod1WS
 		return 20
-	elseif Compatibility.isMod2Loaded && myWS == Compatibility.Mod2WS
+	elseif Compatibility.isMod2Loaded && ws == Compatibility.Mod2WS
 		return 21
-	elseif Compatibility.isMod3Loaded && myWS == Compatibility.Mod3WS
+	elseif Compatibility.isMod3Loaded && ws == Compatibility.Mod3WS
 		return 22
-	elseif Compatibility.isMod4Loaded && myWS == Compatibility.Mod4WS
+	elseif Compatibility.isMod4Loaded && ws == Compatibility.Mod4WS
 		return 23
-	elseif Compatibility.isMod5Loaded && myWS == Compatibility.Mod5WS
+	elseif Compatibility.isMod5Loaded && ws == Compatibility.Mod5WS
 		return 24
-	elseif Compatibility.isMod6Loaded && myWS == Compatibility.Mod6WS
+	elseif Compatibility.isMod6Loaded && ws == Compatibility.Mod6WS
 		return 25
-	elseif Compatibility.isMod7Loaded && myWS == Compatibility.Mod7WS
-		return 26
-	elseif Compatibility.isMod8Loaded && myWS == Compatibility.Mod8WS
-		return 27
-	elseif Compatibility.isMod9Loaded && myWS == Compatibility.Mod9WS
-		return 28
-	elseif Compatibility.isMod10Loaded && myWS == Compatibility.Mod10WS
-		return 29
-	elseif Compatibility.isMod11Loaded && myWS == Compatibility.Mod11WS
-		return 30
-	elseif Compatibility.isMod12Loaded && myWS == Compatibility.Mod12WS
-		return 31
-	elseif Compatibility.isMod13Loaded && myWS == Compatibility.Mod13WS
-		return 32
-	elseif Compatibility.isMod14Loaded && myWS == Compatibility.Mod14WS
-		return 33
-	elseif Compatibility.isMod15Loaded && myWS == Compatibility.Mod15WS
-		return 34
-	elseif Compatibility.isMod16Loaded && myWS == Compatibility.Mod16WS
-		return 35
-	elseif Compatibility.isMod17Loaded && myWS == Compatibility.Mod17WS
-		return 36
-	elseif Compatibility.isMod18Loaded && myWS == Compatibility.Mod18WS
-		return 37
-	elseif Compatibility.isMod19Loaded && myWS == Compatibility.Mod19WS
-		return 38
-	elseif Compatibility.isMod20Loaded && myWS == Compatibility.Mod20WS
-		return 39
 	else
 		return -1
 	endif
