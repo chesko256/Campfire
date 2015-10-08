@@ -13,6 +13,7 @@ FormList property _Frost_WorldspacesExteriorTundraMarsh auto
 FormList property _Frost_WorldspacesExteriorCoast auto
 FormList property _Frost_WorldspacesExteriorSnowy auto
 FormList property _Frost_WorldspacesExteriorOblivion auto
+FormList property _Frost_OvercastWeatherList auto
 
 int property WEATHERCLASS_UNKNOWN 			= -1 	autoReadOnly
 int property WEATHERCLASS_PLEASANT 			= 0 	autoReadOnly
@@ -29,7 +30,7 @@ int property REGION_TUNDRA 					= 5 	autoReadOnly
 int property REGION_TUNDRAMARSH 			= 6 	autoReadOnly
 int property REGION_COAST 					= 7 	autoReadOnly
 int property REGION_SNOW 					= 8 	autoReadOnly
-int property REGION_OBLIVION 				= 9 	autoReadOnly 		;@TODO: ???
+int property REGION_OBLIVION 				= 9 	autoReadOnly
 
 bool in_region_pineforest = false
 bool in_region_volcanictundra = false
@@ -44,8 +45,7 @@ float pos_x
 float pos_y
 float pos_z
 Worldspace ws
-
-
+Weather current_weather
 
 ; Public functions
 bool function IsRaining()
@@ -291,29 +291,24 @@ int function GetPlayerRegion()
 	endif
 endFunction
 
-int function GetWeatherClassificationActual(Weather myWeather)	
-	if !myWeather
+int function GetWeatherClassificationActual(Weather akWeather)	
+	if !akWeather
 		return -1
 	endif
 	
-	if _DE_OvercastWeatherList.HasForm(myWeather)
+	if _Frost_OvercastWeatherList.HasForm(akWeather)
 		return 0
 	endif
 	
-	int iClass = myWeather.GetClassification()
-	
-	if iClass == 3
-		if Compatibility.isDLC2Loaded
-			if myWeather == Compatibility.DLC2AshStorm
-				return 1
-			else
-				return 3
-			endif
+	int weather_class = akWeather.GetClassification()
+	if weather_class == 3
+		if Compatibility.isDLC2Loaded && akWeather == Compatibility.DLC2AshStorm
+			return 1
 		else
 			return 3
 		endif
 	else
-		return iClass
+		return weather_class
 	endif
 endFunction
 
