@@ -185,19 +185,21 @@ endFunction
 
 function DryOff(float limit)
 	FrostDebug(1, "~~~~ Wetness ::: DryOff : Limit " + limit)
-	if IsPlayerNearFire()
-		float time_delta_seconds = (this_update_time - last_update_time) * 3600.0
-		float amount = (((DRYFIRE_SPEED * GetPlayerHeatSourceLevel()) * time_delta_seconds) / 5.0)
-		ModAttributeWetness(amount, limit)
-	else
-		float time_delta_seconds = (this_update_time - last_update_time) * 3600.0
-		float amount = ((DRY_SPEED * time_delta_seconds) / 5.0)
-		ModAttributeWetness(amount, limit)
+	
+	float update_freq = UpdateFrequencyGlobal.GetValue()
+	float time_delta_seconds = (this_update_time - last_update_time) * 3600.0
+	if time_delta_seconds > (update_freq * 2)
+		time_delta_seconds = (update_freq * 2)
 	endif
-endFunction
 
-;@TODO: Figure out where to put this
-float cloak_wetrate_modifier = 1.0
+	float amount
+	if IsPlayerNearFire()
+		 amount = (((DRYFIRE_SPEED * GetPlayerHeatSourceLevel()) * time_delta_seconds) / update_freq)
+    else
+    	 amount = ((DRY_SPEED * time_delta_seconds) / update_freq)
+    endif
+    ModAttributeWetness(amount, limit)
+endFunction
 
 function GetWetter(float limit)
 	FrostDebug(1, "~~~~ Wetness ::: GetWetter : Limit " + limit)
@@ -209,8 +211,16 @@ function GetWetter(float limit)
 		FrostDebug(1, "~~~~ Wetness ::: Wetness greater than limit, drying off.")
 		DryOff(limit)
 	else
+		float update_freq = UpdateFrequencyGlobal.GetValue()
 		float time_delta_seconds = (this_update_time - last_update_time) * 3600.0
-		float amount = ((WET_SPEED * time_delta_seconds) / 5.0) * cloak_wetrate_modifier
+		if time_delta_seconds > (update_freq * 2)
+			time_delta_seconds = (update_freq * 2)
+		endif
+
+		float rain_protect_modifier = 1.0 - GetPlayerArmorRainProtection()
+		float amount = ((WET_SPEED * time_delta_seconds) / update_freq) * rain_protect_modifier
+
+		FrostDebug(1, "~~~~ Wetness ::: GetWetter : Limit " + limit + ", Rain protection modifier " + rain_protect_modifier)
 		ModAttributeWetness(amount, limit)
 	endif
 endFunction

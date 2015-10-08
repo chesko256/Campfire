@@ -244,10 +244,14 @@ int function GetPlayerExposureLevel() global
     return Frostfall._Frost_ExposureLevel.GetValueInt()
 endFunction
 
-int[] function GetArmorProtectionData() global
+float function GetPlayerArmorExposureProtection() global
     _Frost_ClothingSystem clothing_system = GetClothingSystem()
-    
+    return clothing_system.GetArmorRainProtection()
+endFunction
 
+float function GetPlayerArmorRainProtection() global
+    _Frost_ClothingSystem clothing_system = GetClothingSystem()
+    return clothing_system.GetArmorRainProtection()
 endFunction
 
 function SendEvent_OnPlayerStartSwimming() global
