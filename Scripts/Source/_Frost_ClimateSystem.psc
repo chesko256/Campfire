@@ -31,14 +31,14 @@ int property REGION_COAST 					= 7 	autoReadOnly
 int property REGION_SNOW 					= 8 	autoReadOnly
 int property REGION_OBLIVION 				= 9 	autoReadOnly 		;@TODO: ???
 
-bool in_region_1 = false
-bool in_region_2 = false
-bool in_region_3 = false
-bool in_region_4 = false
-bool in_region_5 = false
-bool in_region_6 = false
-bool in_region_7 = false
-bool in_region_8 = false
+bool in_region_pineforest = false
+bool in_region_volcanictundra = false
+bool in_region_fallforest = false
+bool in_region_reach = false
+bool in_region_tundra = false
+bool in_region_tundramarsh = false
+bool in_region_coast = false
+bool in_region_snow = false
 
 float pos_x
 float pos_y
@@ -76,21 +76,21 @@ endFunction
 
 Event OnTamrielRegionChange(int region, bool in_region)
 	if region == 1
-		in_region_1 = in_region
+		in_region_pineforest = in_region
 	elseif region == 2
-		in_region_2 = in_region
+		in_region_volcanictundra = in_region
 	elseif region == 3
-		in_region_3 = in_region
+		in_region_fallforest = in_region
 	elseif region == 4
-		in_region_4 = in_region
+		in_region_reach = in_region
 	elseif region == 5
-		in_region_5 = in_region
+		in_region_tundra = in_region
 	elseif region == 6
-		in_region_6 = in_region
+		in_region_tundramarsh = in_region
 	elseif region == 7
-		in_region_7 = in_region
+		in_region_coast = in_region
 	elseif region == 8
-		in_region_8 = in_region
+		in_region_snow = in_region
 	endif
 endEvent
 
@@ -248,38 +248,24 @@ int function GetRegionBaselineTemperature(int region)
 endFunction
 
 int function GetPlayerRegion()
-	if in_region_1
-		return 1
-	elseif in_region_2
-		return 2
-	elseif in_region_3
-		return 3
-	elseif in_region_4
-		return 4
-	elseif in_region_5
-		return 5
-	elseif in_region_6
-		return 6
-	elseif in_region_7
-		return 7
-	elseif in_region_8
-		return 8
-	elseif _Frost_WorldspacesExteriorPineForest.HasForm(ws)
-		return 1
-	elseif _Frost_WorldspacesExteriorVolcanicTundra.HasForm(ws)
-		return 2
-	elseif _Frost_WorldspacesExteriorFallForest.HasForm(ws)
-		return 3
-	elseif _Frost_WorldspacesExteriorWhiterun.HasForm(ws)
-		return 4
-	elseif _Frost_WorldspacesExteriorTundraMarsh.HasForm(ws)
-		return 6
-	elseif _Frost_WorldspacesExteriorCoast.HasForm(ws)
-		return 7
-	elseif _Frost_WorldspacesExteriorSnowy.HasForm(ws)
-		return 8
+	if in_region_pineforest || _Frost_WorldspacesExteriorPineForest.HasForm(ws)
+		return REGION_PINEFOREST
+	elseif in_region_volcanictundra || _Frost_WorldspacesExteriorVolcanicTundra.HasForm(ws)
+		return REGION_VOLCANICTUNDRA
+	elseif in_region_fallforest || _Frost_WorldspacesExteriorFallForest.HasForm(ws)
+		return REGION_FALLFOREST
+	elseif in_region_reach
+		return REGION_REACH
+	elseif in_region_tundra || _Frost_WorldspacesExteriorWhiterun.HasForm(ws)
+		return REGION_TUNDRA
+	elseif in_region_tundramarsh || _Frost_WorldspacesExteriorTundraMarsh.HasForm(ws)
+		return REGION_TUNDRAMARSH
+	elseif in_region_coast || _Frost_WorldspacesExteriorCoast.HasForm(ws)
+		return REGION_COAST
+	elseif in_region_snow || _Frost_WorldspacesExteriorSnowy.HasForm(ws)
+		return REGION_SNOW
 	elseif _Frost_WorldspacesExteriorOblivion.HasForm(ws)
-		return 9
+		return REGION_OBLIVION
 	elseif Compatibility.isDLC1Loaded && ws == Compatibility.DLC1WS
 		return 10
 	elseif Compatibility.isDLC2Loaded && ws == Compatibility.DLC2WS
@@ -331,7 +317,7 @@ int function GetWeatherClassificationActual(Weather myWeather)
 	endif
 endFunction
 
-;================================================================ Old code
+;================================================================ Old code, to refactor
 int Function GetWeatherTemp()
 	Weather myIncomingWeather
 	int myCurrWeatherClass
