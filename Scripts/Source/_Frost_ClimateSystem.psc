@@ -14,6 +14,23 @@ FormList property _Frost_WorldspacesExteriorCoast auto
 FormList property _Frost_WorldspacesExteriorSnowy auto
 FormList property _Frost_WorldspacesExteriorOblivion auto
 
+int property WEATHERCLASS_UNKNOWN 			= -1 	autoReadOnly
+int property WEATHERCLASS_PLEASANT 			= 0 	autoReadOnly
+int property WEATHERCLASS_CLOUDY_OR_FOGGY 	= 1 	autoReadOnly
+int property WEATHERCLASS_RAIN 				= 2 	autoReadOnly
+int property WEATHERCLASS_SNOW 				= 3 	autoReadOnly
+
+int property REGION_UNKNOWN 				= -1 	autoReadOnly
+int property REGION_PINEFOREST 				= 1 	autoReadOnly
+int property REGION_VOLCANICTUNDRA 			= 2 	autoReadOnly
+int property REGION_FALLFOREST 				= 3 	autoReadOnly
+int property REGION_REACH 					= 4 	autoReadOnly
+int property REGION_TUNDRA 					= 5 	autoReadOnly
+int property REGION_TUNDRAMARSH 			= 6 	autoReadOnly
+int property REGION_COAST 					= 7 	autoReadOnly
+int property REGION_SNOW 					= 8 	autoReadOnly
+int property REGION_OBLIVION 				= 9 	autoReadOnly 		;@TODO: ???
+
 bool in_region_1 = false
 bool in_region_2 = false
 bool in_region_3 = false
@@ -28,20 +45,26 @@ float pos_y
 float pos_z
 Worldspace ws
 
-; Old code
+
+
+; Public functions
+bool function IsRaining()
+
+endFunction
+
+bool function IsSnowing()
+
+endFunction
 
 function UpdateClimateState()
-	if CampUtil.IsRefInInterior(PlayerRef)
-		return
-	endif
-
+	
 	pos_x = PlayerRef.GetPositionX()
 	pos_y = PlayerRef.GetPositionY()
 	pos_z = PlayerRef.GetPositionZ()
 	ws = PlayerRef.GetWorldSpace()
 
 	int region = GetPlayerRegion()
-	int maxtemp = GetMaxTemperatureOverride()
+	int current_temperature = GetCurrentTemperature()
 
 
 
@@ -71,7 +94,55 @@ Event OnTamrielRegionChange(int region, bool in_region)
 	endif
 endEvent
 
-int function GetMaxTemperatureOverride()
+int function GetCurrentTemperature()
+	if CampUtil.IsRefInInterior(PlayerRef)
+		return 10
+	endif
+
+	weather current_weather
+	int current_temperature = 10
+	int base_temperature = GetRegionBaselineTemperature(GetPlayerRegion())
+	int current_weather_class
+	
+	if current_weather_class == WEATHERCLASS_UNKNOWN
+		current_temperature = (base_temperature - 2) - RandomInt(-1, 1)
+
+	elseif current_weather_class == WEATHERCLASS_PLEASANT
+		current_temperature = base_temperature - RandomInt(-1, 2)
+
+	elseif current_weather_class == WEATHERCLASS_CLOUDY_OR_FOGGY
+		current_temperature = (base_temperature - 3) - RandomInt(-1, 1)
+
+	elseif current_weather_class == WEATHERCLASS_RAIN
+		if IsWeatherSevere(current_weather)
+			current_temperature = (base_temperature - 7) - RandomInt(-1, 3)
+		else
+			current_temperature = (base_temperature - 5) - RandomInt(-1, 1)
+		endif
+
+	elseif current_weather_class == WEATHERCLASS_SNOW
+		if IsWeatherSevere(current_weather)
+			current_temperature = (base_temperature - 15) - RandomInt(-2, 2)
+			if current_temperature > -10
+				current_temperature = -10
+			endif
+		else
+			current_temperature = (base_temperature - 5) - RandomInt(-2, 2)
+			if current_temperature > -5
+				current_temperature = -5
+			endif
+		endif
+	endif
+
+	max_temperature = GetMaxTemperatureByLocation()
+	if current_temperature > max_temperature
+		current_temperature = max_temperature
+	endif
+
+	return current_temperature
+endFunction
+
+int function GetMaxTemperatureByLocation()
 	int max_temp = 100
 	if ws != Tamriel
 		return max_temp
@@ -130,7 +201,138 @@ int function GetMaxTemperatureOverride()
 	return max_temp
 endFunction
 
-int Function GetWeatherTemp(int myMaxTemp)			;Approved 2.5
+int function GetRegionBaselineTemperature(int region)
+	if region == REGION_UNKNOWN
+		return 9
+	elseif region == REGION_PINEFOREST
+		return 20
+	elseif region == REGION_VOLCANICTUNDRA
+		return 18
+	elseif region == REGION_FALLFOREST
+		return 12
+	elseif region == REGION_REACH || region == REGION_TUNDRA
+		return 10
+	elseif region == REGION_TUNDRAMARSH
+		return 1
+	elseif region == REGION_COAST
+		return -5
+	elseif region == REGION_SNOW
+		return -10
+	elseif region == REGION_OBLIVION
+		return 16
+	
+	;			####Official DLC Compatibility####
+	elseif region == 10					;DLC1 Worldspace
+		return Compatibility.GetPlayerRegionTempDLC1(flvLastPosX, flvLastPosY)
+	elseif region == 11
+		return Compatibility.GetPlayerRegionTempDLC2(flvLastPosX, flvLastPosY)
+	elseif region == 12
+		return Compatibility.GetPlayerRegionTempDLC3(flvLastPosX, flvLastPosY)
+	elseif region == 13
+		return Compatibility.GetPlayerRegionTempDLC4(flvLastPosX, flvLastPosY)
+	
+	;			####Landmass Mod Compatibility####
+	elseif region == 20
+		return Compatibility.GetPlayerRegionTempMod1(flvLastPosX, flvLastPosY)
+	elseif region == 21
+		return Compatibility.GetPlayerRegionTempMod2(flvLastPosX, flvLastPosY)
+	elseif region == 22
+		return Compatibility.GetPlayerRegionTempMod3(flvLastPosX, flvLastPosY)
+	elseif region == 23
+		return Compatibility.GetPlayerRegionTempMod4(flvLastPosX, flvLastPosY)
+	elseif region == 24
+		return Compatibility.GetPlayerRegionTempMod5(flvLastPosX, flvLastPosY)
+	elseif region == 25
+		return Compatibility.GetPlayerRegionTempMod6(flvLastPosX, flvLastPosY)
+	endif
+endFunction
+
+int function GetPlayerRegion()
+	if in_region_1
+		return 1
+	elseif in_region_2
+		return 2
+	elseif in_region_3
+		return 3
+	elseif in_region_4
+		return 4
+	elseif in_region_5
+		return 5
+	elseif in_region_6
+		return 6
+	elseif in_region_7
+		return 7
+	elseif in_region_8
+		return 8
+	elseif _Frost_WorldspacesExteriorPineForest.HasForm(ws)
+		return 1
+	elseif _Frost_WorldspacesExteriorVolcanicTundra.HasForm(ws)
+		return 2
+	elseif _Frost_WorldspacesExteriorFallForest.HasForm(ws)
+		return 3
+	elseif _Frost_WorldspacesExteriorWhiterun.HasForm(ws)
+		return 4
+	elseif _Frost_WorldspacesExteriorTundraMarsh.HasForm(ws)
+		return 6
+	elseif _Frost_WorldspacesExteriorCoast.HasForm(ws)
+		return 7
+	elseif _Frost_WorldspacesExteriorSnowy.HasForm(ws)
+		return 8
+	elseif _Frost_WorldspacesExteriorOblivion.HasForm(ws)
+		return 9
+	elseif Compatibility.isDLC1Loaded && ws == Compatibility.DLC1WS
+		return 10
+	elseif Compatibility.isDLC2Loaded && ws == Compatibility.DLC2WS
+		return 11
+	elseif Compatibility.isDLC3Loaded && ws == Compatibility.DLC3WS
+		return 12
+	elseif Compatibility.isDLC4Loaded && ws == Compatibility.DLC4WS
+		return 13
+	elseif Compatibility.isMod1Loaded && ws == Compatibility.Mod1WS
+		return 20
+	elseif Compatibility.isMod2Loaded && ws == Compatibility.Mod2WS
+		return 21
+	elseif Compatibility.isMod3Loaded && ws == Compatibility.Mod3WS
+		return 22
+	elseif Compatibility.isMod4Loaded && ws == Compatibility.Mod4WS
+		return 23
+	elseif Compatibility.isMod5Loaded && ws == Compatibility.Mod5WS
+		return 24
+	elseif Compatibility.isMod6Loaded && ws == Compatibility.Mod6WS
+		return 25
+	else
+		return -1
+	endif
+endFunction
+
+int function GetWeatherClassificationActual(Weather myWeather)	
+	if !myWeather
+		return -1
+	endif
+	
+	if _DE_OvercastWeatherList.HasForm(myWeather)
+		return 0
+	endif
+	
+	int iClass = myWeather.GetClassification()
+	
+	if iClass == 3
+		if Compatibility.isDLC2Loaded
+			if myWeather == Compatibility.DLC2AshStorm
+				return 1
+			else
+				return 3
+			endif
+		else
+			return 3
+		endif
+	else
+		return iClass
+	endif
+endFunction
+
+;================================================================ Old code
+int Function GetWeatherTemp()
 	Weather myIncomingWeather
 	int myCurrWeatherClass
 	int myIncomingWeatherClass
@@ -234,52 +436,7 @@ int Function GetWeatherTemp(int myMaxTemp)			;Approved 2.5
 	return myWeatherTemp
 endFunction
 
-int function GetBaseTemp(int myRegion)
-	;Determine weather base temperature based on region
-	if myRegion == -1						;Region lookup failed
-		return 9
-	elseif myRegion == 1					;Pine Forest
-		return 20
-	elseif myRegion == 2					;Volcanic Tundra
-		return 18
-	elseif myRegion == 3					;Fall Forest	
-		return 12
-	elseif myRegion == 4 || myRegion == 5	;Reach, Tundra
-		return 10
-	elseif myRegion == 6					;Tundra Marsh
-		return 1
-	elseif myRegion == 7					;Coast
-		return -5
-	elseif myRegion == 8					;Snow
-		return -10
-	elseif myRegion == 9					;Oblivion
-		return 16
-	
-	;			####Official DLC Compatibility####
-	elseif myRegion == 10					;DLC1 Worldspace
-		return Compatibility.GetPlayerRegionTempDLC1(flvLastPosX, flvLastPosY)
-	elseif myRegion == 11
-		return Compatibility.GetPlayerRegionTempDLC2(flvLastPosX, flvLastPosY)
-	elseif myRegion == 12
-		return Compatibility.GetPlayerRegionTempDLC3(flvLastPosX, flvLastPosY)
-	elseif myRegion == 13
-		return Compatibility.GetPlayerRegionTempDLC4(flvLastPosX, flvLastPosY)
-	
-	;			####Landmass Mod Compatibility####
-	elseif myRegion == 20
-		return Compatibility.GetPlayerRegionTempMod1(flvLastPosX, flvLastPosY)
-	elseif myRegion == 21
-		return Compatibility.GetPlayerRegionTempMod2(flvLastPosX, flvLastPosY)
-	elseif myRegion == 22
-		return Compatibility.GetPlayerRegionTempMod3(flvLastPosX, flvLastPosY)
-	elseif myRegion == 23
-		return Compatibility.GetPlayerRegionTempMod4(flvLastPosX, flvLastPosY)
-	elseif myRegion == 24
-		return Compatibility.GetPlayerRegionTempMod5(flvLastPosX, flvLastPosY)
-	elseif myRegion == 25
-		return Compatibility.GetPlayerRegionTempMod6(flvLastPosX, flvLastPosY)
-	endif
-endFunction
+
 
 function ShowWeatherTransitionMsg(int myCurrWeatherClass, int myIncomingWeatherClass, int myRegion, bool bSevereWeather, bool bIncomingSevere, int myMaxTemp)
 	if !bInInterior && pSetting_MsgWeather
@@ -383,86 +540,3 @@ function ShowWeatherTransitionMsg(int myCurrWeatherClass, int myIncomingWeatherC
 	endif
 endFunction
 
-int function GetPlayerRegion()
-	if in_region_1
-		return 1
-	elseif in_region_2
-		return 2
-	elseif in_region_3
-		return 3
-	elseif in_region_4
-		return 4
-	elseif in_region_5
-		return 5
-	elseif in_region_6
-		return 6
-	elseif in_region_7
-		return 7
-	elseif in_region_8
-		return 8
-	elseif _Frost_WorldspacesExteriorPineForest.HasForm(ws)
-		return 1
-	elseif _Frost_WorldspacesExteriorVolcanicTundra.HasForm(ws)
-		return 2
-	elseif _Frost_WorldspacesExteriorFallForest.HasForm(ws)
-		return 3
-	elseif _Frost_WorldspacesExteriorWhiterun.HasForm(ws)
-		return 4
-	elseif _Frost_WorldspacesExteriorTundraMarsh.HasForm(ws)
-		return 6
-	elseif _Frost_WorldspacesExteriorCoast.HasForm(ws)
-		return 7
-	elseif _Frost_WorldspacesExteriorSnowy.HasForm(ws)
-		return 8
-	elseif _Frost_WorldspacesExteriorOblivion.HasForm(ws)
-		return 9
-	elseif Compatibility.isDLC1Loaded && ws == Compatibility.DLC1WS
-		return 10
-	elseif Compatibility.isDLC2Loaded && ws == Compatibility.DLC2WS
-		return 11
-	elseif Compatibility.isDLC3Loaded && ws == Compatibility.DLC3WS
-		return 12
-	elseif Compatibility.isDLC4Loaded && ws == Compatibility.DLC4WS
-		return 13
-	elseif Compatibility.isMod1Loaded && ws == Compatibility.Mod1WS
-		return 20
-	elseif Compatibility.isMod2Loaded && ws == Compatibility.Mod2WS
-		return 21
-	elseif Compatibility.isMod3Loaded && ws == Compatibility.Mod3WS
-		return 22
-	elseif Compatibility.isMod4Loaded && ws == Compatibility.Mod4WS
-		return 23
-	elseif Compatibility.isMod5Loaded && ws == Compatibility.Mod5WS
-		return 24
-	elseif Compatibility.isMod6Loaded && ws == Compatibility.Mod6WS
-		return 25
-	else
-		return -1
-	endif
-endFunction
-
-int function GetWeatherClassificationActual(Weather myWeather)	
-	if !myWeather
-		return -1
-	endif
-	
-	if _DE_OvercastWeatherList.HasForm(myWeather)
-		return 0
-	endif
-	
-	int iClass = myWeather.GetClassification()
-	
-	if iClass == 3
-		if Compatibility.isDLC2Loaded
-			if myWeather == Compatibility.DLC2AshStorm
-				return 1
-			else
-				return 3
-			endif
-		else
-			return 3
-		endif
-	else
-		return iClass
-	endif
-endFunction
