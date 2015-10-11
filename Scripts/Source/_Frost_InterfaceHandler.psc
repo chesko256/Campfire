@@ -6,13 +6,22 @@ GlobalVariable property _Frost_DatastoreInitialized auto
 
 Event OnInit()
 	RegisterForModEvent("Frost_OnSkyUIInvListSelectChangeArmor", "OnSkyUIInvListSelectChangeArmor")
+	RegisterForModEvent("Frost_UpdateBottomBarInfo", "UpdateBottomBarInfo")
 	RegisterForMenu("InventoryMenu")
 EndEvent
 
+function RegisterForEvents()
+	RegisterForModEvent("Frost_OnSkyUIInvListSelectChangeArmor", "OnSkyUIInvListSelectChangeArmor")
+	RegisterForModEvent("Frost_UpdateBottomBarInfo", "UpdateBottomBarInfo")
+endFunction
+
+function RegisterForMenus()
+	RegisterForMenu("InventoryMenu")
+endFunction
+
 Event OnMenuOpen(string menuName)
 	if menuName == "InventoryMenu"
-		UI.SetString("InventoryMenu", "_root.Menu_mc.bottomBar.frostInfoCard.ExposureProtectionValue.text", GetPlayerArmorExposureProtection())
-		UI.SetString("InventoryMenu", "_root.Menu_mc.bottomBar.frostInfoCard.RainProtectionValue.text", GetPlayerArmorRainProtection())
+		UpdateBottomBarInfo(GetPlayerArmorExposureProtection(), GetPlayerArmorRainProtection())
 	endif
 EndEvent
 
@@ -25,8 +34,7 @@ Event OnSkyUIInvListSelectChangeArmor(string asEventName, string asArg, float af
 	endif
 	locked = true
 
-	UI.SetString("InventoryMenu", "_root.Menu_mc.bottomBar.frostInfoCard.ExposureProtectionValue.text", GetPlayerArmorExposureProtection())
-	UI.SetString("InventoryMenu", "_root.Menu_mc.bottomBar.frostInfoCard.RainProtectionValue.text", GetPlayerArmorRainProtection())
+	UpdateBottomBarInfo(GetPlayerArmorExposureProtection(), GetPlayerArmorRainProtection())
 	UI.SetString("InventoryMenu", "_root.Menu_mc.itemCard.ExposureProtectionValue.text", "")
 	UI.SetString("InventoryMenu", "_root.Menu_mc.itemCard.RainProtectionValue.text", "")
 		
@@ -39,9 +47,6 @@ Event OnSkyUIInvListSelectChangeArmor(string asEventName, string asArg, float af
 		SetItemCardValues()
 	endif
 	locked = false
-	;int fid = UI.GetInt("InventoryMenu", "_root.Menu_mc.inventoryLists.itemList.selectedEntry.formId")
-	;int exp = GetTotalExposureProtection(fid, 1, 1)
-	;UI.SetString("InventoryMenu", "_root.Menu_mc.itemCard.ExposureProtectionValue.text", exp)
 endEvent
 
 function WaitForSelectionSettle()
@@ -51,19 +56,11 @@ function WaitForSelectionSettle()
 		Utility.WaitMenuMode(0.25)
 		if settled == true
 			exit = true
-		else
-			; debug.trace("NOT SETTLED")
 		endif
 	endWhile
 endFunction
 
 function SetItemCardValues()
-	if _Frost_DatastoreInitialized.GetValueInt() != 2
-		UI.SetString("InventoryMenu", "_root.Menu_mc.itemCard.ExposureProtectionValue.text", "--")
-		UI.SetString("InventoryMenu", "_root.Menu_mc.itemCard.RainProtectionValue.text", "--")
-		return
-	endif
-
 	bool set = false
 	_Frost_ArmorProtectionDatastoreHandler datastore = GetClothingDatastoreHandler()
 	while !set
@@ -80,3 +77,8 @@ function SetItemCardValues()
 		endif
 	endWhile
 endFunction
+
+Event UpdateBottomBarInfo(int aiExposureProtection, int aiRainProtection)
+	UI.SetString("InventoryMenu", "_root.Menu_mc.bottomBar.frostInfoCard.ExposureProtectionValue.text", aiExposureProtection)
+	UI.SetString("InventoryMenu", "_root.Menu_mc.bottomBar.frostInfoCard.RainProtectionValue.text", aiRainProtection)
+endEvent

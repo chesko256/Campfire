@@ -23,7 +23,7 @@ Keyword property ArmorBoots auto
 Keyword property ClothingFeet auto
 FormList property _Camp_Backpacks auto
 
-bool property datastore_initialized = false auto hidden
+GlobalVariable property _Frost_DatastoreInitialized auto
 
 int property DEFAULT_BODY_EXPOSUREPROTECTION 				= 110 autoReadOnly
 int property DEFAULT_BODY_RAINPROTECTION 					= 35 autoReadOnly
@@ -35,10 +35,6 @@ int property DEFAULT_HEADHOOD_EXPOSUREPROTECTION 			= 25 autoReadOnly
 int property DEFAULT_HEADHOOD_RAINPROTECTION 				= 43 autoReadOnly
 int property DEFAULT_FEET_EXPOSUREPROTECTION 				= 12 autoReadOnly
 int property DEFAULT_FEET_RAINPROTECTION 					= 14 autoReadOnly
-
-int k1 = -1
-int k2 = -1
-int k3 = -1
 
 Event OnInit()
 	if !self.IsRunning()
@@ -388,7 +384,7 @@ function RevertDatastore()
 	FrostDebug(1, "Setting default settings for cloak armor...")
 	SetDefaults_Cloak()
 	FrostDebug(1, "Setting default settings for cloak armor...done.")
-	datastore_initialized = true
+	_Frost_DatastoreInitialized.SetValueInt(2)
 endFunction
 
 function RevertDatastoreEntry(string asKey)

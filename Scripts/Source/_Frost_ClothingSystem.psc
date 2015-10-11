@@ -4,24 +4,25 @@ import FrostUtil
 import _FrostInternal
 
 Formlist property _Frost_EquipExceptions auto
+GlobalVariable property _Frost_DatastoreInitialized auto
 
-Armor property equipped_body auto
-Armor property equipped_head auto
-Armor property equipped_hands auto
-Armor property equipped_feet auto
-Armor property equipped_cloak auto
+Armor property equipped_body auto hidden
+Armor property equipped_head auto hidden
+Armor property equipped_hands auto hidden
+Armor property equipped_feet auto hidden
+Armor property equipped_cloak auto hidden
 
-int property body_exposure_protection auto
-int property head_exposure_protection auto
-int property hands_exposure_protection auto
-int property feet_exposure_protection auto
-int property cloak_exposure_protection auto
+int property body_exposure_protection auto hidden
+int property head_exposure_protection auto hidden
+int property hands_exposure_protection auto hidden
+int property feet_exposure_protection auto hidden
+int property cloak_exposure_protection auto hidden
 
-int property body_rain_protection auto
-int property head_rain_protection auto
-int property hands_rain_protection auto
-int property feet_rain_protection auto
-int property cloak_rain_protection auto
+int property body_rain_protection auto hidden
+int property head_rain_protection auto hidden
+int property hands_rain_protection auto hidden
+int property feet_rain_protection auto hidden
+int property cloak_rain_protection auto hidden
 
 bool unequip_lock = false
 
@@ -46,12 +47,12 @@ function ObjectEquipped(Form akBaseObject, int iGearType)
     
     HandleEquippedObject(akBaseObject, iGearType)
 
-    FrostDebug(0, "Armor protection report: ")
-    FrostDebug(0, "BODY: " + body_exposure_protection + ", " + body_rain_protection)
-    FrostDebug(0, "HANDS: " + hands_exposure_protection + ", " + hands_rain_protection)
-    FrostDebug(0, "HEAD: " + head_exposure_protection + ", " + head_rain_protection)
-    FrostDebug(0, "FEET: " + feet_exposure_protection + ", " + feet_rain_protection)
-    FrostDebug(0, "CLOAK: " + cloak_exposure_protection + ", " + cloak_rain_protection)
+    SendEvent_UpdateBottomBarInfo(GetArmorExposureProtection(), GetArmorRainProtection())
+    FrostDebug(0, "Armor protection report: BODY(" + body_exposure_protection + ", " + body_rain_protection +       \
+                                            ") HANDS(" + hands_exposure_protection + ", " + hands_rain_protection + \
+                                            ") HEAD(" + head_exposure_protection + ", " + head_rain_protection +    \
+                                            ") FEET(" + feet_exposure_protection + ", " + feet_rain_protection +    \
+                                            ") CLOAK(" + cloak_exposure_protection + ", " + cloak_rain_protection +")")
 endFunction
 
 function HandleEquippedObject(Form akBaseObject, int iGearType)
@@ -137,12 +138,12 @@ function ObjectUnequipped(Form akBaseObject, int iGearType)
     HandleUnequippedObject(akBaseObject, iGearType)
     unequip_lock = false
 
-    FrostDebug(0, "Armor protection report: ")
-    FrostDebug(0, "BODY: " + body_exposure_protection + ", " + body_rain_protection)
-    FrostDebug(0, "HANDS: " + hands_exposure_protection + ", " + hands_rain_protection)
-    FrostDebug(0, "HEAD: " + head_exposure_protection + ", " + head_rain_protection)
-    FrostDebug(0, "FEET: " + feet_exposure_protection + ", " + feet_rain_protection)
-    FrostDebug(0, "CLOAK: " + cloak_exposure_protection + ", " + cloak_rain_protection)
+    SendEvent_UpdateBottomBarInfo(GetArmorExposureProtection(), GetArmorRainProtection())
+    FrostDebug(0, "Armor protection report: BODY(" + body_exposure_protection + ", " + body_rain_protection +       \
+                                            ") HANDS(" + hands_exposure_protection + ", " + hands_rain_protection + \
+                                            ") HEAD(" + head_exposure_protection + ", " + head_rain_protection +    \
+                                            ") FEET(" + feet_exposure_protection + ", " + feet_rain_protection +    \
+                                            ") CLOAK(" + cloak_exposure_protection + ", " + cloak_rain_protection +")")
 endFunction
 
 function HandleUnequippedObject(Form akBaseObject, int iGearType)
@@ -198,4 +199,19 @@ int function GetArmorRainProtection()
                 head_rain_protection + feet_rain_protection + \
                 cloak_rain_protection
     return total
+endFunction
+
+
+function SendEvent_UpdateBottomBarInfo(int aiExposureProtection, int aiRainProtection)
+    if _Frost_DatastoreInitialized.GetValueInt() != 2
+        return
+    endif
+
+    FrostDebug(0, "Sending event Frost_UpdateBottomBarInfo")
+    int handle = ModEvent.Create("Frost_UpdateBottomBarInfo")
+    if handle
+        ModEvent.PushInt(handle, aiExposureProtection)
+        ModEvent.PushInt(handle, aiRainProtection)
+        ModEvent.Send(handle)
+    endif
 endFunction
