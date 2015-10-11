@@ -193,10 +193,9 @@ int function GetArmorExposureProtection()
     return total
 endFunction
 
-float function GetArmorRainProtection()
-    float total = body_rain_protection + hands_rain_protection + \
+int function GetArmorRainProtection()
+    int total = body_rain_protection + hands_rain_protection + \
                 head_rain_protection + feet_rain_protection + \
                 cloak_rain_protection
-    total /= 100.0
     return total
 endFunction
