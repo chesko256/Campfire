@@ -217,7 +217,7 @@ function GetWetter(float limit)
 			time_delta_seconds = (update_freq * 2)
 		endif
 
-		float rain_protect_modifier = 1.0 - GetPlayerArmorRainProtection()
+		float rain_protect_modifier = 1.0 - (((GetPlayerArmorRainProtection() * 80.0) / 343.0) / 100.0)
 		float amount = ((WET_SPEED * time_delta_seconds) / update_freq) * rain_protect_modifier
 
 		FrostDebug(1, "~~~~ Wetness ::: GetWetter : Limit " + limit + ", Rain protection modifier " + rain_protect_modifier)
