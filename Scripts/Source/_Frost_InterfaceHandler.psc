@@ -66,6 +66,7 @@ function SetItemCardValues()
 	_Frost_ArmorProtectionDatastoreHandler datastore = GetClothingDatastoreHandler()
 	while !set
 		int fid = UI.GetInt("InventoryMenu", "_root.Menu_mc.inventoryLists.itemList.selectedEntry.formId")
+		debug.trace(fid)
 		Armor my_armor = Game.GetForm(fid) as Armor
 		int[] protection_values = datastore.GetTotalProtectionValues(my_armor, datastore.GetGearType(my_armor as Form))
 		; Previous lookup takes significant real time, are we still on this entry?
