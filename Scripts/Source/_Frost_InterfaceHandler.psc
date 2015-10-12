@@ -61,6 +61,7 @@ function WaitForSelectionSettle()
 endFunction
 
 function SetItemCardValues()
+	debug.trace("Called SetItemCardValues")
 	bool set = false
 	_Frost_ArmorProtectionDatastoreHandler datastore = GetClothingDatastoreHandler()
 	while !set

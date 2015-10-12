@@ -33,6 +33,7 @@
 !Interface/Translations/Campfire*.txt
 !Interface/exported/widgets/frostfall/*
 !Interface/exported/widgets/lastseed/*
+!Interface/skyui/*
 
 #Meshes
 !Meshes/campfire/*
