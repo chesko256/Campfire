@@ -35,8 +35,7 @@ Event OnSkyUIInvListSelectChangeArmor(string asEventName, string asArg, float af
 	locked = true
 
 	UpdateBottomBarInfo(GetPlayerArmorExposureProtection(), GetPlayerArmorRainProtection())
-	UI.SetString("InventoryMenu", "_root.Menu_mc.itemCard.ExposureProtectionValue.text", "")
-	UI.SetString("InventoryMenu", "_root.Menu_mc.itemCard.RainProtectionValue.text", "")
+	UpdateItemCardInfo(-1, -1)
 		
 	WaitForSelectionSettle()
 		
@@ -61,18 +60,27 @@ function WaitForSelectionSettle()
 endFunction
 
 function SetItemCardValues()
-	debug.trace("Called SetItemCardValues")
 	bool set = false
 	_Frost_ArmorProtectionDatastoreHandler datastore = GetClothingDatastoreHandler()
 	while !set
-		int fid = UI.GetInt("InventoryMenu", "_root.Menu_mc.inventoryLists.itemList.selectedEntry.formId")
-		debug.trace(fid)
+		int menu_id = 0
+		int fid = 0
+		
+		if UI.IsMenuOpen("InventoryMenu")
+			fid = UI.GetInt("InventoryMenu", "_root.Menu_mc.inventoryLists.itemList.selectedEntry.formId")
+		elseif UI.IsMenuOpen("Crafting Menu")
+			fid = UI.GetInt("Crafting Menu", "_root.Menu.InventoryLists.panelContainer.itemList.selectedEntry.formId")
+		endif
+
+		if fid == 0
+			return
+		endif
+
 		Armor my_armor = Game.GetForm(fid) as Armor
 		int[] protection_values = datastore.GetTotalProtectionValues(my_armor, datastore.GetGearType(my_armor as Form))
 		; Previous lookup takes significant real time, are we still on this entry?
 		if settled == true && protection_values[0] != -1
-			UI.SetString("InventoryMenu", "_root.Menu_mc.itemCard.ExposureProtectionValue.text", protection_values[0])
-			UI.SetString("InventoryMenu", "_root.Menu_mc.itemCard.RainProtectionValue.text", protection_values[1])
+			UpdateItemCardInfo(protection_values[0], protection_values[1])
 			set = true
 		else
 			WaitForSelectionSettle()
@@ -81,6 +89,31 @@ function SetItemCardValues()
 endFunction
 
 Event UpdateBottomBarInfo(int aiExposureProtection, int aiRainProtection)
-	UI.SetString("InventoryMenu", "_root.Menu_mc.bottomBar.frostInfoCard.ExposureProtectionValue.text", aiExposureProtection)
-	UI.SetString("InventoryMenu", "_root.Menu_mc.bottomBar.frostInfoCard.RainProtectionValue.text", aiRainProtection)
+	if UI.IsMenuOpen("InventoryMenu")
+		UI.SetString("InventoryMenu", "_root.Menu_mc.bottomBar.frostInfoCard.ExposureProtectionValue.text", aiExposureProtection)
+		UI.SetString("InventoryMenu", "_root.Menu_mc.bottomBar.frostInfoCard.RainProtectionValue.text", aiRainProtection)
+	elseif UI.IsMenuOpen("Crafting Menu")
+		UI.SetString("Crafting Menu", "_root.Menu.BottomBarInfo.frostInfoCard.ExposureProtectionValue.text", aiExposureProtection)
+		UI.SetString("Crafting Menu", "_root.Menu.bottomBarInfo.frostInfoCard.RainProtectionValue.text", aiRainProtection)
+	endif
 endEvent
+
+function UpdateItemCardInfo(int aiExposureProtection, int aiRainProtection)
+	string exp_val
+	string rain_val
+	if aiExposureProtection == -1
+		exp_val = ""
+		rain_val = ""
+	else
+		exp_val = aiExposureProtection
+		rain_val = aiRainProtection
+	endif
+
+	if UI.IsMenuOpen("InventoryMenu")
+		UI.SetString("InventoryMenu", "_root.Menu_mc.itemCard.ExposureProtectionValue.text", exp_val)
+		UI.SetString("InventoryMenu", "_root.Menu_mc.itemCard.RainProtectionValue.text", rain_val)
+	elseif UI.IsMenuOpen("Crafting Menu")
+		UI.SetString("Crafting Menu", "_root.Menu.ItemInfoHolder.ItemInfo.ExposureProtectionValue.text", exp_val)
+		UI.SetString("Crafting Menu", "_root.Menu.ItemInfoHolder.ItemInfo.RainProtectionValue.text", rain_val)
+	endif
+endFunction
