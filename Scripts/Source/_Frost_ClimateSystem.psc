@@ -70,7 +70,11 @@ float pos_y
 float pos_z
 Worldspace ws
 Weather current_weather
+Weather last_current_weather
+Weather last_incoming_weather
 int current_temperature
+int last_region
+int last_current_temperature
 int max_temperature
 
 ; Public functions
@@ -84,31 +88,36 @@ endFunction
 
 function UpdateClimateState()
 	
+	Weather incoming_weather
 	pos_x = PlayerRef.GetPositionX()
 	pos_y = PlayerRef.GetPositionY()
 	pos_z = PlayerRef.GetPositionZ()
 	ws = PlayerRef.GetWorldSpace()
+	int region = GetPlayerRegion()
 
-	if Weather.GetCurrentWeatherTransition() >= 1.0								;No incoming weather.
-		bTransitioning = false
-		myIncomingWeather = none
-		myCurrWeatherClass = GetWeatherClassificationActual(wMyWeather)
-	else																		;Incoming weather.
-		bTransitioning = true
-		myIncomingWeather = wMyWeather
-		wMyWeather = Weather.GetOutgoingWeather()
-		myCurrWeatherClass = GetWeatherClassificationActual(wMyWeather)
-		myIncomingWeatherClass = GetWeatherClassificationActual(myIncomingWeather)
+	bool transitioning = IsWeatherTransitioning()
+	if transitioning
+		incoming_weather = Weather.GetCurrentWeather()
+		current_weather = Weather.GetOutgoingWeather()
+	else
+		incoming_weather = none
+		current_weather = Weather.GetCurrentWeather()
 	endif
 	
-	int region = GetPlayerRegion()
 	max_temperature = GetMaxTemperatureByLocation()
-	current_temperature = GetCurrentTemperature()
+	current_temperature = GetCurrentTemperature(current_weather, region)
 
-	if temp == -1
-		int base_temp = GetBaseTemperature()
-		temp = GetWeatherTemperature(base_temp)
-	endif
+	; huh?
+	;if temp == -1
+	;	int base_temp = GetRegionBaselineTemperature(region)
+	;	temp = GetWeatherTemperature(base_temp)
+	;endif
+
+	ShowWeatherTransitionMessage(current_weather, incoming_weather, region)
+endFunction
+
+bool function IsWeatherTransitioning()
+	return !Weather.GetCurrentWeatherTransition() >= 1.0
 endFunction
 
 Event OnTamrielRegionChange(int region, bool in_region)
@@ -131,13 +140,24 @@ Event OnTamrielRegionChange(int region, bool in_region)
 	endif
 endEvent
 
-int function GetCurrentTemperature(Weather current_weather, int current_region)
+int function GetCurrentTemperature(Weather current_weather, int region)
+	; Don't increase exposure when indoors.
 	if CampUtil.IsRefInInterior(PlayerRef)
 		return 10
 	endif
 
+	; Don't increase exposure in Oblivion.
+	if current_region == REGION_OBLIVION
+		return 10
+	endif
+
+	; Don't recalculate if the weather or region hasn't changed.
+	if current_weather == last_current_weather && region == last_region
+		return last_current_temperature
+	endif
+
 	int current_temperature = 10
-	int base_temperature = GetRegionBaselineTemperature(current_region)
+	int base_temperature = GetRegionBaselineTemperature(region)
 	int current_weather_class = GetWeatherClassificationActual(current_weather)
 	
 	if current_weather_class == WEATHERCLASS_UNKNOWN
@@ -347,8 +367,12 @@ int function GetWeatherClassificationActual(Weather akWeather)
 	endif
 endFunction
 
-function ShowWeatherTransitionMessage(Weather current_weather, Weather incoming_weather)
+function ShowWeatherTransitionMessage(Weather current_weather, Weather incoming_weather, int region)
 	if IsRefInInterior(PlayerRef) || weather message setting != 2
+		return
+	endif
+
+	if incoming_weather == last_incoming_weather || incoming_weather == none
 		return
 	endif
 
@@ -356,7 +380,6 @@ function ShowWeatherTransitionMessage(Weather current_weather, Weather incoming_
 	int incoming_weatherclass = GetWeatherClassificationActual(incoming_weather)
 	bool current_weather_severe = IsWeatherSevere(current_weather)
 	bool incoming_weather_severe = IsWeatherSevere(incoming_weather)
-	int region = GetPlayerRegion()
 
 	if incoming_weatherclass == WEATHERCLASS_UNKNOWN || incoming_weatherclass == WEATHERCLASS_PLEASANT
 		if current_weatherclass == WEATHERCLASS_RAIN
