@@ -141,6 +141,24 @@ int function GetWeatherClassificationActual(Weather akWeather) global
     return 0
 endFunction
 
+bool function IsWeatherSevere(Weather akWeather) global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return -1
+    endif
+
+    if !akWeather
+        return false
+    endif
+
+    if Frostfall._Frost_SevereWeatherList.HasForm(akWeather)
+        return true
+    else
+        return false
+    endif
+endFunction
+
 ;/********f* FrostUtil/IsRefInOblivion
 * API VERSION ADDED
 * 1

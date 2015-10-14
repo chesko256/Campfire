@@ -1,5 +1,6 @@
 scriptname _Frost_ClimateSystem extends _Frost_BaseSystem
 
+import FrostUtil
 import _FrostInternal
 
 Actor property PlayerRef auto
@@ -14,6 +15,29 @@ FormList property _Frost_WorldspacesExteriorCoast auto
 FormList property _Frost_WorldspacesExteriorSnowy auto
 FormList property _Frost_WorldspacesExteriorOblivion auto
 FormList property _Frost_OvercastWeatherList auto
+
+Message property _Frost_WeatherTransMsg_ClearToFog1 auto
+Message property _Frost_WeatherTransMsg_ClearToFog2 auto
+Message property _Frost_WeatherTransMsg_ClearToFog3 auto
+Message property _Frost_WeatherTransMsg_ClearToFog4 auto
+Message property _Frost_WeatherTransMsg_ClearToFog5 auto
+Message property _Frost_WeatherTransMsg_ClearToFog6 auto
+Message property _Frost_WeatherTransMsg_ClearToFog7 auto
+Message property _Frost_WeatherTransMsg_RainToClear auto
+Message property _Frost_WeatherTransMsg_StormToClear auto
+Message property _Frost_WeatherTransMsg_SnowToClear auto
+Message property _Frost_WeatherTransMsg_BlizzardToClear auto
+Message property _Frost_WeatherTransMsg_RainToFog auto
+Message property _Frost_WeatherTransMsg_ClearToRain auto
+Message property _Frost_WeatherTransMsg_ClearToStorm auto
+Message property _Frost_WeatherTransMsg_FogToRain auto
+Message property _Frost_WeatherTransMsg_FogToStorm auto
+Message property _Frost_WeatherTransMsg_SnowToRain auto
+Message property _Frost_WeatherTransMsg_ClearToSnow auto
+Message property _Frost_WeatherTransMsg_ClearToSnowMountain auto
+Message property _Frost_WeatherTransMsg_ClearToSnowSevere auto
+Message property _Frost_WeatherTransMsg_RainToSnow auto
+Message property _Frost_WeatherTransMsg_RainToSnowSevere auto
 
 int property WEATHERCLASS_UNKNOWN 			= -1 	autoReadOnly
 int property WEATHERCLASS_PLEASANT 			= 0 	autoReadOnly
@@ -46,6 +70,8 @@ float pos_y
 float pos_z
 Worldspace ws
 Weather current_weather
+int current_temperature
+int max_temperature
 
 ; Public functions
 bool function IsRaining()
@@ -63,10 +89,21 @@ function UpdateClimateState()
 	pos_z = PlayerRef.GetPositionZ()
 	ws = PlayerRef.GetWorldSpace()
 
+	if Weather.GetCurrentWeatherTransition() >= 1.0								;No incoming weather.
+		bTransitioning = false
+		myIncomingWeather = none
+		myCurrWeatherClass = GetWeatherClassificationActual(wMyWeather)
+	else																		;Incoming weather.
+		bTransitioning = true
+		myIncomingWeather = wMyWeather
+		wMyWeather = Weather.GetOutgoingWeather()
+		myCurrWeatherClass = GetWeatherClassificationActual(wMyWeather)
+		myIncomingWeatherClass = GetWeatherClassificationActual(myIncomingWeather)
+	endif
+	
 	int region = GetPlayerRegion()
-	int current_temperature = GetCurrentTemperature()
-
-
+	max_temperature = GetMaxTemperatureByLocation()
+	current_temperature = GetCurrentTemperature()
 
 	if temp == -1
 		int base_temp = GetBaseTemperature()
@@ -94,15 +131,14 @@ Event OnTamrielRegionChange(int region, bool in_region)
 	endif
 endEvent
 
-int function GetCurrentTemperature()
+int function GetCurrentTemperature(Weather current_weather, int current_region)
 	if CampUtil.IsRefInInterior(PlayerRef)
 		return 10
 	endif
 
-	weather current_weather
 	int current_temperature = 10
-	int base_temperature = GetRegionBaselineTemperature(GetPlayerRegion())
-	int current_weather_class
+	int base_temperature = GetRegionBaselineTemperature(current_region)
+	int current_weather_class = GetWeatherClassificationActual(current_weather)
 	
 	if current_weather_class == WEATHERCLASS_UNKNOWN
 		current_temperature = (base_temperature - 2) - RandomInt(-1, 1)
@@ -134,7 +170,6 @@ int function GetCurrentTemperature()
 		endif
 	endif
 
-	max_temperature = GetMaxTemperatureByLocation()
 	if current_temperature > max_temperature
 		current_temperature = max_temperature
 	endif
@@ -312,6 +347,107 @@ int function GetWeatherClassificationActual(Weather akWeather)
 	endif
 endFunction
 
+function ShowWeatherTransitionMessage(Weather current_weather, Weather incoming_weather)
+	if IsRefInInterior(PlayerRef) || weather message setting != 2
+		return
+	endif
+
+	int current_weatherclass = GetWeatherClassificationActual(current_weather)
+	int incoming_weatherclass = GetWeatherClassificationActual(incoming_weather)
+	bool current_weather_severe = IsWeatherSevere(current_weather)
+	bool incoming_weather_severe = IsWeatherSevere(incoming_weather)
+	int region = GetPlayerRegion()
+
+	if incoming_weatherclass == WEATHERCLASS_UNKNOWN || incoming_weatherclass == WEATHERCLASS_PLEASANT
+		if current_weatherclass == WEATHERCLASS_RAIN
+			if current_weather_severe
+				FrostfallDebug(11, "Weather Transition INCOMING: CLEAR     OUTGOING: STORM")
+				_Frost_WeatherTransMsg_StormToClear.Show()
+			else
+				FrostfallDebug(11, "Weather Transition INCOMING: CLEAR     OUTGOING: RAIN")
+				_Frost_WeatherTransMsg_RainToClear.Show()
+			endif
+		elseif current_weatherclass == WEATHERCLASS_SNOW
+			if current_weather_severe
+				FrostfallDebug(11, "Weather Transition INCOMING: CLEAR     OUTGOING: BLIZZARD")
+				_Frost_WeatherTransMsg_BlizzardToClear.Show()
+			else
+				FrostfallDebug(11, "Weather Transition INCOMING: CLEAR     OUTGOING: SNOW")
+				_Frost_WeatherTransMsg_SnowToClear.Show()
+			endif
+		endif
+
+	elseif incoming_weatherclass == WEATHERCLASS_CLOUDY_OR_FOGGY
+		if current_weatherclass == WEATHERCLASS_UNKNOWN || current_weatherclass == WEATHERCLASS_PLEASANT
+			if region == REGION_UNKNOWN
+				_Frost_WeatherTransMsg_ClearToFog1.Show()
+			elseif region == REGION_PINEFOREST
+				_Frost_WeatherTransMsg_ClearToFog2.Show()
+			elseif region == REGION_VOLCANICTUNDRA
+				_Frost_WeatherTransMsg_ClearToFog3.Show()
+			elseif region == REGION_FALLFOREST
+				_Frost_WeatherTransMsg_ClearToFog4.Show()
+			elseif region == REGION_REACH
+				_Frost_WeatherTransMsg_ClearToFog5.Show()
+			elseif region == REGION_TUNDRAMARSH
+				_Frost_WeatherTransMsg_ClearToFog6.Show()
+			elseif region == REGION_COAST
+				_Frost_WeatherTransMsg_ClearToFog7.Show()
+			endif
+			FrostfallDebug(11, "Weather Transition INCOMING: FOG     OUTGOING: CLEAR")
+		elseif current_weatherclass == WEATHERCLASS_RAIN
+			_Frost_WeatherTransMsg_RainToFog.Show()
+			FrostfallDebug(11, "Weather Transition INCOMING: FOG     OUTGOING: RAIN")
+		endif
+
+	elseif incoming_weatherclass == WEATHERCLASS_RAIN
+		if current_weatherclass == WEATHERCLASS_UNKNOWN || current_weatherclass == WEATHERCLASS_PLEASANT
+			if incoming_weather_severe
+				_Frost_WeatherTransMsg_ClearToStorm.Show()
+				FrostfallDebug(11, "Weather Transition INCOMING: STORM     OUTGOING: CLEAR")
+			else
+				_Frost_WeatherTransMsg_ClearToRain.Show()
+				FrostfallDebug(11, "Weather Transition INCOMING: RAIN     OUTGOING: CLEAR")
+			endif
+		elseif current_weatherclass == WEATHERCLASS_CLOUDY_OR_FOGGY
+			if incoming_weather_severe
+				_Frost_WeatherTransMsg_FogToStorm.Show()
+				FrostfallDebug(11, "Weather Transition INCOMING: STORM     OUTGOING: FOG")
+			else
+				_Frost_WeatherTransMsg_FogToRain.Show()
+				FrostfallDebug(11, "Weather Transition INCOMING: RAIN     OUTGOING: FOG")
+			endif
+		elseif current_weatherclass == WEATHERCLASS_SNOW
+			_Frost_WeatherTransMsg_SnowToRain.Show()
+			FrostfallDebug(11, "Weather Transition INCOMING: RAIN     OUTGOING: SNOW")
+		endif
+	elseif incoming_weatherclass == WEATHERCLASS_SNOW
+		if current_weatherclass == WEATHERCLASS_UNKNOWN || current_weatherclass == WEATHERCLASS_PLEASANT
+			if incoming_weather_severe
+				if max_temperature != 100
+					_Frost_WeatherTransMsg_ClearToSnowMountain.Show()
+					FrostfallDebug(11, "Weather Transition INCOMING: MOUNTAIN BLIZZARD    OUTGOING: CLEAR")
+				else
+					_Frost_WeatherTransMsg_ClearToSnowSevere.Show()
+					FrostfallDebug(11, "Weather Transition INCOMING: BLIZZARD     OUTGOING: CLEAR")
+				endif
+			else
+				_Frost_WeatherTransMsg_ClearToSnow.Show()
+				FrostfallDebug(11, "Weather Transition INCOMING: SNOW     OUTGOING: CLEAR")
+			endif
+		elseif current_weatherclass == WEATHERCLASS_SNOW
+			if incoming_weather_severe
+				_Frost_WeatherTransMsg_RainToSnowSevere.Show()
+				FrostfallDebug(11, "Weather Transition INCOMING: BLIZZARD     OUTGOING: RAIN")
+			else
+				_Frost_WeatherTransMsg_RainToSnow.Show()
+				FrostfallDebug(11, "Weather Transition INCOMING: SNOW     OUTGOING: RAIN")
+			endif
+		endif
+	endif
+endFunction
+
+
 ;================================================================ Old code, to refactor
 int Function GetWeatherTemp()
 	Weather myIncomingWeather
@@ -416,108 +552,3 @@ int Function GetWeatherTemp()
 	;notification("Returning new weather temp " + myWeatherTemp)
 	return myWeatherTemp
 endFunction
-
-
-
-function ShowWeatherTransitionMsg(int myCurrWeatherClass, int myIncomingWeatherClass, int myRegion, bool bSevereWeather, bool bIncomingSevere, int myMaxTemp)
-	if !bInInterior && pSetting_MsgWeather
-		if myIncomingWeatherClass == -1 || myIncomingWeatherClass == 0
-			if myCurrWeatherClass == 2											;Clear weather is incoming, rainy weather is outgoing
-				if bSevereWeather == false
-					FrostfallDebug(4, "Weather Transition INCOMING: CLEAR     OUTGOING: RAIN")
-					_DE_Weather_RainToClear.Show()
-				else
-					FrostfallDebug(4, "Weather Transition INCOMING: CLEAR     OUTGOING: STORM")
-					_DE_Weather_StormToClear.Show()
-				endif
-			elseif myCurrWeatherClass == 3										;Clear weather is incoming, snowy weather is outgoing
-				if bSevereWeather == false
-					FrostfallDebug(4, "Weather Transition INCOMING: CLEAR     OUTGOING: SNOW")
-					_DE_Weather_SnowToClear.Show()
-				else
-					FrostfallDebug(4, "Weather Transition INCOMING: CLEAR     OUTGOING: BLIZZARD")
-					_DE_Weather_BlizzardToClear.Show()
-				endif
-			endif
-		elseif myIncomingWeatherClass == 1
-			if myCurrWeatherClass == -1 || myCurrWeatherClass == 0 				;fog incoming, clear outgoing
-				if myRegion == -1
-					_DE_Weather_ClearToFog1.Show()
-				elseif myRegion == 1	;Pine Forest
-					_DE_Weather_ClearToFog2.Show()
-				elseif myRegion == 2	;Volcanic Tundra
-					_DE_Weather_ClearToFog3.Show()
-				elseif myRegion == 3	;Fall Forest
-					_DE_Weather_ClearToFog4.Show()
-				elseif myRegion == 4	;Reach
-					_DE_Weather_ClearToFog5.Show()
-				elseif myRegion == 6	;Tundra Marsh
-					_DE_Weather_ClearToFog6.Show()
-				elseif myRegion == 7	;Coast
-					_DE_Weather_ClearToFog7.Show()
-				endif
-				;#Region Debug Message
-				if _DE_EPDebug.GetValueInt() == 1
-					FrostfallDebug(4, "Weather Transition INCOMING: FOG     OUTGOING: CLEAR")
-				endif
-				;#EndRegion
-			elseif myCurrWeatherClass == 2										;Fog incoming, rain outgoing
-				;#Region Debug Message
-				if _DE_EPDebug.GetValueInt() == 1
-					FrostfallDebug(4, "Weather Transition INCOMING: FOG     OUTGOING: RAIN")
-				endif
-				;#EndRegion
-				_DE_Weather_RainToFog.Show()
-			endif
-		elseif myIncomingWeatherClass == 2
-			if myCurrWeatherClass == -1 || myCurrWeatherClass == 0 				;Rain incoming, clear outgoing
-				if bIncomingSevere == false
-					FrostfallDebug(4, "Weather Transition INCOMING: RAIN     OUTGOING: CLEAR")
-					_DE_Weather_ClearToRain.Show()
-				else
-					FrostfallDebug(4, "Weather Transition INCOMING: STORM     OUTGOING: CLEAR")
-					_DE_Weather_ClearToStorm.Show()
-				endif
-			elseif myCurrWeatherClass == 1										;Rain incoming, fog outgoing
-				if bIncomingSevere == false
-					FrostfallDebug(4, "Weather Transition INCOMING: RAIN     OUTGOING: FOG")
-					_DE_Weather_FogToRain.Show()
-				else
-					FrostfallDebug(4, "Weather Transition INCOMING: STORM     OUTGOING: FOG")
-					_DE_Weather_FogToStorm.Show()
-				endif
-			elseif myCurrWeatherClass == 3										;Rain incoming, snow outgoing
-				;#Region Debug Message
-				if _DE_EPDebug.GetValueInt() == 1
-					FrostfallDebug(4, "Weather Transition INCOMING: RAIN     OUTGOING: SNOW")
-				endif
-				;#EndRegion
-				_DE_Weather_SnowToRain.Show()
-			endif
-		elseif myIncomingWeatherClass == 3
-			if myCurrWeatherClass == -1 || myCurrWeatherClass == 0 				;Snow incoming, clear outgoing
-				if bIncomingSevere == false
-					FrostfallDebug(4, "Weather Transition INCOMING: SNOW     OUTGOING: CLEAR")
-					_DE_Weather_ClearToSnow.Show()
-				else
-					if myMaxTemp != 100
-						FrostfallDebug(4, "Weather Transition INCOMING: MOUNTAIN BLIZZARD    OUTGOING: CLEAR")
-						_DE_Weather_ClearToSnowMountain.Show()
-					else
-						FrostfallDebug(4, "Weather Transition INCOMING: BLIZZARD     OUTGOING: CLEAR")
-						_DE_Weather_ClearToSnowSevere.Show()
-					endif
-				endif
-			elseif myCurrWeatherClass == 3										;Snow incoming, rain outgoing
-				if bIncomingSevere == false
-					FrostfallDebug(4, "Weather Transition INCOMING: SNOW     OUTGOING: RAIN")
-					_DE_Weather_RainToSnow.Show()
-				else
-					FrostfallDebug(4, "Weather Transition INCOMING: BLIZZARD     OUTGOING: RAIN")
-					_DE_Weather_RainToSnowSevere.Show()
-				endif
-			endif
-		endif
-	endif
-endFunction
-
