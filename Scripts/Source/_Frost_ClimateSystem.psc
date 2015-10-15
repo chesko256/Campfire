@@ -1,11 +1,17 @@
 scriptname _Frost_ClimateSystem extends _Frost_BaseSystem
 
+import CampUtil
 import FrostUtil
 import _FrostInternal
+import Utility
 
 Actor property PlayerRef auto
 
+_Frost_Compatibility property Compatibility auto
+
 GlobalVariable property _Frost_CurrentTemperature auto hidden
+GlobalVariable property _Frost_Setting_WeatherMessages auto
+
 FormList property _Frost_WorldspacesExteriorPineForest auto
 FormList property _Frost_WorldspacesExteriorVolcanicTundra auto
 FormList property _Frost_WorldspacesExteriorFallForest auto
@@ -39,6 +45,8 @@ Message property _Frost_WeatherTransMsg_ClearToSnowSevere auto
 Message property _Frost_WeatherTransMsg_RainToSnow auto
 Message property _Frost_WeatherTransMsg_RainToSnowSevere auto
 
+Worldspace property Tamriel auto
+
 int property WEATHERCLASS_UNKNOWN 			= -1 	autoReadOnly
 int property WEATHERCLASS_PLEASANT 			= 0 	autoReadOnly
 int property WEATHERCLASS_CLOUDY_OR_FOGGY 	= 1 	autoReadOnly
@@ -55,6 +63,10 @@ int property REGION_TUNDRAMARSH 			= 6 	autoReadOnly
 int property REGION_COAST 					= 7 	autoReadOnly
 int property REGION_SNOW 					= 8 	autoReadOnly
 int property REGION_OBLIVION 				= 9 	autoReadOnly
+int property REGION_FALMERVALLEY 			= 10	autoReadOnly
+int property REGION_SOLSTHEIM 				= 11	autoReadOnly
+int property REGION_WYRMSTOOTH 				= 20	autoReadOnly
+int property REGION_DARKEND 				= 21	autoReadOnly
 
 bool in_region_pineforest = false
 bool in_region_volcanictundra = false
@@ -69,13 +81,11 @@ float pos_x
 float pos_y
 float pos_z
 Worldspace ws
-Weather current_weather
-Weather last_current_weather
-Weather last_incoming_weather
-int current_temperature
+int current_max_temperature
 int last_region
 int last_current_temperature
-int max_temperature
+Weather last_incoming_weather
+Weather last_current_weather
 
 ; Public functions
 bool function IsRaining()
@@ -86,9 +96,15 @@ bool function IsSnowing()
 
 endFunction
 
+function Update()
+	UpdateClimateState()
+endFunction
+
 function UpdateClimateState()
-	
+	Weather current_weather
 	Weather incoming_weather
+	int current_temperature
+
 	pos_x = PlayerRef.GetPositionX()
 	pos_y = PlayerRef.GetPositionY()
 	pos_z = PlayerRef.GetPositionZ()
@@ -103,21 +119,28 @@ function UpdateClimateState()
 		incoming_weather = none
 		current_weather = Weather.GetCurrentWeather()
 	endif
-	
-	max_temperature = GetMaxTemperatureByLocation()
-	current_temperature = GetCurrentTemperature(current_weather, region)
-
-	; huh?
-	;if temp == -1
-	;	int base_temp = GetRegionBaselineTemperature(region)
-	;	temp = GetWeatherTemperature(base_temp)
-	;endif
 
 	ShowWeatherTransitionMessage(current_weather, incoming_weather, region)
+
+	current_max_temperature = GetMaxTemperatureByLocation()
+	
+	; To calculate temperature, always use the incoming weather if present.
+	if transitioning
+		current_temperature = GetCurrentTemperature(incoming_weather, region)
+	else
+		current_temperature = GetCurrentTemperature(current_weather, region)
+	endif
+	FrostDebug(0, "%%%% Climate ::: Current Temp: " + current_temperature + ", Region: " + region)
+
+	; Historical values
+	last_current_weather = current_weather
+	last_incoming_weather = incoming_weather
+	last_current_temperature = current_temperature
+	last_region = region
 endFunction
 
 bool function IsWeatherTransitioning()
-	return !Weather.GetCurrentWeatherTransition() >= 1.0
+	return !(Weather.GetCurrentWeatherTransition() >= 1.0)
 endFunction
 
 Event OnTamrielRegionChange(int region, bool in_region)
@@ -140,25 +163,25 @@ Event OnTamrielRegionChange(int region, bool in_region)
 	endif
 endEvent
 
-int function GetCurrentTemperature(Weather current_weather, int region)
+int function GetCurrentTemperature(Weather this_weather, int region)
 	; Don't increase exposure when indoors.
 	if CampUtil.IsRefInInterior(PlayerRef)
 		return 10
 	endif
 
 	; Don't increase exposure in Oblivion.
-	if current_region == REGION_OBLIVION
+	if region == REGION_OBLIVION
 		return 10
 	endif
 
 	; Don't recalculate if the weather or region hasn't changed.
-	if current_weather == last_current_weather && region == last_region
+	if this_weather == last_current_weather && region == last_region
 		return last_current_temperature
 	endif
 
 	int current_temperature = 10
 	int base_temperature = GetRegionBaselineTemperature(region)
-	int current_weather_class = GetWeatherClassificationActual(current_weather)
+	int current_weather_class = GetWeatherClassificationActual(this_weather)
 	
 	if current_weather_class == WEATHERCLASS_UNKNOWN
 		current_temperature = (base_temperature - 2) - RandomInt(-1, 1)
@@ -170,14 +193,14 @@ int function GetCurrentTemperature(Weather current_weather, int region)
 		current_temperature = (base_temperature - 3) - RandomInt(-1, 1)
 
 	elseif current_weather_class == WEATHERCLASS_RAIN
-		if IsWeatherSevere(current_weather)
+		if IsWeatherSevere(this_weather)
 			current_temperature = (base_temperature - 7) - RandomInt(-1, 3)
 		else
 			current_temperature = (base_temperature - 5) - RandomInt(-1, 1)
 		endif
 
 	elseif current_weather_class == WEATHERCLASS_SNOW
-		if IsWeatherSevere(current_weather)
+		if IsWeatherSevere(this_weather)
 			current_temperature = (base_temperature - 15) - RandomInt(-2, 2)
 			if current_temperature > -10
 				current_temperature = -10
@@ -190,8 +213,8 @@ int function GetCurrentTemperature(Weather current_weather, int region)
 		endif
 	endif
 
-	if current_temperature > max_temperature
-		current_temperature = max_temperature
+	if current_temperature > current_max_temperature
+		current_temperature = current_max_temperature
 	endif
 
 	return current_temperature
@@ -277,28 +300,16 @@ int function GetRegionBaselineTemperature(int region)
 		return 16
 	
 	;			####Official DLC Compatibility####
-	elseif region == 10					;DLC1 Worldspace
-		return Compatibility.GetPlayerRegionTempDLC1(flvLastPosX, flvLastPosY)
-	elseif region == 11
-		return Compatibility.GetPlayerRegionTempDLC2(flvLastPosX, flvLastPosY)
-	elseif region == 12
-		return Compatibility.GetPlayerRegionTempDLC3(flvLastPosX, flvLastPosY)
-	elseif region == 13
-		return Compatibility.GetPlayerRegionTempDLC4(flvLastPosX, flvLastPosY)
+	elseif region == REGION_FALMERVALLEY
+		return Compatibility.GetPlayerRegionTemp_FalmerValley(pos_x, pos_y)
+	elseif region == REGION_SOLSTHEIM
+		return Compatibility.GetPlayerRegionTemp_Solstheim(pos_x, pos_y)
 	
 	;			####Landmass Mod Compatibility####
-	elseif region == 20
-		return Compatibility.GetPlayerRegionTempMod1(flvLastPosX, flvLastPosY)
-	elseif region == 21
-		return Compatibility.GetPlayerRegionTempMod2(flvLastPosX, flvLastPosY)
-	elseif region == 22
-		return Compatibility.GetPlayerRegionTempMod3(flvLastPosX, flvLastPosY)
-	elseif region == 23
-		return Compatibility.GetPlayerRegionTempMod4(flvLastPosX, flvLastPosY)
-	elseif region == 24
-		return Compatibility.GetPlayerRegionTempMod5(flvLastPosX, flvLastPosY)
-	elseif region == 25
-		return Compatibility.GetPlayerRegionTempMod6(flvLastPosX, flvLastPosY)
+	elseif region == REGION_WYRMSTOOTH
+		return Compatibility.GetPlayerRegionTemp_Wyrmstooth(pos_x, pos_y)
+	elseif region == REGION_DARKEND
+		return Compatibility.GetPlayerRegionTemp_Darkend(pos_x, pos_y)
 	endif
 endFunction
 
@@ -321,26 +332,14 @@ int function GetPlayerRegion()
 		return REGION_SNOW
 	elseif _Frost_WorldspacesExteriorOblivion.HasForm(ws)
 		return REGION_OBLIVION
-	elseif Compatibility.isDLC1Loaded && ws == Compatibility.DLC1WS
-		return 10
-	elseif Compatibility.isDLC2Loaded && ws == Compatibility.DLC2WS
-		return 11
-	elseif Compatibility.isDLC3Loaded && ws == Compatibility.DLC3WS
-		return 12
-	elseif Compatibility.isDLC4Loaded && ws == Compatibility.DLC4WS
-		return 13
-	elseif Compatibility.isMod1Loaded && ws == Compatibility.Mod1WS
-		return 20
-	elseif Compatibility.isMod2Loaded && ws == Compatibility.Mod2WS
-		return 21
-	elseif Compatibility.isMod3Loaded && ws == Compatibility.Mod3WS
-		return 22
-	elseif Compatibility.isMod4Loaded && ws == Compatibility.Mod4WS
-		return 23
-	elseif Compatibility.isMod5Loaded && ws == Compatibility.Mod5WS
-		return 24
-	elseif Compatibility.isMod6Loaded && ws == Compatibility.Mod6WS
-		return 25
+	elseif Compatibility.isDLC1Loaded && ws == Compatibility.WS_FalmerValley
+		return REGION_FALMERVALLEY
+	elseif Compatibility.isDLC2Loaded && ws == Compatibility.WS_Solstheim
+		return REGION_SOLSTHEIM
+	elseif Compatibility.isWTHLoaded && ws == Compatibility.WS_Wyrmstooth
+		return REGION_WYRMSTOOTH
+	elseif Compatibility.isDRKLoaded && ws == Compatibility.WS_Darkend
+		return REGION_DARKEND
 	else
 		return -1
 	endif
@@ -368,7 +367,7 @@ int function GetWeatherClassificationActual(Weather akWeather)
 endFunction
 
 function ShowWeatherTransitionMessage(Weather current_weather, Weather incoming_weather, int region)
-	if IsRefInInterior(PlayerRef) || weather message setting != 2
+	if IsRefInInterior(PlayerRef) || _Frost_Setting_WeatherMessages.GetValueInt() != 2
 		return
 	endif
 
@@ -384,18 +383,18 @@ function ShowWeatherTransitionMessage(Weather current_weather, Weather incoming_
 	if incoming_weatherclass == WEATHERCLASS_UNKNOWN || incoming_weatherclass == WEATHERCLASS_PLEASANT
 		if current_weatherclass == WEATHERCLASS_RAIN
 			if current_weather_severe
-				FrostfallDebug(11, "Weather Transition INCOMING: CLEAR     OUTGOING: STORM")
+				FrostDebug(1, "%%%% Climate ::: Weather Transition INCOMING: CLEAR     OUTGOING: STORM")
 				_Frost_WeatherTransMsg_StormToClear.Show()
 			else
-				FrostfallDebug(11, "Weather Transition INCOMING: CLEAR     OUTGOING: RAIN")
+				FrostDebug(1, "%%%% Climate ::: Weather Transition INCOMING: CLEAR     OUTGOING: RAIN")
 				_Frost_WeatherTransMsg_RainToClear.Show()
 			endif
 		elseif current_weatherclass == WEATHERCLASS_SNOW
 			if current_weather_severe
-				FrostfallDebug(11, "Weather Transition INCOMING: CLEAR     OUTGOING: BLIZZARD")
+				FrostDebug(1, "%%%% Climate ::: Weather Transition INCOMING: CLEAR     OUTGOING: BLIZZARD")
 				_Frost_WeatherTransMsg_BlizzardToClear.Show()
 			else
-				FrostfallDebug(11, "Weather Transition INCOMING: CLEAR     OUTGOING: SNOW")
+				FrostDebug(1, "%%%% Climate ::: Weather Transition INCOMING: CLEAR     OUTGOING: SNOW")
 				_Frost_WeatherTransMsg_SnowToClear.Show()
 			endif
 		endif
@@ -417,161 +416,55 @@ function ShowWeatherTransitionMessage(Weather current_weather, Weather incoming_
 			elseif region == REGION_COAST
 				_Frost_WeatherTransMsg_ClearToFog7.Show()
 			endif
-			FrostfallDebug(11, "Weather Transition INCOMING: FOG     OUTGOING: CLEAR")
+			FrostDebug(1, "%%%% Climate ::: Weather Transition INCOMING: FOG     OUTGOING: CLEAR")
 		elseif current_weatherclass == WEATHERCLASS_RAIN
 			_Frost_WeatherTransMsg_RainToFog.Show()
-			FrostfallDebug(11, "Weather Transition INCOMING: FOG     OUTGOING: RAIN")
+			FrostDebug(1, "%%%% Climate ::: Weather Transition INCOMING: FOG     OUTGOING: RAIN")
 		endif
 
 	elseif incoming_weatherclass == WEATHERCLASS_RAIN
 		if current_weatherclass == WEATHERCLASS_UNKNOWN || current_weatherclass == WEATHERCLASS_PLEASANT
 			if incoming_weather_severe
 				_Frost_WeatherTransMsg_ClearToStorm.Show()
-				FrostfallDebug(11, "Weather Transition INCOMING: STORM     OUTGOING: CLEAR")
+				FrostDebug(1, "%%%% Climate ::: Weather Transition INCOMING: STORM     OUTGOING: CLEAR")
 			else
 				_Frost_WeatherTransMsg_ClearToRain.Show()
-				FrostfallDebug(11, "Weather Transition INCOMING: RAIN     OUTGOING: CLEAR")
+				FrostDebug(1, "%%%% Climate ::: Weather Transition INCOMING: RAIN     OUTGOING: CLEAR")
 			endif
 		elseif current_weatherclass == WEATHERCLASS_CLOUDY_OR_FOGGY
 			if incoming_weather_severe
 				_Frost_WeatherTransMsg_FogToStorm.Show()
-				FrostfallDebug(11, "Weather Transition INCOMING: STORM     OUTGOING: FOG")
+				FrostDebug(1, "%%%% Climate ::: Weather Transition INCOMING: STORM     OUTGOING: FOG")
 			else
 				_Frost_WeatherTransMsg_FogToRain.Show()
-				FrostfallDebug(11, "Weather Transition INCOMING: RAIN     OUTGOING: FOG")
+				FrostDebug(1, "%%%% Climate ::: Weather Transition INCOMING: RAIN     OUTGOING: FOG")
 			endif
 		elseif current_weatherclass == WEATHERCLASS_SNOW
 			_Frost_WeatherTransMsg_SnowToRain.Show()
-			FrostfallDebug(11, "Weather Transition INCOMING: RAIN     OUTGOING: SNOW")
+			FrostDebug(1, "%%%% Climate ::: Weather Transition INCOMING: RAIN     OUTGOING: SNOW")
 		endif
 	elseif incoming_weatherclass == WEATHERCLASS_SNOW
 		if current_weatherclass == WEATHERCLASS_UNKNOWN || current_weatherclass == WEATHERCLASS_PLEASANT
 			if incoming_weather_severe
-				if max_temperature != 100
+				if current_max_temperature != 100
 					_Frost_WeatherTransMsg_ClearToSnowMountain.Show()
-					FrostfallDebug(11, "Weather Transition INCOMING: MOUNTAIN BLIZZARD    OUTGOING: CLEAR")
+					FrostDebug(1, "%%%% Climate ::: Weather Transition INCOMING: MOUNTAIN BLIZZARD    OUTGOING: CLEAR")
 				else
 					_Frost_WeatherTransMsg_ClearToSnowSevere.Show()
-					FrostfallDebug(11, "Weather Transition INCOMING: BLIZZARD     OUTGOING: CLEAR")
+					FrostDebug(1, "%%%% Climate ::: Weather Transition INCOMING: BLIZZARD     OUTGOING: CLEAR")
 				endif
 			else
 				_Frost_WeatherTransMsg_ClearToSnow.Show()
-				FrostfallDebug(11, "Weather Transition INCOMING: SNOW     OUTGOING: CLEAR")
+				FrostDebug(1, "%%%% Climate ::: Weather Transition INCOMING: SNOW     OUTGOING: CLEAR")
 			endif
 		elseif current_weatherclass == WEATHERCLASS_SNOW
 			if incoming_weather_severe
 				_Frost_WeatherTransMsg_RainToSnowSevere.Show()
-				FrostfallDebug(11, "Weather Transition INCOMING: BLIZZARD     OUTGOING: RAIN")
+				FrostDebug(1, "%%%% Climate ::: Weather Transition INCOMING: BLIZZARD     OUTGOING: RAIN")
 			else
 				_Frost_WeatherTransMsg_RainToSnow.Show()
-				FrostfallDebug(11, "Weather Transition INCOMING: SNOW     OUTGOING: RAIN")
+				FrostDebug(1, "%%%% Climate ::: Weather Transition INCOMING: SNOW     OUTGOING: RAIN")
 			endif
 		endif
 	endif
-endFunction
-
-
-;================================================================ Old code, to refactor
-int Function GetWeatherTemp()
-	Weather myIncomingWeather
-	int myCurrWeatherClass
-	int myIncomingWeatherClass
-	bool bSevereWeather = false
-	bool bIncomingSevere = false
-	int myWeatherTemp
-	int myBaseTemp
-	bool bTransitioning
-	
-	if Weather.GetCurrentWeatherTransition() >= 1.0								;No incoming weather.
-		bTransitioning = false
-		myIncomingWeather = none
-		myCurrWeatherClass = GetWeatherClassificationActual(wMyWeather)
-	else																		;Incoming weather.
-		bTransitioning = true
-		myIncomingWeather = wMyWeather
-		wMyWeather = Weather.GetOutgoingWeather()
-		myCurrWeatherClass = GetWeatherClassificationActual(wMyWeather)
-		myIncomingWeatherClass = GetWeatherClassificationActual(myIncomingWeather)
-	endif
-	
-	int myRegion = GetPlayerRegion()
-	
-	if myRegion == 9
-		myCurrWeatherClass = 0				;Reset the weather class to 0 to avoid losing EP in planes of Oblivion (Soul Cairn, Apocrypha, etc)
-	endif
-	
-	myBaseTemp = GetBaseTemp(myRegion)
-	
-	;Is the current weather severe?
-	if wMyWeather != none
-		if _DE_SevereWeatherList.HasForm(wMyWeather)
-			bSevereWeather = true
-		endif
-	endif
-	
-	;Is the incoming weather severe?
-	if myIncomingWeather != none
-		if _DE_SevereWeatherList.HasForm(myIncomingWeather)
-			bIncomingSevere = true
-		endif
-	endif	
-	
-	if myIncomingWeather != myLastIncomingWeather && myIncomingWeather != none
-		ShowWeatherTransitionMsg(myCurrWeatherClass, myIncomingWeatherClass, myRegion, bSevereWeather, bIncomingSevere, myMaxTemp)
-	endif
-		
-	myLastIncomingWeather = myIncomingWeather
-	
-	;Switch the Current Weather Class to the Incoming Weather Class if necessary for determining temperature.
-	if bTransitioning
-		wMyWeather = myIncomingWeather
-		myCurrWeatherClass = myIncomingWeatherClass
-	endif
-	
-	;Is this the same weather and region from the previous update? If so, don't recalculate
-	if wMyWeather == myLastWeather && myRegion == myLastRegion
-		return myLastWeatherTemp
-	endif	
-	
-	;Check for Worldspace Exception; if none, determine weather temperature
-	if myCurrWeatherClass == -1 											;no classification
-		myWeatherTemp = (myBaseTemp - 2) - RandomInt(-1, 1)
-		_DE_BadWeather.SetValue(0.0)
-	elseif myCurrWeatherClass == 0 											;pleasant
-		myWeatherTemp = myBaseTemp - RandomInt(-1, 2)
-		_DE_BadWeather.SetValue(0.0)
-	elseif myCurrWeatherClass == 1 											;cloudy (foggy)
-		myWeatherTemp = (myBaseTemp - 3) - RandomInt(-1, 1)
-		_DE_BadWeather.SetValue(0.0)
-	elseif myCurrWeatherClass == 2 											;rainy
-		if bSevereWeather == false											;mild rain
-			myWeatherTemp = (myBaseTemp - 5) - RandomInt(-1, 1)
-			_DE_BadWeather.SetValue(1.0)
-		else																;severe rain
-			myWeatherTemp = (myBaseTemp - 7) - RandomInt(-1, 3)
-			_DE_BadWeather.SetValue(2.0)
-		endif
-	elseif myCurrWeatherClass == 3										 	;snowy
-		if bSevereWeather == false											;mild snow
-			myWeatherTemp = (myBaseTemp - 5) - RandomInt(-2, 2)
-			if myWeatherTemp > -5
-				myWeatherTemp = -5
-			endif
-			_DE_BadWeather.SetValue(3.0)
-		else																;snowstorm
-			myWeatherTemp = (myBaseTemp - 15) - RandomInt(-2, 2)
-			if myWeatherTemp > -10
-				myWeatherTemp = -10
-			endif
-			_DE_BadWeather.SetValue(4.0)
-		endif
-	endif
-
-	;Store the last weather and temperature
-	myLastWeather = wMyWeather
-	myLastWeatherTemp = myWeatherTemp
-	myLastRegion = myRegion
-	
-	;notification("Returning new weather temp " + myWeatherTemp)
-	return myWeatherTemp
 endFunction
