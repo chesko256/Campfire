@@ -11,7 +11,9 @@ endFunction
 function FrostDebug(int aiSeverity, string asLogMessage) global
 	int LOG_LEVEL = (Game.GetFormFromFile(0x0006458F, "Frostfall.esp") as GlobalVariable).GetValueInt()
 	if LOG_LEVEL <= 3 && LOG_LEVEL <= aiSeverity
-		if aiSeverity == 0
+		if aiSeverity == -1
+			debug.trace("[Frostfall][SystemPerformance] " + asLogMessage)
+		elseif aiSeverity == 0
 			debug.trace("[Frostfall][Debug] " + asLogMessage)
 		elseif aiSeverity == 1
 			debug.trace("[Frostfall][Info] " + asLogMessage)

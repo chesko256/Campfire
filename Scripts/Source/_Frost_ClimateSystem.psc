@@ -100,6 +100,10 @@ function Update()
 	UpdateClimateState()
 endFunction
 
+function RegisterForEvents()
+	RegisterForModEvent("Frost_OnTamrielRegionChange", "OnTamrielRegionChange")
+endFunction
+
 function UpdateClimateState()
 	Weather current_weather
 	Weather incoming_weather
