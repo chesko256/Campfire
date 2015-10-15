@@ -12,7 +12,7 @@ Event OnInit()
 endEvent
 
 function StartSystem()
-	FrostDebug(0, "StartSystem " + self)
+	FrostDebug(-1, "StartSystem " + self)
 	if !self.IsRunning()
 		self.Start()
 	endif
@@ -33,7 +33,7 @@ Event OnUpdate()
 	Update()
 	if UpdateFrequencyGlobal
 		RegisterForSingleUpdate(UpdateFrequencyGlobal.GetValue())
-		FrostDebug(0, self + " update finished in " + ((Game.GetRealHoursPassed() - start_time) * 3600.0) + " seconds.")
+		FrostDebug(-1, self + " update finished in " + ((Game.GetRealHoursPassed() - start_time) * 3600.0) + " seconds.")
 	endif
 endEvent
 
