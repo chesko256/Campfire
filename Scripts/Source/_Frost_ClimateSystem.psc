@@ -9,7 +9,7 @@ Actor property PlayerRef auto
 
 _Frost_Compatibility property Compatibility auto
 
-GlobalVariable property _Frost_CurrentTemperature auto hidden
+GlobalVariable property _Frost_CurrentTemperature auto
 GlobalVariable property _Frost_Setting_WeatherMessages auto
 
 FormList property _Frost_WorldspacesExteriorPineForest auto
@@ -134,7 +134,9 @@ function UpdateClimateState()
 	else
 		current_temperature = GetCurrentTemperature(current_weather, region)
 	endif
+	
 	FrostDebug(0, "%%%% Climate ::: Current Temp: " + current_temperature + ", Region: " + region)
+	_Frost_CurrentTemperature.SetValueInt(current_temperature)
 
 	; Historical values
 	last_current_weather = current_weather
