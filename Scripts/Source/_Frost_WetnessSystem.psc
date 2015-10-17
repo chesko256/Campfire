@@ -4,7 +4,7 @@ import CampUtil
 import FrostUtil
 import _FrostInternal
 
-float property RAIN_PROTECTION_CAP = 343.0 autoReadOnly
+float property COVERAGE_CAP     = 343.0 autoReadOnly
 float property WET_SPEED 		= 27.0 autoReadOnly 		; Wetness gained when standing in rain.
 float property DRY_SPEED 		= -6.25 autoReadOnly 		; Wetness lost ambiently.
 float property DRYFIRE_SPEED 	= -75.0 autoReadOnly 		; Wetness lost near fires.
@@ -217,7 +217,7 @@ function GetWetter(float limit)
 			time_delta_seconds = (update_freq * 2)
 		endif
 
-		float rain_protect_modifier = 1.0 - (((GetPlayerArmorRainProtection() * 80.0) / RAIN_PROTECTION_CAP) / 100.0)
+		float rain_protect_modifier = 1.0 - (((GetPlayerArmorCoverage() * 80.0) / COVERAGE_CAP) / 100.0)
 		float amount = ((WET_SPEED * time_delta_seconds) / update_freq) * rain_protect_modifier
 
 		FrostDebug(1, "~~~~ Wetness ::: GetWetter : Limit " + limit + ", Rain protection modifier " + rain_protect_modifier)
