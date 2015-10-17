@@ -535,7 +535,7 @@ function AddStartupSpells()
 	endif
 	/;
 
-	;PlayerRef.AddSpell(_Frost_WetVFXSpell, false)
+	((self as ReferenceAlias) as _Frost_PlayerFrostResistMonitor).UpdateFrostResistBonus()
 endFunction
 
 function RegisterForKeysOnLoad()
