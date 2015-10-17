@@ -22,6 +22,6 @@ function UpdateFrostResistBonus()
 	endif
 	_Frost_FrostResistBonusSpell.SetNthEffectMagnitude(0, amount)
 	PlayerRef.RemoveSpell(_Frost_FrostResistBonusSpell)
-	Utility.Wait(0.1)
+	Utility.WaitMenuMode(0.1)
 	PlayerRef.AddSpell(_Frost_FrostResistBonusSpell, false)
 endFunction
