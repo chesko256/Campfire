@@ -21,7 +21,7 @@ endFunction
 
 Event OnMenuOpen(string menuName)
 	if menuName == "InventoryMenu"
-		UpdateBottomBarInfo(GetPlayerArmorExposureProtection(), GetPlayerArmorRainProtection())
+		UpdateBottomBarInfo(GetPlayerArmorWarmth(), GetPlayerArmorCoverage())
 	endif
 EndEvent
 
@@ -34,7 +34,7 @@ Event OnSkyUIInvListSelectChangeArmor(string asEventName, string asArg, float af
 	endif
 	locked = true
 
-	UpdateBottomBarInfo(GetPlayerArmorExposureProtection(), GetPlayerArmorRainProtection())
+	UpdateBottomBarInfo(GetPlayerArmorWarmth(), GetPlayerArmorCoverage())
 	UpdateItemCardInfo(-1, -1)
 		
 	WaitForSelectionSettle()
@@ -88,25 +88,25 @@ function SetItemCardValues()
 	endWhile
 endFunction
 
-Event UpdateBottomBarInfo(int aiExposureProtection, int aiRainProtection)
+Event UpdateBottomBarInfo(int aiWarmth, int aiCoverage)
 	if UI.IsMenuOpen("InventoryMenu")
-		UI.SetString("InventoryMenu", "_root.Menu_mc.bottomBar.frostInfoCard.ExposureProtectionValue.text", aiExposureProtection)
-		UI.SetString("InventoryMenu", "_root.Menu_mc.bottomBar.frostInfoCard.RainProtectionValue.text", aiRainProtection)
+		UI.SetString("InventoryMenu", "_root.Menu_mc.bottomBar.frostInfoCard.ExposureProtectionValue.text", aiWarmth)
+		UI.SetString("InventoryMenu", "_root.Menu_mc.bottomBar.frostInfoCard.RainProtectionValue.text", aiCoverage)
 	elseif UI.IsMenuOpen("Crafting Menu")
-		UI.SetString("Crafting Menu", "_root.Menu.BottomBarInfo.frostInfoCard.ExposureProtectionValue.text", aiExposureProtection)
-		UI.SetString("Crafting Menu", "_root.Menu.bottomBarInfo.frostInfoCard.RainProtectionValue.text", aiRainProtection)
+		UI.SetString("Crafting Menu", "_root.Menu.BottomBarInfo.frostInfoCard.ExposureProtectionValue.text", aiWarmth)
+		UI.SetString("Crafting Menu", "_root.Menu.bottomBarInfo.frostInfoCard.RainProtectionValue.text", aiCoverage)
 	endif
 endEvent
 
-function UpdateItemCardInfo(int aiExposureProtection, int aiRainProtection)
+function UpdateItemCardInfo(int aiWarmth, int aiCoverage)
 	string exp_val
 	string rain_val
-	if aiExposureProtection == -1
+	if aiWarmth == -1
 		exp_val = ""
 		rain_val = ""
 	else
-		exp_val = aiExposureProtection
-		rain_val = aiRainProtection
+		exp_val = aiWarmth
+		rain_val = aiCoverage
 	endif
 
 	if UI.IsMenuOpen("InventoryMenu")
