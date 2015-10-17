@@ -4,8 +4,6 @@ import FrostUtil
 
 Actor property PlayerRef auto
 GlobalVariable property _Frost_AttributeWarmth auto
-;@TODO: Conditionalize this on the player alias instead
-; Spell property _Frost_TorchState_Spell auto
 
 int current_food_bonus
 int current_spell_bonus

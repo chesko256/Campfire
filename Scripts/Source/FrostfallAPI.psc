@@ -1,5 +1,6 @@
 scriptname FrostfallAPI extends Quest
 
+_Frost_ExposureSystem property Exposure auto
 _Frost_Compatibility property Compatibility auto
 _Frost_HeatSourceSystem property HeatSource auto
 _Frost_WetnessSystem property Wetness auto

@@ -4,6 +4,15 @@ FrostfallAPI function GetAPI() global
     return (Game.GetFormFromFile(0x00064590, "Frostfall.esp") as Quest) as FrostfallAPI
 endFunction
 
+_Frost_ExposureSystem function GetExposureSystem() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.Exposure
+endFunction
+
 _Frost_ClothingSystem function GetClothingSystem() global
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
