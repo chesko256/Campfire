@@ -47,7 +47,7 @@ function ObjectEquipped(Form akBaseObject, int iGearType)
     
     HandleEquippedObject(akBaseObject, iGearType)
 
-    SendEvent_UpdateBottomBarInfo(GetArmorExposureProtection(), GetArmorRainProtection())
+    SendEvent_UpdateBottomBarInfo(GetArmorWarmth(), GetArmorCoverage())
     FrostDebug(0, "Armor protection report: BODY(" + body_exposure_protection + ", " + body_rain_protection +       \
                                             ") HANDS(" + hands_exposure_protection + ", " + hands_rain_protection + \
                                             ") HEAD(" + head_exposure_protection + ", " + head_rain_protection +    \
@@ -138,7 +138,7 @@ function ObjectUnequipped(Form akBaseObject, int iGearType)
     HandleUnequippedObject(akBaseObject, iGearType)
     unequip_lock = false
 
-    SendEvent_UpdateBottomBarInfo(GetArmorExposureProtection(), GetArmorRainProtection())
+    SendEvent_UpdateBottomBarInfo(GetArmorWarmth(), GetArmorCoverage())
     FrostDebug(0, "Armor protection report: BODY(" + body_exposure_protection + ", " + body_rain_protection +       \
                                             ") HANDS(" + hands_exposure_protection + ", " + hands_rain_protection + \
                                             ") HEAD(" + head_exposure_protection + ", " + head_rain_protection +    \
@@ -187,14 +187,14 @@ function HandleUnequippedObject(Form akBaseObject, int iGearType)
     endif
 endFunction
 
-int function GetArmorExposureProtection()
+int function GetArmorWarmth()
     int total = body_exposure_protection + hands_exposure_protection + \
                 head_exposure_protection + feet_exposure_protection + \
                 cloak_exposure_protection
     return total
 endFunction
 
-int function GetArmorRainProtection()
+int function GetArmorCoverage()
     int total = body_rain_protection + hands_rain_protection + \
                 head_rain_protection + feet_rain_protection + \
                 cloak_rain_protection
@@ -202,7 +202,7 @@ int function GetArmorRainProtection()
 endFunction
 
 
-function SendEvent_UpdateBottomBarInfo(int aiExposureProtection, int aiRainProtection)
+function SendEvent_UpdateBottomBarInfo(int aiWarmth, int aiCoverage)
     if _Frost_DatastoreInitialized.GetValueInt() != 2
         return
     endif
@@ -210,8 +210,8 @@ function SendEvent_UpdateBottomBarInfo(int aiExposureProtection, int aiRainProte
     FrostDebug(0, "Sending event Frost_UpdateBottomBarInfo")
     int handle = ModEvent.Create("Frost_UpdateBottomBarInfo")
     if handle
-        ModEvent.PushInt(handle, aiExposureProtection)
-        ModEvent.PushInt(handle, aiRainProtection)
+        ModEvent.PushInt(handle, aiWarmth)
+        ModEvent.PushInt(handle, aiCoverage)
         ModEvent.Send(handle)
     endif
 endFunction
