@@ -1,10 +1,12 @@
 scriptname _Frost_WarmthSystem extends _Frost_BaseSystem
 
 import FrostUtil
+import _FrostInternal
 
 Actor property PlayerRef auto
 GlobalVariable property _Frost_AttributeWarmth auto
 GlobalVariable property _Frost_PerkRank_Adaptation auto
+GlobalVariable property _Frost_DatastoreInitialized auto
 
 int current_food_bonus
 int current_spell_bonus
@@ -16,8 +18,6 @@ function RegisterForEvents()
 endFunction
 
 Event UpdateWarmth()
-	; Should push results up to the UI
-
 	int warmth
 	warmth += GetClothingSystem().GetArmorWarmth()
 	warmth += GetTorchBonus()
@@ -28,6 +28,7 @@ Event UpdateWarmth()
 	; spells
 	_FrostInternal.FrostDebug(0, "**** Warmth ::: Warmth Value: " + warmth)
 	_Frost_AttributeWarmth.SetValueInt(warmth)
+	SendEvent_UpdateBottomBarWarmth(warmth)
 endEvent
 
 Event SoupEffectStart()
@@ -54,4 +55,17 @@ int function GetFrostResistBonus()
 		bonus = 50
 	endif
 	return bonus
+endFunction
+
+function SendEvent_UpdateBottomBarWarmth(int aiWarmth)
+    if _Frost_DatastoreInitialized.GetValueInt() != 2
+        return
+    endif
+
+    FrostDebug(0, "Sending event Frost_UpdateBottomBarWarmth")
+    int handle = ModEvent.Create("Frost_UpdateBottomBarWarmth")
+    if handle
+        ModEvent.PushInt(handle, aiWarmth)
+        ModEvent.Send(handle)
+    endif
 endFunction

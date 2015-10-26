@@ -551,6 +551,7 @@ function RegisterForEventsOnLoad()
 	GetWetnessSystem().RegisterForEvents()
 	GetClimateSystem().RegisterForEvents()
 	GetWarmthSystem().RegisterForEvents()
+	GetCoverageSystem().RegisterForEvents()
 endFunction
 
 int function GetPlayerRegionTemp_FalmerValley(float afPosX, float afPosY)

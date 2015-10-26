@@ -1,18 +1,19 @@
 scriptname _Frost_InterfaceHandler extends Quest
 
 import FrostUtil
-
-GlobalVariable property _Frost_DatastoreInitialized auto
+import _FrostInternal
 
 Event OnInit()
 	RegisterForModEvent("Frost_OnSkyUIInvListSelectChangeArmor", "OnSkyUIInvListSelectChangeArmor")
-	RegisterForModEvent("Frost_UpdateBottomBarInfo", "UpdateBottomBarInfo")
+	RegisterForModEvent("Frost_UpdateBottomBarWarmth", "UpdateBottomBarWarmth")
+	RegisterForModEvent("Frost_UpdateBottomBarCoverage", "UpdateBottomBarCoverage")
 	RegisterForMenu("InventoryMenu")
 EndEvent
 
 function RegisterForEvents()
 	RegisterForModEvent("Frost_OnSkyUIInvListSelectChangeArmor", "OnSkyUIInvListSelectChangeArmor")
-	RegisterForModEvent("Frost_UpdateBottomBarInfo", "UpdateBottomBarInfo")
+	RegisterForModEvent("Frost_UpdateBottomBarWarmth", "UpdateBottomBarWarmth")
+	RegisterForModEvent("Frost_UpdateBottomBarCoverage", "UpdateBottomBarCoverage")
 endFunction
 
 function RegisterForMenus()
@@ -21,7 +22,7 @@ endFunction
 
 Event OnMenuOpen(string menuName)
 	if menuName == "InventoryMenu"
-		UpdateBottomBarInfo(GetPlayerArmorWarmth(), GetPlayerArmorCoverage())
+		SendEvent_UpdateWarmthAndCoverage()
 	endif
 EndEvent
 
@@ -34,7 +35,7 @@ Event OnSkyUIInvListSelectChangeArmor(string asEventName, string asArg, float af
 	endif
 	locked = true
 
-	UpdateBottomBarInfo(GetPlayerArmorWarmth(), GetPlayerArmorCoverage())
+	SendEvent_UpdateWarmthAndCoverage()
 	UpdateItemCardInfo(-1, -1)
 		
 	WaitForSelectionSettle()
@@ -88,12 +89,18 @@ function SetItemCardValues()
 	endWhile
 endFunction
 
-Event UpdateBottomBarInfo(int aiWarmth, int aiCoverage)
+Event UpdateBottomBarWarmth(int aiWarmth)
 	if UI.IsMenuOpen("InventoryMenu")
 		UI.SetString("InventoryMenu", "_root.Menu_mc.bottomBar.frostInfoCard.ExposureProtectionValue.text", aiWarmth)
-		UI.SetString("InventoryMenu", "_root.Menu_mc.bottomBar.frostInfoCard.RainProtectionValue.text", aiCoverage)
 	elseif UI.IsMenuOpen("Crafting Menu")
 		UI.SetString("Crafting Menu", "_root.Menu.BottomBarInfo.frostInfoCard.ExposureProtectionValue.text", aiWarmth)
+	endif
+endEvent
+
+Event UpdateBottomBarCoverage(int aiCoverage)
+	if UI.IsMenuOpen("InventoryMenu")
+		UI.SetString("InventoryMenu", "_root.Menu_mc.bottomBar.frostInfoCard.RainProtectionValue.text", aiCoverage)
+	elseif UI.IsMenuOpen("Crafting Menu")
 		UI.SetString("Crafting Menu", "_root.Menu.bottomBarInfo.frostInfoCard.RainProtectionValue.text", aiCoverage)
 	endif
 endEvent
@@ -116,4 +123,17 @@ function UpdateItemCardInfo(int aiWarmth, int aiCoverage)
 		UI.SetString("Crafting Menu", "_root.Menu.ItemInfoHolder.ItemInfo.ExposureProtectionValue.text", exp_val)
 		UI.SetString("Crafting Menu", "_root.Menu.ItemInfoHolder.ItemInfo.RainProtectionValue.text", rain_val)
 	endif
+endFunction
+
+function SendEvent_UpdateWarmthAndCoverage()
+    FrostDebug(0, "Sending event Frost_UpdateWarmth")
+    int handle = ModEvent.Create("Frost_UpdateWarmth")
+    if handle
+        ModEvent.Send(handle)
+    endif
+    FrostDebug(0, "Sending event Frost_UpdateCoverage")
+    handle = ModEvent.Create("Frost_UpdateCoverage")
+    if handle
+        ModEvent.Send(handle)
+    endif
 endFunction
