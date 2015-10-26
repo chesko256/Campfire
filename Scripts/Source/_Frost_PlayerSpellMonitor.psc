@@ -43,10 +43,12 @@ function UpdateFrostResistBonus()
 endFunction
 
 function DispelWetness()
+	_Frost_WetnessSystem wet = GetWetnessSystem()
 	if PlayerRef.HasEffectKeyword(_Frost_WetStateKeyword)
-		GetWetnessSystem().ModAttributeWetness(-750.0, 0.0)
+		wet.ModAttributeWetness(-750.0, 0.0)
 		if _Frost_WetLevel.GetValueInt() > 0
 			SteamFXShader.Play(PlayerRef, 1.5)
+			wet.UpdateWetLevel()
 		endif
 	endif
 endFunction
