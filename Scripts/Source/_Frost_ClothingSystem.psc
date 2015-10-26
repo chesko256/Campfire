@@ -4,7 +4,6 @@ import FrostUtil
 import _FrostInternal
 
 Formlist property _Frost_EquipExceptions auto
-GlobalVariable property _Frost_DatastoreInitialized auto
 
 Armor property equipped_body auto hidden
 Armor property equipped_head auto hidden
@@ -47,7 +46,7 @@ function ObjectEquipped(Form akBaseObject, int iGearType)
     
     HandleEquippedObject(akBaseObject, iGearType)
 
-    SendEvent_UpdateBottomBarInfo(GetArmorWarmth(), GetArmorCoverage())
+    SendEvent_UpdateWarmthAndCoverage()
     FrostDebug(0, "Armor protection report: BODY(" + body_exposure_protection + ", " + body_rain_protection +       \
                                             ") HANDS(" + hands_exposure_protection + ", " + hands_rain_protection + \
                                             ") HEAD(" + head_exposure_protection + ", " + head_rain_protection +    \
@@ -138,7 +137,7 @@ function ObjectUnequipped(Form akBaseObject, int iGearType)
     HandleUnequippedObject(akBaseObject, iGearType)
     unequip_lock = false
 
-    SendEvent_UpdateBottomBarInfo(GetArmorWarmth(), GetArmorCoverage())
+    SendEvent_UpdateWarmthAndCoverage()
     FrostDebug(0, "Armor protection report: BODY(" + body_exposure_protection + ", " + body_rain_protection +       \
                                             ") HANDS(" + hands_exposure_protection + ", " + hands_rain_protection + \
                                             ") HEAD(" + head_exposure_protection + ", " + head_rain_protection +    \
@@ -202,16 +201,15 @@ int function GetArmorCoverage()
 endFunction
 
 
-function SendEvent_UpdateBottomBarInfo(int aiWarmth, int aiCoverage)
-    if _Frost_DatastoreInitialized.GetValueInt() != 2
-        return
-    endif
-
-    FrostDebug(0, "Sending event Frost_UpdateBottomBarInfo")
-    int handle = ModEvent.Create("Frost_UpdateBottomBarInfo")
+function SendEvent_UpdateWarmthAndCoverage()
+    FrostDebug(0, "Sending event Frost_UpdateWarmth")
+    int handle = ModEvent.Create("Frost_UpdateWarmth")
     if handle
-        ModEvent.PushInt(handle, aiWarmth)
-        ModEvent.PushInt(handle, aiCoverage)
+        ModEvent.Send(handle)
+    endif
+    FrostDebug(0, "Sending event Frost_UpdateCoverage")
+    handle = ModEvent.Create("Frost_UpdateCoverage")
+    if handle
         ModEvent.Send(handle)
     endif
 endFunction
