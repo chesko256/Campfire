@@ -83,7 +83,6 @@ function ModAttributeWetness(float amount, float limit)
 	FrostDebug(1, "~~~~ Wetness ::: Current Wetness: " + wetness + " (" + amount + ")")
 endFunction
 
-;@TODO: Use a single spell and have the effects apply based on conditions. No spell swapping.
 function UpdateWetLevel()
 	float wetness = _Frost_AttributeWetness.GetValue()
 	int wet_level = 0
