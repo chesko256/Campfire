@@ -4,6 +4,7 @@ import FrostUtil
 
 Actor property PlayerRef auto
 GlobalVariable property _Frost_AttributeWarmth auto
+GlobalVariable property _Frost_PerkRank_Adaptation auto
 
 int current_food_bonus
 int current_spell_bonus
@@ -18,13 +19,14 @@ Event UpdateWarmth()
 	; Should push results up to the UI
 
 	int warmth
-	warmth += GetClothingSystem().GetArmorExposureProtection()
+	warmth += GetClothingSystem().GetArmorWarmth()
 	warmth += GetTorchBonus()
 	warmth += GetFrostResistBonus()
 	warmth += current_food_bonus
+	warmth += _Frost_PerkRank_Adaptation.GetValueInt() * 20
+	
 	; spells
-	; Perks
-
+	_FrostInternal.FrostDebug(0, "**** Warmth ::: Warmth Value: " + warmth)
 	_Frost_AttributeWarmth.SetValueInt(warmth)
 endEvent
 
