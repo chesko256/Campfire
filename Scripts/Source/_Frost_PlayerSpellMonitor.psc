@@ -3,12 +3,14 @@ scriptname _Frost_PlayerSpellMonitor extends ReferenceAlias
 import FrostUtil
 
 MagicEffect property AbResistFrost auto
+GlobalVariable property _Frost_WetLevel auto
 Keyword property MagicAlchResistFrost auto
 Keyword property MagicEnchResistFrost auto
 Keyword property MagicDamageFire auto
 Keyword property _Frost_WetStateKeyword auto
 Actor property PlayerRef auto
 Spell property _Frost_FrostResistBonusSpell auto
+EffectShader property SteamFXShader auto
 float old_amount
 
 Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
@@ -43,5 +45,8 @@ endFunction
 function DispelWetness()
 	if PlayerRef.HasEffectKeyword(_Frost_WetStateKeyword)
 		GetWetnessSystem().ModAttributeWetness(-750.0, 0.0)
+		if _Frost_WetLevel.GetValueInt() > 0
+			SteamFXShader.Play(PlayerRef, 1.5)
+		endif
 	endif
 endFunction
