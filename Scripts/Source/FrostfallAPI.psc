@@ -6,6 +6,7 @@ _Frost_HeatSourceSystem property HeatSource auto
 _Frost_WetnessSystem property Wetness auto
 _Frost_ClothingSystem property Clothing auto
 _Frost_ClimateSystem property Climate auto
+_Frost_WarmthSystem property Warmth auto
 _Frost_ArmorProtectionDatastoreHandler property ClothingDatastoreHandler auto
 Actor property PlayerRef auto
 Formlist property _Frost_WorldspacesExteriorOblivion auto
