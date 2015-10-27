@@ -5,8 +5,7 @@ import _FrostInternal
 
 GlobalVariable property _Frost_AttributeCoverage auto
 GlobalVariable property _Frost_DatastoreInitialized auto
-
-int property current_windbreaker_bonus auto hidden
+bool property windbreaker_active auto hidden
 
 function RegisterForEvents()
 	debug.trace("Registerd for Frost_UpdateCoverage")
@@ -16,7 +15,9 @@ endFunction
 Event UpdateCoverage()
 	int coverage
 	coverage += GetClothingSystem().GetArmorCoverage()
-	coverage += current_windbreaker_bonus
+	if windbreaker_active
+		coverage += Math.Ceiling(coverage * 0.25)
+	endif
 
 	; spells
 	
