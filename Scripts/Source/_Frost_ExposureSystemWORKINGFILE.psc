@@ -49,21 +49,8 @@ function UpdateExposure()
 	RefreshAbleToFastTravel()
 	RefreshPlayerStateData()
 
-	; Super cereal
-	;/int wet_level = _Frost_WetLevel.GetValueInt()
-	int ClothingBonus = GetClothingState()
-	int FrostResistBonus = GetFrostResistBonus()
-	;###### CURRENT PROGRESS
-	int FoodBonus = GetFoodState()
-	int HeldHeatBonus = GetHeldHeatState()
-	int ConditioningBonus = GetConditioningState()
-	int FollowerBonus = GetFollowerFactor()
-	int SpellModification = GetSpellModification()
-	
-
-	;@TODO: Check _Frost_ExposureProtectionData instead
-	int TotalProtection = FoodBonus + ClothingBonus + HeldHeatBonus + FrostResistBonus + \
-						  ConditioningBonus + FollowerBonus + SpellModification + WetPenalty
+	int wet_level = _Frost_WetLevel.GetValueInt()
+	int warmth = _Frost_AttributeWarmth.GetValueInt()
 
 	; Take action
 	if this_vampire_state == false && last_vampire_state == true
@@ -75,7 +62,6 @@ function UpdateExposure()
 	ExposureEffectsUpdate()
 
 	StoreLastPlayerState()
-	/;
 endFunction
 
 function RefreshPlayerStateData()
