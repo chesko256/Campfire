@@ -4,10 +4,8 @@ import FrostUtil
 import _FrostInternal
 
 Event OnInit()
-	RegisterForModEvent("Frost_OnSkyUIInvListSelectChangeArmor", "OnSkyUIInvListSelectChangeArmor")
-	RegisterForModEvent("Frost_UpdateBottomBarWarmth", "UpdateBottomBarWarmth")
-	RegisterForModEvent("Frost_UpdateBottomBarCoverage", "UpdateBottomBarCoverage")
-	RegisterForMenu("InventoryMenu")
+	RegisterForEvents()
+	RegisterForMenus()
 EndEvent
 
 function RegisterForEvents()
@@ -127,13 +125,13 @@ endFunction
 
 function SendEvent_UpdateWarmthAndCoverage()
     FrostDebug(0, "Sending event Frost_UpdateWarmth")
-    int handle = ModEvent.Create("Frost_UpdateWarmth")
-    if handle
-        ModEvent.Send(handle)
+    int handle_w = ModEvent.Create("Frost_UpdateWarmth")
+    if handle_w
+        ModEvent.Send(handle_w)
     endif
     FrostDebug(0, "Sending event Frost_UpdateCoverage")
-    handle = ModEvent.Create("Frost_UpdateCoverage")
-    if handle
-        ModEvent.Send(handle)
+    int handle_c = ModEvent.Create("Frost_UpdateCoverage")
+    if handle_c
+        ModEvent.Send(handle_c)
     endif
 endFunction

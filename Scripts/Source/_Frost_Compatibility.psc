@@ -548,6 +548,7 @@ function RegisterForControlsOnLoad()
 endFunction
 
 function RegisterForEventsOnLoad()
+	GetClothingSystem().RegisterForEvents()
 	GetWetnessSystem().RegisterForEvents()
 	GetClimateSystem().RegisterForEvents()
 	GetWarmthSystem().RegisterForEvents()
