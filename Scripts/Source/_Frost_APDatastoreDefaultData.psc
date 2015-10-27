@@ -2466,8 +2466,8 @@ function SetDefaults_Cloak()
 	AddDatastoreEntryByKey("1035278___Skyrim.esm", 7, 20, 72) ; ArmorNightingaleCuirassPlayer02 @MULTI
 	AddDatastoreEntryByKey("1035279___Skyrim.esm", 7, 20, 72) ; ArmorNightingaleCuirassPlayer03 @MULTI
 
-	AddDatastoreEntryByKey("46555___Dawnguard.esm", 1, 20, 72) ; DLC1ArmorVampireArmorRoyalRed 	@MULTI
-	AddDatastoreEntryByKey("103621___Dawnguard.esm", 1, 20, 72) ; DLC1ArmorVampireArmorValerica	@MULTI
+	AddDatastoreEntryByKey("46555___Dawnguard.esm", 7, 20, 72) ; DLC1ArmorVampireArmorRoyalRed 	@MULTI
+	AddDatastoreEntryByKey("103621___Dawnguard.esm", 7, 20, 72) ; DLC1ArmorVampireArmorValerica	@MULTI
 
 	;##############################
 	;
@@ -2477,6 +2477,10 @@ function SetDefaults_Cloak()
 
 	
 	
+endFunction
+
+function SetDefaults_Shield()
+	AddDatastoreEntryByKey("151754___Campfire.esm", 8, 0, 0) ; _Camp_WalkingStickShield
 endFunction
 
 ; @Overridden by _Frost_ArmorProtectionDatastoreHandler

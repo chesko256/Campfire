@@ -10,6 +10,7 @@ Keyword property _FrostData_ArmorHead auto
 Keyword property _FrostData_ArmorHands auto
 Keyword property _FrostData_ArmorFeet auto
 Keyword property _FrostData_ArmorCloak auto
+Keyword property _FrostData_ArmorShield auto
 
 Keyword property ClothingCirclet auto
 
@@ -25,16 +26,18 @@ FormList property _Camp_Backpacks auto
 
 GlobalVariable property _Frost_DatastoreInitialized auto
 
-int property DEFAULT_BODY_EXPOSUREPROTECTION 				= 110 autoReadOnly
-int property DEFAULT_BODY_RAINPROTECTION 					= 35 autoReadOnly
-int property DEFAULT_HANDS_EXPOSUREPROTECTION 				= 12 autoReadOnly
-int property DEFAULT_HANDS_RAINPROTECTION 					= 6 autoReadOnly
-int property DEFAULT_HEAD_EXPOSUREPROTECTION 				= 30 autoReadOnly
-int property DEFAULT_HEAD_RAINPROTECTION 					= 14 autoReadOnly
-int property DEFAULT_HEADHOOD_EXPOSUREPROTECTION 			= 25 autoReadOnly
-int property DEFAULT_HEADHOOD_RAINPROTECTION 				= 43 autoReadOnly
-int property DEFAULT_FEET_EXPOSUREPROTECTION 				= 12 autoReadOnly
-int property DEFAULT_FEET_RAINPROTECTION 					= 14 autoReadOnly
+int property DEFAULT_BODY_WARMTH 				= 110 autoReadOnly
+int property DEFAULT_BODY_COVERAGE 				= 35 autoReadOnly
+int property DEFAULT_HANDS_WARMTH 				= 12 autoReadOnly
+int property DEFAULT_HANDS_COVERAGE 			= 6 autoReadOnly
+int property DEFAULT_HEAD_WARMTH 				= 30 autoReadOnly
+int property DEFAULT_HEAD_COVERAGE 				= 14 autoReadOnly
+int property DEFAULT_HEADHOOD_WARMTH 			= 25 autoReadOnly
+int property DEFAULT_HEADHOOD_COVERAGE 			= 43 autoReadOnly
+int property DEFAULT_FEET_WARMTH 				= 12 autoReadOnly
+int property DEFAULT_FEET_COVERAGE 				= 14 autoReadOnly
+int property DEFAULT_SHIELD_WARMTH				= 0 autoReadOnly
+int property DEFAULT_SHIELD_COVERAGE			= 15 autoReadOnly
 
 Event OnInit()
 	if !self.IsRunning()
@@ -66,6 +69,8 @@ int function GetGearType(Form akBaseObject)
 			return 5
 		elseif akBaseObject as Ammo
 			return 6
+		elseif (akBaseObject as Armor).IsShield()
+			return 8
 		else
 			return 7
 		endif
@@ -80,80 +85,80 @@ int[] function GetTotalProtectionValues(Armor akArmor, int aiGearType)
 		return result
 	endif
 
-	int exp_val = 0
-	int rain_val = 0
+	int warmth_val = 0
+	int cover_val = 0
 	string ds_key = GetDatastoreKeyFromForm(akArmor)
 
 	if aiGearType == 1
 		; Body mode - check body and all other slots
 		; Body
-		exp_val = IntListGet(_FrostData_ArmorBody, ds_key, 0) - 1
-		rain_val = IntListGet(_FrostData_ArmorBody, ds_key, 1) - 1
+		warmth_val = IntListGet(_FrostData_ArmorBody, ds_key, 0) - 1
+		cover_val = IntListGet(_FrostData_ArmorBody, ds_key, 1) - 1
 		; Try to set sane default values for the body
-		if exp_val == -1
-			result[0] = result[0] + DEFAULT_BODY_EXPOSUREPROTECTION
-			result[1] = result[1] + DEFAULT_BODY_RAINPROTECTION
+		if warmth_val == -1
+			result[0] = result[0] + DEFAULT_BODY_WARMTH
+			result[1] = result[1] + DEFAULT_BODY_COVERAGE
 		else
-			result[0] = result[0] + exp_val
-			result[1] = result[1] + rain_val
+			result[0] = result[0] + warmth_val
+			result[1] = result[1] + cover_val
 		endif
 		; Hands
-		exp_val = IntListGet(_FrostData_ArmorHands, ds_key, 0) - 1
-		rain_val = IntListGet(_FrostData_ArmorHands, ds_key, 1) - 1
-		if exp_val != -1
-			result[0] = result[0] + exp_val
-			result[1] = result[1] + rain_val
+		warmth_val = IntListGet(_FrostData_ArmorHands, ds_key, 0) - 1
+		cover_val = IntListGet(_FrostData_ArmorHands, ds_key, 1) - 1
+		if warmth_val != -1
+			result[0] = result[0] + warmth_val
+			result[1] = result[1] + cover_val
 		endif
 		; Head
-		exp_val = IntListGet(_FrostData_ArmorHead, ds_key, 0) - 1
-		rain_val = IntListGet(_FrostData_ArmorHead, ds_key, 1) - 1
-		if exp_val != -1
-			result[0] = result[0] + exp_val
-			result[1] = result[1] + rain_val
+		warmth_val = IntListGet(_FrostData_ArmorHead, ds_key, 0) - 1
+		cover_val = IntListGet(_FrostData_ArmorHead, ds_key, 1) - 1
+		if warmth_val != -1
+			result[0] = result[0] + warmth_val
+			result[1] = result[1] + cover_val
 		endif
 		; Feet
-		exp_val = IntListGet(_FrostData_ArmorFeet, ds_key, 0) - 1
-		rain_val = IntListGet(_FrostData_ArmorFeet, ds_key, 1) - 1
-		if exp_val != -1
-			result[0] = result[0] + exp_val
-			result[1] = result[1] + rain_val
+		warmth_val = IntListGet(_FrostData_ArmorFeet, ds_key, 0) - 1
+		cover_val = IntListGet(_FrostData_ArmorFeet, ds_key, 1) - 1
+		if warmth_val != -1
+			result[0] = result[0] + warmth_val
+			result[1] = result[1] + cover_val
 		endif
 		; Cloak
-		exp_val = IntListGet(_FrostData_ArmorCloak, ds_key, 0) - 1
-		rain_val = IntListGet(_FrostData_ArmorCloak, ds_key, 1) - 1
-		if exp_val != -1
-			result[0] = result[0] + exp_val
-			result[1] = result[1] + rain_val
+		warmth_val = IntListGet(_FrostData_ArmorCloak, ds_key, 0) - 1
+		cover_val = IntListGet(_FrostData_ArmorCloak, ds_key, 1) - 1
+		if warmth_val != -1
+			result[0] = result[0] + warmth_val
+			result[1] = result[1] + cover_val
 		endif
 		
 		return result
 	elseif aiGearType == 3
 		; Head mode - check head and cloak slots
 		; Head
-		exp_val = IntListGet(_FrostData_ArmorHead, ds_key, 0) - 1
-		rain_val = IntListGet(_FrostData_ArmorHead, ds_key, 1) - 1
+		warmth_val = IntListGet(_FrostData_ArmorHead, ds_key, 0) - 1
+		cover_val = IntListGet(_FrostData_ArmorHead, ds_key, 1) - 1
 		; Try to set sane default values for the head
-		if exp_val == -1
+		if warmth_val == -1
 			if akArmor.HasKeyword(ClothingCirclet)
 				result[0] = result[0] + 0
 				result[1] = result[1] + 0
 			elseif StringUtil.Find(akArmor.GetName(), "hood") != -1
-				result[0] = result[0] + DEFAULT_HEADHOOD_EXPOSUREPROTECTION
-				result[1] = result[1] + DEFAULT_HEADHOOD_RAINPROTECTION
+				result[0] = result[0] + DEFAULT_HEADHOOD_WARMTH
+				result[1] = result[1] + DEFAULT_HEADHOOD_COVERAGE
 			else
-				result[0] = result[0] + DEFAULT_HEAD_EXPOSUREPROTECTION
-				result[1] = result[1] + DEFAULT_HEAD_RAINPROTECTION
+				result[0] = result[0] + DEFAULT_HEAD_WARMTH
+				result[1] = result[1] + DEFAULT_HEAD_COVERAGE
 			endif
 		else
-			result[0] = result[0] + exp_val
-			result[1] = result[1] + rain_val
+			result[0] = result[0] + warmth_val
+			result[1] = result[1] + cover_val
 		endif
 		; Cloak
-		exp_val = IntListGet(_FrostData_ArmorCloak, ds_key, 0) - 1
-		rain_val = IntListGet(_FrostData_ArmorCloak, ds_key, 1) - 1
-		if exp_val != -1
-			result[0] = result[0] + exp_val
-			result[1] = result[1] + rain_val
+		warmth_val = IntListGet(_FrostData_ArmorCloak, ds_key, 0) - 1
+		cover_val = IntListGet(_FrostData_ArmorCloak, ds_key, 1) - 1
+		if warmth_val != -1
+			result[0] = result[0] + warmth_val
+			result[1] = result[1] + cover_val
 		endif
 
 		return result
@@ -170,38 +175,43 @@ int[] function GetTotalProtectionValues(Armor akArmor, int aiGearType)
 			Datastore = _FrostData_ArmorFeet
 		elseif aiGearType == 7
 			Datastore = _FrostData_ArmorCloak
+		elseif aiGearType == 8
+			Datastore = _FrostData_ArmorShield
 		endif
 	
 		; Subtract 1 to return a falsey -1 on failure
-		exp_val = IntListGet(Datastore, ds_key, 0) - 1
-		rain_val = IntListGet(Datastore, ds_key, 1) - 1
+		warmth_val = IntListGet(Datastore, ds_key, 0) - 1
+		cover_val = IntListGet(Datastore, ds_key, 1) - 1
 	
-		if exp_val == -1
+		if warmth_val == -1
 			; Try to set sane default values
 			if aiGearType == 1
-				result[0] = result[0] + DEFAULT_BODY_EXPOSUREPROTECTION
-				result[1] = result[1] + DEFAULT_BODY_RAINPROTECTION
+				result[0] = result[0] + DEFAULT_BODY_WARMTH
+				result[1] = result[1] + DEFAULT_BODY_COVERAGE
 			elseif aiGearType == 2
-				result[0] = result[0] + DEFAULT_HANDS_EXPOSUREPROTECTION
-				result[1] = result[1] + DEFAULT_HANDS_RAINPROTECTION
+				result[0] = result[0] + DEFAULT_HANDS_WARMTH
+				result[1] = result[1] + DEFAULT_HANDS_COVERAGE
 			elseif aiGearType == 3
 				if akArmor.HasKeyword(ClothingCirclet)
 					result[0] = result[0] + 0
 					result[1] = result[1] + 0
 				elseif StringUtil.Find(akArmor.GetName(), "hood") != -1
-					result[0] = result[0] + DEFAULT_HEADHOOD_EXPOSUREPROTECTION
-					result[1] = result[1] + DEFAULT_HEADHOOD_RAINPROTECTION
+					result[0] = result[0] + DEFAULT_HEADHOOD_WARMTH
+					result[1] = result[1] + DEFAULT_HEADHOOD_COVERAGE
 				else
-					result[0] = result[0] + DEFAULT_HEAD_EXPOSUREPROTECTION
-					result[1] = result[1] + DEFAULT_HEAD_RAINPROTECTION
+					result[0] = result[0] + DEFAULT_HEAD_WARMTH
+					result[1] = result[1] + DEFAULT_HEAD_COVERAGE
 				endif
 			elseif aiGearType == 4
-				result[0] = result[0] + DEFAULT_FEET_EXPOSUREPROTECTION
-				result[1] = result[1] + DEFAULT_FEET_RAINPROTECTION
+				result[0] = result[0] + DEFAULT_FEET_WARMTH
+				result[1] = result[1] + DEFAULT_FEET_COVERAGE
+			elseif aiGearType == 8
+				result[0] = result[0] + DEFAULT_SHIELD_WARMTH
+				result[1] = result[1] + DEFAULT_SHIELD_COVERAGE
 			endif
 		else
-			result[0] = exp_val
-			result[1] = rain_val
+			result[0] = warmth_val
+			result[1] = cover_val
 		endif
 		return result
 	endif
@@ -217,8 +227,8 @@ int[] function GetArmorProtectionData(Armor akArmor, int aiGearType, int aiMode 
 		result[1] = (IntListGet(_FrostData_ArmorBody, ds_key, 1) - 1)
 		; Try to set sane default values for the body
 		if result[0] == -1
-			result[0] = DEFAULT_BODY_EXPOSUREPROTECTION
-			result[1] = DEFAULT_BODY_RAINPROTECTION
+			result[0] = DEFAULT_BODY_WARMTH
+			result[1] = DEFAULT_BODY_COVERAGE
 		endif
 		; Hands
 		result[2] = (IntListGet(_FrostData_ArmorHands, ds_key, 0) - 1)
@@ -246,11 +256,11 @@ int[] function GetArmorProtectionData(Armor akArmor, int aiGearType, int aiMode 
 				result[0] = 0
 				result[1] = 0
 			elseif StringUtil.Find(akArmor.GetName(), "hood") != -1
-				result[0] = DEFAULT_HEADHOOD_EXPOSUREPROTECTION
-				result[1] = DEFAULT_HEADHOOD_RAINPROTECTION
+				result[0] = DEFAULT_HEADHOOD_WARMTH
+				result[1] = DEFAULT_HEADHOOD_COVERAGE
 			else
-				result[0] = DEFAULT_HEAD_EXPOSUREPROTECTION
-				result[1] = DEFAULT_HEAD_RAINPROTECTION
+				result[0] = DEFAULT_HEAD_WARMTH
+				result[1] = DEFAULT_HEAD_COVERAGE
 			endif
 		endif
 		; Cloak
@@ -272,6 +282,8 @@ int[] function GetArmorProtectionData(Armor akArmor, int aiGearType, int aiMode 
 			Datastore = _FrostData_ArmorFeet
 		elseif aiGearType == 7
 			Datastore = _FrostData_ArmorCloak
+		elseif aiGearType == 8
+			Datastore = _FrostData_ArmorShield
 		endif
 	
 		; Subtract 1 to return a falsey -1 on failure
@@ -281,25 +293,28 @@ int[] function GetArmorProtectionData(Armor akArmor, int aiGearType, int aiMode 
 		if result[0] == -1
 			; Try to set sane default values
 			if aiGearType == 1
-				result[0] = DEFAULT_BODY_EXPOSUREPROTECTION
-				result[1] = DEFAULT_BODY_RAINPROTECTION
+				result[0] = DEFAULT_BODY_WARMTH
+				result[1] = DEFAULT_BODY_COVERAGE
 			elseif aiGearType == 2
-				result[0] = DEFAULT_HANDS_EXPOSUREPROTECTION
-				result[1] = DEFAULT_HANDS_RAINPROTECTION
+				result[0] = DEFAULT_HANDS_WARMTH
+				result[1] = DEFAULT_HANDS_COVERAGE
 			elseif aiGearType == 3
 				if akArmor.HasKeyword(ClothingCirclet)
 					result[0] = 0
 					result[1] = 0
 				elseif StringUtil.Find(akArmor.GetName(), "hood") != -1
-					result[0] = DEFAULT_HEADHOOD_EXPOSUREPROTECTION
-					result[1] = DEFAULT_HEADHOOD_RAINPROTECTION
+					result[0] = DEFAULT_HEADHOOD_WARMTH
+					result[1] = DEFAULT_HEADHOOD_COVERAGE
 				else
-					result[0] = DEFAULT_HEAD_EXPOSUREPROTECTION
-					result[1] = DEFAULT_HEAD_RAINPROTECTION
+					result[0] = DEFAULT_HEAD_WARMTH
+					result[1] = DEFAULT_HEAD_COVERAGE
 				endif
 			elseif aiGearType == 4
-				result[0] = DEFAULT_FEET_EXPOSUREPROTECTION
-				result[1] = DEFAULT_FEET_RAINPROTECTION
+				result[0] = DEFAULT_FEET_WARMTH
+				result[1] = DEFAULT_FEET_COVERAGE
+			elseif aiGearType == 8
+				result[0] = DEFAULT_SHIELD_WARMTH
+				result[1] = DEFAULT_SHIELD_COVERAGE
 			endif
 		endif
 		return result
@@ -324,7 +339,7 @@ string function GetDatastoreKeyFromID(int aiFormID)
 	return (aiFormID % 16777216) + "___" + Game.GetModName(mod_index)
 endFunction
 
-function AddDatastoreEntryByKey(string asKey, int aiGearType, int aiExposureProtection, int aiRainProtection)
+function AddDatastoreEntryByKey(string asKey, int aiGearType, int aiWarmth, int aiCoverage)
 	Keyword Datastore
 	if aiGearType == 1
 		Datastore = _FrostData_ArmorBody
@@ -336,15 +351,17 @@ function AddDatastoreEntryByKey(string asKey, int aiGearType, int aiExposureProt
 		Datastore = _FrostData_ArmorFeet
 	elseif aiGearType == 7
 		Datastore = _FrostData_ArmorCloak
+	elseif aiGearType == 8
+		Datastore = _FrostData_ArmorShield
 	endif
 
-	; Do we know if the entry exists already? Assume 'yes, we know it doesn't' for now.
+	; Do we know if the entry exists already? Assume 'we know it doesn't' for now.
 	; Add 1 so we can return a falsey -1 on failure later
-	IntListAdd(Datastore, asKey, aiExposureProtection + 1)
-	IntListAdd(Datastore, asKey, aiRainProtection + 1)
+	IntListAdd(Datastore, asKey, aiWarmth + 1)
+	IntListAdd(Datastore, asKey, aiCoverage + 1)
 endFunction
 
-function AddDatastoreEntryByForm(Armor akArmor, int aiGearType, int aiExposureProtection, int aiRainProtection)
+function AddDatastoreEntryByForm(Armor akArmor, int aiGearType, int aiWarmth, int aiCoverage)
 	string ds_key = GetDatastoreKeyFromForm(akArmor)
 	Keyword Datastore
 	if aiGearType == 1
@@ -357,14 +374,16 @@ function AddDatastoreEntryByForm(Armor akArmor, int aiGearType, int aiExposurePr
 		Datastore = _FrostData_ArmorFeet
 	elseif aiGearType == 7
 		Datastore = _FrostData_ArmorCloak
+	elseif aiGearType == 8
+		Datastore = _FrostData_ArmorShield
 	endif
 
 	; Do we know if the entry exists already? Assume 'yes, we know it doesn't' for now.
-	IntListAdd(Datastore, ds_key, aiExposureProtection + 1)
-	IntListAdd(Datastore, ds_key, aiRainProtection + 1)
+	IntListAdd(Datastore, ds_key, aiWarmth + 1)
+	IntListAdd(Datastore, ds_key, aiCoverage + 1)
 endFunction
 
-function UpdateDatastoreEntry(string asKey, int aiExposureProtection, int aiRainProtection)
+function UpdateDatastoreEntry(string asKey, int aiWarmth, int aiCoverage)
 
 endFunction
 
@@ -384,6 +403,9 @@ function RevertDatastore()
 	FrostDebug(1, "Setting default settings for cloak armor...")
 	SetDefaults_Cloak()
 	FrostDebug(1, "Setting default settings for cloak armor...done.")
+	FrostDebug(1, "Setting default settings for shield armor...")
+	SetDefaults_Shield()
+	FrostDebug(1, "Setting default settings for shield armor...done.")
 	_Frost_DatastoreInitialized.SetValueInt(2)
 endFunction
 
