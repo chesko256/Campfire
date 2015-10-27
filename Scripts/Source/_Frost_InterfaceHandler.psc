@@ -104,34 +104,34 @@ Event UpdateBottomBarCoverage(int aiCoverage)
 endEvent
 
 function UpdateItemCardInfo(int aiWarmth, int aiCoverage)
-	string exp_val
-	string rain_val
+	string warmth_val
+	string cover_val
 	if aiWarmth == -1
-		exp_val = ""
-		rain_val = ""
+		warmth_val = ""
+		cover_val = ""
 	else
-		exp_val = aiWarmth
-		rain_val = aiCoverage
+		warmth_val = aiWarmth
+		cover_val = aiCoverage
 	endif
 
 	if UI.IsMenuOpen("InventoryMenu")
-		UI.SetString("InventoryMenu", "_root.Menu_mc.itemCard.ExposureProtectionValue.text", exp_val)
-		UI.SetString("InventoryMenu", "_root.Menu_mc.itemCard.RainProtectionValue.text", rain_val)
+		UI.SetString("InventoryMenu", "_root.Menu_mc.itemCard.ExposureProtectionValue.text", warmth_val)
+		UI.SetString("InventoryMenu", "_root.Menu_mc.itemCard.RainProtectionValue.text", cover_val)
 	elseif UI.IsMenuOpen("Crafting Menu")
-		UI.SetString("Crafting Menu", "_root.Menu.ItemInfoHolder.ItemInfo.ExposureProtectionValue.text", exp_val)
-		UI.SetString("Crafting Menu", "_root.Menu.ItemInfoHolder.ItemInfo.RainProtectionValue.text", rain_val)
+		UI.SetString("Crafting Menu", "_root.Menu.ItemInfoHolder.ItemInfo.ExposureProtectionValue.text", warmth_val)
+		UI.SetString("Crafting Menu", "_root.Menu.ItemInfoHolder.ItemInfo.RainProtectionValue.text", cover_val)
 	endif
 endFunction
 
 function SendEvent_UpdateWarmthAndCoverage()
     FrostDebug(0, "Sending event Frost_UpdateWarmth")
-    int handle_w = ModEvent.Create("Frost_UpdateWarmth")
-    if handle_w
-        ModEvent.Send(handle_w)
+    int handle_1 = ModEvent.Create("Frost_UpdateWarmth")
+    if handle_1
+        ModEvent.Send(handle_1)
     endif
     FrostDebug(0, "Sending event Frost_UpdateCoverage")
-    int handle_c = ModEvent.Create("Frost_UpdateCoverage")
-    if handle_c
-        ModEvent.Send(handle_c)
+    int handle_2 = ModEvent.Create("Frost_UpdateCoverage")
+    if handle_2
+        ModEvent.Send(handle_2)
     endif
 endFunction

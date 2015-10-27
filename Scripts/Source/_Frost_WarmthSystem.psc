@@ -7,7 +7,7 @@ Actor property PlayerRef auto
 GlobalVariable property _Frost_AttributeWarmth auto
 GlobalVariable property _Frost_PerkRank_Adaptation auto
 GlobalVariable property _Frost_DatastoreInitialized auto
-
+int property current_wellinsulated_bonus auto hidden
 int current_food_bonus
 int current_spell_bonus
 
@@ -24,6 +24,7 @@ Event UpdateWarmth()
 	warmth += GetFrostResistBonus()
 	warmth += current_food_bonus
 	warmth += _Frost_PerkRank_Adaptation.GetValueInt() * 20
+	warmth += current_wellinsulated_bonus
 	
 	; spells
 	_FrostInternal.FrostDebug(0, "**** Warmth ::: Warmth Value: " + warmth)

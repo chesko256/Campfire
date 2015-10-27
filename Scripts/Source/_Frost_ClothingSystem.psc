@@ -17,6 +17,7 @@ int property head_warmth auto hidden
 int property hands_warmth auto hidden
 int property feet_warmth auto hidden
 int property cloak_warmth auto hidden
+int property shield_warmth auto hidden
 
 int property body_coverage auto hidden
 int property head_coverage auto hidden
@@ -57,7 +58,8 @@ function ObjectEquipped(Form akBaseObject, int iGearType)
                                             ") HANDS(" + hands_warmth + ", " + hands_coverage + \
                                             ") HEAD(" + head_warmth + ", " + head_coverage +    \
                                             ") FEET(" + feet_warmth + ", " + feet_coverage +    \
-                                            ") CLOAK(" + cloak_warmth + ", " + cloak_coverage +")")
+                                            ") CLOAK(" + cloak_warmth + ", " + cloak_coverage + \
+                                            ") SHIELD(0, " + shield_coverage + ")")
 endFunction
 
 function HandleEquippedObject(Form akBaseObject, int iGearType)
@@ -138,7 +140,7 @@ function ObjectUnequipped(Form akBaseObject, int iGearType)
     ;       4: Foot gear (Boots, shoes)
     ;       5: Backpack
     ;       6: Ammo
-    ;       7: Other (could be shield, cloak, etc)
+    ;       7: Other (cloak, etc)
     unequip_lock = true
     HandleUnequippedObject(akBaseObject, iGearType)
     unequip_lock = false
@@ -148,7 +150,8 @@ function ObjectUnequipped(Form akBaseObject, int iGearType)
                                             ") HANDS(" + hands_warmth + ", " + hands_coverage + \
                                             ") HEAD(" + head_warmth + ", " + head_coverage +    \
                                             ") FEET(" + feet_warmth + ", " + feet_coverage +    \
-                                            ") CLOAK(" + cloak_warmth + ", " + cloak_coverage +")")
+                                            ") CLOAK(" + cloak_warmth + ", " + cloak_coverage + \
+                                            ") SHIELD(0, " + shield_coverage + ")")
 endFunction
 
 function HandleUnequippedObject(Form akBaseObject, int iGearType)
@@ -194,10 +197,20 @@ endFunction
 
 Event ShieldEquipped(Form akBaseObject, bool abEquipped)
     if abEquipped
-
+        Armor armor_object = akBaseObject as Armor
+        _Frost_ArmorProtectionDatastoreHandler DSHandler = GetClothingDatastoreHandler()
+        int[] protection_data
+        
+        protection_data = DSHandler.GetArmorProtectionData(armor_object, 8)
+        equipped_shield = akBaseObject as Armor
+        shield_warmth = protection_data[0]
+        shield_coverage = protection_data[1]
     else
-
+        equipped_shield = None
+        shield_warmth = 0
+        shield_coverage = 0
     endif
+    SendEvent_UpdateWarmthAndCoverage()
 endEvent
 
 int function GetArmorWarmth()
@@ -210,10 +223,9 @@ endFunction
 int function GetArmorCoverage()
     int total = body_coverage + hands_coverage + \
                 head_coverage + feet_coverage + \
-                cloak_coverage
+                cloak_coverage + shield_coverage
     return total
 endFunction
-
 
 function SendEvent_UpdateWarmthAndCoverage()
     FrostDebug(0, "Sending event Frost_UpdateWarmth")
