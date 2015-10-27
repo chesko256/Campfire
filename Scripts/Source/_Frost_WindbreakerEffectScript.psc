@@ -4,13 +4,16 @@ import FrostUtil
 import _FrostInternal
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
+	utility.waitmenumode(0.3)
 	int coverage = GetClothingSystem().GetArmorCoverage()
 	GetCoverageSystem().current_windbreaker_bonus = Math.Ceiling(coverage * 0.25)
 	SendEvent_UpdateCoverage()
 EndEvent
 
 Event OnEffectFinish(Actor akTarget, Actor akCaster)
+	utility.waitmenumode(0.3)
 	GetCoverageSystem().current_windbreaker_bonus = 0
+	SendEvent_UpdateCoverage()
 EndEvent
 
 function SendEvent_UpdateCoverage()
