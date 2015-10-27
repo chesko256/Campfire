@@ -5,15 +5,20 @@ import _FrostInternal
 
 GlobalVariable property _Frost_AttributeCoverage auto
 GlobalVariable property _Frost_DatastoreInitialized auto
+GlobalVariable property _Frost_PerkRank_Windbreaker auto
+
+int current_windbreaker_bonus
 
 function RegisterForEvents()
+	debug.trace("Registerd for Frost_UpdateCoverage")
 	RegisterForModEvent("Frost_UpdateCoverage", "UpdateCoverage")
 endFunction
 
 Event UpdateCoverage()
 	int coverage
 	coverage += GetClothingSystem().GetArmorCoverage()
-	;coverage += _Frost_PerkRank_Adaptation.GetValueInt() * 20
+	coverage += current_windbreaker_bonus
+	
 	; spells
 	
 	_FrostInternal.FrostDebug(0, "==== Coverage ::: Coverage Value: " + coverage)
