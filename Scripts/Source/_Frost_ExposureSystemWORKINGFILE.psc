@@ -4,6 +4,7 @@ import CampUtil
 
 Actor property PlayerRef auto
 GlobalVariable property _Frost_Setting_ExposureOn auto
+GlobalVariable property _Frost_Setting_MaxExposureMode auto
 GlobalVariable property _Frost_WetLevel auto
 
 int property FIRE_FACTOR = 8 autoReadOnly
@@ -11,7 +12,8 @@ int property HEAT_FACTOR = 6 autoReadOnly
 int property TENT_FACTOR = 1 autoReadOnly
 int property WARM_TENT_BONUS = 1 autoReadOnly
 
-
+float last_update_time = 0.0
+float this_update_time = 0.0
 float distance_moved = 0.0
 bool in_interior = false
 
@@ -33,11 +35,21 @@ function StopSystem()
 endFunction
 
 function Update()
+	if last_update_time == 0.0
+		; Skip the first update
+		last_update_time = Game.GetRealHoursPassed()
+		return
+	endif
+
+	this_update_time = Game.GetRealHoursPassed()
+
 	if _Frost_Setting_ExposureOn.GetValueInt() == 2
 		UpdateExposure()
 	else
 		StopSystem()
 	endif
+
+	last_update_time = this_update_time
 endFunction
 
 function UpdateExposure()
@@ -172,15 +184,13 @@ function ExposureEffectsUpdate()
 endFunction
 
 function SetExposureEffects(int iExposureLevel)
-	bool player_is_vampire = PlayerIsVampire()
-
 	; Death / Incapacitate
-	if iExposureLevel == 5 && !player_is_vampire
+	if iExposureLevel == 5
 		HandleMaxExposure()
 	endif
 
 	; Freezing to Death
-	if iExposureLevel == 4 && !player_is_vampire
+	if iExposureLevel == 4
 		PlayerRef.AddSpell(_Frost_Hypo_Spell_4, false)
 		PlayerRef.AddSpell(_Frost_Hypo_Spell_4NoFrost, false)
 	else
@@ -189,7 +199,7 @@ function SetExposureEffects(int iExposureLevel)
 	endif
 
 	; Freezing
-	if iExposureLevel == 3 && !player_is_vampire
+	if iExposureLevel == 3
 		PlayerRef.AddSpell(_Frost_Hypo_Spell_3, false)
 		PlayerRef.AddSpell(_Frost_Hypo_Spell_3NoFrost, false)
 	else
@@ -198,25 +208,23 @@ function SetExposureEffects(int iExposureLevel)
 	endif
 
 	; Cold
-	if iExposureLevel == 2 && !player_is_vampire
+	if iExposureLevel == 2
 		PlayerRef.AddSpell(_Frost_Hypo_Spell_2, false)
 	else
 		PlayerRef.RemoveSpell(_Frost_Hypo_Spell_2)
 	endif
 
 	; Chilly
-	if iExposureLevel == 1 && !player_is_vampire
+	if iExposureLevel == 1
 		PlayerRef.AddSpell(_Frost_Hypo_Spell_1, false)
 	else
 		PlayerRef.RemoveSpell(_Frost_Hypo_Spell_1)
 	endif
 
 	ApplyVisualEffects(iExposureLevel)
-	if !player_is_vampire
-		ShowExposureStateMessage(iExposureLevel)
-		ApplySoundEffects(iExposureLevel)
-		ApplyForceFeedback(iExposureLevel)
-	endif
+	ShowExposureStateMessage(iExposureLevel)
+	ApplySoundEffects(iExposureLevel)
+	ApplyForceFeedback(iExposureLevel)
 endFunction
 
 function ShowExposureStateMessage(int iExposureLevel)
@@ -238,7 +246,7 @@ endFunction
 
 function ApplyVisualEffects(int iExposureLevel)
 	; Make sure to clear ISM if a vampire, or existing effect if setting toggled off
-	if _Frost_Setting_FullScreenEffects.GetValueInt() == 1 || PlayerIsVampire()
+	if _Frost_Setting_FullScreenEffects.GetValueInt() == 1
 		ImageSpaceModifier.RemoveCrossFade(4.0)
 		return
 	endif
@@ -276,43 +284,29 @@ function ApplyForceFeedback(int iExposureLevel)
 endFunction
 
 function HandleMaxExposure()
-	if _Frost_Setting_ExposureIsFatal.GetValueInt() == 2
-		bool is_rescued = RescuePlayer()
-		if !is_rescued
-			
-			; Kill companions, one by one.
-			Actor[] followers = new Actor[3]
-			followers[0] = CampUtil.GetTrackedFollower(1)
-			followers[1] = CampUtil.GetTrackedFollower(2)
-			followers[2] = CampUtil.GetTrackedFollower(3)
-			int i = 0
-			while i < followers.Length
-				if followers[i]
-					followers[i].Kill()
-					utility.wait(2)
-				endif
-				i += 1
-			endWhile
+	if _Frost_Setting_MaxExposureMode.GetValueInt == 3
+		; Kill companions, one by one.
+		Actor[] followers = new Actor[3]
+		followers[0] = CampUtil.GetTrackedFollower(1)
+		followers[1] = CampUtil.GetTrackedFollower(2)
+		followers[2] = CampUtil.GetTrackedFollower(3)
+		int i = 0
+		while i < followers.Length
+			if followers[i]
+				followers[i].Kill()
+				utility.wait(2)
+			endif
+			i += 1
+		endWhile
+		; Now, kill the player.			
+		_Frost_ExposureDeathMsg.Show()
+		wait(3)
+		PlayerRef.Kill()
 
-			; Now, kill the player.			
-			_Frost_ExposureDeathMsg.Show()
-			wait(3)
-			PlayerRef.Kill()
-		endif
-	endif
-endFunction
-
-int function GetFoodBonus()
-	if PlayerRef.HasEffectKeyword(_Frost_FoodBuffKeyword10)
-		return 1
-	elseif PlayerRef.HasEffectKeyword(_Frost_FoodBuffKeyword15)
-		return 2
-	elseif PlayerRef.HasEffectKeyword(_Frost_FoodBuffKeyword20)
-		return 3
-	elseif PlayerRef.HasEffectKeyword(_Frost_FoodBuffKeyword25)
-		return 4
+	if _Frost_Setting_MaxExposureMode.GetValueInt() == 2
+		RescuePlayer()
 	else
-		return 0
+		; Do nothing.
 	endif
 endFunction
 
@@ -330,35 +324,19 @@ endFunction
 
 function CalculateExposureChange()
 	; If enough game time has passed since the last update, modify based on waiting instead.
-	float time_delta_game_days = GetCurrentGameTime() - last_update_time
-	float time_delta_game_hours = time_delta_game_days * 24.0
-
+	float time_delta_game_hours = (GetCurrentGameTime() - last_update_time) * 24.0
 	if time_delta_game_hours > 1.0
 		ModExposureDueToTime(time_delta_game_hours)
 		return
 	endif
 
-	; Determine real time that would have transpired relative to game time.
-	float time_delta_real_seconds
-	if time_delta_game_days > 0.0
-		time_delta_real_seconds = (time_delta_game_days * 86400) / TimeScale.GetValue()
-	else
-		; Return sane value
-		time_delta_real_seconds = 6.0
+	float time_delta_seconds = (this_update_time - last_update_time) * 3600.0
+	if time_delta_seconds > (update_freq * 2)
+		time_delta_seconds = (update_freq * 2)
 	endif
 	
-	if fTimeDeltaSec <= 20.0	;Clamp point loss to 20-seconds between intervals
-		iSlowUpdateCounter = 0
-		
-		; Master Exposure loss formula
-		exposure_loss = ((((((fTempMultiplier * 20) + WetFactor)/(ClothingFactor + FrostFactor)) * AuxFactor) * pSetting_ExposureRate) * fTimeDeltaSec) / 60
-			
-	else
-		iSlowUpdateCounter += 1
-		if iSlowUpdateCounter == 4 && _Frost_Setting_SystemMsg.GetValueInt() == 2
-			debug.messagebox("Your game's scripting system is running too slowly in order for Frostfall to run correctly. Please see the Troubleshooting page of the online documentation for tips. Your exposure value will not change until this improves. (Last update took " + time_delta_real_seconds + "sec, expected <20.0sec)")
-		endif
-	endif
+	; Master Exposure loss formula
+	exposure_loss = ((((((fTempMultiplier * 20) + WetFactor)/(ClothingFactor + FrostFactor)) * AuxFactor) * pSetting_ExposureRate) * fTimeDeltaSec) / 60
 	
 	return exposure_loss
 endfunction
