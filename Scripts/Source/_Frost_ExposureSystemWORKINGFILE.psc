@@ -14,6 +14,8 @@ GlobalVariable property _Frost_Calc_StasisTemp auto
 GlobalVariable property _Frost_Calc_MaxWarmth auto
 GlobalVariable property _Frost_Calc_MaxCoverage auto
 
+float property MIN_EXPOSURE = -20.0 autoReadOnly
+float property MAX_EXPOSURE = 100.0 autoReadOnly
 int property FIRE_FACTOR = 8 autoReadOnly
 int property HEAT_FACTOR = 6 autoReadOnly
 int property TENT_FACTOR = 1 autoReadOnly
@@ -68,20 +70,48 @@ function UpdateExposure()
 	RefreshAbleToFastTravel()
 	RefreshPlayerStateData()
 
-	int wet_level = _Frost_WetLevel.GetValueInt()
-	int warmth = _Frost_AttributeWarmth.GetValueInt()
-
 	; Take action
-	if this_vampire_state == false && last_vampire_state == true
-		; The player just cured their vampirism. Set their exposure low.
-		SetExposure(30.0)
+	if this_vampire_state == true && last_vampire_state == false
+		; The player just became a vampire. Cure their Frostbite.
 	endif
 
-	CalculateExposureChange()
+	GetExposureChange()
 	ExposureEffectsUpdate()
 
 	StoreLastPlayerState()
 endFunction
+
+function ModAttributeExposure(float amount, float limit)
+	; Note: Limit values above 0 will result in the system "pushing up" (increasing) against
+	; it once it clamps to the limit.
+
+	float exp_attr = _Frost_AttributeExposure.GetValue()
+	if exp_attr == limit
+		if limit == MIN_EXPOSURE && amount < 0
+			; Already at minimum
+			return
+		elseif limit > MIN_EXPOSURE && amount > 0
+			; Already at maximum
+			return
+		endif
+	endif
+
+	float exposure = exp_attr + amount
+	if exposure > limit && amount > 0
+		exposure = limit
+		if limit < MAX_EXPOSURE && limit > MIN_EXPOSURE
+			; Something is preventing the player from getting colder, display message.
+		endif
+	elseif exposure < limit && amount < 0
+		exposure = limit
+		if limit < MAX_EXPOSURE && limit > MIN_EXPOSURE
+			; Something is preventing the player from getting warmer, display message.
+		endif
+	endif
+	ModAttributeExposure.SetValue(exposure)
+	FrostDebug(1, "@@@@ Exposure ::: Current Exposure: " + exposure + " (" + amount + ")")
+endFunction
+
 
 function RefreshPlayerStateData()
 	;/this_worldspace = PlayerRef.GetWorldSpace()
@@ -326,7 +356,7 @@ bool function PlayerIsInDialogue()
 	endif
 endFunction
 
-function CalculateExposureChange()
+function GetExposureChange()
 	; If enough game time has passed since the last update, modify based on waiting instead.
 	float time_delta_game_hours = (GetCurrentGameTime() - last_update_time) * 24.0
 	if time_delta_game_hours > 1.0
@@ -341,8 +371,6 @@ function CalculateExposureChange()
 
 	; Calculate exposure reduction
 	float exposure_reduction = 1.0 - (((_Frost_AttributeWarmth.GetValueInt() * 90.0) / _Frost_Calc_MaxWarmth.GetValue()) / 100.0)
-
-	; Calculate effective temperature
 	
 	; Rise (multiplier on Y-axis) over Run (distance from hemeostasis temperature)
 	float slope = _Frost_Calc_ExtremeMultiplier.GetValue()/(_Frost_Calc_ExtremeTemp.GetValue() - _Frost_Calc_StasisTemp.GetValue())
@@ -351,11 +379,12 @@ function CalculateExposureChange()
     
     ; Slope-intercept form solving for Y
     float temp_multiplier = (slope * a_x) + a_b
+    float wet_factor = GetWetFactor()
 
     ; Master Exposure loss formula
-	exposure_change = (((temp_multiplier / 3) * WetFactor) * exposure_reduction) * time_delta_seconds
+	exposure_change = (((temp_multiplier / 3) * wet_factor) * exposure_reduction) * time_delta_seconds
 	
-	return exposure_change
+	ModAttributeExposure(exposure_change, 0)
 endfunction
 
 float function GetEffectiveTemperature()
@@ -384,6 +413,19 @@ float function GetEffectiveTemperature()
 	return effective_temp
 endFunction
 
+float function GetWetFactor()
+	wet_level = _Frost_WetLevel.GetValueInt()
+	if wet_level == 0
+		return 1.0
+	elseif wet_level == 1
+		return 1.3
+	elseif wet_level == 2
+		return 1.6
+	elseif wet_level == 3
+		return 2.0
+	endif
+endFunction
+
 function ModExposureDueToTime(float aiHoursPassed)
     float exposure_limit
     float exposure_limit_if_near_fire
@@ -391,7 +433,7 @@ function ModExposureDueToTime(float aiHoursPassed)
     if player_fast_traveled
         ; The player fast traveled.
         ;@TODO: Also reduce wetness.
-        SetExposure(100.0)
+        SetExposure(0.0)
         return
     endif
 
