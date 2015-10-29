@@ -4,7 +4,7 @@ import CampUtil
 import FrostUtil
 import _FrostInternal
 
-float property COVERAGE_CAP     = 343.0 autoReadOnly
+float property COVERAGE_CAP     = 360.0 autoReadOnly
 float property WET_SPEED 		= 27.0 autoReadOnly 		; Wetness gained when standing in rain.
 float property DRY_SPEED 		= -6.25 autoReadOnly 		; Wetness lost ambiently.
 float property DRYFIRE_SPEED 	= -75.0 autoReadOnly 		; Wetness lost near fires.
@@ -17,6 +17,7 @@ int property WEATHERCLASS_RAIN 	= 2 autoReadOnly
 
 Actor property PlayerRef auto
 GlobalVariable property _Frost_AttributeWetness auto
+GlobalVariable property _Frost_AttributeCoverage auto
 GlobalVariable property _Frost_WetLevel auto
 GlobalVariable property _Frost_Setting_ConditionMessages auto
 Message property _Frost_WetStateMsg_Wet3 auto
@@ -202,10 +203,6 @@ function DryOff(float limit)
 endFunction
 
 function GetWetter(float limit)
-	;@TODO: Windbreaker Perk
-	;if pPlayer.HasPerk(Compatibility.Windbreaker)
-	;	pWetPoints += 27.0 * ( CloakWetRateMod - ( CloakWetRateMod * 0.25  ) )
-	
 	if _Frost_AttributeWetness.GetValue() > limit
 		FrostDebug(1, "~~~~ Wetness ::: Wetness greater than limit, drying off.")
 		DryOff(limit)
@@ -216,7 +213,8 @@ function GetWetter(float limit)
 			time_delta_seconds = (update_freq * 2)
 		endif
 
-		float rain_protect_modifier = 1.0 - (((GetPlayerArmorCoverage() * 80.0) / COVERAGE_CAP) / 100.0)
+		; Reduce the player's wetness rate by up to 80%.
+		float rain_protect_modifier = 1.0 - (((_Frost_AttributeCoverage.GetValueInt() * 80.0) / COVERAGE_CAP) / 100.0)
 		float amount = ((WET_SPEED * time_delta_seconds) / update_freq) * rain_protect_modifier
 
 		FrostDebug(1, "~~~~ Wetness ::: GetWetter : Limit " + limit + ", Rain protection modifier " + rain_protect_modifier)
