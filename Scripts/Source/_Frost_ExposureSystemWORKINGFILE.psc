@@ -4,6 +4,8 @@ import CampUtil
 
 Actor property PlayerRef auto
 GlobalVariable property _Frost_Setting_ExposureOn auto
+GlobalVariable property _Frost_Setting_ExposurePauseDialogue auto
+GlobalVariable property _Frost_Setting_ExposurePauseCombat auto
 GlobalVariable property _Frost_Setting_MaxExposureMode auto
 GlobalVariable property _Frost_WetLevel auto
 GlobalVariable property _Frost_AttributeWarmth auto
@@ -42,26 +44,21 @@ function Update()
 	endif
 
 	this_update_time = Game.GetRealHoursPassed()
-
-	if _Frost_Setting_ExposureOn.GetValueInt() == 2
-		UpdateExposure()
-	else
-		StopSystem()
-	endif
-
+	RefreshAbleToFastTravel()
+	RefreshPlayerStateData()
+	UpdateExposure()
 	last_update_time = this_update_time
 endFunction
 
 function UpdateExposure()
-	if PlayerIsInDialogue()
+	if _Frost_Setting_ExposurePauseDialogue.GetValueInt() == 2 && PlayerIsInDialogue()
 		return
 	endif
 
-	; Gather data
-	RefreshAbleToFastTravel()
-	RefreshPlayerStateData()
+	if _Frost_Setting_ExposurePauseCombat.GetValueInt() == 2 && PlayerRef.IsInCombat()
+		return
+	endif
 
-	; Take action
 	if this_vampire_state == true && last_vampire_state == false
 		; The player just became a vampire. Cure their Frostbite.
 	endif
@@ -418,91 +415,126 @@ float function GetWetFactor()
 endFunction
 
 function ModExposureDueToTime(float aiHoursPassed)
-    float exposure_limit
-    float exposure_limit_if_near_fire
-
     if player_fast_traveled
         ; The player fast traveled.
         ;@TODO: Also reduce wetness.
         SetExposure(0.0)
         return
     endif
+    
+    float current_temperature
+	bool in_interior
+	bool in_warm_building
+	bool near_fire
+	bool in_shelter
+	bool shelter_is_warm
 
-    ; define max values
-    if in_interior
-        exposure_limit = MIN_EXPOSURE
-        exposure_limit_if_near_fire = MIN_EXPOSURE
-    elseif current_weather_temp <= -15
-        if sheltered
-            if shelter_is_warm
-                exposure_limit = 25.0
-                exposure_limit_if_near_fire = MIN_EXPOSURE
-            else
-                exposure_limit = 40.0
-                exposure_limit_if_near_fire = 25.0
-            endif
-        else
-            exposure_limit = 81.0 ; GetTempExposureCeiling()
-            exposure_limit_if_near_fire = 50.0
-        endif
-    elseif current_weather_temp <= 0
-        if sheltered
-            if shelter_is_warm
-                exposure_limit = 15.0
-                exposure_limit_if_near_fire = MIN_EXPOSURE
-            else
-                exposure_limit = 30.0
-                exposure_limit_if_near_fire = 20.0
-            endif
-        else
-            exposure_limit = 60.0
-            exposure_limit_if_near_fire = 30.0
-        endif
-    elseif current_weather_temp < 10
-        if sheltered
-            if shelter_is_warm
-                exposure_limit = MIN_EXPOSURE
-                exposure_limit_if_near_fire = MIN_EXPOSURE
-            else
-                exposure_limit = 15.0
-                exposure_limit_if_near_fire = MIN_EXPOSURE
-            endif
-        else
-            exposure_limit = 30.0
-            exposure_limit_if_near_fire = MIN_EXPOSURE
-        endif
-    else
-        exposure_limit = MIN_EXPOSURE
-        exposure_limit_if_near_fire = MIN_EXPOSURE
-    endif
+	if in_interior
+		if near_fire || in_warm_building
+			GetWarmer(near_fire=false, MIN_EXPOSURE)
+		endif
+	else
+		if current_temperature <= -15
+			if near_fire
+				if in_shelter
+					if shelter_is_warm
+						GetWarmer(near_fire=true, MIN_EXPOSURE)
+					elseif !shelter_is_warm
+						GetWarmer(near_fire=true, 25.0)
+					endif
+				elseif !in_shelter
+					GetWarmer(near_fire=true, 50.0)
+				endif
+			elseif !near_fire
+				if in_shelter
+					if shelter_is_warm
+						GetWarmer(near_fire=false, 25.0)
+					elseif !shelter_is_warm
+						GetWarmer(near_fire=false, 40.0)
+					endif
+				elseif !in_shelter
+					GetColder(near_fire=false, 81.0)
+				endif
+			endif
+	
+		elseif current_temperature <= 0
+			if near_fire
+				if in_shelter
+					if shelter_is_warm
+						GetWarmer(near_fire=true, MIN_EXPOSURE)
+					elseif !shelter_is_warm
+						GetWarmer(near_fire=true, 15.0)
+					endif
+				elseif !in_shelter
+					GetWarmer(near_fire=true, 30.0)
+				endif
+			elseif !near_fire
+				if in_shelter
+					if shelter_is_warm
+						GetWarmer(near_fire=false, 15.0)
+					elseif !shelter_is_warm
+						GetWarmer(near_fire=false, 30.0)
+					endif
+				elseif !in_shelter
+					GetColder(near_fire=false, 60.0)
+				endif
+			endif
+	
+		elseif current_temperature < 10
+			if near_fire
+				if in_shelter
+					if shelter_is_warm
+						GetWarmer(near_fire=true, MIN_EXPOSURE)
+					elseif !shelter_is_warm
+						GetWarmer(near_fire=true, MIN_EXPOSURE)
+					endif
+				elseif !in_shelter
+					GetWarmer(near_fire=true, MIN_EXPOSURE)
+				endif
+			elseif !near_fire
+				if in_shelter
+					if shelter_is_warm
+						GetWarmer(near_fire=false, MIN_EXPOSURE)
+					elseif !shelter_is_warm
+						GetWarmer(near_fire=false, 15.0
+					endif
+				elseif !in_shelter
+					GetColder(near_fire=false, 30.0)
+				endif
+			endif
+	
+		elseif current_temperature >= 10
+			if near_fire
+				if in_shelter
+					if shelter_is_warm
+						GetWarmer(near_fire=true, MIN_EXPOSURE)
+					elseif !shelter_is_warm
+						GetWarmer(near_fire=true, MIN_EXPOSURE)
+					endif
+				elseif !in_shelter
+					GetWarmer(near_fire=true, MIN_EXPOSURE)
+				endif
+			elseif !near_fire
+				if in_shelter
+					if shelter_is_warm
+						GetWarmer(near_fire=false, MIN_EXPOSURE)
+					elseif !shelter_is_warm
+						GetWarmer(near_fire=false, MIN_EXPOSURE)
+					endif
+				elseif !in_shelter
+					GetColder(near_fire=false, MIN_EXPOSURE)
+				endif
+			endif
+		endif
+	endif
 
+	;@TODO: Do something with this
     ; If they waited less than 2 hours, halve the amount modified.
     float time_factor
     if aiHoursPassed < 2
         time_factor = 1
     else
         time_factor = 0.5
-    endif
-
-    ; Modify exposure based on temperature
-    if in_interior
-        DecreaseExposureToLimit((MAJOR_EXPOSURE * time_factor), exposure_limit)
-    elseif current_weather_temp <= -15
-        if near_fire
-            DecreaseExposureToLimit((MAJOR_EXPOSURE * time_factor), exposure_limit_if_near_fire)    
-        elseif sheltered
-            DecreaseExposureToLimit((MAJOR_EXPOSURE * time_factor), exposure_limit)
-        else
-            IncreaseExposureToLimit((EXTREME_EXPOSURE * time_factor), exposure_limit)
-        endif
-    elseif current_weather_temp > -15
-        if near_fire
-            DecreaseExposureToLimit((EXTREME_EXPOSURE * time_factor), exposure_limit_if_near_fire)
-        elseif sheltered
-            DecreaseExposureToLimit((MAJOR_EXPOSURE * time_factor), exposure_limit)
-        else
-            IncreaseExposureToLimit((MAJOR_EXPOSURE * time_factor), exposure_limit)
-        endif
     endif
 endFunction
 
