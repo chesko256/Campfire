@@ -1,0 +1,1 @@
+scriptname _Frost_ShelterSystem extends _Frost_BaseSystem

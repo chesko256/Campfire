@@ -28,15 +28,6 @@ bool in_interior = false
 
 function StartSystem()
 	parent.StartSystem()
-	; Exposure-related helper quests
-	;/if !ShelterQuest.IsRunning()
-		ShelterQuest.Start()
-	endif
-	if !_Frost_LightableFiresQuest.IsRunning()
-		_Frost_LightableFiresQuest.Start()
-	endif
-	/;
-	; Add exposure mechanic spells
 endFunction
 
 function StopSystem()
