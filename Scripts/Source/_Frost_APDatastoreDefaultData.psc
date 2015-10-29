@@ -485,9 +485,9 @@ function SetDefaults_Body()
 	AddDatastoreEntryByKey("862276___Skyrim.esm", 1, 125, 109) ; DBArmor
 	AddDatastoreEntryByKey("925461___Skyrim.esm", 1, 125, 109) ; DBArmorSP
 	
-	AddDatastoreEntryByKey("383878___Skyrim.esm", 1, 140, 72) ; ArmorNightingaleCuirassPlayer01  @MULTI
-	AddDatastoreEntryByKey("1035278___Skyrim.esm", 1, 140, 72) ; ArmorNightingaleCuirassPlayer02 @MULTI
-	AddDatastoreEntryByKey("1035279___Skyrim.esm", 1, 140, 72) ; ArmorNightingaleCuirassPlayer03 @MULTI
+	AddDatastoreEntryByKey("383878___Skyrim.esm", 1, 128, 106) ; ArmorNightingaleCuirassPlayer01  @MULTI
+	AddDatastoreEntryByKey("1035278___Skyrim.esm", 1, 128, 106) ; ArmorNightingaleCuirassPlayer02 @MULTI
+	AddDatastoreEntryByKey("1035279___Skyrim.esm", 1, 128, 106) ; ArmorNightingaleCuirassPlayer03 @MULTI
 
 	AddDatastoreEntryByKey("962512___Skyrim.esm", 1, 60, 0) ; MS02ForswornArmor
 	AddDatastoreEntryByKey("888144___Skyrim.esm", 1, 60, 0) ; ForswornCuirass
@@ -1228,15 +1228,10 @@ function SetDefaults_Hands()
 
 	;##############################
 	;
-	;    Immersive Armor
-	;
-	;##############################
-
-	;##############################
-	;
 	;    Campfire
 	;
 	;##############################
+	AddDatastoreEntryByKey("267721___Campfire.esm", 2, 21, 14) ; _Camp_ArmorSonsGauntlets
 
 	
 endFunction
@@ -2439,18 +2434,12 @@ function SetDefaults_Feet()
 	AddDatastoreEntryByKey("147482___Dragonborn.esm", 4, 24, 14) ; DLC2dunHaknirArmorBoots
 	AddDatastoreEntryByKey("175412___Dragonborn.esm", 4, 12, 29) ; DLC2TGArmorVariantBoots
 
-
-	;##############################
-	;
-	;    Immersive Armor
-	;
-	;##############################
-
 	;##############################
 	;
 	;    Campfire
 	;
 	;##############################
+	AddDatastoreEntryByKey("267720___Campfire.esm", 4, 21, 14) ; _Camp_ArmorSonsBoots
 
 	
 endFunction
@@ -2461,22 +2450,24 @@ function SetDefaults_Cloak()
 	;    Skyrim
 	;
 	;##############################
-	AddDatastoreEntryByKey("551294___Skyrim.esm", 7, 40, 43) ; ArmorStormcloakBearCuirass 		@MULTI
-	AddDatastoreEntryByKey("383878___Skyrim.esm", 7, 20, 72) ; ArmorNightingaleCuirassPlayer01  @MULTI
-	AddDatastoreEntryByKey("1035278___Skyrim.esm", 7, 20, 72) ; ArmorNightingaleCuirassPlayer02 @MULTI
-	AddDatastoreEntryByKey("1035279___Skyrim.esm", 7, 20, 72) ; ArmorNightingaleCuirassPlayer03 @MULTI
+	AddDatastoreEntryByKey("551294___Skyrim.esm", 7, 40, 12) ; ArmorStormcloakBearCuirass 		@MULTI
+	AddDatastoreEntryByKey("383878___Skyrim.esm", 7, 12, 40) ; ArmorNightingaleCuirassPlayer01  @MULTI
+	AddDatastoreEntryByKey("1035278___Skyrim.esm", 7, 12, 40) ; ArmorNightingaleCuirassPlayer02 @MULTI
+	AddDatastoreEntryByKey("1035279___Skyrim.esm", 7, 12, 40) ; ArmorNightingaleCuirassPlayer03 @MULTI
 
-	AddDatastoreEntryByKey("46555___Dawnguard.esm", 7, 20, 72) ; DLC1ArmorVampireArmorRoyalRed 	@MULTI
-	AddDatastoreEntryByKey("103621___Dawnguard.esm", 7, 20, 72) ; DLC1ArmorVampireArmorValerica	@MULTI
+	AddDatastoreEntryByKey("46555___Dawnguard.esm", 7, 12, 40) ; DLC1ArmorVampireArmorRoyalRed 	@MULTI
+	AddDatastoreEntryByKey("103621___Dawnguard.esm", 7, 12, 40) ; DLC1ArmorVampireArmorValerica	@MULTI
 
 	;##############################
 	;
 	;    Campfire
 	;
 	;##############################
+	AddDatastoreEntryByKey("260764___Campfire.esm", 7, 5, 5) ; _Camp_Cloak_BasicBurlap
+	AddDatastoreEntryByKey("260765___Campfire.esm", 7, 10, 10) ; _Camp_Cloak_BasicLinen
+	AddDatastoreEntryByKey("260766___Campfire.esm", 7, 40, 12) ; _Camp_Cloak_BasicFur
+	AddDatastoreEntryByKey("260767___Campfire.esm", 7, 12, 40) ; _Camp_Cloak_BasicHide
 
-	
-	
 endFunction
 
 function SetDefaults_Shield()

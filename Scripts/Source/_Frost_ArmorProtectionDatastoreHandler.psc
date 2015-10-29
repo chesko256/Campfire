@@ -37,7 +37,7 @@ int property DEFAULT_HEADHOOD_COVERAGE 			= 43 autoReadOnly
 int property DEFAULT_FEET_WARMTH 				= 12 autoReadOnly
 int property DEFAULT_FEET_COVERAGE 				= 14 autoReadOnly
 int property DEFAULT_SHIELD_WARMTH				= 0 autoReadOnly
-int property DEFAULT_SHIELD_COVERAGE			= 15 autoReadOnly
+int property DEFAULT_SHIELD_COVERAGE			= 20 autoReadOnly
 
 Event OnInit()
 	if !self.IsRunning()
