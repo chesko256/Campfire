@@ -6,6 +6,13 @@ Actor property PlayerRef auto
 GlobalVariable property _Frost_Setting_ExposureOn auto
 GlobalVariable property _Frost_Setting_MaxExposureMode auto
 GlobalVariable property _Frost_WetLevel auto
+GlobalVariable property _Frost_AttributeWarmth auto
+GlobalVariable property _Frost_Calc_ExtremeMultiplier auto
+GlobalVariable property _Frost_Calc_StasisMultiplier auto
+GlobalVariable property _Frost_Calc_ExtremeTemp auto
+GlobalVariable property _Frost_Calc_StasisTemp auto
+GlobalVariable property _Frost_Calc_MaxWarmth auto
+GlobalVariable property _Frost_Calc_MaxCoverage auto
 
 int property FIRE_FACTOR = 8 autoReadOnly
 int property HEAT_FACTOR = 6 autoReadOnly
@@ -158,11 +165,8 @@ endFunction
 
 function SetAfterFastTravelCondition()
 	SetExposure(100.0)
-	;Remove wet state effects
-	PlayerRef.RemoveSpell(_Frost_WetState_Spell1)
-	PlayerRef.RemoveSpell(_Frost_WetState_Spell2)
-	PlayerRef.RemoveSpell(_Frost_WetState_Spell3)
-	pWetPoints = 0.0
+	_Frost_WetnessSystem wet = GetWetnessSystem()
+	wet.ModAttributeWetness(-(wet.MAX_WETNESS), 0.0)
 endFunction
 
 function ExposureEffectsUpdate()
@@ -334,12 +338,51 @@ function CalculateExposureChange()
 	if time_delta_seconds > (update_freq * 2)
 		time_delta_seconds = (update_freq * 2)
 	endif
+
+	; Calculate exposure reduction
+	float exposure_reduction = 1.0 - (((_Frost_AttributeWarmth.GetValueInt() * 90.0) / _Frost_Calc_MaxWarmth.GetValue()) / 100.0)
+
+	; Calculate effective temperature
 	
-	; Master Exposure loss formula
-	exposure_loss = ((((((fTempMultiplier * 20) + WetFactor)/(ClothingFactor + FrostFactor)) * AuxFactor) * pSetting_ExposureRate) * fTimeDeltaSec) / 60
+	; Rise (multiplier on Y-axis) over Run (distance from hemeostasis temperature)
+	float slope = _Frost_Calc_ExtremeMultiplier.GetValue()/(_Frost_Calc_ExtremeTemp.GetValue() - _Frost_Calc_StasisTemp.GetValue())
+    float a_x = GetEffectiveTemperature()
+    float a_b = (-slope + _Frost_Calc_StasisMultiplier.GetValue()) * _Frost_Calc_StasisTemp.GetValue()
+    
+    ; Slope-intercept form solving for Y
+    float temp_multiplier = (slope * a_x) + a_b
+
+    ; Master Exposure loss formula
+	exposure_change = (((temp_multiplier / 3) * WetFactor) * exposure_reduction) * time_delta_seconds
 	
-	return exposure_loss
+	return exposure_change
 endfunction
+
+float function GetEffectiveTemperature()
+	; Get the effective temperature, taking the player's Coverage into account.
+
+	float current_temp = _Frost_CurrentTemperature.GetValue()
+	float temp_increase = 0
+	
+	Weather current_weather
+	bool transitioning = !(Weather.GetCurrentWeatherTransition() >= 1.0)
+	if transitioning
+		current_weather = Weather.GetOutgoingWeather()
+	else
+		current_weather = Weather.GetCurrentWeather()
+	endif
+	int current_weather_class = GetWeatherClassificationActual(current_weather)
+
+	if IsWeatherSevere(current_weather) && current_weather_class == 3
+		temp_increase = ((_Frost_AttributeCoverage.GetValue() * 10.0) / _Frost_Calc_MaxCoverage.GetValue())
+	elseif current_weather_class >= 2
+		temp_increase = ((_Frost_AttributeCoverage.GetValue() * 5.0) / _Frost_Calc_MaxCoverage.GetValue())
+	endif
+	float effective_temp = current_temp + temp_increase
+
+	FrostDebug(0, "@@@@ Exposure ::: Current Temp: " + current_temp + ", Effective Temp: " + effective_temp)
+	return effective_temp
+endFunction
 
 function ModExposureDueToTime(float aiHoursPassed)
     float exposure_limit
