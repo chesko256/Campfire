@@ -135,15 +135,52 @@ function ModAttributeExposure(float amount, float limit)
 	endif
 
 	float exposure = exp_attr + amount
-	if exposure > limit && amount > 0
+	bool increasing = amount > 0
+	if exposure > limit && increasing
 		exposure = limit
 		if limit < MAX_EXPOSURE && limit > MIN_EXPOSURE
 			; Something is preventing the player from getting colder, display message.
 		endif
-	elseif exposure < limit && amount < 0
+	elseif exposure < limit && !increasing
 		exposure = limit
 		if limit < MAX_EXPOSURE && limit > MIN_EXPOSURE
 			; Something is preventing the player from getting warmer, display message.
+		endif
+	endif
+	_Frost_AttributeExposure.SetValue(exposure)
+	FrostDebug(1, "@@@@ Exposure ::: Current Exposure: " + exposure + " (" + amount + ")")
+endFunction
+
+function ModAttributeExposureDuration(float amount, float limit)
+	float exp_attr = _Frost_AttributeExposure.GetValue()
+
+	if exp_attr == limit
+		if limit == MIN_EXPOSURE && amount < 0
+			; Already at minimum
+			return
+		elseif limit > MIN_EXPOSURE && amount > 0
+			; Already at maximum
+			return
+		endif
+	endif
+
+	float exposure = exp_attr + amount
+	bool increasing = amount > 0
+	if exposure > limit && increasing
+		if exp_attr <= limit
+			; This update would push us above the limit, cap at the limit
+			exposure = limit
+		else
+			; We're increasing and already above the limit
+			return
+		endif
+	elseif exposure < limit && !increasing
+		if exp_attr >= limit
+			; This update would push us below the limit, cap at the limit
+			exposure = limit
+		else
+			; We're decreasing and already below the limit
+			return
 		endif
 	endif
 	_Frost_AttributeExposure.SetValue(exposure)
@@ -581,7 +618,7 @@ function GetWarmer(int heat_amount, float limit, float game_hours_passed)
 		if game_hours_passed >= 1.0
 			float update_freq = UpdateFrequencyGlobal.GetValue()
 			float ticks = (((game_hours_passed * 3600.0) / TimeScale.GetValue()) / update_freq)
-			ModAttributeExposure((-heat_amount * ticks), limit)
+			ModAttributeExposureDuration((-heat_amount * ticks), limit)
 		else
 			ModAttributeExposure(-heat_amount, limit)
 		endif
@@ -596,7 +633,7 @@ function GetColder(int heat_amount, float limit, float game_hours_passed)
 		time_delta_seconds = (update_freq * 2)
 	endif
 	
-	; Reduce the player's exposure rate by up to 90%.
+	; Reduce the player's exposurke rate by up to 90%.
 	float exposure_reduction = 1.0 - (((_Frost_AttributeWarmth.GetValueInt() * 90.0) / _Frost_Calc_MaxWarmth.GetValue()) / 100.0)	
 	; Rise (multiplier on Y-axis) over Run (distance from hemeostasis temperature)
 	float slope = _Frost_Calc_ExtremeMultiplier.GetValue()/(_Frost_Calc_ExtremeTemp.GetValue() - _Frost_Calc_StasisTemp.GetValue())
@@ -612,7 +649,7 @@ function GetColder(int heat_amount, float limit, float game_hours_passed)
 
 	if game_hours_passed >= 1.0
 		float ticks = (((game_hours_passed * 3600.0) / TimeScale.GetValue()) / update_freq)
-		ModAttributeExposure((amount * ticks), limit)
+		ModAttributeExposureDuration((amount * ticks), limit)
 	else
 		ModAttributeExposure(amount, MAX_EXPOSURE)
 	endif

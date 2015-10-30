@@ -134,7 +134,18 @@ float function GetPlayerHeatSourceDistance() global
 endFunction
 
 bool function IsPlayerTakingShelter() global
-    return false
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return false
+    endif
+
+    int taking_shelter = Frostfall._Frost_IsTakingShelter.GetValueInt()
+    if taking_shelter == 2
+        return true
+    else
+        return false
+    endif
 endFunction
 
 
