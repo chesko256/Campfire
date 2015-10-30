@@ -45,7 +45,7 @@ endFunction
 function DispelWetness()
 	_Frost_WetnessSystem wet = GetWetnessSystem()
 	if PlayerRef.HasEffectKeyword(_Frost_WetStateKeyword)
-		wet.ModAttributeWetness(-750.0, 0.0)
+		wet.ModAttributeWetness(-wet.MAX_WETNESS, wet.MIN_WETNESS)
 		if _Frost_WetLevel.GetValueInt() > 0
 			SteamFXShader.Play(PlayerRef, 1.5)
 			wet.UpdateWetLevel()
