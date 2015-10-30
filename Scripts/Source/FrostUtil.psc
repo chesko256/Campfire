@@ -309,7 +309,7 @@ int function GetPlayerExposureLevel() global
     return Frostfall._Frost_ExposureLevel.GetValueInt()
 endFunction
 
-function ModPlayerExposure(float amount, float limit = -1.0, bool should_display_meter = false) global
+function ModPlayerExposure(float amount, float limit = -1.0, bool display_meter_on_change = false) global
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
