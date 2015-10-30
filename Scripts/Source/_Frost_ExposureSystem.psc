@@ -698,6 +698,7 @@ function ModExposure(float amount, float limit = -1.0, bool display_meter_on_cha
 		endif
 	endif
 	ModAttributeExposure(amount, limit, allow_skill_advancement=false)
+	ExposureEffectsUpdate()
 	;@TODO: if force_meter_display...
 endFunction
 
