@@ -83,7 +83,7 @@ bool in_shelter = false
 bool shelter_is_warm = false
 bool this_vampire_state = false
 bool last_vampire_state = false
-bool property in_interior = false auto hidden
+bool in_interior = false
 bool last_interior_state = false
 
 function Update()
@@ -124,7 +124,7 @@ function UpdateExposure()
 	StoreLastPlayerState()
 endFunction
 
-function ModAttributeExposure(float amount, float limit)
+function ModAttributeExposure(float amount, float limit, bool allow_skill_advancement = true)
 	; Note: Limit values above 0 will result in the system "pushing up" (increasing) against
 	; it once it clamps to the limit.
 
@@ -148,61 +148,36 @@ function ModAttributeExposure(float amount, float limit)
 	endif
 
 	if exposure > limit && increasing
-		exposure = limit
-		if limit < MAX_EXPOSURE && limit > MIN_EXPOSURE
-			; Something is preventing the player from getting colder, display message.
-			advance_skill = false
-		endif
-	elseif exposure < limit && !increasing
-		exposure = limit
-		if limit < MAX_EXPOSURE && limit > MIN_EXPOSURE
-			; Something is preventing the player from getting warmer, display message.
-		endif
-	endif
-	_Frost_AttributeExposure.SetValue(exposure)
-	FrostDebug(1, "@@@@ Exposure ::: Current Exposure: " + exposure + " (" + amount + ")")
-
-	if advance_skill
-		AdvanceEnduranceSkill(amount)
-	endif
-endFunction
-
-function ModAttributeExposureDuration(float amount, float limit)
-	float exp_attr = _Frost_AttributeExposure.GetValue()
-
-	if exp_attr == limit
-		if limit == MIN_EXPOSURE && amount < 0
-			; Already at minimum
-			return
-		elseif limit > MIN_EXPOSURE && amount > 0
-			; Already at maximum
-			return
-		endif
-	endif
-
-	float exposure = exp_attr + amount
-	bool increasing = amount > 0
-	if exposure > limit && increasing
 		if exp_attr <= limit
 			; This update would push us above the limit, cap at the limit
 			exposure = limit
+			advance_skill = false
+			if limit < MAX_EXPOSURE && limit > MIN_EXPOSURE
+				; Something is preventing the player from getting colder, display message.
+			endif
 		else
-			; We're increasing and already above the limit
+			; We're increasing and already above the limit, do nothing
 			return
-		endif
+		endif		
 	elseif exposure < limit && !increasing
 		if exp_attr >= limit
 			; This update would push us below the limit, cap at the limit
 			exposure = limit
+			if limit < MAX_EXPOSURE && limit > MIN_EXPOSURE
+				; Something is preventing the player from getting warmer, display message.
+			endif
 		else
 			; We're decreasing and already below the limit
 			return
-		endif
+		endif		
 	endif
 	_Frost_AttributeExposure.SetValue(exposure)
 	FrostDebug(1, "@@@@ Exposure ::: Current Exposure: " + exposure + " (" + amount + ")")
-endFunction
 
+	if advance_skill && allow_skill_advancement
+		AdvanceEnduranceSkill(amount)
+	endif
+endFunction
 
 function RefreshPlayerStateData()
 	current_temperature = GetEffectiveTemperature()
@@ -634,7 +609,7 @@ function GetWarmer(int heat_amount, float limit, float game_hours_passed)
 		if game_hours_passed >= 1.0
 			float update_freq = UpdateFrequencyGlobal.GetValue()
 			float ticks = (((game_hours_passed * 3600.0) / TimeScale.GetValue()) / update_freq)
-			ModAttributeExposureDuration((-heat_amount * ticks), limit)
+			ModAttributeExposure((-heat_amount * ticks), limit, allow_skill_advancement=false)
 		else
 			ModAttributeExposure(-heat_amount, limit)
 		endif
@@ -665,7 +640,7 @@ function GetColder(int heat_amount, float limit, float game_hours_passed)
 
 	if game_hours_passed >= 1.0
 		float ticks = (((game_hours_passed * 3600.0) / TimeScale.GetValue()) / update_freq)
-		ModAttributeExposureDuration((amount * ticks), limit)
+		ModAttributeExposure((amount * ticks), limit, allow_skill_advancement=false)
 	else
 		ModAttributeExposure(amount, MAX_EXPOSURE)
 	endif
@@ -714,12 +689,16 @@ function AdvanceEnduranceSkill(float exposure_gained)
     endif
 endFunction
 
-function IncreaseExposure(float amount)
-
-endFunction
-
-function DecreaseExposure(float amount)
-
+function ModExposure(float amount, float limit = -1.0, bool display_meter_on_change = false)
+	if limit == -1.0
+		if amount <= 0
+			limit = MIN_EXPOSURE
+		else
+			limit = MAX_EXPOSURE
+		endif
+	endif
+	ModAttributeExposure(amount, limit, allow_skill_advancement=false)
+	;@TODO: if force_meter_display...
 endFunction
 
 function RescuePlayer()

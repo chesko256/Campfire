@@ -309,6 +309,36 @@ int function GetPlayerExposureLevel() global
     return Frostfall._Frost_ExposureLevel.GetValueInt()
 endFunction
 
+function ModPlayerExposure(float amount, float limit = -1.0, bool should_display_meter = false) global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return
+    endif
+
+    Frostfall.Exposure.ModExposure(amount, limit, force_meter_display)
+endFunction
+
+int function GetPlayerWarmth() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return -1
+    endif
+
+    return Frostfall._Frost_AttributeWarmth.GetValueInt()
+endFunction
+
+int function GetPlayerCoverage() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return -1
+    endif
+
+    return Frostfall._Frost_AttributeCoverage.GetValueInt()
+endFunction
+
 int function GetPlayerArmorWarmth() global
     _Frost_ClothingSystem clothing_system = GetClothingSystem()
     return clothing_system.GetArmorWarmth()
