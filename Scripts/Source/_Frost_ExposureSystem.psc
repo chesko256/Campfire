@@ -31,6 +31,10 @@ GlobalVariable property _Frost_Calc_ExtremeTemp auto
 GlobalVariable property _Frost_Calc_StasisTemp auto
 GlobalVariable property _Frost_Calc_MaxWarmth auto
 GlobalVariable property _Frost_Calc_MaxCoverage auto
+GlobalVariable property EndurancePerkPointsEarned auto
+GlobalVariable property EndurancePerkPointsTotal auto
+GlobalVariable property EndurancePerkPointProgress auto
+GlobalVariable property EndurancePerkPoints auto
 Message property _Frost_HypoState_5 auto
 Message property _Frost_HypoState_4 auto
 Message property _Frost_HypoState_3 auto
@@ -39,6 +43,7 @@ Message property _Frost_HypoState_1 auto
 Message property _Frost_HypoState_0 auto
 Message property _Frost_HypoState_0_Min auto
 Message property _Frost_ExposureDeathMsg auto
+Message property _Frost_PerkAdvancement auto
 ImageSpaceModifier property _Frost_ColdISM_Level5 auto
 ImageSpaceModifier property _Frost_ColdISM_Level4 auto
 ImageSpaceModifier property _Frost_ColdISM_Level3 auto
@@ -78,7 +83,7 @@ bool in_shelter = false
 bool shelter_is_warm = false
 bool this_vampire_state = false
 bool last_vampire_state = false
-bool in_interior = false
+bool property in_interior = false auto hidden
 bool last_interior_state = false
 
 function Update()
@@ -134,12 +139,19 @@ function ModAttributeExposure(float amount, float limit)
 		endif
 	endif
 
+	bool advance_skill = false
 	float exposure = exp_attr + amount
 	bool increasing = amount > 0
+
+	if increasing
+		advance_skill = true
+	endif
+
 	if exposure > limit && increasing
 		exposure = limit
 		if limit < MAX_EXPOSURE && limit > MIN_EXPOSURE
 			; Something is preventing the player from getting colder, display message.
+			advance_skill = false
 		endif
 	elseif exposure < limit && !increasing
 		exposure = limit
@@ -149,6 +161,10 @@ function ModAttributeExposure(float amount, float limit)
 	endif
 	_Frost_AttributeExposure.SetValue(exposure)
 	FrostDebug(1, "@@@@ Exposure ::: Current Exposure: " + exposure + " (" + amount + ")")
+
+	if advance_skill
+		AdvanceEnduranceSkill(amount)
+	endif
 endFunction
 
 function ModAttributeExposureDuration(float amount, float limit)
@@ -666,6 +682,37 @@ function ShowTutorial_Exposure()
 endFunction
 
 ; dark souls-like lingering heat effect
+
+; Endurance Skill
+function AdvanceEnduranceSkill(float exposure_gained)
+    if EndurancePerkPointsEarned.GetValueInt() < EndurancePerkPointsTotal.GetValueInt()
+        FrostDebug(1, "Advancing Endurance skill.")
+        int next_level = EndurancePerkPointsEarned.GetValueInt() + 1
+
+        ; 80, 160, 240, 320...
+        float exposure_required = 80 * next_level
+
+        float progress_value = (exposure_gained / exposure_required)
+        EndurancePerkPointProgress.SetValue(EndurancePerkPointProgress.GetValue() + progress_value)
+        FrostDebug(1, "Endurance perk progress value: " + EndurancePerkPointProgress.GetValue())
+
+        if (EndurancePerkPointProgress.GetValue() + 0.01) >= 1.0
+            FrostDebug(1, "Granting an Endurance perk point.")
+            ; Grant perk point
+            _Frost_PerkEarned.Show()
+            EndurancePerkPointsEarned.SetValueInt(EndurancePerkPointsEarned.GetValueInt() + 1)
+            EndurancePerkPoints.SetValueInt(EndurancePerkPoints.GetValueInt() + 1)
+
+            if EndurancePerkPointsEarned.GetValueInt() >= EndurancePerkPointsTotal.GetValueInt()
+                EndurancePerkPointProgress.SetValue(1.0)
+            else
+                EndurancePerkPointProgress.SetValue(0.0)
+            endif
+        else
+            _Frost_PerkAdvancement.Show()
+        endif
+    endif
+endFunction
 
 function IncreaseExposure(float amount)
 
