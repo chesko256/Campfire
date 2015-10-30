@@ -608,7 +608,8 @@ function GetColder(int heat_amount, float limit, float game_hours_passed)
     
     ; Master Exposure loss formula
 	float amount = (((temp_multiplier / 3) * wet_factor) * exposure_reduction) * time_delta_seconds
-	
+	debug.trace(current_temperature + " " + temp_multiplier + " " + 3 + " " + wet_factor + " " + exposure_reduction + " " + time_delta_seconds)
+
 	if game_hours_passed >= 1.0
 		float ticks = (((game_hours_passed * 3600.0) / TimeScale.GetValue()) / update_freq)
 		ModAttributeExposure((amount * ticks), limit)
