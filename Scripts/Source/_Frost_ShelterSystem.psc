@@ -4,6 +4,8 @@ import CampUtil
 import _FrostInternal
 
 Actor property PlayerRef auto
+GlobalVariable property _Frost_IsTakingShelter auto
+GlobalVariable property _Frost_ShelterDetectLastSeenTime auto
 ObjectReference property _Frost_ShelterDetectOrigin auto
 ObjectReference property _Frost_ShelterDetectSensor auto
 ObjectReference property _Frost_AnchorRef auto

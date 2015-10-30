@@ -316,7 +316,7 @@ function ModPlayerExposure(float amount, float limit = -1.0, bool display_meter_
         return
     endif
 
-    Frostfall.Exposure.ModExposure(amount, limit, force_meter_display)
+    Frostfall.Exposure.ModExposure(amount, limit, display_meter_on_change)
 endFunction
 
 int function GetPlayerWarmth() global
