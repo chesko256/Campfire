@@ -7,6 +7,7 @@ GlobalVariable property _Frost_WetLevel auto
 Keyword property MagicAlchResistFrost auto
 Keyword property MagicEnchResistFrost auto
 Keyword property MagicDamageFire auto
+Keyword property MagicDamageFrost auto
 Keyword property _Frost_WetStateKeyword auto
 Actor property PlayerRef auto
 Spell property _Frost_FrostResistBonusSpell auto
@@ -21,6 +22,9 @@ Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
 	    UpdateFrostResistBonus()
 	elseif akEffect.HasKeyword(MagicDamageFire)
 		DispelWetness()
+		DecreaseExposureFireDamage()
+	elseif akEffect.HasKeyword(MagicDamageFrost)
+		IncreaseExposureFrostDamage()
 	endif
 EndEvent
 
@@ -51,4 +55,12 @@ function DispelWetness()
 			wet.UpdateWetLevel()
 		endif
 	endif
+endFunction
+
+function DecreaseExposureFireDamage()
+	ModPlayerExposure(-5.0, 50.0, true)
+endFunction
+
+function IncreaseExposureFrostDamage()
+	ModPlayerExposure(5.0, 90.0, true)
 endFunction

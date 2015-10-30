@@ -7,9 +7,9 @@ float property exposure_penalty_amount auto
 {The amount to increase the player's exposure by when this effect wears off.}
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
-	FrostUtil.GetExposureSystem().DecreaseExposure(exposure_restore_amount)
+	FrostUtil.ModExposure(-exposure_restore_amount)
 EndEvent
 
 Event OnEffectFinish(Actor akTarget, Actor akCaster)
-	FrostUtil.GetExposureSystem().IncreaseExposure(exposure_penalty_amount)
+	FrostUtil.ModExposure(exposure_penalty_amount)
 endEvent
