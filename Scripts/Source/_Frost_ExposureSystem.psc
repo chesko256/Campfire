@@ -37,14 +37,15 @@ Message property _Frost_HypoState_3 auto
 Message property _Frost_HypoState_2 auto
 Message property _Frost_HypoState_1 auto
 Message property _Frost_HypoState_0 auto
+Message property _Frost_HypoState_0_Min auto
 Message property _Frost_ExposureDeathMsg auto
+ImageSpaceModifier property _Frost_ColdISM_Level5 auto
 ImageSpaceModifier property _Frost_ColdISM_Level4 auto
 ImageSpaceModifier property _Frost_ColdISM_Level3 auto
 Sound property _Frost_Female_FreezingSM auto
 Sound property _Frost_Female_FreezingToDeathSM auto
 Sound property _Frost_Male_FreezingSM auto
 Sound property _Frost_Male_FreezingToDeathSM auto
-
 
 FormList property _Frost_WorldspacesExteriorOblivion auto
 
@@ -63,6 +64,8 @@ float property EXPOSURE_LEVEL_0 = 0.0 autoReadOnly
 float current_temperature = 10.0
 float last_update_time = 0.0
 float this_update_time = 0.0
+float  this_update_game_time = 0.0
+float last_update_game_time = 0.0
 float player_x = 0.0
 float player_y = 0.0
 float last_x = 0.0
@@ -82,14 +85,17 @@ function Update()
 	if last_update_time == 0.0
 		; Skip the first update
 		last_update_time = Game.GetRealHoursPassed()
+		last_update_game_time = Utility.GetCurrentGameTime()
 		return
 	endif
 
 	this_update_time = Game.GetRealHoursPassed()
+	this_update_game_time = Utility.GetCurrentGameTime()
 	RefreshAbleToFastTravel()
 	RefreshPlayerStateData()
 	UpdateExposure()
 	last_update_time = this_update_time
+	last_update_game_time = this_update_game_time
 endFunction
 
 function UpdateExposure()
@@ -106,7 +112,7 @@ function UpdateExposure()
 	endif
 
 	; If enough game time has passed since the last update, modify based on waiting instead.
-	float time_delta_game_hours = (Utility.GetCurrentGameTime() - last_update_time) * 24.0
+	float time_delta_game_hours = (Utility.GetCurrentGameTime() - last_update_game_time) * 24.0
 	ExposureValueUpdate(time_delta_game_hours)
 	ExposureEffectsUpdate()
 
@@ -274,6 +280,9 @@ int function UpdateExposureLevel()
 	elseif current_exposure > EXPOSURE_LEVEL_0
 		exposure_level = 0
 		ShowExposureStateMessage(0)
+	elseif current_exposure == MIN_EXPOSURE
+		exposure_level = -1
+		ShowExposureStateMessage(-1)
 	endif
 
 	_Frost_ExposureLevel.SetValueInt(exposure_level)
@@ -300,8 +309,10 @@ function ShowExposureStateMessage(int exposure_level)
 			ShowTutorial_Exposure()
 		elseif exposure_level == 1 && last_exposure_level != 1
 			_Frost_HypoState_1.Show()
-		elseif exposure_level == 0 && last_exposure_level != 0
+		elseif exposure_level == 0 && last_exposure_level != 0 && last_exposure_level != -1
 			_Frost_HypoState_0.Show()
+		elseif exposure_level == -1 && last_exposure_level != -1
+			_Frost_HypoState_0_Min.Show()
 		endif
 	endif
 endFunction
@@ -319,6 +330,8 @@ function ApplyVisualEffects(int exposure_level)
 		_Frost_ColdISM_Level3.ApplyCrossFade(4.0)
 	elseif exposure_level == 4
 		_Frost_ColdISM_Level4.ApplyCrossFade(4.0)
+	elseif exposure_level == 5
+		_Frost_ColdISM_Level5.ApplyCrossFade(4.0)
 	endif
 endFunction
 
@@ -542,7 +555,7 @@ function ExposureValueUpdate(float game_hours_passed)
 						GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
 					endif
 				elseif !in_shelter
-					GetColder(heat_amount, MIN_EXPOSURE, game_hours_passed)
+					GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
 				endif
 			endif
 		endif
@@ -560,47 +573,47 @@ bool function GetInShelter()
 endFunction
 
 function GetWarmer(int heat_amount, float limit, float game_hours_passed)
-	if game_hours_passed >= 1.0
-		float update_freq = UpdateFrequencyGlobal.GetValue()
-		float ticks = (((game_hours_passed * 3600.0) / TimeScale.GetValue()) / update_freq)
-		ModAttributeExposure((-heat_amount * ticks), limit)
+	if _Frost_AttributeExposure.GetValue() < limit
+		FrostDebug(1, "@@@@ Exposure ::: Exposure less than limit, getting colder.")
+		GetColder(heat_amount, limit, game_hours_passed)
 	else
-		ModAttributeExposure(-heat_amount, limit)
+		FrostDebug(1, "@@@@ Exposure ::: GetWarmer : Limit " + Math.Ceiling(limit) + " : GameHoursPassed " + game_hours_passed)
+		if game_hours_passed >= 1.0
+			float update_freq = UpdateFrequencyGlobal.GetValue()
+			float ticks = (((game_hours_passed * 3600.0) / TimeScale.GetValue()) / update_freq)
+			ModAttributeExposure((-heat_amount * ticks), limit)
+		else
+			ModAttributeExposure(-heat_amount, limit)
+		endif
 	endif
 endFunction
 
 function GetColder(int heat_amount, float limit, float game_hours_passed)
-	if _Frost_AttributeExposure.GetValue() > limit
-		FrostDebug(1, "@@@@ Exposure ::: Exposure greater than limit, warming up.")
-		GetWarmer(heat_amount, limit, game_hours_passed)
-	else
-		float update_freq = UpdateFrequencyGlobal.GetValue()
-		float time_delta_seconds = (this_update_time - last_update_time) * 3600.0
-		if time_delta_seconds > (update_freq * 2)
-			time_delta_seconds = (update_freq * 2)
-		endif
-
-		; Reduce the player's exposure rate by up to 90%.
-		float exposure_reduction = 1.0 - (((_Frost_AttributeWarmth.GetValueInt() * 90.0) / _Frost_Calc_MaxWarmth.GetValue()) / 100.0)
+	FrostDebug(1, "@@@@ Exposure ::: GetColder : Limit " + Math.Ceiling(limit) + " : GameHoursPassed " + game_hours_passed)
+	float update_freq = UpdateFrequencyGlobal.GetValue()
+	float time_delta_seconds = (this_update_time - last_update_time) * 3600.0
+	if time_delta_seconds > (update_freq * 2)
+		time_delta_seconds = (update_freq * 2)
+	endif
 	
-		; Rise (multiplier on Y-axis) over Run (distance from hemeostasis temperature)
-		float slope = _Frost_Calc_ExtremeMultiplier.GetValue()/(_Frost_Calc_ExtremeTemp.GetValue() - _Frost_Calc_StasisTemp.GetValue())
-    	float a_x = current_temperature
-    	float a_b = (-slope + _Frost_Calc_StasisMultiplier.GetValue()) * _Frost_Calc_StasisTemp.GetValue()
+	; Reduce the player's exposure rate by up to 90%.
+	float exposure_reduction = 1.0 - (((_Frost_AttributeWarmth.GetValueInt() * 90.0) / _Frost_Calc_MaxWarmth.GetValue()) / 100.0)	
+	; Rise (multiplier on Y-axis) over Run (distance from hemeostasis temperature)
+	float slope = _Frost_Calc_ExtremeMultiplier.GetValue()/(_Frost_Calc_ExtremeTemp.GetValue() - _Frost_Calc_StasisTemp.GetValue())
+    float a_x = current_temperature
+    float a_b = (-slope + _Frost_Calc_StasisMultiplier.GetValue()) * _Frost_Calc_StasisTemp.GetValue()    
+    ; Slope-intercept form solving for Y
+    float temp_multiplier = (slope * a_x) + a_b
+    float wet_factor = GetWetFactor()
     
-    	; Slope-intercept form solving for Y
-    	float temp_multiplier = (slope * a_x) + a_b
-    	float wet_factor = GetWetFactor()
-
-    	; Master Exposure loss formula
-		float amount = (((temp_multiplier / 3) * wet_factor) * exposure_reduction) * time_delta_seconds
-
-		if game_hours_passed >= 1.0
-			float ticks = (((game_hours_passed * 3600.0) / TimeScale.GetValue()) / update_freq)
-			ModAttributeExposure((amount * ticks), limit)
-		else
-			ModAttributeExposure(amount, limit)
-		endif
+    ; Master Exposure loss formula
+	float amount = (((temp_multiplier / 3) * wet_factor) * exposure_reduction) * time_delta_seconds
+	
+	if game_hours_passed >= 1.0
+		float ticks = (((game_hours_passed * 3600.0) / TimeScale.GetValue()) / update_freq)
+		ModAttributeExposure((amount * ticks), limit)
+	else
+		ModAttributeExposure(amount, MAX_EXPOSURE)
 	endif
 endFunction
 
