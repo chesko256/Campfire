@@ -18,3 +18,4 @@ GlobalVariable property _Frost_ExposureLevel auto
 GlobalVariable property _Frost_CurrentHeatSourceSize auto
 GlobalVariable property _Frost_CurrentHeatSourceDistance auto
 GlobalVariable property _Frost_NearFire auto
+GlobalVariable property _Frost_IsTakingShelter auto
