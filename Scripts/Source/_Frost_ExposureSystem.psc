@@ -44,6 +44,7 @@ Message property _Frost_HypoState_0 auto
 Message property _Frost_HypoState_0_Min auto
 Message property _Frost_ExposureDeathMsg auto
 Message property _Frost_PerkAdvancement auto
+Message property _Frost_PerkEarned auto
 ImageSpaceModifier property _Frost_ColdISM_Level5 auto
 ImageSpaceModifier property _Frost_ColdISM_Level4 auto
 ImageSpaceModifier property _Frost_ColdISM_Level3 auto
