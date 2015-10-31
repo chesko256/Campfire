@@ -116,11 +116,12 @@ endFunction
 
 function ShowWetStateMessage(int wet_level)
 	if _Frost_Setting_ConditionMessages.GetValueInt() == 2 && FrostUtil.IsPlayerVampire() == false
-		if wet_level == 3 && last_wet_level != 3
+		bool increasing = wet_level > last_wet_level
+		if increasing && wet_level == 3 && last_wet_level != 3
 			_Frost_WetStateMsg_Wet3.Show()
-		elseif wet_level == 2 && last_wet_level != 2
+		elseif increasing && wet_level == 2 && last_wet_level != 2
 			_Frost_WetStateMsg_Wet2.Show()
-		elseif wet_level == 1 && last_wet_level != 1
+		elseif increasing &&  wet_level == 1 && last_wet_level != 1
 			_Frost_WetStateMsg_Wet1.Show()
 		elseif wet_level == 0 && last_wet_level != 0
 			_Frost_WetStateMsg_Dry.Show()
