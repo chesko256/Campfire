@@ -6,8 +6,8 @@ import _FrostInternal
 Actor property PlayerRef auto
 GlobalVariable property _Frost_IsTakingShelter auto
 GlobalVariable property _Frost_ShelterDetectLastSeenTime auto
-ObjectReference property _Frost_ShelterDetectOrigin auto
-ObjectReference property _Frost_ShelterDetectSensor auto
+ObjectReference property _Frost_ShelterDetectOriginRef auto
+ObjectReference property _Frost_ShelterDetectSensorRef auto
 ObjectReference property _Frost_AnchorRef auto
 Spell property _Frost_ShelterDetectBeam auto
 
@@ -26,14 +26,14 @@ function Update()
 			endif
 			_Frost_IsTakingShelter.SetValue(1)
 		endif
-		_Frost_ShelterDetectOrigin.MoveTo(PlayerRef, 0.0, 0.0, 130.0)
-		_Frost_ShelterDetectSensor.MoveTo(PlayerRef, 0.0, 0.0, 1200.0)
-		_Frost_ShelterDetectBeam.Cast(_Frost_ShelterDetectOrigin, _Frost_ShelterDetectSensor)
+		_Frost_ShelterDetectOriginRef.MoveTo(PlayerRef, 0.0, 0.0, 130.0)
+		_Frost_ShelterDetectSensorRef.MoveTo(PlayerRef, 0.0, 0.0, 1200.0)
+		_Frost_ShelterDetectBeam.Cast(_Frost_ShelterDetectOriginRef, _Frost_ShelterDetectSensorRef)
 	endif
 endFunction
 
 function StopSystem()
-	_Frost_ShelterDetectOrigin.MoveTo(_Frost_AnchorRef)
-	_Frost_ShelterDetectSensor.MoveTo(_Frost_AnchorRef)
+	_Frost_ShelterDetectOriginRef.MoveTo(_Frost_AnchorRef)
+	_Frost_ShelterDetectSensorRef.MoveTo(_Frost_AnchorRef)
 	parent.StopSystem()
 endFunction

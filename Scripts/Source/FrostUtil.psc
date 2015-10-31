@@ -155,6 +155,18 @@ bool function IsNearFastTravelException() global
 	;else
 	;	return false
 	;endif
+    return false
+endFunction
+
+Weather function GetCurrentWeatherActual() global
+    Weather current_weather
+    bool transitioning = !(Weather.GetCurrentWeatherTransition() >= 1.0)
+    if transitioning
+        current_weather = Weather.GetOutgoingWeather()
+    else
+        current_weather = Weather.GetCurrentWeather()
+    endif
+    return current_weather
 endFunction
 
 int function GetWeatherClassificationActual(Weather akWeather) global

@@ -8,6 +8,7 @@ import _FrostInternal
 Quest property _Frost_MainQuest auto
 Actor property PlayerRef auto
 GlobalVariable property TimeScale auto
+GlobalVariable property _Frost_Setting_ExposureRate auto
 GlobalVariable property _Frost_Setting_ExposureOn auto
 GlobalVariable property _Frost_Setting_ExposurePauseDialogue auto
 GlobalVariable property _Frost_Setting_ExposurePauseCombat auto
@@ -24,7 +25,6 @@ GlobalVariable property _Frost_AttributeWarmth auto
 GlobalVariable property _Frost_AttributeCoverage auto
 GlobalVariable property _Frost_AttributeExposure auto
 GlobalVariable property _Frost_CurrentHeatSourceSize auto
-GlobalVariable property _Frost_IsTakingShelter auto
 GlobalVariable property _Frost_Calc_ExtremeMultiplier auto
 GlobalVariable property _Frost_Calc_StasisMultiplier auto
 GlobalVariable property _Frost_Calc_ExtremeTemp auto
@@ -58,8 +58,8 @@ FormList property _Frost_WorldspacesExteriorOblivion auto
 float property MIN_EXPOSURE = 0.0 autoReadOnly
 float property MAX_EXPOSURE = 120.0 autoReadOnly
 int property HEAT_FACTOR = 4 autoReadOnly
-int property SHELTER_FACTOR = 1 autoReadOnly
-int property WARM_SHELTER_BONUS = 1 autoReadOnly
+int property TENT_FACTOR = 1 autoReadOnly
+int property WARM_TENT_BONUS = 1 autoReadOnly
 float property EXPOSURE_LEVEL_5 = 100.0 autoReadOnly
 float property EXPOSURE_LEVEL_4 = 80.0 autoReadOnly
 float property EXPOSURE_LEVEL_3 = 60.0 autoReadOnly
@@ -80,8 +80,9 @@ float distance_moved = 0.0
 int last_exposure_level = 0
 WorldSpace this_worldspace = None
 WorldSpace last_worldspace = None
-bool in_shelter = false
-bool shelter_is_warm = false
+Weather current_weather = None
+bool in_tent = false
+bool tent_is_warm = false
 bool this_vampire_state = false
 bool last_vampire_state = false
 bool in_interior = false
@@ -176,14 +177,14 @@ function ModAttributeExposure(float amount, float limit, bool allow_skill_advanc
 	FrostDebug(1, "@@@@ Exposure ::: Current Exposure: " + exposure + " (" + amount + ")")
 
 	if advance_skill && allow_skill_advancement
-		AdvanceEnduranceSkill(amount)
+		AdvanceEnduranceSkill()
 	endif
 endFunction
 
 function RefreshPlayerStateData()
 	current_temperature = GetEffectiveTemperature()
-	in_shelter = GetInShelter()
-	shelter_is_warm = IsCurrentTentWarm()
+	in_tent = GetCurrentTent()
+	tent_is_warm = IsCurrentTentWarm()
 	this_worldspace = PlayerRef.GetWorldSpace()
 	player_x = PlayerRef.GetPositionX()
 	player_y = PlayerRef.GetPositionY()
@@ -265,7 +266,7 @@ bool function GetFastTravelled(float afDistance)
 endFunction
 
 function SetAfterFastTravelCondition()
-	ModAttributeExposure(-MAX_EXPOSURE, MIN_EXPOSURE)
+	ModAttributeExposure(-MAX_EXPOSURE, EXPOSURE_LEVEL_1)
     ExposureEffectsUpdate()
     _Frost_WetnessSystem wet = GetWetnessSystem()
     wet.ModAttributeWetness(-wet.MAX_WETNESS, wet.MIN_WETNESS)
@@ -439,13 +440,7 @@ float function GetEffectiveTemperature()
 	float current_temp = _Frost_CurrentTemperature.GetValue()
 	float temp_increase = 0
 	
-	Weather current_weather
-	bool transitioning = !(Weather.GetCurrentWeatherTransition() >= 1.0)
-	if transitioning
-		current_weather = Weather.GetOutgoingWeather()
-	else
-		current_weather = Weather.GetCurrentWeather()
-	endif
+	current_weather = GetCurrentWeatherActual()
 	int current_weather_class = GetWeatherClassificationActual(current_weather)
 
 	if IsWeatherSevere(current_weather) && current_weather_class == 3
@@ -482,122 +477,112 @@ function ExposureValueUpdate(float game_hours_passed)
 		near_heat = true
 		heat_amount = HEAT_FACTOR * _Frost_CurrentHeatSourceSize.GetValueInt()
 	else
-		if in_shelter || in_interior
-			if shelter_is_warm
-				heat_amount = SHELTER_FACTOR + WARM_SHELTER_BONUS
+		if in_tent || in_interior
+			if tent_is_warm
+				heat_amount = TENT_FACTOR + WARM_TENT_BONUS
 			else
-				heat_amount = SHELTER_FACTOR
+				heat_amount = TENT_FACTOR
 			endif
 		endif
 	endif
 
-	FrostDebug(0, "@@@@ Exposure ::: near_heat: " + near_heat + ", in_interior: " + in_interior + ", in_shelter: " + in_shelter + ", shelter_is_warm: " + shelter_is_warm)
+	FrostDebug(0, "@@@@ Exposure ::: near_heat: " + near_heat + ", in_interior: " + in_interior + ", in_tent: " + in_tent + ", tent_is_warm: " + tent_is_warm)
 
 	if in_interior
-		GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
+		GetWarmer(heat_amount, EXPOSURE_LEVEL_1, game_hours_passed)
 	else
 		if current_temperature <= -15
 			if near_heat
-				if in_shelter
-					if shelter_is_warm
+				if in_tent
+					if tent_is_warm
 						GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
-					elseif !shelter_is_warm
-						GetWarmer(heat_amount, 25.0, game_hours_passed)
+					elseif !tent_is_warm
+						GetWarmer(heat_amount, 45.0, game_hours_passed)
 					endif
-				elseif !in_shelter
-					GetWarmer(heat_amount, 50.0, game_hours_passed)
+				elseif !in_tent
+					GetWarmer(heat_amount, 70.0, game_hours_passed)
 				endif
 			elseif !near_heat
-				if in_shelter
-					if shelter_is_warm
-						GetWarmer(heat_amount, 25.0, game_hours_passed)
-					elseif !shelter_is_warm
-						GetWarmer(heat_amount, 40.0, game_hours_passed)
+				if in_tent
+					if tent_is_warm
+						GetWarmer(heat_amount, 35.0, game_hours_passed)
+					elseif !tent_is_warm
+						GetWarmer(heat_amount, 50.0, game_hours_passed)
 					endif
-				elseif !in_shelter
-					GetColder(heat_amount, 81.0, game_hours_passed)
+				elseif !in_tent
+					GetColder(heat_amount, 101.0, game_hours_passed)
 				endif
 			endif
 	
 		elseif current_temperature <= 0
 			if near_heat
-				if in_shelter
-					if shelter_is_warm
+				if in_tent
+					if tent_is_warm
 						GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
-					elseif !shelter_is_warm
-						GetWarmer(heat_amount, 15.0, game_hours_passed)
+					elseif !tent_is_warm
+						GetWarmer(heat_amount, 35.0, game_hours_passed)
 					endif
-				elseif !in_shelter
-					GetWarmer(heat_amount, 30.0, game_hours_passed)
+				elseif !in_tent
+					GetWarmer(heat_amount, 40.0, game_hours_passed)
 				endif
 			elseif !near_heat
-				if in_shelter
-					if shelter_is_warm
+				if in_tent
+					if tent_is_warm
 						GetWarmer(heat_amount, 15.0, game_hours_passed)
-					elseif !shelter_is_warm
-						GetWarmer(heat_amount, 30.0, game_hours_passed)
+					elseif !tent_is_warm
+						GetWarmer(heat_amount, 40.0, game_hours_passed)
 					endif
-				elseif !in_shelter
-					GetColder(heat_amount, 60.0, game_hours_passed)
+				elseif !in_tent
+					GetColder(heat_amount, 81.0, game_hours_passed)
 				endif
 			endif
 	
 		elseif current_temperature < 10
 			if near_heat
-				if in_shelter
-					if shelter_is_warm
+				if in_tent
+					if tent_is_warm
 						GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
-					elseif !shelter_is_warm
+					elseif !tent_is_warm
 						GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
 					endif
-				elseif !in_shelter
+				elseif !in_tent
 					GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
 				endif
 			elseif !near_heat
-				if in_shelter
-					if shelter_is_warm
+				if in_tent
+					if tent_is_warm
 						GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
-					elseif !shelter_is_warm
+					elseif !tent_is_warm
 						GetWarmer(heat_amount, 15.0, game_hours_passed)
 					endif
-				elseif !in_shelter
-					GetColder(heat_amount, 30.0, game_hours_passed)
+				elseif !in_tent
+					GetColder(heat_amount, 51.0, game_hours_passed)
 				endif
 			endif
 	
 		elseif current_temperature >= 10
 			if near_heat
-				if in_shelter
-					if shelter_is_warm
+				if in_tent
+					if tent_is_warm
 						GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
-					elseif !shelter_is_warm
+					elseif !tent_is_warm
 						GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
 					endif
-				elseif !in_shelter
+				elseif !in_tent
 					GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
 				endif
 			elseif !near_heat
-				if in_shelter
-					if shelter_is_warm
-						GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
-					elseif !shelter_is_warm
-						GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
+				if in_tent
+					if tent_is_warm
+						GetWarmer(heat_amount, EXPOSURE_LEVEL_1, game_hours_passed)
+					elseif !tent_is_warm
+						GetWarmer(heat_amount, EXPOSURE_LEVEL_1, game_hours_passed)
 					endif
-				elseif !in_shelter
-					GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
+				elseif !in_tent
+					GetWarmer(heat_amount, EXPOSURE_LEVEL_1, game_hours_passed)
 				endif
 			endif
 		endif
-	endif
-endFunction
-
-bool function GetInShelter()
-	if GetCurrentTent()
-		return true
-	elseif _Frost_IsTakingShelter.GetValueInt() == 2
-		return true
-	else
-		return false
 	endif
 endFunction
 
@@ -608,9 +593,8 @@ function GetWarmer(int heat_amount, float limit, float game_hours_passed)
 	else
 		FrostDebug(1, "@@@@ Exposure ::: GetWarmer : Limit " + Math.Ceiling(limit) + " : GameHoursPassed " + game_hours_passed)
 		if game_hours_passed >= 1.0
-			float update_freq = UpdateFrequencyGlobal.GetValue()
-			float ticks = (((game_hours_passed * 3600.0) / TimeScale.GetValue()) / update_freq)
-			ModAttributeExposure((-heat_amount * ticks), limit, allow_skill_advancement=false)
+			float duration_amount = 15.0 * game_hours_passed
+			ModAttributeExposure(-duration_amount, limit, allow_skill_advancement=false)
 		else
 			ModAttributeExposure(-heat_amount, limit)
 		endif
@@ -636,12 +620,12 @@ function GetColder(int heat_amount, float limit, float game_hours_passed)
     float wet_factor = GetWetFactor()
     
     ; Master Exposure loss formula
-	float amount = (((temp_multiplier / 3) * wet_factor) * exposure_reduction) * time_delta_seconds
+	float amount = ((((temp_multiplier / 3) * wet_factor) * exposure_reduction) * time_delta_seconds) * _Frost_Setting_ExposureRate.GetValue()
 	debug.trace(current_temperature + " " + temp_multiplier + " " + 3 + " " + wet_factor + " " + exposure_reduction + " " + time_delta_seconds)
 
 	if game_hours_passed >= 1.0
-		float ticks = (((game_hours_passed * 3600.0) / TimeScale.GetValue()) / update_freq)
-		ModAttributeExposure((amount * ticks), limit, allow_skill_advancement=false)
+		float duration_amount = (limit / 4) * game_hours_passed
+		ModAttributeExposure(duration_amount, limit, allow_skill_advancement=false)
 	else
 		ModAttributeExposure(amount, MAX_EXPOSURE)
 	endif
@@ -660,17 +644,27 @@ endFunction
 ; dark souls-like lingering heat effect
 
 ; Endurance Skill
-function AdvanceEnduranceSkill(float exposure_gained)
+function AdvanceEnduranceSkill()
     if EndurancePerkPointsEarned.GetValueInt() < EndurancePerkPointsTotal.GetValueInt()
-        FrostDebug(1, "Advancing Endurance skill.")
+    	if in_interior || GetCurrentTent() || _Frost_CurrentHeatSourceSize.GetValueInt() > 0
+    		return
+    	endif
+    	if (current_temperature <= 0) || (current_temperature < 10 && GetWeatherClassificationActual(current_weather) >= 2)
+    		; continue
+    	else
+    		return
+    	endif
+
+        FrostDebug(0, "Advancing Endurance skill.")
         int next_level = EndurancePerkPointsEarned.GetValueInt() + 1
 
-        ; 80, 160, 240, 320...
-        float exposure_required = 80 * next_level
+        ; 40, 80, 120, 160...
+        float ticks_required = 40 * next_level
 
-        float progress_value = (exposure_gained / exposure_required)
-        EndurancePerkPointProgress.SetValue(EndurancePerkPointProgress.GetValue() + progress_value)
-        FrostDebug(1, "Endurance perk progress value: " + EndurancePerkPointProgress.GetValue())
+        float new_progress = (1.0 / ticks_required)
+        float current_progress = EndurancePerkPointProgress.GetValue()
+        float total_progress = current_progress + new_progress
+        EndurancePerkPointProgress.SetValue(total_progress)
 
         if (EndurancePerkPointProgress.GetValue() + 0.01) >= 1.0
             FrostDebug(1, "Granting an Endurance perk point.")
@@ -685,7 +679,13 @@ function AdvanceEnduranceSkill(float exposure_gained)
                 EndurancePerkPointProgress.SetValue(0.0)
             endif
         else
-            _Frost_PerkAdvancement.Show()
+        	if (current_progress < 0.25 && total_progress >= 0.25) || \
+        	   (current_progress < 0.50 && total_progress >= 0.50) || \	
+        	   (current_progress < 0.75 && total_progress >= 0.75)
+
+            	FrostDebug(1, "Endurance perk progress value: " + EndurancePerkPointProgress.GetValue())
+            	_Frost_PerkAdvancement.Show()
+            endif
         endif
     endif
 endFunction

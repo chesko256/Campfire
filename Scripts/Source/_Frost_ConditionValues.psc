@@ -11,3 +11,4 @@ bool property IsHearthfireLoaded = false auto conditional hidden
 bool property IsDawnguardLoaded = false auto conditional hidden
 bool property IsDragonbornLoaded = false auto conditional hidden
 bool property IsLastSeedLoaded = false auto conditional hidden
+bool property IsSkyReLoaded = false auto conditional hidden

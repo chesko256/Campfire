@@ -30,6 +30,7 @@ bool property isCOTLoaded auto hidden						;Climates of Tamriel
 bool property isIMALoaded auto hidden						;Immersive Armors 7.1
 bool property isWTHLoaded auto hidden						;Wyrmstooth
 bool property isDRKLoaded auto hidden						;DarkenD
+bool property isSKYRELoaded auto hidden						;Skyim Redone
 
 ;#Merchant Containers==========================================================
 ;ObjectReference property MerchantRiverwoodTraderContainer auto
@@ -218,6 +219,24 @@ function RunCompatibility()
 		if isWTHLoaded
 			;Wyrmstooth was just added.
 			WTHLoadUp()
+		endif
+	endif
+
+	if isSKYRELoaded
+		isSKYRELoaded = Game.GetFormFromFile(0x0008D73F, "SkyRe_Main.esp")
+		if !isSKYRELoaded
+			;SkyRe was removed since the last save.
+			Conditions.IsSkyReLoaded = false
+		else
+			Conditions.IsSkyReLoaded = true
+		endif
+	else
+		isSKYRELoaded = Game.GetFormFromFile(0x0008D73F, "SkyRe_Main.esp")
+		if isSKYRELoaded
+			;SkyRe was just added.
+			Conditions.IsSkyReLoaded = true
+		else
+			Conditions.IsSkyReLoaded = false
 		endif
 	endif
 
