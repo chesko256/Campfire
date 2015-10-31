@@ -1,4 +1,4 @@
-scriptname _DE_SKI_MeterWidget extends SKI_WidgetBase
+scriptname _Frost_SKI_MeterWidget extends SKI_WidgetBase
 
 ; PRIVATE VARIABLES -------------------------------------------------------------------------------
 
