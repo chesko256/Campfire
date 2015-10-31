@@ -179,6 +179,8 @@ function ModAttributeExposure(float amount, float limit, bool allow_skill_advanc
 	if advance_skill && allow_skill_advancement
 		AdvanceEnduranceSkill()
 	endif
+
+	SendEvent_UpdateExposureMeter()
 endFunction
 
 function RefreshPlayerStateData()
@@ -266,7 +268,7 @@ bool function GetFastTravelled(float afDistance)
 endFunction
 
 function SetAfterFastTravelCondition()
-	ModAttributeExposure(-MAX_EXPOSURE, EXPOSURE_LEVEL_1)
+	ModAttributeExposure(-MAX_EXPOSURE, EXPOSURE_LEVEL_1 + 1)
     ExposureEffectsUpdate()
     _Frost_WetnessSystem wet = GetWetnessSystem()
     wet.ModAttributeWetness(-wet.MAX_WETNESS, wet.MIN_WETNESS)
@@ -327,19 +329,20 @@ int function UpdateExposureLevel()
 endFunction
 
 function ShowExposureStateMessage(int exposure_level)
-	if _Frost_Setting_ConditionMessages.GetValueInt() == 2 
-		if exposure_level == 5 && last_exposure_level != 5
+	if _Frost_Setting_ConditionMessages.GetValueInt() == 2
+		bool increasing = exposure_level > last_exposure_level
+		if increasing && exposure_level == 5 && last_exposure_level != 5
 			_Frost_HypoState_5.Show()
-		elseif exposure_level == 4 && last_exposure_level != 4
+		elseif increasing && exposure_level == 4 && last_exposure_level != 4
 			_Frost_HypoState_4.Show()
-		elseif exposure_level == 3 && last_exposure_level != 3
+		elseif increasing && exposure_level == 3 && last_exposure_level != 3
 			_Frost_HypoState_3.Show()
-		elseif exposure_level == 2 && last_exposure_level != 2
+		elseif increasing && exposure_level == 2 && last_exposure_level != 2
 			_Frost_HypoState_2.Show()
 			ShowTutorial_Exposure()
-		elseif exposure_level == 1 && last_exposure_level != 1
+		elseif increasing && exposure_level == 1 && last_exposure_level != 1
 			_Frost_HypoState_1.Show()
-		elseif exposure_level == 0 && last_exposure_level != 0 && last_exposure_level != -1
+		elseif increasing && exposure_level == 0 && last_exposure_level != 0 && last_exposure_level != -1
 			_Frost_HypoState_0.Show()
 		elseif exposure_level == -1 && last_exposure_level != -1
 			_Frost_HypoState_0_Min.Show()
@@ -489,7 +492,11 @@ function ExposureValueUpdate(float game_hours_passed)
 	FrostDebug(0, "@@@@ Exposure ::: near_heat: " + near_heat + ", in_interior: " + in_interior + ", in_tent: " + in_tent + ", tent_is_warm: " + tent_is_warm)
 
 	if in_interior
-		GetWarmer(heat_amount, EXPOSURE_LEVEL_1, game_hours_passed)
+		if near_heat
+			GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
+		else
+			GetWarmer(heat_amount, EXPOSURE_LEVEL_1, game_hours_passed)
+		endif
 	else
 		if current_temperature <= -15
 			if near_heat
@@ -703,6 +710,16 @@ function ModExposure(float amount, float limit = -1.0, bool display_meter_on_cha
 	;@TODO: if force_meter_display...
 endFunction
 
+function SendEvent_UpdateExposureMeter()
+	int handle = ModEvent.Create("Frost_UpdateExposureMeter")
+	if handle
+		ModEvent.Send(handle)
+	endif
+endFunction
+
 function RescuePlayer()
 
 endFunction
+
+;@TODO: Update warmth and coverage when perks are bought
+;@TODO: Add InterfaceHandler to start-up event registration

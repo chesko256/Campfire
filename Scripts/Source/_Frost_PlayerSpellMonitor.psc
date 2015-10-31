@@ -57,10 +57,24 @@ function DispelWetness()
 	endif
 endFunction
 
+bool fire_damage_lock = false
 function DecreaseExposureFireDamage()
+	if fire_damage_lock
+		return
+	endif
+	fire_damage_lock = true
 	ModPlayerExposure(-5.0, 50.0, true)
+	Utility.Wait(2.0)
+	fire_damage_lock = false
 endFunction
 
+bool frost_damage_lock = false
 function IncreaseExposureFrostDamage()
+	if frost_damage_lock
+		return
+	endif
+	frost_damage_lock = true
 	ModPlayerExposure(5.0, 90.0, true)
+	Utility.Wait(2.0)
+	frost_damage_lock = false
 endFunction
