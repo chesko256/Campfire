@@ -4,7 +4,6 @@ import CampUtil
 import FrostUtil
 import _FrostInternal
 
-GlobalVariable property _Frost_Calc_MaxCoverage auto
 
 float property WET_SPEED 		= 27.0 autoReadOnly 		; Wetness gained when standing in rain.
 float property DRY_SPEED 		= -6.25 autoReadOnly 		; Wetness lost ambiently.
@@ -19,6 +18,7 @@ int property WEATHERCLASS_RAIN 	= 2 autoReadOnly
 Actor property PlayerRef auto
 GlobalVariable property _Frost_AttributeWetness auto
 GlobalVariable property _Frost_AttributeCoverage auto
+GlobalVariable property _Frost_Calc_MaxCoverage auto
 GlobalVariable property _Frost_WetLevel auto
 GlobalVariable property _Frost_Setting_ConditionMessages auto
 Message property _Frost_WetStateMsg_Wet3 auto
@@ -62,9 +62,11 @@ function ModAttributeWetness(float amount, float limit)
 	if wet_attr == limit
 		if limit == MIN_WETNESS && amount < 0
 			; Already at minimum
+			SendEvent_UpdateWetnessMeter()
 			return
 		elseif limit > MIN_WETNESS && amount > 0
 			; Already at maximum
+			SendEvent_UpdateWetnessMeter()
 			return
 		endif
 	endif
@@ -83,6 +85,8 @@ function ModAttributeWetness(float amount, float limit)
 	endif
 	_Frost_AttributeWetness.SetValue(wetness)
 	FrostDebug(1, "~~~~ Wetness ::: Current Wetness: " + wetness + " (" + amount + ")")
+
+	SendEvent_UpdateWetnessMeter()
 endFunction
 
 function UpdateWetLevel()
@@ -221,5 +225,12 @@ function GetWetter(float limit)
 
 		FrostDebug(1, "~~~~ Wetness ::: GetWetter : Limit " + limit + ", Rain protection modifier " + rain_protect_modifier)
 		ModAttributeWetness(amount, limit)
+	endif
+endFunction
+
+function SendEvent_UpdateWetnessMeter()
+	int handle = ModEvent.Create("Frost_UpdateWetnessMeter")
+	if handle
+		ModEvent.Send(handle)
 	endif
 endFunction
