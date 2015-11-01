@@ -3,10 +3,12 @@ scriptname _Frost_InterfaceHandler extends Quest
 import FrostUtil
 import _FrostInternal
 
+Actor property PlayerRef auto
+
 Event OnInit()
 	RegisterForEvents()
 	RegisterForMenus()
-	SetMeterPositions("right", "top", 1219.0, 75.2)
+	SetMeterPositions()
 EndEvent
 
 function RegisterForEvents()
@@ -143,16 +145,29 @@ endFunction
 ; *   Meters   *
 ; **************
 _Frost_ExposureMeter property ExposureMeter auto
+_Frost_WetnessMeter property WetnessMeter auto
 GlobalVariable property _Frost_AttributeExposure auto
+GlobalVariable property _Frost_AttributeWetness auto
 GlobalVariable property _Frost_ExposureMeterColorWarm_Light auto
 GlobalVariable property _Frost_ExposureMeterColorWarm_Dark auto
 GlobalVariable property _Frost_ExposureMeterColorCold_Light auto
 GlobalVariable property _Frost_ExposureMeterColorCold_Dark auto
+GlobalVariable property _Frost_WetnessMeterColor_Light auto
+GlobalVariable property _Frost_WetnessMeterColor_Dark auto
 GlobalVariable property _Frost_Setting_MeterDisplayTime auto
 GlobalVariable property _Frost_Setting_MeterDisplayMode auto		; 0 = Off, 1 = Always On, 2 = Contextual
-GlobalVariable property _Frost_Setting_ExposureMeterOpacity auto
+GlobalVariable property _Frost_Setting_MeterOpacity auto
+FormList property _Frost_SleepObjects auto
+
+float property EXPOSURE_LEVEL_5 = 100.0 autoReadOnly
+float property EXPOSURE_LEVEL_4 = 80.0 autoReadOnly
+float property EXPOSURE_LEVEL_3 = 60.0 autoReadOnly
+float property EXPOSURE_LEVEL_2 = 40.0 autoReadOnly
+float property EXPOSURE_LEVEL_1 = 20.0 autoReadOnly
+float property EXPOSURE_LEVEL_0 = 0.0 autoReadOnly
 
 float last_exposure = 20.0
+float last_wetness = 0.0
 int exposure_display_iterations_remaining = 0
 int wetness_display_iterations_remaining = 0
 
@@ -162,7 +177,7 @@ Event OnUpdate()
 		RegisterForSingleUpdate(2)
 	endif
 	if wetness_display_iterations_remaining > 0 || wetness_display_iterations_remaining == -1
-		; UpdateWetnessMeter()
+		UpdateWetnessMeter()
 		RegisterForSingleUpdate(2)
 	endif
 EndEvent
@@ -179,11 +194,24 @@ function UpdateExposureMeter()
 		RegisterForSingleUpdate(2)
 	elseif exposure_display_iterations_remaining == -1
 		RegisterForSingleUpdate(2)
-	endif
-	
-	if exposure_display_iterations_remaining == 0
+	elseif exposure_display_iterations_remaining == 0
 		if _Frost_Setting_MeterDisplayMode.GetValueInt() == 2
 			ExposureMeter.FadeTo(0.0, 3.0)
+		endif
+	endif
+endFunction
+
+function UpdateWetnessMeter()
+	UpdateWetnessMeter_Do(false)
+
+	if wetness_display_iterations_remaining > 0
+		wetness_display_iterations_remaining -= 1
+		RegisterForSingleUpdate(2)
+	elseif wetness_display_iterations_remaining == -1
+		RegisterForSingleUpdate(2)
+	elseif wetness_display_iterations_remaining == 0
+		if _Frost_Setting_MeterDisplayMode.GetValueInt() == 2
+			WetnessMeter.FadeTo(0.0, 3.0)
 		endif
 	endif
 endFunction
@@ -196,12 +224,12 @@ function UpdateExposureMeter_Do(bool bSkipDisplayHandling = false)
 	endif
 
 	if _Frost_Setting_MeterDisplayMode.GetValueInt() == 1 									; Always On
-		ExposureMeter.Alpha = _Frost_Setting_ExposureMeterOpacity.GetValue()
+		ExposureMeter.Alpha = _Frost_Setting_MeterOpacity.GetValue()
 	elseif _Frost_Setting_MeterDisplayMode.GetValueInt() == 2 || bSkipDisplayHandling 		; Contextual
 		if warm
-			ContextualDisplay(exposure)
+			Exposure_ContextualDisplay(exposure)
 		else
-			ContextualDisplay(exposure, bSkipDisplayHandling)
+			Exposure_ContextualDisplay(exposure, bSkipDisplayHandling)
 		endif
 	elseif _Frost_Setting_MeterDisplayMode.GetValueInt() == 0 && exposure_display_iterations_remaining == 0
 		ExposureMeter.Alpha = 0.0
@@ -223,23 +251,40 @@ function UpdateExposureMeter_Do(bool bSkipDisplayHandling = false)
 	last_exposure = exposure
 endFunction
 
+function UpdateWetnessMeter_Do(bool bSkipDisplayHandling = false)
+	float wetness = _Frost_AttributeWetness.GetValue()
+
+	if _Frost_Setting_MeterDisplayMode.GetValueInt() == 1
+		WetnessMeter.Alpha = _Frost_Setting_MeterOpacity.GetValue()
+	elseif _Frost_Setting_MeterDisplayMode.GetValueInt() == 2 || bSkipDisplayHandling
+		Wetness_ContextualDisplay(wetness)
+	elseif _Frost_Setting_MeterDisplayMode.GetValueInt() == 0 && wetness_display_iterations_remaining == 0
+		WetnessMeter.Alpha = 0.0
+		return
+	endif
+
+	WetnessMeter.SetPercent(wetness / 750.0)
+	WetnessMeter.SetColors(_Frost_WetnessMeterColor_Light.GetValueInt(), _Frost_WetnessMeterColor_Dark.GetValueInt())
+	last_wetness = wetness
+endFunction
+
 ;/function ForceDisplayAndUpdate(bool bSkipDisplayHandling = true)
 	;Called by spells that change exposure.
 	exposure_display_iterations_remaining = _Frost_Setting_MeterDisplayTime.GetValueInt()
-	ExposureMeter.FadeTo(_Frost_Setting_ExposureMeterOpacity.GetValue(), 1.0)
+	ExposureMeter.FadeTo(_Frost_Setting_MeterOpacity.GetValue(), 1.0)
 	UpdateExposureMeter(bSkipDisplayHandling)
 endFunction
 
 function ForceDisplayAndUpdateFlash(bool bSkipDisplayHandling = true)
 	;Called by spells that change exposure.
 	exposure_display_iterations_remaining = _Frost_Setting_MeterDisplayTime.GetValueInt()
-	ExposureMeter.FadeTo(_Frost_Setting_ExposureMeterOpacity.GetValue(), 1.0)
+	ExposureMeter.FadeTo(_Frost_Setting_MeterOpacity.GetValue(), 1.0)
 	ExposureMeter.ForceFlash()
 	UpdateExposureMeter(bSkipDisplayHandling)
 endFunction
 /;
 
-function ContextualDisplay(float exposure, bool bSkipDisplayHandling = false)
+function Exposure_ContextualDisplay(float exposure, bool bSkipDisplayHandling = false)
 	debug.trace("[Frostfall] Exposure: " + exposure + ",  Last Exposure:" + last_exposure + ", Meter Duration Remaining:" + exposure_display_iterations_remaining)
 
 	if bSkipDisplayHandling
@@ -248,44 +293,44 @@ function ContextualDisplay(float exposure, bool bSkipDisplayHandling = false)
 	endif
 
 	bool increasing = last_exposure < exposure
-	if increasing && last_exposure < 101 && exposure >= 101
+	if increasing && last_exposure <= EXPOSURE_LEVEL_5 && exposure > EXPOSURE_LEVEL_5
 		;freezing to death, show, flash
-		ExposureMeter.FadeTo(_Frost_Setting_ExposureMeterOpacity.GetValue(), 2.0)
+		ExposureMeter.FadeTo(_Frost_Setting_MeterOpacity.GetValue(), 2.0)
 		ExposureMeter.StartFlash()
 		exposure_display_iterations_remaining = -1
 
-	elseif increasing && last_exposure < 81 && exposure >= 81
+	elseif increasing && last_exposure <= EXPOSURE_LEVEL_4 && exposure > EXPOSURE_LEVEL_4
 		;freezing, show, flash
-		ExposureMeter.FadeTo(_Frost_Setting_ExposureMeterOpacity.GetValue(), 2.0)
+		ExposureMeter.FadeTo(_Frost_Setting_MeterOpacity.GetValue(), 2.0)
 		ExposureMeter.StartFlash()
 		exposure_display_iterations_remaining = -1
 
-	elseif increasing && last_exposure < 61 && exposure >= 61
+	elseif increasing && last_exposure <= EXPOSURE_LEVEL_3 && exposure > EXPOSURE_LEVEL_3
 		;very cold, show
-		ExposureMeter.FadeTo(_Frost_Setting_ExposureMeterOpacity.GetValue(), 2.0)
+		ExposureMeter.FadeTo(_Frost_Setting_MeterOpacity.GetValue(), 2.0)
 		exposure_display_iterations_remaining = _Frost_Setting_MeterDisplayTime.GetValueInt()
 
-	elseif increasing && last_exposure < 41 && exposure >= 41
+	elseif increasing && last_exposure <= EXPOSURE_LEVEL_2 && exposure > EXPOSURE_LEVEL_2
 		;chilly, show
-		ExposureMeter.FadeTo(_Frost_Setting_ExposureMeterOpacity.GetValue(), 2.0)
+		ExposureMeter.FadeTo(_Frost_Setting_MeterOpacity.GetValue(), 2.0)
 		exposure_display_iterations_remaining = _Frost_Setting_MeterDisplayTime.GetValueInt()
 		
-	elseif increasing && last_exposure < 21 && exposure >= 21
+	elseif increasing && last_exposure <= EXPOSURE_LEVEL_1 && exposure > EXPOSURE_LEVEL_1
 		;comfortable, show
-		ExposureMeter.FadeTo(_Frost_Setting_ExposureMeterOpacity.GetValue(), 2.0)
+		ExposureMeter.FadeTo(_Frost_Setting_MeterOpacity.GetValue(), 2.0)
 		exposure_display_iterations_remaining = _Frost_Setting_MeterDisplayTime.GetValueInt()
 
-	elseif increasing && last_exposure < 11 && exposure >= 11
+	elseif increasing && last_exposure <= 11 && exposure > 11
 		;warm, show
-		ExposureMeter.FadeTo(_Frost_Setting_ExposureMeterOpacity.GetValue(), 2.0)
+		ExposureMeter.FadeTo(_Frost_Setting_MeterOpacity.GetValue(), 2.0)
 		exposure_display_iterations_remaining = _Frost_Setting_MeterDisplayTime.GetValueInt()
 		
-	elseif !increasing && last_exposure != exposure && exposure > 0.0 && (GetPlayerHeatSourceLevel() > 0) ; @TODO: || Game.FindClosestReferenceOfAnyTypeInListFromRef(_DE_SleepObjects, PlayerRef,  600.0) != None)
+	elseif !increasing && last_exposure != exposure && exposure > 0.0 && (GetPlayerHeatSourceLevel() > 0 || Game.FindClosestReferenceOfAnyTypeInListFromRef(_Frost_SleepObjects, PlayerRef,  600.0) != None)
 		;going down, show
-		ExposureMeter.FadeTo(_Frost_Setting_ExposureMeterOpacity.GetValue(), 2.0)
+		ExposureMeter.FadeTo(_Frost_Setting_MeterOpacity.GetValue(), 2.0)
 		exposure_display_iterations_remaining = -1
 
-	elseif (last_exposure > 0.0 && exposure <= 0.0) ;@TODO: || (_DE_FireDistance.GetValue() == -1 && exposure >= 41)
+	elseif (last_exposure > 0.0 && exposure <= 0.0) || (GetPlayerHeatSourceDistance() == -1 && exposure < 61)
 		; hit bottom, fade out
 		if exposure_display_iterations_remaining == -1
 			exposure_display_iterations_remaining = _Frost_Setting_MeterDisplayTime.GetValueInt()
@@ -293,27 +338,64 @@ function ContextualDisplay(float exposure, bool bSkipDisplayHandling = false)
 	endif
 endFunction
 
-function SetMeterPositions(string Exposure_HAnchor, string Exposure_VAnchor, float Exposure_X, float Exposure_Y)
-	ExposureMeter.HAnchor = Exposure_HAnchor
-	ExposureMeter.VAnchor = Exposure_VAnchor
+function Wetness_ContextualDisplay(float wetness, bool bSkipDisplayHandling = false)
+	debug.trace("[Frostfall] Wetness: " + wetness + ",  Last Wetness:" + last_wetness + ", Meter Duration Remaining:" + wetness_display_iterations_remaining)
+
+	if bSkipDisplayHandling
+		wetness_display_iterations_remaining = _Frost_Setting_MeterDisplayTime.GetValueInt()
+		return
+	endif
+
+	bool increasing = last_wetness < wetness
+	if increasing && wetness >= 550.0
+		WetnessMeter.FadeTo(_Frost_Setting_MeterOpacity.GetValue(), 2.0)
+		wetness_display_iterations_remaining = _Frost_Setting_MeterDisplayTime.GetValueInt()
+	elseif increasing && last_wetness < 200.0 && wetness >= 200.0
+		WetnessMeter.FadeTo(_Frost_Setting_MeterOpacity.GetValue(), 2.0)
+		wetness_display_iterations_remaining = _Frost_Setting_MeterDisplayTime.GetValueInt()
+	elseif increasing && last_wetness < 400.0 && wetness >= 400.0
+		WetnessMeter.FadeTo(_Frost_Setting_MeterOpacity.GetValue(), 2.0)
+		wetness_display_iterations_remaining = _Frost_Setting_MeterDisplayTime.GetValueInt()
+	elseif !increasing && last_wetness != wetness && wetness > 0.0 && (GetPlayerHeatSourceDistance() == -1 || Game.FindClosestReferenceOfAnyTypeInListFromRef(_Frost_SleepObjects, PlayerRef,  600.0) != None)
+		WetnessMeter.FadeTo(_Frost_Setting_MeterOpacity.GetValue(), 2.0)
+		wetness_display_iterations_remaining = -1
+	elseif (last_wetness > 0.0 && wetness <= 0.0) || (GetPlayerHeatSourceDistance() == -1 && wetness < 550.0)
+		if wetness_display_iterations_remaining == -1
+			wetness_display_iterations_remaining = _Frost_Setting_MeterDisplayTime.GetValueInt()
+		endif
+	endif
+endFunction
+
+
+function SetMeterPositions()
+	ExposureMeter.HAnchor = "right"
+	ExposureMeter.VAnchor = "top"
 	ExposureMeter.Width = 292.8
 	ExposureMeter.Height = 25.2
-		
-	ExposureMeter.X = Exposure_X
-	ExposureMeter.Y = Exposure_Y
-		
-	;WetMeter.HAnchor = Wet_HAnchor
-	;WetMeter.VAnchor = Wet_VAnchor
-	;WetMeter.X = Wet_X
+	ExposureMeter.X = 1219.0
+	ExposureMeter.Y = 75.2
+
+	WetnessMeter.HAnchor = "right"
+	WetnessMeter.VAnchor = "top"
+	WetnessMeter.Width = 292.0
+	WetnessMeter.Height = -22.0
+	WetnessMeter.X = 1494.25
+	WetnessMeter.Y = 114.0
 
 	if ExposureMeter.HAnchor == "right"
 		ExposureMeter.FillDirection = "left"
 	else
 		ExposureMeter.FillDirection = "right"
 	endIf
+
+	if WetnessMeter.HAnchor == "right"
+		WetnessMeter.FillDirection = "right"
+	else
+		WetnessMeter.FillDirection = "left"
+	endIf
 	
 	; ExposureMeterDisplay.ForceDisplayAndUpdate()
 	; WetMeterDisplay.ForceDisplayAndUpdate()
 
-	;debug.trace("[Frostfall] EMX:" + ExposureMeter.X + ", EMY:" + ExposureMeter.Y + ", WMX:" + WetMeter.X + ", WMY:" + WetMeter.Y)
+	;debug.trace("[Frostfall] EMX:" + ExposureMeter.X + ", EMY:" + ExposureMeter.Y + ", WMX:" + WetnessMeter.X + ", WMY:" + WetnessMeter.Y)
 endFunction
