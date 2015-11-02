@@ -567,14 +567,6 @@ function Update()
 	UpdateTentUseState(self)
 endFunction
 
-Event OnCellAttach()
-	debug.trace("OnCellAttach################# " + self)
-EndEvent
-
-Event OnCellDetach()
-	debug.trace("OnCellDetach################# " + self)
-EndEvent
-
 Event OnActivate(ObjectReference akActionRef)
 	ActivateTent(akActionRef, self)
 endEvent
