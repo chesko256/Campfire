@@ -783,6 +783,7 @@ endFunction
 ;@TODO: Add alternate coverage / warmth display method
 ;@TODO: Reimplement tutorials
 ;@TODO: Refresh loading screens
+;@TODO: Conditionalize Weathersense acquire on hotkey
 ;@TODO: Hook up SkyUI MCM
 ;@TODO: Fix color issue on charge meters
 ;@TODO: Start-up, shut-down procedures
