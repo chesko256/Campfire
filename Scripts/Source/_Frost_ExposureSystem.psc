@@ -69,7 +69,6 @@ float property EXPOSURE_LEVEL_4 = 80.0 autoReadOnly
 float property EXPOSURE_LEVEL_3 = 60.0 autoReadOnly
 float property EXPOSURE_LEVEL_2 = 40.0 autoReadOnly
 float property EXPOSURE_LEVEL_1 = 20.0 autoReadOnly
-float property EXPOSURE_LEVEL_0 = 0.0 autoReadOnly
 
 float current_temperature = 10.0
 float last_update_time = 0.0
@@ -342,7 +341,7 @@ int function UpdateExposureLevel()
 	elseif current_exposure >= EXPOSURE_LEVEL_1
 		exposure_level = 1
 		ShowExposureStateMessage(1)
-	elseif current_exposure >= EXPOSURE_LEVEL_0
+	elseif current_exposure > MIN_EXPOSURE
 		exposure_level = 0
 		ShowExposureStateMessage(0)
 	elseif current_exposure == MIN_EXPOSURE
@@ -764,6 +763,5 @@ function RescuePlayer()
 endFunction
 
 ;@TODO: Update warmth and coverage when perks are bought
-;@TODO: Completely warm message not firing
 ;@TODO: Shelter system is broken for some reason
 ;@TODO: In shelter, don't passively warm up, but allow fire to warm you as much as a leather tent

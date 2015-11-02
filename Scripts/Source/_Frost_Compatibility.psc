@@ -4,6 +4,7 @@ import debug
 import FrostUtil
 
 int property SKSE_MIN_VERSION = 10703 autoReadOnly
+float property CAMPFIRE_MIN_VERSION = 1.4 autoReadOnly
 
 ;#PROPERTIES=====================================================================================================================
 actor property PlayerRef auto
@@ -76,6 +77,7 @@ float[] Wyrmstooth_West_PolyY
 
 ;#Misc=============================================================================
 Message property _Frost_CriticalError_SKSE auto
+Message property _Frost_CriticalError_Campfire auto
 Weather property DLC2AshStorm auto hidden
 
 ;#Upgrade Flags====================================================================
@@ -96,6 +98,14 @@ function FatalErrorSKSE(int version)
 	trace("[Frostfall][ERROR] Detected SKSE version " + ((version as float) / 10000) + ", out of date! Expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer.")
 	while true
 		_Frost_CriticalError_SKSE.Show(((version as float) / 10000), ((SKSE_MIN_VERSION as float) / 10000))
+		utility.wait(3.0)
+	endWhile
+endFunction
+
+function FatalErrorCampfire(float version)
+	trace("[Frostfall][ERROR] Detected Campfire version " + version + ", out of date! Expected " + CAMPFIRE_MIN_VERSION + " or newer.")
+	while true
+		_Frost_CriticalError_Campfire.Show(version, CAMPFIRE_MIN_VERSION)
 		utility.wait(3.0)
 	endWhile
 endFunction
@@ -122,8 +132,12 @@ function RunCompatibility()
 		FatalErrorSKSE(0)
 	endif
 
-	float campfire_loaded = CampUtil.GetCampfireVersion()
-	debug.trace("FROSTFALL FOUND CAMPFIRE " + campfire_loaded)
+	float campfire_version = CampUtil.GetCampfireVersion()
+	if campfire_version < CAMPFIRE_MIN_VERSION
+		FatalErrorCampfire(campfire_version)
+	else
+		trace("[Frostfall] Detected Campfire version " + campfire_version + " (expected " + CAMPFIRE_MIN_VERSION + " or newer, success!)")
+	endif
 	
 	if isSKYUILoaded
 		isSKYUILoaded = IsPluginLoaded(0x01000814, "SkyUI.esp")
@@ -223,7 +237,7 @@ function RunCompatibility()
 	endif
 
 	if isSKYRELoaded
-		isSKYRELoaded = Game.GetFormFromFile(0x0008D73F, "SkyRe_Main.esp")
+		isSKYRELoaded = IsPluginLoaded(0x0008D73F, "SkyRe_Main.esp")
 		if !isSKYRELoaded
 			;SkyRe was removed since the last save.
 			Conditions.IsSkyReLoaded = false
@@ -231,7 +245,7 @@ function RunCompatibility()
 			Conditions.IsSkyReLoaded = true
 		endif
 	else
-		isSKYRELoaded = Game.GetFormFromFile(0x0008D73F, "SkyRe_Main.esp")
+		isSKYRELoaded = IsPluginLoaded(0x0008D73F, "SkyRe_Main.esp")
 		if isSKYRELoaded
 			;SkyRe was just added.
 			Conditions.IsSkyReLoaded = true
