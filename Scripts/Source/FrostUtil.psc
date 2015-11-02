@@ -167,6 +167,15 @@ bool function IsNearFastTravelException() global
     return false
 endFunction
 
+int function GetCurrentTemperature() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return -1
+    endif
+    return Frostfall._Frost_CurrentTemperature.GetValueInt()
+endFunction
+
 Weather function GetCurrentWeatherActual() global
     Weather current_weather
     bool transitioning = !(Weather.GetCurrentWeatherTransition() >= 1.0)
@@ -310,6 +319,15 @@ endif
     return false
 endFunction
 
+float function GetPlayerWetness() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return -1.0
+    endif
+    return Frostfall._Frost_AttributeWetness.GetValue()
+endFunction
+
 int function GetPlayerWetnessLevel() global
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
@@ -318,6 +336,15 @@ int function GetPlayerWetnessLevel() global
     endif
 
     return Frostfall._Frost_WetLevel.GetValueInt()
+endFunction
+
+float function GetPlayerExposure() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return -1.0
+    endif
+    return Frostfall._Frost_AttributeExposure.GetValue()
 endFunction
 
 int function GetPlayerExposureLevel() global

@@ -11,8 +11,6 @@ ObjectReference property _Frost_ShelterDetectSensorRef auto
 ObjectReference property _Frost_AnchorRef auto
 Spell property _Frost_ShelterDetectBeam auto
 
-; Debug
-
 function Update()
 	if !(IsRefInInterior(PlayerRef))
 		float time_delta_seconds = (Game.GetRealHoursPassed() - _Frost_ShelterDetectLastSeenTime.GetValue()) * 3600.0
