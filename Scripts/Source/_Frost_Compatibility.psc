@@ -287,6 +287,7 @@ function RunCompatibility()
 
 	RegisterForControlsOnLoad()
 	RegisterForEventsOnLoad()
+	RegisterForMenusOnLoad()
 	AddStartupSpells()
 endFunction
 
@@ -572,6 +573,11 @@ function RegisterForEventsOnLoad()
 	GetClimateSystem().RegisterForEvents()
 	GetWarmthSystem().RegisterForEvents()
 	GetCoverageSystem().RegisterForEvents()
+	GetInterfaceHandler().RegisterForEvents()
+endFunction
+
+function RegisterForMenusOnLoad()
+	GetInterfaceHandler().RegisterForMenus()
 endFunction
 
 int function GetPlayerRegionTemp_FalmerValley(float afPosX, float afPosY)

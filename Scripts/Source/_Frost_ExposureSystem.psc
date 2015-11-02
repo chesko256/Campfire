@@ -362,6 +362,7 @@ int function UpdateExposureLevel()
 endFunction
 
 function ShowExposureStateMessage(int exposure_level)
+	debug.trace("Calling ShowExposureStateMessage current: " + exposure_level + " last: " + last_exposure_level)
 	if _Frost_Setting_ConditionMessages.GetValueInt() == 2
 		bool increasing = exposure_level > last_exposure_level
 		if increasing && exposure_level == 5 && last_exposure_level != 5
@@ -763,7 +764,6 @@ function RescuePlayer()
 endFunction
 
 ;@TODO: Update warmth and coverage when perks are bought
-;@TODO: Add InterfaceHandler to start-up event registration
 ;@TODO: Completely warm message not firing
 ;@TODO: Shelter system is broken for some reason
 ;@TODO: In shelter, don't passively warm up, but allow fire to warm you as much as a leather tent

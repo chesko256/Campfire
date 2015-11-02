@@ -22,6 +22,15 @@ _Frost_ClothingSystem function GetClothingSystem() global
     return Frostfall.Clothing
 endFunction
 
+_Frost_InterfaceHandler function GetInterfaceHandler() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.Interface
+endFunction
+
 _Frost_ArmorProtectionDatastoreHandler function GetClothingDatastoreHandler() global
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none

@@ -6,8 +6,6 @@ import _FrostInternal
 Actor property PlayerRef auto
 
 Event OnInit()
-	RegisterForEvents()
-	RegisterForMenus()
 	SetMeterPositions()
 EndEvent
 
