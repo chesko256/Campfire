@@ -10,6 +10,7 @@ bool property windbreaker_active auto hidden
 function RegisterForEvents()
 	debug.trace("Registerd for Frost_UpdateCoverage")
 	RegisterForModEvent("Frost_UpdateCoverage", "UpdateCoverage")
+	RegisterForModEvent("Campfire_CampfirePerkPurchased", "CampfirePerkPurchased")
 endFunction
 
 Event UpdateCoverage()
@@ -38,3 +39,7 @@ function SendEvent_UpdateBottomBarCoverage(int aiCoverage)
         ModEvent.Send(handle)
     endif
 endFunction
+
+Event CampfirePerkPurchased()
+	UpdateCoverage()
+endEvent

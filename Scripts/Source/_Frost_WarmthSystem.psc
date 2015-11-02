@@ -15,6 +15,7 @@ function RegisterForEvents()
 	RegisterForModEvent("Frost_UpdateWarmth", "UpdateWarmth")
 	RegisterForModEvent("Frost_SoupEffectStart", "SoupEffectStart")
 	RegisterForModEvent("Frost_SoupEffectStop", "SoupEffectStop")
+	RegisterForModEvent("Campfire_CampfirePerkPurchased", "CampfirePerkPurchased")
 endFunction
 
 Event UpdateWarmth()
@@ -72,3 +73,7 @@ function SendEvent_UpdateBottomBarWarmth(int aiWarmth)
         ModEvent.Send(handle)
     endif
 endFunction
+
+Event CampfirePerkPurchased()
+	UpdateWarmth()
+endEvent
