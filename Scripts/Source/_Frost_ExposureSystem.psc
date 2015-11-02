@@ -86,6 +86,7 @@ WorldSpace last_worldspace = None
 Weather current_weather = None
 bool in_tent = false
 bool tent_is_warm = false
+bool in_shelter = false
 bool this_vampire_state = false
 bool last_vampire_state = false
 bool in_interior = false
@@ -166,7 +167,7 @@ function ModAttributeExposure(float amount, float limit, bool allow_skill_advanc
 			if limit < MAX_EXPOSURE && limit > MIN_EXPOSURE
 				; Something is preventing the player from getting colder, display message.
 				if can_display_limit_msg
-					if in_tent
+					if in_tent || in_shelter
 						_Frost_ExposureCap_ColdShelter.Show()
 					endif
 					can_display_limit_msg = false
@@ -185,7 +186,7 @@ function ModAttributeExposure(float amount, float limit, bool allow_skill_advanc
 			advance_skill = false
 			if limit < MAX_EXPOSURE && limit > MIN_EXPOSURE
 				; Something is preventing the player from getting warmer, display message.
-				if can_display_limit_msg
+				if !in_interior && (near_heat || in_tent) && can_display_limit_msg
 					_Frost_ExposureCap_Warm.Show()
 					can_display_limit_msg = false
 				endif
@@ -218,6 +219,7 @@ function RefreshPlayerStateData()
 	current_temperature = GetEffectiveTemperature()
 	in_tent = GetCurrentTent()
 	tent_is_warm = IsCurrentTentWarm()
+	in_shelter = IsPlayerTakingShelter()
 	this_worldspace = PlayerRef.GetWorldSpace()
 	player_x = PlayerRef.GetPositionX()
 	player_y = PlayerRef.GetPositionY()
@@ -361,7 +363,6 @@ int function UpdateExposureLevel()
 endFunction
 
 function ShowExposureStateMessage(int exposure_level)
-	debug.trace("Calling ShowExposureStateMessage current: " + exposure_level + " last: " + last_exposure_level)
 	if _Frost_Setting_ConditionMessages.GetValueInt() == 2
 		bool increasing = exposure_level > last_exposure_level
 		if increasing && exposure_level == 5 && last_exposure_level != 5
@@ -539,7 +540,9 @@ function ExposureValueUpdate(float game_hours_passed)
 					elseif !tent_is_warm
 						GetWarmer(heat_amount, EXPOSURE_LEVEL_2, game_hours_passed)
 					endif
-				elseif !in_tent
+				elseif in_shelter
+					GetWarmer(heat_amount, EXPOSURE_LEVEL_2, game_hours_passed)
+				else
 					GetWarmer(heat_amount, EXPOSURE_LEVEL_3, game_hours_passed)
 				endif
 			elseif !near_heat
@@ -562,7 +565,9 @@ function ExposureValueUpdate(float game_hours_passed)
 					elseif !tent_is_warm
 						GetWarmer(heat_amount, EXPOSURE_LEVEL_1, game_hours_passed)
 					endif
-				elseif !in_tent
+				elseif in_shelter
+					GetWarmer(heat_amount, EXPOSURE_LEVEL_1, game_hours_passed)
+				else
 					GetWarmer(heat_amount, EXPOSURE_LEVEL_2, game_hours_passed)
 				endif
 			elseif !near_heat
@@ -585,7 +590,9 @@ function ExposureValueUpdate(float game_hours_passed)
 					elseif !tent_is_warm
 						GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
 					endif
-				elseif !in_tent
+				elseif in_shelter
+					GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
+				else
 					GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
 				endif
 			elseif !near_heat
@@ -608,7 +615,9 @@ function ExposureValueUpdate(float game_hours_passed)
 					elseif !tent_is_warm
 						GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
 					endif
-				elseif !in_tent
+				elseif in_shelter
+					GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
+				else
 					GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
 				endif
 			elseif !near_heat
@@ -661,7 +670,7 @@ function GetColder(int heat_amount, float limit, float game_hours_passed)
     
     ; Master Exposure loss formula
 	float amount = ((((temp_multiplier / 3) * wet_factor) * exposure_reduction) * time_delta_seconds) * _Frost_Setting_ExposureRate.GetValue()
-	debug.trace(current_temperature + " " + temp_multiplier + " " + 3 + " " + wet_factor + " " + exposure_reduction + " " + time_delta_seconds)
+	FrostDebug(0, "@@@@ Exposure ::: Calc Values - temp_multiplier " + temp_multiplier + " wet_factor " + wet_factor + " exposure_reduction " + exposure_reduction + " time_delta_seconds " + time_delta_seconds + " _Frost_Setting_ExposureRate " + _Frost_Setting_ExposureRate.GetValue())
 
 	if game_hours_passed >= 1.0
 		float duration_amount = (limit / 4) * game_hours_passed
@@ -685,7 +694,7 @@ endFunction
 
 function DisplayWarmUpMessage(bool exposure_increasing, float limit)
 	if !exposure_increasing && !was_near_heat && near_heat
-		if !in_tent && limit > 0.0
+		if (!in_tent && !in_shelter) && limit > 0.0
 			_Frost_ExposureCap_FaintHeat.Show()
 		else
 			_Frost_WarmUpMessage.Show()
@@ -762,6 +771,18 @@ function RescuePlayer()
 
 endFunction
 
-;@TODO: Update warmth and coverage when perks are bought
-;@TODO: Shelter system is broken for some reason
-;@TODO: In shelter, don't passively warm up, but allow fire to warm you as much as a leather tent
+;@TODO: Smelters still aren't working as heat sources.
+;@TODO: Am I adding apocrypha / etc to oblivion worldspaces?
+;@TODO: Hook up frigid water
+;@TODO: Make sure breathing SFX / Rumble are working
+;@TODO: Implement rescue system
+;@TODO: Implement Settings Profiles
+;@TODO: Hook up remaining perks, add graphics
+;@TODO: Implement all armor compatibility
+;@TODO: Add missing menu support for coverage / warmth
+;@TODO: Add alternate coverage / warmth display method
+;@TODO: Reimplement tutorials
+;@TODO: Refresh loading screens
+;@TODO: Hook up SkyUI MCM
+;@TODO: Fix color issue on charge meters
+;@TODO: Start-up, shut-down procedures

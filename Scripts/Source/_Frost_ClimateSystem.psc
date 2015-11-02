@@ -9,6 +9,7 @@ Actor property PlayerRef auto
 
 _Frost_Compatibility property Compatibility auto
 
+GlobalVariable property GameHour auto
 GlobalVariable property _Frost_CurrentTemperature auto
 GlobalVariable property _Frost_Setting_WeatherMessages auto
 
@@ -137,6 +138,7 @@ function UpdateClimateState()
 	
 	FrostDebug(0, "%%%% Climate ::: Current Temp: " + current_temperature + ", Region: " + region)
 	_Frost_CurrentTemperature.SetValueInt(current_temperature)
+	SendEvent_UpdateWeathersenseMeter(current_temperature)
 
 	; Historical values
 	last_current_weather = current_weather
@@ -217,6 +219,10 @@ int function GetCurrentTemperature(Weather this_weather, int region)
 				current_temperature = -5
 			endif
 		endif
+	endif
+
+	if GameHour.GetValue() > 19 || GameHour.GetValue() < 7
+		current_temperature -= 5
 	endif
 
 	if current_temperature > current_max_temperature
@@ -472,5 +478,35 @@ function ShowWeatherTransitionMessage(Weather current_weather, Weather incoming_
 				FrostDebug(1, "%%%% Climate ::: Weather Transition INCOMING: SNOW     OUTGOING: RAIN")
 			endif
 		endif
+	endif
+endFunction
+
+function SendEvent_UpdateWeathersenseMeter(int temp)
+	int temp_level
+	if temp >= 18
+		temp_level = 10
+	elseif temp < 18 && temp >= 15
+		temp_level = 9
+	elseif temp < 15 && temp > 10
+		temp_level = 8
+	elseif temp == 10
+		temp_level = 7
+	elseif temp < 10 && temp >= 6
+		temp_level = 6
+	elseif temp < 6 && temp >= 1
+		temp_level = 5
+	elseif temp < 1 && temp >= -4
+		temp_level = 4
+	elseif temp < -4 && temp >= -9
+		temp_level = 3
+	elseif temp < -9 && temp >= -14
+		temp_level = 2
+	elseif temp < -14
+		temp_level = 1
+	endif
+	int handle = ModEvent.Create("Frost_UpdateWeathersenseMeter")
+	if handle
+		ModEvent.PushInt(handle, temp_level)
+		ModEvent.Send(handle)
 	endif
 endFunction
