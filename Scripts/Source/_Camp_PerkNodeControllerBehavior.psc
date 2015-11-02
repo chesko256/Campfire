@@ -94,10 +94,18 @@ function ShowPerkDescription(_Camp_PerkNode akPerkNode, bool abEligibleForIncrea
         if j == 0        
             akPerkNode.IncreasePerkRank()
             required_perk_points_available.SetValueInt(required_perk_points_available.GetValueInt() - 1)
+            SendEvent_CampfirePerkPurchased()
         endif
     elseif i == 1
         akPerkNode.skill_description.Show(required_perk_points_available.GetValueInt(), \
                                              (required_perk_point_progress.GetValue() * 100.0))
         ShowPerkDescription(akPerkNode, abEligibleForIncrease)
+    endif
+endFunction
+
+function SendEvent_CampfirePerkPurchased()
+    int handle = ModEvent.Create("Campfire_CampfirePerkPurchased")
+    if handle
+        ModEvent.Send(handle)
     endif
 endFunction
