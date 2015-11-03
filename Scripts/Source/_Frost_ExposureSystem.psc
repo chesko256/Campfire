@@ -451,7 +451,7 @@ function HandleMaxExposure()
 		PlayerRef.Kill()
 
 	elseif _Frost_Setting_MaxExposureMode.GetValueInt() == 2
-		RescuePlayer()
+		SendEvent_OnRescuePlayer(PlayerRef.IsSwimming())
 	else
 		; Do nothing.
 	endif
@@ -769,8 +769,12 @@ function SendEvent_UpdateExposureMeter()
 	endif
 endFunction
 
-function RescuePlayer()
-
+function SendEvent_OnRescuePlayer(bool in_water)
+	int handle = ModEvent.Create("Frost_OnRescuePlayer")
+	if handle
+		ModEvent.PushBool(handle, in_water)
+		ModEvent.Send(handle)
+	endif
 endFunction
 
 ;@TODO: Smelters still aren't working as heat sources.
@@ -790,3 +794,5 @@ endFunction
 ;@TODO: Start-up, shut-down procedures
 ;@TODO: Region detection fails on start-up until player moves to new region
 ;@TODO: Hook spells up to exposure mod function with meter display
+;@TODO: Block Campfire hotkeys on Enchanting / renaming / other crafting menus
+;@TODO: Add way to put out campfire without frost spell
