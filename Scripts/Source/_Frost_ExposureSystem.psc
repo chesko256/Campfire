@@ -80,6 +80,7 @@ float player_y = 0.0
 float last_x = 0.0
 float last_y = 0.0
 float distance_moved = 0.0
+int exposure_level = 0
 int last_exposure_level = 0
 WorldSpace this_worldspace = None
 WorldSpace last_worldspace = None
@@ -244,6 +245,7 @@ function StoreLastPlayerState()
 	last_x = player_x
 	last_y = player_y
 	last_vampire_state = this_vampire_state
+	last_exposure_level = exposure_level
 endFunction
 
 ;/function WaitStateUpdate()
@@ -311,58 +313,42 @@ endFunction
 
 function ExposureEffectsUpdate()
 	float current_exposure = _Frost_AttributeExposure.GetValue()
-	int exposure_level = UpdateExposureLevel()
+	UpdateExposureLevel()
 	
 	if exposure_level == 6
 		HandleMaxExposure()
 	endif
 
-	ApplyVisualEffects(exposure_level)
-	ApplySoundEffects(exposure_level)
-	ApplyForceFeedback(exposure_level)
+	ApplyVisualEffects()
+	ApplySoundEffects()
+	ApplyForceFeedback()
 endFunction
 
-int function UpdateExposureLevel()
+function UpdateExposureLevel()
 	float current_exposure = _Frost_AttributeExposure.GetValue()
-	int exposure_level = 0
-
 	if current_exposure >= MAX_EXPOSURE
 		exposure_level = 6
 	elseif current_exposure >= EXPOSURE_LEVEL_5
 		exposure_level = 5
-		ShowExposureStateMessage(5)
 	elseif current_exposure >= EXPOSURE_LEVEL_4
 		exposure_level = 4
-		ShowExposureStateMessage(4)
 	elseif current_exposure >= EXPOSURE_LEVEL_3
 		exposure_level = 3
-		ShowExposureStateMessage(3)
 	elseif current_exposure >= EXPOSURE_LEVEL_2
 		exposure_level = 2
-		ShowExposureStateMessage(2)
 	elseif current_exposure >= EXPOSURE_LEVEL_1
 		exposure_level = 1
-		ShowExposureStateMessage(1)
 	elseif current_exposure > MIN_EXPOSURE
 		exposure_level = 0
-		ShowExposureStateMessage(0)
 	elseif current_exposure == MIN_EXPOSURE
 		exposure_level = -1
-		ShowExposureStateMessage(-1)
 	endif
+	ShowExposureStateMessage()
 
 	_Frost_ExposureLevel.SetValueInt(exposure_level)
-	
-	if exposure_level > -1
-		last_exposure_level = _Frost_ExposureLevel.GetValueInt()
-	elseif current_exposure == MIN_EXPOSURE
-		last_exposure_level = -1
-	endif
-
-	return exposure_level
 endFunction
 
-function ShowExposureStateMessage(int exposure_level)
+function ShowExposureStateMessage()
 	if _Frost_Setting_ConditionMessages.GetValueInt() == 2
 		bool increasing = exposure_level > last_exposure_level
 		if increasing && exposure_level == 5 && last_exposure_level != 5
@@ -384,7 +370,7 @@ function ShowExposureStateMessage(int exposure_level)
 	endif
 endFunction
 
-function ApplyVisualEffects(int exposure_level)
+function ApplyVisualEffects()
 	; Make sure to clear ISM if a vampire, or existing effect if setting toggled off
 	if _Frost_Setting_FullScreenEffects.GetValueInt() == 1
 		ImageSpaceModifier.RemoveCrossFade(4.0)
@@ -402,7 +388,7 @@ function ApplyVisualEffects(int exposure_level)
 	endif
 endFunction
 
-function ApplySoundEffects(int exposure_level)
+function ApplySoundEffects()
 	if _Frost_Setting_SoundEffects.GetValueInt() == 2
 		bool gender = PlayerRef.GetActorBase().GetSex() == 1
 
@@ -422,7 +408,7 @@ function ApplySoundEffects(int exposure_level)
 	endif
 endFunction
 
-function ApplyForceFeedback(int exposure_level)
+function ApplyForceFeedback()
 	if _Frost_Setting_ForceFeedback.GetValueInt() == 2
 		if exposure_level == 4 && last_exposure_level != 4
 			Game.ShakeController(0.7, 0.3, 1.5)
