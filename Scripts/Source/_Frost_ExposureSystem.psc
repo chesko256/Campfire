@@ -774,8 +774,6 @@ endFunction
 ;@TODO: Smelters still aren't working as heat sources.
 ;@TODO: Am I adding apocrypha / etc to oblivion worldspaces?
 ;@TODO: Hook up frigid water
-;@TODO: Make sure Rumble working
-;@TODO: Don't show frost shader when temp above 0
 ;@TODO: Implement rescue system
 ;@TODO: Implement Settings Profiles
 ;@TODO: Hook up remaining perks, add graphics
@@ -786,5 +784,5 @@ endFunction
 ;@TODO: Refresh loading screens
 ;@TODO: Conditionalize Weathersense acquire on hotkey
 ;@TODO: Hook up SkyUI MCM
-;@TODO: Fix color issue on charge meters
+;@TODO: Finalize meter colors
 ;@TODO: Start-up, shut-down procedures
