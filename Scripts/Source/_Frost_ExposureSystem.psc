@@ -82,6 +82,8 @@ float last_y = 0.0
 float distance_moved = 0.0
 int exposure_level = 0
 int last_exposure_level = 0
+int warm_message_debounce = 0
+bool totalwarm_message_debounce = false
 WorldSpace this_worldspace = None
 WorldSpace last_worldspace = None
 Weather current_weather = None
@@ -109,6 +111,11 @@ function Update()
 	RefreshAbleToFastTravel()
 	RefreshPlayerStateData()
 	UpdateExposure()
+
+	if warm_message_debounce > 0
+		warm_message_debounce -= 1
+	endif
+
 	last_update_time = this_update_time
 	last_update_game_time = this_update_game_time
 endFunction
@@ -343,6 +350,9 @@ function UpdateExposureLevel()
 	elseif current_exposure == MIN_EXPOSURE
 		exposure_level = -1
 	endif
+	if exposure_level > 0
+		totalwarm_message_debounce = false
+	endif
 	ShowExposureStateMessage()
 
 	_Frost_ExposureLevel.SetValueInt(exposure_level)
@@ -364,8 +374,9 @@ function ShowExposureStateMessage()
 			_Frost_HypoState_1.Show()
 		elseif increasing && exposure_level == 0 && last_exposure_level != 0 && last_exposure_level != -1
 			_Frost_HypoState_0.Show()
-		elseif exposure_level == -1 && last_exposure_level != -1
+		elseif exposure_level == -1 && last_exposure_level != -1 && !totalwarm_message_debounce
 			_Frost_HypoState_0_Min.Show()
+			totalwarm_message_debounce = true
 		endif
 	endif
 endFunction
@@ -679,11 +690,13 @@ function ShowTutorial_Exposure()
 endFunction
 
 function DisplayWarmUpMessage(bool exposure_increasing, float limit)
-	if !exposure_increasing && !was_near_heat && near_heat
+	if !exposure_increasing && !was_near_heat && near_heat && exposure_level > 0 && warm_message_debounce == 0
 		if (!in_tent && !in_shelter) && limit > 0.0
 			_Frost_ExposureCap_FaintHeat.Show()
+			warm_message_debounce = 3
 		else
 			_Frost_WarmUpMessage.Show()
+			warm_message_debounce = 3
 		endif
 	endif
 endFunction
@@ -760,7 +773,8 @@ endFunction
 ;@TODO: Smelters still aren't working as heat sources.
 ;@TODO: Am I adding apocrypha / etc to oblivion worldspaces?
 ;@TODO: Hook up frigid water
-;@TODO: Make sure breathing SFX / Rumble are working
+;@TODO: Make sure Rumble working
+;@TODO: Don't show frost shader when temp above 0
 ;@TODO: Implement rescue system
 ;@TODO: Implement Settings Profiles
 ;@TODO: Hook up remaining perks, add graphics
