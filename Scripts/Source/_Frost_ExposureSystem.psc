@@ -465,10 +465,6 @@ bool function PlayerIsInDialogue()
 	endif
 endFunction
 
-function GetExposureChange()
-	
-endfunction
-
 float function GetEffectiveTemperature()
 	; Get the effective temperature, taking the player's Coverage into account.
 
@@ -760,6 +756,12 @@ function ModExposure(float amount, float limit = -1.0, bool display_meter_on_cha
 	;@TODO: if force_meter_display...
 endFunction
 
+function SetExposure(float value, bool display_meter_on_change = false)
+	_Frost_AttributeExposure.SetValue(value)
+	ExposureEffectsUpdate()
+	;@TODO: if force_meter_display...
+endFunction
+
 function SendEvent_UpdateExposureMeter()
 	int handle = ModEvent.Create("Frost_UpdateExposureMeter")
 	if handle
@@ -786,3 +788,5 @@ endFunction
 ;@TODO: Hook up SkyUI MCM
 ;@TODO: Finalize meter colors
 ;@TODO: Start-up, shut-down procedures
+;@TODO: Region detection fails on start-up until player moves to new region
+;@TODO: Hook spells up to exposure mod function with meter display
