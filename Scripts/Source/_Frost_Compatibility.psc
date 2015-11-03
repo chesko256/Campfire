@@ -587,6 +587,7 @@ function RegisterForEventsOnLoad()
 	GetClimateSystem().RegisterForEvents()
 	GetWarmthSystem().RegisterForEvents()
 	GetCoverageSystem().RegisterForEvents()
+	GetRescueSystem().RegisterForEvents()
 	GetInterfaceHandler().RegisterForEvents()
 endFunction
 

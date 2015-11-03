@@ -94,6 +94,15 @@ _Frost_CoverageSystem function GetCoverageSystem() global
     return Frostfall.Coverage
 endFunction
 
+_Frost_RescueSystem function GetRescueSystem() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.Rescue
+endFunction
+
 bool function IsWarmEnoughToRemoveGearInTent() global
     return true
 endFunction
