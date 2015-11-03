@@ -402,14 +402,14 @@ endFunction
 function ApplySoundEffects()
 	if _Frost_Setting_SoundEffects.GetValueInt() == 2
 		bool gender = PlayerRef.GetActorBase().GetSex() == 1
-
-		if exposure_level == 4 && last_exposure_level != 4
+ 		bool increasing = exposure_level > last_exposure_level
+		if increasing && exposure_level == 4 && last_exposure_level != 4
 			if gender == 1
 				_Frost_Female_FreezingSM.Play(PlayerRef)
 			else
 				_Frost_Male_FreezingSM.Play(PlayerRef)
 			endif
-		elseif exposure_level == 5 && last_exposure_level != 5
+		elseif increasing && exposure_level == 5 && last_exposure_level != 5
 			if gender == 1
 				_Frost_Female_FreezingToDeathSM.Play(PlayerRef)
 			else
@@ -421,9 +421,10 @@ endFunction
 
 function ApplyForceFeedback()
 	if _Frost_Setting_ForceFeedback.GetValueInt() == 2
-		if exposure_level == 4 && last_exposure_level != 4
+		bool increasing = exposure_level > last_exposure_level
+		if increasing && exposure_level == 4 && last_exposure_level != 4
 			Game.ShakeController(0.7, 0.3, 1.5)
-		elseif exposure_level == 5 && last_exposure_level != 5
+		elseif increasing && exposure_level == 5 && last_exposure_level != 5
 			Game.ShakeController(0.4, 0.6, 2.5)
 		endif
 	endif
