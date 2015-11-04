@@ -86,6 +86,11 @@
 !DGIntimidatePlayerScript.psc
 !MS11CalixtoScript.psc
 
+#PapyrusUtil files
+!StorageUtil.dll
+!StorageUtil.pex
+!JsonUtil.pex
+
 #CampDevKit Files
 !CampDevKit/*
 !CampDevKit/Source/*
