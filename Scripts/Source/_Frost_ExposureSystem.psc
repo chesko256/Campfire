@@ -31,6 +31,7 @@ GlobalVariable property _Frost_Calc_ExtremeTemp auto
 GlobalVariable property _Frost_Calc_StasisTemp auto
 GlobalVariable property _Frost_Calc_MaxWarmth auto
 GlobalVariable property _Frost_Calc_MaxCoverage auto
+GlobalVariable property _Frost_FrostbiteChance auto
 GlobalVariable property EndurancePerkPointsEarned auto
 GlobalVariable property EndurancePerkPointsTotal auto
 GlobalVariable property EndurancePerkPointProgress auto
@@ -56,6 +57,14 @@ Sound property _Frost_Female_FreezingSM auto
 Sound property _Frost_Female_FreezingToDeathSM auto
 Sound property _Frost_Male_FreezingSM auto
 Sound property _Frost_Male_FreezingToDeathSM auto
+Potion property _Frost_FrostbittenPotionBody auto
+Potion property _Frost_FrostbittenPotionHead auto
+Potion property _Frost_FrostbittenPotionHands auto
+Potion property _Frost_FrostbittenPotionFeet auto
+Keyword property _Frost_FrostbiteBodyKW auto
+Keyword property _Frost_FrostbiteHeadKW auto
+Keyword property _Frost_FrostbiteHandsKW auto
+Keyword property _Frost_FrostbiteFeetKW auto
 
 FormList property _Frost_WorldspacesExteriorOblivion auto
 
@@ -90,7 +99,7 @@ Weather current_weather = None
 bool in_tent = false
 bool tent_is_warm = false
 bool in_shelter = false
-bool this_vampire_state = false
+bool is_vampire = false
 bool last_vampire_state = false
 bool in_interior = false
 bool was_in_interior = false
@@ -129,7 +138,7 @@ function UpdateExposure()
 		return
 	endif
 
-	if this_vampire_state == true && last_vampire_state == false
+	if is_vampire == true && last_vampire_state == false
 		; The player just became a vampire. Cure their Frostbite.
 	endif
 
@@ -245,13 +254,12 @@ function RefreshPlayerStateData()
 endFunction
 
 function StoreLastPlayerState()
-	; Store the player's last known position and vampire state.
 	last_worldspace = this_worldspace
 	was_in_interior = in_interior
 	was_near_heat = near_heat
 	last_x = player_x
 	last_y = player_y
-	last_vampire_state = this_vampire_state
+	last_vampire_state = is_vampire
 	last_exposure_level = exposure_level
 endFunction
 
@@ -324,6 +332,10 @@ function ExposureEffectsUpdate()
 	
 	if exposure_level == 6
 		HandleMaxExposure()
+	endif
+
+	if exposure_level >= 4
+		GetFrostbite()
 	endif
 
 	ApplyVisualEffects()
@@ -676,6 +688,39 @@ function GetColder(int heat_amount, float limit, float game_hours_passed)
 	endif
 endFunction
 
+function GetFrostbite()
+	if IsPlayerVampire()
+		return
+	endif
+	_Frost_ClothingSystem clothing = GetClothingSystem()
+	bool wearing_body = clothing.body_warmth
+	bool wearing_head = clothing.head_warmth
+	bool wearing_hands = clothing.hands_warmth
+	bool wearing_feet = clothing.feet_warmth
+	float frostbite_chance = _Frost_FrostbiteChance.GetValue()
+
+	if !wearing_body
+		if !PlayerRef.HasEffectKeyword(_Frost_FrostbiteBodyKW) && Utility.RandomFloat() <= frostbite_chance
+			PlayerRef.EquipItem(_Frost_FrostbittenPotionBody, abSilent = true)
+		endif
+	endif
+	if !wearing_head
+		if !PlayerRef.HasEffectKeyword(_Frost_FrostbiteHeadKW) && Utility.RandomFloat() <= frostbite_chance
+			PlayerRef.EquipItem(_Frost_FrostbittenPotionHead, abSilent = true)
+		endif
+	endif
+	if !wearing_hands
+		if !PlayerRef.HasEffectKeyword(_Frost_FrostbiteHandsKW) && Utility.RandomFloat() <= frostbite_chance
+			PlayerRef.EquipItem(_Frost_FrostbittenPotionHands, abSilent = true)
+		endif
+	endif
+	if !wearing_feet
+		if !PlayerRef.HasEffectKeyword(_Frost_FrostbiteFeetKW) && Utility.RandomFloat() <= frostbite_chance
+			PlayerRef.EquipItem(_Frost_FrostbittenPotionFeet, abSilent = true)
+		endif
+	endif
+endFunction
+
 function ShowTutorial_Exposure()
 	;/if _DE_Setting_Help.GetValueInt() == 2 && _Frost_HelpDone_ExposurePoints.GetValueInt() == 1
 		if !PlayerIsVampire()
@@ -697,8 +742,6 @@ function DisplayWarmUpMessage(bool exposure_increasing, float limit)
 		endif
 	endif
 endFunction
-
-; dark souls-like lingering heat effect
 
 ; Endurance Skill
 function AdvanceEnduranceSkill()
@@ -780,6 +823,7 @@ endFunction
 ;@TODO: Smelters still aren't working as heat sources.
 ;@TODO: Am I adding apocrypha / etc to oblivion worldspaces?
 ;@TODO: Hook up frigid water
+;@TODO: Implement frostbite
 ;@TODO: Implement rescue system
 ;@TODO: Implement Settings Profiles
 ;@TODO: Hook up remaining perks, add graphics
@@ -787,7 +831,6 @@ endFunction
 ;@TODO: Add missing menu support for coverage / warmth
 ;@TODO: Add alternate coverage / warmth display method
 ;@TODO: Reimplement tutorials
-;@TODO: Refresh loading screens
 ;@TODO: Conditionalize Weathersense acquire on hotkey
 ;@TODO: Hook up SkyUI MCM
 ;@TODO: Finalize meter colors
@@ -796,3 +839,4 @@ endFunction
 ;@TODO: Hook spells up to exposure mod function with meter display
 ;@TODO: Block Campfire hotkeys on Enchanting / renaming / other crafting menus
 ;@TODO: Add way to put out campfire without frost spell
+;@TODO: Display wetness bar on direction change
