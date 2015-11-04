@@ -688,7 +688,7 @@ function GetColder(int heat_amount, float limit, float game_hours_passed)
 	endif
 endFunction
 
-function GetFrostbite()
+function GetFrostbite(bool force_frostbite = false)
 	if IsPlayerVampire()
 		return
 	endif
@@ -697,25 +697,30 @@ function GetFrostbite()
 	bool wearing_head = clothing.head_warmth
 	bool wearing_hands = clothing.hands_warmth
 	bool wearing_feet = clothing.feet_warmth
-	float frostbite_chance = _Frost_FrostbiteChance.GetValue()
+	float frostbite_chance 
+	if force_frostbite
+		frostbite_chance = 0.5
+	else
+		frostbite_chance = _Frost_FrostbiteChance.GetValue()
+	endif
 
-	if !wearing_body
-		if !PlayerRef.HasEffectKeyword(_Frost_FrostbiteBodyKW) && Utility.RandomFloat() <= frostbite_chance
+	if (!wearing_body || force_frostbite) && !PlayerRef.HasEffectKeyword(_Frost_FrostbiteBodyKW)
+		if Utility.RandomFloat() <= frostbite_chance
 			PlayerRef.EquipItem(_Frost_FrostbittenPotionBody, abSilent = true)
 		endif
 	endif
-	if !wearing_head
-		if !PlayerRef.HasEffectKeyword(_Frost_FrostbiteHeadKW) && Utility.RandomFloat() <= frostbite_chance
+	if (!wearing_head || force_frostbite) && !PlayerRef.HasEffectKeyword(_Frost_FrostbiteHeadKW)
+		if Utility.RandomFloat() <= frostbite_chance
 			PlayerRef.EquipItem(_Frost_FrostbittenPotionHead, abSilent = true)
 		endif
 	endif
-	if !wearing_hands
-		if !PlayerRef.HasEffectKeyword(_Frost_FrostbiteHandsKW) && Utility.RandomFloat() <= frostbite_chance
+	if (!wearing_hands || force_frostbite) && !PlayerRef.HasEffectKeyword(_Frost_FrostbiteHandsKW)
+		if Utility.RandomFloat() <= frostbite_chance
 			PlayerRef.EquipItem(_Frost_FrostbittenPotionHands, abSilent = true)
 		endif
 	endif
-	if !wearing_feet
-		if !PlayerRef.HasEffectKeyword(_Frost_FrostbiteFeetKW) && Utility.RandomFloat() <= frostbite_chance
+	if (!wearing_feet || force_frostbite) && !PlayerRef.HasEffectKeyword(_Frost_FrostbiteFeetKW)
+		if Utility.RandomFloat() <= frostbite_chance
 			PlayerRef.EquipItem(_Frost_FrostbittenPotionFeet, abSilent = true)
 		endif
 	endif
