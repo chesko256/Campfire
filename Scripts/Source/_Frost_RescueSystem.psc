@@ -274,9 +274,7 @@ function RescueEnd()
 	PlayerRef.PlayIdle(Idle_1stPersonWoozyGetUpFromBed)
 	Wait(1)
 	Game.EnablePlayerControls()
-	;@TODO: Apply frostbite
-	; PlayerRef.EquipItem(_DE_FrostbittenPotion, false, true)
-	; _DE_FrostbiteMsg.Show()
+	GetExposureSystem().GetFrostbite(true)
 endFunction
 
 function RescueFailsafeMessage()
@@ -829,7 +827,6 @@ function RescueFollowerPasserby()
 	_Frost_RescueMsg_F_4.Show()
 endFunction
 function RescueFollowerBuildsCampfire()
-	; @TODO: Place lit campfire
 	FollowerBuildCampfire()
 	PlayerRef.SplineTranslateTo(PlayerRef.GetPositionX() + 150.0, PlayerRef.GetPositionY(), PlayerRef.GetPositionZ(), 0.0, 0.0, 0.0, 1000.0, 1000.0)
 	_Frost_RescueMsg_F_5.Show()
