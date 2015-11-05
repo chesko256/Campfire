@@ -4,6 +4,7 @@ import FrostUtil
 import _FrostInternal
 
 Formlist property _Frost_EquipExceptions auto
+Quest property FrostfallStrings auto
 
 Armor property equipped_body auto hidden
 Armor property equipped_head auto hidden
@@ -54,6 +55,8 @@ function ObjectEquipped(Form akBaseObject, int iGearType)
     HandleEquippedObject(akBaseObject, iGearType)
 
     SendEvent_UpdateWarmthAndCoverage()
+    DisplayWarmthCoverageNoSkyUI(akBaseObject as Armor, iGearType)
+
     FrostDebug(0, "Armor protection report: BODY(" + body_warmth + ", " + body_coverage +       \
                                             ") HANDS(" + hands_warmth + ", " + hands_coverage + \
                                             ") HEAD(" + head_warmth + ", " + head_coverage +    \
@@ -146,6 +149,8 @@ function ObjectUnequipped(Form akBaseObject, int iGearType)
     unequip_lock = false
 
     SendEvent_UpdateWarmthAndCoverage()
+    DisplayWarmthCoverageNoSkyUIRemove()
+
     FrostDebug(0, "Armor protection report: BODY(" + body_warmth + ", " + body_coverage +       \
                                             ") HANDS(" + hands_warmth + ", " + hands_coverage + \
                                             ") HEAD(" + head_warmth + ", " + head_coverage +    \
@@ -211,6 +216,12 @@ Event ShieldEquipped(Form akBaseObject, bool abEquipped)
         shield_coverage = 0
     endif
     SendEvent_UpdateWarmthAndCoverage()
+    
+    if abEquipped
+        DisplayWarmthCoverageNoSkyUI(akBaseObject as Armor, 8)
+    else
+        DisplayWarmthCoverageNoSkyUIRemove()
+    endif
 endEvent
 
 int function GetArmorWarmth()
@@ -226,6 +237,33 @@ int function GetArmorCoverage()
                 cloak_coverage + shield_coverage
     return total
 endFunction
+
+function DisplayWarmthCoverageNoSkyUI(Armor akArmor, int aiGearType)
+    if !GetCompatibilitySystem().isUIPackageInstalled
+        _Frost_Strings str = FrostfallStrings as _Frost_Strings
+        int[] result = GetClothingDatastoreHandler().GetTotalProtectionValues(akArmor, aiGearType)
+        if result[0] == 0 && result[1] == 0
+            return
+        endif
+        string name = akArmor.GetName()
+        debug.notification(name + " - " + str.Warmth + " " + result[0] + ", " + str.Coverage + " " + result[1])
+        RegisterForMenu("InventoryMenu")
+    endif
+endFunction
+
+function DisplayWarmthCoverageNoSkyUIRemove()
+    if !GetCompatibilitySystem().isUIPackageInstalled
+        RegisterForMenu("InventoryMenu")
+    endif
+endFunction
+
+Event OnMenuClose(string menuName)
+    if menuName == "InventoryMenu"
+        _Frost_Strings str = FrostfallStrings as _Frost_Strings
+        debug.notification(str.TotalWarmth + " " + GetPlayerWarmth() + ", " + str.TotalCoverage + " " + GetPlayerCoverage())
+        UnregisterForMenu("InventoryMenu")
+    endif
+EndEvent
 
 function SendEvent_UpdateWarmthAndCoverage()
     FrostDebug(0, "Sending event Frost_UpdateWarmth")

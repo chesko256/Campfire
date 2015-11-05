@@ -25,7 +25,8 @@ bool property isDLC2Loaded auto hidden						;Dragonborn
 bool property isHFLoaded auto hidden						;Hearthfire
 
 ;#Supported Mods===============================================================
-bool property isSKYUILoaded auto hidden						;SkyUI 3.4+
+bool property isUIPackageInstalled auto hidden				;SkyUI optional UI package
+bool property isSKYUILoaded auto hidden						;SkyUI 4.1+
 bool property isLastSeedLoaded auto hidden					;Last Seed
 bool property isCOTLoaded auto hidden						;Climates of Tamriel
 bool property isIMALoaded auto hidden						;Immersive Armors 7.1

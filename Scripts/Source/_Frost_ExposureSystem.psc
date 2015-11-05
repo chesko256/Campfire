@@ -883,7 +883,6 @@ endFunction
 ;@TODO: Hook up SkyUI MCM
 ;@TODO: Start-up, shut-down procedures
 ;@TODO: Animation for followers (package)
-;@TODO: Shelter detector getting hit too often
 ;@TODO: Toggle to allow handwarming animation in first person
 
 

@@ -15,3 +15,9 @@ string property Level4 auto				; The air is cold.
 string property Level3 auto				; The air is biting cold.
 string property Level2 auto				; The air is bone-chilling.
 string property Level1 auto				; The air is frigid and deadly.
+
+; Warmth Coverage message strings
+string property Warmth auto				; Warmth:
+string property Coverage auto			; Coverage:
+string property TotalWarmth auto		; Total Warmth:
+string property TotalCoverage auto		; Total Coverage:
