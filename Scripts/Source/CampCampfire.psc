@@ -969,6 +969,7 @@ function LightFire(bool abBypassLightingChance = false)
     if !abBypassLightingChance
         if current_light_chance > 0.0
             float result = Utility.RandomFloat()
+            CampDebug(0, "Campfire lighting chance result: " + result + " (needed " + current_light_chance + " or less).")
             if result <= current_light_chance
                 self.PlayImpactEffect(MAGFlames01ImpactSet)
                 AdvanceCampingSkill()

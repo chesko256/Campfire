@@ -179,6 +179,7 @@ bool exposure_meter_displayed = false
 bool wetness_meter_displayed = false
 bool weathersense_meter_displayed = false
 bool should_update = false
+bool was_wetness_increasing = false
 
 Event OnUpdate()
 	UpdateExposureMeter()
@@ -203,7 +204,6 @@ function UpdateWeathersenseMeter(int temp_level)
 endFunction
 
 function DisplayExposureMeter(bool bSkipDisplayHandling = false)
-	debug.trace("DisplayExposureMeter exposure_meter_displayed " + exposure_meter_displayed + " remaining " + exposure_display_iterations_remaining)
 	HandleExposureMeterUpdate(bSkipDisplayHandling)
 
 	if exposure_display_iterations_remaining > 0
@@ -212,13 +212,10 @@ function DisplayExposureMeter(bool bSkipDisplayHandling = false)
 
 	if exposure_display_iterations_remaining != 0
 		if !should_update
-			debug.trace("exposure SHOULD update")
 			should_update = true
 		endif
 	else
-		debug.trace("checking fade out...")
 		if _Frost_Setting_MeterDisplayMode.GetValueInt() == 2 && exposure_meter_displayed
-			debug.trace("Exposure fade out")
 			ExposureMeter.FadeTo(0.0, 3.0)
 			exposure_meter_displayed = false
 		endif
@@ -238,7 +235,6 @@ function DisplayWetnessMeter(bool bSkipDisplayHandling = false)
 		endif
 	else
 		if _Frost_Setting_MeterDisplayMode.GetValueInt() == 2 && wetness_meter_displayed
-			debug.trace("Wetness fade out")
 			WetnessMeter.FadeTo(0.0, 3.0)
 			wetness_meter_displayed = false
 		endif
@@ -258,7 +254,6 @@ function DisplayWeathersenseMeter(int temp_level, bool bSkipDisplayHandling = fa
 		endif
 	else
 		if _Frost_Setting_MeterDisplayMode.GetValueInt() == 2 && weathersense_meter_displayed
-			debug.trace("Weathersense fade out")
 			WeathersenseMeter.FadeTo(0.0, 3.0)
 			weathersense_meter_displayed = false
 		endif
@@ -346,7 +341,6 @@ Event ForceWeathersenseMeterDisplay(int temp_level, bool flash = false)
 endEvent
 
 function Exposure_ContextualDisplay(float exposure, bool bSkipDisplayHandling = false)
-	debug.trace("[Frostfall] Exposure: " + exposure + ",  Last Exposure:" + last_exposure + ", Meter Duration Remaining:" + exposure_display_iterations_remaining)
 
 	if bSkipDisplayHandling
 		exposure_display_iterations_remaining = _Frost_Setting_MeterDisplayTime.GetValueInt()
@@ -391,7 +385,6 @@ function Exposure_ContextualDisplay(float exposure, bool bSkipDisplayHandling = 
 endFunction
 
 function Wetness_ContextualDisplay(float wetness, bool bSkipDisplayHandling = false)
-	debug.trace("[Frostfall] Wetness: " + wetness + ",  Last Wetness:" + last_wetness + ", Meter Duration Remaining:" + wetness_display_iterations_remaining)
 
 	if bSkipDisplayHandling
 		wetness_display_iterations_remaining = _Frost_Setting_MeterDisplayTime.GetValueInt()
@@ -399,7 +392,9 @@ function Wetness_ContextualDisplay(float wetness, bool bSkipDisplayHandling = fa
 	endif
 
 	bool increasing = last_wetness < wetness
-	if increasing && wetness >= 550.0
+	if increasing && !was_wetness_increasing
+		WetnessMeter_FadeUp(_Frost_Setting_MeterDisplayTime.GetValueInt())
+	elseif increasing && wetness >= 550.0
 		WetnessMeter_FadeUp(_Frost_Setting_MeterDisplayTime.GetValueInt())
 	elseif increasing && last_wetness < 200.0 && wetness >= 200.0
 		WetnessMeter_FadeUp(_Frost_Setting_MeterDisplayTime.GetValueInt())
@@ -412,6 +407,7 @@ function Wetness_ContextualDisplay(float wetness, bool bSkipDisplayHandling = fa
 			wetness_display_iterations_remaining = _Frost_Setting_MeterDisplayTime.GetValueInt()
 		endif
 	endif
+	was_wetness_increasing = increasing
 endFunction
 
 function Weathersense_ContextualDisplay(int temp_level, bool bSkipDisplayHandling = false)

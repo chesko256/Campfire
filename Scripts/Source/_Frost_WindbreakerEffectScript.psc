@@ -5,13 +5,13 @@ import _FrostInternal
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	utility.waitmenumode(0.3)
-	GetCoverageSystem().windbreaker_active = true
+	GetCoverageSystem().windbreaker_perk_active = true
 	SendEvent_UpdateCoverage()
 EndEvent
 
 Event OnEffectFinish(Actor akTarget, Actor akCaster)
 	utility.waitmenumode(0.3)
-	GetCoverageSystem().windbreaker_active = false
+	GetCoverageSystem().windbreaker_perk_active = false
 	SendEvent_UpdateCoverage()
 EndEvent
 

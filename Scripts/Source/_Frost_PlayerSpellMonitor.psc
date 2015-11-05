@@ -4,6 +4,7 @@ import FrostUtil
 
 MagicEffect property AbResistFrost auto
 GlobalVariable property _Frost_WetLevel auto
+GlobalVariable property _Frost_PerkRank_FrostWarding auto
 Keyword property MagicAlchResistFrost auto
 Keyword property MagicEnchResistFrost auto
 Keyword property MagicDamageFire auto
@@ -63,7 +64,8 @@ function DecreaseExposureFireDamage()
 		return
 	endif
 	fire_damage_lock = true
-	ModPlayerExposure(-5.0, 50.0, true)
+	SendEvent_ForceExposureMeterDisplay()
+	ModPlayerExposure(-5.0, 50.0)
 	Utility.Wait(2.0)
 	fire_damage_lock = false
 endFunction
@@ -74,7 +76,18 @@ function IncreaseExposureFrostDamage()
 		return
 	endif
 	frost_damage_lock = true
-	ModPlayerExposure(5.0, 90.0, true)
+	float frost_ward_rank = _Frost_PerkRank_FrostWarding.GetValue()
+	float exposure_increase = 5.0 * (1 - (0.25 * frost_ward_rank))
+	SendEvent_ForceExposureMeterDisplay()
+	ModPlayerExposure(exposure_increase, 90.0)
 	Utility.Wait(2.0)
 	frost_damage_lock = false
+endFunction
+
+function SendEvent_ForceExposureMeterDisplay()
+	int handle = ModEvent.Create("Frost_ForceExposureMeterDisplay")
+	if handle
+		ModEvent.PushBool(handle, false)
+		ModEvent.Send(handle)
+	endif
 endFunction

@@ -12,6 +12,7 @@ _Frost_Compatibility property Compatibility auto
 GlobalVariable property GameHour auto
 GlobalVariable property _Frost_CurrentTemperature auto
 GlobalVariable property _Frost_Setting_WeatherMessages auto
+GlobalVariable property _Frost_RegionDetect_ForceUpdate auto
 
 FormList property _Frost_WorldspacesExteriorPineForest auto
 FormList property _Frost_WorldspacesExteriorVolcanicTundra auto
@@ -103,6 +104,9 @@ endFunction
 
 function RegisterForEvents()
 	RegisterForModEvent("Frost_OnTamrielRegionChange", "OnTamrielRegionChange")
+
+	; Force the region detect system to fire something on start-up.
+	_Frost_RegionDetect_ForceUpdate.SetValueInt(0)
 endFunction
 
 function UpdateClimateState()
