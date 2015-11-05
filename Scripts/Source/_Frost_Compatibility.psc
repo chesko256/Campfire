@@ -593,6 +593,7 @@ function RegisterForEventsOnLoad()
 endFunction
 
 function RegisterForMenusOnLoad()
+	(PlayerAlias as _Frost_PlayerDialogueMonitor).RegisterForMenus()
 	GetInterfaceHandler().RegisterForMenus()
 endFunction
 

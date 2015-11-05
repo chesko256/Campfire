@@ -872,7 +872,6 @@ function SendEvent_OnRescuePlayer(bool in_water)
 	endif
 endFunction
 
-;@TODO: Smelters still aren't working as heat sources.
 ;@TODO: Am I adding apocrypha / etc to oblivion worldspaces?
 ;@TODO: Hook up frigid water and Glacial Swimmer and Snowberry Extract
 ;@TODO: Implement Settings Profiles
@@ -882,15 +881,17 @@ endFunction
 ;@TODO: Reimplement tutorials
 ;@TODO: Conditionalize Weathersense acquire on hotkey
 ;@TODO: Hook up SkyUI MCM
-;@TODO: Finalize meter colors
 ;@TODO: Start-up, shut-down procedures
-;@TODO: Region detection fails on start-up until player moves to new region
-;@TODO: Hook spells up to exposure mod function with meter display
+;@TODO: Animation for followers (package)
+;@TODO: Shelter detector getting hit too often
+;@TODO: Toggle to allow handwarming animation in first person
+
+
+
+
+
+; Campfire stuff
+;@TODO: Smelters still aren't working as heat sources.
 ;@TODO: Block Campfire hotkeys on Enchanting / renaming / other crafting menus
-
-
-
-
-
 ;@TODO: Add way to put out campfire without frost spell
 ;@TODO: Kick people out of attached furniture objects before pick up
