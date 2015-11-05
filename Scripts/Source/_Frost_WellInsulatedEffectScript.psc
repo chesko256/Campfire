@@ -5,13 +5,13 @@ import _FrostInternal
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	utility.waitmenumode(0.3)
-	GetWarmthSystem().wellinsulated_active = true
+	GetWarmthSystem().well_insulated_perk_active = true
 	SendEvent_UpdateWarmth()
 EndEvent
 
 Event OnEffectFinish(Actor akTarget, Actor akCaster)
 	utility.waitmenumode(0.3)
-	GetWarmthSystem().wellinsulated_active = false
+	GetWarmthSystem().well_insulated_perk_active = false
 	SendEvent_UpdateWarmth()
 EndEvent
 

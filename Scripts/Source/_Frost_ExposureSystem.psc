@@ -32,6 +32,7 @@ GlobalVariable property _Frost_Calc_StasisTemp auto
 GlobalVariable property _Frost_Calc_MaxWarmth auto
 GlobalVariable property _Frost_Calc_MaxCoverage auto
 GlobalVariable property _Frost_FrostbiteChance auto
+GlobalVariable property _Frost_PerkRank_InnerFire auto
 GlobalVariable property EndurancePerkPointsEarned auto
 GlobalVariable property EndurancePerkPointsTotal auto
 GlobalVariable property EndurancePerkPointProgress auto
@@ -50,6 +51,10 @@ Message property _Frost_WarmUpMessage auto
 Message property _Frost_ExposureCap_FaintHeat auto
 Message property _Frost_ExposureCap_ColdShelter auto
 Message property _Frost_ExposureCap_Warm auto
+Message property _Frost_FrostbiteMessage_Body auto
+Message property _Frost_FrostbiteMessage_Head auto
+Message property _Frost_FrostbiteMessage_Hands auto
+Message property _Frost_FrostbiteMessage_Feet auto
 ImageSpaceModifier property _Frost_ColdISM_Level5 auto
 ImageSpaceModifier property _Frost_ColdISM_Level4 auto
 ImageSpaceModifier property _Frost_ColdISM_Level3 auto
@@ -57,6 +62,7 @@ Sound property _Frost_Female_FreezingSM auto
 Sound property _Frost_Female_FreezingToDeathSM auto
 Sound property _Frost_Male_FreezingSM auto
 Sound property _Frost_Male_FreezingToDeathSM auto
+Spell property _Frost_InnerFireSpell auto
 Potion property _Frost_FrostbittenPotionBody auto
 Potion property _Frost_FrostbittenPotionHead auto
 Potion property _Frost_FrostbittenPotionHands auto
@@ -99,6 +105,7 @@ Weather current_weather = None
 bool in_tent = false
 bool tent_is_warm = false
 bool in_shelter = false
+bool is_meditating = false
 bool is_vampire = false
 bool last_vampire_state = false
 bool in_interior = false
@@ -106,6 +113,11 @@ bool was_in_interior = false
 bool near_heat = false
 bool was_near_heat = false
 bool can_display_limit_msg = true
+
+function RegisterForEvents()
+	RegisterForModEvent("Frost_OnInnerFireMeditate", "OnInnerFireMeditate")
+	RegisterForModEvent("Campfire_CampfirePerkPurchased", "CampfirePerkPurchased")
+endFunction
 
 function Update()
 	if last_update_time == 0.0
@@ -175,6 +187,10 @@ function ModAttributeExposure(float amount, float limit, bool allow_skill_advanc
 		advance_skill = true
 	endif
 
+	if is_meditating
+		advance_skill = false
+	endif
+
 	bool limit_condition_triggered = false
 	if exposure > limit && increasing
 		if exp_attr <= limit
@@ -203,7 +219,7 @@ function ModAttributeExposure(float amount, float limit, bool allow_skill_advanc
 			advance_skill = false
 			if limit < MAX_EXPOSURE && limit > MIN_EXPOSURE
 				; Something is preventing the player from getting warmer, display message.
-				if !in_interior && (near_heat || in_tent) && can_display_limit_msg
+				if !in_interior && (near_heat || in_tent || is_meditating) && can_display_limit_msg
 					_Frost_ExposureCap_Warm.Show()
 					can_display_limit_msg = false
 				endif
@@ -520,7 +536,7 @@ function ExposureValueUpdate(float game_hours_passed)
 		heat_amount = HEAT_FACTOR * _Frost_CurrentHeatSourceSize.GetValueInt()
 	else
 		near_heat = false
-		if in_tent || in_interior
+		if in_tent || in_interior || is_meditating
 			if tent_is_warm
 				heat_amount = TENT_FACTOR + WARM_TENT_BONUS
 			else
@@ -537,6 +553,8 @@ function ExposureValueUpdate(float game_hours_passed)
 		else
 			GetWarmer(heat_amount, EXPOSURE_LEVEL_1, game_hours_passed)
 		endif
+	elseif is_meditating
+		GetWarmer(heat_amount, EXPOSURE_LEVEL_4, game_hours_passed)
 	else
 		if current_temperature <= -15
 			if near_heat
@@ -707,21 +725,25 @@ function GetFrostbite(bool force_frostbite = false)
 	if (!wearing_body || force_frostbite) && !PlayerRef.HasEffectKeyword(_Frost_FrostbiteBodyKW)
 		if Utility.RandomFloat() <= frostbite_chance
 			PlayerRef.EquipItem(_Frost_FrostbittenPotionBody, abSilent = true)
+			_Frost_FrostbiteMessage_Body.Show()
 		endif
 	endif
 	if (!wearing_head || force_frostbite) && !PlayerRef.HasEffectKeyword(_Frost_FrostbiteHeadKW)
 		if Utility.RandomFloat() <= frostbite_chance
 			PlayerRef.EquipItem(_Frost_FrostbittenPotionHead, abSilent = true)
+			_Frost_FrostbiteMessage_Head.Show()
 		endif
 	endif
 	if (!wearing_hands || force_frostbite) && !PlayerRef.HasEffectKeyword(_Frost_FrostbiteHandsKW)
 		if Utility.RandomFloat() <= frostbite_chance
 			PlayerRef.EquipItem(_Frost_FrostbittenPotionHands, abSilent = true)
+			_Frost_FrostbiteMessage_Hands.Show()
 		endif
 	endif
 	if (!wearing_feet || force_frostbite) && !PlayerRef.HasEffectKeyword(_Frost_FrostbiteFeetKW)
 		if Utility.RandomFloat() <= frostbite_chance
 			PlayerRef.EquipItem(_Frost_FrostbittenPotionFeet, abSilent = true)
+			_Frost_FrostbiteMessage_Feet.Show()
 		endif
 	endif
 endFunction
@@ -791,7 +813,7 @@ function AdvanceEnduranceSkill()
     endif
 endFunction
 
-function ModExposure(float amount, float limit = -1.0, bool display_meter_on_change = false)
+function ModExposure(float amount, float limit = -1.0)
 	if limit == -1.0
 		if amount <= 0
 			limit = MIN_EXPOSURE
@@ -799,15 +821,40 @@ function ModExposure(float amount, float limit = -1.0, bool display_meter_on_cha
 			limit = MAX_EXPOSURE
 		endif
 	endif
-	ModAttributeExposure(amount, limit, allow_skill_advancement=false)
+	ModAttributeExposure(amount, limit, false)
 	ExposureEffectsUpdate()
-	;@TODO: if force_meter_display...
 endFunction
 
-function SetExposure(float value, bool display_meter_on_change = false)
+function SetExposure(float value, bool force_meter_display = false)
 	_Frost_AttributeExposure.SetValue(value)
+	if force_meter_display
+		SendEvent_ForceExposureMeterDisplay()
+	else
+		SendEvent_UpdateExposureMeter()
+	endif
 	ExposureEffectsUpdate()
-	;@TODO: if force_meter_display...
+endFunction
+
+Event OnInnerFireMeditate(bool abMeditating)
+	if abMeditating
+		is_meditating = true
+	else
+		is_meditating = false
+	endif
+endEvent
+
+Event CampfirePerkPurchased()
+	if _Frost_PerkRank_InnerFire.GetValueInt() > 0
+		PlayerRef.AddSpell(_Frost_InnerFireSpell)
+	endif
+endEvent
+
+function SendEvent_ForceExposureMeterDisplay(bool flash = false)
+	int handle = ModEvent.Create("Frost_ForceExposureMeterDisplay")
+	if handle
+		ModEvent.PushBool(handle, flash)
+		ModEvent.Send(handle)
+	endif
 endFunction
 
 function SendEvent_UpdateExposureMeter()
@@ -827,11 +874,8 @@ endFunction
 
 ;@TODO: Smelters still aren't working as heat sources.
 ;@TODO: Am I adding apocrypha / etc to oblivion worldspaces?
-;@TODO: Hook up frigid water
-;@TODO: Implement frostbite
-;@TODO: Implement rescue system
+;@TODO: Hook up frigid water and Glacial Swimmer and Snowberry Extract
 ;@TODO: Implement Settings Profiles
-;@TODO: Hook up remaining perks, add graphics
 ;@TODO: Implement all armor compatibility
 ;@TODO: Add missing menu support for coverage / warmth
 ;@TODO: Add alternate coverage / warmth display method
@@ -843,5 +887,10 @@ endFunction
 ;@TODO: Region detection fails on start-up until player moves to new region
 ;@TODO: Hook spells up to exposure mod function with meter display
 ;@TODO: Block Campfire hotkeys on Enchanting / renaming / other crafting menus
+
+
+
+
+
 ;@TODO: Add way to put out campfire without frost spell
-;@TODO: Display wetness bar on direction change
+;@TODO: Kick people out of attached furniture objects before pick up

@@ -5,7 +5,7 @@ import _FrostInternal
 
 GlobalVariable property _Frost_AttributeCoverage auto
 GlobalVariable property _Frost_DatastoreInitialized auto
-bool property windbreaker_active auto hidden
+bool property windbreaker_perk_active auto hidden
 
 function RegisterForEvents()
 	debug.trace("Registerd for Frost_UpdateCoverage")
@@ -16,7 +16,7 @@ endFunction
 Event UpdateCoverage()
 	int coverage
 	coverage += GetClothingSystem().GetArmorCoverage()
-	if windbreaker_active
+	if windbreaker_perk_active
 		coverage += Math.Ceiling(coverage * 0.25)
 	endif
 
@@ -26,6 +26,14 @@ Event UpdateCoverage()
 	_Frost_AttributeCoverage.SetValueInt(coverage)
 	SendEvent_UpdateBottomBarCoverage(coverage)
 endEvent
+
+function SetWindbreaker(bool active)
+	if active
+		windbreaker_perk_active = true
+	else
+		windbreaker_perk_active = false
+	endif
+endFunction
 
 function SendEvent_UpdateBottomBarCoverage(int aiCoverage)
     if _Frost_DatastoreInitialized.GetValueInt() != 2

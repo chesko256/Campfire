@@ -7,7 +7,7 @@ Actor property PlayerRef auto
 GlobalVariable property _Frost_AttributeWarmth auto
 GlobalVariable property _Frost_PerkRank_Adaptation auto
 GlobalVariable property _Frost_DatastoreInitialized auto
-bool property wellinsulated_active = false auto hidden
+bool property well_insulated_perk_active = false auto hidden
 int current_food_bonus
 int current_spell_bonus
 
@@ -21,7 +21,7 @@ endFunction
 Event UpdateWarmth()
 	int warmth
 	warmth += GetClothingSystem().GetArmorWarmth()
-	if wellinsulated_active
+	if well_insulated_perk_active
 		warmth += Math.Ceiling(warmth * 0.25)
 	endif
 	warmth += GetTorchBonus()
@@ -59,6 +59,14 @@ int function GetFrostResistBonus()
 		bonus = 50
 	endif
 	return bonus
+endFunction
+
+function SetWellInsulated(bool active)
+	if active
+		well_insulated_perk_active = true
+	else
+		well_insulated_perk_active = false
+	endif
 endFunction
 
 function SendEvent_UpdateBottomBarWarmth(int aiWarmth)
