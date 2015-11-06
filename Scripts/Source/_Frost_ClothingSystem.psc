@@ -3,6 +3,7 @@ scriptname _Frost_ClothingSystem extends _Frost_BaseSystem
 import FrostUtil
 import _FrostInternal
 
+GlobalVariable property _Frost_Setting_Notifications_EquipmentValues auto
 Formlist property _Frost_EquipExceptions auto
 Quest property FrostfallStrings auto
 
@@ -36,7 +37,6 @@ endFunction
 function RaceChanged()
     debug.trace("Got call from Campfire: RaceChanged")
 endFunction
-
 
 function ObjectEquipped(Form akBaseObject, int iGearType)
     ;===========
@@ -149,7 +149,7 @@ function ObjectUnequipped(Form akBaseObject, int iGearType)
     unequip_lock = false
 
     SendEvent_UpdateWarmthAndCoverage()
-    DisplayWarmthCoverageNoSkyUIRemove()
+    DisplayWarmthCoverageNoSkyUIRemove(akBaseObject as Armor, iGearType)
 
     FrostDebug(0, "Armor protection report: BODY(" + body_warmth + ", " + body_coverage +       \
                                             ") HANDS(" + hands_warmth + ", " + hands_coverage + \
@@ -220,7 +220,7 @@ Event ShieldEquipped(Form akBaseObject, bool abEquipped)
     if abEquipped
         DisplayWarmthCoverageNoSkyUI(akBaseObject as Armor, 8)
     else
-        DisplayWarmthCoverageNoSkyUIRemove()
+        DisplayWarmthCoverageNoSkyUIRemove(akBaseObject as Armor, 8)
     endif
 endEvent
 
@@ -238,22 +238,41 @@ int function GetArmorCoverage()
     return total
 endFunction
 
+Event OnUpdate()
+    _Frost_Strings str = FrostfallStrings as _Frost_Strings
+    debug.notification(str.TotalWarmth + " " + GetPlayerWarmth() + ", " + str.TotalCoverage + " " + GetPlayerCoverage())
+EndEvent
+
 function DisplayWarmthCoverageNoSkyUI(Armor akArmor, int aiGearType)
     if !GetCompatibilitySystem().isUIPackageInstalled
-        _Frost_Strings str = FrostfallStrings as _Frost_Strings
         int[] result = GetClothingDatastoreHandler().GetTotalProtectionValues(akArmor, aiGearType)
         if result[0] == 0 && result[1] == 0
             return
         endif
-        string name = akArmor.GetName()
-        debug.notification(name + " - " + str.Warmth + " " + result[0] + ", " + str.Coverage + " " + result[1])
-        RegisterForMenu("InventoryMenu")
+        if UI.IsMenuOpen("InventoryMenu")
+            if _Frost_Setting_Notifications_EquipmentValues.GetValueInt() == 2
+                _Frost_Strings str = FrostfallStrings as _Frost_Strings
+                string name = akArmor.GetName()
+                debug.notification(name + " - " + str.Warmth + " " + result[0] + ", " + str.Coverage + " " + result[1])
+            endif
+            RegisterForMenu("InventoryMenu")
+        else
+            RegisterForSingleUpdate(1)
+        endif
     endif
 endFunction
 
-function DisplayWarmthCoverageNoSkyUIRemove()
+function DisplayWarmthCoverageNoSkyUIRemove(Armor akArmor, int aiGearType)
     if !GetCompatibilitySystem().isUIPackageInstalled
-        RegisterForMenu("InventoryMenu")
+        int[] result = GetClothingDatastoreHandler().GetTotalProtectionValues(akArmor, aiGearType)
+        if result[0] == 0 && result[1] == 0
+            return
+        endif
+        if UI.IsMenuOpen("InventoryMenu")
+            RegisterForMenu("InventoryMenu")
+        else
+            RegisterForSingleUpdate(1)
+        endif
     endif
 endFunction
 

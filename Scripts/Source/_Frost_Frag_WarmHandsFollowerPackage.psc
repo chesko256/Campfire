@@ -1,5 +1,5 @@
 ;BEGIN FRAGMENT CODE - Do not edit anything between this and the end comment
-;NEXT FRAGMENT INDEX 1
+;NEXT FRAGMENT INDEX 2
 Scriptname _Frost_Frag_WarmHandsFollowerPackage Extends Package Hidden
 
 ;BEGIN FRAGMENT Fragment_0
@@ -18,12 +18,27 @@ elseif akActor == CampUtil.GetTrackedFollower(2) && _Frost_Follower3AnimLock.Get
 endif
 
 if locked
-	int i = Utility.RandomFloat()
-	if i <= 0.50
+	float f = Utility.RandomFloat()
+	if f <= 0.50
 		akActor.PlayIdle(IdleWarmHandsStanding)
 	else
 		akActor.PlayIdle(IdleWarmHandsCrouched)
 	endif
+endif
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_1
+Function Fragment_1(Actor akActor)
+;BEGIN CODE
+akActor.PlayIdle(IdleStop_Loose)
+if akActor == CampUtil.GetTrackedFollower(1)
+	_Frost_Follower1AnimLock.SetValueInt(1)
+elseif akActor == CampUtil.GetTrackedFollower(2)
+	_Frost_Follower2AnimLock.SetValueInt(1)
+elseif akActor == CampUtil.GetTrackedFollower(3)
+	_Frost_Follower3AnimLock.SetValueInt(1)
 endif
 ;END CODE
 EndFunction
