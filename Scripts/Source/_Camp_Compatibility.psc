@@ -53,6 +53,15 @@ formlist property _Camp_HeatSources_Fire_Small auto
 formlist property _Camp_HeatSources_Fire_Medium auto
 formlist property _Camp_HeatSources_Fire_Large auto
 formlist property _Camp_HeatSources_Other auto
+formlist property EnchantmentResistFire auto
+formlist property EnchantmentResistFrost auto
+formlist property EnchantmentResistShock auto
+formlist property EnchantmentResistMagic auto
+formlist property EnchantmentResistDisease auto
+formlist property EnchantmentResistPoison auto
+
+;#Keywords=========================================================================
+Keyword property WAF_ClothingCloak auto
 
 ;#Trees============================================================================
 ;@TODO: Move to Frostfall
@@ -106,7 +115,7 @@ Weather property DLC2AshStorm auto hidden
 
 ;#Upgrade Flags====================================================================
 bool Upgraded_1_1 = false
-
+bool Upgraded_1_4 = false
 
 Event OnPlayerLoadGame()
 	RunCompatibility()
@@ -142,6 +151,10 @@ function RunCompatibility()
 
 	if !Upgraded_1_1
 		Upgrade_1_1()
+	endif
+
+	if !Upgraded_1_4
+		Upgrade_1_4()
 	endif
 
 	bool skse_loaded = SKSE.GetVersion()
@@ -600,6 +613,16 @@ function Upgrade_1_1()
 	PerkNodeControllers = new Activator[4]
 	CampfirePerkSystemRegister(_Camp_PerkNodeController_Camping, 0, "Campfire.esm")
 	Upgraded_1_1 = true
+endFunction
+
+function Upgrade_1_4()
+	EnchantmentResistFire.AddForm(WAF_ClothingCloak)
+	EnchantmentResistFrost.AddForm(WAF_ClothingCloak)
+	EnchantmentResistShock.AddForm(WAF_ClothingCloak)
+	EnchantmentResistMagic.AddForm(WAF_ClothingCloak)
+	EnchantmentResistDisease.AddForm(WAF_ClothingCloak)
+	EnchantmentResistPoison.AddForm(WAF_ClothingCloak)
+	Upgraded_1_4 = true
 endFunction
 
 function CampfirePerkSystemRegister(Activator akNodeController, int aiIndex, string asPluginName)
