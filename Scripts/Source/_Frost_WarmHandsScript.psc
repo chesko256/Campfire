@@ -13,12 +13,13 @@ GlobalVariable property _Frost_WarmingHandsToggle auto
 GlobalVariable property _Frost_HandWarmingControlTime auto
 GlobalVariable property _Frost_CurrentHeatSourceSize auto
 GlobalVariable property _Frost_PlayingWarmHands auto
+GlobalVariable property _Frost_Setting_1PAnimationAllowed auto
 bool animation_playing = false
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	FrostDebug(0, ")))) ANIMATION ::: The hand-warming effect was applied.")
 	bool no_recent_animation = ((Game.GetRealHoursPassed() * 3600) - _Frost_HandWarmingControlTime.GetValue() >= 6.0)
-	if no_recent_animation && !PlayerRef.GetAnimationVariableBool("IsFirstPerson")
+	if no_recent_animation && (!PlayerRef.GetAnimationVariableBool("IsFirstPerson") || _Frost_Setting_1PAnimationAllowed.GetValueInt() == 2)
 		FrostDebug(0, ")))) ANIMATION ::: Animation control time was " + _Frost_HandWarmingControlTime.GetValue())
 		PickIdle()
 		Game.DisablePlayerControls(false, false, true, false, false, false, false)
@@ -31,7 +32,14 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 endEvent
 
 function PickIdle()
-	if _Frost_CurrentHeatSourceSize.GetValueInt() <= 2
+	if PlayerRef.GetAnimationVariableBool("IsFirstPerson")
+		;Always pick standing anims in first person
+		if PlayerRef.GetEquippedShield()
+			PlayerRef.Playidle(IdleBowHeadAtGrave_01)
+		else
+			PlayerRef.Playidle(IdleWarmHandsStanding)
+		endif
+	elseif _Frost_CurrentHeatSourceSize.GetValueInt() <= 1
 		;High chance to crouch near small fires (campfires, etc)
 		float fRandom = RandomFloat()
 		FrostDebug(0, ")))) ANIMATION ::: Picked " + fRandom)
