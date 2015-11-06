@@ -8,21 +8,22 @@ Idle property IdleWarmHandsCrouched auto
 Idle property IdleWarmHandsStanding auto
 Idle property IdleBowHeadAtGrave_01 auto
 Idle property IdleStop_Loose auto
+Quest property _Frost_System_Follower auto
 GlobalVariable property _Frost_WarmingHandsToggle auto
 GlobalVariable property _Frost_HandWarmingControlTime auto
 GlobalVariable property _Frost_CurrentHeatSourceSize auto
 GlobalVariable property _Frost_PlayingWarmHands auto
-GlobalVariable property _Frost_Setting_Animation1PAllowed auto
 bool animation_playing = false
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	FrostDebug(0, ")))) ANIMATION ::: The hand-warming effect was applied.")
 	bool no_recent_animation = ((Game.GetRealHoursPassed() * 3600) - _Frost_HandWarmingControlTime.GetValue() >= 6.0)
-	if no_recent_animation && (!PlayerRef.GetAnimationVariableBool("IsFirstPerson") || _Frost_Setting_Animation1PAllowed.GetValueInt() == 2)
+	if no_recent_animation && !PlayerRef.GetAnimationVariableBool("IsFirstPerson")
 		FrostDebug(0, ")))) ANIMATION ::: Animation control time was " + _Frost_HandWarmingControlTime.GetValue())
 		PickIdle()
 		Game.DisablePlayerControls(false, false, true, false, false, false, false)
 		RegisterForKeys()
+		_Frost_System_Follower.Start()
 	else
 		FrostDebug(0, ")))) ANIMATION ::: Current time is " + (Game.GetRealHoursPassed() * 3600) + ", control time was " + _Frost_HandWarmingControlTime.GetValue() + ", waiting...")
 		_Frost_WarmingHandsToggle.SetValue(2)
@@ -85,4 +86,5 @@ Event OnEffectFinish(Actor akTarget, Actor akCaster)
 	endif
 	FrostDebug(0, ")))) ANIMATION ::: Ending animation and recording control time of " + _Frost_HandWarmingControlTime.GetValue())
 	_Frost_WarmingHandsToggle.SetValue(1)
+	_Frost_System_Follower.Stop()
 endEvent

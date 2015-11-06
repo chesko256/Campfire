@@ -877,17 +877,15 @@ endFunction
 ;@TODO: Implement Settings Profiles
 ;@TODO: Implement all armor compatibility
 ;@TODO: Add missing menu support for coverage / warmth
-;@TODO: Add alternate coverage / warmth display method
 ;@TODO: Reimplement tutorials
 ;@TODO: Conditionalize Weathersense acquire on hotkey
 ;@TODO: Hook up SkyUI MCM
 ;@TODO: Start-up, shut-down procedures
+
+
+
+
 ;@TODO: Animation for followers (package)
-;@TODO: Toggle to allow handwarming animation in first person
-
-
-
-
 
 ; Campfire stuff
 ;@TODO: Smelters still aren't working as heat sources.

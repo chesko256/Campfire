@@ -2,6 +2,7 @@ scriptname _Frost_HeatSourceSystem extends _Frost_BaseSystem
 
 import _FrostInternal
 
+ReferenceAlias property HeatSource auto
 GlobalVariable property _Frost_CurrentHeatSourceSize auto
 GlobalVariable property _Frost_CurrentHeatSourceDistance auto
 GlobalVariable property _Frost_NearFire auto
@@ -52,13 +53,17 @@ function GetHeatSourceData()
         float current_heat_distance
         if current_heat_size > 0
             ; We successfully found a heat source.
+            HeatSource.ForceRefTo(current_heat_source)
             current_heat_distance = SetHeatSourceDistance(distance_from_heat)
             FrostDebug(1, "%%%% Heat ::: Size " + current_heat_size + ", Distance " + current_heat_distance + ", Fire " + near_fire + ", Ref " + current_heat_source)
             return
+        else
+            HeatSource.Clear()
         endif
     else
         ; If the player is in an inn, they are warm everywhere inside it.
         ; We check this second because we want the animation system to find a fire first, if nearby.
+        HeatSource.Clear()
         Location current_location = PlayerRef.GetCurrentLocation()
         if current_location && current_location.HasKeyword(LocTypeInn)
             FrostDebug(1, "%%%% Heat ::: Inside Inn")
