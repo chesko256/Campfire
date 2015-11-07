@@ -889,10 +889,8 @@ endFunction
 ;@TODO: Start-up, shut-down procedures
 ;@TODO: Verify vampire crap (including BSV)
 ;@TODO: If the point delta on the limit is < 1, don't display limit message.
-
-
-
-;@TODO: Animation for followers (package)
+;@TODO: snowberry vfx on inner fire
+;@TODO: In rain, coverage should determine if you lose exposure, even in warm areas.
 
 ; Campfire stuff
 ;@TODO: Smelters still aren't working as heat sources.

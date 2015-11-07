@@ -22,10 +22,7 @@ Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
 
 	    UpdateFrostResistBonus()
 	elseif akEffect.HasKeyword(MagicDamageFire)
-		if !PlayerRef.IsSwimming()
-			DispelWetness()
-		endif
-		DecreaseExposureFireDamage()
+		DecreaseExposureWetnessFireDamage()
 	elseif akEffect.HasKeyword(MagicDamageFrost)
 		IncreaseExposureFrostDamage()
 	endif
@@ -51,21 +48,22 @@ endFunction
 
 function DispelWetness()
 	_Frost_WetnessSystem wet = GetWetnessSystem()
-	if PlayerRef.HasEffectKeyword(_Frost_WetStateKeyword)
-		wet.ModAttributeWetness(-wet.MAX_WETNESS, wet.MIN_WETNESS)
-		if _Frost_WetLevel.GetValueInt() > 0
-			SteamFXShader.Play(PlayerRef, 1.5)
-			wet.UpdateWetLevel()
-		endif
+	wet.ModAttributeWetness(-wet.MAX_WETNESS, wet.MIN_WETNESS)
+	if _Frost_WetLevel.GetValueInt() > 0
+		SteamFXShader.Play(PlayerRef, 1.5)
+		wet.UpdateWetLevel()
 	endif
 endFunction
 
 bool fire_damage_lock = false
-function DecreaseExposureFireDamage()
+function DecreaseExposureWetnessFireDamage()
 	if fire_damage_lock
 		return
 	endif
 	fire_damage_lock = true
+	if !PlayerRef.IsSwimming()
+		DispelWetness()
+	endif
 	SendEvent_ForceExposureMeterDisplay()
 	ModPlayerExposure(-5.0, 50.0)
 	Utility.Wait(2.0)
