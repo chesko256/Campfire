@@ -11,6 +11,7 @@ _Frost_Compatibility property Compatibility auto
 
 GlobalVariable property GameHour auto
 GlobalVariable property _Frost_CurrentTemperature auto
+GlobalVariable property _Frost_CurrentWaterTemperature auto
 GlobalVariable property _Frost_Setting_WeatherMessages auto
 GlobalVariable property _Frost_RegionDetect_ForceUpdate auto
 
@@ -86,6 +87,8 @@ Worldspace ws
 int current_max_temperature
 int last_region
 int last_current_temperature
+bool was_nighttime
+bool is_nighttime
 Weather last_incoming_weather
 Weather last_current_weather
 
@@ -142,6 +145,7 @@ function UpdateClimateState()
 	
 	FrostDebug(0, "%%%% Climate ::: Current Temp: " + current_temperature + ", Region: " + region)
 	_Frost_CurrentTemperature.SetValueInt(current_temperature)
+	_Frost_CurrentWaterTemperature.SetValueInt(current_temperature + 2)
 	SendEvent_UpdateWeathersenseMeter(current_temperature)
 
 	; Historical values
@@ -186,8 +190,19 @@ int function GetCurrentTemperature(Weather this_weather, int region)
 		return 10
 	endif
 
-	; Don't recalculate if the weather or region hasn't changed.
-	if this_weather == last_current_weather && region == last_region
+	if GameHour.GetValue() > 19 || GameHour.GetValue() < 7
+		is_nighttime = true
+	else
+		is_nighttime = false
+	endif
+
+	bool time_changed = false
+	if (is_nighttime && !was_nighttime) || (!is_nighttime && was_nighttime)
+		time_changed = true
+	endif
+
+	; Don't recalculate if the weather, region or time hasn't changed.
+	if this_weather == last_current_weather && region == last_region && !time_changed
 		return last_current_temperature
 	endif
 
@@ -225,9 +240,10 @@ int function GetCurrentTemperature(Weather this_weather, int region)
 		endif
 	endif
 
-	if GameHour.GetValue() > 19 || GameHour.GetValue() < 7
+	if is_nighttime
 		current_temperature -= 5
 	endif
+	was_nighttime = is_nighttime
 
 	if current_temperature > current_max_temperature
 		current_temperature = current_max_temperature

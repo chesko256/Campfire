@@ -4,6 +4,7 @@ import CampUtil
 
 Actor property PlayerRef auto
 GlobalVariable property GameHour auto
+GlobalVariable property _Frost_PerkRank_GlacialSwimmer auto
 Keyword property _Frost_ColdWaterPotionKW auto
 Message property _Frost_WaterTemp1Msg auto
 Message property _Frost_WaterTemp2Msg auto
@@ -26,44 +27,24 @@ Event OnPlayerStopSwimming()
 	HandleNotSwimming()
 endEvent
 
-Event OnUpdate()
-	if PlayerRef.IsSwimming() && \
-		!IsRefInInterior(PlayerRef) && !PlayerRef.HasEffectKeyword(_Frost_ColdWaterPotionKW)
-		ApplyTempEffects()
-		RegisterForSingleUpdate(3)
-	endif
-EndEvent
-
 function HandleSwimming()
 	if !IsRefInInterior(PlayerRef) && !PlayerRef.HasEffectKeyword(_Frost_ColdWaterPotionKW)
 		ApplyTempEffects()
-		RegisterForSingleUpdate(3)
 	endif
-
-	if Frostfall.bInInterior == true 						;do not affect the player inside
-	elseif Frostfall.pSetting_IsRunning == false			;do not affect the player if Frostfall isn't running
-	elseif PlayerRef.HasEffectKeyword(_DE_WaterPotionKW)	;do not affect the player when using the water potion
-	elseif Frostfall.bIsVampire == true						;do not affect the player if a vampire
-	else
-		if Frostfall.pSetting_IsRunning == true && Frostfall.ShutdownState == false
-			ApplyTempEffects()
-		endif
-	endif
-	RegisterForSingleUpdate(3)
 endfunction
 
 function HandleNotSwimming()
-	PlayerRef.RemoveSpell(_DE_ColdWater_1)
-	PlayerRef.RemoveSpell(_DE_ColdWater_2)
-	PlayerRef.RemoveSpell(_DE_ColdWater_3)
+	PlayerRef.RemoveSpell(_Frost_ColdWater_1)
+	PlayerRef.RemoveSpell(_Frost_ColdWater_2)
+	PlayerRef.RemoveSpell(_Frost_ColdWater_3)
 endFunction
 
 function ApplyTempEffects()
-	bool bSapStamina = true
-	if Compatibility.isSKYRELoaded
-		if Game.GetPlayer().HasPerk(Compatibility.GlacialSwimmer)
-			bSapStamina = false
-		endif
+	bool drain_stamina
+	if _Frost_PerkRank_GlacialSwimmer.GetValueInt() > 0
+		drain_stamina = false
+	else
+		drain_stamina = true
 	endif
 
 	;Check temperature and apply effects as needed
@@ -76,20 +57,20 @@ function ApplyTempEffects()
 			last_water_message_time = GameHour.GetValue()
 		endif
 	elseif water_temp <= 10 && water_temp > 5
-		if bSapStamina
-			ApplyColdWaterSpell(_DE_ColdWater_1, 40.0, _Frost_WaterTemp2Msg)
+		if drain_stamina
+			ApplyColdWaterSpell(_Frost_ColdWater_1, 40.0, _Frost_WaterTemp2Msg)
 		else
 			ApplyColdWaterSpell(none, 40.0, _Frost_WaterTemp2Msg)
 		endif
 	elseif water_temp <= 5 && water_temp > 0
-		if bSapStamina
-			ApplyColdWaterSpell(_DE_ColdWater_2, 60.0, _Frost_WaterTemp3Msg)
+		if drain_stamina
+			ApplyColdWaterSpell(_Frost_ColdWater_2, 60.0, _Frost_WaterTemp3Msg)
 		else
 			ApplyColdWaterSpell(none, 60.0, _Frost_WaterTemp3Msg)
 		endif
 	elseif water_temp < 0
-		if bSapStamina
-			ApplyColdWaterSpell(_DE_ColdWater_3, 80.0, _Frost_WaterTemp4Msg)
+		if drain_stamina
+			ApplyColdWaterSpell(_Frost_ColdWater_3, 80.0, _Frost_WaterTemp4Msg)
 		else
 			ApplyColdWaterSpell(_DE_ColdWater_3_Perk, 80.0, _Frost_WaterTemp4Msg)
 		endif

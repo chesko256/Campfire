@@ -55,6 +55,7 @@ Message property _Frost_FrostbiteMessage_Body auto
 Message property _Frost_FrostbiteMessage_Head auto
 Message property _Frost_FrostbiteMessage_Hands auto
 Message property _Frost_FrostbiteMessage_Feet auto
+MiscObject property _Frost_DummyItem auto
 ImageSpaceModifier property _Frost_ColdISM_Level5 auto
 ImageSpaceModifier property _Frost_ColdISM_Level4 auto
 ImageSpaceModifier property _Frost_ColdISM_Level3 auto
@@ -352,6 +353,15 @@ function ExposureEffectsUpdate()
 
 	if exposure_level >= 4
 		GetFrostbite()
+	endif
+
+	; Add and remove the dummy item to force the player's movement speed to update.
+	if last_exposure_level != 4 && exposure_level == 4
+		PlayerRef.AddItem(_Frost_DummyItem, 1, true)
+		PlayerRef.RemoveItem(_Frost_DummyItem, 1, true)
+	elseif last_exposure_level != 5 && exposure_level == 5
+		PlayerRef.AddItem(_Frost_DummyItem, 1, true)
+		PlayerRef.RemoveItem(_Frost_DummyItem, 1, true)
 	endif
 
 	ApplyVisualEffects()
@@ -881,7 +891,9 @@ endFunction
 ;@TODO: Conditionalize Weathersense acquire on hotkey
 ;@TODO: Hook up SkyUI MCM
 ;@TODO: Start-up, shut-down procedures
-
+;@TODO: Suppress "drenched" message and meter until done swimming
+;@TODO: Clear wetness after rescue
+;@TODO: Verify vampire crap (including BSV)
 
 
 
@@ -892,3 +904,4 @@ endFunction
 ;@TODO: Block Campfire hotkeys on Enchanting / renaming / other crafting menus
 ;@TODO: Add way to put out campfire without frost spell
 ;@TODO: Kick people out of attached furniture objects before pick up
+;@TODO: Public "can cook" injected global
