@@ -847,6 +847,41 @@ bool function IsTentWarm(ObjectReference akTent) global
 	endif
 endFunction
 
+;/********f* CampUtil/TentHasShelter
+* API VERSION ADDED
+* 3
+*
+* DESCRIPTION
+* Does this tent have shelter? (Used by Frostfall to determine if the player should warm up additionally when inside it.)
+*
+* SYNTAX
+*/;
+bool function TentHasShelter(ObjectReference akTent) global
+;/*
+* PARAMETERS
+* akTent: The Tent ObjectReference to check. Use the return value of GetCurrentTent(), or use CurrentTentHasShelter() instead.
+*
+* RETURN VALUE
+* Whether or not this tent has shelter.
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+
+	if Campfire.CurrentTent
+		if Campfire.CurrentTent.GetBaseObject().HasKeyword(Campfire.isCampfireTentNoShelter)
+			return false
+		else
+			return true
+		endif
+	else
+		return false
+	endif
+
+endFunction
+
 ;/********f* CampUtil/IsCurrentTentWaterproof
 * API VERSION ADDED
 * 2
@@ -905,6 +940,41 @@ bool function IsCurrentTentWarm() global
 	else
 		return false
 	endif
+endFunction
+
+;/********f* CampUtil/CurrentTentHasShelter
+* API VERSION ADDED
+* 3
+*
+* DESCRIPTION
+* Does the current tent have shelter? (Used by Frostfall to determine if the player should warm up additionally when inside it.)
+*
+* SYNTAX
+*/;
+bool function CurrentTentHasShelter() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* Whether or not the current tent has shelter.
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+
+	if Campfire.CurrentTent
+		if Campfire.CurrentTent.GetBaseObject().HasKeyword(Campfire.isCampfireTentNoShelter)
+			return false
+		else
+			return true
+		endif
+	else
+		return false
+	endif
+
 endFunction
 
 ;/********f* CampUtil/IsCrimeToPlaceInTowns
