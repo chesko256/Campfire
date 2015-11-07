@@ -228,6 +228,23 @@ function GetWetter(float limit)
 	endif
 endFunction
 
+function SetWetness(float value, bool force_meter_display = false)
+	_Frost_AttributeWetness.SetValue(value)
+	if force_meter_display
+		SendEvent_ForceWetnessMeterDisplay()
+	else
+		SendEvent_UpdateWetnessMeter()
+	endif
+endFunction
+
+function SendEvent_ForceWetnessMeterDisplay(bool flash = false)
+	int handle = ModEvent.Create("Frost_ForceWetnessMeterDisplay")
+	if handle
+		ModEvent.PushBool(handle, flash)
+		ModEvent.Send(handle)
+	endif
+endFunction
+
 function SendEvent_UpdateWetnessMeter()
 	int handle = ModEvent.Create("Frost_UpdateWetnessMeter")
 	if handle

@@ -266,6 +266,7 @@ function RescueStart(bool bInWater = false)
 	endif
 	
 	GetExposureSystem().SetExposure(45.0, true)
+	GetWetnessSystem().SetWetness(0.0, true)
 endFunction
 
 function RescueEnd()
