@@ -754,6 +754,9 @@ function GetFrostbite(bool force_frostbite = false)
 		if Utility.RandomFloat() <= frostbite_chance
 			PlayerRef.EquipItem(_Frost_FrostbittenPotionFeet, abSilent = true)
 			_Frost_FrostbiteMessage_Feet.Show()
+			; Add and remove dummy item to recalculate movement speed.
+			PlayerRef.AddItem(_Frost_DummyItem, 1, true)
+			PlayerRef.RemoveItem(_Frost_DummyItem, 1, true)
 		endif
 	endif
 endFunction
