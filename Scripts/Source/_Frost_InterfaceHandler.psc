@@ -196,6 +196,9 @@ function UpdateExposureMeter()
 endFunction
 
 function UpdateWetnessMeter()
+	if PlayerRef.IsSwimming()
+		return
+	endif
 	DisplayWetnessMeter()
 endFunction
 
