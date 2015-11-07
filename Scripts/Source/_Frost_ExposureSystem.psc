@@ -886,7 +886,6 @@ function SendEvent_OnRescuePlayer(bool in_water)
 endFunction
 
 ;@TODO: Am I adding apocrypha / etc to oblivion worldspaces?
-;@TODO: Hook up frigid water and Glacial Swimmer and Snowberry Extract
 ;@TODO: Implement Settings Profiles
 ;@TODO: Implement all armor compatibility
 ;@TODO: Add missing menu support for coverage / warmth
@@ -894,8 +893,6 @@ endFunction
 ;@TODO: Conditionalize Weathersense acquire on hotkey
 ;@TODO: Hook up SkyUI MCM
 ;@TODO: Start-up, shut-down procedures
-;@TODO: Suppress "drenched" message and meter until done swimming
-;@TODO: Clear wetness after rescue
 ;@TODO: Verify vampire crap (including BSV)
 
 
