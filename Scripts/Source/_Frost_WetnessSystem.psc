@@ -47,11 +47,17 @@ endFunction
 
 function RegisterForEvents()
 	RegisterForModEvent("Frostfall_OnPlayerStartSwimming", "OnPlayerStartSwimming")
+	RegisterForModEvent("Frostfall_OnPlayerStopSwimming", "OnPlayerStopSwimming")
 endFunction
 
 Event OnPlayerStartSwimming()
 	ModAttributeWetness(MAX_WETNESS, MAX_WETNESS)
 	UpdateWetLevel()
+endEvent
+
+Event OnPlayerStopSwimming()
+	_Frost_WetStateMsg_Wet3.Show()
+	SendEvent_ForceWetnessMeterDisplay()
 endEvent
 
 function ModAttributeWetness(float amount, float limit)
@@ -119,7 +125,10 @@ function UpdateWetLevel()
 endFunction
 
 function ShowWetStateMessage(int wet_level)
-	if _Frost_Setting_ConditionMessages.GetValueInt() == 2 && FrostUtil.IsPlayerVampire() == false
+	if PlayerRef.IsSwimming()
+		return
+	endif
+	if _Frost_Setting_ConditionMessages.GetValueInt() == 2
 		bool increasing = wet_level > last_wet_level
 		if increasing && wet_level == 3 && last_wet_level != 3
 			_Frost_WetStateMsg_Wet3.Show()
