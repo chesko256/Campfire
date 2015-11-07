@@ -22,7 +22,9 @@ Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
 
 	    UpdateFrostResistBonus()
 	elseif akEffect.HasKeyword(MagicDamageFire)
-		DispelWetness()
+		if !PlayerRef.IsSwimming()
+			DispelWetness()
+		endif
 		DecreaseExposureFireDamage()
 	elseif akEffect.HasKeyword(MagicDamageFrost)
 		IncreaseExposureFrostDamage()
