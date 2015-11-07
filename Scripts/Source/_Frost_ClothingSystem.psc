@@ -3,6 +3,7 @@ scriptname _Frost_ClothingSystem extends _Frost_BaseSystem
 import FrostUtil
 import _FrostInternal
 
+Actor property PlayerRef auto
 GlobalVariable property _Frost_Setting_Notifications_EquipmentValues auto
 Formlist property _Frost_EquipExceptions auto
 Quest property FrostfallStrings auto
@@ -239,6 +240,11 @@ int function GetArmorCoverage()
 endFunction
 
 Event OnUpdate()
+    ; Suppress this message when getting into / out of a tent
+    if PlayerRef.GetSitState() > 0
+        return
+    endif
+
     _Frost_Strings str = FrostfallStrings as _Frost_Strings
     debug.notification(str.TotalWarmth + " " + GetPlayerWarmth() + ", " + str.TotalCoverage + " " + GetPlayerCoverage())
 EndEvent
