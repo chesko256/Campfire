@@ -251,7 +251,11 @@ endFunction
 
 function RefreshPlayerStateData()
 	current_temperature = GetEffectiveTemperature()
-	in_tent = GetCurrentTent()
+	if GetCurrentTent() && CurrentTentHasShelter()
+		in_tent	= true
+	else
+		in_tent = false
+	endif
 	tent_is_warm = IsCurrentTentWarm()
 	in_shelter = IsPlayerTakingShelter()
 	this_worldspace = PlayerRef.GetWorldSpace()
@@ -259,11 +263,7 @@ function RefreshPlayerStateData()
 	player_y = PlayerRef.GetPositionY()
 	in_interior = CampUtil.IsRefInInterior(PlayerRef)
 	distance_moved = GetDistanceMoved()
-	if distance_moved > 0.0
-		;@TODO: Let animation quest handle this itself
-		;_DE_WarmingHandsToggle.SetValue(1)
-	endif
-
+	
 	bool fast_travelled = GetFastTravelled(distance_moved)
 	if fast_travelled
 		SetAfterFastTravelCondition()
@@ -356,10 +356,7 @@ function ExposureEffectsUpdate()
 	endif
 
 	; Add and remove the dummy item to force the player's movement speed to update.
-	if last_exposure_level != 4 && exposure_level == 4
-		PlayerRef.AddItem(_Frost_DummyItem, 1, true)
-		PlayerRef.RemoveItem(_Frost_DummyItem, 1, true)
-	elseif last_exposure_level != 5 && exposure_level == 5
+	if last_exposure_level != exposure_level
 		PlayerRef.AddItem(_Frost_DummyItem, 1, true)
 		PlayerRef.RemoveItem(_Frost_DummyItem, 1, true)
 	endif
@@ -754,9 +751,6 @@ function GetFrostbite(bool force_frostbite = false)
 		if Utility.RandomFloat() <= frostbite_chance
 			PlayerRef.EquipItem(_Frost_FrostbittenPotionFeet, abSilent = true)
 			_Frost_FrostbiteMessage_Feet.Show()
-			; Add and remove dummy item to recalculate movement speed.
-			PlayerRef.AddItem(_Frost_DummyItem, 1, true)
-			PlayerRef.RemoveItem(_Frost_DummyItem, 1, true)
 		endif
 	endif
 endFunction
@@ -894,6 +888,7 @@ endFunction
 ;@TODO: Hook up SkyUI MCM
 ;@TODO: Start-up, shut-down procedures
 ;@TODO: Verify vampire crap (including BSV)
+;@TODO: If the point delta on the limit is < 1, don't display limit message.
 
 
 
