@@ -1,5 +1,7 @@
 scriptname _Frost_SkyUIConfigPanelScript extends SKI_ConfigBase
 
+import FrostUtil
+
 string CONFIG_PATH = "../FrostfallData/"
 
 ; External scripts
@@ -11,30 +13,30 @@ GlobalVariable property _Frost_AttributeWarmth auto
 GlobalVariable property _Frost_AttributeCoverage auto
 
 GlobalVariable property StartFrostfall auto
-GlobalVariable property  _Frost_Setting_Animation auto
-GlobalVariable property  _Frost_Setting_Animation1PAllowed auto
-GlobalVariable property  _Frost_Setting_ConditionMessages auto
-GlobalVariable property  _Frost_Setting_DisplayAttributesInWeathersense auto
-; GlobalVariable property  _Frost_Setting_ExposureMeterHeight auto
-GlobalVariable property  _Frost_Setting_ExposurePauseCombat auto
-GlobalVariable property  _Frost_Setting_ExposurePauseDialogue auto
-GlobalVariable property  _Frost_Setting_ExposureRate auto
-GlobalVariable property  _Frost_Setting_ForceFeedback auto
-GlobalVariable property  _Frost_Setting_FrostShaderOn auto
-GlobalVariable property  _Frost_Setting_FullScreenEffects auto
-GlobalVariable property  _Frost_Setting_LogLevel auto
-GlobalVariable property  _Frost_Setting_MaxExposureMode auto
-GlobalVariable property  _Frost_Setting_MeterDisplayMode auto
-GlobalVariable property  _Frost_Setting_MeterDisplayTime auto
-GlobalVariable property  _Frost_Setting_MeterOpacity auto
-GlobalVariable property  _Frost_Setting_MovementPenalty auto
-GlobalVariable property  _Frost_Setting_NoFastTravel auto
-GlobalVariable property  _Frost_Setting_SoundEffects auto
-GlobalVariable property  _Frost_Setting_WeatherMessages auto
-GlobalVariable property  _Frost_Setting_WeathersenseDisplayMode auto
-GlobalVariable property  _Frost_Setting_WetShaderOn auto
-GlobalVariable property  _Frost_Setting_CurrentProfile auto
-GlobalVariable property  _Frost_Setting_AutoSaveLoad auto
+GlobalVariable property _Frost_Setting_Animation auto
+GlobalVariable property _Frost_Setting_1PAnimationAllowed auto
+GlobalVariable property _Frost_Setting_ConditionMessages auto
+GlobalVariable property _Frost_Setting_DisplayAttributesInWeathersense auto
+; GlobalVariable property _Frost_Setting_ExposureMeterHeight auto
+GlobalVariable property _Frost_Setting_ExposurePauseCombat auto
+GlobalVariable property _Frost_Setting_ExposurePauseDialogue auto
+GlobalVariable property _Frost_Setting_ExposureRate auto
+GlobalVariable property _Frost_Setting_ForceFeedback auto
+GlobalVariable property _Frost_Setting_FrostShaderOn auto
+GlobalVariable property _Frost_Setting_FullScreenEffects auto
+GlobalVariable property _Frost_Setting_LogLevel auto
+GlobalVariable property _Frost_Setting_MaxExposureMode auto
+GlobalVariable property _Frost_Setting_MeterDisplayMode auto
+GlobalVariable property _Frost_Setting_MeterDisplayTime auto
+GlobalVariable property _Frost_Setting_MeterOpacity auto
+GlobalVariable property _Frost_Setting_MovementPenalty auto
+GlobalVariable property _Frost_Setting_NoFastTravel auto
+GlobalVariable property _Frost_Setting_SoundEffects auto
+GlobalVariable property _Frost_Setting_WeatherMessages auto
+GlobalVariable property _Frost_Setting_WeathersenseDisplayMode auto
+GlobalVariable property _Frost_Setting_WetShaderOn auto
+GlobalVariable property _Frost_Setting_CurrentProfile auto
+GlobalVariable property _Frost_Setting_AutoSaveLoad auto
 
 string[] ProfileList
 
@@ -76,6 +78,30 @@ endFunction
 Event OnVersionUpdate(int a_version)
 	; Pass
 EndEvent
+
+event OnPageReset(string page)																			;TRANSLATED
+	if page == ""
+		LoadCustomContent("frostfall/frostfall_splash.swf")
+	else
+		UnloadCustomContent()
+	endif
+
+	if page == "$FrostfallOverviewPage"
+		PageReset_Overview()
+	elseif page == "$FrostfallGameplayPage"
+		PageReset_Gameplay()
+	elseif page == "$FrostfallEquipmentPage"
+		PageReset_Equipment()
+	elseif page == "$FrostfallInterfacePage"
+		PageReset_Interface()
+	elseif page == "$CampfireSaveLoadPage"
+		PageReset_SaveLoad()
+	elseif page == "$FrostfallGuidePage"
+		PageReset_Guide()
+	elseif page == "$CampfireSystemPage"
+		PageReset_System()
+	endif
+endEvent
 
 function PageReset_Overview()
 	SetCursorFillMode(TOP_TO_BOTTOM)
@@ -131,6 +157,10 @@ function PageReset_Gameplay()
 
 endFunction
 
+function PageReset_Equipment()
+
+endFunction
+
 function PageReset_Interface()
 
 endFunction
@@ -143,7 +173,7 @@ function PageReset_SaveLoad()
 	SetCursorFillMode(TOP_TO_BOTTOM)
 
 	AddHeaderOption("$FrostfallSaveLoadHeaderProfile")
-	if _Camp_Setting_AutoSaveLoad.GetValueInt() == 2
+	if _Frost_Setting_AutoSaveLoad.GetValueInt() == 2
 		SaveLoad_SelectProfile_OID = AddMenuOption("$FrostfallSaveLoadCurrentProfile", GetProfileName(_Frost_Setting_CurrentProfile.GetValueInt()))
 	else
 		SaveLoad_SelectProfile_OID = AddMenuOption("$FrostfallSaveLoadCurrentProfile", GetProfileName(_Frost_Setting_CurrentProfile.GetValueInt()), OPTION_FLAG_DISABLED)
@@ -187,4 +217,13 @@ function PageReset_SaveLoad()
 	if _Frost_Setting_AutoSaveLoad.GetValueInt() == 2
 		AddTextOption("$FrostfallSaveLoadSettingsSaved", "", OPTION_FLAG_DISABLED)
 	endif
+endFunction
+
+string function GetProfileName(int aiProfileIndex)
+	;bool b = JsonUtil.Load(CONFIG_PATH + "profile" + aiProfileIndex)
+	return JsonUtil.GetStringValue(CONFIG_PATH + "profile" + aiProfileIndex, "profile_name", missing = "Profile " + aiProfileIndex)
+endFunction
+
+function PageReset_System()
+
 endFunction
