@@ -39,13 +39,18 @@ int property DEFAULT_FEET_COVERAGE 				= 14 autoReadOnly
 int property DEFAULT_SHIELD_WARMTH				= 0 autoReadOnly
 int property DEFAULT_SHIELD_COVERAGE			= 20 autoReadOnly
 
-Event OnInit()
+function StartDatastore()
 	if !self.IsRunning()
 		self.Start()
-		return
 	endif
 	RevertDatastore()
-EndEvent
+endFunction
+
+function StopDatastore()
+	if self.IsRunning()
+		self.Stop()
+	endif
+endFunction
 
 int function GetGearType(Form akBaseObject)
 	if !akBaseObject
@@ -391,12 +396,12 @@ function RevertDatastore()
 	FrostDebug(1, "Setting default settings for body armor...")
 	SetDefaults_Body()
 	FrostDebug(1, "Setting default settings for body armor...done.")
-	FrostDebug(1, "Setting default settings for hands armor...")
-	SetDefaults_Hands()
-	FrostDebug(1, "Setting default settings for hands armor...done.")
 	FrostDebug(1, "Setting default settings for head armor...")
 	SetDefaults_Head()
 	FrostDebug(1, "Setting default settings for head armor...done.")
+	FrostDebug(1, "Setting default settings for hands armor...")
+	SetDefaults_Hands()
+	FrostDebug(1, "Setting default settings for hands armor...done.")
 	FrostDebug(1, "Setting default settings for feet armor...")
 	SetDefaults_Feet()
 	FrostDebug(1, "Setting default settings for feet armor...done.")
@@ -412,13 +417,3 @@ endFunction
 function RevertDatastoreEntry(string asKey)
 
 endFunction
-
-;@TODO
-;/Event OnKeyUp(int keyCode, float holdTime)
-    if UI.IsMenuOpen("InventoryMenu")
-        utility.WaitMenuMode(0.1)
-        debug.trace("[Frost] ItemCard item formid " + UI.GetInt("InventoryMenu", "_root.Menu_mc.inventoryLists.itemList.selectedEntry.formId"))
-        debug.trace("[Frost] ItemCard item name " + UI.GetString("InventoryMenu", "_root.Menu_mc.itemCard.ItemName.text"))
-    endif
-endEvent
-/;

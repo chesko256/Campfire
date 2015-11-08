@@ -103,6 +103,15 @@ _Frost_RescueSystem function GetRescueSystem() global
     return Frostfall.Rescue
 endFunction
 
+_Frost_ShelterSystem function GetShelterSystem() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.Shelter
+endFunction
+
 bool function IsWarmEnoughToRemoveGearInTent() global
     return true
 endFunction

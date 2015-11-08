@@ -113,10 +113,10 @@ function FatalErrorCampfire(float version)
 	endWhile
 endFunction
 
-function FatalErrorSkyUIPackage()
+function FatalErrorSkyUIPackage(int skyui_version)
 	trace("[Frostfall][ERROR] Detected optional Frostfall SkyUI Interface Package, but the wrong version of SkyUI is installed!")
 	while true
-		_Frost_CriticalError_SkyUIInterfacePackage.Show()
+		_Frost_CriticalError_SkyUIInterfacePackage.Show(skyui_version)
 		utility.wait(3.0)
 	endWhile
 endFunction
@@ -157,10 +157,10 @@ function RunCompatibility()
 		int skyui_version = skyui.ReqSWFRelease
 		if skyui_version >= 1026 	; SkyUI 5.1+
 			isUIPackageInstalled = true
-			trace("[Frostfall] Detected optional SkyUI Interface Package version " + ui_package_version_installed + ", success!")
+			trace("[Frostfall] Detected optional SkyUI Interface Package version " + ui_package_version_installed + " and SkyUI version " + skyui_version + ", success!")
 		else
 			isUIPackageInstalled = false
-			FatalErrorSkyUIPackage()
+			FatalErrorSkyUIPackage(5)
 		endif
 	else
 		isUIPackageInstalled = false

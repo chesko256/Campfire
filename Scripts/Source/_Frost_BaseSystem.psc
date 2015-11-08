@@ -7,12 +7,6 @@ GlobalVariable property UpdateFrequencyGlobal auto
 
 bool initialized = false
 
-; @TODO: DEBUG TESTING ONLY
-Event OnInit()
-	; @TODO: Conditionalize
-	StartSystem()
-endEvent
-
 function StartSystem()
 	FrostDebug(-1, "StartSystem " + self)
 	if !self.IsRunning()
