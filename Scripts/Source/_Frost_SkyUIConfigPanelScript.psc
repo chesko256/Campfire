@@ -6,6 +6,7 @@ string CONFIG_PATH = "../FrostfallData/"
 
 ; External scripts
 _Frost_Compatibility property Compatibility auto
+_Frost_Main property FrostfallMain auto
 
 GlobalVariable property _Frost_AttributeExposure auto
 GlobalVariable property _Frost_AttributeWetness auto
@@ -271,6 +272,26 @@ endFunction
 function PageReset_System()
 
 endFunction
+
+event OnOptionSelect(int option)
+	if option == Overview_RunStatusText_OID
+		if FrostfallRunning.GetValueInt() == 2
+			FrostfallRunning.SetValue(1)
+			ForcePageReset()
+			FrostfallMain.StopFrostfall()
+		else
+			FrostfallRunning.SetValue(2)
+			ForcePageReset()
+			FrostfallMain.StartFrostfall()
+		endif
+	endif	
+endEvent
+
+event OnOptionDefault(int option)
+
+endEvent
+
+
 
 Event StartupComplete()
 

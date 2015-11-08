@@ -29,11 +29,15 @@ function StartFrostfall()
 		GetClothingDatastoreHandler().StartDatastore()
 	endif
 	StartAllSystems()
-	FrostUtil.GetCompatibilitySystem().RunCompatibility()
+	GetCompatibilitySystem().RunCompatibility()
 endFunction
 
 function StopFrostfall()
-
+	if self.IsRunning()
+		self.Stop()
+	endif
+	PlayerAlias.Clear()
+	StopAllSystems()
 endFunction
 
 function StartAllSystems()
