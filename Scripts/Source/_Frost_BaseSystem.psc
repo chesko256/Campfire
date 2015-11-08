@@ -5,6 +5,8 @@ import _FrostInternal
 GlobalVariable property UpdateFrequencyGlobal auto
 {The global variable that determines how often this system should update. If left blank, this system is event-driven.}
 
+bool initialized = false
+
 ; @TODO: DEBUG TESTING ONLY
 Event OnInit()
 	; @TODO: Conditionalize
@@ -19,6 +21,7 @@ function StartSystem()
 	if UpdateFrequencyGlobal
 		RegisterForSingleUpdate(1)
 	endif
+	initialized = true
 endFunction
 
 function StopSystem()
@@ -26,6 +29,11 @@ function StopSystem()
 	if self.IsRunning()
 		self.Stop()
 	endif
+	initialized = false
+endFunction
+
+bool function IsSystemRunning()
+	return initialized
 endFunction
 
 Event OnUpdate()
