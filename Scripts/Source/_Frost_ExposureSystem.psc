@@ -884,7 +884,6 @@ endFunction
 ;@TODO: Am I adding apocrypha / etc to oblivion worldspaces?
 ;@TODO: Implement Settings Profiles
 ;@TODO: Implement all armor compatibility
-;@TODO: Add missing menu support for coverage / warmth
 ;@TODO: Reimplement tutorials
 ;@TODO: Conditionalize Weathersense acquire on hotkey
 ;@TODO: Hook up SkyUI MCM

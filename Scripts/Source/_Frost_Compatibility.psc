@@ -5,6 +5,7 @@ import FrostUtil
 
 int property SKSE_MIN_VERSION = 10703 autoReadOnly
 float property CAMPFIRE_MIN_VERSION = 1.4 autoReadOnly
+string CONFIG_PATH = "../FrostfallData/"
 
 ;#PROPERTIES=====================================================================================================================
 actor property PlayerRef auto
@@ -79,6 +80,7 @@ float[] Wyrmstooth_West_PolyY
 ;#Misc=============================================================================
 Message property _Frost_CriticalError_SKSE auto
 Message property _Frost_CriticalError_Campfire auto
+Message property _Frost_CriticalError_SkyUIInterfacePackage auto
 Weather property DLC2AshStorm auto hidden
 
 ;#Upgrade Flags====================================================================
@@ -111,6 +113,15 @@ function FatalErrorCampfire(float version)
 	endWhile
 endFunction
 
+function FatalErrorSkyUIPackage()
+	trace("[Frostfall][ERROR] Detected optional Frostfall SkyUI Interface Package, but the wrong version of SkyUI is installed!")
+	while true
+		_Frost_CriticalError_SkyUIInterfacePackage.Show()
+		utility.wait(3.0)
+	endWhile
+endFunction
+
+
 function RunCompatibility()
 	VanillaGameLoadUp()
 
@@ -140,6 +151,22 @@ function RunCompatibility()
 		trace("[Frostfall] Detected Campfire version " + campfire_version + " (expected " + CAMPFIRE_MIN_VERSION + " or newer, success!)")
 	endif
 	
+	int ui_package_version_installed = JsonUtil.GetIntValue(CONFIG_PATH + "interface_package_version", "installed_package_version")
+	if ui_package_version_installed > 0
+		SKI_Main skyui = Game.GetFormFromFile(0x00000814, "SkyUI.esp") as SKI_Main
+		int skyui_version = skyui.ReqSWFRelease
+		if skyui_version >= 1026 	; SkyUI 5.1+
+			isUIPackageInstalled = true
+			trace("[Frostfall] Detected optional SkyUI Interface Package version " + ui_package_version_installed + ", success!")
+		else
+			isUIPackageInstalled = false
+			FatalErrorSkyUIPackage()
+		endif
+	else
+		isUIPackageInstalled = false
+	endif
+
+	;@TODO: Rework to check version. SkyUI is now required.
 	if isSKYUILoaded
 		isSKYUILoaded = IsPluginLoaded(0x01000814, "SkyUI.esp")
 		if !isSKYUILoaded
