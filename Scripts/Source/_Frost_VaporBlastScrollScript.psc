@@ -8,16 +8,19 @@ Message property _Frost_VaporBlastError_Dry auto
 Message property _Frost_VaporBlastError_Swimming auto
 Spell property _Frost_VaporBlastEffects auto
 Sound property FXFireOut auto
+Sound property MAGFail auto
 EffectShader property SteamFXShader auto
 Scroll property myScroll auto
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	if _Frost_WetLevel.GetValueInt() == 0
 		_Frost_VaporBlastError_Dry.Show()
+		MAGFail.Play(PlayerRef)
 		PlayerRef.AddItem(myScroll, 1)
 		return
 	elseif PlayerRef.IsSwimming()
 		_Frost_VaporBlastError_Swimming.Show()
+		MAGFail.Play(PlayerRef)
 		PlayerRef.AddItem(myScroll, 1)
 		return
 	endif
