@@ -269,7 +269,7 @@ function DisplayWarmthCoverageNoSkyUI(Armor akArmor, int aiGearType)
 endFunction
 
 function DisplayWarmthCoverageNoSkyUIRemove(Armor akArmor, int aiGearType)
-    if !GetCompatibilitySystem().isUIPackageInstalled
+    if !GetCompatibilitySystem().isUIPackageInstalled 
         int[] result = GetClothingDatastoreHandler().GetTotalProtectionValues(akArmor, aiGearType)
         if result[0] == 0 && result[1] == 0
             return
