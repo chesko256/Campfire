@@ -17,9 +17,6 @@ keyword property ClothingHands auto
 keyword property ClothingHead auto
 keyword property ClothingFeet auto
 
-; Edge case - Only armor in vanilla game with integrated headgear
-Armor property ClothesMGRobesArchmage1Hooded auto
-
 bool processing_unequip = false
 
 Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
@@ -37,6 +34,7 @@ Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 	if akBaseObject as Armor
 
 		if !(GetUsesMainBodySlot(akBaseObject))
+			processing_unequip = false
 			return
 		endif
 
@@ -50,7 +48,7 @@ Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 			bEventRaised = SendEvent_OnGearUnequipped(akBaseObject, 2)
 			CampData.CurrentHands = none
 		endif
-		if akBaseObject.HasKeyword(ArmorHelmet) || akBaseObject.HasKeyword(ClothingHead) || akBaseObject == ClothesMGRobesArchmage1Hooded
+		if akBaseObject.HasKeyword(ArmorHelmet) || akBaseObject.HasKeyword(ClothingHead)
 			CampDebug(1, "Unequipped helmet!")
 			bEventRaised = SendEvent_OnGearUnequipped(akBaseObject, 3)
 			CampData.CurrentHead = none
@@ -99,7 +97,7 @@ function ProcessEquippedObject(Form akBaseObject)
 		CampData.CurrentHands = akBaseObject as Armor
 		bEventRaised = SendEvent_OnGearEquipped(akBaseObject, 2)
 	endif
-	if akBaseObject.HasKeyword(ArmorHelmet) || akBaseObject.HasKeyword(ClothingHead) || akBaseObject == ClothesMGRobesArchmage1Hooded
+	if akBaseObject.HasKeyword(ArmorHelmet) || akBaseObject.HasKeyword(ClothingHead)
 		CampDebug(1, "The player equipped a piece of head armor.")
 		CampData.CurrentHead = akBaseObject as Armor
 		bEventRaised = SendEvent_OnGearEquipped(akBaseObject, 3)
