@@ -116,6 +116,9 @@
 !textures/lastseed/old_backup/*
 !textures/lastseed/old_backup/PSDs/*
 
+#SKSE Data
+!SKSE/Plugins/FrostfallData/*
+
 #Working / raw files
 !WorkingFiles/*
 !WorkingFiles/FLA/*
