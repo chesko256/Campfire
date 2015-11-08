@@ -2468,6 +2468,14 @@ function SetDefaults_Cloak()
 	AddDatastoreEntryByKey("260766___Campfire.esm", 7, 40, 12) ; _Camp_Cloak_BasicFur
 	AddDatastoreEntryByKey("260767___Campfire.esm", 7, 12, 40) ; _Camp_Cloak_BasicHide
 
+	;##############################
+	;
+	;    Frostfall
+	;
+	;##############################
+	AddDatastoreEntryByKey("356637___Frostfall.esp", 7, 10, 10) ; _Frost_Cloak_BoundLesser
+	AddDatastoreEntryByKey("359400___Frostfall.esp", 7, 25, 25) ; _Frost_Cloak_BoundGreater
+
 endFunction
 
 function SetDefaults_Shield()
