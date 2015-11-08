@@ -543,12 +543,14 @@ function ExposureValueUpdate(float game_hours_passed)
 		heat_amount = HEAT_FACTOR * _Frost_CurrentHeatSourceSize.GetValueInt()
 	else
 		near_heat = false
-		if in_tent || in_interior || is_meditating
+		if in_tent || in_interior
 			if tent_is_warm
 				heat_amount = TENT_FACTOR + WARM_TENT_BONUS
 			else
 				heat_amount = TENT_FACTOR
 			endif
+		elseif is_meditating
+			heat_amount = 3
 		endif
 	endif
 
