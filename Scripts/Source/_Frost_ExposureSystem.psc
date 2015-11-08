@@ -891,6 +891,7 @@ endFunction
 ;@TODO: Verify vampire crap (including BSV)
 ;@TODO: If the point delta on the limit is < 1, don't display limit message.
 ;@TODO: In rain, coverage should determine if you lose exposure, even in warm areas.
+;@TODO: Check how long to reach max Endurance
 
 ; Campfire stuff
 ;@TODO: Smelters still aren't working as heat sources.
