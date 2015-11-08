@@ -4,6 +4,13 @@ import FrostUtil
 import _FrostInternal
 
 Actor property PlayerRef auto
+GlobalVariable property _Frost_ArmorPerk3Active auto
+GlobalVariable property _Frost_ArmorPerk2Active auto
+GlobalVariable property _Frost_ArmorPerk1Active auto
+MagicEffect property _Frost_ExposureArmorFFSelf_3 auto
+MagicEffect property _Frost_ExposureArmorFFSelf_2 auto
+MagicEffect property _Frost_ExposureArmorFFSelf_1 auto
+
 GlobalVariable property _Frost_AttributeWarmth auto
 GlobalVariable property _Frost_PerkRank_Adaptation auto
 GlobalVariable property _Frost_DatastoreInitialized auto
@@ -28,8 +35,8 @@ Event UpdateWarmth()
 	warmth += GetFrostResistBonus()
 	warmth += current_food_bonus
 	warmth += _Frost_PerkRank_Adaptation.GetValueInt() * 20
-	
-	; spells
+	warmth += GetSpellBonus()
+
 	_FrostInternal.FrostDebug(0, "**** Warmth ::: Warmth Value: " + warmth)
 	_Frost_AttributeWarmth.SetValueInt(warmth)
 	SendEvent_UpdateBottomBarWarmth(warmth)
@@ -48,6 +55,42 @@ endEvent
 int function GetTorchBonus()
 	if PlayerRef.GetEquippedItemType(0) == 11 || PlayerRef.GetEquippedItemType(1) == 11
 		return 25
+	else
+		return 0
+	endif
+endFunction
+
+int function GetSpellBonus()
+	if PlayerRef.HasMagicEffect(_Frost_ExposureArmorFFSelf_3)				;Bearskin
+		if _Frost_ArmorPerk3Active.GetValue() == 1.0
+			return 90
+		elseif _Frost_ArmorPerk2Active.GetValue() == 1.0
+			return 75
+		elseif _Frost_ArmorPerk1Active.GetValue() == 1.0
+			return 60
+		else
+			return 30
+		endif
+	elseif PlayerRef.HasMagicEffect(_Frost_ExposureArmorFFSelf_2)			;Wolfskin
+		if _Frost_ArmorPerk3Active.GetValue() == 1.0
+			return 60
+		elseif _Frost_ArmorPerk2Active.GetValue() == 1.0
+			return 50
+		elseif _Frost_ArmorPerk1Active.GetValue() == 1.0
+			return 40
+		else
+			return 20
+		endif
+	elseif PlayerRef.HasMagicEffect(_Frost_ExposureArmorFFSelf_1)			;Foxskin
+		if _Frost_ArmorPerk3Active.GetValue() == 1.0
+			return 30
+		elseif _Frost_ArmorPerk2Active.GetValue() == 1.0
+			return 25
+		elseif _Frost_ArmorPerk1Active.GetValue() == 1.0
+			return 20
+		else
+			return 10
+		endif
 	else
 		return 0
 	endif
