@@ -540,7 +540,6 @@ function WTHLoadUp()
 		Wyrmstooth_West_PolyY[6] = -29523.0
 		Wyrmstooth_West_PolyY[7] = 52329.0
 	endif
-
 endFunction
 
 function VanillaGameLoadUp()
