@@ -24,10 +24,13 @@ endFunction
 
 function RegisterForMenus()
 	RegisterForMenu("InventoryMenu")
+	RegisterForMenu("ContainerMenu")
+	RegisterForMenu("BarterMenu")
+	RegisterForMenu("Crafting Menu")
 endFunction
 
 Event OnMenuOpen(string menuName)
-	if menuName == "InventoryMenu"
+	if menuName == "InventoryMenu" || menuName == "ContainerMenu" || menuName == "BarterMenu" || menuName == "Crafting Menu"
 		SendEvent_UpdateWarmthAndCoverage()
 	endif
 EndEvent
