@@ -13,6 +13,7 @@ GlobalVariable property _Frost_AttributeWarmth auto
 GlobalVariable property _Frost_AttributeCoverage auto
 
 GlobalVariable property StartFrostfall auto
+GlobalVariable property FrostfallRunning auto
 GlobalVariable property _Frost_Setting_Animation auto
 GlobalVariable property _Frost_Setting_1PAnimationAllowed auto
 GlobalVariable property _Frost_Setting_ConditionMessages auto
@@ -37,10 +38,17 @@ GlobalVariable property _Frost_Setting_WeathersenseDisplayMode auto
 GlobalVariable property _Frost_Setting_WetShaderOn auto
 GlobalVariable property _Frost_Setting_CurrentProfile auto
 GlobalVariable property _Frost_Setting_AutoSaveLoad auto
+GlobalVariable property _Frost_DS_Body_InitProgress auto
+GlobalVariable property _Frost_DS_Hands_InitProgress auto
+GlobalVariable property _Frost_DS_Head_InitProgress auto
+GlobalVariable property _Frost_DS_Feet_InitProgress auto
+GlobalVariable property _Frost_DS_Cloak_InitProgress auto
+GlobalVariable property _Frost_DatastoreInitialized auto
 
 string[] ProfileList
 
 int Overview_RunStatusText_OID
+int Overview_RunSubStatusText_OID
 int Overview_InfoLine1_OID
 int Overview_InfoLine2_OID
 int Overview_InfoLine3_OID
@@ -61,7 +69,7 @@ int SaveLoad_ProfileHelp_OID
 int SaveLoad_Enable_OID
 
 Event OnConfigInit()
-	Pages = new string[4]
+	Pages = new string[7]
 	Pages[0] = "$FrostfallOverviewPage"
 	Pages[1] = "$FrostfallGameplayPage"
 	Pages[2] = "$FrostfallEquipmentPage"
@@ -76,7 +84,7 @@ int function GetVersion()
 endFunction
 
 Event OnVersionUpdate(int a_version)
-	; Pass
+	; pass
 EndEvent
 
 event OnPageReset(string page)																			;TRANSLATED
@@ -104,25 +112,61 @@ event OnPageReset(string page)																			;TRANSLATED
 endEvent
 
 function PageReset_Overview()
+	; Register for callbacks
+	RegisterForModEvent("Frost_BodyDatastoreUpdate", "BodyDatastoreUpdate")
+	RegisterForModEvent("Frost_HeadDatastoreUpdate", "HeadDatastoreUpdate")
+	RegisterForModEvent("Frost_HandsDatastoreUpdate", "HandsDatastoreUpdate")
+	RegisterForModEvent("Frost_FeetDatastoreUpdate", "FeetDatastoreUpdate")
+	RegisterForModEvent("Frost_CloakDatastoreUpdate", "CloakDatastoreUpdate")
+	RegisterForModEvent("Frost_StartupComplete", "StartupComplete")
+
 	SetCursorFillMode(TOP_TO_BOTTOM)
 
 	AddHeaderOption("$FrostfallOverviewHeaderStatus")
-	if StartFrostfall.GetValueInt() == 2
-		Overview_RunStatusText_OID = AddTextOption("$FrostfallOverviewCtrlStatus", "$FrostfallEnabled")
+	if FrostfallRunning.GetValueInt() == 2
+		if _Frost_DatastoreInitialized.GetValueInt() == 2
+			Overview_RunStatusText_OID = AddTextOption("$FrostfallOverviewCtrlStatus", "$FrostfallEnabled")
+			Overview_RunSubStatusText_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
+		else
+			Overview_RunStatusText_OID = AddTextOption("$FrostfallOverviewCtrlStatus", "$FrostfallStartingUp", OPTION_FLAG_DISABLED)
+			Overview_RunSubStatusText_OID = AddTextOption("$FrostfallStartingUpDetail", "", OPTION_FLAG_DISABLED)
+		endif
 	else
 		Overview_RunStatusText_OID = AddTextOption("$FrostfallOverviewCtrlStatus", "$FrostfallDisabled")
+		Overview_RunSubStatusText_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
 	endif
-	
-	AddEmptyOption()
+
 	AddHeaderOption("$FrostfallOverviewHeaderInfo")
-	Overview_InfoLine1_OID = AddTextOption("", "")
-	Overview_InfoLine2_OID = AddTextOption("", "")
-	Overview_InfoLine3_OID = AddTextOption("", "")
-	Overview_InfoLine4_OID = AddTextOption("", "")
-	Overview_InfoLine5_OID = AddTextOption("", "")
-	Overview_InfoLine6_OID = AddTextOption("", "")
-	Overview_InfoLine7_OID = AddTextOption("", "")
-	Overview_InfoLine8_OID = AddTextOption("", "")
+	if FrostfallRunning.GetValueInt() == 2
+		if _Frost_DatastoreInitialized.GetValueInt() == 2
+			Overview_InfoLine1_OID = AddTextOption("$FrostfallOverviewRunning", "", OPTION_FLAG_DISABLED)
+			Overview_InfoLine2_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
+			Overview_InfoLine3_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
+			Overview_InfoLine4_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
+			Overview_InfoLine5_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
+			Overview_InfoLine6_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
+			Overview_InfoLine7_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
+			Overview_InfoLine8_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
+		else
+			Overview_InfoLine1_OID = AddTextOption("$FrostfallStartUpDSCreateBody", ((_Frost_DS_Body_InitProgress.GetValue() * 100.0) as int) + "%", OPTION_FLAG_DISABLED)
+			Overview_InfoLine2_OID = AddTextOption("$FrostfallStartUpDSCreateHead", ((_Frost_DS_Head_InitProgress.GetValue() * 100.0) as int) + "%", OPTION_FLAG_DISABLED)
+			Overview_InfoLine3_OID = AddTextOption("$FrostfallStartUpDSCreateHands", ((_Frost_DS_Hands_InitProgress.GetValue() * 100.0) as int) + "%", OPTION_FLAG_DISABLED)
+			Overview_InfoLine4_OID = AddTextOption("$FrostfallStartUpDSCreateFeet", ((_Frost_DS_Feet_InitProgress.GetValue() * 100.0) as int) + "%", OPTION_FLAG_DISABLED)
+			Overview_InfoLine5_OID = AddTextOption("$FrostfallStartUpDSCreateCloak", ((_Frost_DS_Cloak_InitProgress.GetValue() * 100.0) as int) + "%", OPTION_FLAG_DISABLED)
+			Overview_InfoLine6_OID = AddTextOption("$FrostfallStartUpLoadingSettings", "", OPTION_FLAG_DISABLED)
+			Overview_InfoLine7_OID = AddTextOption("$FrostfallStartUpStartingSystems", "", OPTION_FLAG_DISABLED)
+			Overview_InfoLine8_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
+		endif
+	else
+		Overview_InfoLine1_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
+		Overview_InfoLine2_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
+		Overview_InfoLine3_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
+		Overview_InfoLine4_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
+		Overview_InfoLine5_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
+		Overview_InfoLine6_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
+		Overview_InfoLine7_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
+		Overview_InfoLine8_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
+	endif
 
 	SetCursorPosition(1) ; Move cursor to top right position
 
@@ -227,3 +271,32 @@ endFunction
 function PageReset_System()
 
 endFunction
+
+Event StartupComplete()
+
+endEvent
+Event BodyDatastoreUpdate(float progress)
+	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine1_OID
+		SetTextOptionValue(Overview_InfoLine1_OID, ((progress * 100.0) as int) + "%")
+	endif
+endEvent
+Event HeadDatastoreUpdate(float progress)
+	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine2_OID
+		SetTextOptionValue(Overview_InfoLine2_OID, ((progress * 100.0) as int) + "%")
+	endif
+endEvent
+Event HandsDatastoreUpdate(float progress)
+	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine3_OID
+		SetTextOptionValue(Overview_InfoLine3_OID, ((progress * 100.0) as int) + "%")
+	endif
+endEvent
+Event FeetDatastoreUpdate(float progress)
+	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine4_OID
+		SetTextOptionValue(Overview_InfoLine4_OID, ((progress * 100.0) as int) + "%")
+	endif
+endEvent
+Event CloakDatastoreUpdate(float progress)
+	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine5_OID
+		SetTextOptionValue(Overview_InfoLine5_OID, ((progress * 100.0) as int) + "%")
+	endif
+endEvent

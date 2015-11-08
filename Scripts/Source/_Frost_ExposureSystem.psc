@@ -882,6 +882,7 @@ function SendEvent_OnRescuePlayer(bool in_water)
 endFunction
 
 ;@TODO: Am I adding apocrypha / etc to oblivion worldspaces?
+;@TODO: Exception gear
 ;@TODO: Implement Settings Profiles
 ;@TODO: Implement all armor compatibility
 ;@TODO: Reimplement tutorials
@@ -892,6 +893,9 @@ endFunction
 ;@TODO: If the point delta on the limit is < 1, don't display limit message.
 ;@TODO: In rain, coverage should determine if you lose exposure, even in warm areas.
 ;@TODO: Check how long to reach max Endurance
+;@TODO: Riverwood starting gear
+;@TODO: Global and function for frostfall version
+;@TODO: Global and function for API version
 
 ; Campfire stuff
 ;@TODO: Smelters still aren't working as heat sources.
