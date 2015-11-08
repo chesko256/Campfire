@@ -51,12 +51,13 @@ function ObjectEquipped(Form akBaseObject, int iGearType)
     ;       4: Foot gear (Boots, shoes)
     ;       5: Backpack
     ;       6: Ammo
-    ;       7: Other (could be shield, cloak, etc)
+    ;       7: Other (could be cloak)
+    ;       8: Shield
     
     HandleEquippedObject(akBaseObject, iGearType)
 
     SendEvent_UpdateWarmthAndCoverage()
-    DisplayWarmthCoverageNoSkyUI(akBaseObject as Armor, iGearType)
+    DisplayWarmthCoverageNoSkyUIPkg(akBaseObject as Armor, iGearType)
 
     FrostDebug(0, "Armor protection report: BODY(" + body_warmth + ", " + body_coverage +       \
                                             ") HANDS(" + hands_warmth + ", " + hands_coverage + \
@@ -129,6 +130,13 @@ function HandleEquippedObject(Form akBaseObject, int iGearType)
             cloak_warmth = protection_data[0]
             cloak_coverage = protection_data[1]
         endif
+    elseif iGearType == 8
+        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
+        if protection_data[0] != -1
+            equipped_shield = armor_object
+            shield_warmth = protection_data[0]
+            shield_coverage = protection_data[1]
+        endif
     endif
 endFunction
 
@@ -144,13 +152,15 @@ function ObjectUnequipped(Form akBaseObject, int iGearType)
     ;       4: Foot gear (Boots, shoes)
     ;       5: Backpack
     ;       6: Ammo
-    ;       7: Other (cloak, etc)
+    ;       7: Other (could be cloak)
+    ;       8: Shield
+
     unequip_lock = true
     HandleUnequippedObject(akBaseObject, iGearType)
     unequip_lock = false
 
     SendEvent_UpdateWarmthAndCoverage()
-    DisplayWarmthCoverageNoSkyUIRemove(akBaseObject as Armor, iGearType)
+    DisplayWarmthCoverageNoSkyUIPkgRemove(akBaseObject as Armor, iGearType)
 
     FrostDebug(0, "Armor protection report: BODY(" + body_warmth + ", " + body_coverage +       \
                                             ") HANDS(" + hands_warmth + ", " + hands_coverage + \
@@ -198,30 +208,20 @@ function HandleUnequippedObject(Form akBaseObject, int iGearType)
             cloak_warmth = 0
             cloak_coverage = 0
         endif
+    elseif iGearType == 8
+        if equipped_shield == armor_object
+            equipped_shield = None
+            shield_warmth = 0
+            shield_coverage = 0
+        endif
     endif
 endFunction
 
 Event ShieldEquipped(Form akBaseObject, bool abEquipped)
     if abEquipped
-        Armor armor_object = akBaseObject as Armor
-        _Frost_ArmorProtectionDatastoreHandler DSHandler = GetClothingDatastoreHandler()
-        int[] protection_data
-        
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, 8)
-        equipped_shield = akBaseObject as Armor
-        shield_warmth = protection_data[0]
-        shield_coverage = protection_data[1]
+        ObjectEquipped(akBaseObject, 8)
     else
-        equipped_shield = None
-        shield_warmth = 0
-        shield_coverage = 0
-    endif
-    SendEvent_UpdateWarmthAndCoverage()
-    
-    if abEquipped
-        DisplayWarmthCoverageNoSkyUI(akBaseObject as Armor, 8)
-    else
-        DisplayWarmthCoverageNoSkyUIRemove(akBaseObject as Armor, 8)
+        ObjectUnequipped(akBaseObject, 8)
     endif
 endEvent
 
@@ -249,7 +249,7 @@ Event OnUpdate()
     debug.notification(str.TotalWarmth + " " + GetPlayerWarmth() + ", " + str.TotalCoverage + " " + GetPlayerCoverage())
 EndEvent
 
-function DisplayWarmthCoverageNoSkyUI(Armor akArmor, int aiGearType)
+function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor, int aiGearType)
     if !GetCompatibilitySystem().isUIPackageInstalled
         int[] result = GetClothingDatastoreHandler().GetTotalProtectionValues(akArmor, aiGearType)
         if result[0] == 0 && result[1] == 0
@@ -268,7 +268,7 @@ function DisplayWarmthCoverageNoSkyUI(Armor akArmor, int aiGearType)
     endif
 endFunction
 
-function DisplayWarmthCoverageNoSkyUIRemove(Armor akArmor, int aiGearType)
+function DisplayWarmthCoverageNoSkyUIPkgRemove(Armor akArmor, int aiGearType)
     if !GetCompatibilitySystem().isUIPackageInstalled 
         int[] result = GetClothingDatastoreHandler().GetTotalProtectionValues(akArmor, aiGearType)
         if result[0] == 0 && result[1] == 0
@@ -291,12 +291,10 @@ Event OnMenuClose(string menuName)
 EndEvent
 
 function SendEvent_UpdateWarmthAndCoverage()
-    FrostDebug(0, "Sending event Frost_UpdateWarmth")
     int handle = ModEvent.Create("Frost_UpdateWarmth")
     if handle
         ModEvent.Send(handle)
     endif
-    FrostDebug(0, "Sending event Frost_UpdateCoverage")
     handle = ModEvent.Create("Frost_UpdateCoverage")
     if handle
         ModEvent.Send(handle)

@@ -152,7 +152,7 @@ function RunCompatibility()
 	endif
 	
 	int ui_package_version_installed = JsonUtil.GetIntValue(CONFIG_PATH + "interface_package_version", "installed_package_version")
-	if ui_package_version_installed > 0
+	if ui_package_version_installed == 5
 		SKI_Main skyui = Game.GetFormFromFile(0x00000814, "SkyUI.esp") as SKI_Main
 		int skyui_version = skyui.ReqSWFRelease
 		if skyui_version >= 1026 	; SkyUI 5.1+

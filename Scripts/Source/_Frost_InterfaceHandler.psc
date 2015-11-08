@@ -153,12 +153,10 @@ function UpdateItemCardInfo(int aiWarmth, int aiCoverage)
 endFunction
 
 function SendEvent_UpdateWarmthAndCoverage()
-    FrostDebug(0, "Sending event Frost_UpdateWarmth")
     int handle_1 = ModEvent.Create("Frost_UpdateWarmth")
     if handle_1
         ModEvent.Send(handle_1)
     endif
-    FrostDebug(0, "Sending event Frost_UpdateCoverage")
     int handle_2 = ModEvent.Create("Frost_UpdateCoverage")
     if handle_2
         ModEvent.Send(handle_2)
