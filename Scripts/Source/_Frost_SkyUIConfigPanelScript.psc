@@ -225,28 +225,28 @@ function PageReset_Overview()
 
 	AddHeaderOption("$FrostfallOverviewHeaderPlayerAttributes")
 	if GetExposureSystem().IsSystemRunning()
-		Overview_ExposureStatusText_OID = AddTextOption("$FrostfallOverviewExposureValue", (_Frost_AttributeExposure.GetValueInt() - 20), OPTION_FLAG_DISABLED)
+		Overview_ExposureStatusText_OID = AddTextOption("$FrostfallOverviewExposureValue", (_Frost_AttributeExposure.GetValueInt() - 20))
 	else
-		Overview_ExposureStatusText_OID = AddTextOption("$FrostfallOverviewExposureValue", "", OPTION_FLAG_DISABLED)
+		Overview_ExposureStatusText_OID = AddTextOption("$FrostfallOverviewExposureValue", "")
 	endif
 	if GetWetnessSystem().IsSystemRunning()
-		Overview_WetnessStatusText_OID = AddTextOption("$FrostfallOverviewWetnessValue", (((_Frost_AttributeWetness.GetValueInt() / 750.0) * 100.0) as int) + "%", OPTION_FLAG_DISABLED)
+		Overview_WetnessStatusText_OID = AddTextOption("$FrostfallOverviewWetnessValue", (((_Frost_AttributeWetness.GetValueInt() / 750.0) * 100.0) as int) + "%")
 	else
-		Overview_WetnessStatusText_OID = AddTextOption("$FrostfallOverviewWetnessValue", "", OPTION_FLAG_DISABLED)
+		Overview_WetnessStatusText_OID = AddTextOption("$FrostfallOverviewWetnessValue", "")
 	endif
 
 	AddEmptyOption()
 
 	AddHeaderOption("$FrostfallOverviewHeaderPlayerStats")
 	if GetWarmthSystem().IsSystemRunning()
-		Overview_WarmthStatusText_OID = AddTextOption("$FrostfallOverviewWarmthValue", _Frost_AttributeWarmth.GetValueInt(), OPTION_FLAG_DISABLED)
+		Overview_WarmthStatusText_OID = AddTextOption("$FrostfallOverviewWarmthValue", _Frost_AttributeWarmth.GetValueInt())
 	else
-		Overview_WarmthStatusText_OID = AddTextOption("$FrostfallOverviewWarmthValue", "", OPTION_FLAG_DISABLED)
+		Overview_WarmthStatusText_OID = AddTextOption("$FrostfallOverviewWarmthValue", "")
 	endif
 	if GetCoverageSystem().IsSystemRunning()
-		Overview_CoverageStatusText_OID = AddTextOption("$FrostfallOverviewCoverageValue", _Frost_AttributeCoverage.GetValueInt(), OPTION_FLAG_DISABLED)
+		Overview_CoverageStatusText_OID = AddTextOption("$FrostfallOverviewCoverageValue", _Frost_AttributeCoverage.GetValueInt())
 	else
-		Overview_CoverageStatusText_OID = AddTextOption("$FrostfallOverviewCoverageValue", "", OPTION_FLAG_DISABLED)
+		Overview_CoverageStatusText_OID = AddTextOption("$FrostfallOverviewCoverageValue", "")
 	endif
 endFunction
 
@@ -489,19 +489,19 @@ endEvent
 
 Event OnOptionHighlight(int option)
 	if option == Overview_RunStatusText_OID
-		SetInfoText("$")
+		SetInfoText("$FrostfallOptionHighlightRunStatus")
 	elseif option == Overview_ExposureStatusText_OID
-		SetInfoText("$")
+		SetInfoText("$FrostfallOptionHighlightStatExposure")
 	elseif option == Overview_WetnessStatusText_OID
-		SetInfoText("$")
+		SetInfoText("$FrostfallOptionHighlightStatWetness")
 	elseif option == Overview_WarmthStatusText_OID
-		SetInfoText("$")
+		SetInfoText("$FrostfallOptionHighlightStatWarmth")
 	elseif option == Overview_CoverageStatusText_OID
-		SetInfoText("$")
+		SetInfoText("$FrostfallOptionHighlightStatCoverage")
 	elseif option == Gameplay_ExposureRate_OID
 		SetInfoText("$FrostfallOptionHighlightSettingExposureRateSlider")
 	elseif option == Gameplay_MaxExposureMode_OID
-		SetInfoText("$")
+		SetInfoText("$FrostfallOptionHighlightSettingMaxExposure")
 	elseif option == Gameplay_FrigidWater_OID
 		SetInfoText("$FrostfallOptionHighlightSettingExposureWaterText")
 	elseif option == Gameplay_ExposurePauseDialogue_OID
@@ -511,7 +511,7 @@ Event OnOptionHighlight(int option)
 	elseif option == Gameplay_MovementPenalty_OID
 		SetInfoText("$FrostfallOptionHighlightSettingMovementText")
 	elseif option == Gameplay_VampirismMode_OID
-		SetInfoText("$")
+		SetInfoText("$FrostfallOptionHighlightSettingVampirism")
 	elseif option == Gameplay_DisableFT_OID
 		SetInfoText("$FrostfallOptionHighlightSettingFTToggleText")
 	elseif option == Gameplay_DisableWaiting_OID
