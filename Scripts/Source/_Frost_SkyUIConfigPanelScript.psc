@@ -763,6 +763,10 @@ Event OnOptionMenuOpen(int option)
 		SetMenuDialogOptions(AspectRatioList)
 		SetMenuDialogStartIndex(_Frost_Setting_MeterAspectRatio.GetValueInt())
 		SetMenuDialogDefaultIndex(1)
+	elseif option == Interface_MeterDisplayMode_OID
+		SetMenuDialogOptions(MeterDisplayModeList)
+		SetMenuDialogStartIndex(_Frost_Setting_MeterDisplayMode.GetValueInt())
+		SetMenuDialogDefaultIndex(2)
 	endif	
 EndEvent
 
@@ -785,6 +789,10 @@ Event OnOptionMenuAccept(int option, int index)
 		_Frost_Setting_MeterAspectRatio.SetValueInt(index)
 		GetInterfaceHandler().SetAspectRatio(index)
 		SaveSettingToCurrentProfile("meter_aspect_ratio", _Frost_Setting_MeterAspectRatio.GetValueInt())
+	elseif option == Interface_MeterDisplayMode_OID
+		SetMenuOptionValue(Interface_MeterDisplayMode_OID, MeterDisplayModeList[index])
+		_Frost_Setting_MeterDisplayMode.SetValueInt(index)
+		SaveSettingToCurrentProfile("meter_display_mode", _Frost_Setting_MeterDisplayMode.GetValueInt())
 	endif
 EndEvent
 
