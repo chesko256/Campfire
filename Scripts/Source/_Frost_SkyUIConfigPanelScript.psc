@@ -39,6 +39,9 @@ GlobalVariable property _Frost_Setting_WeathersenseDisplayMode auto
 GlobalVariable property _Frost_Setting_WetShaderOn auto
 GlobalVariable property _Frost_Setting_CurrentProfile auto
 GlobalVariable property _Frost_Setting_AutoSaveLoad auto
+GlobalVariable property _Frost_Setting_FrigidWaterIsLethal auto
+GlobalVariable property _Frost_Setting_VampireMode auto
+
 GlobalVariable property _Frost_DS_Body_InitProgress auto
 GlobalVariable property _Frost_DS_Hands_InitProgress auto
 GlobalVariable property _Frost_DS_Head_InitProgress auto
@@ -49,6 +52,8 @@ GlobalVariable property _Frost_DatastoreInitialized auto
 bool must_exit = false
 
 string[] ProfileList
+string[] MaxExposureModeList
+string[] VampirismModeList
 
 int Overview_RunStatusText_OID
 int Overview_RunSubStatusText_OID
@@ -65,6 +70,14 @@ int Overview_WetnessStatusText_OID
 int Overview_WarmthStatusText_OID
 int Overview_CoverageStatusText_OID
 
+int Gameplay_ExposureRate_OID
+int Gameplay_MaxExposureMode_OID
+int Gameplay_FrigidWater_OID
+int Gameplay_ExposurePauseDialogue_OID
+int Gameplay_ExposurePauseCombat_OID
+int Gameplay_MovementPenalty_OID
+int Gameplay_VampirismMode_OID
+
 int SaveLoad_SelectProfile_OID
 int SaveLoad_RenameProfile_OID
 int SaveLoad_DefaultProfile_OID
@@ -80,6 +93,15 @@ Event OnConfigInit()
 	Pages[4] = "$FrostfallSaveLoadPage"
 	Pages[5] = "$FrostfallGuidePage"
 	Pages[6] = "$FrostfallSystemPage"
+
+	MaxExposureModeList = new string[3]
+	MaxExposureModeList[0] = "$FrostfallMaxExposureNothing"
+	MaxExposureModeList[1] = "$FrostfallMaxExposureRescue"
+	MaxExposureModeList[2] = "$FrostfallMaxExposureDeath"
+
+	VampirismModeList = new string[2]
+	VampirismModeList[0] = "$FrostfallVampirismHuman"
+	VampirismModeList[1] = "$FrostfallVampirismSuperhuman"
 endEvent
 
 int function GetVersion()
@@ -195,12 +217,12 @@ function PageReset_Overview()
 
 	AddHeaderOption("$FrostfallOverviewHeaderPlayerAttributes")
 	if GetExposureSystem().IsSystemRunning()
-		Overview_ExposureStatusText_OID = AddTextOption("$FrostfallOverviewExposureValue", _Frost_AttributeExposure.GetValueInt(), OPTION_FLAG_DISABLED)
+		Overview_ExposureStatusText_OID = AddTextOption("$FrostfallOverviewExposureValue", (_Frost_AttributeExposure.GetValueInt() - 20), OPTION_FLAG_DISABLED)
 	else
 		Overview_ExposureStatusText_OID = AddTextOption("$FrostfallOverviewExposureValue", "", OPTION_FLAG_DISABLED)
 	endif
 	if GetWetnessSystem().IsSystemRunning()
-		Overview_WetnessStatusText_OID = AddTextOption("$FrostfallOverviewWetnessValue", _Frost_AttributeWetness.GetValueInt(), OPTION_FLAG_DISABLED)
+		Overview_WetnessStatusText_OID = AddTextOption("$FrostfallOverviewWetnessValue", (((_Frost_AttributeWetness.GetValueInt() / 750.0) * 100.0) as int) + "%", OPTION_FLAG_DISABLED)
 	else
 		Overview_WetnessStatusText_OID = AddTextOption("$FrostfallOverviewWetnessValue", "", OPTION_FLAG_DISABLED)
 	endif
@@ -222,12 +244,37 @@ endFunction
 
 function PageReset_Gameplay()
 	SetCursorFillMode(TOP_TO_BOTTOM)
-	if FrostfallRunning.GetValueInt() != 2 || must_exit
+	;debug
+	;/if FrostfallRunning.GetValueInt() != 2 || must_exit
 		AddTextOption("$FrostfallNotRunningError", "", OPTION_FLAG_DISABLED)
 		return
 	endif
+	/;
 
-
+	AddHeaderOption("$FrostfallGameplayHeaderPlayer")
+	Gameplay_ExposureRate_OID = AddSliderOption("$FrostfallGameplaySettingExposureRate", _Frost_Setting_ExposureRate.GetValue(), "{1}x")
+	Gameplay_MaxExposureMode_OID = AddMenuOption("$FrostfallGameplaySettingPlayerExposureMode", MaxExposureModeList[_Frost_Setting_MaxExposureMode.GetValueInt() - 1])
+	if _Frost_Setting_FrigidWaterIsLethal.GetValueInt() == 2
+		Gameplay_FrigidWater_OID = AddToggleOption("$FrostfallGameplaySettingExposureWaterLethality", true)
+	else
+		Gameplay_FrigidWater_OID = AddToggleOption("$FrostfallGameplaySettingExposureWaterLethality", false)
+	endif
+	if _Frost_Setting_ExposurePauseDialogue.GetValueInt() == 2
+		Gameplay_ExposurePauseDialogue_OID = AddToggleOption("$FrostfallGameplaySettingExposureDialoguePause", true)
+	else
+		Gameplay_ExposurePauseDialogue_OID = AddToggleOption("$FrostfallGameplaySettingExposureDialoguePause", false)
+	endif
+	if _Frost_Setting_ExposurePauseCombat.GetValueInt() == 2
+		Gameplay_ExposurePauseCombat_OID = AddToggleOption("$FrostfallGameplaySettingExposureCombatPause", true)
+	else
+		Gameplay_ExposurePauseCombat_OID = AddToggleOption("$FrostfallGameplaySettingExposureCombatPause", false)
+	endif
+	if _Frost_Setting_MovementPenalty.GetValueInt() == 2
+		Gameplay_MovementPenalty_OID = AddToggleOption("$FrostfallGameplaySettingPlayerMovement", true)
+	else
+		Gameplay_MovementPenalty_OID = AddToggleOption("$FrostfallGameplaySettingPlayerMovement", false)
+	endif
+	Gameplay_VampirismMode_OID = AddMenuOption("$FrostfallGameplaySettingPlayerVampirism", VampirismModeList[_Frost_Setting_VampireMode.GetValueInt()])
 endFunction
 
 function PageReset_Equipment()
@@ -319,17 +366,55 @@ endFunction
 event OnOptionSelect(int option)
 	if option == Overview_RunStatusText_OID
 		if FrostfallRunning.GetValueInt() == 2
-			must_exit = true
-			FrostfallRunning.SetValue(1)
-			ForcePageReset()
-			FrostfallMain.RegisterForModEvents()
-			SendEvent_StopFrostfall()
+			bool b = ShowMessage("$FrostfallOverviewShutDownPrompt")
+			if b
+				must_exit = true
+				FrostfallRunning.SetValue(1)
+				ForcePageReset()
+				FrostfallMain.RegisterForModEvents()
+				SendEvent_StopFrostfall()
+			endif
 		else
-			must_exit = true
-			FrostfallRunning.SetValue(2)
-			ForcePageReset()
-			FrostfallMain.RegisterForModEvents()
-			SendEvent_StartFrostfall()
+			bool b = ShowMessage("$FrostfallOverviewStartUpPrompt")
+			if b
+				must_exit = true
+				FrostfallRunning.SetValue(2)
+				ForcePageReset()
+				FrostfallMain.RegisterForModEvents()
+				SendEvent_StartFrostfall()
+			endif
+		endif
+	elseif option == Gameplay_FrigidWater_OID
+		if _Frost_Setting_FrigidWaterIsLethal.GetValueInt() == 2
+			_Frost_Setting_FrigidWaterIsLethal.SetValueInt(1)
+			SetToggleOptionValue(Gameplay_FrigidWater_OID, false)
+		else
+			_Frost_Setting_FrigidWaterIsLethal.SetValueInt(2)
+			SetToggleOptionValue(Gameplay_FrigidWater_OID, true)
+		endif
+	elseif option == Gameplay_ExposurePauseDialogue_OID
+		if _Frost_Setting_ExposurePauseDialogue.GetValueInt() == 2
+			_Frost_Setting_ExposurePauseDialogue.SetValueInt(1)
+			SetToggleOptionValue(Gameplay_ExposurePauseDialogue_OID, false)
+		else
+			_Frost_Setting_ExposurePauseDialogue.SetValueInt(2)
+			SetToggleOptionValue(Gameplay_ExposurePauseDialogue_OID, true)
+		endif
+	elseif option == Gameplay_ExposurePauseCombat_OID
+		if _Frost_Setting_ExposurePauseCombat.GetValueInt() == 2
+			_Frost_Setting_ExposurePauseCombat.SetValueInt(1)
+			SetToggleOptionValue(Gameplay_ExposurePauseCombat_OID, false)
+		else
+			_Frost_Setting_ExposurePauseCombat.SetValueInt(2)
+			SetToggleOptionValue(Gameplay_ExposurePauseCombat_OID, true)
+		endif
+	elseif option == Gameplay_MovementPenalty_OID
+		if _Frost_Setting_MovementPenalty.GetValueInt() == 2
+			_Frost_Setting_MovementPenalty.SetValueInt(1)
+			SetToggleOptionValue(Gameplay_MovementPenalty_OID, false)
+		else
+			_Frost_Setting_MovementPenalty.SetValueInt(2)
+			SetToggleOptionValue(Gameplay_MovementPenalty_OID, true)
 		endif
 	endif	
 endEvent
@@ -338,6 +423,28 @@ event OnOptionDefault(int option)
 
 endEvent
 
+Event OnOptionMenuOpen(int option)
+	if option == Gameplay_MaxExposureMode_OID
+		SetMenuDialogOptions(MaxExposureModeList)
+		SetMenuDialogStartIndex(_Frost_Setting_MaxExposureMode.GetValueInt() - 1)
+		SetMenuDialogDefaultIndex(0)
+	elseif option == Gameplay_VampirismMode_OID
+		SetMenuDialogOptions(VampirismModeList)
+		SetMenuDialogStartIndex(_Frost_Setting_VampireMode.GetValueInt())
+		SetMenuDialogDefaultIndex(0)
+	elseif option == SaveLoad_SelectProfile_OID
+		string[] profile_list = new string[10]
+		int i = 0
+		while i < 10
+			string pname = GetProfileName(i + 1)
+			profile_list[i] = pname
+			i += 1
+		endWhile
+		SetMenuDialogOptions(profile_list)
+		SetMenuDialogStartIndex(_Frost_Setting_CurrentProfile.GetValueInt() - 1)
+		SetMenuDialogDefaultIndex(0)
+	endif	
+EndEvent
 
 Event StartupAlmostDone()
 	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine6_OID
