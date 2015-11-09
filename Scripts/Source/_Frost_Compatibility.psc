@@ -10,6 +10,8 @@ string CONFIG_PATH = "../FrostfallData/"
 ;#PROPERTIES=====================================================================================================================
 actor property PlayerRef auto
 ReferenceAlias property PlayerAlias auto
+Spell property _Frost_Weathersense_Spell auto
+GlobalVariable property _Frost_HotkeyWeathersense auto
 
 ;#Scripts======================================================================
 ;_Camp_SkyUIConfigPanelScript property FrostConfig Auto 			;SkyUI Configuration script
@@ -589,23 +591,21 @@ endFunction
 
 
 function AddStartupSpells()
-	;/if isSKYUILoaded
-		PlayerRef.RemoveSpell(_Camp_LegacyConfig_Spell)
+	if _Frost_HotkeyWeathersense.GetValueInt() != 0
+		PlayerRef.RemoveSpell(_Frost_Weathersense_Spell)
 	else
-		PlayerRef.AddSpell(_Camp_LegacyConfig_Spell, false)
+		PlayerRef.AddSpell(_Frost_Weathersense_Spell, false)
 	endif
-	/;
 
 	((self as ReferenceAlias) as _Frost_PlayerSpellMonitor).UpdateFrostResistBonus()
 endFunction
 
 function RegisterForKeysOnLoad()
-	;CampConfig.RegisterForKeysOnLoad()
+	; pass
 endFunction
 
 function RegisterForControlsOnLoad()
-	;CampDebug(0, "Compatibility is trying to call Campfire.RegisterForControlsOnLoad()")
-	;Campfire.RegisterForControlsOnLoad()
+	; pass
 endFunction
 
 function RegisterForEventsOnLoad()
