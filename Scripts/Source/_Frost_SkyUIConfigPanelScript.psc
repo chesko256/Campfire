@@ -4,6 +4,8 @@ import FrostUtil
 
 string CONFIG_PATH = "../FrostfallData/"
 
+Actor property PlayerRef auto
+
 ; External scripts
 _Frost_Compatibility property Compatibility auto
 _Frost_Main property FrostfallMain auto
@@ -26,7 +28,6 @@ GlobalVariable property _Frost_Setting_ExposureRate auto
 GlobalVariable property _Frost_Setting_ForceFeedback auto
 GlobalVariable property _Frost_Setting_FrostShaderOn auto
 GlobalVariable property _Frost_Setting_FullScreenEffects auto
-GlobalVariable property _Frost_Setting_LogLevel auto
 GlobalVariable property _Frost_Setting_MaxExposureMode auto
 GlobalVariable property _Frost_Setting_MeterDisplayMode auto
 GlobalVariable property _Frost_Setting_MeterDisplayTime auto
@@ -41,6 +42,7 @@ GlobalVariable property _Frost_Setting_CurrentProfile auto
 GlobalVariable property _Frost_Setting_AutoSaveLoad auto
 GlobalVariable property _Frost_Setting_FrigidWaterIsLethal auto
 GlobalVariable property _Frost_Setting_VampireMode auto
+GlobalVariable property _Frost_HotkeyWeathersense auto
 
 GlobalVariable property _Frost_DS_Body_InitProgress auto
 GlobalVariable property _Frost_DS_Hands_InitProgress auto
@@ -48,6 +50,8 @@ GlobalVariable property _Frost_DS_Head_InitProgress auto
 GlobalVariable property _Frost_DS_Feet_InitProgress auto
 GlobalVariable property _Frost_DS_Cloak_InitProgress auto
 GlobalVariable property _Frost_DatastoreInitialized auto
+
+Spell property _Frost_Weathersense_Spell auto
 
 bool must_exit = false
 
@@ -445,6 +449,170 @@ Event OnOptionMenuOpen(int option)
 		SetMenuDialogDefaultIndex(0)
 	endif	
 EndEvent
+
+Event OnOptionMenuAccept(int option, int index)
+	if option == Gameplay_MaxExposureMode_OID
+		SetMenuOptionValue(Gameplay_MaxExposureMode_OID, MaxExposureModeList[index])
+		_Frost_Setting_MaxExposureMode.SetValueInt(index + 1)
+	elseif option == Gameplay_VampirismMode_OID
+		SetMenuOptionValue(Gameplay_VampirismMode_OID, VampirismModeList[index])
+		_Frost_Setting_VampireMode.SetValueInt(index)
+	elseif option == SaveLoad_SelectProfile_OID
+		bool b = ShowMessage("$FrostfallSaveLoadConfirm")
+		if b
+			SwitchToProfile(index + 1)
+		endif
+	endif
+EndEvent
+
+int function LoadSettingFromProfile(int aiProfileIndex, string asKeyName)
+	return JsonUtil.GetIntValue(CONFIG_PATH + "profile" + aiProfileIndex, asKeyName, -1)
+endFunction
+
+float function LoadSettingFromProfileFloat(int aiProfileIndex, string asKeyName)
+	return JsonUtil.GetFloatValue(CONFIG_PATH + "profile" + aiProfileIndex, asKeyName, -1)
+endFunction
+
+function SwitchToProfile(int aiProfileIndex)
+	_Frost_Setting_CurrentProfile.SetValueInt(aiProfileIndex)
+	JsonUtil.SetIntValue(CONFIG_PATH + "common", "last_profile", aiProfileIndex)
+	JsonUtil.Save(CONFIG_PATH + "common")
+
+	string pname = JsonUtil.GetStringValue(CONFIG_PATH + "profile" + aiProfileIndex, "profile_name", "")
+	if pname == ""
+		GenerateDefaultProfile(aiProfileIndex)
+	endif
+	int val = LoadSettingFromProfile(aiProfileIndex, "animation")
+	if val != -1
+		_Frost_Setting_Animation.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "1P_animation_allowed")
+	if val != -1
+		_Frost_Setting_1PAnimationAllowed.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "condition_messages")
+	if val != -1
+		_Frost_Setting_ConditionMessages.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "display_attributes_in_weathersense")
+	if val != -1
+		_Frost_Setting_DisplayAttributesInWeathersense.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "exposure_pause_combat")
+	if val != -1
+		_Frost_Setting_ExposurePauseCombat.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "exposure_pause_dialogue")
+	if val != -1
+		_Frost_Setting_ExposurePauseDialogue.SetValueInt(val)
+	endif
+	float fval = LoadSettingFromProfileFloat(aiProfileIndex, "exposure_rate")
+	if fval != -1
+		_Frost_Setting_ExposureRate.SetValue(fval)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "force_feedback")
+	if val != -1
+		_Frost_Setting_ForceFeedback.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "frost_shader_on")
+	if val != -1
+		_Frost_Setting_FrostShaderOn.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "full_screen_effects")
+	if val != -1
+		_Frost_Setting_FullScreenEffects.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "max_exposure_mode")
+	if val != -1
+		_Frost_Setting_MaxExposureMode.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "meter_display_mode")
+	if val != -1
+		_Frost_Setting_MeterDisplayMode.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "meter_display_time")
+	if val != -1
+		_Frost_Setting_MeterDisplayTime.SetValueInt(val)
+	endif
+	fval = LoadSettingFromProfileFloat(aiProfileIndex, "meter_opacity")
+	if fval != -1
+		_Frost_Setting_MeterOpacity.SetValue(fval)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "movement_penalty")
+	if val != -1
+		_Frost_Setting_MovementPenalty.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "no_fast_travel")
+	if val != -1
+		_Frost_Setting_NoFastTravel.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "sound_effects")
+	if val != -1
+		_Frost_Setting_SoundEffects.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "weather_messages")
+	if val != -1
+		_Frost_Setting_WeatherMessages.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "weathersense_display_mode")
+	if val != -1
+		_Frost_Setting_WeathersenseDisplayMode.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "wet_shader_on")
+	if val != -1
+		_Frost_Setting_WetShaderOn.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "frigid_water_is_lethal")
+	if val != -1
+		_Frost_Setting_FrigidWaterIsLethal.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "vampire_mode")
+	if val != -1
+		_Frost_Setting_VampireMode.SetValueInt(val)
+	endif
+
+	val = LoadSettingFromProfile(aiProfileIndex, "hotkey_weathersense")
+	if val != -1 && val != 0
+		RegisterForKey(val)
+		_Frost_HotkeyWeathersense.SetValueInt(val)
+		PlayerRef.RemoveSpell(_Frost_Weathersense_Spell)
+	else
+		UnregisterForKey(_Frost_HotkeyWeathersense.GetValueInt())
+		_Frost_HotkeyWeathersense.SetValue(0)
+		PlayerRef.AddSpell(_Frost_Weathersense_Spell, false)
+	endif
+endFunction
+
+function GenerateDefaultProfile(int aiProfileIndex)
+	string profile_path = CONFIG_PATH + "profile" + aiProfileIndex
+	JsonUtil.SetStringValue(profile_path, "profile_name", "Profile " + aiProfileIndex)
+
+	JsonUtil.SetIntValue(profile_path, "animation", 2)
+	JsonUtil.SetIntValue(profile_path, "1P_animation_allowed", 1)
+	JsonUtil.SetIntValue(profile_path, "condition_messages", 2)
+	JsonUtil.SetIntValue(profile_path, "display_attributes_in_weathersense", 1)
+	JsonUtil.SetIntValue(profile_path, "exposure_pause_combat", 2)
+	JsonUtil.SetIntValue(profile_path, "exposure_pause_dialogue", 2)
+	JsonUtil.SetFloatValue(profile_path, "exposure_rate", 1.0)
+	JsonUtil.SetIntValue(profile_path, "force_feedback", 2)
+	JsonUtil.SetIntValue(profile_path, "frost_shader_on", 2)
+	JsonUtil.SetIntValue(profile_path, "full_screen_effects", 2)
+	JsonUtil.SetIntValue(profile_path, "max_exposure_mode", 2)
+	JsonUtil.SetIntValue(profile_path, "meter_display_mode", 2)
+	JsonUtil.SetIntValue(profile_path, "meter_display_time", 3)
+	JsonUtil.SetFloatValue(profile_path, "meter_opacity", 100.0)
+	JsonUtil.SetIntValue(profile_path, "movement_penalty", 2)
+	JsonUtil.SetIntValue(profile_path, "no_fast_travel", 1)
+	JsonUtil.SetIntValue(profile_path, "sound_effects", 2)
+	JsonUtil.SetIntValue(profile_path, "weather_messages", 2)
+	JsonUtil.SetIntValue(profile_path, "weathersense_display_mode", 2)
+	JsonUtil.SetIntValue(profile_path, "wet_shader_on", 2)
+	JsonUtil.SetIntValue(profile_path, "frigid_water_is_lethal", 2)
+	JsonUtil.SetIntValue(profile_path, "vampire_mode", 1)
+	JsonUtil.SetIntValue(profile_path, "hotkey_weathersense", 0)
+
+	JsonUtil.Save(profile_path)
+endFunction
 
 Event StartupAlmostDone()
 	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine6_OID
