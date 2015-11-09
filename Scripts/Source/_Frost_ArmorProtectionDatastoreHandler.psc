@@ -39,12 +39,6 @@ int property DEFAULT_FEET_COVERAGE 				= 14 autoReadOnly
 int property DEFAULT_SHIELD_WARMTH				= 0 autoReadOnly
 int property DEFAULT_SHIELD_COVERAGE			= 20 autoReadOnly
 
-function StartSystem()
-	if !self.IsRunning()
-		self.Start()
-	endif
-endFunction
-
 function StopSystem()
 	if self.IsRunning()
 		self.Stop()
@@ -416,6 +410,10 @@ function RevertDatastore()
 	FrostDebug(1, "Setting default settings for shield armor...")
 	SetDefaults_Shield()
 	FrostDebug(1, "Setting default settings for shield armor...done.")
+
+	if !self.IsRunning()
+		self.Start()
+	endif
 	_Frost_DatastoreInitialized.SetValueInt(2)
 endFunction
 
