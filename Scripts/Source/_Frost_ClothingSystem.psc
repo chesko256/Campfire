@@ -5,6 +5,7 @@ import _FrostInternal
 
 Actor property PlayerRef auto
 GlobalVariable property _Frost_Setting_Notifications_EquipmentValues auto
+GlobalVariable property _Frost_CheckInitialEquipment auto
 Formlist property _Frost_EquipExceptions auto
 Quest property FrostfallStrings auto
 
@@ -28,6 +29,13 @@ int property hands_coverage auto hidden
 int property feet_coverage auto hidden
 int property cloak_coverage auto hidden
 int property shield_coverage auto hidden
+
+Keyword property _Frost_DummyArmorKW auto
+Armor property initial_body auto hidden
+Armor property initial_head auto hidden
+Armor property initial_hands auto hidden
+Armor property initial_feet auto hidden
+Armor property initial_shield auto hidden
 
 bool unequip_lock = false
 
@@ -54,6 +62,11 @@ function ObjectEquipped(Form akBaseObject, int iGearType)
     ;       7: Other (could be cloak)
     ;       8: Shield
     
+    ; Initial equipment check
+    if akBaseObject.HasKeyword(_Frost_DummyArmorKW)
+        return
+    endif
+
     HandleEquippedObject(akBaseObject, iGearType)
 
     SendEvent_UpdateWarmthAndCoverage()
@@ -156,6 +169,22 @@ function ObjectUnequipped(Form akBaseObject, int iGearType)
     ;       8: Shield
 
     unequip_lock = true
+    if akBaseObject.HasKeyword(_Frost_DummyArmorKW)
+        return
+    endif
+    if _Frost_CheckInitialEquipment.GetValueInt() == 2
+        if iGearType == 1
+            initial_body = akBaseObject as Armor
+        elseif iGearType == 2
+            initial_hands = akBaseObject as Armor
+        elseif iGearType == 3
+            initial_head = akBaseObject as Armor
+        elseif iGearType == 4
+            initial_feet = akBaseObject as Armor
+        elseif iGearType == 8
+            initial_shield = akBaseObject as Armor
+        endif
+    endif
     HandleUnequippedObject(akBaseObject, iGearType)
     unequip_lock = false
 
