@@ -501,6 +501,12 @@ function WeathersenseMeter_FadeUp(int iterations_remaining, bool flash = false)
 	weathersense_display_iterations_remaining = iterations_remaining
 endFunction
 
+function RemoveAllMeters()
+	ExposureMeter.Alpha = 0.0
+	WetnessMeter.Alpha = 0.0
+	WeathersenseMeter.Alpha = 0.0
+endFunction
+
 function SetMeterPositions()
 	ExposureMeter.HAnchor = "right"
 	ExposureMeter.VAnchor = "top"

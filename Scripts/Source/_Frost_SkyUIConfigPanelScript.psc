@@ -77,9 +77,9 @@ Event OnConfigInit()
 	Pages[1] = "$FrostfallGameplayPage"
 	Pages[2] = "$FrostfallEquipmentPage"
 	Pages[3] = "$FrostfallInterfacePage"
-	Pages[4] = "$CampfireSaveLoadPage"
+	Pages[4] = "$FrostfallSaveLoadPage"
 	Pages[5] = "$FrostfallGuidePage"
-	Pages[6] = "$CampfireSystemPage"
+	Pages[6] = "$FrostfallSystemPage"
 endEvent
 
 int function GetVersion()
@@ -105,11 +105,11 @@ event OnPageReset(string page)																			;TRANSLATED
 		PageReset_Equipment()
 	elseif page == "$FrostfallInterfacePage"
 		PageReset_Interface()
-	elseif page == "$CampfireSaveLoadPage"
+	elseif page == "$FrostfallSaveLoadPage"
 		PageReset_SaveLoad()
 	elseif page == "$FrostfallGuidePage"
 		PageReset_Guide()
-	elseif page == "$CampfireSystemPage"
+	elseif page == "$FrostfallSystemPage"
 		PageReset_System()
 	endif
 endEvent
@@ -176,7 +176,7 @@ function PageReset_Overview()
 			Overview_InfoLine3_OID = AddTextOption("$FrostfallStartUpDSCreateHands", ((_Frost_DS_Hands_InitProgress.GetValue() * 100.0) as int) + "%")
 			Overview_InfoLine4_OID = AddTextOption("$FrostfallStartUpDSCreateFeet", ((_Frost_DS_Feet_InitProgress.GetValue() * 100.0) as int) + "%")
 			Overview_InfoLine5_OID = AddTextOption("$FrostfallStartUpDSCreateCloak", ((_Frost_DS_Cloak_InitProgress.GetValue() * 100.0) as int) + "%")
-			Overview_InfoLine6_OID = AddTextOption("", "")
+			Overview_InfoLine6_OID = AddTextOption("$FrostfallStartUpProgress", "$FrostfallStartUpWorking")
 			Overview_InfoLine7_OID = AddTextOption("", "")
 			Overview_InfoLine8_OID = AddTextOption("", "")
 		endif
