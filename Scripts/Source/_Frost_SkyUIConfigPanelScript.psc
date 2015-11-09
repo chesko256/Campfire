@@ -42,6 +42,7 @@ GlobalVariable property _Frost_Setting_CurrentProfile auto
 GlobalVariable property _Frost_Setting_AutoSaveLoad auto
 GlobalVariable property _Frost_Setting_FrigidWaterIsLethal auto
 GlobalVariable property _Frost_Setting_VampireMode auto
+GlobalVariable property _Frost_Setting_NoWaiting auto
 GlobalVariable property _Frost_HotkeyWeathersense auto
 
 GlobalVariable property _Frost_DS_Body_InitProgress auto
@@ -81,6 +82,9 @@ int Gameplay_ExposurePauseDialogue_OID
 int Gameplay_ExposurePauseCombat_OID
 int Gameplay_MovementPenalty_OID
 int Gameplay_VampirismMode_OID
+int Gameplay_DisableFT_OID
+int Gameplay_DisableWaiting_OID
+int Gameplay_WeathersenseHotkey_OID
 
 int SaveLoad_SelectProfile_OID
 int SaveLoad_RenameProfile_OID
@@ -279,6 +283,34 @@ function PageReset_Gameplay()
 		Gameplay_MovementPenalty_OID = AddToggleOption("$FrostfallGameplaySettingPlayerMovement", false)
 	endif
 	Gameplay_VampirismMode_OID = AddMenuOption("$FrostfallGameplaySettingPlayerVampirism", VampirismModeList[_Frost_Setting_VampireMode.GetValueInt()])
+
+	AddHeaderOption("$FrostfallGameplayHeaderFastTravel")
+	if _Frost_Setting_NoFastTravel.GetValueInt() == 2
+		Gameplay_DisableFT_OID = AddToggleOption("$FrostfallGameplaySettingFTToggle", true)
+	else
+		Gameplay_DisableFT_OID = AddToggleOption("$FrostfallGameplaySettingFTToggle", false)
+	endif
+	if _Frost_Setting_NoWaiting.GetValueInt() == 2
+		Gameplay_DisableWaiting_OID = AddToggleOption("$FrostfallGameplaySettingFTWaiting", true)
+	else
+		Gameplay_DisableWaiting_OID = AddToggleOption("$FrostfallGameplaySettingFTWaiting", false)
+	endif
+
+	SetCursorPosition(1)
+
+	AddHeaderOption("$FrostfallGameplayHeaderWorld")
+	AddTextOption("$FrostfallGameplaySettingsFollowers", "$FrostfallComingSoon", OPTION_FLAG_DISABLED)
+	AddTextOption("$FrostfallGameplaySettingsNPCs", "$FrostfallComingSoon", OPTION_FLAG_DISABLED)
+	AddTextOption("$FrostfallGameplaySettingsLightableFires", "$FrostfallComingSoon", OPTION_FLAG_DISABLED)
+	AddTextOption("$FrostfallGameplaySettingsHarvestFromEnvironment", "$FrostfallComingSoon", OPTION_FLAG_DISABLED)
+	AddTextOption("$FrostfallGameplaySettingsHarvestFromWoodPiles", "$FrostfallComingSoon", OPTION_FLAG_DISABLED)
+
+	AddEmptyOption()
+	AddEmptyOption()
+
+	AddHeaderOption("$FrostfallGameplayHeaderHotkeys")
+	Gameplay_WeathersenseHotkey_OID = AddKeyMapOption("$FrostfallHotkeyWeathersense", _Frost_HotkeyWeathersense.GetValueInt())
+
 endFunction
 
 function PageReset_Equipment()
@@ -420,11 +452,33 @@ event OnOptionSelect(int option)
 			_Frost_Setting_MovementPenalty.SetValueInt(2)
 			SetToggleOptionValue(Gameplay_MovementPenalty_OID, true)
 		endif
+	elseif option == Gameplay_DisableFT_OID
+		if _Frost_Setting_NoFastTravel.GetValueInt() == 2
+			_Frost_Setting_NoFastTravel.SetValueInt(1)
+			SetToggleOptionValue(Gameplay_DisableFT_OID, false)
+		else
+			_Frost_Setting_NoFastTravel.SetValueInt(2)
+			SetToggleOptionValue(Gameplay_DisableFT_OID, true)
+		endif
+	elseif option == Gameplay_DisableWaiting_OID
+		if _Frost_Setting_NoWaiting.GetValueInt() == 2
+			_Frost_Setting_NoWaiting.SetValueInt(1)
+			SetToggleOptionValue(Gameplay_DisableWaiting_OID, false)
+		else
+			_Frost_Setting_NoWaiting.SetValueInt(2)
+			SetToggleOptionValue(Gameplay_DisableWaiting_OID, true)
+		endif
 	endif	
 endEvent
 
 event OnOptionDefault(int option)
-
+	if option == Gameplay_WeathersenseHotkey_OID
+		UnregisterForKey(_Frost_HotkeyWeathersense.GetValueInt())
+		_Frost_HotkeyWeathersense.SetValue(0)
+		ForcePageReset()
+		PlayerRef.AddSpell(_Frost_Weathersense_Spell, false)
+		SaveSettingToCurrentProfile("hotkey_weathersense", 0)
+	endif
 endEvent
 
 Event OnOptionSliderOpen(int option)
@@ -481,12 +535,111 @@ Event OnOptionMenuAccept(int option, int index)
 	endif
 EndEvent
 
+Event OnOptionKeyMapChange(int option, int keyCode, string conflictControl, string conflictName)
+	bool success
+	if option == Gameplay_WeathersenseHotkey_OID
+		success = RemapHotkey(option, keyCode, conflictControl, conflictName, _Frost_HotkeyWeathersense, _Frost_Weathersense_Spell)
+		if success
+			SaveSettingToCurrentProfile("hotkey_weathersense", keyCode)
+		endif
+	endif
+EndEvent
+
+bool function RemapHotkey(int option, int keyCode, string conflictControl, string conflictName, GlobalVariable akHotkeyGlobal, Spell akHotkeySpell)
+	_Camp_Strings cs = _CampInternal.GetCampfireStrings()
+	if conflictControl != ""
+		if conflictName != ""
+			; "This key is already bound to " + conflictControl + " in " + conflictName + ". Undesirable behavior may occur; use with caution, or assign to a different control."
+			bool b = ShowMessage(cs.HotkeyConflict1 + conflictControl + cs.HotkeyConflict2 + conflictName + cs.HotkeyConflict3_mod)
+			if b
+				akHotkeyGlobal.SetValueInt(keyCode)
+				RegisterForKey(akHotkeyGlobal.GetValueInt())
+				ForcePageReset()
+				Game.GetPlayer().RemoveSpell(akHotkeySpell)
+				return true
+			endif
+		else
+			; "This key is already bound to " + conflictControl + " in Skyrim. Please select a different key."
+			ShowMessage(cs.HotkeyConflict1 + conflictControl + cs.HotkeyConflict3_game, a_withCancel = false)
+			return false
+		endif
+	else
+		akHotkeyGlobal.SetValueInt(keyCode)
+		RegisterForKey(akHotkeyGlobal.GetValueInt())
+		ForcePageReset()
+		Game.GetPlayer().RemoveSpell(akHotkeySpell)
+		return true
+	endif
+endFunction
+
+function SaveSettingToCurrentProfile(string asKeyName, int aiValue)
+	if _Frost_Setting_AutoSaveLoad.GetValueInt() == 2
+		int current_profile_index = _Frost_Setting_CurrentProfile.GetValueInt()
+		JsonUtil.SetIntValue(CONFIG_PATH + "profile" + current_profile_index, asKeyName, aiValue)
+		JsonUtil.Save(CONFIG_PATH + "profile" + current_profile_index)
+	endif
+endFunction
+
+function SaveSettingToCurrentProfileFloat(string asKeyName, float afValue)
+	if _Frost_Setting_AutoSaveLoad.GetValueInt() == 2
+		int current_profile_index = _Frost_Setting_CurrentProfile.GetValueInt()
+		JsonUtil.SetFloatValue(CONFIG_PATH + "profile" + current_profile_index, asKeyName, afValue)
+		JsonUtil.Save(CONFIG_PATH + "profile" + current_profile_index)
+	endif
+endFunction
+
 int function LoadSettingFromProfile(int aiProfileIndex, string asKeyName)
 	return JsonUtil.GetIntValue(CONFIG_PATH + "profile" + aiProfileIndex, asKeyName, -1)
 endFunction
 
 float function LoadSettingFromProfileFloat(int aiProfileIndex, string asKeyName)
 	return JsonUtil.GetFloatValue(CONFIG_PATH + "profile" + aiProfileIndex, asKeyName, -1)
+endFunction
+
+function LoadProfileOnStartup()
+	int auto_load = JsonUtil.GetIntValue(CONFIG_PATH + "common", "auto_load", 0)
+	if auto_load == 2
+		_Frost_Setting_AutoSaveLoad.SetValueInt(2)
+		int last_profile = JsonUtil.GetIntValue(CONFIG_PATH + "common", "last_profile", 0)
+		if last_profile != 0
+			_Frost_Setting_CurrentProfile.SetValueInt(last_profile)
+			SwitchToProfile(last_profile)
+		else
+			; default to Profile 1 and write the file
+			_Frost_Setting_CurrentProfile.SetValueInt(1)
+			JsonUtil.SetIntValue(CONFIG_PATH + "common", "last_profile", 1)
+			JsonUtil.Save(CONFIG_PATH + "common")
+			SwitchToProfile(1)
+		endif
+	elseif auto_load == 1
+		_Frost_Setting_AutoSaveLoad.SetValueInt(1)
+	elseif auto_load == 0
+		; The file or setting does not exist, create it and default to auto-loading.
+		; default to Profile 1 and write the file
+		_Frost_Setting_AutoSaveLoad.SetValueInt(2)
+		_Frost_Setting_CurrentProfile.SetValueInt(1)
+		JsonUtil.SetIntValue(CONFIG_PATH + "common", "auto_load", 2)
+		JsonUtil.SetIntValue(CONFIG_PATH + "common", "last_profile", 1)
+		JsonUtil.Save(CONFIG_PATH + "common")
+		SwitchToProfile(1)
+	endif
+endFunction
+
+Event OnKeyDown(int keyCode)
+	if UI.IsMenuOpen("Console") || UI.IsMenuOpen("Book Menu") || UI.IsMenuOpen("BarterMenu") || UI.IsMenuOpen("ContainerMenu") || UI.IsMenuOpen("Crafting Menu") || UI.IsMenuOpen("Dialogue Menu") || UI.IsMenuOpen("FavoritesMenu") || UI.IsMenuOpen("InventoryMenu") || UI.IsMenuOpen("Journal Menu") || UI.IsMenuOpen("Lockpicking Menu") || UI.IsMenuOpen("MagicMenu") || UI.IsMenuOpen("MapMenu") || UI.IsMenuOpen("MessageBoxMenu") || UI.IsMenuOpen("Sleep/Wait Menu") || UI.IsMenuOpen("StatsMenu")
+		return
+	endif
+	if keyCode == _Frost_HotkeyWeathersense.GetValueInt()
+		_Frost_Weathersense_Spell.Cast(PlayerRef)
+	endif
+EndEvent
+
+string function GetCustomControl(int keyCode)
+	if (keyCode == _Frost_HotkeyWeathersense.GetValueInt())
+		return "Survival Skill: Weathersense"
+	else
+		return ""
+	endIf
 endFunction
 
 function SwitchToProfile(int aiProfileIndex)
@@ -562,6 +715,10 @@ function SwitchToProfile(int aiProfileIndex)
 	if val != -1
 		_Frost_Setting_NoFastTravel.SetValueInt(val)
 	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "no_waiting")
+	if val != -1
+		_Frost_Setting_NoWaiting.SetValueInt(val)
+	endif
 	val = LoadSettingFromProfile(aiProfileIndex, "sound_effects")
 	if val != -1
 		_Frost_Setting_SoundEffects.SetValueInt(val)
@@ -619,6 +776,7 @@ function GenerateDefaultProfile(int aiProfileIndex)
 	JsonUtil.SetFloatValue(profile_path, "meter_opacity", 100.0)
 	JsonUtil.SetIntValue(profile_path, "movement_penalty", 2)
 	JsonUtil.SetIntValue(profile_path, "no_fast_travel", 1)
+	JsonUtil.SetIntValue(profile_path, "no_waiting", 1)
 	JsonUtil.SetIntValue(profile_path, "sound_effects", 2)
 	JsonUtil.SetIntValue(profile_path, "weather_messages", 2)
 	JsonUtil.SetIntValue(profile_path, "weathersense_display_mode", 2)
@@ -673,4 +831,10 @@ function SendEvent_StopFrostfall()
     if handle
         ModEvent.Send(handle)
     endif
+endFunction
+
+function RegisterForKeysOnLoad()
+	if _Frost_HotkeyWeathersense.GetValueInt() != 0
+		RegisterForKey(_Frost_HotkeyWeathersense.GetValueInt())
+	endIf
 endFunction
