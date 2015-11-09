@@ -2,6 +2,7 @@ Scriptname _Frost_Main extends Quest
 {This script handles starting the mod for the first time, setting appropriate start-up aliases, and running compatibility on startup.}
 
 import FrostUtil
+import _FrostInternal
 
 Actor property PlayerRef auto
 ReferenceAlias property PlayerAlias auto
@@ -11,36 +12,35 @@ Event OnInit()
 	; pass	
 EndEvent
 
-Event OnUpdate()
-	;if the mod hasn't ever been activated && we're staring up at the night sky
-	;	StartModFirstTime()
-	;	FrostUtil.GetExposureSystem().StartSystem()
-	;else
-	;	RegisterForSingleUpdate(5)
-	;endif
-EndEvent
+function RegisterForModEvents()
+	RegisterForModEvent("Frost_StartFrostfall", "StartFrostfall")
+	RegisterForModEvent("Frost_StopFrostfall", "StopFrostfall")
+endFunction
 
-function StartFrostfall()
+Event StartFrostfall()
+	FrostDebug(1, "Starting Frostfall...")
+	GetClothingDatastoreHandler().InitializeDatastore()
+	
+	; Menu-Mode blocked functions
 	if !self.IsRunning()
 		self.Start()
 	endif
+	FrostDebug(1, "Started Frostfall...")
 	PlayerAlias.ForceRefTo(PlayerRef)
-	if _Frost_DatastoreInitialized.GetValueInt() != 2
-		GetClothingDatastoreHandler().StartDatastore()
-	endif
 	StartAllSystems()
 	GetCompatibilitySystem().RunCompatibility()
-endFunction
+endEvent
 
-function StopFrostfall()
+Event StopFrostfall()
 	if self.IsRunning()
 		self.Stop()
 	endif
 	PlayerAlias.Clear()
 	StopAllSystems()
-endFunction
+endEvent
 
 function StartAllSystems()
+	GetClothingDatastoreHandler().StartSystem()
 	GetClimateSystem().StartSystem()
 	GetHeatSourceSystem().StartSystem()
 	GetClothingSystem().StartSystem()
@@ -53,6 +53,7 @@ function StartAllSystems()
 endFunction
 
 function StopAllSystems()
+	GetClothingDatastoreHandler().StopSystem()
 	GetClimateSystem().StopSystem()
 	GetHeatSourceSystem().StopSystem()
 	GetClothingSystem().StopSystem()

@@ -39,16 +39,21 @@ int property DEFAULT_FEET_COVERAGE 				= 14 autoReadOnly
 int property DEFAULT_SHIELD_WARMTH				= 0 autoReadOnly
 int property DEFAULT_SHIELD_COVERAGE			= 20 autoReadOnly
 
-function StartDatastore()
+function StartSystem()
 	if !self.IsRunning()
 		self.Start()
 	endif
-	RevertDatastore()
 endFunction
 
-function StopDatastore()
+function StopSystem()
 	if self.IsRunning()
 		self.Stop()
+	endif
+endFunction
+
+function InitializeDatastore()
+	if _Frost_DatastoreInitialized.GetValueInt() != 2
+		RevertDatastore()
 	endif
 endFunction
 
