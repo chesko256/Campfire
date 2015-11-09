@@ -14,8 +14,7 @@ Spell property _Frost_Weathersense_Spell auto
 GlobalVariable property _Frost_HotkeyWeathersense auto
 
 ;#Scripts======================================================================
-;_Camp_SkyUIConfigPanelScript property FrostConfig Auto 			;SkyUI Configuration script
-;_Camp_Main property Campfire auto 									;Main script
+_Frost_SkyUIConfigPanelScript property FrostConfig Auto 			;SkyUI Configuration script
 _Frost_ConditionValues property Conditions auto
 
 ;#Quests=======================================================================
@@ -90,11 +89,7 @@ Weather property DLC2AshStorm auto hidden
 
 Event OnPlayerLoadGame()
 	RunCompatibility()
-	if isSKYUILoaded
-		;CampConfig.LoadProfileOnStartup()
-	else
-		;RegisterForKeysOnLoad()
-	endif
+	RegisterForKeysOnLoad()
 	RegisterForControlsOnLoad()
 	RegisterForEventsOnLoad()
 endEvent
@@ -601,7 +596,7 @@ function AddStartupSpells()
 endFunction
 
 function RegisterForKeysOnLoad()
-	; pass
+	FrostConfig.RegisterForKeysOnLoad()
 endFunction
 
 function RegisterForControlsOnLoad()
