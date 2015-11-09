@@ -487,6 +487,48 @@ event OnOptionDefault(int option)
 	endif
 endEvent
 
+Event OnOptionHighlight(int option)
+	if option == Overview_RunStatusText_OID
+		SetInfoText("$")
+	elseif option == Overview_ExposureStatusText_OID
+		SetInfoText("$")
+	elseif option == Overview_WetnessStatusText_OID
+		SetInfoText("$")
+	elseif option == Overview_WarmthStatusText_OID
+		SetInfoText("$")
+	elseif option == Overview_CoverageStatusText_OID
+		SetInfoText("$")
+	elseif option == Gameplay_ExposureRate_OID
+		SetInfoText("$FrostfallOptionHighlightSettingExposureRateSlider")
+	elseif option == Gameplay_MaxExposureMode_OID
+		SetInfoText("$")
+	elseif option == Gameplay_FrigidWater_OID
+		SetInfoText("$FrostfallOptionHighlightSettingExposureWaterText")
+	elseif option == Gameplay_ExposurePauseDialogue_OID
+		SetInfoText("$FrostfallOptionHighlightSettingExposureDialogueText")
+	elseif option == Gameplay_ExposurePauseCombat_OID
+		SetInfoText("$FrostfallOptionHighlightSettingExposureCombatText")
+	elseif option == Gameplay_MovementPenalty_OID
+		SetInfoText("$FrostfallOptionHighlightSettingMovementText")
+	elseif option == Gameplay_VampirismMode_OID
+		SetInfoText("$")
+	elseif option == Gameplay_DisableFT_OID
+		SetInfoText("$FrostfallOptionHighlightSettingFTToggleText")
+	elseif option == Gameplay_DisableWaiting_OID
+		SetInfoText("$FrostfallOptionHighlightSettingWaitToggleText")
+	elseif option == Gameplay_WeathersenseHotkey_OID
+		SetInfoText("$FrostfallOptionHighlightHKWeathersense")
+	elseif option == SaveLoad_SelectProfile_OID
+		SetInfoText("$FrostfallOptionHighlightSettingSelectProfile")
+	elseif option == SaveLoad_RenameProfile_OID
+		SetInfoText("$FrostfallOptionHighlightSettingRenameProfile")
+	elseif option == SaveLoad_DefaultProfile_OID
+		SetInfoText("$FrostfallOptionHighlightSettingDefaultProfile")
+	elseif option == SaveLoad_Enable_OID
+		SetInfoText("$FrostfallOptionHighlightSettingEnableSaveLoad")
+	endif
+EndEvent
+
 Event OnOptionSliderOpen(int option)
 	if option == Gameplay_ExposureRate_OID
 		SetSliderDialogStartValue(_Frost_Setting_ExposureRate.GetValue())
