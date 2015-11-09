@@ -43,6 +43,7 @@ GlobalVariable property _Frost_Setting_AutoSaveLoad auto
 GlobalVariable property _Frost_Setting_FrigidWaterIsLethal auto
 GlobalVariable property _Frost_Setting_VampireMode auto
 GlobalVariable property _Frost_Setting_NoWaiting auto
+GlobalVariable property _Frost_Setting_Notifications_EquipmentValues auto
 GlobalVariable property _Frost_HotkeyWeathersense auto
 
 GlobalVariable property _Frost_DS_Body_InitProgress auto
@@ -59,6 +60,8 @@ bool must_exit = false
 string[] ProfileList
 string[] MaxExposureModeList
 string[] VampirismModeList
+string[] AspectRatioList
+string[] MeterDisplayModeList
 
 int Overview_RunStatusText_OID
 int Overview_RunSubStatusText_OID
@@ -86,6 +89,19 @@ int Gameplay_DisableFT_OID
 int Gameplay_DisableWaiting_OID
 int Gameplay_WeathersenseHotkey_OID
 
+int Interface_FrostShaderOn_OID
+int Interface_WetShaderOn_OID
+int Interface_SoundEffects_OID
+int Interface_FullScreenEffects_OID
+int Interface_ForceFeedback_OID
+int Interface_Animation_OID
+int Interface_1PAnimationAllowed_OID
+int Interface_FollowerAnimation_OID
+int Interface_MeterAspectRatio_OID
+int Interface_MeterDisplayTime_OID
+int Interface_MeterOpacity_OID
+int Interface_MeterDisplayMode_OID
+
 int SaveLoad_SelectProfile_OID
 int SaveLoad_RenameProfile_OID
 int SaveLoad_DefaultProfile_OID
@@ -99,8 +115,6 @@ Event OnConfigInit()
 	Pages[2] = "$FrostfallEquipmentPage"
 	Pages[3] = "$FrostfallInterfacePage"
 	Pages[4] = "$FrostfallSaveLoadPage"
-	Pages[5] = "$FrostfallGuidePage"
-	Pages[6] = "$FrostfallSystemPage"
 
 	MaxExposureModeList = new string[3]
 	MaxExposureModeList[0] = "$FrostfallMaxExposureNothing"
@@ -110,6 +124,16 @@ Event OnConfigInit()
 	VampirismModeList = new string[2]
 	VampirismModeList[0] = "$FrostfallVampirismHuman"
 	VampirismModeList[1] = "$FrostfallVampirismSuperhuman"
+
+	AspectRatioList = new string[3]
+	AspectRatioList[0] = "4:3"
+	AspectRatioList[1] = "16:9"
+	AspectRatioList[2] = "16:10"
+
+	MeterDisplayModeList = new string[3]
+	MeterDisplayModeList[0] = "$FrostfallOff"
+	MeterDisplayModeList[1] = "$FrostfallAlwaysOn"
+	MeterDisplayModeList[2] = "$FrostfallContextual"
 endEvent
 
 int function GetVersion()
@@ -120,7 +144,7 @@ Event OnVersionUpdate(int a_version)
 	; pass
 EndEvent
 
-event OnPageReset(string page)																			;TRANSLATED
+event OnPageReset(string page)
 	if page == ""
 		LoadCustomContent("frostfall/frostfall_splash.swf")
 	else
@@ -137,10 +161,6 @@ event OnPageReset(string page)																			;TRANSLATED
 		PageReset_Interface()
 	elseif page == "$FrostfallSaveLoadPage"
 		PageReset_SaveLoad()
-	elseif page == "$FrostfallGuidePage"
-		PageReset_Guide()
-	elseif page == "$FrostfallSystemPage"
-		PageReset_System()
 	endif
 endEvent
 
@@ -315,10 +335,11 @@ endFunction
 
 function PageReset_Equipment()
 	SetCursorFillMode(TOP_TO_BOTTOM)
-	if FrostfallRunning.GetValueInt() != 2 || must_exit
+	;/if FrostfallRunning.GetValueInt() != 2 || must_exit
 		AddTextOption("$FrostfallNotRunningError", "", OPTION_FLAG_DISABLED)
 		return
-	endif
+	endif/;
+	AddTextOption("Coming in Frostfall 3.1.")
 
 endFunction
 
@@ -329,13 +350,75 @@ function PageReset_Interface()
 		return
 	endif
 
-endFunction
+	AddHeaderOption("$")
+	if _Frost_Setting_FrostShaderOn.GetValueInt() == 2
+		Interface_FrostShaderOn_OID = AddToggleOption("$", true)
+	else
+		Interface_FrostShaderOn_OID = AddToggleOption("$", false)
+	endif
+	if _Frost_Setting_WetShaderOn.GetValueInt() == 2
+		Interface_WetShaderOn_OID = AddToggleOption("$", true)
+	else
+		Interface_WetShaderOn_OID = AddToggleOption("$", false)
+	endif
+	if _Frost_Setting_SoundEffects.GetValueInt() == 2
+		Interface_SoundEffects_OID = AddToggleOption("$", true)
+	else
+		Interface_SoundEffects_OID = AddToggleOption("$", false)
+	endif
+	if _Frost_Setting_FullScreenEffects.GetValueInt() == 2
+		Interface_FullScreenEffects_OID = AddToggleOption("$", true)
+	else
+		Interface_FullScreenEffects_OID = AddToggleOption("$", false)
+	endif
+	if _Frost_Setting_ForceFeedback.GetValueInt() == 2
+		Interface_ForceFeedback_OID = AddToggleOption("$", true)
+	else
+		Interface_ForceFeedback_OID = AddToggleOption("$", false)
+	endif
+	if _Frost_Setting_Animation.GetValueInt() == 2
+		Interface_Animation_OID = AddToggleOption("$", true)
+	else
+		Interface_Animation_OID = AddToggleOption("$", false)
+	endif
+	if _Frost_Setting_1PAnimationAllowed.GetValueInt() == 2
+		Interface_1PAnimationAllowed_OID = AddToggleOption("$", true)
+	else
+		Interface_1PAnimationAllowed_OID = AddToggleOption("$", false)
+	endif
+	if _Frost_Setting_FollowerAnimation.GetValueInt() == 2
+		Interface_FollowerAnimation_OID = AddToggleOption("$", true)
+	else
+		Interface_FollowerAnimation_OID = AddToggleOption("$", false)
+	endif
 
-function PageReset_Guide()
-	SetCursorFillMode(TOP_TO_BOTTOM)
-	if FrostfallRunning.GetValueInt() != 2 || must_exit
-		AddTextOption("$FrostfallNotRunningError", "", OPTION_FLAG_DISABLED)
-		return
+	SetCursorPosition(1)
+	AddHeaderOption("$")
+	Interface_MeterAspectRatio_OID = AddMenuOption("$", AspectRatioList[_Frost_Setting_MeterAspectRatio.GetValueInt()])
+	Interface_MeterDisplayTime_OID = AddSliderOption("$", _Frost_Setting_MeterDisplayTime.GetValueInt(), "{0}")
+	Interface_MeterOpacity_OID = AddSliderOption("$", _Frost_Setting_MeterOpacity.GetValue(), "{0}%")
+	Interface_MeterDisplayMode_OID = AddMenuOption("$", MeterDisplayModeList[_Frost_Setting_MeterDisplayMode.GetValueInt()])
+	AddEmptyOption()
+	AddHeaderOption("$")
+	if _Frost_Setting_ConditionMessages.GetValueInt() == 2
+		Interface_ConditionMessages_OID = AddToggleOption("$", true)
+	else
+		Interface_ConditionMessages_OID = AddToggleOption("$", false)
+	endif
+	if _Frost_Setting_WeatherMessages.GetValueInt() == 2
+		Interface_WeatherMessages_OID = AddToggleOption("$", true)
+	else
+		Interface_WeatherMessages_OID = AddToggleOption("$", false)
+	endif
+	if _Frost_Setting_DisplayAttributesInWeathersense.GetValueInt() == 2
+		Interface_DisplayAttributesInWeathersense_OID = AddToggleOption("$", true)
+	else
+		Interface_DisplayAttributesInWeathersense_OID = AddToggleOption("$", false)
+	endif
+	if _Frost_Setting_Notifications_EquipmentValues.GetValueInt() == 2
+		Interface_Notifications_EquipmentValues_OID = AddToggleOption("$", true)
+	else
+		Interface_Notifications_EquipmentValues_OID = AddToggleOption("$", false)
 	endif
 
 endFunction
@@ -393,10 +476,6 @@ endFunction
 string function GetProfileName(int aiProfileIndex)
 	;bool b = JsonUtil.Load(CONFIG_PATH + "profile" + aiProfileIndex)
 	return JsonUtil.GetStringValue(CONFIG_PATH + "profile" + aiProfileIndex, "profile_name", missing = "Profile " + aiProfileIndex)
-endFunction
-
-function PageReset_System()
-
 endFunction
 
 event OnOptionSelect(int option)
@@ -566,6 +645,10 @@ Event OnOptionMenuOpen(int option)
 		SetMenuDialogOptions(profile_list)
 		SetMenuDialogStartIndex(_Frost_Setting_CurrentProfile.GetValueInt() - 1)
 		SetMenuDialogDefaultIndex(0)
+	elseif option == Interface_AspectRatio_OID
+		SetMenuDialogOptions(AspectRatioList)
+		SetMenuDialogStartIndex(_Frost_Setting_MeterAspectRatio.GetValueInt())
+		SetMenuDialogDefaultIndex(1)
 	endif	
 EndEvent
 
@@ -583,6 +666,11 @@ Event OnOptionMenuAccept(int option, int index)
 		if b
 			SwitchToProfile(index + 1)
 		endif
+	elseif option == Interface_AspectRatio_OID
+		SetMenuOptionValue(Interface_AspectRatio_OID, AspectRatioList[index])
+		_Frost_Setting_MeterAspectRatio.SetValueInt(index)
+		GetInterfaceHandler().SetAspectRatio(index)
+		SaveSettingToCurrentProfile("meter_aspect_ratio", _Frost_Setting_MeterAspectRatio.GetValueInt())
 	endif
 EndEvent
 
@@ -737,6 +825,10 @@ function SwitchToProfile(int aiProfileIndex)
 	if val != -1
 		_Frost_Setting_DisplayAttributesInWeathersense.SetValueInt(val)
 	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "notification_equipmentvalues")
+	if val != -1
+		_Frost_Setting_Notifications_EquipmentValues.SetValueInt(val)
+	endif
 	val = LoadSettingFromProfile(aiProfileIndex, "exposure_pause_combat")
 	if val != -1
 		_Frost_Setting_ExposurePauseCombat.SetValueInt(val)
@@ -834,6 +926,7 @@ function GenerateDefaultProfile(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "1P_animation_allowed", 1)
 	JsonUtil.SetIntValue(profile_path, "condition_messages", 2)
 	JsonUtil.SetIntValue(profile_path, "display_attributes_in_weathersense", 1)
+	JsonUtil.SetIntValue(profile_path, "notification_equipmentvalues", 2)
 	JsonUtil.SetIntValue(profile_path, "exposure_pause_combat", 2)
 	JsonUtil.SetIntValue(profile_path, "exposure_pause_dialogue", 2)
 	JsonUtil.SetFloatValue(profile_path, "exposure_rate", 1.0)

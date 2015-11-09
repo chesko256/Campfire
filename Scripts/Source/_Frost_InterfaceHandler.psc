@@ -546,3 +546,29 @@ function SetMeterPositions()
 
 	;debug.trace("[Frostfall] EMX:" + ExposureMeter.X + ", EMY:" + ExposureMeter.Y + ", WMX:" + WetnessMeter.X + ", WMY:" + WetnessMeter.Y)
 endFunction
+
+function SetAspectRatio(int ratio)
+	; ratio: 0 = 4:3, 1 = 16:9, 2 = 16:10
+	if ratio == 0
+		ExposureMeter.X = 1219.0
+		ExposureMeter.Y = 75.2
+		WetnessMeter.X = 1494.25
+		WetnessMeter.Y = 114.0
+		WeathersenseMeter.X = 916.75
+		WeathersenseMeter.Y = 16.0
+	elseif ratio == 1
+		ExposureMeter.X = 1219.0
+		ExposureMeter.Y = 75.2
+		WetnessMeter.X = 1494.25
+		WetnessMeter.Y = 114.0
+		WeathersenseMeter.X = 916.75
+		WeathersenseMeter.Y = 16.0
+	elseif ratio == 2
+		ExposureMeter.X = 1219.0
+		ExposureMeter.Y = 75.2
+		WetnessMeter.X = 1494.25
+		WetnessMeter.Y = 112.0
+		WeathersenseMeter.X = 916.75
+		WeathersenseMeter.Y = 14.0
+	endif
+endFunction
