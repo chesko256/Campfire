@@ -428,6 +428,7 @@ event OnOptionSelect(int option)
 			_Frost_Setting_FrigidWaterIsLethal.SetValueInt(2)
 			SetToggleOptionValue(Gameplay_FrigidWater_OID, true)
 		endif
+		SaveSettingToCurrentProfile("frigid_water_is_lethal", _Frost_Setting_FrigidWaterIsLethal.GetValueInt())
 	elseif option == Gameplay_ExposurePauseDialogue_OID
 		if _Frost_Setting_ExposurePauseDialogue.GetValueInt() == 2
 			_Frost_Setting_ExposurePauseDialogue.SetValueInt(1)
@@ -436,6 +437,7 @@ event OnOptionSelect(int option)
 			_Frost_Setting_ExposurePauseDialogue.SetValueInt(2)
 			SetToggleOptionValue(Gameplay_ExposurePauseDialogue_OID, true)
 		endif
+		SaveSettingToCurrentProfile("exposure_pause_dialogue", _Frost_Setting_ExposurePauseDialogue.GetValueInt())
 	elseif option == Gameplay_ExposurePauseCombat_OID
 		if _Frost_Setting_ExposurePauseCombat.GetValueInt() == 2
 			_Frost_Setting_ExposurePauseCombat.SetValueInt(1)
@@ -444,6 +446,7 @@ event OnOptionSelect(int option)
 			_Frost_Setting_ExposurePauseCombat.SetValueInt(2)
 			SetToggleOptionValue(Gameplay_ExposurePauseCombat_OID, true)
 		endif
+		SaveSettingToCurrentProfile("exposure_pause_combat", _Frost_Setting_ExposurePauseCombat.GetValueInt())
 	elseif option == Gameplay_MovementPenalty_OID
 		if _Frost_Setting_MovementPenalty.GetValueInt() == 2
 			_Frost_Setting_MovementPenalty.SetValueInt(1)
@@ -452,6 +455,7 @@ event OnOptionSelect(int option)
 			_Frost_Setting_MovementPenalty.SetValueInt(2)
 			SetToggleOptionValue(Gameplay_MovementPenalty_OID, true)
 		endif
+		SaveSettingToCurrentProfile("movement_penalty", _Frost_Setting_MovementPenalty.GetValueInt())
 	elseif option == Gameplay_DisableFT_OID
 		if _Frost_Setting_NoFastTravel.GetValueInt() == 2
 			_Frost_Setting_NoFastTravel.SetValueInt(1)
@@ -460,6 +464,7 @@ event OnOptionSelect(int option)
 			_Frost_Setting_NoFastTravel.SetValueInt(2)
 			SetToggleOptionValue(Gameplay_DisableFT_OID, true)
 		endif
+		SaveSettingToCurrentProfile("no_fast_travel", _Frost_Setting_NoFastTravel.GetValueInt())
 	elseif option == Gameplay_DisableWaiting_OID
 		if _Frost_Setting_NoWaiting.GetValueInt() == 2
 			_Frost_Setting_NoWaiting.SetValueInt(1)
@@ -468,6 +473,7 @@ event OnOptionSelect(int option)
 			_Frost_Setting_NoWaiting.SetValueInt(2)
 			SetToggleOptionValue(Gameplay_DisableWaiting_OID, true)
 		endif
+		SaveSettingToCurrentProfile("no_waiting", _Frost_Setting_NoWaiting.GetValueInt())
 	endif	
 endEvent
 
@@ -494,6 +500,7 @@ Event OnOptionSliderAccept(int option, float value)
 	if option == Gameplay_ExposureRate_OID
 		_Frost_Setting_ExposureRate.SetValue(value)
 		SetSliderOptionValue(Gameplay_ExposureRate_OID, value, "{1}x")
+		SaveSettingToCurrentProfileFloat("exposure_rate", _Frost_Setting_ExposureRate.GetValue())
 	endif
 EndEvent
 
@@ -524,9 +531,11 @@ Event OnOptionMenuAccept(int option, int index)
 	if option == Gameplay_MaxExposureMode_OID
 		SetMenuOptionValue(Gameplay_MaxExposureMode_OID, MaxExposureModeList[index])
 		_Frost_Setting_MaxExposureMode.SetValueInt(index + 1)
+		SaveSettingToCurrentProfile("max_exposure_mode", _Frost_Setting_MaxExposureMode.GetValueInt())
 	elseif option == Gameplay_VampirismMode_OID
 		SetMenuOptionValue(Gameplay_VampirismMode_OID, VampirismModeList[index])
 		_Frost_Setting_VampireMode.SetValueInt(index)
+		SaveSettingToCurrentProfile("vampire_mode", _Frost_Setting_VampireMode.GetValueInt())
 	elseif option == SaveLoad_SelectProfile_OID
 		bool b = ShowMessage("$FrostfallSaveLoadConfirm")
 		if b
