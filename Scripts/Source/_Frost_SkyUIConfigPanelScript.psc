@@ -427,6 +427,22 @@ event OnOptionDefault(int option)
 
 endEvent
 
+Event OnOptionSliderOpen(int option)
+	if option == Gameplay_ExposureRate_OID
+		SetSliderDialogStartValue(_Frost_Setting_ExposureRate.GetValue())
+		SetSliderDialogDefaultValue(1.0)
+		SetSliderDialogRange(0.0, 3.0)
+		SetSliderDialogInterval(0.1)
+	endif
+EndEvent
+
+Event OnOptionSliderAccept(int option, float value)
+	if option == Gameplay_ExposureRate_OID
+		_Frost_Setting_ExposureRate.SetValue(value)
+		SetSliderOptionValue(Gameplay_ExposureRate_OID, value, "{1}x")
+	endif
+EndEvent
+
 Event OnOptionMenuOpen(int option)
 	if option == Gameplay_MaxExposureMode_OID
 		SetMenuDialogOptions(MaxExposureModeList)
