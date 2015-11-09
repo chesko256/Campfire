@@ -91,6 +91,7 @@ Event StopFrostfall()
 	endif
 	PlayerAlias.Clear()
 	StopAllSystems()
+	GetInterfaceHandler().RemoveAllMeters()
 endEvent
 
 function StartAllSystems()
