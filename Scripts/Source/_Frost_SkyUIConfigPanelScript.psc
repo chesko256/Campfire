@@ -572,6 +572,25 @@ bool function RemapHotkey(int option, int keyCode, string conflictControl, strin
 	endif
 endFunction
 
+event OnOptionInputOpen(int option)
+	if option == SaveLoad_RenameProfile_OID
+		SetInputDialogStartText(GetProfileName(_Frost_Setting_CurrentProfile.GetValueInt()))
+	endif
+endEvent
+
+event OnOptionInputAccept(int option, string str)
+	if option == SaveLoad_RenameProfile_OID
+		if str != ""
+			string profile_path = CONFIG_PATH + "profile" + _Frost_Setting_CurrentProfile.GetValueInt()
+			JsonUtil.SetStringValue(profile_path, "profile_name", str)
+			JsonUtil.Save(profile_path)
+			ForcePageReset()
+		else
+			ShowMessage("$FrostfallSaveLoadRenameErrorBlank", false)
+		endif
+	endif
+endEvent
+
 function SaveSettingToCurrentProfile(string asKeyName, int aiValue)
 	if _Frost_Setting_AutoSaveLoad.GetValueInt() == 2
 		int current_profile_index = _Frost_Setting_CurrentProfile.GetValueInt()
