@@ -46,6 +46,8 @@ GlobalVariable property _Frost_DS_Feet_InitProgress auto
 GlobalVariable property _Frost_DS_Cloak_InitProgress auto
 GlobalVariable property _Frost_DatastoreInitialized auto
 
+bool must_exit = false
+
 string[] ProfileList
 
 int Overview_RunStatusText_OID
@@ -113,13 +115,19 @@ event OnPageReset(string page)																			;TRANSLATED
 endEvent
 
 Event OnConfigOpen()
+	if FrostfallRunning.GetValueInt() == 2 && _Frost_DatastoreInitialized.GetValueInt() != 2
+		must_exit = true
+	else
+		must_exit = false
+	endif
+
 	; Register for callbacks
 	RegisterForModEvent("Frost_BodyDatastoreUpdate", "BodyDatastoreUpdate")
 	RegisterForModEvent("Frost_HeadDatastoreUpdate", "HeadDatastoreUpdate")
 	RegisterForModEvent("Frost_HandsDatastoreUpdate", "HandsDatastoreUpdate")
 	RegisterForModEvent("Frost_FeetDatastoreUpdate", "FeetDatastoreUpdate")
 	RegisterForModEvent("Frost_CloakDatastoreUpdate", "CloakDatastoreUpdate")
-	RegisterForModEvent("Frost_StartupComplete", "StartupComplete")
+	RegisterForModEvent("Frost_StartupAlmostDone", "StartupAlmostDone")
 EndEvent
 
 Event OnConfigClose()
@@ -127,21 +135,27 @@ Event OnConfigClose()
 EndEvent
 
 function PageReset_Overview()
-	
-
 	SetCursorFillMode(TOP_TO_BOTTOM)
 
 	AddHeaderOption("$FrostfallOverviewHeaderStatus")
 	if FrostfallRunning.GetValueInt() == 2
 		if _Frost_DatastoreInitialized.GetValueInt() == 2
-			Overview_RunStatusText_OID = AddTextOption("$FrostfallOverviewCtrlStatus", "$FrostfallEnabled")
+			if !must_exit
+				Overview_RunStatusText_OID = AddTextOption("$FrostfallOverviewCtrlStatus", "$FrostfallEnabled")
+			else
+				Overview_RunStatusText_OID = AddTextOption("$FrostfallOverviewCtrlStatus", "$FrostfallEnabled", OPTION_FLAG_DISABLED)
+			endif
 			Overview_RunSubStatusText_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
 		else
 			Overview_RunStatusText_OID = AddTextOption("$FrostfallOverviewCtrlStatus", "$FrostfallStartingUp", OPTION_FLAG_DISABLED)
 			Overview_RunSubStatusText_OID = AddTextOption("$FrostfallStartingUpDetail", "", OPTION_FLAG_DISABLED)
 		endif
 	else
-		Overview_RunStatusText_OID = AddTextOption("$FrostfallOverviewCtrlStatus", "$FrostfallDisabled")
+		if !must_exit
+			Overview_RunStatusText_OID = AddTextOption("$FrostfallOverviewCtrlStatus", "$FrostfallDisabled")
+		else
+			Overview_RunStatusText_OID = AddTextOption("$FrostfallOverviewCtrlStatus", "$FrostfallDisabled", OPTION_FLAG_DISABLED)
+		endif
 		Overview_RunSubStatusText_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
 	endif
 
@@ -162,8 +176,8 @@ function PageReset_Overview()
 			Overview_InfoLine3_OID = AddTextOption("$FrostfallStartUpDSCreateHands", ((_Frost_DS_Hands_InitProgress.GetValue() * 100.0) as int) + "%")
 			Overview_InfoLine4_OID = AddTextOption("$FrostfallStartUpDSCreateFeet", ((_Frost_DS_Feet_InitProgress.GetValue() * 100.0) as int) + "%")
 			Overview_InfoLine5_OID = AddTextOption("$FrostfallStartUpDSCreateCloak", ((_Frost_DS_Cloak_InitProgress.GetValue() * 100.0) as int) + "%")
-			Overview_InfoLine6_OID = AddTextOption("$FrostfallStartUpLoadingSettings", "")
-			Overview_InfoLine7_OID = AddTextOption("$FrostfallStartUpStartingSystems", "")
+			Overview_InfoLine6_OID = AddTextOption("", "")
+			Overview_InfoLine7_OID = AddTextOption("", "")
 			Overview_InfoLine8_OID = AddTextOption("", "")
 		endif
 	else
@@ -207,18 +221,39 @@ function PageReset_Overview()
 endFunction
 
 function PageReset_Gameplay()
+	SetCursorFillMode(TOP_TO_BOTTOM)
+	if FrostfallRunning.GetValueInt() != 2 || must_exit
+		AddTextOption("$FrostfallNotRunningError", "", OPTION_FLAG_DISABLED)
+		return
+	endif
+
 
 endFunction
 
 function PageReset_Equipment()
+	SetCursorFillMode(TOP_TO_BOTTOM)
+	if FrostfallRunning.GetValueInt() != 2 || must_exit
+		AddTextOption("$FrostfallNotRunningError", "", OPTION_FLAG_DISABLED)
+		return
+	endif
 
 endFunction
 
 function PageReset_Interface()
+	SetCursorFillMode(TOP_TO_BOTTOM)
+	if FrostfallRunning.GetValueInt() != 2 || must_exit
+		AddTextOption("$FrostfallNotRunningError", "", OPTION_FLAG_DISABLED)
+		return
+	endif
 
 endFunction
 
 function PageReset_Guide()
+	SetCursorFillMode(TOP_TO_BOTTOM)
+	if FrostfallRunning.GetValueInt() != 2 || must_exit
+		AddTextOption("$FrostfallNotRunningError", "", OPTION_FLAG_DISABLED)
+		return
+	endif
 
 endFunction
 
@@ -284,11 +319,13 @@ endFunction
 event OnOptionSelect(int option)
 	if option == Overview_RunStatusText_OID
 		if FrostfallRunning.GetValueInt() == 2
+			must_exit = true
 			FrostfallRunning.SetValue(1)
 			ForcePageReset()
 			FrostfallMain.RegisterForModEvents()
 			SendEvent_StopFrostfall()
 		else
+			must_exit = true
 			FrostfallRunning.SetValue(2)
 			ForcePageReset()
 			FrostfallMain.RegisterForModEvents()
@@ -302,9 +339,10 @@ event OnOptionDefault(int option)
 endEvent
 
 
-
-Event StartupComplete()
-
+Event StartupAlmostDone()
+	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine6_OID
+		SetTextOptionValue(Overview_InfoLine6_OID, "$FrostfallGeneralExitMenuPrompt")
+	endif
 endEvent
 Event BodyDatastoreUpdate(float progress)
 	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine1_OID

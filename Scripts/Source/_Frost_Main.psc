@@ -20,12 +20,14 @@ endFunction
 Event StartFrostfall()
 	FrostDebug(1, "Starting Frostfall...")
 	GetClothingDatastoreHandler().InitializeDatastore()
-	
+
+	; Prompt player to exit menu now.
+	SendEvent_StartupAlmostDone()
+
 	; Menu-Mode blocked functions
 	if !self.IsRunning()
 		self.Start()
 	endif
-	FrostDebug(1, "Started Frostfall...")
 	PlayerAlias.ForceRefTo(PlayerRef)
 	StartAllSystems()
 	GetCompatibilitySystem().RunCompatibility()
@@ -40,7 +42,6 @@ Event StopFrostfall()
 endEvent
 
 function StartAllSystems()
-	GetClothingDatastoreHandler().StartSystem()
 	GetClimateSystem().StartSystem()
 	GetHeatSourceSystem().StartSystem()
 	GetClothingSystem().StartSystem()
@@ -68,4 +69,11 @@ endFunction
 function StartModFirstTime()
 	; Display the message
 	; Give the book
+endFunction
+
+function SendEvent_StartupAlmostDone()
+    int handle = ModEvent.Create("Frost_StartupAlmostDone")
+    if handle
+        ModEvent.Send(handle)
+    endif
 endFunction
