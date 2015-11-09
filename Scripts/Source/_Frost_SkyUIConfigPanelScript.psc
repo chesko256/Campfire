@@ -553,6 +553,78 @@ event OnOptionSelect(int option)
 			SetToggleOptionValue(Gameplay_DisableWaiting_OID, true)
 		endif
 		SaveSettingToCurrentProfile("no_waiting", _Frost_Setting_NoWaiting.GetValueInt())
+	elseif option == Interface_FrostShaderOn_OID
+		if _Frost_Setting_FrostShaderOn.GetValueInt() == 2
+			_Frost_Setting_FrostShaderOn.SetValueInt(1)
+			SetToggleOptionValue(Interface_FrostShaderOn_OID, false)
+		else
+			_Frost_Setting_FrostShaderOn.SetValueInt(2)
+			SetToggleOptionValue(Interface_FrostShaderOn_OID, true)
+		endif
+		SaveSettingToCurrentProfile("frost_shader_on", _Frost_Setting_NoWaiting.GetValueInt())
+	elseif option == Interface_WetShaderOn_OID
+		if _Frost_Setting_WetShaderOn.GetValueInt() == 2
+			_Frost_Setting_WetShaderOn.SetValueInt(1)
+			SetToggleOptionValue(Interface_WetShaderOn_OID, false)
+		else
+			_Frost_Setting_WetShaderOn.SetValueInt(2)
+			SetToggleOptionValue(Interface_WetShaderOn_OID, true)
+		endif
+		SaveSettingToCurrentProfile("wet_shader_on", _Frost_Setting_NoWaiting.GetValueInt())
+	elseif option == Interface_SoundEffects_OID
+		if _Frost_Setting_SoundEffects.GetValueInt() == 2
+			_Frost_Setting_SoundEffects.SetValueInt(1)
+			SetToggleOptionValue(Interface_SoundEffects_OID, false)
+		else
+			_Frost_Setting_SoundEffects.SetValueInt(2)
+			SetToggleOptionValue(Interface_SoundEffects_OID, true)
+		endif
+		SaveSettingToCurrentProfile("sound_effects", _Frost_Setting_NoWaiting.GetValueInt())
+	elseif option == Interface_FullScreenEffects_OID
+		if _Frost_Setting_FullScreenEffects.GetValueInt() == 2
+			_Frost_Setting_FullScreenEffects.SetValueInt(1)
+			SetToggleOptionValue(Interface_FullScreenEffects_OID, false)
+		else
+			_Frost_Setting_FullScreenEffects.SetValueInt(2)
+			SetToggleOptionValue(Interface_FullScreenEffects_OID, true)
+		endif
+		SaveSettingToCurrentProfile("full_screen_effects", _Frost_Setting_NoWaiting.GetValueInt())
+	elseif option == Interface_ForceFeedback_OID
+		if _Frost_Setting_ForceFeedback.GetValueInt() == 2
+			_Frost_Setting_ForceFeedback.SetValueInt(1)
+			SetToggleOptionValue(Interface_ForceFeedback_OID, false)
+		else
+			_Frost_Setting_ForceFeedback.SetValueInt(2)
+			SetToggleOptionValue(Interface_ForceFeedback_OID, true)
+		endif
+		SaveSettingToCurrentProfile("force_feedback", _Frost_Setting_NoWaiting.GetValueInt())
+	elseif option == Interface_Animation_OID
+		if _Frost_Setting_Animation.GetValueInt() == 2
+			_Frost_Setting_Animation.SetValueInt(1)
+			SetToggleOptionValue(Interface_Animation_OID, false)
+		else
+			_Frost_Setting_Animation.SetValueInt(2)
+			SetToggleOptionValue(Interface_Animation_OID, true)
+		endif
+		SaveSettingToCurrentProfile("animation", _Frost_Setting_NoWaiting.GetValueInt())
+	elseif option == Interface_1PAnimationAllowed_OID
+		if _Frost_Setting_1PAnimationAllowed.GetValueInt() == 2
+			_Frost_Setting_1PAnimationAllowed.SetValueInt(1)
+			SetToggleOptionValue(Interface_1PAnimationAllowed_OID, false)
+		else
+			_Frost_Setting_1PAnimationAllowed.SetValueInt(2)
+			SetToggleOptionValue(Interface_1PAnimationAllowed_OID, true)
+		endif
+		SaveSettingToCurrentProfile("1P_animation_allowed", _Frost_Setting_NoWaiting.GetValueInt())
+	elseif option == Interface_FollowerAnimation_OID
+		if _Frost_Setting_FollowerAnimation.GetValueInt() == 2
+			_Frost_Setting_FollowerAnimation.SetValueInt(1)
+			SetToggleOptionValue(Interface_FollowerAnimation_OID, false)
+		else
+			_Frost_Setting_FollowerAnimation.SetValueInt(2)
+			SetToggleOptionValue(Interface_FollowerAnimation_OID, true)
+		endif
+		SaveSettingToCurrentProfile("follower_animation", _Frost_Setting_NoWaiting.GetValueInt())
 	endif	
 endEvent
 
@@ -605,6 +677,30 @@ Event OnOptionHighlight(int option)
 		SetInfoText("$FrostfallOptionHighlightSettingDefaultProfile")
 	elseif option == SaveLoad_Enable_OID
 		SetInfoText("$FrostfallOptionHighlightSettingEnableSaveLoad")
+	elseif option == Interface_FrostShaderOn_OID
+		SetInfoText("$")
+	elseif option == Interface_WetShaderOn_OID
+		SetInfoText("$")
+	elseif option == Interface_SoundEffects_OID
+		SetInfoText("$")
+	elseif option == Interface_FullScreenEffects_OID
+		SetInfoText("$")
+	elseif option == Interface_ForceFeedback_OID
+		SetInfoText("$")
+	elseif option == Interface_Animation_OID
+		SetInfoText("$")
+	elseif option == Interface_1PAnimationAllowed_OID
+		SetInfoText("$")
+	elseif option == Interface_FollowerAnimation_OID
+		SetInfoText("$")
+	elseif option == Interface_MeterAspectRatio_OID
+		SetInfoText("$")
+	elseif option == Interface_MeterDisplayTime_OID
+		SetInfoText("$")
+	elseif option == Interface_MeterOpacity_OID
+		SetInfoText("$")
+	elseif option == Interface_MeterDisplayMode_OID
+		SetInfoText("$")
 	endif
 EndEvent
 
@@ -813,6 +909,10 @@ function SwitchToProfile(int aiProfileIndex)
 	if val != -1
 		_Frost_Setting_Animation.SetValueInt(val)
 	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "follower_animation")
+	if val != -1
+		_Frost_Setting_FollowerAnimation.SetValueInt(val)
+	endif
 	val = LoadSettingFromProfile(aiProfileIndex, "1P_animation_allowed")
 	if val != -1
 		_Frost_Setting_1PAnimationAllowed.SetValueInt(val)
@@ -923,6 +1023,7 @@ function GenerateDefaultProfile(int aiProfileIndex)
 	JsonUtil.SetStringValue(profile_path, "profile_name", "Profile " + aiProfileIndex)
 
 	JsonUtil.SetIntValue(profile_path, "animation", 2)
+	JsonUtil.SetIntValue(profile_path, "follower_animation", 2)
 	JsonUtil.SetIntValue(profile_path, "1P_animation_allowed", 1)
 	JsonUtil.SetIntValue(profile_path, "condition_messages", 2)
 	JsonUtil.SetIntValue(profile_path, "display_attributes_in_weathersense", 1)
