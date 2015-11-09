@@ -710,6 +710,16 @@ Event OnOptionSliderOpen(int option)
 		SetSliderDialogDefaultValue(1.0)
 		SetSliderDialogRange(0.0, 3.0)
 		SetSliderDialogInterval(0.1)
+	elseif option == Interface_MeterDisplayTime_OID
+		SetSliderDialogStartValue(_Frost_Setting_MeterDisplayTime.GetValue())
+		SetSliderDialogDefaultValue(3.0)
+		SetSliderDialogRange(1.0, 10.0)
+		SetSliderDialogInterval(1.0)
+	elseif option == Interface_MeterOpacity_OID
+		SetSliderDialogStartValue(_Frost_Setting_MeterOpacity.GetValue())
+		SetSliderDialogDefaultValue(100.0)
+		SetSliderDialogRange(0.0, 100.0)
+		SetSliderDialogInterval(1.0)
 	endif
 EndEvent
 
@@ -718,6 +728,14 @@ Event OnOptionSliderAccept(int option, float value)
 		_Frost_Setting_ExposureRate.SetValue(value)
 		SetSliderOptionValue(Gameplay_ExposureRate_OID, value, "{1}x")
 		SaveSettingToCurrentProfileFloat("exposure_rate", _Frost_Setting_ExposureRate.GetValue())
+	elseif option == Interface_MeterDisplayTime_OID
+		_Frost_Setting_MeterDisplayTime.SetValue(value)
+		SetSliderOptionValue(Gameplay_ExposureRate_OID, value, "{0}")
+		SaveSettingToCurrentProfileFloat("meter_display_time", _Frost_Setting_MeterDisplayTime.GetValue())
+	elseif option == Interface_MeterOpacity_OID
+		_Frost_Setting_MeterOpacity.SetValue(value)
+		SetSliderOptionValue(Gameplay_ExposureRate_OID, value, "{0}%")
+		SaveSettingToCurrentProfileFloat("meter_opacity", _Frost_Setting_MeterOpacity.GetValue())
 	endif
 EndEvent
 
