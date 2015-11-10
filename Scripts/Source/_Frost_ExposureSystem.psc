@@ -19,6 +19,7 @@ GlobalVariable property _Frost_Setting_FullScreenEffects auto
 GlobalVariable property _Frost_Setting_SoundEffects auto
 GlobalVariable property _Frost_Setting_ForceFeedback auto
 GlobalVariable property _Frost_Setting_NoWaiting auto
+GlobalVariable property _Frost_Setting_DisplayTutorials auto
 GlobalVariable property _Frost_WetLevel auto
 GlobalVariable property _Frost_ExposureLevel auto
 GlobalVariable property _Frost_CurrentTemperature auto
@@ -38,6 +39,7 @@ GlobalVariable property EndurancePerkPointsEarned auto
 GlobalVariable property EndurancePerkPointsTotal auto
 GlobalVariable property EndurancePerkPointProgress auto
 GlobalVariable property EndurancePerkPoints auto
+GlobalVariable property _Frost_HelpDone_Exposure auto
 Message property _Frost_HypoState_5 auto
 Message property _Frost_HypoState_4 auto
 Message property _Frost_HypoState_3 auto
@@ -56,6 +58,7 @@ Message property _Frost_FrostbiteMessage_Body auto
 Message property _Frost_FrostbiteMessage_Head auto
 Message property _Frost_FrostbiteMessage_Hands auto
 Message property _Frost_FrostbiteMessage_Feet auto
+Message property _Frost_Help_Exposure auto
 MiscObject property _Frost_DummyItem auto
 ImageSpaceModifier property _Frost_ColdISM_Level5 auto
 ImageSpaceModifier property _Frost_ColdISM_Level4 auto
@@ -777,13 +780,10 @@ function GetFrostbite(bool force_frostbite = false)
 endFunction
 
 function ShowTutorial_Exposure()
-	;/if _DE_Setting_Help.GetValueInt() == 2 && _Frost_HelpDone_ExposurePoints.GetValueInt() == 1
-		if !PlayerIsVampire()
-			_Frost_Help_ExposurePoints.Show()
-			_Frost_HelpDone_ExposurePoints.SetValue(2)
-		endif
+	if _Frost_Setting_DisplayTutorials.GetValueInt() == 2 && _Frost_HelpDone_Exposure.GetValueInt() == 1
+		_Frost_Help_Exposure.Show()
+		_Frost_HelpDone_Exposure.SetValue(2)
 	endif
-	/;
 endFunction
 
 function DisplayWarmUpMessage(bool exposure_increasing, float limit)
@@ -902,22 +902,16 @@ endFunction
 
 ;@TODO: Am I adding apocrypha / etc to oblivion worldspaces?
 ;@TODO: Exception gear
-;@TODO: Implement Settings Profiles
 ;@TODO: Implement all armor compatibility
 ;@TODO: Reimplement tutorials
-;@TODO: Conditionalize Weathersense acquire on hotkey
-;@TODO: Hook up SkyUI MCM
 ;@TODO: Verify vampire crap (including BSV)
 ;@TODO: If the point delta on the limit is < 1, don't display limit message.
 ;@TODO: In rain, coverage should determine if you lose exposure, even in warm areas.
-;@TODO: Check how long to reach max Endurance
 ;@TODO: Riverwood starting gear
 ;@TODO: Global and function for frostfall version
 ;@TODO: Global and function for API version
 
 ; Campfire stuff
 ;@TODO: Smelters still aren't working as heat sources.
-;@TODO: Block Campfire hotkeys on Enchanting / renaming / other crafting menus
 ;@TODO: Add way to put out campfire without frost spell
 ;@TODO: Kick people out of attached furniture objects before pick up
-;@TODO: Public "can cook" injected global

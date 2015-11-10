@@ -12,8 +12,8 @@ E-mail - chesko.tesmod@gmail.com
 
 ===================================================
 
-Version: 1.3
-Date: 9/27/2015
+Version: 1.4
+Date: 11/10/2015
 
 Please see:
 

@@ -245,6 +245,7 @@ GlobalVariable property CampingPerkPoints auto
 GlobalVariable property CampingPerkPointsEarned auto
 GlobalVariable property CampingPerkPointsTotal auto
 GlobalVariable property CampingPerkPointProgress auto
+GlobalVariable property CampfireCanCookFood auto
 MiscObject property _Camp_CampfireItem_GoodWeather auto
 MiscObject property RuinedBook auto
 MiscObject property _Camp_DeadwoodBranch auto
@@ -345,6 +346,11 @@ function DoActivate(ObjectReference akActionRef)
 
     _Camp_LastUsedCampfireSize.SetValueInt(campfire_size)
     _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
+    if campfire_size >= 2 && campfire_stage == 2
+        CampfireCanCookFood.SetValueInt(1)
+    else
+        CampfireCanCookFood.SetValueInt(0)
+    endif
 
     if akActionRef == Game.GetPlayer() && !in_use
         int i = _Camp_Campfire_Menu.Show()

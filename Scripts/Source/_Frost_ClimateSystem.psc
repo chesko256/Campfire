@@ -14,6 +14,8 @@ GlobalVariable property _Frost_CurrentTemperature auto
 GlobalVariable property _Frost_CurrentWaterTemperature auto
 GlobalVariable property _Frost_Setting_WeatherMessages auto
 GlobalVariable property _Frost_RegionDetect_ForceUpdate auto
+GlobalVariable property _Frost_Setting_DisplayTutorials auto
+GlobalVariable property _Frost_HelpDone_Cold auto
 
 FormList property _Frost_WorldspacesExteriorPineForest auto
 FormList property _Frost_WorldspacesExteriorVolcanicTundra auto
@@ -47,6 +49,7 @@ Message property _Frost_WeatherTransMsg_ClearToSnowMountain auto
 Message property _Frost_WeatherTransMsg_ClearToSnowSevere auto
 Message property _Frost_WeatherTransMsg_RainToSnow auto
 Message property _Frost_WeatherTransMsg_RainToSnowSevere auto
+Message property _Frost_Help_Cold auto
 
 Worldspace property Tamriel auto
 
@@ -71,6 +74,7 @@ int property REGION_SOLSTHEIM 				= 11	autoReadOnly
 int property REGION_WYRMSTOOTH 				= 20	autoReadOnly
 int property REGION_DARKEND 				= 21	autoReadOnly
 
+bool first_update = true
 bool in_region_pineforest = false
 bool in_region_volcanictundra = false
 bool in_region_fallforest = false
@@ -142,6 +146,10 @@ function UpdateClimateState()
 	else
 		current_temperature = GetCurrentTemperature(current_weather, region)
 	endif
+
+	if !first_update && current_temperature <= 5
+		ShowTutorial_Cold()
+	endif
 	
 	FrostDebug(0, "%%%% Climate ::: Current Temp: " + current_temperature + ", Region: " + region)
 	_Frost_CurrentTemperature.SetValueInt(current_temperature)
@@ -153,6 +161,7 @@ function UpdateClimateState()
 	last_incoming_weather = incoming_weather
 	last_current_temperature = current_temperature
 	last_region = region
+	first_update = false
 endFunction
 
 bool function IsWeatherTransitioning()
@@ -498,6 +507,13 @@ function ShowWeatherTransitionMessage(Weather current_weather, Weather incoming_
 				FrostDebug(1, "%%%% Climate ::: Weather Transition INCOMING: SNOW     OUTGOING: RAIN")
 			endif
 		endif
+	endif
+endFunction
+
+function ShowTutorial_Cold()
+	if _Frost_Setting_DisplayTutorials.GetValueInt() == 2 && _Frost_HelpDone_Cold.GetValueInt() == 1
+		_Frost_Help_Cold.Show()
+		_Frost_HelpDone_Cold.SetValue(2)
 	endif
 endFunction
 
