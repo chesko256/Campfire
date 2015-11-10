@@ -7,6 +7,7 @@ import _FrostInternal
 
 Actor property PlayerRef auto
 ReferenceAlias property PlayerAlias auto
+ReferenceAlias property RiverwoodFriend auto
 GlobalVariable property _Frost_DatastoreInitialized auto
 GlobalVariable property _Frost_CheckInitialEquipment auto
 GlobalVariable property GameHour auto
@@ -24,9 +25,13 @@ Message property _Frost_FirstStartup_3 auto
 Message property _Frost_StartStarsMsg auto
 Book property _Frost_SurvivorsGuide auto
 Quest property _Frost_TrackingQuest auto
+MiscObject property _Camp_Tent_LeatherSmall1BR_MISC auto
+Armor property _Camp_Cloak_BasicBurlap auto
+Armor property _Camp_ArmorSonsBoots auto
 
 int stars_counter = 0
 bool started_via_stars = false
+bool gave_friend_items = false
 
 Event OnInit()
 	if _Frost_TrackingQuest.GetStage() == 0			;Kicks things off for the player
@@ -36,6 +41,9 @@ Event OnInit()
 EndEvent
 
 Event OnUpdate()
+	; We stop updating when the mod has been started
+	; and the friend items have been granted.
+	
 	if _Frost_TrackingQuest.GetStage() == 10 && !started_via_stars
 		if !IsRefInInterior(PlayerRef) && 		\
 			PlayerRef.GetAngleX() <= -55.0 && 	\
@@ -45,6 +53,11 @@ Event OnUpdate()
 				StartPrompt()
 			endif
 		endif
+		RegisterForSingleUpdate(5)
+	endif
+
+	if !gave_friend_items
+		AddFriendItems()
 		RegisterForSingleUpdate(5)
 	endif
 EndEvent
@@ -168,6 +181,15 @@ function CheckInitialEquipment()
 	endif
 	if Clothing.initial_shield
 		PlayerRef.EquipItem(Clothing.initial_shield, abSilent = true)
+	endif
+endFunction
+
+function AddFriendItems()
+	if RiverwoodFriend.GetActorRef() != none
+		RiverwoodFriend.GetActorRef().AddItem(_Camp_Tent_LeatherSmall1BR_MISC)
+		RiverwoodFriend.GetActorRef().AddItem(_Camp_Cloak_BasicBurlap)
+		RiverwoodFriend.GetActorRef().AddItem(_Camp_ArmorSonsBoots)
+		gave_friend_items = true
 	endif
 endFunction
 
