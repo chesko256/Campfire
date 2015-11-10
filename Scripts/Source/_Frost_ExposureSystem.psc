@@ -20,6 +20,7 @@ GlobalVariable property _Frost_Setting_SoundEffects auto
 GlobalVariable property _Frost_Setting_ForceFeedback auto
 GlobalVariable property _Frost_Setting_NoWaiting auto
 GlobalVariable property _Frost_Setting_DisplayTutorials auto
+GlobalVariable property _Frost_Setting_VampireMode auto
 GlobalVariable property _Frost_WetLevel auto
 GlobalVariable property _Frost_ExposureLevel auto
 GlobalVariable property _Frost_CurrentTemperature auto
@@ -73,6 +74,8 @@ Potion property _Frost_FrostbittenPotionBody auto
 Potion property _Frost_FrostbittenPotionHead auto
 Potion property _Frost_FrostbittenPotionHands auto
 Potion property _Frost_FrostbittenPotionFeet auto
+Keyword property ActorTypeDragon auto
+Keyword property ActorTypeUndead auto
 Keyword property _Frost_FrostbiteBodyKW auto
 Keyword property _Frost_FrostbiteHeadKW auto
 Keyword property _Frost_FrostbiteHandsKW auto
@@ -139,6 +142,7 @@ function Update()
 	;@TODO: Move to state update quest
 	RefreshAbleToWait()
 	RefreshAbleToFastTravel()
+	RefreshVampireState()
 
 	RefreshPlayerStateData()
 	UpdateExposure()
@@ -160,8 +164,9 @@ function UpdateExposure()
 		return
 	endif
 
-	if is_vampire == true && last_vampire_state == false
-		; The player just became a vampire. Cure their Frostbite.
+	; Immunity conditions
+	if PlayerRef.HasKeyword(ActorTypeDragon) || (_Frost_Setting_VampireMode.GetValueInt() == 2 && is_vampire)
+		return
 	endif
 
 	; If enough game time has passed since the last update, modify based on waiting instead.
@@ -303,12 +308,10 @@ function RefreshAbleToWait()
 	;@TODO: Provide FrostUtil.IsAbleToWait()
 endFunction
 
-
 ;@TODO: Possibly wrap in FrostUtil IsAbleToFastTravel() or similar
 ;@TODO: Check fast travel exceptions too, like black book
 function RefreshAbleToFastTravel()
-	; Can the player fast-travel?
-
+	
 	if FrostUtil.GetCompatibilitySystem().isDLC2Loaded
 		WorldSpace my_ws = PlayerRef.GetWorldspace()
 		if _Frost_WorldspacesExteriorOblivion.HasForm(my_ws)
@@ -327,6 +330,14 @@ function RefreshAbleToFastTravel()
 		return
 	endif
 
+	; Is the player near a fast travel exception?
+	if IsNearFastTravelException()
+		if !Game.IsFastTravelControlsEnabled()
+			Game.EnableFastTravel()
+		endif
+		return
+	endif
+
 	if _Frost_Setting_NoFastTravel.GetValueInt() == 2
 		if Game.IsFastTravelControlsEnabled()
 			Game.EnableFastTravel(false)
@@ -335,6 +346,18 @@ function RefreshAbleToFastTravel()
 		if !Game.IsFastTravelControlsEnabled()
 			Game.EnableFastTravel()
 		endif
+	endif
+endFunction
+
+function RefreshVampireState()
+	if _Frost_Setting_VampireMode.GetValueInt() > 0
+		if PlayerRef.HasKeyword(ActorTypeUndead)
+			is_vampire = true
+		else
+			is_vampire = false
+		endif
+	else
+		is_vampire = false
 	endif
 endFunction
 
@@ -741,7 +764,7 @@ function GetColder(int heat_amount, float limit, float game_hours_passed)
 endFunction
 
 function GetFrostbite(bool force_frostbite = false)
-	if IsPlayerVampire()
+	if is_vampire
 		return
 	endif
 	_Frost_ClothingSystem clothing = GetClothingSystem()

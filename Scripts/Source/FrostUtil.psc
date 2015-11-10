@@ -116,11 +116,6 @@ bool function IsWarmEnoughToRemoveGearInTent() global
     return true
 endFunction
 
-bool function IsWarmEnoughToHarvestWood() global
-    ; Responsible for displaying error, if too cold.
-    return true
-endFunction
-
 function Event_LegacyWoodHarvest() global
     ;pass
 endFunction
@@ -320,20 +315,7 @@ if IsPlayerVampire()
     Debug.Trace("Player is a bloodsucker!")
 endif
 * NOTES
-* This function returns true for blah blah blah
-;*********/;
-    ;/FrostfallAPI Frostfall = GetAPI()
-    if Frostfall == none
-        RaiseFrostAPIError()
-        return False
-    endif
-
-    if Frostfall._Frost_WorldspacesExteriorOblivion.HasForm(akReference.GetWorldSpace())
-        return true
-    else
-        return false
-    endif
-    /;
+/;
     return false
 endFunction
 
