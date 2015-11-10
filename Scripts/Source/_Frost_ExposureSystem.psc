@@ -308,7 +308,7 @@ function RefreshAbleToFastTravel()
 
 	if _Frost_Setting_NoFastTravel.GetValueInt() == 2
 		Game.EnableFastTravel(false)
-	else																;Fast Travel Cost = Off
+	else
 		Game.EnableFastTravel()
 	endif
 endFunction
@@ -888,7 +888,6 @@ endFunction
 ;@TODO: Reimplement tutorials
 ;@TODO: Conditionalize Weathersense acquire on hotkey
 ;@TODO: Hook up SkyUI MCM
-;@TODO: Start-up, shut-down procedures
 ;@TODO: Verify vampire crap (including BSV)
 ;@TODO: If the point delta on the limit is < 1, don't display limit message.
 ;@TODO: In rain, coverage should determine if you lose exposure, even in warm areas.

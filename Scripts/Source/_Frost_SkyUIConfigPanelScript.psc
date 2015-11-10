@@ -45,6 +45,8 @@ GlobalVariable property _Frost_Setting_VampireMode auto
 GlobalVariable property _Frost_Setting_NoWaiting auto
 GlobalVariable property _Frost_Setting_Notifications_EquipmentValues auto
 GlobalVariable property _Frost_HotkeyWeathersense auto
+GlobalVariable property _Frost_Setting_FollowerAnimation auto
+GlobalVariable property _Frost_Setting_MeterAspectRatio auto
 
 GlobalVariable property _Frost_DS_Body_InitProgress auto
 GlobalVariable property _Frost_DS_Hands_InitProgress auto
@@ -101,6 +103,11 @@ int Interface_MeterAspectRatio_OID
 int Interface_MeterDisplayTime_OID
 int Interface_MeterOpacity_OID
 int Interface_MeterDisplayMode_OID
+int Interface_DisplayAttributesInWeathersense_OID
+int Interface_AspectRatio_OID
+int Interface_ConditionMessages_OID
+int Interface_WeatherMessages_OID
+int Interface_Notifications_EquipmentValues_OID
 
 int SaveLoad_SelectProfile_OID
 int SaveLoad_RenameProfile_OID
@@ -339,7 +346,7 @@ function PageReset_Equipment()
 		AddTextOption("$FrostfallNotRunningError", "", OPTION_FLAG_DISABLED)
 		return
 	endif/;
-	AddTextOption("Coming in Frostfall 3.1.")
+	AddTextOption("Coming in Frostfall 3.1.", "")
 
 endFunction
 
@@ -350,75 +357,79 @@ function PageReset_Interface()
 		return
 	endif
 
-	AddHeaderOption("$")
+	AddHeaderOption("$FrostfallInterfaceHeaderEffects")
 	if _Frost_Setting_FrostShaderOn.GetValueInt() == 2
-		Interface_FrostShaderOn_OID = AddToggleOption("$", true)
+		Interface_FrostShaderOn_OID = AddToggleOption("$FrostfallInterfaceSettingFrostShader", true)
 	else
-		Interface_FrostShaderOn_OID = AddToggleOption("$", false)
+		Interface_FrostShaderOn_OID = AddToggleOption("$FrostfallInterfaceSettingFrostShader", false)
 	endif
 	if _Frost_Setting_WetShaderOn.GetValueInt() == 2
-		Interface_WetShaderOn_OID = AddToggleOption("$", true)
+		Interface_WetShaderOn_OID = AddToggleOption("$FrostfallInterfaceSettingWetShader", true)
 	else
-		Interface_WetShaderOn_OID = AddToggleOption("$", false)
+		Interface_WetShaderOn_OID = AddToggleOption("$FrostfallInterfaceSettingWetShader", false)
 	endif
 	if _Frost_Setting_SoundEffects.GetValueInt() == 2
-		Interface_SoundEffects_OID = AddToggleOption("$", true)
+		Interface_SoundEffects_OID = AddToggleOption("$FrostfallInterfaceSettingSoundEffects", true)
 	else
-		Interface_SoundEffects_OID = AddToggleOption("$", false)
+		Interface_SoundEffects_OID = AddToggleOption("$FrostfallInterfaceSettingSoundEffects", false)
 	endif
 	if _Frost_Setting_FullScreenEffects.GetValueInt() == 2
-		Interface_FullScreenEffects_OID = AddToggleOption("$", true)
+		Interface_FullScreenEffects_OID = AddToggleOption("$FrostfallInterfaceSettingImagespaceModifiers", true)
 	else
-		Interface_FullScreenEffects_OID = AddToggleOption("$", false)
+		Interface_FullScreenEffects_OID = AddToggleOption("$FrostfallInterfaceSettingImagespaceModifiers", false)
 	endif
 	if _Frost_Setting_ForceFeedback.GetValueInt() == 2
-		Interface_ForceFeedback_OID = AddToggleOption("$", true)
+		Interface_ForceFeedback_OID = AddToggleOption("$FrostfallInterfaceSettingForceFeedback", true)
 	else
-		Interface_ForceFeedback_OID = AddToggleOption("$", false)
+		Interface_ForceFeedback_OID = AddToggleOption("$FrostfallInterfaceSettingForceFeedback", false)
 	endif
 	if _Frost_Setting_Animation.GetValueInt() == 2
-		Interface_Animation_OID = AddToggleOption("$", true)
+		Interface_Animation_OID = AddToggleOption("$FrostfallInterfaceSettingAnimation", true)
 	else
-		Interface_Animation_OID = AddToggleOption("$", false)
+		Interface_Animation_OID = AddToggleOption("$FrostfallInterfaceSettingAnimation", false)
 	endif
 	if _Frost_Setting_1PAnimationAllowed.GetValueInt() == 2
-		Interface_1PAnimationAllowed_OID = AddToggleOption("$", true)
+		Interface_1PAnimationAllowed_OID = AddToggleOption("$FrostfallInterfaceSetting1PAnimation", true)
 	else
-		Interface_1PAnimationAllowed_OID = AddToggleOption("$", false)
+		Interface_1PAnimationAllowed_OID = AddToggleOption("$FrostfallInterfaceSetting1PAnimation", false)
 	endif
 	if _Frost_Setting_FollowerAnimation.GetValueInt() == 2
-		Interface_FollowerAnimation_OID = AddToggleOption("$", true)
+		Interface_FollowerAnimation_OID = AddToggleOption("$FrostfallInterfaceSettingFollowerAnimation", true)
 	else
-		Interface_FollowerAnimation_OID = AddToggleOption("$", false)
+		Interface_FollowerAnimation_OID = AddToggleOption("$FrostfallInterfaceSettingFollowerAnimation", false)
 	endif
 
 	SetCursorPosition(1)
-	AddHeaderOption("$")
-	Interface_MeterAspectRatio_OID = AddMenuOption("$", AspectRatioList[_Frost_Setting_MeterAspectRatio.GetValueInt()])
-	Interface_MeterDisplayTime_OID = AddSliderOption("$", _Frost_Setting_MeterDisplayTime.GetValueInt(), "{0}")
-	Interface_MeterOpacity_OID = AddSliderOption("$", _Frost_Setting_MeterOpacity.GetValue(), "{0}%")
-	Interface_MeterDisplayMode_OID = AddMenuOption("$", MeterDisplayModeList[_Frost_Setting_MeterDisplayMode.GetValueInt()])
+	AddHeaderOption("$FrostfallInterfaceHeaderUserInterface")
+	Interface_MeterAspectRatio_OID = AddMenuOption("$FrostfallInterfaceSettingAspectRatio", AspectRatioList[_Frost_Setting_MeterAspectRatio.GetValueInt()])
+	Interface_MeterDisplayMode_OID = AddMenuOption("$FrostfallInterfaceSettingMeterDisplayMode", MeterDisplayModeList[_Frost_Setting_MeterDisplayMode.GetValueInt()])
+	Interface_MeterDisplayTime_OID = AddSliderOption("$FrostfallInterfaceSettingMeterDisplaytime", _Frost_Setting_MeterDisplayTime.GetValueInt(), "{0}")
+	Interface_MeterOpacity_OID = AddSliderOption("$FrostfallInterfaceSettingMeterOpacity", _Frost_Setting_MeterOpacity.GetValue(), "{0}%")
 	AddEmptyOption()
-	AddHeaderOption("$")
+	AddHeaderOption("$FrostfallInterfaceHeaderNotifications")
 	if _Frost_Setting_ConditionMessages.GetValueInt() == 2
-		Interface_ConditionMessages_OID = AddToggleOption("$", true)
+		Interface_ConditionMessages_OID = AddToggleOption("$FrostfallInterfaceSettingCondition", true)
 	else
-		Interface_ConditionMessages_OID = AddToggleOption("$", false)
+		Interface_ConditionMessages_OID = AddToggleOption("$FrostfallInterfaceSettingCondition", false)
 	endif
 	if _Frost_Setting_WeatherMessages.GetValueInt() == 2
-		Interface_WeatherMessages_OID = AddToggleOption("$", true)
+		Interface_WeatherMessages_OID = AddToggleOption("$FrostfallInterfaceSettingWeather", true)
 	else
-		Interface_WeatherMessages_OID = AddToggleOption("$", false)
+		Interface_WeatherMessages_OID = AddToggleOption("$FrostfallInterfaceSettingWeather", false)
 	endif
 	if _Frost_Setting_DisplayAttributesInWeathersense.GetValueInt() == 2
-		Interface_DisplayAttributesInWeathersense_OID = AddToggleOption("$", true)
+		Interface_DisplayAttributesInWeathersense_OID = AddToggleOption("$FrostfallInterfaceSettingWeathersense", true)
 	else
-		Interface_DisplayAttributesInWeathersense_OID = AddToggleOption("$", false)
+		Interface_DisplayAttributesInWeathersense_OID = AddToggleOption("$FrostfallInterfaceSettingWeathersense", false)
 	endif
-	if _Frost_Setting_Notifications_EquipmentValues.GetValueInt() == 2
-		Interface_Notifications_EquipmentValues_OID = AddToggleOption("$", true)
+	if Compatibility.isUIPackageInstalled
+		Interface_Notifications_EquipmentValues_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentValues", false, OPTION_FLAG_DISABLED)
 	else
-		Interface_Notifications_EquipmentValues_OID = AddToggleOption("$", false)
+		if _Frost_Setting_Notifications_EquipmentValues.GetValueInt() == 2
+			Interface_Notifications_EquipmentValues_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentValues", true)
+		else
+			Interface_Notifications_EquipmentValues_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentValues", false)
+		endif
 	endif
 
 endFunction
@@ -625,6 +636,27 @@ event OnOptionSelect(int option)
 			SetToggleOptionValue(Interface_FollowerAnimation_OID, true)
 		endif
 		SaveSettingToCurrentProfile("follower_animation", _Frost_Setting_NoWaiting.GetValueInt())
+	elseif option == SaveLoad_DefaultProfile_OID
+		bool b = ShowMessage("$FrostfallSaveLoadDefaultProfileConfirm")
+		if b
+			GenerateDefaultProfile(_Frost_Setting_CurrentProfile.GetValueInt())
+			SwitchToProfile(_Frost_Setting_CurrentProfile.GetValueInt())
+			ForcePageReset()
+		endif
+	;/elseif option == Advanced_CampingSkillRestore_OID
+		bool b = ShowMessage("$CampfireAdvancedCampingSkillRestoreConfirm")
+		if b
+			ShowMessage("$CampfireAdvancedCampingSkillRestoreSelect")
+			SetToggleOptionValue(Advanced_CampingSkillRestore_OID, true, true)
+			SetOptionFlags(Advanced_CampingSkillRestoreSlider_OID, OPTION_FLAG_NONE)
+		endif
+	elseif option == Advanced_CampingSkillRespec_OID
+		bool b = ShowMessage("$CampfireAdvancedCampingSkillRespecConfirm")
+		if b
+			RefundCampingSkillPoints()
+			ShowMessage("$CampfireAdvancedCampingSkillRestoreDone", false)
+		endif
+		/;
 	endif	
 endEvent
 
@@ -678,29 +710,37 @@ Event OnOptionHighlight(int option)
 	elseif option == SaveLoad_Enable_OID
 		SetInfoText("$FrostfallOptionHighlightSettingEnableSaveLoad")
 	elseif option == Interface_FrostShaderOn_OID
-		SetInfoText("$")
+		SetInfoText("$FrostfallOptionHighlightSettingFrostShaderToggle")
 	elseif option == Interface_WetShaderOn_OID
-		SetInfoText("$")
+		SetInfoText("$FrostfallOptionHighlightSettingWetShaderToggle")
 	elseif option == Interface_SoundEffects_OID
-		SetInfoText("$")
+		SetInfoText("$FrostfallOptionHighlightSoundEffects")
 	elseif option == Interface_FullScreenEffects_OID
-		SetInfoText("$")
+		SetInfoText("$FrostfallOptionHighlightSettingFullScreenEffectsToggle")
 	elseif option == Interface_ForceFeedback_OID
-		SetInfoText("$")
+		SetInfoText("$FrostfallOptionHighlightForceFeedback")
 	elseif option == Interface_Animation_OID
-		SetInfoText("$")
+		SetInfoText("$FrostfallOptionHighlightAnimation")
 	elseif option == Interface_1PAnimationAllowed_OID
-		SetInfoText("$")
+		SetInfoText("$FrostfallOptionHighlightAnimation1P")
 	elseif option == Interface_FollowerAnimation_OID
-		SetInfoText("$")
+		SetInfoText("$FrostfallOptionHighlightFollowerAnimation")
 	elseif option == Interface_MeterAspectRatio_OID
-		SetInfoText("$")
+		SetInfoText("$FrostfallOptionHighlightUIAspectRatio")
 	elseif option == Interface_MeterDisplayTime_OID
-		SetInfoText("$")
+		SetInfoText("$FrostfallOptionHightlightUIMeterDisplayTime")
 	elseif option == Interface_MeterOpacity_OID
-		SetInfoText("$")
+		SetInfoText("$FrostfallOptionHightlightUIMeterOpacity")
 	elseif option == Interface_MeterDisplayMode_OID
-		SetInfoText("$")
+		SetInfoText("$FrostfallOptionHightlightUIMeterDisplay")
+	elseif option == Interface_ConditionMessages_OID
+		SetInfoText("$FrostfallOptionHighlightSettingConditionMsgToggle")
+	elseif option == Interface_WeatherMessages_OID
+		SetInfoText("$FrostfallOptionHighlightSettingWeatherMsgToggle")
+	elseif option == Interface_DisplayAttributesInWeathersense_OID
+		SetInfoText("$FrostfallOptionHighlightSettingExpValueMsgToggle")
+	elseif option == Interface_Notifications_EquipmentValues_OID
+		SetInfoText("$FrostfallOptionHighlightSettingEquipValuesMsgToggle")
 	endif
 EndEvent
 
@@ -783,6 +823,7 @@ Event OnOptionMenuAccept(int option, int index)
 		bool b = ShowMessage("$FrostfallSaveLoadConfirm")
 		if b
 			SwitchToProfile(index + 1)
+			SetMenuOptionValue(SaveLoad_SelectProfile_OID, _Frost_Setting_CurrentProfile.GetValueInt())
 		endif
 	elseif option == Interface_AspectRatio_OID
 		SetMenuOptionValue(Interface_AspectRatio_OID, AspectRatioList[index])
