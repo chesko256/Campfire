@@ -55,6 +55,17 @@ GlobalVariable property _Frost_DS_Feet_InitProgress auto
 GlobalVariable property _Frost_DS_Cloak_InitProgress auto
 GlobalVariable property _Frost_DatastoreInitialized auto
 
+GlobalVariable property EndurancePerkPointProgress auto
+GlobalVariable property EndurancePerkPoints auto
+GlobalVariable property EndurancePerkPointsEarned auto
+GlobalVariable property EndurancePerkPointsTotal auto
+GlobalVariable property _Frost_PerkRank_Adaptation auto
+GlobalVariable property _Frost_PerkRank_Windbreaker auto
+GlobalVariable property _Frost_PerkRank_FrostWarding auto
+GlobalVariable property _Frost_PerkRank_GlacialSwimmer auto
+GlobalVariable property _Frost_PerkRank_InnerFire auto
+GlobalVariable property _Frost_PerkRank_WellInsulated auto
+
 Spell property _Frost_Weathersense_Spell auto
 
 bool must_exit = false
@@ -104,7 +115,6 @@ int Interface_MeterDisplayTime_OID
 int Interface_MeterOpacity_OID
 int Interface_MeterDisplayMode_OID
 int Interface_DisplayAttributesInWeathersense_OID
-int Interface_AspectRatio_OID
 int Interface_ConditionMessages_OID
 int Interface_WeatherMessages_OID
 int Interface_Notifications_EquipmentValues_OID
@@ -115,13 +125,18 @@ int SaveLoad_DefaultProfile_OID
 int SaveLoad_ProfileHelp_OID
 int SaveLoad_Enable_OID
 
+int Advanced_EnduranceSkillRestore_OID
+int Advanced_EnduranceSkillRestoreSlider_OID
+int Advanced_EnduranceSkillRespec_OID
+
 Event OnConfigInit()
-	Pages = new string[7]
+	Pages = new string[6]
 	Pages[0] = "$FrostfallOverviewPage"
 	Pages[1] = "$FrostfallGameplayPage"
 	Pages[2] = "$FrostfallEquipmentPage"
 	Pages[3] = "$FrostfallInterfacePage"
 	Pages[4] = "$FrostfallSaveLoadPage"
+	Pages[5] = "$FrostfallAdvancedPage"
 
 	MaxExposureModeList = new string[3]
 	MaxExposureModeList[0] = "$FrostfallMaxExposureNothing"
@@ -168,6 +183,8 @@ event OnPageReset(string page)
 		PageReset_Interface()
 	elseif page == "$FrostfallSaveLoadPage"
 		PageReset_SaveLoad()
+	elseif page == "$FrostfallAdvancedPage"
+		PageReset_Advanced()
 	endif
 endEvent
 
@@ -279,12 +296,10 @@ endFunction
 
 function PageReset_Gameplay()
 	SetCursorFillMode(TOP_TO_BOTTOM)
-	;debug
-	;/if FrostfallRunning.GetValueInt() != 2 || must_exit
+	if FrostfallRunning.GetValueInt() != 2 || must_exit
 		AddTextOption("$FrostfallNotRunningError", "", OPTION_FLAG_DISABLED)
 		return
 	endif
-	/;
 
 	AddHeaderOption("$FrostfallGameplayHeaderPlayer")
 	Gameplay_ExposureRate_OID = AddSliderOption("$FrostfallGameplaySettingExposureRate", _Frost_Setting_ExposureRate.GetValue(), "{1}x")
@@ -312,10 +327,14 @@ function PageReset_Gameplay()
 	Gameplay_VampirismMode_OID = AddMenuOption("$FrostfallGameplaySettingPlayerVampirism", VampirismModeList[_Frost_Setting_VampireMode.GetValueInt()])
 
 	AddHeaderOption("$FrostfallGameplayHeaderFastTravel")
-	if _Frost_Setting_NoFastTravel.GetValueInt() == 2
-		Gameplay_DisableFT_OID = AddToggleOption("$FrostfallGameplaySettingFTToggle", true)
+	if _Frost_Setting_NoWaiting.GetValueInt() == 2
+		Gameplay_DisableFT_OID = AddToggleOption("$FrostfallGameplaySettingFTToggle", true, OPTION_FLAG_DISABLED)
 	else
-		Gameplay_DisableFT_OID = AddToggleOption("$FrostfallGameplaySettingFTToggle", false)
+		if _Frost_Setting_NoFastTravel.GetValueInt() == 2
+			Gameplay_DisableFT_OID = AddToggleOption("$FrostfallGameplaySettingFTToggle", true)
+		else
+			Gameplay_DisableFT_OID = AddToggleOption("$FrostfallGameplaySettingFTToggle", false)
+		endif
 	endif
 	if _Frost_Setting_NoWaiting.GetValueInt() == 2
 		Gameplay_DisableWaiting_OID = AddToggleOption("$FrostfallGameplaySettingFTWaiting", true)
@@ -484,6 +503,19 @@ function PageReset_SaveLoad()
 	endif
 endFunction
 
+function PageReset_Advanced()
+	SetCursorFillMode(TOP_TO_BOTTOM)
+	if FrostfallRunning.GetValueInt() != 2 || must_exit
+		AddTextOption("$FrostfallNotRunningError", "", OPTION_FLAG_DISABLED)
+		return
+	endif
+	
+	AddHeaderOption("$FrostfallAdvancedHeaderEnduranceSkill")
+	Advanced_EnduranceSkillRespec_OID = AddTextOption("$FrostfallAdvancedEnduranceSkillRespec", "")
+	Advanced_EnduranceSkillRestore_OID = AddToggleOption("$FrostfallAdvancedEnduranceSkillRestore", false)
+	Advanced_EnduranceSkillRestoreSlider_OID = AddSliderOption("$FrostfallAdvancedEnduranceSkillRestoreAmount", 0, "{0}", OPTION_FLAG_DISABLED)
+endFunction
+
 string function GetProfileName(int aiProfileIndex)
 	;bool b = JsonUtil.Load(CONFIG_PATH + "profile" + aiProfileIndex)
 	return JsonUtil.GetStringValue(CONFIG_PATH + "profile" + aiProfileIndex, "profile_name", missing = "Profile " + aiProfileIndex)
@@ -559,9 +591,11 @@ event OnOptionSelect(int option)
 		if _Frost_Setting_NoWaiting.GetValueInt() == 2
 			_Frost_Setting_NoWaiting.SetValueInt(1)
 			SetToggleOptionValue(Gameplay_DisableWaiting_OID, false)
+			ForcePageReset()
 		else
 			_Frost_Setting_NoWaiting.SetValueInt(2)
 			SetToggleOptionValue(Gameplay_DisableWaiting_OID, true)
+			ForcePageReset()
 		endif
 		SaveSettingToCurrentProfile("no_waiting", _Frost_Setting_NoWaiting.GetValueInt())
 	elseif option == Interface_FrostShaderOn_OID
@@ -636,6 +670,24 @@ event OnOptionSelect(int option)
 			SetToggleOptionValue(Interface_FollowerAnimation_OID, true)
 		endif
 		SaveSettingToCurrentProfile("follower_animation", _Frost_Setting_NoWaiting.GetValueInt())
+	elseif option == Interface_DisplayAttributesInWeathersense_OID
+		if _Frost_Setting_DisplayAttributesInWeathersense.GetValueInt() == 2
+			_Frost_Setting_DisplayAttributesInWeathersense.SetValueInt(1)
+			SetToggleOptionValue(Interface_DisplayAttributesInWeathersense_OID, false)
+		else
+			_Frost_Setting_DisplayAttributesInWeathersense.SetValueInt(2)
+			SetToggleOptionValue(Interface_DisplayAttributesInWeathersense_OID, true)
+		endif
+		SaveSettingToCurrentProfile("display_attributes_in_weathersense", _Frost_Setting_DisplayAttributesInWeathersense.GetValueInt())
+	elseif option == Interface_Notifications_EquipmentValues_OID
+		if _Frost_Setting_Notifications_EquipmentValues.GetValueInt() == 2
+			_Frost_Setting_Notifications_EquipmentValues.SetValueInt(1)
+			SetToggleOptionValue(Interface_Notifications_EquipmentValues_OID, false)
+		else
+			_Frost_Setting_Notifications_EquipmentValues.SetValueInt(2)
+			SetToggleOptionValue(Interface_Notifications_EquipmentValues_OID, true)
+		endif
+		SaveSettingToCurrentProfile("notification_equipmentvalues", _Frost_Setting_Notifications_EquipmentValues.GetValueInt())
 	elseif option == SaveLoad_DefaultProfile_OID
 		bool b = ShowMessage("$FrostfallSaveLoadDefaultProfileConfirm")
 		if b
@@ -643,20 +695,35 @@ event OnOptionSelect(int option)
 			SwitchToProfile(_Frost_Setting_CurrentProfile.GetValueInt())
 			ForcePageReset()
 		endif
-	;/elseif option == Advanced_CampingSkillRestore_OID
-		bool b = ShowMessage("$CampfireAdvancedCampingSkillRestoreConfirm")
+	elseif option == SaveLoad_Enable_OID
+		if _Frost_Setting_AutoSaveLoad.GetValueInt() == 2
+			_Frost_Setting_AutoSaveLoad.SetValueInt(1)
+			SetToggleOptionValue(SaveLoad_Enable_OID, false)
+			JsonUtil.SetIntValue(CONFIG_PATH + "common", "auto_load", 1)
+			JsonUtil.Save(CONFIG_PATH + "common")
+		elseif _Frost_Setting_AutoSaveLoad.GetValueInt() == 1
+			_Frost_Setting_AutoSaveLoad.SetValueInt(2)
+			SetToggleOptionValue(SaveLoad_Enable_OID, true)
+			JsonUtil.SetIntValue(CONFIG_PATH + "common", "auto_load", 2)
+			JsonUtil.Save(CONFIG_PATH + "common")
+			SaveAllSettings(_Frost_Setting_CurrentProfile.GetValueInt())
+		endIf
+		ForcePageReset()
+	elseif option == SaveLoad_ProfileHelp_OID
+		ShowProfileHelp()
+	elseif option == Advanced_EnduranceSkillRespec_OID
+		bool b = ShowMessage("$FrostfallAdvancedEnduranceSkillRespecConfirm")
 		if b
-			ShowMessage("$CampfireAdvancedCampingSkillRestoreSelect")
-			SetToggleOptionValue(Advanced_CampingSkillRestore_OID, true, true)
-			SetOptionFlags(Advanced_CampingSkillRestoreSlider_OID, OPTION_FLAG_NONE)
+			RefundEnduranceSkillPoints()
+			ShowMessage("$FrostfallAdvancedEnduranceSkillRestoreDone", false)
 		endif
-	elseif option == Advanced_CampingSkillRespec_OID
-		bool b = ShowMessage("$CampfireAdvancedCampingSkillRespecConfirm")
+	elseif option == Advanced_EnduranceSkillRestore_OID
+		bool b = ShowMessage("$FrostfallAdvancedEnduranceSkillRestoreConfirm")
 		if b
-			RefundCampingSkillPoints()
-			ShowMessage("$CampfireAdvancedCampingSkillRestoreDone", false)
+			ShowMessage("$FrostfallAdvancedEnduranceSkillRestoreSelect")
+			SetToggleOptionValue(Advanced_EnduranceSkillRestore_OID, true, true)
+			SetOptionFlags(Advanced_EnduranceSkillRestoreSlider_OID, OPTION_FLAG_NONE)
 		endif
-		/;
 	endif	
 endEvent
 
@@ -760,6 +827,11 @@ Event OnOptionSliderOpen(int option)
 		SetSliderDialogDefaultValue(100.0)
 		SetSliderDialogRange(0.0, 100.0)
 		SetSliderDialogInterval(1.0)
+	elseif option == Advanced_EnduranceSkillRestoreSlider_OID
+		SetSliderDialogStartValue(0.0)
+		SetSliderDialogDefaultValue(0.0)
+		SetSliderDialogRange(0, EndurancePerkPointsTotal.GetValue())
+		SetSliderDialogInterval(1.0)
 	endif
 EndEvent
 
@@ -770,12 +842,20 @@ Event OnOptionSliderAccept(int option, float value)
 		SaveSettingToCurrentProfileFloat("exposure_rate", _Frost_Setting_ExposureRate.GetValue())
 	elseif option == Interface_MeterDisplayTime_OID
 		_Frost_Setting_MeterDisplayTime.SetValue(value)
-		SetSliderOptionValue(Gameplay_ExposureRate_OID, value, "{0}")
+		SetSliderOptionValue(Interface_MeterDisplayTime_OID, value, "{0}")
 		SaveSettingToCurrentProfileFloat("meter_display_time", _Frost_Setting_MeterDisplayTime.GetValue())
 	elseif option == Interface_MeterOpacity_OID
 		_Frost_Setting_MeterOpacity.SetValue(value)
-		SetSliderOptionValue(Gameplay_ExposureRate_OID, value, "{0}%")
+		SetSliderOptionValue(Interface_MeterOpacity_OID, value, "{0}%")
 		SaveSettingToCurrentProfileFloat("meter_opacity", _Frost_Setting_MeterOpacity.GetValue())
+	elseif option == Advanced_EnduranceSkillRestoreSlider_OID
+		EndurancePerkPointProgress.SetValue(0.0)
+		EndurancePerkPoints.SetValue(value)
+		EndurancePerkPointsEarned.SetValue(value)
+		ClearEndurancePerks()
+		ShowMessage("$FrostfallAdvancedEnduranceSkillRestoreDone", false)
+		SetOptionFlags(Advanced_EnduranceSkillRestoreSlider_OID, OPTION_FLAG_DISABLED, true)
+		SetToggleOptionValue(Advanced_EnduranceSkillRestore_OID, false)
 	endif
 EndEvent
 
@@ -799,10 +879,10 @@ Event OnOptionMenuOpen(int option)
 		SetMenuDialogOptions(profile_list)
 		SetMenuDialogStartIndex(_Frost_Setting_CurrentProfile.GetValueInt() - 1)
 		SetMenuDialogDefaultIndex(0)
-	elseif option == Interface_AspectRatio_OID
+	elseif option == Interface_MeterAspectRatio_OID
 		SetMenuDialogOptions(AspectRatioList)
 		SetMenuDialogStartIndex(_Frost_Setting_MeterAspectRatio.GetValueInt())
-		SetMenuDialogDefaultIndex(1)
+		SetMenuDialogDefaultIndex(0)
 	elseif option == Interface_MeterDisplayMode_OID
 		SetMenuDialogOptions(MeterDisplayModeList)
 		SetMenuDialogStartIndex(_Frost_Setting_MeterDisplayMode.GetValueInt())
@@ -823,16 +903,21 @@ Event OnOptionMenuAccept(int option, int index)
 		bool b = ShowMessage("$FrostfallSaveLoadConfirm")
 		if b
 			SwitchToProfile(index + 1)
-			SetMenuOptionValue(SaveLoad_SelectProfile_OID, _Frost_Setting_CurrentProfile.GetValueInt())
+			ForcePageReset()
 		endif
-	elseif option == Interface_AspectRatio_OID
-		SetMenuOptionValue(Interface_AspectRatio_OID, AspectRatioList[index])
+	elseif option == Interface_MeterAspectRatio_OID
+		SetMenuOptionValue(Interface_MeterAspectRatio_OID, AspectRatioList[index])
 		_Frost_Setting_MeterAspectRatio.SetValueInt(index)
 		GetInterfaceHandler().SetAspectRatio(index)
 		SaveSettingToCurrentProfile("meter_aspect_ratio", _Frost_Setting_MeterAspectRatio.GetValueInt())
 	elseif option == Interface_MeterDisplayMode_OID
 		SetMenuOptionValue(Interface_MeterDisplayMode_OID, MeterDisplayModeList[index])
 		_Frost_Setting_MeterDisplayMode.SetValueInt(index)
+		if index == 0
+			GetInterfaceHandler().RemoveAllMeters()
+		elseif index == 1
+			GetInterfaceHandler().ForceAllMeters()
+		endif
 		SaveSettingToCurrentProfile("meter_display_mode", _Frost_Setting_MeterDisplayMode.GetValueInt())
 	endif
 EndEvent
@@ -1119,6 +1204,43 @@ function GenerateDefaultProfile(int aiProfileIndex)
 	JsonUtil.Save(profile_path)
 endFunction
 
+function SaveAllSettings(int aiProfileIndex)
+	string profile_path = CONFIG_PATH + "profile" + aiProfileIndex
+	JsonUtil.SetIntValue(profile_path, "animation", _Frost_Setting_Animation.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "follower_animation", _Frost_Setting_FollowerAnimation.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "1P_animation_allowed", _Frost_Setting_1PAnimationAllowed.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "condition_messages", _Frost_Setting_ConditionMessages.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "display_attributes_in_weathersense", _Frost_Setting_DisplayAttributesInWeathersense.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "notification_equipmentvalues", _Frost_Setting_Notifications_EquipmentValues.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "exposure_pause_combat", _Frost_Setting_ExposurePauseCombat.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "exposure_pause_dialogue", _Frost_Setting_ExposurePauseDialogue.GetValueInt())
+	JsonUtil.SetFloatValue(profile_path, "exposure_rate", _Frost_Setting_ExposureRate.GetValue())
+	JsonUtil.SetIntValue(profile_path, "force_feedback", _Frost_Setting_ForceFeedback.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "frost_shader_on", _Frost_Setting_FrostShaderOn.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "full_screen_effects", _Frost_Setting_FullScreenEffects.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "max_exposure_mode", _Frost_Setting_MaxExposureMode.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "meter_display_mode", _Frost_Setting_MeterDisplayMode.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "meter_display_time", _Frost_Setting_MeterDisplayTime.GetValueInt())
+	JsonUtil.SetFloatValue(profile_path, "meter_opacity", _Frost_Setting_MeterOpacity.GetValue())
+	JsonUtil.SetIntValue(profile_path, "movement_penalty", _Frost_Setting_MovementPenalty.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "no_fast_travel", _Frost_Setting_NoFastTravel.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "no_waiting", _Frost_Setting_NoWaiting.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "sound_effects", _Frost_Setting_SoundEffects.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "weather_messages", _Frost_Setting_WeatherMessages.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "weathersense_display_mode", _Frost_Setting_WeathersenseDisplayMode.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "wet_shader_on", _Frost_Setting_WetShaderOn.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "frigid_water_is_lethal", _Frost_Setting_FrigidWaterIsLethal.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "vampire_mode", _Frost_Setting_VampireMode.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "hotkey_weathersense", _Frost_HotkeyWeathersense.GetValueInt())
+	JsonUtil.Save(profile_path)
+endFunction
+
+function ShowProfileHelp()
+	ShowMessage("$FrostfallSaveLoadTopic", false)
+	ShowMessage("$FrostfallSaveLoadTopicCont", false)
+	ShowMessage("$FrostfallSaveLoadTopicCont2", false)
+endFunction
+
 Event StartupAlmostDone()
 	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine6_OID
 		SetTextOptionValue(Overview_InfoLine6_OID, "$FrostfallGeneralExitMenuPrompt")
@@ -1168,4 +1290,19 @@ function RegisterForKeysOnLoad()
 	if _Frost_HotkeyWeathersense.GetValueInt() != 0
 		RegisterForKey(_Frost_HotkeyWeathersense.GetValueInt())
 	endIf
+endFunction
+
+function ClearEndurancePerks()
+	_Frost_PerkRank_Adaptation.SetValueInt(0)
+	_Frost_PerkRank_FrostWarding.SetValueInt(0)
+	_Frost_PerkRank_GlacialSwimmer.SetValueInt(0)
+	_Frost_PerkRank_InnerFire.SetValueInt(0)
+	_Frost_PerkRank_WellInsulated.SetValueInt(0)
+	_Frost_PerkRank_Windbreaker.SetValueInt(0)
+endFunction
+
+function RefundEnduranceSkillPoints()
+	ClearEndurancePerks()
+	EndurancePerkPoints.SetValueInt(EndurancePerkPointsEarned.GetValueInt())
+	EndurancePerkPointProgress.SetValue(0.0)
 endFunction

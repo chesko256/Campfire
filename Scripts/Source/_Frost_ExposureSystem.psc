@@ -18,6 +18,7 @@ GlobalVariable property _Frost_Setting_ConditionMessages auto
 GlobalVariable property _Frost_Setting_FullScreenEffects auto
 GlobalVariable property _Frost_Setting_SoundEffects auto
 GlobalVariable property _Frost_Setting_ForceFeedback auto
+GlobalVariable property _Frost_Setting_NoWaiting auto
 GlobalVariable property _Frost_WetLevel auto
 GlobalVariable property _Frost_ExposureLevel auto
 GlobalVariable property _Frost_CurrentTemperature auto
@@ -64,6 +65,7 @@ Sound property _Frost_Female_FreezingToDeathSM auto
 Sound property _Frost_Male_FreezingSM auto
 Sound property _Frost_Male_FreezingToDeathSM auto
 Spell property _Frost_InnerFireSpell auto
+Spell property _Frost_NoWait_Spell auto
 Potion property _Frost_FrostbittenPotionBody auto
 Potion property _Frost_FrostbittenPotionHead auto
 Potion property _Frost_FrostbittenPotionHands auto
@@ -130,6 +132,7 @@ function Update()
 
 	this_update_time = Game.GetRealHoursPassed()
 	this_update_game_time = Utility.GetCurrentGameTime()
+	RefreshAbleToWait()
 	RefreshAbleToFastTravel()
 	RefreshPlayerStateData()
 	UpdateExposure()
@@ -280,13 +283,20 @@ function StoreLastPlayerState()
 	last_exposure_level = exposure_level
 endFunction
 
-;/function WaitStateUpdate()
-	;@TODO: Drive this with a reference alias instead, add all vanilla bed rolls + _Camp_TentLayDownMarker to _Frost_SleepObjects
-	; and condition against _Frost_Setting_NoWaitingOutdoors and _Camp_ConditionValues.IsPlayerInInterior
-
-	;@TODO: Provide FrostUtil.PlayerAbleToWait()
+function RefreshAbleToWait()
+	bool has_spell = PlayerRef.HasSpell(_Frost_NoWait_Spell)
+	if _Frost_Setting_NoWaiting.GetValueInt() == 2 && !IsRefInInterior(PlayerRef)
+		if !has_spell
+			PlayerRef.AddSpell(_Frost_NoWait_Spell, false)
+		endif
+	else
+		if has_spell
+			PlayerRef.RemoveSpell(_Frost_NoWait_Spell)
+		endif
+	endif
+	;@TODO: Provide FrostUtil.IsAbleToWait()
 endFunction
-/;
+
 
 ;@TODO: Possibly wrap in FrostUtil IsAbleToFastTravel() or similar
 ;@TODO: Check fast travel exceptions too, like black book
@@ -296,20 +306,29 @@ function RefreshAbleToFastTravel()
 	if FrostUtil.GetCompatibilitySystem().isDLC2Loaded
 		WorldSpace my_ws = PlayerRef.GetWorldspace()
 		if _Frost_WorldspacesExteriorOblivion.HasForm(my_ws)
-			Game.EnableFastTravel()
+			if !Game.IsFastTravelControlsEnabled()
+				Game.EnableFastTravel()
+			endif
 			return
 		endif
 	endif
+
 	; Is the player riding a dragon?
 	if (_Frost_MainQuest as _Frost_ConditionValues).IsRidingFlyingMount
-		Game.EnableFastTravel()
+		if !Game.IsFastTravelControlsEnabled()
+			Game.EnableFastTravel()
+		endif
 		return
 	endif
 
 	if _Frost_Setting_NoFastTravel.GetValueInt() == 2
-		Game.EnableFastTravel(false)
+		if Game.IsFastTravelControlsEnabled()
+			Game.EnableFastTravel(false)
+		endif
 	else
-		Game.EnableFastTravel()
+		if !Game.IsFastTravelControlsEnabled()
+			Game.EnableFastTravel()
+		endif
 	endif
 endFunction
 

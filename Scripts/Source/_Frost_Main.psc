@@ -16,6 +16,7 @@ Armor property _Frost_DummyHelmet auto
 Armor property _Frost_DummyGauntlets auto
 Armor property _Frost_DummyBoots auto
 Armor property _Frost_DummyShield auto
+Spell property _Frost_NoWait_Spell auto
 Message property _Frost_StartingUp auto
 Message property _Frost_FirstStartup_1 auto
 Message property _Frost_FirstStartup_2 auto
@@ -91,6 +92,10 @@ Event StopFrostfall()
 	endif
 	PlayerAlias.Clear()
 	StopAllSystems()
+	if !Game.IsFastTravelControlsEnabled()
+		Game.EnableFastTravel()
+	endif
+	PlayerRef.RemoveSpell(_Frost_NoWait_Spell)
 	GetInterfaceHandler().RemoveAllMeters()
 endEvent
 
@@ -117,6 +122,7 @@ function StopAllSystems()
 	GetCoverageSystem().StopSystem()
 	GetExposureSystem().StopSystem()
 	GetWetnessSystem().StopSystem()
+	Utility.Wait(2)
 endFunction
 
 function CheckInitialEquipment()
@@ -127,9 +133,13 @@ function CheckInitialEquipment()
 	PlayerRef.AddItem(_Frost_DummyBoots, 1, true)
 	PlayerRef.AddItem(_Frost_DummyShield, 1, true)
 	PlayerRef.EquipItem(_Frost_DummyCuirass, abSilent = true)
+	Utility.Wait(0.2)
 	PlayerRef.EquipItem(_Frost_DummyHelmet, abSilent = true)
+	Utility.Wait(0.2)
 	PlayerRef.EquipItem(_Frost_DummyGauntlets, abSilent = true)
+	Utility.Wait(0.2)
 	PlayerRef.EquipItem(_Frost_DummyBoots, abSilent = true)
+	Utility.Wait(0.2)
 	PlayerRef.EquipItem(_Frost_DummyShield, abSilent = true)
 	Utility.Wait(1.0)
 	_Frost_CheckInitialEquipment.SetValue(1)
@@ -142,15 +152,19 @@ function CheckInitialEquipment()
 	_Frost_ClothingSystem Clothing = GetClothingSystem()
 	if Clothing.initial_body
 		PlayerRef.EquipItem(Clothing.initial_body, abSilent = true)
+		Utility.Wait(0.2)
 	endif
 	if Clothing.initial_head
 		PlayerRef.EquipItem(Clothing.initial_head, abSilent = true)
+		Utility.Wait(0.2)
 	endif
 	if Clothing.initial_hands
 		PlayerRef.EquipItem(Clothing.initial_hands, abSilent = true)
+		Utility.Wait(0.2)
 	endif
 	if Clothing.initial_feet
 		PlayerRef.EquipItem(Clothing.initial_feet, abSilent = true)
+		Utility.Wait(0.2)
 	endif
 	if Clothing.initial_shield
 		PlayerRef.EquipItem(Clothing.initial_shield, abSilent = true)
