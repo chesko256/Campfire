@@ -135,8 +135,12 @@ function Update()
 
 	this_update_time = Game.GetRealHoursPassed()
 	this_update_game_time = Utility.GetCurrentGameTime()
+	
+	;@TODO: Move to state update quest
 	RefreshAbleToWait()
 	RefreshAbleToFastTravel()
+	AddFriendItems()
+
 	RefreshPlayerStateData()
 	UpdateExposure()
 
@@ -903,13 +907,13 @@ endFunction
 ;@TODO: Am I adding apocrypha / etc to oblivion worldspaces?
 ;@TODO: Exception gear
 ;@TODO: Implement all armor compatibility
-;@TODO: Reimplement tutorials
 ;@TODO: Verify vampire crap (including BSV)
-;@TODO: If the point delta on the limit is < 1, don't display limit message.
-;@TODO: In rain, coverage should determine if you lose exposure, even in warm areas.
 ;@TODO: Riverwood starting gear
 ;@TODO: Global and function for frostfall version
 ;@TODO: Global and function for API version
+
+;@TODO: If the point delta on the limit is < 1, don't display limit message.
+;@TODO: In rain, coverage should determine if you lose exposure, even in warm areas.
 
 ; Campfire stuff
 ;@TODO: Smelters still aren't working as heat sources.
