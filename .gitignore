@@ -11,9 +11,12 @@
 
 #Build files
 !Campfire_BuildRelease.py
+!Frostfall_BuildRelease.py
 !Archive.exe
 !CampfireArchiveBuilder.txt
 !CampfireArchiveManifest.txt
+!FrostfallArchiveBuilder.txt
+!FrostfallArchiveManifest.txt
 
 #Top-level files
 !Campfire.esp
