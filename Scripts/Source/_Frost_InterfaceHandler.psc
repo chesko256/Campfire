@@ -474,6 +474,9 @@ function Weathersense_ContextualDisplay(int temp_level, bool bSkipDisplayHandlin
 endFunction
 
 function ExposureMeter_FadeUp(int iterations_remaining, bool flash = false)
+	if _Frost_Setting_MeterDisplayMode.GetValueInt() == 0
+		return
+	endif
 	exposure_meter_displayed = true
 	ExposureMeter.FadeTo(_Frost_Setting_MeterOpacity.GetValue(), 2.0)
 	if flash
@@ -483,6 +486,9 @@ function ExposureMeter_FadeUp(int iterations_remaining, bool flash = false)
 endFunction
 
 function WetnessMeter_FadeUp(int iterations_remaining, bool flash = false)
+	if _Frost_Setting_MeterDisplayMode.GetValueInt() == 0
+		return
+	endif
 	wetness_meter_displayed = true
 	WetnessMeter.FadeTo(_Frost_Setting_MeterOpacity.GetValue(), 2.0)
 	if flash
@@ -493,6 +499,9 @@ endFunction
 
 
 function WeathersenseMeter_FadeUp(int iterations_remaining, bool flash = false)
+	if _Frost_Setting_MeterDisplayMode.GetValueInt() == 0
+		return
+	endif
 	weathersense_meter_displayed = true
 	WeathersenseMeter.FadeTo(_Frost_Setting_MeterOpacity.GetValue(), 2.0)
 	if flash
@@ -505,6 +514,13 @@ function RemoveAllMeters()
 	ExposureMeter.Alpha = 0.0
 	WetnessMeter.Alpha = 0.0
 	WeathersenseMeter.Alpha = 0.0
+endFunction
+
+function ForceAllMeters()
+	float opacity = _Frost_Setting_MeterOpacity.GetValue()
+	ExposureMeter.Alpha = opacity
+	WetnessMeter.Alpha = opacity
+	WeathersenseMeter.Alpha = opacity
 endFunction
 
 function SetMeterPositions()
@@ -553,9 +569,9 @@ function SetAspectRatio(int ratio)
 		ExposureMeter.X = 1219.0
 		ExposureMeter.Y = 75.2
 		WetnessMeter.X = 1494.25
-		WetnessMeter.Y = 114.0
+		WetnessMeter.Y = 104.0
 		WeathersenseMeter.X = 916.75
-		WeathersenseMeter.Y = 16.0
+		WeathersenseMeter.Y = 12.0
 	elseif ratio == 1
 		ExposureMeter.X = 1219.0
 		ExposureMeter.Y = 75.2
@@ -567,8 +583,8 @@ function SetAspectRatio(int ratio)
 		ExposureMeter.X = 1219.0
 		ExposureMeter.Y = 75.2
 		WetnessMeter.X = 1494.25
-		WetnessMeter.Y = 112.0
+		WetnessMeter.Y = 110.0
 		WeathersenseMeter.X = 916.75
-		WeathersenseMeter.Y = 14.0
+		WeathersenseMeter.Y = 13.0
 	endif
 endFunction

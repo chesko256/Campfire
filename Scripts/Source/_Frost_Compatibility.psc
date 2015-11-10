@@ -320,10 +320,8 @@ function RunCompatibility()
 	trace("[Frostfall]                            Frostfall compatibility check complete.   		                        ")
 	trace("[Frostfall]======================================================================================================")
 
-	if isSKYUILoaded
-		;CampConfig.LoadProfileOnStartup()
-	endif
-
+	FrostConfig.LoadProfileOnStartup()
+	
 	RegisterForControlsOnLoad()
 	RegisterForEventsOnLoad()
 	RegisterForMenusOnLoad()
