@@ -75,6 +75,70 @@ float[] Wyrmstooth_Center_PolyY
 float[] Wyrmstooth_West_PolyX
 float[] Wyrmstooth_West_PolyY
 
+;#Leveled Lists================================================================
+LeveledItem property LItemSpellTomes00AllIllusion auto
+LeveledItem property LItemSpellTomes00AllSpells auto
+LeveledItem property LItemSpellTomes00Illusion auto
+LeveledItem property LItemSpellTomes00Spells auto
+LeveledItem property LItemSpellTomes25AllAlteration auto
+LeveledItem property LItemSpellTomes25Alteration auto
+LeveledItem property LItemSpellTomes25AllIllusion auto
+LeveledItem property LItemSpellTomes25Illusion auto
+LeveledItem property LItemSpellTomes25AllConjuration auto
+LeveledItem property LItemSpellTomes25Conjuration auto
+LeveledItem property LItemSpellTomes50AllAlteration auto
+LeveledItem property LItemSpellTomes50Alteration auto
+LeveledItem property LItemSpellTomes50Spells auto
+LeveledItem property LitemSpellTomes50AllDestruction auto
+LeveledItem property LitemSpellTomes50Destruction auto
+LeveledItem property LItemSpellTomes50AllIllusion auto
+LeveledItem property LItemSpellTomes50Illusion auto
+LeveledItem property LItemSpellTOmes50AllRestoration auto
+LeveledItem property LItemSpellTOmes50Restoration auto
+LeveledItem property LItemSpellTomes50AllConjuration auto
+LeveledItem property LItemSpellTomes50Conjuration auto
+LeveledItem property LItemSpellTomes75Conjuration auto
+LeveledItem property LItemSpellTomes75AllConjuration auto
+LeveledItem property LItemSpellTomes75Alteration auto
+LeveledItem property LItemSpellTomes75AllAlteration auto
+LeveledItem property LItemSpellTomes75Spells auto
+LeveledItem property LItemSpellTomes100Conjuration auto
+LeveledItem property MGRitualConjurationBooks auto
+LeveledItem property LItemScroll00Skill auto
+LeveledItem property LItemScroll25Skill auto
+LeveledItem property LItemScroll50Skill auto
+LeveledItem property LItemScroll75Skill auto
+LeveledItem property LItemScroll100Skill auto
+
+;#Spellbooks===================================================================
+book property _Frost_SpellTomeSoothe1 auto
+book property _Frost_SpellTomeFoxskin auto
+book property _Frost_SpellTomeSoothe2 auto
+book property _Frost_SpellTomeBoundCloakLesser auto
+book property _Frost_SpellTomeWolfskin auto
+book property _Frost_SpellTomeVaporBlast auto
+book property _Frost_SpellTomeSoothe3 auto
+book property _Frost_SpellTomeKindle auto
+book property _Frost_SpellTomeBoundCloakGreater auto
+book property _Frost_SpellTomeConjureShelterLesser auto
+book property _Frost_SpellTomeTransmuteWood auto
+book property _Frost_SpellTomeBearskin auto
+book property _Frost_SpellTomeConjureShelterGreater auto
+
+;#Scrolls======================================================================
+scroll property _Frost_ScrollSoothe auto
+scroll property _Frost_ScrollBask auto
+scroll property _Frost_ScrollFoxskin auto
+scroll property _Frost_ScrollBoundCloakLesser auto
+scroll property _Frost_ScrollRevel auto
+scroll property _Frost_ScrollWolfskin auto
+scroll property _Frost_ScrollVaporBlast auto
+scroll property _Frost_ScrollKindle auto
+scroll property _Frost_ScrollBoundCloakGreater auto
+scroll property _Frost_ScrollBearskin auto
+scroll property _Frost_ScrollConjureShelterLesser auto
+scroll property _Frost_ScrollConjureShelterGreater auto
+
 ;#Campfire Perk System=============================================================
 
 
@@ -83,6 +147,7 @@ Message property _Frost_CriticalError_SKSE auto
 Message property _Frost_CriticalError_Campfire auto
 Message property _Frost_CriticalError_SkyUIInterfacePackage auto
 Weather property DLC2AshStorm auto hidden
+bool added_spell_books = false
 
 ;#Upgrade Flags====================================================================
 
@@ -577,8 +642,10 @@ function VanillaGameLoadUp()
 		PlayerAlias.ForceRefTo(PlayerRef)
 	endif
 	/;
+	if added_spell_books == false
+		AddSpellBooks()
+	endif
 	
-	;@TODO: Move to Frostfall
 	; TreeReachTreeStump01 = Game.GetFormFromFile(0x000B8A75, "Skyrim.esm") as TreeObject
 endFunction
 
@@ -591,6 +658,70 @@ function AddStartupSpells()
 	endif
 
 	((self as ReferenceAlias) as _Frost_PlayerSpellMonitor).UpdateFrostResistBonus()
+endFunction
+
+function AddSpellBooks()
+	if added_spell_books == false
+		;0
+		LItemSpellTomes00AllIllusion.AddForm(_Frost_SpellTomeSoothe1, 1, 1)
+		LItemSpellTomes00AllSpells.AddForm(_Frost_SpellTomeSoothe1, 1, 1)
+		LItemSpellTomes00Illusion.AddForm(_Frost_SpellTomeSoothe1, 1, 1)
+		LItemSpellTomes00Spells.AddForm(_Frost_SpellTomeSoothe1, 1, 1)
+		LItemScroll00Skill.AddForm(_Frost_ScrollSoothe, 1, 1)
+
+		;25
+		LItemSpellTomes25AllAlteration.AddForm(_Frost_SpellTomeFoxskin, 1, 1)
+		LItemSpellTomes25Alteration.AddForm(_Frost_SpellTomeFoxskin, 1, 1)
+		LItemSpellTomes25AllIllusion.AddForm(_Frost_SpellTomeSoothe2, 1, 1)
+		LItemSpellTomes25Illusion.AddForm(_Frost_SpellTomeSoothe2, 1, 1)
+		LItemSpellTomes25AllConjuration.AddForm(_Frost_SpellTomeBoundCloakLesser, 1, 1)
+		LItemSpellTomes25Conjuration.AddForm(_Frost_SpellTomeBoundCloakLesser, 1, 1)
+		LItemScroll25Skill.AddForm(_Frost_ScrollBask, 1, 1)
+		LItemScroll25Skill.AddForm(_Frost_ScrollFoxskin, 1, 1)
+		LItemScroll25Skill.AddForm(_Frost_ScrollBoundCloakLesser, 1, 1)
+
+		;50
+		LItemSpellTomes50AllAlteration.AddForm(_Frost_SpellTomeWolfskin, 1, 1)
+		LItemSpellTomes50Alteration.AddForm(_Frost_SpellTomeWolfskin, 1, 1)
+		LItemSpellTomes50Spells.AddForm(_Frost_SpellTomeWolfskin, 1, 1)
+		LitemSpellTomes50AllDestruction.AddForm(_Frost_SpellTomeVaporBlast, 1, 1)
+		LitemSpellTomes50Destruction.AddForm(_Frost_SpellTomeVaporBlast, 1, 1)
+		LItemSpellTomes50Spells.AddForm(_Frost_SpellTomeVaporBlast, 1, 1)
+		LItemSpellTomes50AllIllusion.AddForm(_Frost_SpellTomeSoothe3, 1, 1)
+		LItemSpellTomes50Illusion.AddForm(_Frost_SpellTomeSoothe3, 1, 1)
+		LItemSpellTomes50Spells.AddForm(_Frost_SpellTomeSoothe3, 1, 1)
+		LItemSpellTOmes50AllRestoration.AddForm(_Frost_SpellTomeKindle, 1, 1)
+		LItemSpellTOmes50Restoration.AddForm(_Frost_SpellTomeKindle, 1, 1)
+		LItemSpellTomes50Spells.AddForm(_Frost_SpellTomeKindle, 1, 1)
+		LItemSpellTomes50AllConjuration.AddForm(_Frost_SpellTomeBoundCloakGreater, 1, 1)
+		LItemSpellTomes50Conjuration.AddForm(_Frost_SpellTomeBoundCloakGreater, 1, 1)
+		LItemSpellTomes50Spells.AddForm(_Frost_SpellTomeBoundCloakGreater, 1, 1)
+		LItemScroll50Skill.AddForm(_Frost_ScrollRevel, 1, 1)
+		LItemScroll50Skill.AddForm(_Frost_ScrollWolfskin, 1, 1)
+		LItemScroll50Skill.AddForm(_Frost_ScrollVaporBlast, 1, 1)
+		LItemScroll50Skill.AddForm(_Frost_ScrollKindle, 1, 1)
+		LItemScroll50Skill.AddForm(_Frost_ScrollBoundCloakGreater, 1, 1)
+
+		;75
+		; LItemSpellTomes75AllConjuration.AddForm(_Frost_SpellTomeConjureShelterLesser, 1, 1)
+		; LItemSpellTomes75Conjuration.AddForm(_Frost_SpellTomeConjureShelterLesser, 1, 1)
+		; LItemSpellTomes75Spells.AddForm(_Frost_SpellTomeConjureShelterLesser, 1, 1)
+		LItemSpellTomes75AllAlteration.AddForm(_Frost_SpellTomeTransmuteWood, 1, 1)
+		LItemSpellTomes75Alteration.AddForm(_Frost_SpellTomeTransmuteWood, 1, 1)
+		LItemSpellTomes75Spells.AddForm(_Frost_SpellTomeTransmuteWood, 1, 1)
+		LItemSpellTomes75AllAlteration.AddForm(_Frost_SpellTomeBearskin, 1, 1)
+		LItemSpellTomes75Alteration.AddForm(_Frost_SpellTomeBearskin, 1, 1)
+		LItemSpellTomes75Spells.AddForm(_Frost_SpellTomeBearskin, 1, 1)
+		LItemScroll75Skill.AddForm(_Frost_ScrollBearskin, 1, 1)
+		; LItemScroll75Skill.AddForm(_Frost_ScrollConjureShelterLesser, 1, 1)
+
+		;100
+		; LItemSpellTomes100Conjuration.AddForm(_Frost_SpellTomeConjureShelterGreater, 1, 1)
+		; MGRitualConjurationBooks.AddForm(_Frost_SpellTomeConjureShelterGreater, 1, 1)
+		; LItemScroll100Skill.AddForm(_Frost_ScrollConjureShelterGreater, 1, 1)
+
+		added_spell_books = true
+	endif
 endFunction
 
 function RegisterForKeysOnLoad()
