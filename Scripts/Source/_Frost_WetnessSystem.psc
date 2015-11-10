@@ -21,11 +21,14 @@ GlobalVariable property _Frost_AttributeCoverage auto
 GlobalVariable property _Frost_Calc_MaxCoverage auto
 GlobalVariable property _Frost_WetLevel auto
 GlobalVariable property _Frost_Setting_ConditionMessages auto
+GlobalVariable property _Frost_Setting_DisplayTutorials auto
+GlobalVariable property _Frost_HelpDone_Wet auto
 Message property _Frost_WetStateMsg_Wet3 auto
 Message property _Frost_WetStateMsg_Wet2 auto
 Message property _Frost_WetStateMsg_Wet1 auto
 Message property _Frost_WetStateMsg_Dry auto
 Message property _Frost_WetStateMsg_LeakingWater auto
+Message property _Frost_Help_Wet auto
 Formlist property _Frost_Waterfalls auto
 
 int last_wet_level = 0
@@ -138,6 +141,9 @@ function ShowWetStateMessage(int wet_level)
 			_Frost_WetStateMsg_Wet1.Show()
 		elseif wet_level == 0 && last_wet_level != 0
 			_Frost_WetStateMsg_Dry.Show()
+		endif
+		if wet_level == 3 && last_wet_level != 3
+			ShowTutorial_Wetness()
 		endif
 	endif
 endFunction
@@ -258,5 +264,12 @@ function SendEvent_UpdateWetnessMeter()
 	int handle = ModEvent.Create("Frost_UpdateWetnessMeter")
 	if handle
 		ModEvent.Send(handle)
+	endif
+endFunction
+
+function ShowTutorial_Wetness()
+	if _Frost_Setting_DisplayTutorials.GetValueInt() == 2 && _Frost_HelpDone_Wet.GetValueInt() == 1
+		_Frost_Help_Wet.Show()
+		_Frost_HelpDone_Wet.SetValue(2)
 	endif
 endFunction

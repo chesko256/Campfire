@@ -7,9 +7,30 @@ Complete Camping System
 Change Log
 
 ===================================================
-Release 1.4 ()
+Release 1.4 (11/10/2015)
+
+Changes for Players
+
+    Cleaned Pelts are now Fur Plates, and is the same Fur Plate used by Complete Crafting Overhaul, Immersive Armors, and other mods. If any of these compatible mods are installed, they will share this crafting component.
+
+    A wide number of back-end changes were made to ensure a very deep level of compatibility with Complete Crafting Overhaul and Complete Alchemy and Cooking Overhaul (thanks, Kryptopyr!)
+
+        Experience should no longer be granted when crafting certain survival equipment.
+        Cloaks can now only be enchanted with elemental Resist enchantments.
+
+Changes for Modders
+
+    Purchasing a perk using the Campfire Perk System (in any skill tree) generates a new Campfire_CampfirePerkPurchased SKSE mod event.
+    A number of injected records were added to support increased compatibility. Will be documented soon.
+
 Bug Fixes
-    Changes related to heat sources to prepare for the launch of Frostfall 3.0.
+
+    Hotkeys should now be correctly blocked when in a crafting menu.
+    Fixed a critical bug in the equipment processing code.
+    Fixed an issue where Frostfall would think that there was a fire nearby any time the player was near a tent.
+    Removed an unnecessary check in the head equipment section of the equipment monitor script.
+    Removed unnecessary debug message when exiting a cell that has a tent in it.
+
 
 Release 1.3 (9/27/2015)
 
