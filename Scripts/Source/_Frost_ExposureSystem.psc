@@ -139,7 +139,6 @@ function Update()
 	;@TODO: Move to state update quest
 	RefreshAbleToWait()
 	RefreshAbleToFastTravel()
-	AddFriendItems()
 
 	RefreshPlayerStateData()
 	UpdateExposure()
