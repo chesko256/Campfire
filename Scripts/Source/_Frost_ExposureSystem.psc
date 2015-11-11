@@ -44,6 +44,7 @@ GlobalVariable property EndurancePerkPointProgress auto
 GlobalVariable property EndurancePerkPoints auto
 GlobalVariable property _Frost_HelpDone_Exposure auto
 FormList property _Frost_FastTravelExceptions auto
+FormList property _Frost_ExposureExceptions auto
 FormList property _Frost_SleepObjects auto
 Message property _Frost_HypoState_5 auto
 Message property _Frost_HypoState_4 auto
@@ -165,6 +166,11 @@ function UpdateExposure()
 	endif
 
 	if _Frost_Setting_ExposurePauseCombat.GetValueInt() == 2 && PlayerRef.IsInCombat()
+		return
+	endif
+
+	ObjectReference exception = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Frost_ExposureExceptions, PlayerRef, 600.0)
+	if exception
 		return
 	endif
 

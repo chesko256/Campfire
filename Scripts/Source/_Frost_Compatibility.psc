@@ -35,6 +35,7 @@ bool property isIMALoaded auto hidden						;Immersive Armors 7.1
 bool property isWTHLoaded auto hidden						;Wyrmstooth
 bool property isDRKLoaded auto hidden						;DarkenD
 bool property isSKYRELoaded auto hidden						;Skyim Redone
+bool property isSCLoaded auto hidden						;Scenic Carriages
 
 ;#Merchant Containers==========================================================
 ;ObjectReference property MerchantRiverwoodTraderContainer auto
@@ -44,6 +45,7 @@ Formlist property _Camp_WorldspacesInteriors auto
 Formlist property _Frost_SevereWeatherList auto
 Formlist property _Frost_OvercastWeatherList auto
 Formlist property _Frost_FastTravelExceptions auto
+Formlist property _Frost_ExposureExceptions auto
 
 ;#Trees============================================================================
 ;@TODO: Move to Frostfall
@@ -377,6 +379,24 @@ function RunCompatibility()
 				_Frost_OvercastWeatherList.AddForm(Game.GetFormFromFile(0x01044825, "ClimatesOfTamriel.esm"))			;CoTOvercast_3
 				_Frost_OvercastWeatherList.AddForm(Game.GetFormFromFile(0x01044824, "ClimatesOfTamriel.esm"))			;CoTOvercast_2
 				_Frost_OvercastWeatherList.AddForm(Game.GetFormFromFile(0x010437F9, "ClimatesOfTamriel.esm"))			;CoTOvercast_1
+			endif
+		endif
+	endif
+
+	if isSCLoaded
+		isSCLoaded = IsPluginLoaded(0x010215C5, "ScenicCarriages.esp")
+		if !isSCLoaded
+			;Scenic Carriages was removed since the last save.
+		endif
+	else
+		isSCLoaded = IsPluginLoaded(0x010215C5, "ScenicCarriages.esp")
+		if isSCLoaded
+			Form myCarriage = Game.GetFormFromFile(0x010215C5, "ScenicCarriages.esp")
+			if !(_Frost_ExposureExceptions.HasForm(myCarriage))
+				_Frost_ExposureExceptions.AddForm(myCarriage)
+			endif
+			if !(_Frost_FastTravelExceptions.HasForm(myCarriage))
+				_Frost_FastTravelExceptions.AddForm(myCarriage)
 			endif
 		endif
 	endif
