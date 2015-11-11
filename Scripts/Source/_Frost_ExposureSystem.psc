@@ -41,6 +41,8 @@ GlobalVariable property EndurancePerkPointsTotal auto
 GlobalVariable property EndurancePerkPointProgress auto
 GlobalVariable property EndurancePerkPoints auto
 GlobalVariable property _Frost_HelpDone_Exposure auto
+FormList property _Frost_FastTravelExceptions auto
+FormList property _Frost_SleepObjects auto
 Message property _Frost_HypoState_5 auto
 Message property _Frost_HypoState_4 auto
 Message property _Frost_HypoState_3 auto
@@ -115,7 +117,7 @@ bool in_tent = false
 bool tent_is_warm = false
 bool in_shelter = false
 bool is_meditating = false
-bool is_vampire = false
+bool property is_vampire = false auto hidden
 bool last_vampire_state = false
 bool in_interior = false
 bool was_in_interior = false
@@ -296,7 +298,9 @@ endFunction
 
 function RefreshAbleToWait()
 	bool has_spell = PlayerRef.HasSpell(_Frost_NoWait_Spell)
-	if _Frost_Setting_NoWaiting.GetValueInt() == 2 && !IsRefInInterior(PlayerRef)
+	if _Frost_Setting_NoWaiting.GetValueInt() == 2 && 	\
+		!IsRefInInterior(PlayerRef) && 					\
+		!Game.FindClosestReferenceOfAnyTypeInListFromRef(_Frost_SleepObjects, PlayerRef, 600.0)
 		if !has_spell
 			PlayerRef.AddSpell(_Frost_NoWait_Spell, false)
 		endif
@@ -331,7 +335,8 @@ function RefreshAbleToFastTravel()
 	endif
 
 	; Is the player near a fast travel exception?
-	if IsNearFastTravelException()
+	ObjectReference exception = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Frost_FastTravelExceptions, PlayerRef,  600.0)
+	if exception
 		if !Game.IsFastTravelControlsEnabled()
 			Game.EnableFastTravel()
 		endif
@@ -358,6 +363,11 @@ function RefreshVampireState()
 		endif
 	else
 		is_vampire = false
+	endif
+
+	if is_vampire != last_vampire_state
+		(_Frost_MainQuest as _Frost_ConditionValues).IsVampire = is_vampire
+		SendEvent_UpdateWarmth()
 	endif
 endFunction
 
@@ -924,6 +934,13 @@ function SendEvent_OnRescuePlayer(bool in_water)
 		ModEvent.PushBool(handle, in_water)
 		ModEvent.Send(handle)
 	endif
+endFunction
+
+function SendEvent_UpdateWarmth()
+    int handle = ModEvent.Create("Frost_UpdateWarmth")
+    if handle
+        ModEvent.Send(handle)
+    endif
 endFunction
 
 ;@TODO: Am I adding apocrypha / etc to oblivion worldspaces?

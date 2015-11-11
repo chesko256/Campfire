@@ -172,12 +172,7 @@ endFunction
 
 
 bool function IsNearFastTravelException() global
-	;if Game.FindClosestReferenceOfAnyTypeInListFromRef(_DE_FastTravelExceptions, pPlayer,  600.0) != None
-	;	return true
-	;else
-	;	return false
-	;endif
-    return false
+	
 endFunction
 
 int function GetCurrentTemperature() global
@@ -217,14 +212,13 @@ int function GetWeatherClassificationActual(Weather akWeather) global
     
     int classification = akWeather.GetClassification()
     
-    ;@TODO
-    ;_Frost_Compatibility Compatibility = GetCompatibilitySystem()
+    _Frost_Compatibility Compatibility = GetCompatibilitySystem()
     if classification == 3
-        ;if Compatibility.isDLC2Loaded && akWeather == Compatibility.DLC2AshStorm
-        ;    return 1
-        ;else
+        if Compatibility.isDLC2Loaded && akWeather == Compatibility.DLC2AshStorm
+            return 1
+        else
             return 3
-        ;endif
+        endif
     else
         return classification
     endif

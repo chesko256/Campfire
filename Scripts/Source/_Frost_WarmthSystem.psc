@@ -37,6 +37,10 @@ Event UpdateWarmth()
 	warmth += _Frost_PerkRank_Adaptation.GetValueInt() * 20
 	warmth += GetSpellBonus()
 
+	if GetExposureSystem().is_vampire
+		warmth += 100
+	endif
+
 	_FrostInternal.FrostDebug(0, "**** Warmth ::: Warmth Value: " + warmth)
 	_Frost_AttributeWarmth.SetValueInt(warmth)
 	SendEvent_UpdateBottomBarWarmth(warmth)
