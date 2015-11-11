@@ -362,12 +362,11 @@ function PageReset_Gameplay()
 	SetCursorPosition(1)
 
 	AddHeaderOption("$FrostfallGameplayHeaderWorld")
-	AddTextOption("$FrostfallGameplaySettingsFollowers", "$FrostfallComingSoon", OPTION_FLAG_DISABLED)
-	AddTextOption("$FrostfallGameplaySettingsNPCs", "$FrostfallComingSoon", OPTION_FLAG_DISABLED)
-	AddTextOption("$FrostfallGameplaySettingsLightableFires", "$FrostfallComingSoon", OPTION_FLAG_DISABLED)
-	AddTextOption("$FrostfallGameplaySettingsHarvestFromEnvironment", "$FrostfallComingSoon", OPTION_FLAG_DISABLED)
-	AddTextOption("$FrostfallGameplaySettingsHarvestFromWoodPiles", "$FrostfallComingSoon", OPTION_FLAG_DISABLED)
-
+	AddTextOption("$FrostfallComingSoon", "", OPTION_FLAG_DISABLED)
+	AddEmptyOption()
+	AddEmptyOption()
+	AddEmptyOption()
+	AddEmptyOption()
 	AddEmptyOption()
 	AddEmptyOption()
 
@@ -789,81 +788,106 @@ event OnOptionDefault(int option)
 	if option == Interface_Animation_OID
 		_Frost_Setting_Animation.SetValueInt(2)
 		SetToggleOptionValue(Interface_Animation_OID, true)
+		SaveSettingToCurrentProfile("animation", _Frost_Setting_Animation.GetValueInt())
 	elseif option == Interface_FollowerAnimation_OID
 		_Frost_Setting_FollowerAnimation.SetValueInt(2)
 		SetToggleOptionValue(Interface_FollowerAnimation_OID, true)
+		SaveSettingToCurrentProfile("follower_animation", _Frost_Setting_FollowerAnimation.GetValueInt())
 	elseif option == Interface_1PAnimationAllowed_OID
 		_Frost_Setting_1PAnimationAllowed.SetValueInt(1)
 		SetToggleOptionValue(Interface_1PAnimationAllowed_OID, false)
+		SaveSettingToCurrentProfile("1P_animation_allowed", _Frost_Setting_1PAnimationAllowed.GetValueInt())
 	elseif option == Interface_ConditionMessages_OID
 		_Frost_Setting_ConditionMessages.SetValueInt(2)
 		SetToggleOptionValue(Interface_ConditionMessages_OID, true)
+		SaveSettingToCurrentProfile("condition_messages", _Frost_Setting_ConditionMessages.GetValueInt())
 	elseif option == Interface_DisplayAttributesInWeathersense_OID
 		_Frost_Setting_DisplayAttributesInWeathersense.SetValueInt(1)
 		SetToggleOptionValue(Interface_DisplayAttributesInWeathersense_OID, false)
+		SaveSettingToCurrentProfile("display_attributes_in_weathersense", _Frost_Setting_DisplayAttributesInWeathersense.GetValueInt())
 	elseif option == Interface_Notifications_EquipmentValues_OID
 		_Frost_Setting_Notifications_EquipmentValues.SetValueInt(2)
 		SetToggleOptionValue(Interface_Notifications_EquipmentValues_OID, true)
+		SaveSettingToCurrentProfile("notification_equipmentvalues", _Frost_Setting_Notifications_EquipmentValues.GetValueInt())
 	elseif option == Interface_Notifications_EquipmentSummary_OID
 		_Frost_Setting_Notifications_EquipmentSummary.SetValueInt(2)
 		SetToggleOptionValue(Interface_Notifications_EquipmentSummary_OID, true)
+		SaveSettingToCurrentProfile("notification_equipmentsummary", _Frost_Setting_Notifications_EquipmentSummary.GetValueInt())
 	elseif option == Gameplay_ExposurePauseCombat_OID
 		_Frost_Setting_ExposurePauseCombat.SetValueInt(2)
 		SetToggleOptionValue(Gameplay_ExposurePauseCombat_OID, true)
+		SaveSettingToCurrentProfile("exposure_pause_combat", _Frost_Setting_ExposurePauseCombat.GetValueInt())
 	elseif option == Gameplay_ExposurePauseDialogue_OID
 		_Frost_Setting_ExposurePauseDialogue.SetValueInt(2)
 		SetToggleOptionValue(Gameplay_ExposurePauseDialogue_OID, true)
+		SaveSettingToCurrentProfile("exposure_pause_dialogue", _Frost_Setting_ExposurePauseDialogue.GetValueInt())
 	elseif option == Interface_ForceFeedback_OID
 		_Frost_Setting_ForceFeedback.SetValueInt(2)
 		SetToggleOptionValue(Interface_ForceFeedback_OID, true)
+		SaveSettingToCurrentProfile("force_feedback", _Frost_Setting_ForceFeedback.GetValueInt())
 	elseif option == Interface_FrostShaderOn_OID
 		_Frost_Setting_FrostShaderOn.SetValueInt(2)
 		SetToggleOptionValue(Interface_FrostShaderOn_OID, true)
+		SaveSettingToCurrentProfile("frost_shader_on", _Frost_Setting_FrostShaderOn.GetValueInt())
 	elseif option == Interface_FullScreenEffects_OID
 		_Frost_Setting_FullScreenEffects.SetValueInt(2)
 		SetToggleOptionValue(Interface_FullScreenEffects_OID, true)
+		SaveSettingToCurrentProfile("full_screen_effects", _Frost_Setting_FullScreenEffects.GetValueInt())
 	elseif option == Gameplay_MovementPenalty_OID
 		_Frost_Setting_MovementPenalty.SetValueInt(2)
 		SetToggleOptionValue(Gameplay_MovementPenalty_OID, true)
+		SaveSettingToCurrentProfile("movement_penalty", _Frost_Setting_MovementPenalty.GetValueInt())
 	elseif option == Gameplay_DisableFT_OID
 		_Frost_Setting_NoFastTravel.SetValueInt(1)
 		SetToggleOptionValue(Gameplay_DisableFT_OID, false)
+		SaveSettingToCurrentProfile("no_fast_travel", _Frost_Setting_NoFastTravel.GetValueInt())
 	elseif option == Gameplay_DisableWaiting_OID
 		_Frost_Setting_NoWaiting.SetValueInt(1)
 		SetToggleOptionValue(Gameplay_DisableWaiting_OID, false)
+		SaveSettingToCurrentProfile("no_waiting", _Frost_Setting_NoWaiting.GetValueInt())
 	elseif option == Interface_WeatherMessages_OID
 		_Frost_Setting_WeatherMessages.SetValueInt(2)
 		SetToggleOptionValue(Interface_WeatherMessages_OID, true)
+		SaveSettingToCurrentProfile("weather_messages", _Frost_Setting_WeatherMessages.GetValueInt())
 	elseif option == Interface_WetShaderOn_OID
 		_Frost_Setting_WetShaderOn.SetValueInt(2)
 		SetToggleOptionValue(Interface_WetShaderOn_OID, true)
+		SaveSettingToCurrentProfile("wet_shader_on", _Frost_Setting_WetShaderOn.GetValueInt())
 	elseif option == Gameplay_FrigidWater_OID
 		_Frost_Setting_FrigidWaterIsLethal.SetValueInt(2)
 		SetToggleOptionValue(Gameplay_FrigidWater_OID, true)
+		SaveSettingToCurrentProfile("frigid_water_is_lethal", _Frost_Setting_FrigidWaterIsLethal.GetValueInt())
 	elseif option == Interface_SoundEffects_OID
 		_Frost_Setting_SoundEffects.SetValueInt(2)
 		SetToggleOptionValue(Interface_SoundEffects_OID, true)
+		SaveSettingToCurrentProfile("sound_effects", _Frost_Setting_SoundEffects.GetValueInt())
 	
 	elseif option == Gameplay_ExposureRate_OID
 		_Frost_Setting_ExposureRate.SetValue(1.0)
 		SetSliderOptionValue(Gameplay_ExposureRate_OID, 1.0, "{1}x")
+		SaveSettingToCurrentProfileFloat("exposure_rate", _Frost_Setting_ExposureRate.GetValue())
 	elseif option == Interface_MeterDisplayTime_OID
 		_Frost_Setting_MeterDisplayTime.SetValueInt(3)
 		SetSliderOptionValue(Interface_MeterDisplayTime_OID, 3.0, "{0}")
+		SaveSettingToCurrentProfile("meter_display_time", _Frost_Setting_MeterDisplayTime.GetValueInt())
 	elseif option == Interface_MeterOpacity_OID
 		_Frost_Setting_MeterOpacity.SetValue(100.0)
 		SetSliderOptionValue(Interface_MeterOpacity_OID, 100.0, "{0}%")
+		SaveSettingToCurrentProfileFloat("meter_opacity", _Frost_Setting_MeterOpacity.GetValue())
 
 	elseif option == Gameplay_MaxExposureMode_OID
-		_Frost_Setting_MaxExposureMode.SetValue(2)
+		_Frost_Setting_MaxExposureMode.SetValueInt(2)
 		SetMenuOptionValue(Gameplay_MaxExposureMode_OID, MaxExposureModeList[1])
+		SaveSettingToCurrentProfile("max_exposure_mode", _Frost_Setting_MaxExposureMode.GetValueInt())
 	elseif option == Interface_MeterDisplayMode_OID
 		_Frost_Setting_MeterDisplayMode.SetValueInt(2)
 		SetMenuOptionValue(Interface_MeterDisplayMode_OID, MeterDisplayModeList[2])
+		SaveSettingToCurrentProfile("meter_display_mode", _Frost_Setting_MeterDisplayMode.GetValueInt())
 		GetInterfaceHandler().RemoveAllMeters()
 	elseif option == Gameplay_VampirismMode_OID
 		_Frost_Setting_VampireMode.SetValueInt(1)
 		SetMenuOptionValue(Gameplay_VampirismMode_OID, VampirismModeList[1])
+		SaveSettingToCurrentProfile("vampire_mode", _Frost_Setting_VampireMode.GetValueInt())
 
 	elseif option == Gameplay_WeathersenseHotkey_OID
 		UnregisterForKey(_Frost_HotkeyWeathersense.GetValueInt())
