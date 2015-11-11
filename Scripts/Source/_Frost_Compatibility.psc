@@ -29,7 +29,6 @@ bool property isLastSeedLoaded auto hidden					;Last Seed
 bool property isCOTLoaded auto hidden						;Climates of Tamriel
 bool property isIMALoaded auto hidden						;Immersive Armors 7.1
 bool property isWTHLoaded auto hidden						;Wyrmstooth
-bool property isDRKLoaded auto hidden						;DarkenD
 bool property isSKYRELoaded auto hidden						;Skyim Redone
 bool property isSCLoaded auto hidden						;Scenic Carriages
 bool property isNFHLoaded auto hidden						;Northborn Fur Hoods
@@ -39,6 +38,7 @@ bool property isCOSDGLoaded auto hidden						;Cloaks of Skyrim - Dawnguard
 bool property isAEALoaded auto hidden						;Aesir Armor
 bool property isWACLoaded auto hidden						;Wet and Cold
 bool property isSSILoaded auto hidden						;Summerset Isle
+bool property isDRKLoaded auto hidden						;DarkenD
 
 ;#Merchant Containers==========================================================
 ;ObjectReference property MerchantRiverwoodTraderContainer auto
@@ -50,6 +50,8 @@ Formlist property _Frost_SevereWeatherList auto
 Formlist property _Frost_OvercastWeatherList auto
 Formlist property _Frost_FastTravelExceptions auto
 Formlist property _Frost_ExposureExceptions auto
+Formlist property _Camp_HeatSources_All auto
+Formlist property _Camp_HeatSources_Other auto
 
 ;#Trees============================================================================
 ;TreeObject property TreeReachTreeStump01 auto hidden
@@ -79,6 +81,9 @@ float[] Wyrmstooth_Center_PolyX
 float[] Wyrmstooth_Center_PolyY
 float[] Wyrmstooth_West_PolyX
 float[] Wyrmstooth_West_PolyY
+
+float[] DNKD_Phalos_Frozen_PolyX
+float[] DNKD_Phalos_Frozen_PolyY
 
 ;#Leveled Lists================================================================
 LeveledItem property LItemSpellTomes00AllIllusion auto
@@ -418,7 +423,17 @@ function RunCompatibility()
 		endif
 	endif
 
-
+	if isDRKLoaded
+		isDRKLoaded = IsPluginLoaded(0x00000D62, "Darkend.esp")
+		if !isDRKLoaded
+			;DarkenD was removed.
+		endif
+	else
+		isDRKLoaded = IsPluginLoaded(0x00000D62, "Darkend.esp")
+		if isDRKLoaded
+			DRKLoadUp()
+		endif
+	endif
 
 	RunCompatibilityArmors()
 	
@@ -663,6 +678,37 @@ function DLC1LoadUp()
 		DLC1_FVBoss_PolyY[4] = -7244
 	endif
 	
+endFunction
+
+function DRKLoadUp()
+	form orb = Game.GetFormFromFile(0x000B8474, "Darkend.esp")
+	if !_Camp_HeatSources_All.HasForm(orb)
+		_Camp_HeatSources_All.AddForm(orb)
+	endif
+	if !_Camp_HeatSources_Other.HasForm(orb)
+		_Camp_HeatSources_Other.AddForm(orb)
+	endif
+	if !WS_Darkend
+		WS_Darkend = Game.GetFormFromFile(0x00000D62, "Darkend.esp") as Worldspace
+	endif
+	if !DNKD_Phalos_Frozen_PolyX
+		DNKD_Phalos_Frozen_PolyX = new float[4]
+	endif
+	if !DNKD_Phalos_Frozen_PolyY
+		DNKD_Phalos_Frozen_PolyY = new float[4]
+	endif
+	if !DNKD_Phalos_Frozen_PolyX[0]
+		DNKD_Phalos_Frozen_PolyX[0] = 931.0
+		DNKD_Phalos_Frozen_PolyX[1] = 19951.0
+		DNKD_Phalos_Frozen_PolyX[2] = 28261.0
+		DNKD_Phalos_Frozen_PolyX[3] = -4750.0
+	endif
+	if !DNKD_Phalos_Frozen_PolyY[0]
+		DNKD_Phalos_Frozen_PolyY[0] = 14542.0
+		DNKD_Phalos_Frozen_PolyY[1] = 6015.0
+		DNKD_Phalos_Frozen_PolyY[2] = 49880.0
+		DNKD_Phalos_Frozen_PolyY[3] = 49880.0
+	endif
 endFunction
 
 function DLC2LoadUp()
@@ -945,8 +991,11 @@ int function GetPlayerRegionTemp_Wyrmstooth(float afPosX, float afPosY)
 endFunction
 
 int function GetPlayerRegionTemp_Darkend(float afPosX, float afPosY)
-	;@TODO
-	return 10
+	if IsPointInPolygon(DNKD_Phalos_Frozen_PolyX, DNKD_Phalos_Frozen_PolyY, afPosX, afPosY)
+		return -10
+	else
+		return 5
+	endif
 endFunction
 
 bool function IsPointInPolygon(float[] polyX, float[] polyY, float x, float y)

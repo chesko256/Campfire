@@ -13,6 +13,7 @@ Formlist property _Camp_HeatSources_Fire auto
 Formlist property _Camp_HeatSources_Fire_Small auto
 Formlist property _Camp_HeatSources_Fire_Medium auto
 Formlist property _Camp_HeatSources_Fire_Large auto
+Formlist property _Camp_HeatSources_Other auto
 Keyword property LocTypeInn auto
 
 Quest property _Frost_MainQuest auto
@@ -35,6 +36,8 @@ function GetHeatSourceData()
             current_heat_size = SetHeatSourceSize(2)
         elseif _Camp_HeatSources_Fire_Large.HasForm(heat_source_object)
             current_heat_size = SetHeatSourceSize(3)
+        elseif _Camp_HeatSources_Other.HasForm(heat_source_object)
+            current_heat_size = SetHeatSourceSize(2)
         else
             if distance_from_heat <= 450.0
                 current_heat_size = SetHeatSourceSize(2)
