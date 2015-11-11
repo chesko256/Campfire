@@ -38,12 +38,14 @@ bool property isCOSLoaded auto hidden						;Cloaks of Skyrim
 bool property isCOSDGLoaded auto hidden						;Cloaks of Skyrim - Dawnguard
 bool property isAEALoaded auto hidden						;Aesir Armor
 bool property isWACLoaded auto hidden						;Wet and Cold
+bool property isSSILoaded auto hidden						;Summerset Isle
 
 ;#Merchant Containers==========================================================
 ;ObjectReference property MerchantRiverwoodTraderContainer auto
 
 ;#FormLists====================================================================
 Formlist property _Camp_WorldspacesInteriors auto
+Formlist property _Frost_WorldspacesFTException auto
 Formlist property _Frost_SevereWeatherList auto
 Formlist property _Frost_OvercastWeatherList auto
 Formlist property _Frost_FastTravelExceptions auto
@@ -389,6 +391,34 @@ function RunCompatibility()
 			endif
 		endif
 	endif
+
+	if isSSILoaded
+		isSSILoaded = IsPluginLoaded(0x00AE416D, "summersetisles.esp")
+		if !isSSILoaded
+			;Summerset Isle is not loaded.
+		endif
+	else
+		isSSILoaded = IsPluginLoaded(0x00AE416D, "summersetisles.esp")
+		if isSSILoaded
+			Form ssi_1 = Game.GetFormFromFile(0x00AE416D, "summersetisles.esp")
+			Form ssi_2 = Game.GetFormFromFile(0x002822DC, "summersetisles.esp")
+			Form ssi_3 = Game.GetFormFromFile(0x0026C9F0, "summersetisles.esp")
+			Form ssi_4 = Game.GetFormFromFile(0x000C7888, "summersetisles.esp")
+			Form ssi_5 = Game.GetFormFromFile(0x000AA978, "summersetisles.esp")
+			Form ssi_6 = Game.GetFormFromFile(0x000A351C, "summersetisles.esp")
+
+			if !(_Frost_WorldspacesFTException.HasForm(ssi_1))
+				_Frost_WorldspacesFTException.AddForm(ssi_1)
+				_Frost_WorldspacesFTException.AddForm(ssi_2)
+				_Frost_WorldspacesFTException.AddForm(ssi_3)
+				_Frost_WorldspacesFTException.AddForm(ssi_4)
+				_Frost_WorldspacesFTException.AddForm(ssi_5)
+				_Frost_WorldspacesFTException.AddForm(ssi_6)
+			endif
+		endif
+	endif
+
+
 
 	RunCompatibilityArmors()
 	

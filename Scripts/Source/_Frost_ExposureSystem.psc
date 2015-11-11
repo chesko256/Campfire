@@ -46,6 +46,8 @@ GlobalVariable property _Frost_HelpDone_Exposure auto
 FormList property _Frost_FastTravelExceptions auto
 FormList property _Frost_ExposureExceptions auto
 FormList property _Frost_SleepObjects auto
+FormList property _Frost_WorldspacesFTException auto
+FormList property _Frost_WorldspacesExteriorOblivion auto
 Message property _Frost_HypoState_5 auto
 Message property _Frost_HypoState_4 auto
 Message property _Frost_HypoState_3 auto
@@ -85,8 +87,6 @@ Keyword property _Frost_FrostbiteBodyKW auto
 Keyword property _Frost_FrostbiteHeadKW auto
 Keyword property _Frost_FrostbiteHandsKW auto
 Keyword property _Frost_FrostbiteFeetKW auto
-
-FormList property _Frost_WorldspacesExteriorOblivion auto
 
 float property MIN_EXPOSURE = 0.0 autoReadOnly
 float property MAX_EXPOSURE = 120.0 autoReadOnly
@@ -330,7 +330,7 @@ function RefreshAbleToFastTravel()
 	
 	if FrostUtil.GetCompatibilitySystem().isDLC2Loaded
 		WorldSpace my_ws = PlayerRef.GetWorldspace()
-		if _Frost_WorldspacesExteriorOblivion.HasForm(my_ws)
+		if _Frost_WorldspacesExteriorOblivion.HasForm(my_ws) || _Frost_WorldspacesFTException.HasForm(my_ws)
 			if !Game.IsFastTravelControlsEnabled()
 				Game.EnableFastTravel()
 			endif
