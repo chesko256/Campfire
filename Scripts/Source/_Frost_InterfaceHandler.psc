@@ -455,19 +455,19 @@ function Weathersense_ContextualDisplay(int temp_level, bool bSkipDisplayHandlin
 			WeathersenseMeter.SetColors(0x33517C, 0x66A3F8)
 		elseif temp_level == 5
 			WeathersenseMeter.SetPercent(0.5)
-			WeathersenseMeter.SetColors(0x004997, 0x005CBD)
+			WeathersenseMeter.SetColors(0x33517C, 0x66A3F8)
 		elseif temp_level == 4
 			WeathersenseMeter.SetPercent(0.4)
-			WeathersenseMeter.SetColors(0x00419C, 0x0052C3)
+			WeathersenseMeter.SetColors(0x33517C, 0x66A3F8)
 		elseif temp_level == 3
 			WeathersenseMeter.SetPercent(0.3)
-			WeathersenseMeter.SetColors(0x002457, 0x003D92)
+			WeathersenseMeter.SetColors(0x33517C, 0x66A3F8)
 		elseif temp_level == 2
 			WeathersenseMeter.SetPercent(0.2)
-			WeathersenseMeter.SetColors(0x001534, 0x002457)
+			WeathersenseMeter.SetColors(0x33517C, 0x66A3F8)
 		elseif temp_level == 1
 			WeathersenseMeter.SetPercent(0.1)
-			WeathersenseMeter.SetColors(0x00050C, 0x000A18)
+			WeathersenseMeter.SetColors(0x33517C, 0x66A3F8)
 		endif
 		WeathersenseMeter_FadeUp(_Frost_Setting_MeterDisplayTime.GetValueInt())
 	endif
