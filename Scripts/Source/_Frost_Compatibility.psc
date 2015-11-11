@@ -37,6 +37,7 @@ bool property isWICLoaded auto hidden						;Winter is Coming
 bool property isCOSLoaded auto hidden						;Cloaks of Skyrim
 bool property isCOSDGLoaded auto hidden						;Cloaks of Skyrim - Dawnguard
 bool property isAEALoaded auto hidden						;Aesir Armor
+bool property isWACLoaded auto hidden						;Wet and Cold
 
 ;#Merchant Containers==========================================================
 ;ObjectReference property MerchantRiverwoodTraderContainer auto
@@ -470,6 +471,21 @@ function RunCompatibility()
 		if isAEALoaded
 			;Aesir Armor was just added.
 			AEALoadUp()
+		endif
+	endif
+
+	if isWACLoaded
+		isWACLoaded = IsPluginLoaded(0x02002314, "WetandCold.esp")
+		if !isWACLoaded
+			;Wet and Cold was removed since the last save.
+		else
+			WACLoadUp()
+		endif
+	else
+		isWACLoaded = IsPluginLoaded(0x02002314, "WetandCold.esp")
+		if isWACLoaded
+			;Wet and Cold was just added.
+			WACLoadUp()
 		endif
 	endif
 	
@@ -1425,4 +1441,56 @@ function AEALoadUp()
 	handler.AddDatastoreEntryByKey("31541___AesirArmor.esp", 4, 21, 14) ; feet full
 	handler.AddDatastoreEntryByKey("131560___AesirArmor.esp", 4, 21, 14) ; feet full
 	handler.AddDatastoreEntryByKey("49194___AesirArmor.esp", 4, 21, 14) ; feet full
+endFunction
+
+function WACLoadUp()
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+	handler.AddDatastoreEntryByKey("860640___WetandCold.esp", 7, 10, 10) ; _WetCloak1 linen
+	handler.AddDatastoreEntryByKey("860649___WetandCold.esp", 7, 10, 10) ; _WetCloak1_Black linen
+	handler.AddDatastoreEntryByKey("864795___WetandCold.esp", 7, 10, 10) ; _WetCloak1_Blue linen
+	handler.AddDatastoreEntryByKey("864791___WetandCold.esp", 7, 10, 10) ; _WetCloak1_Gray linen
+	handler.AddDatastoreEntryByKey("864794___WetandCold.esp", 7, 10, 10) ; _WetCloak1_Green linen
+	handler.AddDatastoreEntryByKey("864796___WetandCold.esp", 7, 10, 10) ; _WetCloak1_Purple linen
+	handler.AddDatastoreEntryByKey("864792___WetandCold.esp", 7, 10, 10) ; _WetCloak1_Red linen
+	handler.AddDatastoreEntryByKey("864793___WetandCold.esp", 7, 10, 10) ; _WetCloak1_Yellow linen
+	handler.AddDatastoreEntryByKey("415000___WetandCold.esp", 7, 40, 12) ; _WetCloakFur1 fur
+	handler.AddDatastoreEntryByKey("514265___WetandCold.esp", 7, 40, 12) ; _WetCloakFur1_Black fur
+	handler.AddDatastoreEntryByKey("416384___WetandCold.esp", 7, 40, 12) ; _WetCloakFur1_Brown fur
+	handler.AddDatastoreEntryByKey("416380___WetandCold.esp", 7, 40, 12) ; _WetCloakFur1_Gray fur
+	handler.AddDatastoreEntryByKey("831666___WetandCold.esp", 7, 40, 12) ; _WetCloakFur2 fur
+	handler.AddDatastoreEntryByKey("831673___WetandCold.esp", 7, 40, 12) ; _WetCloakFur2_Black fur
+	handler.AddDatastoreEntryByKey("831674___WetandCold.esp", 7, 40, 12) ; _WetCloakFur2_Brown fur
+	handler.AddDatastoreEntryByKey("831675___WetandCold.esp", 7, 40, 12) ; _WetCloakFur2_Gray fur
+	handler.AddDatastoreEntryByKey("152448___WetandCold.esp", 2, 5, 14) ; _WetGloves1
+	handler.AddDatastoreEntryByKey("698278___WetandCold.esp", 2, 5, 14) ; _WetGloves1_Blue
+	handler.AddDatastoreEntryByKey("152450___WetandCold.esp", 2, 5, 14) ; _WetGloves1_Gray
+	handler.AddDatastoreEntryByKey("698279___WetandCold.esp", 2, 5, 14) ; _WetGloves1_Green
+	handler.AddDatastoreEntryByKey("152451___WetandCold.esp", 2, 5, 14) ; _WetGloves1_Yellow
+	handler.AddDatastoreEntryByKey("95879___WetandCold.esp", 3, 35, 43) ; _WetHood1
+	handler.AddDatastoreEntryByKey("334976___WetandCold.esp", 3, 35, 43) ; _WetHood1_Teal
+	handler.AddDatastoreEntryByKey("95880___WetandCold.esp", 3, 35, 43) ; _WetHood2
+	handler.AddDatastoreEntryByKey("104164___WetandCold.esp", 3, 35, 43) ; _WetHood2_Gray
+	handler.AddDatastoreEntryByKey("97267___WetandCold.esp", 3, 35, 43) ; _WetHood3
+	handler.AddDatastoreEntryByKey("104163___WetandCold.esp", 3, 35, 43) ; _WetHood3_Yellow
+	handler.AddDatastoreEntryByKey("450851___WetandCold.esp", 3, 35, 43) ; _WetHood4
+	handler.AddDatastoreEntryByKey("804073___WetandCold.esp", 3, 35, 28) ; _WetHood5
+	handler.AddDatastoreEntryByKey("804074___WetandCold.esp", 3, 35, 28) ; _WetHood5_Brown
+	handler.AddDatastoreEntryByKey("804075___WetandCold.esp", 3, 35, 28) ; _WetHood5_Gray
+	handler.AddDatastoreEntryByKey("804076___WetandCold.esp", 3, 35, 28) ; _WetHood5_Green
+	handler.AddDatastoreEntryByKey("804077___WetandCold.esp", 3, 35, 28) ; _WetHood5_Red
+	handler.AddDatastoreEntryByKey("146916___WetandCold.esp", 3, 45, 14) ; _WetHoodFur1
+	handler.AddDatastoreEntryByKey("146917___WetandCold.esp", 3, 45, 14) ; _WetHoodFur1_Black
+	handler.AddDatastoreEntryByKey("699670___WetandCold.esp", 3, 45, 14) ; _WetHoodFur1_Brown
+	handler.AddDatastoreEntryByKey("146918___WetandCold.esp", 3, 45, 14) ; _WetHoodFur1_Gray
+	handler.AddDatastoreEntryByKey("873070___WetandCold.esp", 3, 45, 14) ; _WetHoodFur2
+	handler.AddDatastoreEntryByKey("874470___WetandCold.esp", 3, 45, 14) ; _WetHoodFur2_Black
+	handler.AddDatastoreEntryByKey("874471___WetandCold.esp", 3, 45, 14) ; _WetHoodFur2_Brown
+	handler.AddDatastoreEntryByKey("874472___WetandCold.esp", 3, 45, 14) ; _WetHoodFur2_LightBrown
+	handler.AddDatastoreEntryByKey("874473___WetandCold.esp", 3, 45, 14) ; _WetHoodFur2_White
+	handler.AddDatastoreEntryByKey("874476___WetandCold.esp", 3, 45, 14) ; _WetHoodFur3
+	handler.AddDatastoreEntryByKey("874481___WetandCold.esp", 3, 45, 14) ; _WetHoodFur3_Black
+	handler.AddDatastoreEntryByKey("874482___WetandCold.esp", 3, 45, 14) ; _WetHoodFur3_White
+	handler.AddDatastoreEntryByKey("841332___WetandCold.esp", 3, 45, 14) ; _WetHoodFurLined1
+	handler.AddDatastoreEntryByKey("842717___WetandCold.esp", 3, 45, 14) ; _WetHoodFurLined1_Brown
+	handler.AddDatastoreEntryByKey("842718___WetandCold.esp", 3, 45, 14) ; _WetHoodFurLined1_Dark
 endFunction
