@@ -524,18 +524,6 @@ function DLC1LoadUp()
 		DLC1_FVBoss_PolyY[4] = -7244
 	endif
 	
-	;@TODO
-	;/if !(_DE_EquipExceptions.HasForm(Game.GetFormFromFile(0x020023F5, "Dawnguard.esm")))
-		_DE_EquipExceptions.AddForm(Game.GetFormFromFile(0x020023F5, "Dawnguard.esm"))		;DLC1SkinNakedVampireLord
-		_DE_EquipExceptions.AddForm(Game.GetFormFromFile(0x02011A84, "Dawnguard.esm"))		;DLC1ClothesVampireLordArmor
-	endif
-
-	;Add the cloaks
-	FrostfallArmor.ArrayAddFormXT("cloak hide", Game.GetFormFromFile(0x0200b5db, "Dawnguard.esm"))	;Vampire Royal Armor (Red)
-	FrostfallArmor.ArrayAddFormXT("cloak hide", Game.GetFormFromFile(0x020194c5, "Dawnguard.esm"))	;Vampire Royal Armor (Valerica)
-	FrostfallArmor.ArrayAddFormXT("cloak hide", Game.GetFormFromFile(0x02011a85, "Dawnguard.esm"))	;Vampire Royal Armor (Vampire Lord) (Not normally obtainable)
-	/;
-	
 endFunction
 
 function DLC2LoadUp()
@@ -630,18 +618,6 @@ function WTHLoadUp()
 endFunction
 
 function VanillaGameLoadUp()
-	; Verify quests are running and aliases are filled
-	;/if !_Camp_MainQuest.IsRunning()
-		_Camp_MainQuest.Start()
-	endif
-	if !_Camp_FollowerQuest.IsRunning()
-		_Camp_FollowerQuest.Start()
-	endif
-
-	if !PlayerAlias.GetActorRef()
-		PlayerAlias.ForceRefTo(PlayerRef)
-	endif
-	/;
 	if added_spell_books == false
 		AddSpellBooks()
 	endif
