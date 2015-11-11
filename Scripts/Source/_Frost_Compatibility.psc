@@ -1882,4 +1882,11 @@ function IMALoadUp()
 	handler.AddDatastoreEntryByKey("436742___Hothtrooper44_ArmorCompilation.esp", 4, 15, 14) ; IAImperialKnightGreaves
 	handler.AddDatastoreEntryByKey("3474___Hothtrooper44_ArmorCompilation.esp", 4, 21, 14) ; IAWarchiefHeavyStompers
 	handler.AddDatastoreEntryByKey("3475___Hothtrooper44_ArmorCompilation.esp", 4, 21, 14) ; IAWarchiefLightStompers
+
+	handler.AddDatastoreEntryByKey("145642___Hothtrooper44_ArmorCompilation.esp", 7, 10, 10) ; IABosmerFullCape
+	handler.AddDatastoreEntryByKey("145660___Hothtrooper44_ArmorCompilation.esp", 7, 8, 8) ; IABosmerShoulderCape
+	handler.AddDatastoreEntryByKey("145641___Hothtrooper44_ArmorCompilation.esp", 7, 8, 8) ; IABosmerEngravedShoulderCape
+	handler.AddDatastoreEntryByKey("436740___Hothtrooper44_ArmorCompilation.esp", 7, 10, 10) ; IAImperialKnightCape
+	handler.AddDatastoreEntryByKey("63308___Hothtrooper44_ArmorCompilation.esp", 7, 10, 10) ; IARedguardKnightCape
+	handler.AddDatastoreEntryByKey("11733___Hothtrooper44_ArmorCompilation.esp", 7, 10, 10) ; IASeadogCape
 endFunction
