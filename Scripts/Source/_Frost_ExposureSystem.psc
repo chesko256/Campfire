@@ -117,7 +117,8 @@ bool in_tent = false
 bool tent_is_warm = false
 bool in_shelter = false
 bool is_meditating = false
-bool property is_vampire = false auto hidden
+bool is_vampire = false
+bool is_immune = false
 bool last_vampire_state = false
 bool in_interior = false
 bool was_in_interior = false
@@ -168,7 +169,10 @@ function UpdateExposure()
 
 	; Immunity conditions
 	if PlayerRef.HasKeyword(ActorTypeDragon) || (_Frost_Setting_VampireMode.GetValueInt() == 2 && is_vampire)
+		(_Frost_MainQuest as _Frost_ConditionValues).IsImmune = true
 		return
+	else
+		(_Frost_MainQuest as _Frost_ConditionValues).IsImmune = false
 	endif
 
 	; If enough game time has passed since the last update, modify based on waiting instead.

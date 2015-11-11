@@ -4,6 +4,7 @@ import FrostUtil
 import _FrostInternal
 
 Actor property PlayerRef auto
+Quest property _Frost_MainQuest auto
 GlobalVariable property _Frost_ArmorPerk3Active auto
 GlobalVariable property _Frost_ArmorPerk2Active auto
 GlobalVariable property _Frost_ArmorPerk1Active auto
@@ -37,8 +38,12 @@ Event UpdateWarmth()
 	warmth += _Frost_PerkRank_Adaptation.GetValueInt() * 20
 	warmth += GetSpellBonus()
 
-	if GetExposureSystem().is_vampire
+	if (_Frost_MainQuest as _Frost_ConditionValues).IsVampire
 		warmth += 100
+	endif
+
+	if (_Frost_MainQuest as _Frost_ConditionValues).IsBeast
+		warmth += 500
 	endif
 
 	_FrostInternal.FrostDebug(0, "**** Warmth ::: Warmth Value: " + warmth)
