@@ -455,15 +455,10 @@ function RunCompatibility()
 		endif
 	endif
 	
-	;/if isCOSDGLoaded
+	if isCOSDGLoaded
 		isCOSDGLoaded = GetCOSDGPluginLoaded()
 		if !isCOSDGLoaded
 			;Cloaks of Skyrim - Dawnguard was removed since the last save.
-			;notification("Dumping COS forms")
-			bool bRemove = FrostfallArmor.ArrayRemoveBlankFormsXT("cloak linen")
-			if bRemove
-				trace("[Frostfall] Cloaks of Skyrim - Dawnguard has been unloaded. Cleared added forms from all associated arrays.")
-			endif
 		else
 			COSDGLoadUp()
 		endif
@@ -474,7 +469,6 @@ function RunCompatibility()
 			COSDGLoadUp()
 		endif
 	endif
-	/;
 
 	;/if isAEALoaded
 		isAEALoaded = IsPluginLoaded(0x02017424, "AesirArmor.esp")
@@ -763,6 +757,26 @@ bool function GetCOSPluginLoaded()
 	endif
 endFunction
 
+bool function GetCOSDGPluginLoaded()
+	;Determine if Cloaks of Skyrim - Dawnguard is loaded.
+	bool loaded
+	loaded = IsPluginLoaded(0x00005905, "Complete Crafting Overhaul_Remade.esp")
+	if !loaded
+		loaded = IsPluginLoaded(0x00000D64, "Cloaks - Dawnguard.esp")
+	endif
+	if !loaded
+		loaded = IsPluginLoaded(0x00000D64, "Cloaks - Player Only - Dawnguard.esp")
+	endif
+	if !loaded
+		loaded = IsPluginLoaded(0x00000D64, "Cloaks - No Imperial - Dawnguard.esp")
+	endif
+	if loaded
+		return true
+	else
+		return false
+	endif
+endFunction
+
 function AddStartupSpells()
 	if _Frost_HotkeyWeathersense.GetValueInt() != 0
 		PlayerRef.RemoveSpell(_Frost_Weathersense_Spell)
@@ -978,8 +992,8 @@ function NFHLoadUp()
 endFunction
 
 function COSLoadUp()
-	string sCOSPluginName
 	bool loaded
+	string sCOSPluginName
 	
 	loaded = IsPluginLoaded(0x0200F615, "Complete Crafting Overhaul_Remade.esp")
 	sCOSPluginName = "Complete Crafting Overhaul_Remade.esp"
@@ -1130,4 +1144,36 @@ function COSLoadUp()
 	handler.AddDatastoreEntryByKey("100481___" + sCOSPluginName, 7, 10, 10) ; CloakComp
 	handler.AddDatastoreEntryByKey("89445___" + sCOSPluginName, 7, 10, 10) ; CloakShortImperial
 	handler.AddDatastoreEntryByKey("94961___" + sCOSPluginName, 7, 12, 40) ; CloakScale
+endFunction
+
+function COSDGLoadUp()
+	bool loaded
+	string sCOSDGPluginName
+
+	loaded = IsPluginLoaded(0x00005905, "Complete Crafting Overhaul_Remade.esp")
+	sCOSDGPluginName = "Complete Crafting Overhaul_Remade.esp"
+	if !loaded
+		loaded = IsPluginLoaded(0x00000D64, "Cloaks - Dawnguard.esp")
+		sCOSDGPluginName = "Cloaks - Dawnguard.esp"
+	endif
+	if !loaded
+		loaded = IsPluginLoaded(0x00000D64, "Cloaks - Player Only - Dawnguard.esp")
+		sCOSDGPluginName = "Cloaks - Player Only - Dawnguard.esp"
+	endif
+	if !loaded
+		loaded = IsPluginLoaded(0x00000D64, "Cloaks - No Imperial - Dawnguard.esp")
+		sCOSDGPluginName = "Cloaks - No Imperial - Dawnguard.esp"
+	endif
+	if !loaded
+		return
+	endif
+
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+	if sCOSDGPluginName == "Complete Crafting Overhaul_Remade.esp"
+		handler.AddDatastoreEntryByKey("22789___" + sCOSDGPluginName, 7, 10, 10) ; CloakDawnguard
+		handler.AddDatastoreEntryByKey("22790___" + sCOSDGPluginName, 7, 10, 10) ; CloakShortDawnguard
+	else
+		handler.AddDatastoreEntryByKey("3428___" + sCOSDGPluginName, 7, 10, 10) ; CloakDawnguard
+		handler.AddDatastoreEntryByKey("3429___" + sCOSDGPluginName, 7, 10, 10) ; CloakShortDawnguard
+	endif
 endFunction
