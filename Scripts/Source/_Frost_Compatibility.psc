@@ -17,10 +17,6 @@ GlobalVariable property _Frost_HotkeyWeathersense auto
 _Frost_SkyUIConfigPanelScript property FrostConfig Auto 			;SkyUI Configuration script
 _Frost_ConditionValues property Conditions auto
 
-;#Quests=======================================================================
-;Quest property _Camp_MainQuest auto 						;Main quest
-;Quest property _Camp_FollowerQuest auto 					;Follower tracking quest
-
 ;#Official DLC=================================================================
 bool property isDLC1Loaded auto	hidden						;Dawnguard
 bool property isDLC2Loaded auto hidden						;Dragonborn
@@ -40,6 +36,7 @@ bool property isNFHLoaded auto hidden						;Northborn Fur Hoods
 bool property isWICLoaded auto hidden						;Winter is Coming
 bool property isCOSLoaded auto hidden						;Cloaks of Skyrim
 bool property isCOSDGLoaded auto hidden						;Cloaks of Skyrim - Dawnguard
+bool property isAEALoaded auto hidden						;Aesir Armor
 
 ;#Merchant Containers==========================================================
 ;ObjectReference property MerchantRiverwoodTraderContainer auto
@@ -52,7 +49,6 @@ Formlist property _Frost_FastTravelExceptions auto
 Formlist property _Frost_ExposureExceptions auto
 
 ;#Trees============================================================================
-;@TODO: Move to Frostfall
 ;TreeObject property TreeReachTreeStump01 auto hidden
 
 ;#DLC / Mod Worldspaces============================================================
@@ -464,19 +460,10 @@ function RunCompatibility()
 		endif
 	endif
 
-	;/if isAEALoaded
+	if isAEALoaded
 		isAEALoaded = IsPluginLoaded(0x02017424, "AesirArmor.esp")
 		if !isAEALoaded
-			;Aesir Armor was removed since the last save.
-			bool bRemove1 = FrostfallArmor.ArrayRemoveBlankFormsXT("cloak fur")
-			bool bRemove2 = FrostfallArmor.ArrayRemoveBlankFormsXT("body full")
-			bool bRemove3 = FrostfallArmor.ArrayRemoveBlankFormsXT("feet full")
-			bool bRemove4 = FrostfallArmor.ArrayRemoveBlankFormsXT("hands full")
-			bool bRemove5 = FrostfallArmor.ArrayRemoveBlankFormsXT("head full")
-			
-			if bRemove1 && bRemove2 && bRemove3 && bRemove4 && bRemove5
-				trace("[Frostfall] Aesir Armor has been unloaded. Cleared added forms from all associated arrays.")
-			endif
+			;Aesir Armor was removed.
 		endif
 	else
 		isAEALoaded = IsPluginLoaded(0x02017424, "AesirArmor.esp")
@@ -485,7 +472,6 @@ function RunCompatibility()
 			AEALoadUp()
 		endif
 	endif
-	/;
 	
 	trace("[Frostfall]======================================================================================================")
 	trace("[Frostfall]                            Frostfall compatibility check complete.   		                        ")
@@ -1378,4 +1364,65 @@ function WICLoadUpCloaks()
 	handler.AddDatastoreEntryByKey("9033___" + sWICPluginName, 7, 40, 12) ; 1nivCloakWolfSkinTrimWWhite
 	handler.AddDatastoreEntryByKey("56174___" + sWICPluginName, 7, 40, 12) ; 1nivCloakWolfSkinTrimWWhiteEnchF
 	handler.AddDatastoreEntryByKey("56192___" + sWICPluginName, 7, 40, 12) ; 1nivCloakWolfSkinTrimWWhiteEnchM
+endFunction
+
+function AEALoadUp()
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+	handler.AddDatastoreEntryByKey("20056___AesirArmor.esp", 7, 40, 12) ; cloak fur
+	handler.AddDatastoreEntryByKey("130085___AesirArmor.esp", 7, 40, 12) ; cloak fur
+	handler.AddDatastoreEntryByKey("98064___AesirArmor.esp", 7, 40, 12) ; cloak fur
+	handler.AddDatastoreEntryByKey("130086___AesirArmor.esp", 7, 40, 12) ; cloak fur
+	handler.AddDatastoreEntryByKey("98065___AesirArmor.esp", 7, 40, 12) ; cloak fur
+	handler.AddDatastoreEntryByKey("130087___AesirArmor.esp", 7, 40, 12) ; cloak fur
+	handler.AddDatastoreEntryByKey("233387___AesirArmor.esp", 7, 40, 12) ; cloak fur
+	handler.AddDatastoreEntryByKey("233392___AesirArmor.esp", 7, 40, 12) ; cloak fur
+	handler.AddDatastoreEntryByKey("233388___AesirArmor.esp", 7, 40, 12) ; cloak fur
+	handler.AddDatastoreEntryByKey("233393___AesirArmor.esp", 7, 40, 12) ; cloak fur
+	handler.AddDatastoreEntryByKey("233389___AesirArmor.esp", 7, 40, 12) ; cloak fur
+	handler.AddDatastoreEntryByKey("233394___AesirArmor.esp", 7, 40, 12) ; cloak fur
+	handler.AddDatastoreEntryByKey("95268___AesirArmor.esp", 1, 175, 54) ; body full
+	handler.AddDatastoreEntryByKey("125934___AesirArmor.esp", 1, 175, 54) ; body full
+	handler.AddDatastoreEntryByKey("49193___AesirArmor.esp", 1, 175, 54) ; body full
+	handler.AddDatastoreEntryByKey("247294___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("247295___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("247296___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("247297___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("10379___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("130178___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("18674___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("131557___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("18675___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("131559___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("18676___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("131558___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("211121___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("211122___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("211123___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("211124___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("211125___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("211126___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("211127___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("211128___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("211129___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("212522___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("211130___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("212523___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("211131___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("212524___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("211136___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("212525___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("211135___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("212526___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("211132___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("212527___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("211133___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("212528___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("211134___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("212529___AesirArmor.esp", 3, 50, 14) ; head full
+	handler.AddDatastoreEntryByKey("49195___AesirArmor.esp", 2, 21, 14) ; hands full
+	handler.AddDatastoreEntryByKey("31538___AesirArmor.esp", 2, 21, 14) ; hands full
+	handler.AddDatastoreEntryByKey("131561___AesirArmor.esp", 2, 21, 14) ; hands full
+	handler.AddDatastoreEntryByKey("31541___AesirArmor.esp", 4, 21, 14) ; feet full
+	handler.AddDatastoreEntryByKey("131560___AesirArmor.esp", 4, 21, 14) ; feet full
+	handler.AddDatastoreEntryByKey("49194___AesirArmor.esp", 4, 21, 14) ; feet full
 endFunction
