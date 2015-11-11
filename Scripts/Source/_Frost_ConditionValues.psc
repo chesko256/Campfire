@@ -13,3 +13,4 @@ bool property IsDragonbornLoaded = false auto conditional hidden
 bool property IsLastSeedLoaded = false auto conditional hidden
 bool property IsSkyReLoaded = false auto conditional hidden
 bool property IsInDialogue = false auto conditional hidden
+bool property IsVampire = false auto conditional hidden

@@ -142,7 +142,7 @@ function ShowWetStateMessage(int wet_level)
 		elseif wet_level == 0 && last_wet_level != 0
 			_Frost_WetStateMsg_Dry.Show()
 		endif
-		if wet_level == 3 && last_wet_level != 3
+		if wet_level == 3 && !increasing
 			ShowTutorial_Wetness()
 		endif
 	endif
