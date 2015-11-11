@@ -13,5 +13,5 @@ Check: Retain Directory Names
 Check: Retain File Names
 Check: Compress Archive
 Set File Group Root: Data\
-Add File Group: ./CampfireArchiveManifest.txt
+Add File Group: ./FrostfallArchiveManifest.txt
 Save Archive: ./Frostfall.bsa
