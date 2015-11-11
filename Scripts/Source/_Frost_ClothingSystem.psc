@@ -4,10 +4,13 @@ import FrostUtil
 import _FrostInternal
 
 Actor property PlayerRef auto
+Quest property _Frost_MainQuest auto
 GlobalVariable property _Frost_Setting_Notifications_EquipmentValues auto
 GlobalVariable property _Frost_CheckInitialEquipment auto
 Formlist property _Frost_EquipExceptions auto
 Quest property FrostfallStrings auto
+Keyword property ActorTypeCreature auto
+Keyword property ImmuneParalysis auto
 
 Armor property equipped_body auto hidden
 Armor property equipped_head auto hidden
@@ -44,7 +47,16 @@ function RegisterForEvents()
 endFunction 
 
 function RaceChanged()
-    debug.trace("Got call from Campfire: RaceChanged")
+    if PlayerRef.GetRace().HasKeyword(ActorTypeCreature) || PlayerRef.GetRace().HasKeyword(ImmuneParalysis)
+        FrostDebug(1, "I am now a werewolf or vampire lord.")
+        ModPlayerExposure(-120.0, 0.0)
+        (_Frost_MainQuest as _Frost_ConditionValues).IsBeast = true
+        SendEvent_UpdateWarmth()
+    else
+        FrostDebug(1, "I am now a werewolf or vampire lord.")
+        (_Frost_MainQuest as _Frost_ConditionValues).IsBeast = false
+        SendEvent_UpdateWarmth()
+    endif
 endFunction
 
 function ObjectEquipped(Form akBaseObject, int iGearType)
@@ -325,6 +337,13 @@ function SendEvent_UpdateWarmthAndCoverage()
         ModEvent.Send(handle)
     endif
     handle = ModEvent.Create("Frost_UpdateCoverage")
+    if handle
+        ModEvent.Send(handle)
+    endif
+endFunction
+
+function SendEvent_UpdateWarmth()
+    int handle = ModEvent.Create("Frost_UpdateWarmth")
     if handle
         ModEvent.Send(handle)
     endif

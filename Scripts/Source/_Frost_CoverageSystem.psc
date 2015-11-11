@@ -8,7 +8,6 @@ GlobalVariable property _Frost_DatastoreInitialized auto
 bool property windbreaker_perk_active auto hidden
 
 function RegisterForEvents()
-	debug.trace("Registerd for Frost_UpdateCoverage")
 	RegisterForModEvent("Frost_UpdateCoverage", "UpdateCoverage")
 	RegisterForModEvent("Campfire_CampfirePerkPurchased", "CampfirePerkPurchased")
 endFunction
