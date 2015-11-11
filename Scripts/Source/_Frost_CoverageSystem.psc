@@ -4,6 +4,7 @@ import FrostUtil
 import _FrostInternal
 
 GlobalVariable property _Frost_AttributeCoverage auto
+GlobalVariable property FrostfallAttributeCoverageReadOnly auto
 GlobalVariable property _Frost_DatastoreInitialized auto
 bool property windbreaker_perk_active auto hidden
 
@@ -23,6 +24,7 @@ Event UpdateCoverage()
 	
 	_FrostInternal.FrostDebug(0, "==== Coverage ::: Coverage Value: " + coverage)
 	_Frost_AttributeCoverage.SetValueInt(coverage)
+	FrostfallAttributeCoverageReadOnly.SetValueInt(coverage)
 	SendEvent_UpdateBottomBarCoverage(coverage)
 endEvent
 

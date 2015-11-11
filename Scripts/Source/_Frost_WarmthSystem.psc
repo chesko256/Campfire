@@ -13,6 +13,7 @@ MagicEffect property _Frost_ExposureArmorFFSelf_2 auto
 MagicEffect property _Frost_ExposureArmorFFSelf_1 auto
 
 GlobalVariable property _Frost_AttributeWarmth auto
+GlobalVariable property FrostfallAttributeWarmthReadOnly auto
 GlobalVariable property _Frost_PerkRank_Adaptation auto
 GlobalVariable property _Frost_DatastoreInitialized auto
 bool property well_insulated_perk_active = false auto hidden
@@ -48,6 +49,7 @@ Event UpdateWarmth()
 
 	_FrostInternal.FrostDebug(0, "**** Warmth ::: Warmth Value: " + warmth)
 	_Frost_AttributeWarmth.SetValueInt(warmth)
+	FrostfallAttributeWarmthReadOnly.SetValueInt(warmth)
 	SendEvent_UpdateBottomBarWarmth(warmth)
 endEvent
 

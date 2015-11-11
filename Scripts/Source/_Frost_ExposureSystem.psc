@@ -27,6 +27,8 @@ GlobalVariable property _Frost_CurrentTemperature auto
 GlobalVariable property _Frost_AttributeWarmth auto
 GlobalVariable property _Frost_AttributeCoverage auto
 GlobalVariable property _Frost_AttributeExposure auto
+GlobalVariable property FrostfallAttributeExposureReadOnly auto
+GlobalVariable property FrostfallExposureLevelReadOnly auto
 GlobalVariable property _Frost_CurrentHeatSourceSize auto
 GlobalVariable property _Frost_Calc_ExtremeMultiplier auto
 GlobalVariable property _Frost_Calc_StasisMultiplier auto
@@ -255,6 +257,7 @@ function ModAttributeExposure(float amount, float limit, bool allow_skill_advanc
 	DisplayWarmUpMessage(increasing, limit)
 
 	_Frost_AttributeExposure.SetValue(exposure)
+	FrostfallAttributeExposureReadOnly.SetValue(exposure)
 	FrostDebug(1, "@@@@ Exposure ::: Current Exposure: " + exposure + " (" + amount + ")")
 
 	if advance_skill && allow_skill_advancement
@@ -452,6 +455,7 @@ function UpdateExposureLevel()
 	ShowExposureStateMessage()
 
 	_Frost_ExposureLevel.SetValueInt(exposure_level)
+	FrostfallExposureLevelReadOnly.SetValueInt(exposure_level)
 endFunction
 
 function ShowExposureStateMessage()
@@ -894,6 +898,7 @@ endFunction
 
 function SetExposure(float value, bool force_meter_display = false)
 	_Frost_AttributeExposure.SetValue(value)
+	FrostfallAttributeExposureReadOnly.SetValue(value)
 	if force_meter_display
 		SendEvent_ForceExposureMeterDisplay()
 	else
