@@ -148,7 +148,7 @@ function UpdateClimateState()
 		current_temperature = GetCurrentTemperature(current_weather, region)
 	endif
 
-	if !first_update && current_temperature <= 5
+	if !first_update && current_temperature <= 3
 		ShowTutorial_Cold()
 	endif
 	
