@@ -113,6 +113,12 @@ _Frost_ShelterSystem function GetShelterSystem() global
 endFunction
 
 bool function IsWarmEnoughToRemoveGearInTent() global
+    ; This feature is currently unimplemented in Campfire
+    return true
+endFunction
+
+bool function IsWarmEnoughToHarvestWood() global
+    ; This feature was deprecated, always return true
     return true
 endFunction
 
