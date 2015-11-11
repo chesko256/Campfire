@@ -91,6 +91,7 @@ int Overview_InfoLine5_OID
 int Overview_InfoLine6_OID
 int Overview_InfoLine7_OID
 int Overview_InfoLine8_OID
+int Overview_InfoLineAux_OID
 int Overview_ExposureStatusText_OID
 int Overview_WetnessStatusText_OID
 int Overview_WarmthStatusText_OID
@@ -208,6 +209,8 @@ Event OnConfigOpen()
 	RegisterForModEvent("Frost_HandsDatastoreUpdate", "HandsDatastoreUpdate")
 	RegisterForModEvent("Frost_FeetDatastoreUpdate", "FeetDatastoreUpdate")
 	RegisterForModEvent("Frost_CloakDatastoreUpdate", "CloakDatastoreUpdate")
+	RegisterForModEvent("Frost_ModDatastoreUpdate", "ModDatastoreUpdate")
+	RegisterForModEvent("Frost_ModDatastoreName", "SetModDatastoreName")
 	RegisterForModEvent("Frost_StartupAlmostDone", "StartupAlmostDone")
 EndEvent
 
@@ -257,8 +260,8 @@ function PageReset_Overview()
 			Overview_InfoLine3_OID = AddTextOption("$FrostfallStartUpDSCreateHands", ((_Frost_DS_Hands_InitProgress.GetValue() * 100.0) as int) + "%")
 			Overview_InfoLine4_OID = AddTextOption("$FrostfallStartUpDSCreateFeet", ((_Frost_DS_Feet_InitProgress.GetValue() * 100.0) as int) + "%")
 			Overview_InfoLine5_OID = AddTextOption("$FrostfallStartUpDSCreateCloak", ((_Frost_DS_Cloak_InitProgress.GetValue() * 100.0) as int) + "%")
-			Overview_InfoLine6_OID = AddTextOption("$FrostfallStartUpProgress", "$FrostfallStartUpWorking")
-			Overview_InfoLine7_OID = AddTextOption("", "")
+			Overview_InfoLine6_OID = AddTextOption("$FrostfallStartUpDSCreateMods", "")
+			Overview_InfoLine7_OID = AddTextOption("$FrostfallStartUpProgress", "$FrostfallStartUpWorking")
 			Overview_InfoLine8_OID = AddTextOption("", "")
 		endif
 	else
@@ -298,6 +301,11 @@ function PageReset_Overview()
 		Overview_CoverageStatusText_OID = AddTextOption("$FrostfallOverviewCoverageValue", _Frost_AttributeCoverage.GetValueInt())
 	else
 		Overview_CoverageStatusText_OID = AddTextOption("$FrostfallOverviewCoverageValue", "")
+	endif
+	AddEmptyOption()
+	AddEmptyOption()
+	if FrostfallRunning.GetValueInt() == 2 && _Frost_DatastoreInitialized.GetValueInt() != 2
+		Overview_InfoLineAux_OID = AddTextOption("$FrostfallModName", "", OPTION_FLAG_DISABLED)
 	endif
 endFunction
 
@@ -745,7 +753,7 @@ event OnOptionSelect(int option)
 			_Frost_Setting_DisplayTutorials.SetValueInt(2)
 			SetToggleOptionValue(Advanced_TutorialsToggle_OID, true)
 		endif
-		SaveSettingToCurrentProfile("notification_equipmentvalues", _Frost_Setting_DisplayTutorials.GetValueInt())
+		SaveSettingToCurrentProfile("display_tutorials", _Frost_Setting_DisplayTutorials.GetValueInt())
 	elseif option == Advanced_TutorialsResetText_OID
 		bool b = ShowMessage("$FrostfallTutorialResetPrompt")
 		if b
@@ -1368,8 +1376,9 @@ function ShowProfileHelp()
 endFunction
 
 Event StartupAlmostDone()
-	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine6_OID
-		SetTextOptionValue(Overview_InfoLine6_OID, "$FrostfallGeneralExitMenuPrompt")
+	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine7_OID
+		Utility.WaitMenuMode(1.0)
+		SetTextOptionValue(Overview_InfoLine7_OID, "$FrostfallGeneralExitMenuPrompt")
 	endif
 endEvent
 Event BodyDatastoreUpdate(float progress)
@@ -1395,6 +1404,21 @@ endEvent
 Event CloakDatastoreUpdate(float progress)
 	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine5_OID
 		SetTextOptionValue(Overview_InfoLine5_OID, ((progress * 100.0) as int) + "%")
+	endif
+endEvent
+Event ModDatastoreUpdate(bool working)
+	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine6_OID
+		Utility.WaitMenuMode(0.5)
+		if working
+			SetTextOptionValue(Overview_InfoLine6_OID, "$FrostfallModArmorsWorking")
+		else
+			SetTextOptionValue(Overview_InfoLine6_OID, "$FrostfallModArmorsDone")
+		endif
+	endif
+endEvent
+Event SetModDatastoreName(string sname)
+	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLineAux_OID
+		SetTextOptionValue(Overview_InfoLineAux_OID, sname)
 	endif
 endEvent
 
