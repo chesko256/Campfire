@@ -27,3 +27,5 @@ GlobalVariable property _Frost_AttributeWetness auto
 GlobalVariable property _Frost_AttributeWarmth auto
 GlobalVariable property _Frost_AttributeCoverage auto
 GlobalVariable property _Frost_CurrentTemperature auto
+GlobalVariable property _Frost_FrostfallVersion auto
+GlobalVariable property _Frost_APIVersion auto

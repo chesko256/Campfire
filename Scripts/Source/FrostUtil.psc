@@ -120,6 +120,24 @@ function Event_LegacyWoodHarvest() global
     ;pass
 endFunction
 
+float function GetAPIVersion() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return -1.0
+    endif
+    return Frostfall._Frost_APIVersion.GetValue()
+endFunction
+
+float function GetFrostfallVersion() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return -1.0
+    endif
+    return Frostfall._Frost_FrostfallVersion.GetValue()
+endFunction
+
 bool function IsPlayerNearFire() global
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
