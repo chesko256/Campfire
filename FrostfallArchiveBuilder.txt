@@ -1,0 +1,17 @@
+Log: Campfire\FrostfallArchiveLog.txt
+New Archive
+Check: Meshes
+Check: Textures
+Check: Menus
+Check: Sounds
+Check: Voices
+Check: Shaders
+Check: Trees
+Check: Fonts
+Check: Misc
+Check: Retain Directory Names
+Check: Retain File Names
+Check: Compress Archive
+Set File Group Root: Data\
+Add File Group: ./CampfireArchiveManifest.txt
+Save Archive: ./Frostfall.bsa
