@@ -302,18 +302,7 @@ function RunCompatibility()
 		endif
 	endif
 
-	if isIMALoaded
-		isIMALoaded = IsPluginLoaded(0x00014836, "Hothtrooper44_ArmorCompilation.esp")
-		if !isIMALoaded
-			;Immersive Armors was removed since the last save.
-		endif
-	else
-		isIMALoaded = IsPluginLoaded(0x00014836, "Hothtrooper44_ArmorCompilation.esp")
-		if isIMALoaded
-			;Immersive Armors was just added.
-			IMALoadUp()
-		endif
-	endif
+	
 
 	if isWTHLoaded
 		isWTHLoaded = IsPluginLoaded(0x01000D62, "Wyrmstooth.esp")
@@ -401,6 +390,35 @@ function RunCompatibility()
 		endif
 	endif
 
+	RunCompatibilityArmors()
+	
+	trace("[Frostfall]======================================================================================================")
+	trace("[Frostfall]                            Frostfall compatibility check complete.   		                        ")
+	trace("[Frostfall]======================================================================================================")
+
+	FrostConfig.LoadProfileOnStartup()
+	
+	RegisterForControlsOnLoad()
+	RegisterForEventsOnLoad()
+	RegisterForMenusOnLoad()
+	AddStartupSpells()
+endFunction
+
+function RunCompatibilityArmors()
+	SendEvent_ModDatastoreUpdate(true)
+	if isIMALoaded
+		isIMALoaded = IsPluginLoaded(0x00014836, "Hothtrooper44_ArmorCompilation.esp")
+		if !isIMALoaded
+			;Immersive Armors was removed since the last save.
+		endif
+	else
+		isIMALoaded = IsPluginLoaded(0x00014836, "Hothtrooper44_ArmorCompilation.esp")
+		if isIMALoaded
+			;Immersive Armors was just added.
+			IMALoadUp()
+		endif
+	endif
+	
 	if isNFHLoaded	
 		isNFHLoaded = IsPluginLoaded(0x010048DF, "Northborn Fur Hoods.esp")
 		if !isNFHLoaded
@@ -487,18 +505,10 @@ function RunCompatibility()
 			WACLoadUp()
 		endif
 	endif
-	
-	trace("[Frostfall]======================================================================================================")
-	trace("[Frostfall]                            Frostfall compatibility check complete.   		                        ")
-	trace("[Frostfall]======================================================================================================")
-
-	FrostConfig.LoadProfileOnStartup()
-	
-	RegisterForControlsOnLoad()
-	RegisterForEventsOnLoad()
-	RegisterForMenusOnLoad()
-	AddStartupSpells()
+	SendEvent_ModDatastoreName("")
+	SendEvent_ModDatastoreUpdate(false)
 endFunction
+
 
 bool function IsPluginLoaded(int iFormID, string sPluginName)
 	int i = Game.GetModByName(sPluginName)
@@ -958,6 +968,14 @@ endFunction
 
 function NFHLoadUp()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+
+	; Check if already loaded
+	if handler.DatastoreHasEntry("18655___Northborn Fur Hoods.esp", 3)
+		return
+	endif
+
+	SendEvent_ModDatastoreName("Fur Hoods HD")
+
 	handler.AddDatastoreEntryByKey("18655___Northborn Fur Hoods.esp", 3, 45, 14) ; ArmorFurHoodNsLtWhite
 	handler.AddDatastoreEntryByKey("18654___Northborn Fur Hoods.esp", 3, 45, 14) ; ArmorFurHoodNsLtBlack
 	handler.AddDatastoreEntryByKey("18653___Northborn Fur Hoods.esp", 3, 45, 14) ; ArmorFurHoodNsLt
@@ -1005,6 +1023,14 @@ function COSLoadUp()
 	endif
 	
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+
+	; Check if already loaded
+	if handler.DatastoreHasEntry("58747___" + sCOSPluginName, 7)
+		return
+	endif
+
+	SendEvent_ModDatastoreName("Cloaks of Skyrim")
+
 	;==========BURLAP CLOAKS===========
 	handler.AddDatastoreEntryByKey("58747___" + sCOSPluginName, 7, 5, 5) ; CloakForswornAlt
 	handler.AddDatastoreEntryByKey("53213___" + sCOSPluginName, 7, 5, 5) ; CloakBurned
@@ -1156,10 +1182,20 @@ function COSDGLoadUp()
 	endif
 
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+
 	if sCOSDGPluginName == "Complete Crafting Overhaul_Remade.esp"
+		; Check if already loaded
+		if handler.DatastoreHasEntry("22789___" + sCOSDGPluginName, 7)
+			return
+		endif
+
 		handler.AddDatastoreEntryByKey("22789___" + sCOSDGPluginName, 7, 10, 10) ; CloakDawnguard
 		handler.AddDatastoreEntryByKey("22790___" + sCOSDGPluginName, 7, 10, 10) ; CloakShortDawnguard
 	else
+		; Check if already loaded
+		if handler.DatastoreHasEntry("3428___" + sCOSDGPluginName, 7)
+			return
+		endif
 		handler.AddDatastoreEntryByKey("3428___" + sCOSDGPluginName, 7, 10, 10) ; CloakDawnguard
 		handler.AddDatastoreEntryByKey("3429___" + sCOSDGPluginName, 7, 10, 10) ; CloakShortDawnguard
 	endif
@@ -1210,6 +1246,14 @@ function WICLoadUp()
 	endif
 
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+
+	; Check if already loaded
+	if handler.DatastoreHasEntry("10445___" + sWICPluginName, 3)
+		return
+	endif
+
+	SendEvent_ModDatastoreName("Winter is Coming - Cloaks")
+
 	handler.AddDatastoreEntryByKey("10445___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearComBrown
 	handler.AddDatastoreEntryByKey("14581___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearComCave
 	handler.AddDatastoreEntryByKey("14582___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearComSnow
@@ -1308,6 +1352,14 @@ function WICLoadUpCloaks()
 	endif
 
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+
+	; Check if already loaded
+	if handler.DatastoreHasEntry("7639___" + sWICPluginName, 7)
+		return
+	endif
+
+	SendEvent_ModDatastoreName("Winter is Coming - Cloaks")
+
 	handler.AddDatastoreEntryByKey("7639___" + sWICPluginName, 7, 40, 12) ; 1nivCloakBearClawComBrown
 	handler.AddDatastoreEntryByKey("56156___" + sWICPluginName, 7, 40, 12) ; 1nivCloakBearClawComBrownEnchF
 	handler.AddDatastoreEntryByKey("56175___" + sWICPluginName, 7, 40, 12) ; 1nivCloakBearClawComBrownEnchM
@@ -1375,6 +1427,14 @@ endFunction
 
 function AEALoadUp()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+
+	; Check if already loaded
+	if handler.DatastoreHasEntry("20056___AesirArmor.esp", 7)
+		return
+	endif
+
+	SendEvent_ModDatastoreName("Aesir Armor")
+
 	handler.AddDatastoreEntryByKey("20056___AesirArmor.esp", 7, 40, 12) ; cloak fur
 	handler.AddDatastoreEntryByKey("130085___AesirArmor.esp", 7, 40, 12) ; cloak fur
 	handler.AddDatastoreEntryByKey("98064___AesirArmor.esp", 7, 40, 12) ; cloak fur
@@ -1436,6 +1496,14 @@ endFunction
 
 function WACLoadUp()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+
+	; Check if already loaded
+	if handler.DatastoreHasEntry("860640___WetandCold.esp", 7)
+		return
+	endif
+
+	SendEvent_ModDatastoreName("Wet and Cold")
+
 	handler.AddDatastoreEntryByKey("860640___WetandCold.esp", 7, 10, 10) ; _WetCloak1 linen
 	handler.AddDatastoreEntryByKey("860649___WetandCold.esp", 7, 10, 10) ; _WetCloak1_Black linen
 	handler.AddDatastoreEntryByKey("864795___WetandCold.esp", 7, 10, 10) ; _WetCloak1_Blue linen
@@ -1488,6 +1556,14 @@ endFunction
 
 function IMALoadUp()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+
+	; Check if already loaded
+	if handler.DatastoreHasEntry("20258___Hothtrooper44_ArmorCompilation.esp", 1)
+		return
+	endif
+
+	SendEvent_ModDatastoreName("Immersive Armors")
+
 	handler.AddDatastoreEntryByKey("20258___Hothtrooper44_ArmorCompilation.esp", 1, 125, 54) ; IAAkaviriSamuraiCuirass
 	handler.AddDatastoreEntryByKey("144010___Hothtrooper44_ArmorCompilation.esp", 1, 140, 109) ; IAAlduinCuirass
 	handler.AddDatastoreEntryByKey("46671___Hothtrooper44_ArmorCompilation.esp", 1, 125, 91) ; IAApotheusCuirass
@@ -1676,9 +1752,9 @@ function IMALoadUp()
 	handler.AddDatastoreEntryByKey("23134___Hothtrooper44_ArmorCompilation.esp", 3, 15, 3) ; IABarbarianHelmet
 	handler.AddDatastoreEntryByKey("144097___Hothtrooper44_ArmorCompilation.esp", 3, 35, 14) ; IABoiledChitinHHelmet
 	handler.AddDatastoreEntryByKey("544587___Hothtrooper44_ArmorCompilation.esp", 3, 35, 14) ; IABoiledChitinLHelmet
-	handler.AddDatastoreEntryByKey("145639___Hothtrooper44_ArmorCompilation.esp", 3, 35, 43) ; IABosmerEngravedHelmet
-	handler.AddDatastoreEntryByKey("145648___Hothtrooper44_ArmorCompilation.esp", 3, 35, 43) ; IABosmerHeavyHelmet
-	handler.AddDatastoreEntryByKey("145649___Hothtrooper44_ArmorCompilation.esp", 3, 35, 43) ; IABosmerHelmet
+	handler.AddDatastoreEntryByKey("145639___Hothtrooper44_ArmorCompilation.esp", 3, 35, 14) ; IABosmerEngravedHelmet
+	handler.AddDatastoreEntryByKey("145648___Hothtrooper44_ArmorCompilation.esp", 3, 35, 14) ; IABosmerHeavyHelmet
+	handler.AddDatastoreEntryByKey("145649___Hothtrooper44_ArmorCompilation.esp", 3, 35, 14) ; IABosmerHelmet
 	handler.AddDatastoreEntryByKey("145652___Hothtrooper44_ArmorCompilation.esp", 3, 35, 43) ; IABosmerHuntHeavyHelmet
 	handler.AddDatastoreEntryByKey("139247___Hothtrooper44_ArmorCompilation.esp", 3, 40, 58) ; IADragonEbonHHelmClassic
 	handler.AddDatastoreEntryByKey("139248___Hothtrooper44_ArmorCompilation.esp", 3, 40, 58) ; IADragonEbonHHelmClassicVeil
@@ -1798,6 +1874,8 @@ function IMALoadUp()
 	handler.AddDatastoreEntryByKey("143465___Hothtrooper44_ArmorCompilation.esp", 3, 50, 14) ; IAMantleSilverHandLight
 	handler.AddDatastoreEntryByKey("4807___Hothtrooper44_ArmorCompilation.esp", 3, 35, 43) ; IASeadogTricorne
 	handler.AddDatastoreEntryByKey("7571___Hothtrooper44_ArmorCompilation.esp", 3, 35, 43) ; IASeadogTricorneFeathered
+	handler.AddDatastoreEntryByKey("145633___Hothtrooper44_ArmorCompilation.esp", 3, 35, 43) ; Bosmer Coif
+	handler.AddDatastoreEntryByKey("145645___Hothtrooper44_ArmorCompilation.esp", 3, 35, 43) ; Bosmer Reinforced Coif
 
 
 	handler.AddDatastoreEntryByKey("20257___Hothtrooper44_ArmorCompilation.esp", 4, 12, 14) ; IAAkaviriSamuraiBoots
@@ -1927,6 +2005,12 @@ function IMALoadUp()
 	handler.AddDatastoreEntryByKey("143757___Hothtrooper44_ArmorCompilation.esp", 7, 5, 5) ; IATribunalUnarmoredRobeGreen
 	handler.AddDatastoreEntryByKey("143758___Hothtrooper44_ArmorCompilation.esp", 7, 5, 5) ; IATribunalUnarmoredRobeRed
 	handler.AddDatastoreEntryByKey("143759___Hothtrooper44_ArmorCompilation.esp", 7, 5, 5) ; IATribunalUnarmoredRobeWhite
+	handler.AddDatastoreEntryByKey("8949___Hothtrooper44_ArmorCompilation.esp", 7, 20, 6) ; IAArmorHeavyFurHoodBlackScarf
+	handler.AddDatastoreEntryByKey("764316___Hothtrooper44_ArmorCompilation.esp", 7, 20, 6) ; IAArmorHeavyFurHoodPlainScarf
+	handler.AddDatastoreEntryByKey("6185___Hothtrooper44_ArmorCompilation.esp", 7, 20, 6) ; IAArmorHeavyFurHoodWhiteScarf
+	handler.AddDatastoreEntryByKey("8957___Hothtrooper44_ArmorCompilation.esp", 7, 20, 6) ; IAArmorLightFurHoodBlackScarf
+	handler.AddDatastoreEntryByKey("764315___Hothtrooper44_ArmorCompilation.esp", 7, 20, 6) ; IAArmorLightFurHoodPlainScarf
+	handler.AddDatastoreEntryByKey("7567___Hothtrooper44_ArmorCompilation.esp", 7, 20, 6) ; IAArmorLightFurHoodWhiteScarf
 
 
 	handler.AddDatastoreEntryByKey("143495___Hothtrooper44_ArmorCompilation.esp", 99, 0, 0) ; IATrollbaneHeavyMask		@IGNORE
@@ -1939,4 +2023,21 @@ function IMALoadUp()
 	handler.AddDatastoreEntryByKey("10329___Hothtrooper44_ArmorCompilation.esp", 99, 0, 0) ; IASeadogEarings 			@IGNORE
 	handler.AddDatastoreEntryByKey("10335___Hothtrooper44_ArmorCompilation.esp", 99, 0, 0) ; IASeadogEyepatch			@IGNORE
 	handler.AddDatastoreEntryByKey("145659___Hothtrooper44_ArmorCompilation.esp", 99, 0, 0) ; IABosmerMask 				@IGNORE
+	handler.AddDatastoreEntryByKey("139153___Hothtrooper44_ArmorCompilation.esp", 99, 0, 0) ; IARitualBoethiahShroud	@IGNORE
+endFunction
+
+function SendEvent_ModDatastoreUpdate(bool working)
+    int handle = ModEvent.Create("Frost_ModDatastoreUpdate")
+    if handle
+    	ModEvent.PushBool(handle, working)
+        ModEvent.Send(handle)
+    endif
+endFunction
+
+function SendEvent_ModDatastoreName(string sname)
+    int handle = ModEvent.Create("Frost_ModDatastoreName")
+    if handle
+    	ModEvent.PushString(handle, sname)
+        ModEvent.Send(handle)
+    endif
 endFunction

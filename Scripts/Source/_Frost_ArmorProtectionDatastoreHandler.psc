@@ -95,6 +95,32 @@ int function GetGearType(Form akBaseObject)
 	endif
 endFunction
 
+bool function DatastoreHasEntry(string ds_key, int aiDatastoreType)
+	Keyword Datastore
+	if aiDatastoreType == 1
+		Datastore = _FrostData_ArmorBody
+	elseif aiDatastoreType == 2
+		Datastore = _FrostData_ArmorHands
+	elseif aiDatastoreType == 3
+		Datastore = _FrostData_ArmorHead
+	elseif aiDatastoreType == 4
+		Datastore = _FrostData_ArmorFeet
+	elseif aiDatastoreType == 7
+		Datastore = _FrostData_ArmorCloak
+	elseif aiDatastoreType == 8
+		Datastore = _FrostData_ArmorShield
+	elseif aiDatastoreType == 99
+		Datastore = _FrostData_ArmorIgnore
+	endif
+
+	int result = IntListGet(Datastore, ds_key, 0) - 1
+	if result >= 0
+		return true
+	else
+		return false
+	endif
+endFunction
+
 int[] function GetTotalProtectionValues(Armor akArmor, int aiGearType)
 	int[] result = new int[2]
 	if aiGearType == -1
@@ -496,9 +522,6 @@ function RevertDatastore()
 	SetDefaults_Shield()
 	FrostDebug(1, "Setting default settings for shield armor...done.")
 
-	if !self.IsRunning()
-		self.Start()
-	endif
 	_Frost_DatastoreInitialized.SetValueInt(2)
 endFunction
 

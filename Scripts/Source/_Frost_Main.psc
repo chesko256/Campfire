@@ -82,13 +82,16 @@ Event StartFrostfall()
 	_Frost_StartingUp.Show()
 	FrostDebug(1, "Starting Frostfall...")
 	GetClothingDatastoreHandler().InitializeDatastore()
-
+	FrostUtil.GetCompatibilitySystem().RunCompatibilityArmors()
 	; Prompt player to exit menu now.
 	SendEvent_StartupAlmostDone()
 
 	; Menu-Mode blocked functions
 	if !self.IsRunning()
 		self.Start()
+	endif
+	if !GetClothingDatastoreHandler().IsRunning()
+		GetClothingDatastoreHandler().Start()
 	endif
 	PlayerAlias.ForceRefTo(PlayerRef)
 	StartModFirstTime()
