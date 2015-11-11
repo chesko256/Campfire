@@ -47,13 +47,13 @@ function SetDefaults_Body()
 	AddAndShowProgress(TOTAL_COUNT, PROGRESS, _Frost_DS_Body_InitProgress, "1071439___Skyrim.esm", 1, 125, 17) ; ArmorBanditCuirass3 	;Sleeveless
 	AddAndShowProgress(TOTAL_COUNT, PROGRESS, _Frost_DS_Body_InitProgress, "455571___Skyrim.esm", 1, 160, 35) ; ArmorBanditCuirass 		;Full
 	
-	AddAndShowProgress(TOTAL_COUNT, PROGRESS, _Frost_DS_Body_InitProgress, "111522___Skyrim.esm", 1, 75, 0) ; ArmorStuddedCuirass
-	AddAndShowProgress(TOTAL_COUNT, PROGRESS, _Frost_DS_Body_InitProgress, "707731___Skyrim.esm", 1, 75, 0) ; EnchArmorStuddedCuirassHealth01
-	AddAndShowProgress(TOTAL_COUNT, PROGRESS, _Frost_DS_Body_InitProgress, "709843___Skyrim.esm", 1, 75, 0) ; EnchArmorStuddedCuirassHealth02
-	AddAndShowProgress(TOTAL_COUNT, PROGRESS, _Frost_DS_Body_InitProgress, "709844___Skyrim.esm", 1, 75, 0) ; EnchArmorStuddedCuirassHealth03
-	AddAndShowProgress(TOTAL_COUNT, PROGRESS, _Frost_DS_Body_InitProgress, "707732___Skyrim.esm", 1, 75, 0) ; EnchArmorStuddedCuirassLightArmor01
-	AddAndShowProgress(TOTAL_COUNT, PROGRESS, _Frost_DS_Body_InitProgress, "709845___Skyrim.esm", 1, 75, 0) ; EnchArmorStuddedCuirassLightArmor02
-	AddAndShowProgress(TOTAL_COUNT, PROGRESS, _Frost_DS_Body_InitProgress, "709846___Skyrim.esm", 1, 75, 0) ; EnchArmorStuddedCuirassLightArmor03
+	AddAndShowProgress(TOTAL_COUNT, PROGRESS, _Frost_DS_Body_InitProgress, "111522___Skyrim.esm", 1, 75, 35) ; ArmorStuddedCuirass
+	AddAndShowProgress(TOTAL_COUNT, PROGRESS, _Frost_DS_Body_InitProgress, "707731___Skyrim.esm", 1, 75, 35) ; EnchArmorStuddedCuirassHealth01
+	AddAndShowProgress(TOTAL_COUNT, PROGRESS, _Frost_DS_Body_InitProgress, "709843___Skyrim.esm", 1, 75, 35) ; EnchArmorStuddedCuirassHealth02
+	AddAndShowProgress(TOTAL_COUNT, PROGRESS, _Frost_DS_Body_InitProgress, "709844___Skyrim.esm", 1, 75, 35) ; EnchArmorStuddedCuirassHealth03
+	AddAndShowProgress(TOTAL_COUNT, PROGRESS, _Frost_DS_Body_InitProgress, "707732___Skyrim.esm", 1, 75, 35) ; EnchArmorStuddedCuirassLightArmor01
+	AddAndShowProgress(TOTAL_COUNT, PROGRESS, _Frost_DS_Body_InitProgress, "709845___Skyrim.esm", 1, 75, 35) ; EnchArmorStuddedCuirassLightArmor02
+	AddAndShowProgress(TOTAL_COUNT, PROGRESS, _Frost_DS_Body_InitProgress, "709846___Skyrim.esm", 1, 75, 35) ; EnchArmorStuddedCuirassLightArmor03
 	
 	AddAndShowProgress(TOTAL_COUNT, PROGRESS, _Frost_DS_Body_InitProgress, "221598___Skyrim.esm", 1, 125, 91) ; ArmorLeatherCuirass
 	AddAndShowProgress(TOTAL_COUNT, PROGRESS, _Frost_DS_Body_InitProgress, "1105605___Skyrim.esm", 1, 125, 91) ; EnchArmorLeatherCuirassAlteration01
