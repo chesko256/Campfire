@@ -190,7 +190,16 @@ endFunction
 
 
 bool function IsNearFastTravelException() global
-	
+	FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return false
+    endif
+    if Game.FindClosestReferenceOfAnyTypeInListFromRef(Frostfall._Frost_FastTravelExceptions, Frostfall.PlayerRef, 600.0)
+        return true
+    else
+        return false
+    endif
 endFunction
 
 int function GetCurrentTemperature() global
