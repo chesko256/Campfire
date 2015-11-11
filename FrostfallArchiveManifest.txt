@@ -63,11 +63,6 @@ Scripts\FrostUtil.pex
 Scripts\JsonUtil.pex
 Scripts\qf__de_trackingquest_010177d7.pex
 Scripts\StorageUtil.pex
-Scripts\_DE_ConjuredShelter.pex
-Scripts\_DE_ConjuredShelterGreater.pex
-Scripts\_DE_ConjuredShelterLesser.pex
-Scripts\_DE_ConjureShelterLesser.pex
-Scripts\_DE_ConjureShelterScroll.pex
 Scripts\_FrostInternal.pex
 Scripts\_Frost_APDatastoreDefaultData.pex
 Scripts\_Frost_ArmorProtectionDatastoreHandler.pex
@@ -138,11 +133,6 @@ Scripts\Source\FrostUtil.psc
 Scripts\Source\JsonUtil.psc
 Scripts\Source\qf__de_trackingquest_010177d7.psc
 Scripts\Source\StorageUtil.psc
-Scripts\Source\_DE_ConjuredShelter.psc
-Scripts\Source\_DE_ConjuredShelterGreater.psc
-Scripts\Source\_DE_ConjuredShelterLesser.psc
-Scripts\Source\_DE_ConjureShelterLesser.psc
-Scripts\Source\_DE_ConjureShelterScroll.psc
 Scripts\Source\_FrostInternal.psc
 Scripts\Source\_Frost_APDatastoreDefaultData.psc
 Scripts\Source\_Frost_ArmorProtectionDatastoreHandler.psc

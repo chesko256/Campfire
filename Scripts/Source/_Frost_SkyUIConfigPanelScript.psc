@@ -470,6 +470,10 @@ endFunction
 
 function PageReset_SaveLoad()
 	SetCursorFillMode(TOP_TO_BOTTOM)
+	if FrostfallRunning.GetValueInt() != 2 || must_exit
+		AddTextOption("$FrostfallNotRunningError", "", OPTION_FLAG_DISABLED)
+		return
+	endif
 
 	AddHeaderOption("$FrostfallSaveLoadHeaderProfile")
 	if _Frost_Setting_AutoSaveLoad.GetValueInt() == 2

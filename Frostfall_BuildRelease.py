@@ -22,9 +22,11 @@ print "Creating temp directories..."
 tempdir = ".\\tmp\\Data\\"
 os.makedirs('./tmp/Data/readmes')
 os.makedirs('./tmp/Data/Interface/frostfall')
+os.makedirs('./tmp/Data/Interface/exported/widgets/frostfall')
 os.makedirs('./tmp/Data/Interface/Translations')
 os.makedirs('./tmp/Data/meshes/frostfall')
 os.makedirs('./tmp/Data/Scripts/Source')
+os.makedirs('./tmp/Data/sound/fx/frostfall')
 os.makedirs('./tmp/Data/textures/frostfall')
 
 # Copy the project files
