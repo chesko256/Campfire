@@ -8,6 +8,7 @@ Actor property PlayerRef auto
 Quest property _Frost_MainQuest auto
 GlobalVariable property FrostfallRunning auto
 GlobalVariable property _Frost_Setting_Notifications_EquipmentValues auto
+GlobalVariable property _Frost_Setting_Notifications_EquipmentSummary auto
 GlobalVariable property _Frost_CheckInitialEquipment auto
 Quest property FrostfallStrings auto
 Keyword property ActorTypeCreature auto
@@ -306,6 +307,10 @@ Event OnUpdate()
         return
     endif
 
+    if _Frost_Setting_Notifications_EquipmentSummary.GetValueInt() != 2
+        return
+    endif
+
     _Frost_Strings str = FrostfallStrings as _Frost_Strings
     debug.notification(str.TotalWarmth + " " + GetPlayerWarmth() + ", " + str.TotalCoverage + " " + GetPlayerCoverage())
 EndEvent
@@ -345,6 +350,10 @@ endFunction
 
 Event OnMenuClose(string menuName)
     if menuName == "InventoryMenu"
+        if _Frost_Setting_Notifications_EquipmentSummary.GetValueInt() != 2
+            UnregisterForMenu("InventoryMenu")
+            return
+        endif
         _Frost_Strings str = FrostfallStrings as _Frost_Strings
         debug.notification(str.TotalWarmth + " " + GetPlayerWarmth() + ", " + str.TotalCoverage + " " + GetPlayerCoverage())
         UnregisterForMenu("InventoryMenu")

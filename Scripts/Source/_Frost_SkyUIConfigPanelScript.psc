@@ -48,6 +48,7 @@ GlobalVariable property _Frost_HotkeyWeathersense auto
 GlobalVariable property _Frost_Setting_FollowerAnimation auto
 GlobalVariable property _Frost_Setting_MeterAspectRatio auto
 GlobalVariable property _Frost_Setting_DisplayTutorials auto
+GlobalVariable property _Frost_Setting_Notifications_EquipmentSummary auto
 GlobalVariable property _Frost_SettingsProfileVersion auto
 GlobalVariable property _Frost_HelpDone_Exposure auto
 GlobalVariable property _Frost_HelpDone_Wet auto
@@ -124,6 +125,7 @@ int Interface_DisplayAttributesInWeathersense_OID
 int Interface_ConditionMessages_OID
 int Interface_WeatherMessages_OID
 int Interface_Notifications_EquipmentValues_OID
+int Interface_Notifications_EquipmentSummary_OID
 
 int SaveLoad_SelectProfile_OID
 int SaveLoad_RenameProfile_OID
@@ -458,11 +460,17 @@ function PageReset_Interface()
 	endif
 	if Compatibility.isUIPackageInstalled
 		Interface_Notifications_EquipmentValues_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentValues", false, OPTION_FLAG_DISABLED)
+		Interface_Notifications_EquipmentSummary_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentSummary", false, OPTION_FLAG_DISABLED)
 	else
 		if _Frost_Setting_Notifications_EquipmentValues.GetValueInt() == 2
 			Interface_Notifications_EquipmentValues_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentValues", true)
 		else
 			Interface_Notifications_EquipmentValues_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentValues", false)
+		endif
+		if _Frost_Setting_Notifications_EquipmentSummary.GetValueInt() == 2
+			Interface_Notifications_EquipmentSummary_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentSummary", true)
+		else
+			Interface_Notifications_EquipmentSummary_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentSummary", false)
 		endif
 	endif
 
@@ -713,6 +721,15 @@ event OnOptionSelect(int option)
 			SetToggleOptionValue(Interface_Notifications_EquipmentValues_OID, true)
 		endif
 		SaveSettingToCurrentProfile("notification_equipmentvalues", _Frost_Setting_Notifications_EquipmentValues.GetValueInt())
+	elseif option == Interface_Notifications_EquipmentSummary_OID
+		if _Frost_Setting_Notifications_EquipmentSummary.GetValueInt() == 2
+			_Frost_Setting_Notifications_EquipmentSummary.SetValueInt(1)
+			SetToggleOptionValue(Interface_Notifications_EquipmentSummary_OID, false)
+		else
+			_Frost_Setting_Notifications_EquipmentSummary.SetValueInt(2)
+			SetToggleOptionValue(Interface_Notifications_EquipmentSummary_OID, true)
+		endif
+		SaveSettingToCurrentProfile("notification_equipmentsummary", _Frost_Setting_Notifications_EquipmentSummary.GetValueInt())
 	elseif option == SaveLoad_DefaultProfile_OID
 		bool b = ShowMessage("$FrostfallSaveLoadDefaultProfileConfirm")
 		if b
@@ -787,6 +804,9 @@ event OnOptionDefault(int option)
 	elseif option == Interface_Notifications_EquipmentValues_OID
 		_Frost_Setting_Notifications_EquipmentValues.SetValueInt(2)
 		SetToggleOptionValue(Interface_Notifications_EquipmentValues_OID, true)
+	elseif option == Interface_Notifications_EquipmentSummary_OID
+		_Frost_Setting_Notifications_EquipmentSummary.SetValueInt(2)
+		SetToggleOptionValue(Interface_Notifications_EquipmentSummary_OID, true)
 	elseif option == Gameplay_ExposurePauseCombat_OID
 		_Frost_Setting_ExposurePauseCombat.SetValueInt(2)
 		SetToggleOptionValue(Gameplay_ExposurePauseCombat_OID, true)
@@ -925,6 +945,8 @@ Event OnOptionHighlight(int option)
 		SetInfoText("$FrostfallOptionHighlightSettingExpValueMsgToggle")
 	elseif option == Interface_Notifications_EquipmentValues_OID
 		SetInfoText("$FrostfallOptionHighlightSettingEquipValuesMsgToggle")
+	elseif option == Interface_Notifications_EquipmentSummary_OID
+		SetInfoText("$FrostfallOptionHighlightSettingEquipSummaryMsgToggle")
 	elseif option == Advanced_EnduranceSkillRespec_OID
 		SetInfoText("$FrostfallOptionHighlightSettingRespec")
 	elseif option == Advanced_EnduranceSkillRestore_OID
@@ -1207,6 +1229,10 @@ function SwitchToProfile(int aiProfileIndex)
 	if val != -1
 		_Frost_Setting_Notifications_EquipmentValues.SetValueInt(val)
 	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "notification_equipmentsummary")
+	if val != -1
+		_Frost_Setting_Notifications_EquipmentSummary.SetValueInt(val)
+	endif
 	val = LoadSettingFromProfile(aiProfileIndex, "exposure_pause_combat")
 	if val != -1
 		_Frost_Setting_ExposurePauseCombat.SetValueInt(val)
@@ -1315,6 +1341,7 @@ function GenerateDefaultProfile(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "condition_messages", 2)
 	JsonUtil.SetIntValue(profile_path, "display_attributes_in_weathersense", 1)
 	JsonUtil.SetIntValue(profile_path, "notification_equipmentvalues", 2)
+	JsonUtil.SetIntValue(profile_path, "notification_equipmentsummary", 2)
 	JsonUtil.SetIntValue(profile_path, "exposure_pause_combat", 2)
 	JsonUtil.SetIntValue(profile_path, "exposure_pause_dialogue", 2)
 	JsonUtil.SetFloatValue(profile_path, "exposure_rate", 1.0)
@@ -1349,6 +1376,7 @@ function SaveAllSettings(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "condition_messages", _Frost_Setting_ConditionMessages.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "display_attributes_in_weathersense", _Frost_Setting_DisplayAttributesInWeathersense.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "notification_equipmentvalues", _Frost_Setting_Notifications_EquipmentValues.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "notification_equipmentsummary", _Frost_Setting_Notifications_EquipmentSummary.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "exposure_pause_combat", _Frost_Setting_ExposurePauseCombat.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "exposure_pause_dialogue", _Frost_Setting_ExposurePauseDialogue.GetValueInt())
 	JsonUtil.SetFloatValue(profile_path, "exposure_rate", _Frost_Setting_ExposureRate.GetValue())
