@@ -118,7 +118,6 @@ bool tent_is_warm = false
 bool in_shelter = false
 bool is_meditating = false
 bool is_vampire = false
-bool is_immune = false
 bool last_vampire_state = false
 bool in_interior = false
 bool was_in_interior = false
