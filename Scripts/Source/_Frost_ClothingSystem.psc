@@ -2,15 +2,16 @@ scriptname _Frost_ClothingSystem extends _Frost_BaseSystem
 
 import FrostUtil
 import _FrostInternal
+import math
 
 Actor property PlayerRef auto
 Quest property _Frost_MainQuest auto
 GlobalVariable property _Frost_Setting_Notifications_EquipmentValues auto
 GlobalVariable property _Frost_CheckInitialEquipment auto
-Formlist property _Frost_EquipExceptions auto
 Quest property FrostfallStrings auto
 Keyword property ActorTypeCreature auto
 Keyword property ImmuneParalysis auto
+Keyword property WAF_ClothingCloak auto
 
 Armor property equipped_body auto hidden
 Armor property equipped_head auto hidden
@@ -102,6 +103,15 @@ function HandleEquippedObject(Form akBaseObject, int iGearType)
     Armor armor_object = akBaseObject as Armor
     _Frost_ArmorProtectionDatastoreHandler DSHandler = GetClothingDatastoreHandler()
     int[] protection_data
+
+    ; Gear Type Overrides
+    if akBaseObject.HasKeyword(WAF_ClothingCloak)
+        iGearType = 7
+    endif
+    int mySlotMask = armor_object.GetSlotMask()
+    if LogicalAnd(mySlotMask, armor_object.kSlotMask31) && !LogicalAnd(mySlotMask, armor_object.kSlotMask32)
+        iGearType = 3
+    endif
 
     if iGearType == 1
         protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType, aiMode = 1)
@@ -213,6 +223,15 @@ endFunction
 
 function HandleUnequippedObject(Form akBaseObject, int iGearType)
     Armor armor_object = akBaseObject as Armor
+
+    ; Gear Type Overrides
+    if akBaseObject.HasKeyword(WAF_ClothingCloak)
+        iGearType = 7
+    endif
+    int mySlotMask = armor_object.GetSlotMask()
+    if LogicalAnd(mySlotMask, armor_object.kSlotMask31) && !LogicalAnd(mySlotMask, armor_object.kSlotMask32)
+        iGearType = 3
+    endif
 
     if iGearType == 1
         if equipped_body == armor_object
