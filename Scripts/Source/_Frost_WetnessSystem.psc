@@ -23,6 +23,8 @@ GlobalVariable property _Frost_WetLevel auto
 GlobalVariable property _Frost_Setting_ConditionMessages auto
 GlobalVariable property _Frost_Setting_DisplayTutorials auto
 GlobalVariable property _Frost_HelpDone_Wet auto
+GlobalVariable property FrostfallAttributeWetnessReadOnly auto
+GlobalVariable property FrostfallWetLevelReadOnly auto
 Message property _Frost_WetStateMsg_Wet3 auto
 Message property _Frost_WetStateMsg_Wet2 auto
 Message property _Frost_WetStateMsg_Wet1 auto
@@ -93,6 +95,7 @@ function ModAttributeWetness(float amount, float limit)
 		endif
 	endif
 	_Frost_AttributeWetness.SetValue(wetness)
+	FrostfallAttributeWetnessReadOnly.SetValue(wetness)
 	FrostDebug(1, "~~~~ Wetness ::: Current Wetness: " + wetness + " (" + amount + ")")
 
 	SendEvent_UpdateWetnessMeter()
@@ -119,6 +122,7 @@ function UpdateWetLevel()
 	endif
 
 	_Frost_WetLevel.SetValueInt(wet_level)
+	FrostfallWetLevelReadOnly.SetValueInt(wet_level)
 	
 	if wet_level > 0
 		last_wet_level = _Frost_WetLevel.GetValueInt()
@@ -245,6 +249,7 @@ endFunction
 
 function SetWetness(float value, bool force_meter_display = false)
 	_Frost_AttributeWetness.SetValue(value)
+	FrostfallAttributeWetnessReadOnly.SetValue(value)
 	if force_meter_display
 		SendEvent_ForceWetnessMeterDisplay()
 	else

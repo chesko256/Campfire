@@ -9,6 +9,7 @@ formlist property _Frost_Drinks20 auto
 
 Keyword property _Frost_FoodBuffKeyword auto
 Keyword property _Frost_DrinkKeyword auto
+Keyword property FrostfallWarmFoodDrinkKeyword auto
 
 Potion property _Frost_DrinkEffectPotion1 auto
 Potion property _Frost_DrinkEffectPotion2 auto
@@ -18,7 +19,7 @@ Potion property _Frost_FoodEffectPotion auto
 Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
 	if akBaseObject as Potion
 		; Soups and Stews
-		if _Frost_SoupsList.HasForm(akBaseObject)
+		if _Frost_SoupsList.HasForm(akBaseObject) || akBaseObject.HasKeyword(FrostfallWarmFoodDrinkKeyword)
 			if !(PlayerRef.HasEffectKeyword(_Frost_FoodBuffKeyword))
 				PlayerRef.EquipItem(_Frost_FoodEffectPotion, false, true)
 			EndIf

@@ -16,6 +16,7 @@ GlobalVariable property _Frost_Setting_WeatherMessages auto
 GlobalVariable property _Frost_RegionDetect_ForceUpdate auto
 GlobalVariable property _Frost_Setting_DisplayTutorials auto
 GlobalVariable property _Frost_HelpDone_Cold auto
+GlobalVariable property FrostfallCurrentTemperatureReadOnly auto
 
 FormList property _Frost_WorldspacesExteriorPineForest auto
 FormList property _Frost_WorldspacesExteriorVolcanicTundra auto
@@ -154,6 +155,7 @@ function UpdateClimateState()
 	FrostDebug(0, "%%%% Climate ::: Current Temp: " + current_temperature + ", Region: " + region)
 	_Frost_CurrentTemperature.SetValueInt(current_temperature)
 	_Frost_CurrentWaterTemperature.SetValueInt(current_temperature + 2)
+	FrostfallCurrentTemperatureReadOnly.SetValueInt(current_temperature)
 	SendEvent_UpdateWeathersenseMeter(current_temperature)
 
 	; Historical values
