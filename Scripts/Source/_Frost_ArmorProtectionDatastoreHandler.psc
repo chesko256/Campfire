@@ -149,13 +149,13 @@ int[] function GetTotalProtectionValues(Armor akArmor, int aiGearType)
         aiGearType = 3
     endif
 
-	FrostDebug(0, "iGearType=" + aiGearType)
+	;FrostDebug(0, "iGearType=" + aiGearType)
 	if aiGearType == 1
 		; Body mode - check body and all other slots
 		; Body
 		warmth_val = IntListGet(_FrostData_ArmorBody, ds_key, 0) - 1
 		cover_val = IntListGet(_FrostData_ArmorBody, ds_key, 1) - 1
-		FrostDebug(0, "Returning body " + warmth_val + " " + cover_val)
+		;FrostDebug(0, "Returning body " + warmth_val + " " + cover_val)
 		; Try to set sane default values for the body
 		if warmth_val == -1
 			result[0] = result[0] + DEFAULT_BODY_WARMTH
@@ -167,7 +167,7 @@ int[] function GetTotalProtectionValues(Armor akArmor, int aiGearType)
 		; Hands
 		warmth_val = IntListGet(_FrostData_ArmorHands, ds_key, 0) - 1
 		cover_val = IntListGet(_FrostData_ArmorHands, ds_key, 1) - 1
-		FrostDebug(0, "Returning multi hands " + warmth_val + " " + cover_val)
+		;FrostDebug(0, "Returning multi hands " + warmth_val + " " + cover_val)
 		if warmth_val != -1
 			result[0] = result[0] + warmth_val
 			result[1] = result[1] + cover_val
@@ -175,7 +175,7 @@ int[] function GetTotalProtectionValues(Armor akArmor, int aiGearType)
 		; Head
 		warmth_val = IntListGet(_FrostData_ArmorHead, ds_key, 0) - 1
 		cover_val = IntListGet(_FrostData_ArmorHead, ds_key, 1) - 1
-		FrostDebug(0, "Returning multi head " + warmth_val + " " + cover_val)
+		;FrostDebug(0, "Returning multi head " + warmth_val + " " + cover_val)
 		if warmth_val != -1
 			result[0] = result[0] + warmth_val
 			result[1] = result[1] + cover_val
@@ -183,7 +183,7 @@ int[] function GetTotalProtectionValues(Armor akArmor, int aiGearType)
 		; Feet
 		warmth_val = IntListGet(_FrostData_ArmorFeet, ds_key, 0) - 1
 		cover_val = IntListGet(_FrostData_ArmorFeet, ds_key, 1) - 1
-		FrostDebug(0, "Returning multi feet " + warmth_val + " " + cover_val)
+		;FrostDebug(0, "Returning multi feet " + warmth_val + " " + cover_val)
 		if warmth_val != -1
 			result[0] = result[0] + warmth_val
 			result[1] = result[1] + cover_val
@@ -191,20 +191,20 @@ int[] function GetTotalProtectionValues(Armor akArmor, int aiGearType)
 		; Cloak
 		warmth_val = IntListGet(_FrostData_ArmorCloak, ds_key, 0) - 1
 		cover_val = IntListGet(_FrostData_ArmorCloak, ds_key, 1) - 1
-		FrostDebug(0, "Returning multi feet " + warmth_val + " " + cover_val)
+		;FrostDebug(0, "Returning multi feet " + warmth_val + " " + cover_val)
 		if warmth_val != -1
 			result[0] = result[0] + warmth_val
 			result[1] = result[1] + cover_val
 		endif
 		
-		FrostDebug(0, "Result: " + result)
+		;FrostDebug(0, "Result: " + result)
 		return result
 	elseif aiGearType == 3
 		; Head mode - check head and cloak slots
 		; Head
 		warmth_val = IntListGet(_FrostData_ArmorHead, ds_key, 0) - 1
 		cover_val = IntListGet(_FrostData_ArmorHead, ds_key, 1) - 1
-		FrostDebug(0, "Returning head " + warmth_val + " " + cover_val)
+		;FrostDebug(0, "Returning head " + warmth_val + " " + cover_val)
 		; Try to set sane default values for the head
 		if warmth_val == -1
 			if akArmor.HasKeyword(ClothingCirclet) || StringUtil.Find(akArmor.GetName(), "circlet") != -1
@@ -224,13 +224,13 @@ int[] function GetTotalProtectionValues(Armor akArmor, int aiGearType)
 		; Cloak
 		warmth_val = IntListGet(_FrostData_ArmorCloak, ds_key, 0) - 1
 		cover_val = IntListGet(_FrostData_ArmorCloak, ds_key, 1) - 1
-		FrostDebug(0, "Returning multi cloak " + warmth_val + " " + cover_val)
+		;FrostDebug(0, "Returning multi cloak " + warmth_val + " " + cover_val)
 		if warmth_val != -1
 			result[0] = result[0] + warmth_val
 			result[1] = result[1] + cover_val
 		endif
 
-		FrostDebug(0, "Result: " + result)
+		;FrostDebug(0, "Result: " + result)
 		return result
 	else
 		; Normal mode - check single slot
@@ -252,7 +252,7 @@ int[] function GetTotalProtectionValues(Armor akArmor, int aiGearType)
 		; Subtract 1 to return a falsey -1 on failure
 		warmth_val = IntListGet(Datastore, ds_key, 0) - 1
 		cover_val = IntListGet(Datastore, ds_key, 1) - 1
-		FrostDebug(0, "Returning type " + aiGearType + " single " + warmth_val + " " + cover_val)
+		;FrostDebug(0, "Returning type " + aiGearType + " single " + warmth_val + " " + cover_val)
 	
 		if warmth_val == -1
 			; Try to set sane default values
@@ -284,7 +284,7 @@ int[] function GetTotalProtectionValues(Armor akArmor, int aiGearType)
 			result[0] = warmth_val
 			result[1] = cover_val
 		endif
-		FrostDebug(0, "Result: " + result)
+		;FrostDebug(0, "Result: " + result)
 		return result
 	endif
 endFunction
@@ -378,7 +378,7 @@ int[] function GetArmorProtectionData(Armor akArmor, int aiGearType, int aiMode 
 		; Cloak
 		result[2] = (IntListGet(_FrostData_ArmorCloak, ds_key, 0) - 1)
 		result[3] = (IntListGet(_FrostData_ArmorCloak, ds_key, 1) - 1)
-		FrostDebug(0, "Result: " + result)
+		;FrostDebug(0, "Result: " + result)
 		return result
 	else
 		; Normal mode - check single slot, return int[2]
@@ -429,7 +429,7 @@ int[] function GetArmorProtectionData(Armor akArmor, int aiGearType, int aiMode 
 				result[1] = DEFAULT_SHIELD_COVERAGE
 			endif
 		endif
-		FrostDebug(0, "Result: " + result)
+		;FrostDebug(0, "Result: " + result)
 		return result
 	endif
 endFunction
