@@ -16,6 +16,100 @@ E-mail - chesko.tesmod@gmail.com
 
 This changelog is mainly for posterity purposes. This mod has evolved a lot in the amount of time it's been in development. Read on only if you enjoy watching me change my mind many, many times.
 
+
+===========================================
+Frostfall 3.0 Change Log
+===========================================
+
+For upgrade and install instructions, please see the Quickstart Guide (http://skyrimsurvival.com/home/frostfall/quickstart-guide/).
+
+FEATURES
+----------------------------
+    Performance - Substantially enhanced performance.
+
+    UI Features - Your equipment's protection values can now display right on the item card in the menu. See UI under Changes, below.
+
+    Endurance Skill Tree - A new stand-alone perk tree centered around cold weather survival. Earn points by traveling and spending time in the cold or in bad weather. (Time near a fire, inside a tent, or underneath shelter does not contribute towards Endurance. It is based on time spent only; losing more exposure will not increase the skill faster.) From any campfire you create, select Skills and navigate to the Endurance tree.
+
+    Settings Profiles - Your Frostfall mod settings can now be automatically saved to a Profile. Settings Profiles are written to a file, and persist across saves, loads, characters, and new games. If enabled, any settings changes you make (including customizing the protection values of your equipment) are automatically saved to your current Profile, and your last used Profile will be loaded any time you load your game or start a new one, ensuring that you spend less time configuring mods and more time playing the game. There are 10 Profile slots to switch between, and can be renamed.
+        This feature can be disabled.
+        Renaming profiles requires SkyUI 5.1+. SkyUI 4+ is supported, but you will not be able to rename profiles.
+
+    Streamlined Mechanics - The way Frostfall works is now much more straightforward. All protection from exposure and rain is now represented as Warmth or Coverage. See Changes, below.
+
+    Compatibility - Compatible with the latest versions of Immersive Armors, Wet and Cold, Climates of Tamriel, and more. 
+
+
+CHANGES
+----------------------------
+
+There are extensive changes between Frostfall 2.6 and Frostfall 3.0 / Campfire 1.x. For a more focused list of important changes, please see the Frostfall 3 Primer (http://skyrimsurvival.com/home/frostfall/frostfall-3-primer-for-current-and-former-players/).
+
+All of the camping components of Frostfall were moved into Campfire. The changes to the camping system will not be covered below. However, please note that the way campfires are built has changed significantly from Frostfall 2.6. See the Campfire documentation for details on the new campfire building system.
+
+	System
+
+    Frostfall now requires Campfire, SKSE 1.7.3+, and SkyUI 4.1+.
+    Nearly all of Frostfall's scripts have been rewritten from scratch with performance in mind.
+    Frostfall's architecture has been completely redesigned in order to allow many parts of the system to run simultaneously. This means that the main exposure script now runs in tenths of a second instead of several seconds.
+    As part of the above, the "your script system is running too slowly" error message has been entirely removed.
+
+Gameplay
+
+    Exposure Protection is now called Warmth.
+    Exposure Resistance has been removed. Many of the things that granted Exposure Resistance, like torches and soups, now grant Warmth instead.
+    Frost Resistance, which was part of the exposure calculation but granted neither Exposure Protection nor Exposure Resistance, now simply provides a small bonus to Warmth. This bonus is displayed in the Active Effects menu.
+    A new attribute, Coverage, was added to all worn equipment. Coverage determines how quickly you get wet in the rain, and also reduces the exposure rate in bad and severe weather. It effectively helps increase the temperature during bad weather to more normal levels by cutting the wind chill.
+    All worn gear in the head, body, hands, and feet slots grant Warmth and Coverage. (Exception: circlets, jewelry, etc)
+    Cloaks no longer grant a "rain resistance" bonus and now simply grant Warmth and Coverage like other gear. Since all worn gear grants some Coverage, the need to wear a cloak to protect against the rain has been greatly reduced depending on your gear choices.
+    Shields grant a small amount of Coverage.
+    Inspect Equipment has been removed. It will be possible to change the Warmth and Coverage value of any piece of equipment through the Mod Configuration Menu in the next version (Frostfall 3.1).
+    Being wet now grants a bonus to fire resistance, but also grants a weakness to shock.
+    Being hit with a flame spell now dries you off.
+    Being hit with a flame spell now decreases exposure slightly, down to a limit.
+    Being hit with a frost spell now increases exposure slightly, up to a limit.
+    Adaptation, a benefit in Frostfall 2.6 that granted extra Exposure Resistance as you leveled up, has been removed. There is now an Adaptation perk in the Endurance skill tree which grants additional Warmth for each rank purchased.
+    All of the SkyRe Wayfarer perks added by an optional plug-in for SkyRe have been folded into Frostfall 3.0's Endurance skill tree. Do not use the Frostfall Wayfarer plug-in with Frostfall 3.0.
+    The player can now seldomly gain Frostbite when reaching Freezing exposure or below when in low temperature areas while not wearing equipment in a main slot; head, body, hands, feet. Frostbite takes real-time minutes to wear off and cannot be cured by standing near fires. You can gain Frostbite on any (or all) of the 4 above mentioned areas, with appropriate penalties (Example: "Frostbite (Feet)" grants a penalty to sneak and movement speed.)
+    Vampires are no longer immune to Exposure. By default, they are immune to all forms of Frostbite and have a passive +100 Warmth bonus.
+    Woodcutter's Axe durability has been removed, in part due to the new way that fires are created in Campfire.
+    Exposure now decreases slowly when indoors. This prevents the player becoming stuck at a cold location with no way to recover before they leave.
+    High exposure will no longer prevent you from searching for wood.
+    The "Will to Survive" benefit when traveling with a follower was removed.
+    "Transmute Wood" now transmutes branches to deadwood, and deadwood to firewood, if the caster is carrying any.
+    "Kindle" now works equally well no matter the weather conditions.
+
+Settings
+
+    Many settings have been moved to Campfire's configuration system. See Campfire for more details.
+    "Presets" (Lite, Classic, Hardcore) have been removed. The mod continues to be fully configurable, and Settings Profiles make keeping the settings you have much simpler.
+    A single setting, "At Max Exposure:" allows selection between "Rescue", "Death", and "Nothing". This streamlines the "Max Exposure is Lethal" and the rescue toggle / rescue percentage chance settings. The default setting is now "Rescue".
+    The W.E.A.R. system is no longer an optional feature; its successor (the Warmth and Coverage system) is now the new and only armor system in Frostfall. Since Warmth and Coverage is clearly communicated for each piece of equipment, a separate, simpler system was felt to be unnecessary.
+    "Vampire Immunity to Exposure" has been removed. It has been replaced by "Treat Vampires Like Mortals", enabling it causes Vampires to be treated like any other normal race (without the Warmth bonus and Frostbite immunity).
+        If you want a Frostfall 2.6-like immunity to exposure as a Vampire in Frostfall 3.0, simply disable the exposure system when you become a Vampire.
+    "Axe Required to Fast Travel" has been removed. You can now simply enable and disable Fast Travel.
+    You can configure the Warmth and Coverage of any worn piece of gear through the MCM. This replaces the Inspect Equipment ability. Your Warmth and Coverage customizations are saved to your Settings Profile.
+
+
+UI
+
+    Warmth and Coverage now display on armor's item card in the inventory menu, if using the optional SkyUI 5.0+ menu add-on.
+    Warmth Rating and Coverage for the player now display on the bottom bar of the inventory menu, if using the optional SkyUI 5.0+ menu add-on.
+    The Wetness meter is now a smaller sub-meter underneath the Exposure meter.
+    The Weathersense indicator is now a meter similar in design to the Weapon Charge meters. The meter now ranges from full (very warm temperatures) to almost empty (very cold temperatures), with the color changing appropriately. This more clearly communicates the current temperature across a range, and improves ease of use for colorblind players.
+    A new System page was added to the Mod Configuration Menu. You can view the health of all of Frostfall's systems and modify the Papyrus debug logging amount.
+    The Status screen has been removed. Important data is now available in-game or in the Mod Configuration Menu.
+    The Ranks screen has been removed.
+
+
+BUG FIXES
+----------------------------
+
+    The movement penalty when Freezing and Freezing to Death now take effect immediately more often.
+    Fixed an issue where the player's position in Wyrmstooth was being miscalculated.
+    Fixed an issue where the player character or followers very near the player may play a swirling visual effect when using Requiem.
+    Bound cloaks can now be unequipped from the inventory in order to dispel them, as their effect description notes.
+
 ===========================================
 Frostfall 2.6 Change Log
 ===========================================

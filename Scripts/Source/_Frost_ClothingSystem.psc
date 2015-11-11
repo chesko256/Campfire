@@ -6,6 +6,7 @@ import math
 
 Actor property PlayerRef auto
 Quest property _Frost_MainQuest auto
+GlobalVariable property FrostfallRunning auto
 GlobalVariable property _Frost_Setting_Notifications_EquipmentValues auto
 GlobalVariable property _Frost_CheckInitialEquipment auto
 Quest property FrostfallStrings auto
@@ -310,7 +311,7 @@ Event OnUpdate()
 EndEvent
 
 function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor, int aiGearType)
-    if !GetCompatibilitySystem().isUIPackageInstalled
+    if !GetCompatibilitySystem().isUIPackageInstalled && FrostfallRunning.GetValueInt() == 2
         int[] result = GetClothingDatastoreHandler().GetTotalProtectionValues(akArmor, aiGearType)
         if result[0] == 0 && result[1] == 0
             return
@@ -329,7 +330,7 @@ function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor, int aiGearType)
 endFunction
 
 function DisplayWarmthCoverageNoSkyUIPkgRemove(Armor akArmor, int aiGearType)
-    if !GetCompatibilitySystem().isUIPackageInstalled 
+    if !GetCompatibilitySystem().isUIPackageInstalled && FrostfallRunning.GetValueInt() == 2
         int[] result = GetClothingDatastoreHandler().GetTotalProtectionValues(akArmor, aiGearType)
         if result[0] == 0 && result[1] == 0
             return
