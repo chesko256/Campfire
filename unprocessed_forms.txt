@@ -1,14 +1,8 @@
 
 AddDatastoreEntryByKey("754637___Skyrim.esm", X, Y, Z) ; ArmorFalmerBoots
-AddDatastoreEntryByKey("754635___Skyrim.esm", X, Y, Z) ; ArmorFalmerCuirass
+
 AddDatastoreEntryByKey("754639___Skyrim.esm", X, Y, Z) ; ArmorFalmerGauntlets
 AddDatastoreEntryByKey("312267___Skyrim.esm", X, Y, Z) ; ArmorFAlmerHelmet
-AddDatastoreEntryByKey("1021552___Skyrim.esm", X, Y, Z) ; ArmorGag
-
-AddDatastoreEntryByKey("868007___Skyrim.esm", X, Y, Z) ; ArmorPenitusBoots
-AddDatastoreEntryByKey("868000___Skyrim.esm", X, Y, Z) ; ArmorPenitusCuirass
-AddDatastoreEntryByKey("868011___Skyrim.esm", X, Y, Z) ; ArmorPenitusGauntlets
-AddDatastoreEntryByKey("868010___Skyrim.esm", X, Y, Z) ; ArmorPenitusHelmet
 
 AddDatastoreEntryByKey("976320___Skyrim.esm", X, Y, Z) ; ArmorTorturerHood
 AddDatastoreEntryByKey("786790___Skyrim.esm", X, Y, Z) ; ArmorTsunBoots

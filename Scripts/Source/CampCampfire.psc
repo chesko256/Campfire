@@ -592,6 +592,12 @@ function TakeDown()
         (myPerkNavController as _Camp_PerkNavController).TakeDown()
     endif
     UnregisterForUpdateGameTime()
+
+    ForceStopUsingFurniture(mySitFurniture1)
+    ForceStopUsingFurniture(mySitFurniture2)
+    ForceStopUsingFurniture(mySitFurniture3)
+    ForceStopUsingFurniture(mySitFurniture4)
+
     TryToDisableAndDeleteRef(mySteam)
     TryToDisableAndDeleteRef(myFuelLit)
     TryToDisableAndDeleteRef(myFuelUnlit)

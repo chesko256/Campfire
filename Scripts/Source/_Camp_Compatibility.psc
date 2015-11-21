@@ -102,6 +102,8 @@ ConstructibleObject property _Camp_RecipeLeatherValeDeerHideDLC1 auto
 ConstructibleObject property _Camp_RecipeLeatherValeSabreCatHideDLC1 auto
 ConstructibleObject property _Camp_RecipeTanningLeatherValeDeerHideDLC1 auto
 ConstructibleObject property _Camp_RecipeTanningLeatherValeSabreCatHideDLC1 auto
+ConstructibleObject property _Camp_RecipeLeatherValeSabreCatHideDLC1_CCO auto
+ConstructibleObject property _Camp_RecipeTanningLeatherValeSabreCatHideDLC1_CCO auto
 
 Spell property _Camp_CreateItemSpell auto
 Spell property _Camp_CampfireSpell auto
@@ -558,6 +560,8 @@ function RunCompatibility()
 		_Camp_RecipeLeatherValeSabreCatHideDLC1.SetNthIngredient(ValeSabreCatHide, 0)
 		_Camp_RecipeTanningLeatherValeDeerHideDLC1.SetNthIngredient(ValeDeerHide, 0)
 		_Camp_RecipeTanningLeatherValeSabreCatHideDLC1.SetNthIngredient(ValeSabreCatHide, 0)
+		_Camp_RecipeLeatherValeSabreCatHideDLC1_CCO.SetNthIngredient(ValeDeerHide, 0)
+		_Camp_RecipeTanningLeatherValeSabreCatHideDLC1_CCO.SetNthIngredient(ValeSabreCatHide, 0)
 	endif
 
 	if isEOLoaded
