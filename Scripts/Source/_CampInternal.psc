@@ -64,6 +64,13 @@ function TryToDisableAndDeleteRef(ObjectReference akReference, bool bFadeOut = f
 	if akReference
 		akReference.Disable(bFadeOut)
 		akReference.Delete()
+
+		if akReference && akReference.IsEnabled()
+			; Try one more time
+			CampDebug(2, "Placed object " + akReference + " failed to disable/delete on first attempt, trying again.")
+			akReference.Disable(bFadeOut)
+			akReference.Delete()
+		endif
 	endif
 endFunction
 
