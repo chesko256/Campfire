@@ -402,15 +402,18 @@ function DoActivate(ObjectReference akActionRef)
             ;Talk To...
             ShowTalkMenu()
         elseif i == 3
+            ;Get Up
+            mySitFurniture2.Activate(PlayerRef)
+        elseif i == 4
             ;Destroy
             TakeDown()
-        elseif i == 4
+        elseif i == 5
             ;Place Cooking Pot
             if PlayerRef.GetItemCount(_Camp_CookingPot_MISC) > 0
                 myCookPotSnapMarker.PlaceAtMe(_Camp_CookingPot, abForcePersist = !(IsPlaceableObjectTemporary(_Camp_CookingPot)))
                 PlayerRef.RemoveItem(_Camp_CookingPot_MISC, 1, true)
             endif
-        elseif i == 5
+        elseif i == 6
             ;Skills
             if !myPerkNodeController
                 bool b = ShowSkills()
@@ -418,7 +421,7 @@ function DoActivate(ObjectReference akActionRef)
                     DoActivate(akActionRef)
                 endif
             endif
-        elseif i == 6
+        elseif i == 7
             ;Cancel
         endif
     endif

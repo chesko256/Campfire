@@ -5,9 +5,10 @@ import CampUtil
 _Camp_ConditionValues property ConditionVars auto
 Quest property CampfireTentSystem auto
 Message property _Camp_Help_CampfireActivate auto
+Actor property PlayerRef auto
 
 Event OnActivate(ObjectReference akActionRef)
-	if akActionRef == Game.GetPlayer()
+	if akActionRef == PlayerRef && PlayerRef.GetSitState() <= 2
 		ConditionVars.IsPlayerSittingNearFire = true
 		CampfireTentSystem.Start()
 		Game.DisablePlayerControls(false, true, true, false, true, false, false, false)
