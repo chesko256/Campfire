@@ -386,3 +386,16 @@ function TryToPlayShader(ObjectReference akObjectReference)
 		PlacementSystem._Camp_BurnEffect.Play(akObjectReference)
 	endif
 endFunction
+
+function ForceStopUsingFurniture(ObjectReference akFurnitureRef)
+	if akFurnitureRef
+		if akFurnitureRef.IsFurnitureInUse()
+			; Someone is using this furniture. Discover them and kick them out.
+			ObjectReference akUser = Game.FindClosestActorFromRef(akFurnitureRef, 100.0)
+			if akUser
+				akFurnitureRef.Activate(akUser)
+				Utility.Wait(0.25)
+			endif
+		endif
+	endif
+endFunction

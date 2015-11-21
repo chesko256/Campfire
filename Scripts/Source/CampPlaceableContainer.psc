@@ -257,6 +257,13 @@ endFunction
 
 function TakeDown()
 	parent.TakeDown()
+
+	ForceStopUsingFurniture(myExtraFurniture1)
+	ForceStopUsingFurniture(myExtraFurniture2)
+	ForceStopUsingFurniture(myExtraFurniture3)
+	ForceStopUsingFurniture(myExtraFurniture4)
+	ForceStopUsingFurniture(myExtraFurniture5)
+
 	TryToDisableAndDeleteRef(myExtraStatic1)
 	TryToDisableAndDeleteRef(myExtraStatic2)
 	TryToDisableAndDeleteRef(myExtraStatic3)
