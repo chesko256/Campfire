@@ -81,6 +81,9 @@ function UpdateTentUseState(ObjectReference akTent)
 		endif
 		_Camp_ForceBlackVFX.Stop(PlayerRef)
 		_Camp_Black.PopTo(_Camp_FadeUp)
+		if Compatibility.isSKSELoaded
+			akTent.UnregisterForAllControls()
+		endif
 		CleanUpTent(akTent)
 	elseif !(PlayerRef.GetSitState() == 2 || PlayerRef.GetSitState() == 3) && !TentObject.bGettingUp
 		;Player getting up from sitting or lying down
@@ -93,6 +96,9 @@ function UpdateTentUseState(ObjectReference akTent)
 
 		if TentObject.myExitFront && TentObject.myExitFront.IsEnabled() && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
 			PlayerRef.SplineTranslateToRef(TentObject.myExitFront, 1.0, 65.0)
+		endif
+		if Compatibility.isSKSELoaded
+			akTent.UnregisterForAllControls()
 		endif
 		CleanUpTent(akTent)
 	else
@@ -159,12 +165,14 @@ function ShowMainMenu(ObjectReference akTent)
 		if Compatibility.isSKSELoaded
 			Message.ResetHelpMessage("Activate")
 			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
+			akTent.RegisterForControl("Jump")
 		endif
 		PlayerSit(akTent)
 	elseif i == 1									;Lie Down
 		if Compatibility.isSKSELoaded
 			Message.ResetHelpMessage("Activate")
 			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
+			akTent.RegisterForControl("Jump")
 		endif
 		PlayerLieDown(akTent)
 	elseif i == 2									;Lantern
@@ -987,32 +995,6 @@ function PackTent(ObjectReference akTent)
 	PlayerRef.AddItem(TentObject.Required_InventoryItem, abSilent = true)
 	ITMGenericArmorUp.Play(akTent)
 
-	;Are any of the bed rolls in use?
-	if TentObject.myBedRoll
-		if TentObject.myBedRoll.IsFurnitureInUse()
-			_Camp_TentPickUpError.Show()
-			return
-		endif
-	endif
-	if TentObject.mySpareBedRoll1
-		if TentObject.mySpareBedRoll1.IsFurnitureInUse()
-			_Camp_TentPickUpError.Show()
-			return
-		endif
-	endif
-	if TentObject.mySpareBedRoll2
-		if TentObject.mySpareBedRoll2.IsFurnitureInUse()
-			_Camp_TentPickUpError.Show()
-			return
-		endif
-	endif
-	if TentObject.mySpareBedRoll3
-		if TentObject.mySpareBedRoll3.IsFurnitureInUse()
-			_Camp_TentPickUpError.Show()
-			return
-		endif
-	endif
-	
 	;Move activation trigger to the anchor
 	_Camp_Tent_InteractTriggerREF.MoveTo(_Camp_Anchor)
 
