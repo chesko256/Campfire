@@ -392,8 +392,13 @@ function ForceStopUsingFurniture(ObjectReference akFurnitureRef)
 		if akFurnitureRef.IsFurnitureInUse()
 			; Someone is using this furniture. Discover them and kick them out.
 			ObjectReference akUser = Game.FindClosestActorFromRef(akFurnitureRef, 100.0)
+			CampDebug(1, "Found actor " + akUser + " using my furniture, kicking them out.")
 			if akUser
-				akFurnitureRef.Activate(akUser)
+				; Move the furniture to prevent future use
+				akFurnitureRef.MoveTo(akFurnitureRef, afZOffset = -2000.0)
+
+				; Remove the actor
+				akUser.MoveTo(akUser, 1.0, 1.0, 1.0)
 				Utility.Wait(0.25)
 			endif
 		endif
