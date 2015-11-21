@@ -730,10 +730,9 @@ function RegisterForKeysOnLoad()
 endFunction
 
 function RegisterForControlsOnLoad()
-	CampDebug(0, "Compatibility is trying to call Campfire.RegisterForControlsOnLoad()")
-	Campfire.RegisterForControlsOnLoad()
+	; pass
 endFunction
 
 function RegisterForEventsOnLoad()
-	Campfire.RegisterForEventsOnLoad()
+	; pass
 endFunction

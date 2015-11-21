@@ -20,23 +20,3 @@ event OnInit()
 	PlayerAlias.ForceRefTo(PlayerRef)
 	Compatibility.RunCompatibility()
 endEvent
-
-function RegisterForEventsOnLoad()
-	;pass
-endFunction
-
-function RegisterForControlsOnLoad()
-	CampDebug(0, "Registering for controls!")
-	RegisterForControl("Jump")
-endFunction
-
-Event OnControlDown(string control)
-	if control == "Jump"
-		CampDebug(0, "Got jump press, checking for tent.")
-		ObjectReference tent = GetCurrentTent()
-		if tent && PlayerRef.GetSitState() == 3
-			CampDebug(0, "Activating tent " + tent)
-			tent.Activate(PlayerRef)
-		endif
-	endif
-endEvent

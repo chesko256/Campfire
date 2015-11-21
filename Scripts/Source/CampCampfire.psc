@@ -1095,3 +1095,10 @@ Event OnUpdateGameTime()
         endif
     endif
 endEvent
+
+Event OnControlDown(string control)
+    if control == "Jump"
+        CampfireAPI Campfire = (Game.GetFormFromFile(0x00024095, "Campfire.esm") as Quest) as CampfireAPI
+        self.Activate(Campfire.PlayerRef)
+    endif
+endEvent
