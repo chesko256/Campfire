@@ -4,7 +4,7 @@ import debug
 import FrostUtil
 
 int property SKSE_MIN_VERSION = 10703 autoReadOnly
-float property CAMPFIRE_MIN_VERSION = 1.4 autoReadOnly
+float property CAMPFIRE_MIN_VERSION = 1.51 autoReadOnly
 string CONFIG_PATH = "../FrostfallData/"
 
 ;#PROPERTIES=====================================================================================================================

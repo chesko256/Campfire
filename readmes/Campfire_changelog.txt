@@ -7,6 +7,13 @@ Complete Camping System
 Change Log
 
 ===================================================
+Release 1.5.1 (11/22/2015)
+
+Bug Fixes
+
+    Fixed an issue where giant campfires were not registering correctly as heat sources. (Fixing this in Frostfall will require an update to Frostfall as well, please be on the lookout for that soon.)
+
+
 Release 1.5 (11/21/2015)
 
 Features
