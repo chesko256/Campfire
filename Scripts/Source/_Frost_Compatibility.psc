@@ -5,7 +5,11 @@ import FrostUtil
 
 int property SKSE_MIN_VERSION = 10703 autoReadOnly
 float property CAMPFIRE_MIN_VERSION = 1.51 autoReadOnly
+GlobalVariable property _Frost_PreviousVersion auto
+GlobalVariable property _Frost_FrostfallVersion auto
+
 string CONFIG_PATH = "../FrostfallData/"
+bool datastore_update_required = false
 
 ;#PROPERTIES=====================================================================================================================
 actor property PlayerRef auto
@@ -160,7 +164,8 @@ Weather property DLC2AshStorm auto hidden
 bool added_spell_books = false
 
 ;#Upgrade Flags====================================================================
-
+GlobalVariable property _Frost_Setting_1PAnimationAllowed auto
+GlobalVariable property _Frost_Upgraded_3_0_1 auto
 
 Event OnPlayerLoadGame()
 	RunCompatibility()
@@ -203,6 +208,12 @@ function RunCompatibility()
 	trace("[Frostfall]======================================================================================================")
 	
 	; Upgrade code goes here
+	if _Frost_Upgraded_3_0_1.GetValueInt() != 2
+		Upgrade_3_0_1()
+	endif
+
+	; Update the previous version value with the current version
+	_Frost_PreviousVersion.SetValue(_Frost_FrostfallVersion.GetValue())
 
 	bool skse_loaded = SKSE.GetVersion()
 	if skse_loaded
@@ -447,6 +458,15 @@ function RunCompatibility()
 	RegisterForEventsOnLoad()
 	RegisterForMenusOnLoad()
 	AddStartupSpells()
+endFunction
+
+function Upgrade_3_0_1()
+	; Deprecate the 1st Person Hand Warming Animation setting
+	_Frost_Setting_1PAnimationAllowed.SetValueInt(0)
+	FrostConfig.SaveSettingToCurrentProfile("1P_animation_allowed", _Frost_Setting_1PAnimationAllowed.GetValueInt())
+
+	trace("[Frostfall] Upgraded to 3.0.1.")
+	_Frost_Upgraded_3_0_1.SetValueInt(2)
 endFunction
 
 function RunCompatibilityArmors()
