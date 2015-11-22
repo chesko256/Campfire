@@ -102,7 +102,16 @@ function HandleEquippedObject(Form akBaseObject, int iGearType)
         i -= 1
     endWhile
 
-    Armor armor_object = akBaseObject as Armor
+    if !akBaseObject
+        return
+    endif
+
+    Armor armor_object = akBaseObject as Armor    
+
+    if !armor_object
+        return
+    endif
+
     _Frost_ArmorProtectionDatastoreHandler DSHandler = GetClothingDatastoreHandler()
     int[] protection_data
 
@@ -224,7 +233,14 @@ function ObjectUnequipped(Form akBaseObject, int iGearType)
 endFunction
 
 function HandleUnequippedObject(Form akBaseObject, int iGearType)
+    if !akBaseObject
+        return
+    endif
     Armor armor_object = akBaseObject as Armor
+
+    if !armor_object
+        return
+    endif
 
     ; Gear Type Overrides
     if akBaseObject.HasKeyword(WAF_ClothingCloak)
