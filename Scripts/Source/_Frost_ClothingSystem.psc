@@ -76,7 +76,11 @@ function ObjectEquipped(Form akBaseObject, int iGearType)
     ;       6: Ammo
     ;       7: Other (could be cloak)
     ;       8: Shield
-    
+        
+    if !akBaseObject
+        return
+    endif
+
     ; Initial equipment check
     if akBaseObject.HasKeyword(_Frost_DummyArmorKW)
         return
@@ -102,12 +106,7 @@ function HandleEquippedObject(Form akBaseObject, int iGearType)
         i -= 1
     endWhile
 
-    if !akBaseObject
-        return
-    endif
-
-    Armor armor_object = akBaseObject as Armor    
-
+    Armor armor_object = akBaseObject as Armor
     if !armor_object
         return
     endif
@@ -202,6 +201,9 @@ function ObjectUnequipped(Form akBaseObject, int iGearType)
     ;       8: Shield
 
     unequip_lock = true
+    if !akBaseObject
+        return
+    endif
     if akBaseObject.HasKeyword(_Frost_DummyArmorKW)
         return
     endif
@@ -233,15 +235,10 @@ function ObjectUnequipped(Form akBaseObject, int iGearType)
 endFunction
 
 function HandleUnequippedObject(Form akBaseObject, int iGearType)
-    if !akBaseObject
-        return
-    endif
     Armor armor_object = akBaseObject as Armor
-
     if !armor_object
         return
     endif
-
     ; Gear Type Overrides
     if akBaseObject.HasKeyword(WAF_ClothingCloak)
         iGearType = 7
@@ -332,6 +329,9 @@ Event OnUpdate()
 EndEvent
 
 function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor, int aiGearType)
+    if !akArmor
+        return
+    endif
     if !GetCompatibilitySystem().isUIPackageInstalled && FrostfallRunning.GetValueInt() == 2
         int[] result = GetClothingDatastoreHandler().GetTotalProtectionValues(akArmor, aiGearType)
         if result[0] == 0 && result[1] == 0
@@ -351,6 +351,9 @@ function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor, int aiGearType)
 endFunction
 
 function DisplayWarmthCoverageNoSkyUIPkgRemove(Armor akArmor, int aiGearType)
+    if !akArmor
+        return
+    endif
     if !GetCompatibilitySystem().isUIPackageInstalled && FrostfallRunning.GetValueInt() == 2
         int[] result = GetClothingDatastoreHandler().GetTotalProtectionValues(akArmor, aiGearType)
         if result[0] == 0 && result[1] == 0
