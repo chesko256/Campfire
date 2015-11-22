@@ -18,7 +18,6 @@ GlobalVariable property _Frost_AttributeCoverage auto
 GlobalVariable property StartFrostfall auto
 GlobalVariable property FrostfallRunning auto
 GlobalVariable property _Frost_Setting_Animation auto
-GlobalVariable property _Frost_Setting_1PAnimationAllowed auto
 GlobalVariable property _Frost_Setting_ConditionMessages auto
 GlobalVariable property _Frost_Setting_DisplayAttributesInWeathersense auto
 ; GlobalVariable property _Frost_Setting_ExposureMeterHeight auto
@@ -115,7 +114,6 @@ int Interface_SoundEffects_OID
 int Interface_FullScreenEffects_OID
 int Interface_ForceFeedback_OID
 int Interface_Animation_OID
-int Interface_1PAnimationAllowed_OID
 int Interface_FollowerAnimation_OID
 int Interface_MeterAspectRatio_OID
 int Interface_MeterDisplayTime_OID
@@ -423,11 +421,6 @@ function PageReset_Interface()
 	else
 		Interface_Animation_OID = AddToggleOption("$FrostfallInterfaceSettingAnimation", false)
 	endif
-	if _Frost_Setting_1PAnimationAllowed.GetValueInt() == 2
-		Interface_1PAnimationAllowed_OID = AddToggleOption("$FrostfallInterfaceSetting1PAnimation", true)
-	else
-		Interface_1PAnimationAllowed_OID = AddToggleOption("$FrostfallInterfaceSetting1PAnimation", false)
-	endif
 	if _Frost_Setting_FollowerAnimation.GetValueInt() == 2
 		Interface_FollowerAnimation_OID = AddToggleOption("$FrostfallInterfaceSettingFollowerAnimation", true)
 	else
@@ -684,15 +677,6 @@ event OnOptionSelect(int option)
 			SetToggleOptionValue(Interface_Animation_OID, true)
 		endif
 		SaveSettingToCurrentProfile("animation", _Frost_Setting_NoWaiting.GetValueInt())
-	elseif option == Interface_1PAnimationAllowed_OID
-		if _Frost_Setting_1PAnimationAllowed.GetValueInt() == 2
-			_Frost_Setting_1PAnimationAllowed.SetValueInt(1)
-			SetToggleOptionValue(Interface_1PAnimationAllowed_OID, false)
-		else
-			_Frost_Setting_1PAnimationAllowed.SetValueInt(2)
-			SetToggleOptionValue(Interface_1PAnimationAllowed_OID, true)
-		endif
-		SaveSettingToCurrentProfile("1P_animation_allowed", _Frost_Setting_NoWaiting.GetValueInt())
 	elseif option == Interface_FollowerAnimation_OID
 		if _Frost_Setting_FollowerAnimation.GetValueInt() == 2
 			_Frost_Setting_FollowerAnimation.SetValueInt(1)
@@ -793,10 +777,6 @@ event OnOptionDefault(int option)
 		_Frost_Setting_FollowerAnimation.SetValueInt(2)
 		SetToggleOptionValue(Interface_FollowerAnimation_OID, true)
 		SaveSettingToCurrentProfile("follower_animation", _Frost_Setting_FollowerAnimation.GetValueInt())
-	elseif option == Interface_1PAnimationAllowed_OID
-		_Frost_Setting_1PAnimationAllowed.SetValueInt(1)
-		SetToggleOptionValue(Interface_1PAnimationAllowed_OID, false)
-		SaveSettingToCurrentProfile("1P_animation_allowed", _Frost_Setting_1PAnimationAllowed.GetValueInt())
 	elseif option == Interface_ConditionMessages_OID
 		_Frost_Setting_ConditionMessages.SetValueInt(2)
 		SetToggleOptionValue(Interface_ConditionMessages_OID, true)
@@ -949,8 +929,6 @@ Event OnOptionHighlight(int option)
 		SetInfoText("$FrostfallOptionHighlightForceFeedback")
 	elseif option == Interface_Animation_OID
 		SetInfoText("$FrostfallOptionHighlightAnimation")
-	elseif option == Interface_1PAnimationAllowed_OID
-		SetInfoText("$FrostfallOptionHighlightAnimation1P")
 	elseif option == Interface_FollowerAnimation_OID
 		SetInfoText("$FrostfallOptionHighlightFollowerAnimation")
 	elseif option == Interface_MeterAspectRatio_OID
@@ -1237,10 +1215,6 @@ function SwitchToProfile(int aiProfileIndex)
 	if val != -1
 		_Frost_Setting_FollowerAnimation.SetValueInt(val)
 	endif
-	val = LoadSettingFromProfile(aiProfileIndex, "1P_animation_allowed")
-	if val != -1
-		_Frost_Setting_1PAnimationAllowed.SetValueInt(val)
-	endif
 	val = LoadSettingFromProfile(aiProfileIndex, "condition_messages")
 	if val != -1
 		_Frost_Setting_ConditionMessages.SetValueInt(val)
@@ -1361,7 +1335,6 @@ function GenerateDefaultProfile(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "profile_version", _Frost_SettingsProfileVersion.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "animation", 2)
 	JsonUtil.SetIntValue(profile_path, "follower_animation", 2)
-	JsonUtil.SetIntValue(profile_path, "1P_animation_allowed", 1)
 	JsonUtil.SetIntValue(profile_path, "condition_messages", 2)
 	JsonUtil.SetIntValue(profile_path, "display_attributes_in_weathersense", 1)
 	JsonUtil.SetIntValue(profile_path, "notification_equipmentvalues", 2)
@@ -1396,7 +1369,6 @@ function SaveAllSettings(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "profile_version", _Frost_SettingsProfileVersion.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "animation", _Frost_Setting_Animation.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "follower_animation", _Frost_Setting_FollowerAnimation.GetValueInt())
-	JsonUtil.SetIntValue(profile_path, "1P_animation_allowed", _Frost_Setting_1PAnimationAllowed.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "condition_messages", _Frost_Setting_ConditionMessages.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "display_attributes_in_weathersense", _Frost_Setting_DisplayAttributesInWeathersense.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "notification_equipmentvalues", _Frost_Setting_Notifications_EquipmentValues.GetValueInt())
@@ -1512,3 +1484,9 @@ function RefundEnduranceSkillPoints()
 	EndurancePerkPoints.SetValueInt(EndurancePerkPointsEarned.GetValueInt())
 	EndurancePerkPointProgress.SetValue(0.0)
 endFunction
+
+
+
+; DEPRECATED
+GlobalVariable property _Frost_Setting_1PAnimationAllowed auto
+{This setting is deprecated as of Frostfall 3.0.1.}

@@ -150,7 +150,6 @@ function RunCompatibility()
 	trace("[Campfire]             unloaded files may follow. This is NORMAL and can be ignored.   		                   ")
 	trace("[Campfire]======================================================================================================")
 	
-	;@TODO: Add fatal error for old version of Frostfall
 	isFrostfallLoaded = false
 
 	if !Upgraded_1_1
