@@ -7,6 +7,30 @@ Complete Camping System
 Change Log
 
 ===================================================
+Release 1.5 (11/21/2015)
+
+Features
+
+    You can now put out a campfire without a frost spell. Simply select "Put Out" from the campfire menu.
+    Destroying a campfire will now put it out first, and return any unspent fuel to you.
+    There is now a "Get Up" option when sitting near campfires, similar to tents.
+    (SKSE Req) You can now activate your campfire while sitting near it by pressing the jump key, similar to tents.
+
+Changes
+
+    You can no longer "Use" a campfire when sitting near it, or access "Skills".
+    The player's camera state (first or third person view) before using a tent or campfire is re-applied after exiting it.
+    The option for harvesting deadwood now always appears, but selecting it without an appropriate axe in your inventory displays an error, in order to make it clear to new players how to obtain deadwood.
+    Added back-end support for a future feature in Frostfall.
+
+Bug Fixes
+
+    Fixed an issue where the ingredient for a fur plate was a sweet roll when using Complete Crafting Overhaul.
+    Fixed an issue where the cooking pot was difficult to select.
+    Fixed an issue where the player or followers could become stuck if they destroyed or picked up the object they were using, if that object was furniture (campfires, tents, etc).
+    If a placed object doesn't get disabled and deleted on the first try when packing something up, we now try one more time and log a warning in the Papyrus log.
+
+
 Release 1.4 (11/10/2015)
 
 Changes for Players

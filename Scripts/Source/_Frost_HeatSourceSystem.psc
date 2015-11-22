@@ -23,21 +23,27 @@ function Update()
 endFunction
 
 function GetHeatSourceData()
+    debug.trace("checking for heat.")
     ObjectReference current_heat_source = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_HeatSources_All, PlayerRef, 600.0)
-
+    debug.trace("current heat source " + current_heat_source)
     if current_heat_source && current_heat_source.IsEnabled()
+        debug.trace("current heat source is not none and is enabled")
         Form heat_source_object = current_heat_source.GetBaseObject()
         float distance_from_heat = PlayerRef.GetDistance(current_heat_source)
         
         int current_heat_size = 0
         if _Camp_HeatSources_Fire_Small.HasForm(heat_source_object) && distance_from_heat <= 300.0
             current_heat_size = SetHeatSourceSize(1)
+            debug.trace("current heat source size is 1")
         elseif _Camp_HeatSources_Fire_Medium.HasForm(heat_source_object) && distance_from_heat <= 450.0
             current_heat_size = SetHeatSourceSize(2)
+            debug.trace("current heat source size is 2")
         elseif _Camp_HeatSources_Fire_Large.HasForm(heat_source_object)
             current_heat_size = SetHeatSourceSize(3)
+            debug.trace("current heat source size is 3")
         elseif _Camp_HeatSources_Other.HasForm(heat_source_object)
             current_heat_size = SetHeatSourceSize(2)
+            debug.trace("current heat source size is other")
         else
             if distance_from_heat <= 450.0
                 current_heat_size = SetHeatSourceSize(2)
@@ -49,15 +55,19 @@ function GetHeatSourceData()
         bool near_fire
         if current_heat_size > 0 && _Camp_HeatSources_Fire.HasForm(heat_source_object)
             near_fire = SetNearFire(true)
+            debug.trace("near fire")
         else
             near_fire = SetNearFire(false)
+            debug.trace("not near fire")
         endif
         
         float current_heat_distance
         if current_heat_size > 0
+            debug.trace("we found a heat source of size " + current_heat_size)
             ; We successfully found a heat source.
             HeatSource.ForceRefTo(current_heat_source)
             current_heat_distance = SetHeatSourceDistance(distance_from_heat)
+            debug.trace("distance " + current_heat_distance)
             FrostDebug(1, "%%%% Heat ::: Size " + current_heat_size + ", Distance " + current_heat_distance + ", Fire " + near_fire + ", Ref " + current_heat_source)
             return
         else
@@ -78,6 +88,7 @@ function GetHeatSourceData()
     endif
     
     ; We didn't find any heat sources.
+    debug.trace("we didn't find a heat source.")
     SetHeatSourceSize(0)
     SetHeatSourceDistance(-1.0)
     SetNearFire(false)
