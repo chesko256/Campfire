@@ -463,8 +463,7 @@ endFunction
 function Upgrade_3_0_1()
 	; Deprecate the 1st Person Hand Warming Animation setting
 	_Frost_Setting_1PAnimationAllowed.SetValueInt(0)
-	FrostConfig.SaveSettingToCurrentProfile("1P_animation_allowed", _Frost_Setting_1PAnimationAllowed.GetValueInt())
-
+	
 	trace("[Frostfall] Upgraded to 3.0.1.")
 	_Frost_Upgraded_3_0_1.SetValueInt(2)
 endFunction

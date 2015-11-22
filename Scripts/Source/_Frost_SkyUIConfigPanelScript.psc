@@ -1154,12 +1154,14 @@ function LoadProfileOnStartup()
 		int last_profile = JsonUtil.GetIntValue(CONFIG_PATH + "common", "last_profile", 0)
 		if last_profile != 0
 			_Frost_Setting_CurrentProfile.SetValueInt(last_profile)
+			CleanProfile(last_profile)
 			SwitchToProfile(last_profile)
 		else
 			; default to Profile 1 and write the file
 			_Frost_Setting_CurrentProfile.SetValueInt(1)
 			JsonUtil.SetIntValue(CONFIG_PATH + "common", "last_profile", 1)
 			JsonUtil.Save(CONFIG_PATH + "common")
+			CleanProfile(1)
 			SwitchToProfile(1)
 		endif
 	elseif auto_load == 1
@@ -1172,6 +1174,7 @@ function LoadProfileOnStartup()
 		JsonUtil.SetIntValue(CONFIG_PATH + "common", "auto_load", 2)
 		JsonUtil.SetIntValue(CONFIG_PATH + "common", "last_profile", 1)
 		JsonUtil.Save(CONFIG_PATH + "common")
+		CleanProfile(1)
 		SwitchToProfile(1)
 	endif
 endFunction
@@ -1394,6 +1397,14 @@ function SaveAllSettings(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "vampire_mode", _Frost_Setting_VampireMode.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "display_tutorials", _Frost_Setting_DisplayTutorials.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "hotkey_weathersense", _Frost_HotkeyWeathersense.GetValueInt())
+	JsonUtil.Save(profile_path)
+endFunction
+
+function CleanProfile(int aiProfileIndex)
+	string profile_path = CONFIG_PATH + "profile" + aiProfileIndex
+
+	bool result
+	result = JsonUtil.UnsetIntValue(profile_path, "1P_animation_allowed")
 	JsonUtil.Save(profile_path)
 endFunction
 
