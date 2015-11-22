@@ -179,7 +179,6 @@ Scripts\CampCampfire.pex
 Scripts\CampCookingPot.pex
 Scripts\CampfireAPI.pex
 Scripts\CampfireData.pex
-Scripts\CampFuelMiscItem.pex
 Scripts\CampLargeTentTriggerVolumeScript.pex
 Scripts\CampPlaceableContainer.pex
 Scripts\CampPlaceableContainerEx.pex
@@ -305,7 +304,6 @@ Scripts\Source\CampCampfire.psc
 Scripts\Source\CampCookingPot.psc
 Scripts\Source\CampfireAPI.psc
 Scripts\Source\CampfireData.psc
-Scripts\Source\CampFuelMiscItem.psc
 Scripts\Source\CampLargeTentTriggerVolumeScript.psc
 Scripts\Source\CampPlaceableContainer.psc
 Scripts\Source\CampPlaceableContainerEx.psc
