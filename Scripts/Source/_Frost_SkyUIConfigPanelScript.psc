@@ -1210,6 +1210,8 @@ function SwitchToProfile(int aiProfileIndex)
 	if pname == ""
 		GenerateDefaultProfile(aiProfileIndex)
 	endif
+	CleanProfile(aiProfileIndex)
+	
 	int val = LoadSettingFromProfile(aiProfileIndex, "animation")
 	if val != -1
 		_Frost_Setting_Animation.SetValueInt(val)
