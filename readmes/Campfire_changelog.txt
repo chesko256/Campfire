@@ -18,6 +18,7 @@ Features
 
 Changes
 
+    Included PapyrusUtil updated to 3.1.
     You can no longer "Use" a campfire when sitting near it, or access "Skills".
     The player's camera state (first or third person view) before using a tent or campfire is re-applied after exiting it.
     The option for harvesting deadwood now always appears, but selecting it without an appropriate axe in your inventory displays an error, in order to make it clear to new players how to obtain deadwood.
