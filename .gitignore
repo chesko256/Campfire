@@ -93,7 +93,9 @@
 #PapyrusUtil files
 !StorageUtil.dll
 !StorageUtil.pex
+!StorageUtil.psc
 !JsonUtil.pex
+!JsonUtil.psc
 
 #CampDevKit Files
 !CampDevKit/*
