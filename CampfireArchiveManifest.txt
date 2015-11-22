@@ -197,6 +197,7 @@ Scripts\CompanionsSingleCombatantScript.pex
 Scripts\DGIntimidateAliasScript.pex
 Scripts\DGIntimidatePlayerScript.pex
 Scripts\JsonUtil.pex
+Scripts\StorageUtil.pex
 Scripts\MS11CalixtoScript.pex
 Scripts\TentSystem.pex
 Scripts\_CampfireInternalAPI.pex
@@ -322,6 +323,7 @@ Scripts\Source\CompanionsSingleCombatantScript.psc
 Scripts\Source\DGIntimidateAliasScript.psc
 Scripts\Source\DGIntimidatePlayerScript.psc
 Scripts\Source\JsonUtil.psc
+Scripts\Source\StorageUtil.psc
 Scripts\Source\MS11CalixtoScript.psc
 Scripts\Source\TentSystem.psc
 Scripts\Source\_CampfireInternalAPI.psc
