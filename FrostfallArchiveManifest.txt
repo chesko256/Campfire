@@ -218,6 +218,8 @@ textures\frostfall\_Frost_gradbound2.dds
 textures\frostfall\_Frost_gradient.dds
 textures\frostfall\_Frost_magicbound.dds
 textures\frostfall\_Frost_PerkArt_Crystal.dds
+textures\frostfall\_Frost_plainglasstile01.dds
+textures\frostfall\_Frost_plainglasstile01blue.dds
 textures\frostfall\_Frost_sagecloakblue.dds
 textures\frostfall\_Frost_sagecloak_n.dds
 textures\frostfall\_Frost_SurvivorsGuide.dds
