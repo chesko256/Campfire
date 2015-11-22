@@ -8,6 +8,8 @@ License Agreement
 
 ===================================================
 
+This license is dated 11/21/2015 and supercedes any other licenses or permissions, written or oral, in any form.
+
 === TL;DR ===
 
 	* You can use Campfire for personal use.
