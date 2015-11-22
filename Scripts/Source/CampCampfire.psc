@@ -241,6 +241,7 @@ GlobalVariable property _Camp_LastUsedCampfireSize auto
 GlobalVariable property _Camp_LastUsedCampfireStage auto
 GlobalVariable property _Camp_Setting_ManualFireLighting auto
 GlobalVariable property _Camp_LastSelectedSkill auto
+GlobalVariable property _Camp_WasFirstPersonBeforeUse auto
 GlobalVariable property CampingPerkPoints auto
 GlobalVariable property CampingPerkPointsEarned auto
 GlobalVariable property CampingPerkPointsTotal auto
@@ -397,15 +398,23 @@ function DoActivate(ObjectReference akActionRef)
             in_use = false
         elseif i == 1
             ;Sit
+            SetWasFirstPerson()
             SitDown()
         elseif i == 2
             ;Talk To...
             ShowTalkMenu()
         elseif i == 3
-            ;Get Up
-            mySitFurniture2.Activate(PlayerRef)
+            ;Put Out
+            if campfire_size > 0 && campfire_stage == 2
+                PutOutFire()
+            endif
         elseif i == 4
             ;Destroy
+            if campfire_size > 0 && campfire_stage == 2
+                PutOutFire()
+            endif
+            RefundRemainingFuel()
+            Utility.Wait(1.0)
             TakeDown()
         elseif i == 5
             ;Place Cooking Pot
@@ -422,6 +431,9 @@ function DoActivate(ObjectReference akActionRef)
                 endif
             endif
         elseif i == 7
+            ;Get Up
+            mySitFurniture2.Activate(PlayerRef)
+        elseif i == 8
             ;Cancel
         endif
     endif
@@ -919,11 +931,12 @@ function RefundRemainingFuel()
     endWhile
 
     ; Give back the remaining
-    bool have_refund = false
     if supplied_books > 0 || supplied_branches > 0 || supplied_kindling > 0 || supplied_firewood > 0 || supplied_deadwood > 0
         _Camp_Campfire_RefundFuelMsg.Show()
     else
-        _Camp_Campfire_RefundFuelMsgSpent.Show()
+        if burn_duration > 0    ; Don't show this message if campfire is empty
+            _Camp_Campfire_RefundFuelMsgSpent.Show()
+        endif
     endif
 
     if supplied_books > 0
@@ -1098,6 +1111,14 @@ Event OnUpdateGameTime()
         endif
     endif
 endEvent
+
+function SetWasFirstPerson()
+    if PlayerRef.GetAnimationVariableBool("IsFirstPerson")
+        _Camp_WasFirstPersonBeforeUse.SetValueInt(2)
+    else
+        _Camp_WasFirstPersonBeforeUse.SetValueInt(1)
+    endif
+endFunction
 
 Event OnControlDown(string control)
     if control == "Jump"

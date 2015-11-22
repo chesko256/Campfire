@@ -23,6 +23,7 @@ GlobalVariable property _Camp_Setting_TakeOff_Shield auto
 GlobalVariable property _Camp_Setting_TakeOff_Ammo auto
 GlobalVariable property _Camp_Setting_CompatibilityEO auto
 GlobalVariable property _Camp_TentSeeThru auto
+GlobalVariable property _Camp_WasFirstPersonBeforeUse auto
 Message property _Camp_TentMainMenu auto
 Message property _Camp_TentSitMenu auto
 Message property _Camp_TentLayMenu auto
@@ -57,7 +58,6 @@ ReferenceAlias property Follower2 auto
 ReferenceAlias property Follower3 auto
 ReferenceAlias property Spouse auto
 
-
 ; From OnUpdate on CampTent / CampTentEx
 function UpdateTentUseState(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
@@ -84,7 +84,24 @@ function UpdateTentUseState(ObjectReference akTent)
 		if Compatibility.isSKSELoaded
 			akTent.UnregisterForAllControls()
 		endif
+
 		CleanUpTent(akTent)
+		
+		; Wait for the player to get up completely.
+		int i = 0
+		while PlayerRef.GetSitState() != 0 && i < 100
+			Utility.Wait(0.1)
+			i += 1
+		endWhile
+		Utility.Wait(0.1)
+
+		; Set the previous camera state.
+		if _Camp_WasFirstPersonBeforeUse.GetValueInt() == 2
+			if !PlayerRef.GetAnimationVariableBool("IsFirstPerson")
+				Game.ForceFirstPerson()
+			endif
+		endif
+
 	elseif !(PlayerRef.GetSitState() == 2 || PlayerRef.GetSitState() == 3) && !TentObject.bGettingUp
 		;Player getting up from sitting or lying down
 		if !TentObject.TentAsset_LargeTentTriggerVolume
@@ -101,6 +118,21 @@ function UpdateTentUseState(ObjectReference akTent)
 			akTent.UnregisterForAllControls()
 		endif
 		CleanUpTent(akTent)
+
+		; Wait for the player to get up completely.
+		int i = 0
+		while PlayerRef.GetSitState() != 0 && i < 100
+			Utility.Wait(0.1)
+			i += 1
+		endWhile
+		Utility.Wait(0.1)
+
+		; Set the previous camera state.
+		if _Camp_WasFirstPersonBeforeUse.GetValueInt() == 2
+			Game.ForceFirstPerson()
+		else
+			Game.ForceThirdPerson()
+		endif
 	else
 		TentObject.RegisterForSingleUpdate(1.0)
 	endif
@@ -162,6 +194,7 @@ function ShowMainMenu(ObjectReference akTent)
 	CheckTentFeatures(TentObject)
 	int i = _Camp_TentMainMenu.Show()
 	if i == 0										;Sit
+		SetWasFirstPerson()
 		if Compatibility.isSKSELoaded
 			Message.ResetHelpMessage("Activate")
 			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
@@ -169,6 +202,7 @@ function ShowMainMenu(ObjectReference akTent)
 		endif
 		PlayerSit(akTent)
 	elseif i == 1									;Lie Down
+		SetWasFirstPerson()
 		if Compatibility.isSKSELoaded
 			Message.ResetHelpMessage("Activate")
 			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
@@ -1092,5 +1126,13 @@ function EO_TurnOn()
 		if EO_Hotkey != 0 && !EO_ConfigScript.bTempGearedEnabled
 			EO_HandlerScript.OnKeyDown(EO_Hotkey)
 		endif
+	endif
+endFunction
+
+function SetWasFirstPerson()
+	if PlayerRef.GetAnimationVariableBool("IsFirstPerson")
+		_Camp_WasFirstPersonBeforeUse.SetValueInt(2)
+	else
+		_Camp_WasFirstPersonBeforeUse.SetValueInt(1)
 	endif
 endFunction
