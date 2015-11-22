@@ -28,6 +28,7 @@ Bug Fixes
 
     Fixed an issue where the ingredient for a fur plate was a sweet roll when using Complete Crafting Overhaul.
     Fixed an issue where the cooking pot was difficult to select.
+    Fixed an issue where ruined books were not being subtracted from the player's inventory when creating campfires from them.
     Fixed an issue where the player or followers could become stuck if they destroyed or picked up the object they were using, if that object was furniture (campfires, tents, etc).
     If a placed object doesn't get disabled and deleted on the first try when packing something up, we now try one more time and log a warning in the Papyrus log.
 

@@ -18,6 +18,8 @@ Activator property _Camp_Fuel_Flickering_BranchesLit auto
 Activator property _Camp_Fuel_Flickering_BooksLit auto
 Activator property _Camp_Fuel_Flickering_BranchesUnlit auto
 Activator property _Camp_Fuel_Flickering_BooksUnlit auto
+MiscObject property RuinedBook auto
+MiscObject property RuinedBook02 auto
 Light property _Camp_Campfire_Light_3 auto
 Book property this_item auto
 Actor property PlayerRef auto
@@ -42,8 +44,25 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
 				(f as CampCampfire).SetFuel(_Camp_Fuel_Flickering_BooksLit, 		\
 											_Camp_Fuel_Flickering_BooksUnlit, 		\
 											_Camp_Campfire_Light_3, burn_duration)
+				SubtractBooks()
 			endif
 		endif
 		PlayerRef.RemoveItem(this_item, 1, true)
 	endif
 endEvent
+
+function SubtractBooks()
+	bool done = false
+	int books_to_subtract = count_books
+	while books_to_subtract > 0 && !done
+		if PlayerRef.GetItemCount(RuinedBook) > 0
+			PlayerRef.RemoveItem(RuinedBook, 1, true)
+			books_to_subtract -= 1
+		elseif PlayerRef.GetItemCount(RuinedBook02) > 0
+			PlayerRef.RemoveItem(RuinedBook02, 1, true)
+			books_to_subtract -= 1
+		else
+			done = true
+		endif
+	endWhile
+endFunction

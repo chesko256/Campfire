@@ -728,7 +728,7 @@ EndEvent
 function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int aiBurnDuration)
     CampDebug(1, "Fuel set: " + akFuelLit + "," + akFuelUnlit + "," + akLight)
     burn_duration = aiBurnDuration * ((_Camp_PerkRank_Firecraft.GetValueInt() * 0.25) + 1)
-    
+
     ;If there is pre-existing fuel, get rid of it
     TryToDisableAndDeleteRef(myFuelUnlit)
     TryToDisableAndDeleteRef(myFuelLit)
@@ -910,7 +910,7 @@ endFunction
 
 function RefundRemainingFuel()
     int hours_burnt = Math.Ceiling((last_put_out_time * 24.0) - (last_lit_time * 24.0))
-
+    
     ; Eat fuel for each hour burned
     while hours_burnt > 0
         if supplied_books >= 2
@@ -986,6 +986,8 @@ function PlaceFuel()
     myEmbers.DisableNoWait()
     RegisterForSingleUpdateGameTime(ASH_DURATION)
     last_update_registration_time = Utility.GetCurrentGameTime()
+    last_lit_time = 0.0
+    last_put_out_time = 0.0
     remaining_time = ASH_DURATION
     CampDebug(1, "Campfire registered for update in " + ASH_DURATION + " hours.")
     campfire_stage = 3

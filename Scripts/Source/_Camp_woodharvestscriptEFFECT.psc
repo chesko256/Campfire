@@ -13,7 +13,7 @@ Actor property PlayerRef auto
 message property _Camp_WoodHarvestConfirmMsg auto
 message property _Camp_WoodHarvestErrorCombat auto
 message property _Camp_WoodHarvestErrorNoTrees auto
-message property _Camp_WoodHarvestErrorNoAxe auto
+message property WoodChoppingFailureMessage auto
 message property _Camp_WoodHarvestErrorTooCold auto
 message property _Camp_DeadwoodHarvestSuccess auto
 message property _Camp_BranchHarvestSuccess auto
@@ -74,7 +74,7 @@ endEvent
 
 function HarvestWood()
 	if PlayerRef.GetItemCount(woodChoppingAxes) == 0 && PlayerRef.GetItemCount(_Camp_StoneWarAxe) == 0
-		_Camp_WoodHarvestErrorNoAxe.Show()
+		WoodChoppingFailureMessage.Show()
 		OnEffectStart(PlayerRef, PlayerRef)
 		return
 	endif
