@@ -87,6 +87,7 @@ GlobalVariable property _Camp_HotkeyBuildCampfire auto
 GlobalVariable property _Camp_HotkeyHarvestWood auto
 GlobalVariable property _Camp_HotkeyInstincts auto
 GlobalVariable property _Camp_Setting_TrackFollowers auto
+GlobalVariable property _Camp_HarvestWoodEnabled auto
 
 ConstructibleObject property _Camp_FireMiscRecipe_TinderStraw auto
 ConstructibleObject property _Camp_FireMiscRecipe_TinderStraw_perk1 auto
@@ -126,6 +127,7 @@ Event OnPlayerLoadGame()
 	else
 		RegisterForKeysOnLoad()
 	endif
+	CheckHarvestWoodDisabled()
 	if isSKSELoaded
 		RegisterForControlsOnLoad()
 		RegisterForEventsOnLoad()
@@ -735,4 +737,24 @@ endFunction
 
 function RegisterForEventsOnLoad()
 	; pass
+endFunction
+
+function SetHarvestWoodAbility(bool abEnabled)
+	if abEnabled
+		_Camp_HarvestWoodEnabled.SetValueInt(2)
+		if _Camp_HotkeyHarvestWood.GetValueInt() != 0
+			PlayerRef.RemoveSpell(_Camp_HarvestWoodSpell)
+		else
+			PlayerRef.AddSpell(_Camp_HarvestWoodSpell, false)
+		endif
+	else
+		_Camp_HarvestWoodEnabled.SetValueInt(1)
+		PlayerRef.RemoveSpell(_Camp_HarvestWoodSpell)
+	endif
+endFunction
+
+function CheckHarvestWoodDisabled()
+	if _Camp_HarvestWoodEnabled.GetValueInt() != 2
+		PlayerRef.RemoveSpell(_Camp_HarvestWoodSpell)
+	endif
 endFunction

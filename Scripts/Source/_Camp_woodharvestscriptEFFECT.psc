@@ -13,6 +13,7 @@ Actor property PlayerRef auto
 message property _Camp_WoodHarvestConfirmMsg auto
 message property _Camp_WoodHarvestErrorCombat auto
 message property _Camp_WoodHarvestErrorNoTrees auto
+message property _Camp_WoodHarvestErrorNoAxe auto
 message property _Camp_WoodHarvestErrorTooCold auto
 message property _Camp_DeadwoodHarvestSuccess auto
 message property _Camp_BranchHarvestSuccess auto
@@ -27,6 +28,7 @@ ImageSpaceModifier Property _Camp_Black auto
 globalvariable property TimeScale auto
 globalvariable property GameHour auto
 globalvariable property _Camp_PerkRank_Resourceful auto
+globalvariable property _Camp_HarvestWoodEnabled auto
 Sound property _Camp_ChopWoodSM auto
 Sound property _Camp_GatherBranchesSM auto
 VisualEffect property _Camp_ForceBlackVFX auto
@@ -35,6 +37,10 @@ VisualEffect property _Camp_ForceBlackVFX auto
 Weapon property _Camp_StoneWarAxe auto
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
+	if _Camp_HarvestWoodEnabled.GetValueInt() != 2
+		return
+	endif
+
 	if Compatibility.isFrostfallLoaded && !FrostUtil.IsWarmEnoughToHarvestWood()
 		return
 	endif
@@ -67,6 +73,11 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 endEvent
 
 function HarvestWood()
+	if PlayerRef.GetItemCount(woodChoppingAxes) == 0 && PlayerRef.GetItemCount(_Camp_StoneWarAxe) == 0
+		_Camp_WoodHarvestErrorNoAxe.Show()
+		OnEffectStart(PlayerRef, PlayerRef)
+		return
+	endif
 	_Camp_FadeDown.Apply()
 	Wait(1)
 	_Camp_ForceBlackVFX.Play(PlayerRef)
