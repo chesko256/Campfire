@@ -279,7 +279,14 @@ function PageReset_Overview()
 
 	AddHeaderOption("$FrostfallOverviewHeaderPlayerAttributes")
 	if GetExposureSystem().IsSystemRunning()
-		Overview_ExposureStatusText_OID = AddTextOption("$FrostfallOverviewExposureValue", (_Frost_AttributeExposure.GetValueInt() - 20))
+		string exp_val
+		int exposure = (Math.Floor(GetPlayerExposure()) - 20)
+		if exposure < 0
+			exp_val = "+" + (Math.Abs(exposure) as Int)
+		else
+			exp_val = exposure
+		endif
+		Overview_ExposureStatusText_OID = AddTextOption("$FrostfallOverviewExposureValue", exp_val)
 	else
 		Overview_ExposureStatusText_OID = AddTextOption("$FrostfallOverviewExposureValue", "")
 	endif
@@ -1211,7 +1218,7 @@ function SwitchToProfile(int aiProfileIndex)
 		GenerateDefaultProfile(aiProfileIndex)
 	endif
 	CleanProfile(aiProfileIndex)
-	
+
 	int val = LoadSettingFromProfile(aiProfileIndex, "animation")
 	if val != -1
 		_Frost_Setting_Animation.SetValueInt(val)
