@@ -458,6 +458,7 @@ function ShowTalkMenu()
 endFunction
 
 Event OnCellDetach()
+    UnregisterForAllControls()
     if eligible_for_deletion
         TakeDown()
     endif
@@ -607,6 +608,7 @@ function TakeDown()
         (myPerkNavController as _Camp_PerkNavController).TakeDown()
     endif
     UnregisterForUpdateGameTime()
+    UnregisterForAllControls()
 
     ForceStopUsingFurniture(mySitFurniture1)
     ForceStopUsingFurniture(mySitFurniture2)
