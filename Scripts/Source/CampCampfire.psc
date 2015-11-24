@@ -458,7 +458,6 @@ function ShowTalkMenu()
 endFunction
 
 Event OnCellDetach()
-    UnregisterForAllControls()
     if eligible_for_deletion
         TakeDown()
     endif
@@ -608,7 +607,6 @@ function TakeDown()
         (myPerkNavController as _Camp_PerkNavController).TakeDown()
     endif
     UnregisterForUpdateGameTime()
-    UnregisterForAllControls()
 
     ForceStopUsingFurniture(mySitFurniture1)
     ForceStopUsingFurniture(mySitFurniture2)
@@ -1123,10 +1121,3 @@ function SetWasFirstPerson()
         _Camp_WasFirstPersonBeforeUse.SetValueInt(1)
     endif
 endFunction
-
-Event OnControlDown(string control)
-    if control == "Jump"
-        CampfireAPI Campfire = (Game.GetFormFromFile(0x00024095, "Campfire.esm") as Quest) as CampfireAPI
-        self.Activate(Campfire.PlayerRef)
-    endif
-endEvent
