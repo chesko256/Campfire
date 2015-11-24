@@ -731,7 +731,7 @@ function RegisterForKeysOnLoad()
 endFunction
 
 function RegisterForControlsOnLoad()
-	; pass
+	Campfire.RegisterForControlsOnLoad()
 endFunction
 
 function RegisterForEventsOnLoad()

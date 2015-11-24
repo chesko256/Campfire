@@ -81,9 +81,6 @@ function UpdateTentUseState(ObjectReference akTent)
 		endif
 		_Camp_ForceBlackVFX.Stop(PlayerRef)
 		_Camp_Black.PopTo(_Camp_FadeUp)
-		if Compatibility.isSKSELoaded
-			akTent.UnregisterForAllControls()
-		endif
 
 		CleanUpTent(akTent)
 		
@@ -113,9 +110,6 @@ function UpdateTentUseState(ObjectReference akTent)
 
 		if TentObject.myExitFront && TentObject.myExitFront.IsEnabled() && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
 			PlayerRef.SplineTranslateToRef(TentObject.myExitFront, 1.0, 65.0)
-		endif
-		if Compatibility.isSKSELoaded
-			akTent.UnregisterForAllControls()
 		endif
 		CleanUpTent(akTent)
 
@@ -198,7 +192,6 @@ function ShowMainMenu(ObjectReference akTent)
 		if Compatibility.isSKSELoaded
 			Message.ResetHelpMessage("Activate")
 			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
-			akTent.RegisterForControl("Jump")
 		endif
 		PlayerSit(akTent)
 	elseif i == 1									;Lie Down
@@ -206,7 +199,6 @@ function ShowMainMenu(ObjectReference akTent)
 		if Compatibility.isSKSELoaded
 			Message.ResetHelpMessage("Activate")
 			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
-			akTent.RegisterForControl("Jump")
 		endif
 		PlayerLieDown(akTent)
 	elseif i == 2									;Lantern

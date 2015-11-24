@@ -17,7 +17,6 @@ Event OnActivate(ObjectReference akActionRef)
 		if GetCompatibilitySystem().isSKSELoaded
 			Message.ResetHelpMessage("Activate")
 			_Camp_Help_CampfireActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
-			GetLastUsedCampfire().RegisterForControl("Jump")
 		endif
 	endif
 EndEvent
@@ -29,9 +28,6 @@ Event OnUpdate()
 		ConditionVars.IsPlayerSittingNearFire = false
 		CampfireTentSystem.Stop()
 		Game.EnablePlayerControls()
-		if GetCompatibilitySystem().isSKSELoaded
-			GetLastUsedCampfire().UnregisterForAllControls()
-		endif
 
 		; Wait for the player to get up completely.
 		int i = 0
