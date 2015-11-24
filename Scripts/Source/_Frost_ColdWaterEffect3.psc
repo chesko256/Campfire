@@ -13,7 +13,7 @@ GlobalVariable property _Frost_Setting_ForceFeedback auto
 GlobalVariable property _Frost_Setting_FrigidWaterIsLethal auto
 GlobalVariable property _Frost_Setting_ConditionMessages auto
 GlobalVariable property _Frost_Setting_MaxExposureMode auto
-GlobalVariable property _Frost_FrigidWater_ForceKillPlayer auto
+Spell property _Frost_ColdWaterDeathSpell auto
 
 bool message_1_shown
 bool message_2_shown
@@ -140,7 +140,7 @@ endFunction
 function HandleMaxWaterExposure()
 	if _Frost_Setting_MaxExposureMode.GetValueInt() == 3
 		; Kill the player.
-		_Frost_FrigidWater_ForceKillPlayer.SetValueInt(2)
+		_Frost_ColdWaterDeathSpell.Cast(PlayerRef, PlayerRef)
 	elseif _Frost_Setting_MaxExposureMode.GetValueInt() == 2
 		SendEvent_OnRescuePlayer(true)
 	else
@@ -155,3 +155,6 @@ function SendEvent_OnRescuePlayer(bool in_water)
 		ModEvent.Send(handle)
 	endif
 endFunction
+
+GlobalVariable property _Frost_FrigidWater_ForceKillPlayer auto
+{This global is deprecated as of Frostfall 3.0.1.}
