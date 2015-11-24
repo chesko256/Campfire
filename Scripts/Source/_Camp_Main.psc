@@ -28,14 +28,18 @@ endFunction
 
 Event OnControlDown(string control)
 	if control == "Jump"
-		CampDebug(0, "Got jump press, checking for tent.")
+		CampDebug(0, "Got jump press, checking for tent or campfire.")
 		ObjectReference tent = GetCurrentTent()
 		ObjectReference campfire = GetLastUsedCampfire()
 		if tent && PlayerRef.GetSitState() == 3
 			CampDebug(0, "Activating tent " + tent)
 			tent.Activate(PlayerRef)
-		elseif campfire && (campfire as CampCampfire).mySitFurniture2.IsFurnitureInUse() && PlayerRef.GetSitState() == 3
-			campfire.Activate(PlayerRef)
+		elseif campfire
+			ObjectReference player_sit_marker = (campfire as CampCampfire).mySitFurniture2
+			if player_sit_marker && player_sit_marker.IsFurnitureInUse() && PlayerRef.GetSitState() == 3
+				CampDebug(0, "Activating campfire " + campfire)
+				campfire.Activate(PlayerRef)
+			endif
 		endif
 	endif
 endEvent 
