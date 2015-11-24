@@ -132,6 +132,9 @@ function UpdateItemCardInfo(int aiWarmth, int aiCoverage)
 	if aiWarmth == -1
 		warmth_val = ""
 		cover_val = ""
+	elseif aiWarmth == -99
+		warmth_val = "--"
+		cover_val = "--"
 	else
 		warmth_val = aiWarmth
 		cover_val = aiCoverage

@@ -60,9 +60,7 @@ meshes\frostfall\_Frost_VaporBlastAreaEffect.nif
 meshes\frostfall\_frost_WoodHarvestingAnimAxe.nif
 Scripts\FrostfallAPI.pex
 Scripts\FrostUtil.pex
-Scripts\JsonUtil.pex
 Scripts\qf__de_trackingquest_010177d7.pex
-Scripts\StorageUtil.pex
 Scripts\_FrostInternal.pex
 Scripts\_Frost_APDatastoreDefaultData.pex
 Scripts\_Frost_ArmorProtectionDatastoreHandler.pex
@@ -130,9 +128,7 @@ Scripts\_Frost_WoodpileAliasScript.pex
 Scripts\_Frost_WoodpileNodeController.pex
 Scripts\Source\FrostfallAPI.psc
 Scripts\Source\FrostUtil.psc
-Scripts\Source\JsonUtil.psc
 Scripts\Source\qf__de_trackingquest_010177d7.psc
-Scripts\Source\StorageUtil.psc
 Scripts\Source\_FrostInternal.psc
 Scripts\Source\_Frost_APDatastoreDefaultData.psc
 Scripts\Source\_Frost_ArmorProtectionDatastoreHandler.psc

@@ -341,7 +341,11 @@ function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor, int aiGearType)
             if _Frost_Setting_Notifications_EquipmentValues.GetValueInt() == 2
                 _Frost_Strings str = FrostfallStrings as _Frost_Strings
                 string name = akArmor.GetName()
-                debug.notification(name + " - " + str.Warmth + " " + result[0] + ", " + str.Coverage + " " + result[1])
+                if result[0] == -99
+                    debug.notification(name + " - " + str.Warmth + " N/A, " + str.Coverage + " N/A")
+                else
+                    debug.notification(name + " - " + str.Warmth + " " + result[0] + ", " + str.Coverage + " " + result[1])
+                endif
             endif
             RegisterForMenu("InventoryMenu")
         else

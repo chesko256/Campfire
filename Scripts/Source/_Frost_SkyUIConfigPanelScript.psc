@@ -702,6 +702,24 @@ event OnOptionSelect(int option)
 			SetToggleOptionValue(Interface_DisplayAttributesInWeathersense_OID, true)
 		endif
 		SaveSettingToCurrentProfile("display_attributes_in_weathersense", _Frost_Setting_DisplayAttributesInWeathersense.GetValueInt())
+	elseif option == Interface_ConditionMessages_OID
+		if _Frost_Setting_ConditionMessages.GetValueInt() == 2
+			_Frost_Setting_ConditionMessages.SetValueInt(1)
+			SetToggleOptionValue(Interface_ConditionMessages_OID, false)
+		else
+			_Frost_Setting_ConditionMessages.SetValueInt(2)
+			SetToggleOptionValue(Interface_ConditionMessages_OID, true)
+		endif
+		SaveSettingToCurrentProfile("condition_messages", _Frost_Setting_ConditionMessages.GetValueInt())
+	elseif option == Interface_WeatherMessages_OID
+		if _Frost_Setting_WeatherMessages.GetValueInt() == 2
+			_Frost_Setting_WeatherMessages.SetValueInt(1)
+			SetToggleOptionValue(Interface_WeatherMessages_OID, false)
+		else
+			_Frost_Setting_WeatherMessages.SetValueInt(2)
+			SetToggleOptionValue(Interface_WeatherMessages_OID, true)
+		endif
+		SaveSettingToCurrentProfile("weather_messages", _Frost_Setting_WeatherMessages.GetValueInt())
 	elseif option == Interface_Notifications_EquipmentValues_OID
 		if _Frost_Setting_Notifications_EquipmentValues.GetValueInt() == 2
 			_Frost_Setting_Notifications_EquipmentValues.SetValueInt(1)

@@ -64,6 +64,9 @@ int function GetGearType(Form akBaseObject)
         return 7
     endif
     Armor armor_object = akBaseObject as Armor
+    if !armor_object
+    	return -1
+    endif
     int mySlotMask = armor_object.GetSlotMask()
     if LogicalAnd(mySlotMask, armor_object.kSlotMask31) && !LogicalAnd(mySlotMask, armor_object.kSlotMask32)
         return 3
@@ -276,6 +279,10 @@ int[] function GetTotalProtectionValues(Armor akArmor, int aiGearType)
 			elseif aiGearType == 4
 				result[0] = result[0] + DEFAULT_FEET_WARMTH
 				result[1] = result[1] + DEFAULT_FEET_COVERAGE
+			elseif aiGearType == 7
+				; This item is not supposed to provide warmth or coverage.
+				result[0] = -99
+				result[1] = -99
 			elseif aiGearType == 8
 				result[0] = result[0] + DEFAULT_SHIELD_WARMTH
 				result[1] = result[1] + DEFAULT_SHIELD_COVERAGE
