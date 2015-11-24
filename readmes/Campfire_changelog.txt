@@ -7,6 +7,12 @@ Complete Camping System
 Change Log
 
 ===================================================
+Release 1.5.2 (11/23/2015)
+
+Bug Fixes
+
+    Fixed an issue introduced in 1.5 where pressing the jump key after getting up from a campfire or tent would sometimes cause the campfire or tent menu to always appear.
+
 Release 1.5.1 (11/22/2015)
 
 Bug Fixes
