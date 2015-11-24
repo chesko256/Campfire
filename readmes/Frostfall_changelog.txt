@@ -16,6 +16,31 @@ E-mail - chesko.tesmod@gmail.com
 
 This changelog is mainly for posterity purposes. This mod has evolved a lot in the amount of time it's been in development. Read on only if you enjoy watching me change my mind many, many times.
 
+===========================================
+Frostfall 3.0.1 Change Log
+===========================================
+CHANGES
+----------------------------
+    Campfire 1.5.2 is now required.
+    Removed PapyrusUtil files. Since they are included in Campfire, they don't need to be included in Frostfall.
+    (SkyUI Add-On) When viewing an item that is not intended to provide Warmth and Coverage, the item card now displays "--" for those values.
+    When equipping an item without the SkyUI Add-On installed, if that item is not intended to provide Warmth and Coverage, the notification will display "N/A" for those values.
+    Added a message, "The feeling of warmth from your drink/spell has worn off." when the effects of your alcohol or your Soothe spell finishes, to make it clear why you suddenly gained exposure.
+    Removed the "1st Person Player Anims Allowed" setting. Using it caused several errors related to not being able to move and teleporting to other areas when near heat sources.
+    Added a note that "This setting make take up to 5 seconds to take effect" to Disable Fast Travel and Disable Waiting Outdoors.
+
+BUG FIXES
+----------------------------
+    Smelters should now register as heat sources.
+    Campfires found in Giant camps should now register as heat sources.
+    Fixed a bug wherein the player would sometimes teleport to another area when near a heat source.
+    Fixed a bug where Vampiric Thirst's "Feed" ability would not work when Frostfall was enabled.
+    Fixed several bugs related to Foxskin, Wolfskin, and Bearskin applying erroneous casting perks to the player. not using the right perks, or showing up as "Novice" in-game.
+    Fixed several bugs where certain settings were not being saved to the user's profile correctly.
+    Fixed a bug where selecting "Condition Messages" and "Weather Messages" in the MCM would do nothing.
+    Added missing Snowberry Extract textures.
+    Fixed a papyrus log error in the Clothing system.
+    Fixed a minor error in the way exposure was displayed in the MCM.
 
 ===========================================
 Frostfall 3.0 Change Log

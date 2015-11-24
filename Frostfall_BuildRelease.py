@@ -47,7 +47,6 @@ else:
     os.mkdir(dirname)
 
 os.mkdir(dirname + "/readmes")
-os.makedirs(dirname + "/SKSE/Plugins")
 
 # Generate BSA archive
 print "Generating BSA archive..."
@@ -61,7 +60,6 @@ os.chdir("..\\")
 # Copy files
 shutil.copyfile("./Campfire/Frostfall.esp", dirname + "/Frostfall.esp")
 shutil.copyfile("./tmp/Frostfall.bsa", dirname + "/Frostfall.bsa")
-shutil.copyfile("./Campfire/SKSE/Plugins/StorageUtil.dll", dirname + "/SKSE/Plugins/StorageUtil.dll")
 shutil.copyfile("./Campfire/readmes/Frostfall_readme.txt", dirname + "/readmes/Frostfall_readme.txt")
 shutil.copyfile("./Campfire/readmes/Frostfall_license.txt", dirname + "/readmes/Frostfall_license.txt")
 shutil.copyfile("./Campfire/readmes/Frostfall_changelog.txt", dirname + "/readmes/Frostfall_changelog.txt")
