@@ -704,7 +704,7 @@ function PlaceObject_myCookPotSnapMarker()
     myCookPotSnapMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_CampfireCookPotSnapMarker, PositionRef_CookPotSnapMarker, is_hanging = true, is_temp = is_temporary)
 endFunction
 
-Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
+;/Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
     if akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11
         CampDebug(0, "Torch bash!")
         if campfire_size > 0 && campfire_stage == 4
@@ -712,8 +712,9 @@ Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile,
         endif
     endif
 EndEvent
+/;
 
-Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
+;/Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
     if akEffect.HasKeyword(GetMagicDamageFireKeyword())
         if campfire_size > 0 && campfire_stage == 4
             LightFire()
@@ -724,6 +725,7 @@ Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
         endif
     endif
 EndEvent
+/;
 
 function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int aiBurnDuration)
     CampDebug(1, "Fuel set: " + akFuelLit + "," + akFuelUnlit + "," + akLight)
@@ -973,9 +975,9 @@ function SetTinder(float afLightChance)
     current_light_chance = afLightChance
     CampDebug(1, "Set tinder with light chance of " + current_light_chance)
 
-    if _Camp_Setting_ManualFireLighting.GetValueInt() != 2
-        LightFire()
-    endif
+    ;if _Camp_Setting_ManualFireLighting.GetValueInt() != 2
+    ;    LightFire()
+    ;endif
 endFunction
 
 function PlaceFuel()
