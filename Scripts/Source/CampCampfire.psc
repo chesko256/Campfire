@@ -743,11 +743,7 @@ function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int 
     myLight = self.PlaceAtMe(akLight, abInitiallyDisabled = true)
     myLight.MoveTo(myLight, afZOffset = 100.0)
 
-    if campfire_stage == 2
-        LightFire(true)
-    else
-        PlaceFuel()
-    endif
+    PlaceFuel()
 endFunction
 
 function SitDown()
