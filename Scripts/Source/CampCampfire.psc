@@ -357,12 +357,7 @@ function DoActivate(ObjectReference akActionRef)
 
     if akActionRef == Game.GetPlayer() && !in_use
         ; Calculate the displayed time remaining
-        float displayed_time
-        if campfire_stage == 0 || campfire_stage >= 3
-            displayed_time = remaining_time - ASH_DURATION
-        else
-            displayed_time = remaining_time - (ASH_DURATION + EMBERS_DURATION)
-        endif
+        float displayed_time = GetRemainingDisplayTime()        
         
         int i
         if displayed_time > 0.0
@@ -1139,4 +1134,15 @@ function SetWasFirstPerson()
     else
         _Camp_WasFirstPersonBeforeUse.SetValueInt(1)
     endif
+endFunction
+
+float function GetRemainingDisplayTime()
+    float burn_time
+    if campfire_stage == 0 || campfire_stage >= 3
+        total_burn_time = remaining_time - ASH_DURATION
+    else
+        total_burn_time = remaining_time - (ASH_DURATION + EMBERS_DURATION)
+    endif
+    float remaining_burn_time = total_burn_time - (Utility.GetCurrentGameTime() - last_update_registration_time)
+    return remaining_burn_time
 endFunction
