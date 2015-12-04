@@ -215,7 +215,7 @@ function AdvanceTime()
 	if GameHour.GetValue() <= 22.9
 		GameHour.SetValue(GameHour.GetValue() + 1.0)
 	else
-		GameHour.SetValue(0.0)
+		GameHour.SetValue(23.999999)
 	endif
 	if Compatibility.IsFrostfallLoaded
 		FrostUtil.Event_LegacyWoodHarvest()
