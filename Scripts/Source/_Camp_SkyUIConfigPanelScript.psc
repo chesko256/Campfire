@@ -7,7 +7,6 @@ string CONFIG_PATH = "../CampfireData/"
 ; External scripts
 _Camp_Compatibility property Compatibility auto
 
-GlobalVariable property _Camp_Setting_ManualFireLighting auto
 GlobalVariable property _Camp_Setting_EquipmentFlammable auto
 GlobalVariable property _Camp_Setting_CampingArmorTakeOff auto
 GlobalVariable property _Camp_Setting_TakeOff_Helm auto
@@ -141,12 +140,6 @@ function PageReset_Gameplay()
 	else
 		Gameplay_SettingCampingArmorTentsText_OID = AddToggleOption("$CampfireGameplaySettingCampingRemoveGear", false)
 	endif
-	
-	if _Camp_Setting_ManualFireLighting.GetValueInt() == 2
-		Gameplay_SettingCampingFireLightingText_OID = AddToggleOption("$CampfireGameplaySettingCampingLightingMode", true)
-	else
-		Gameplay_SettingCampingFireLightingText_OID = AddToggleOption("$CampfireGameplaySettingCampingLightingMode", false)
-	endif
 
 	if _Camp_Setting_Legality.GetValueInt() == 2
 		Gameplay_SettingCampingLegalityToggle_OID = AddToggleOption("$CampfireGameplaySettingLegality", true)
@@ -160,6 +153,7 @@ function PageReset_Gameplay()
 		Gameplay_SettingCampingFlammabilityToggle_OID = AddToggleOption("$CampfireGameplaySettingFlammability", false)
 	endif
 
+	AddEmptyOption()
 	AddEmptyOption()
 	
 	AddHeaderOption("$CampfireGameplayHeaderHotkeys")
@@ -463,15 +457,6 @@ event OnOptionSelect(int option)
 			ForcePageReset()
 		endif
 		SaveSettingToCurrentProfile("tent_remove_player_equipment", _Camp_Setting_CampingArmorTakeOff.GetValueInt())
-	elseif option == Gameplay_SettingCampingFireLightingText_OID
-		if _Camp_Setting_ManualFireLighting.GetValueInt() == 2
-			_Camp_Setting_ManualFireLighting.SetValueInt(1)
-			SetToggleOptionValue(Gameplay_SettingCampingFireLightingText_OID, false)
-		else
-			_Camp_Setting_ManualFireLighting.SetValueInt(2)
-			SetToggleOptionValue(Gameplay_SettingCampingFireLightingText_OID, true)
-		endif
-		SaveSettingToCurrentProfile("manual_fire_lighting", _Camp_Setting_ManualFireLighting.GetValueInt())
 	elseif option == Gameplay_SettingCampingLegalityToggle_OID
 		if _Camp_Setting_Legality.GetValueInt() == 2
 			_Camp_Setting_Legality.SetValueInt(1)
@@ -675,10 +660,6 @@ event OnOptionDefault(int option)
 		SetToggleOptionValue(Gameplay_SettingCampingArmorTentsText_OID, true)
 		ForcePageReset()
 		SaveSettingToCurrentProfile("tent_remove_player_equipment", _Camp_Setting_CampingArmorTakeOff.GetValueInt())
-	elseif option == Gameplay_SettingCampingFireLightingText_OID
-		_Camp_Setting_ManualFireLighting.SetValue(1)
-		SetToggleOptionValue(Gameplay_SettingCampingFireLightingText_OID, false)
-		SaveSettingToCurrentProfile("manual_fire_lighting", _Camp_Setting_ManualFireLighting.GetValueInt())
 	elseif option == Gameplay_SettingCampingLegalityToggle_OID
 		_Camp_Setting_Legality.SetValueInt(2)
 		SetToggleOptionValue(Gameplay_SettingCampingLegalityToggle_OID, true)
@@ -1047,12 +1028,9 @@ function SwitchToProfile(int aiProfileIndex)
 	if pname == ""
 		GenerateDefaultProfile(aiProfileIndex)
 	endif
+	CleanProfile(aiProfileIndex)
 
-	int val = LoadSettingFromProfile(aiProfileIndex, "manual_fire_lighting")
-	if val != -1
-		_Camp_Setting_ManualFireLighting.SetValueInt(val)
-	endif
-	val = LoadSettingFromProfile(aiProfileIndex, "camping_gear_flammable")
+	int val = LoadSettingFromProfile(aiProfileIndex, "camping_gear_flammable")
 	if val != -1
 		_Camp_Setting_EquipmentFlammable.SetValueInt(val)
 	endif
@@ -1176,7 +1154,6 @@ endFunction
 function GenerateDefaultProfile(int aiProfileIndex)
 	string profile_path = CONFIG_PATH + "profile" + aiProfileIndex
 	JsonUtil.SetStringValue(profile_path, "profile_name", "Profile " + aiProfileIndex)
-	JsonUtil.SetIntValue(profile_path, "manual_fire_lighting", 1)
 	JsonUtil.SetIntValue(profile_path, "camping_gear_flammable", 2)
 	JsonUtil.SetIntValue(profile_path, "tent_remove_player_equipment", 2)
 	JsonUtil.SetIntValue(profile_path, "tent_remove_player_cuirass", 1)
@@ -1203,7 +1180,6 @@ endFunction
 
 function SaveAllSettings(int aiProfileIndex)
 	string profile_path = CONFIG_PATH + "profile" + aiProfileIndex
-	JsonUtil.SetIntValue(profile_path, "manual_fire_lighting", _Camp_Setting_ManualFireLighting.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "camping_gear_flammable", _Camp_Setting_EquipmentFlammable.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "tent_remove_player_equipment", _Camp_Setting_CampingArmorTakeOff.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "tent_remove_player_cuirass", _Camp_Setting_TakeOff_Cuirass.GetValueInt())
@@ -1228,6 +1204,14 @@ function SaveAllSettings(int aiProfileIndex)
 	JsonUtil.Save(profile_path)
 endFunction
 
+function CleanProfile(int aiProfileIndex)
+	string profile_path = CONFIG_PATH + "profile" + aiProfileIndex
+
+	bool result
+	result = JsonUtil.UnsetIntValue(profile_path, "manual_fire_lighting")
+	JsonUtil.Save(profile_path)
+endFunction
+
 function ClearCampingPerks()
 	_Camp_PerkRank_Resourceful.SetValueInt(0)
 	_Camp_PerkRank_Trailblazer.SetValueInt(0)
@@ -1241,3 +1225,6 @@ function RefundCampingSkillPoints()
 	CampingPerkPoints.SetValueInt(CampingPerkPointsEarned.GetValueInt())
 	CampingPerkPointProgress.SetValue(0.0)
 endFunction
+
+GlobalVariable property _Camp_Setting_ManualFireLighting auto
+{This setting is deprecated as of Campfire 1.6.}
