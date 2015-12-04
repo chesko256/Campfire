@@ -316,7 +316,7 @@ float last_lit_time
 bool in_use = false
 bool eligible_for_deletion = false
 
-int property campfire_stage = 0 auto hidden     ;0 = empty or ash, 1 = embers, 2 = burning, 3 = unlit fuel no tinder, 4 = unlit fuel and tinder
+int property campfire_stage = 0 auto hidden     ;0 = empty or ash, 1 = embers, 2 = burning, 3 = unlit fuel no tinder, 4 = unlit fuel and tinder, 5 = attempting to be lit
 int property campfire_size = 0 auto hidden      ;0 = not built, 1 = fragile, 2 = flickering, 3 = crackling, 4 = roaring
 float last_update_registration_time             ;when this campfire last registered
 float burn_duration                             ;how long this campfire will burn (set by fuel)
@@ -357,7 +357,7 @@ function DoActivate(ObjectReference akActionRef)
 
     if akActionRef == Game.GetPlayer() && !in_use
         ; Calculate the displayed time remaining
-        int displayed_time = GetRemainingDisplayTimeHours()        
+        int displayed_time = GetRemainingDisplayTimeHours()
         
         int i
         if displayed_time > 0.0
@@ -1137,7 +1137,7 @@ function SetWasFirstPerson()
 endFunction
 
 int function GetRemainingDisplayTimeHours()
-    float burn_time
+    float total_burn_time
     if campfire_stage == 0 || campfire_stage >= 3
         total_burn_time = remaining_time - ASH_DURATION
     else

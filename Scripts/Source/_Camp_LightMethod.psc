@@ -16,9 +16,11 @@ Light property Torch01 auto
 ImpactDataSet property MAGFirebolt01ImpactSet auto
 ImpactDataSet property WPNzBluntImpactSet auto
 Activator property FXSparkFountainToggleLight auto
+GlobalVariable property _Camp_LastUsedCampfireStage auto
 
 Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)
 	if akNewContainer == PlayerRef
+		_Camp_LastUsedCampfireStage.SetValueInt(5)
 		if is_flames
 			FlamesVFX()
 		elseif is_torch
