@@ -11,8 +11,6 @@ Message property _Camp_legacyconfig_help auto
 Message property _Camp_legacyconfig_troubleshooting auto
 Message property _Camp_legacyconfig_removegeartents_on auto
 Message property _Camp_legacyconfig_removegeartents_off auto
-Message property _Camp_legacyconfig_manuallighting_on auto
-Message property _Camp_legacyconfig_manuallighting_off auto
 Message property _Camp_legacyconfig_campingillegal_on auto
 Message property _Camp_legacyconfig_campingillegal_off auto
 Message property _Camp_legacyconfig_flammableitems_on auto
@@ -51,7 +49,6 @@ Message property _Camp_legacyconfig_campingskillrestoredone auto
 
 ;Globals
 GlobalVariable property _Camp_Setting_CampingArmorTakeOff auto
-GlobalVariable property _Camp_Setting_ManualFireLighting auto
 GlobalVariable property _Camp_Setting_Legality auto
 GlobalVariable property _Camp_Setting_EquipmentFlammable auto
 GlobalVariable property _Camp_Setting_TakeOff_Backpack auto
@@ -132,17 +129,14 @@ endFunction
 function menu_camping2()
     int i = _Camp_legacyconfig_camping2.Show()
     if i == 0
-        MenuHandler_Toggle(_Camp_legacyconfig_manuallighting_on, _Camp_legacyconfig_manuallighting_off, _Camp_Setting_ManualFireLighting)
-        menu_camping2()
-    elseif i == 1
         MenuHandler_Toggle(_Camp_legacyconfig_campingillegal_on, _Camp_legacyconfig_campingillegal_off, _Camp_Setting_Legality)
         menu_camping2()
-    elseif i == 2
+    elseif i == 1
         MenuHandler_Toggle(_Camp_legacyconfig_flammableitems_on, _Camp_legacyconfig_flammableitems_off, _Camp_Setting_EquipmentFlammable)
         menu_camping2()
-    elseif i == 3
+    elseif i == 2
         menu_camping()
-    elseif i == 4
+    elseif i == 3
         menu_root()
     endif
 endFunction
@@ -344,3 +338,10 @@ function RefundCampingSkillPoints()
     CampingPerkPoints.SetValueInt(CampingPerkPointsEarned.GetValueInt())
     CampingPerkPointProgress.SetValue(0.0)
 endFunction
+
+Message property _Camp_legacyconfig_manuallighting_on auto
+{This message is deprecated as of Campfire 1.6.}
+Message property _Camp_legacyconfig_manuallighting_off auto
+{This message is deprecated as of Campfire 1.6.}
+GlobalVariable property _Camp_Setting_ManualFireLighting auto
+{This setting is deprecated as of Campfire 1.6.}
