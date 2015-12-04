@@ -224,6 +224,7 @@ Sound property _Camp_UISkillsPerkEnter auto
 Explosion property _Camp_PerkSystemEnterExplosion01 auto
 ImpactDataSet property MAGFlames01ImpactSet auto
 Message property _Camp_Campfire_Menu auto
+Message property _Camp_Campfire_MenuNoTime auto
 Message property _Camp_Campfire_SitError auto
 Message property _Camp_Campfire_LightFail auto
 Message property _Camp_Campfire_RefundFuelMsg auto
@@ -355,7 +356,21 @@ function DoActivate(ObjectReference akActionRef)
     endif
 
     if akActionRef == Game.GetPlayer() && !in_use
-        int i = _Camp_Campfire_Menu.Show()
+        ; Calculate the displayed time remaining
+        float displayed_time
+        if campfire_stage == 0 || campfire_stage >= 3
+            displayed_time = remaining_time - ASH_DURATION
+        else
+            displayed_time = remaining_time - (ASH_DURATION + EMBERS_DURATION)
+        endif
+        
+        int i
+        if displayed_time > 0.0
+            i = _Camp_Campfire_Menu.Show(Math.Floor(displayed_time))
+        else
+            i = _Camp_Campfire_MenuNoTime.Show()
+        endif
+
         if i == 0
             in_use = true
             self.BlockActivation(false)
@@ -743,7 +758,11 @@ function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int 
     myLight = self.PlaceAtMe(akLight, abInitiallyDisabled = true)
     myLight.MoveTo(myLight, afZOffset = 100.0)
 
-    PlaceFuel()
+    if campfire_stage == 2
+        LightFire(true)
+    else
+        PlaceFuel()
+    endif
 endFunction
 
 function SitDown()
