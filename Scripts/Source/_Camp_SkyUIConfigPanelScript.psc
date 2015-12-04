@@ -61,7 +61,6 @@ int TroubleshootingIndex = 0
 
 int Gameplay_SettingCampingLegalityToggle_OID
 int Gameplay_SettingCampingArmorTentsText_OID
-int Gameplay_SettingCampingFireLightingText_OID
 int Gameplay_SettingCampingFlammabilityToggle_OID
 
 int Gameplay_SettingCampingPlaceHelm_OID
@@ -383,8 +382,6 @@ endEvent
 event OnOptionHighlight(int option)
 	if option == Gameplay_SettingCampingArmorTentsText_OID
 		SetInfoText("$CampfireOptionHighlightSettingCampingArmorTentsText")
-	elseif option == Gameplay_SettingCampingFireLightingText_OID
-		SetInfoText("$CampfireOptionHighlightSettingCampingFireLightingText")
 	elseif option == Gameplay_SettingCampingLegalityToggle_OID
 		SetInfoText("$CampfireOptionHighlightSettingLegality")
 	elseif option == Gameplay_SettingCampingFlammabilityToggle_OID
