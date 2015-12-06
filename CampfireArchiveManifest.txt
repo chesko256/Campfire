@@ -97,10 +97,14 @@ meshes\campfire\_Camp_Fuel_Flickering_BooksLit.nif
 meshes\campfire\_Camp_Fuel_Flickering_BooksUnlit.nif
 meshes\campfire\_Camp_Fuel_Flickering_BranchesLit.nif
 meshes\campfire\_Camp_Fuel_Flickering_BranchesUnlit.nif
+meshes\campfire\_Camp_Fuel_Flickering_KindlingLit.nif
+meshes\campfire\_Camp_Fuel_Flickering_KindlingUnlit.nif
 meshes\campfire\_Camp_Fuel_Fragile_BooksLit.nif
 meshes\campfire\_Camp_Fuel_Fragile_BooksUnlit.nif
 meshes\campfire\_Camp_Fuel_Fragile_BranchesLit.nif
 meshes\campfire\_Camp_Fuel_Fragile_BranchesUnlit.nif
+meshes\campfire\_Camp_Fuel_Fragile_KindlingLit.nif
+meshes\campfire\_Camp_Fuel_Fragile_KindlingUnlit.nif
 meshes\campfire\_Camp_Fuel_Roaring_DeadwoodLit.nif
 meshes\campfire\_Camp_Fuel_Roaring_DeadwoodUnlit.nif
 meshes\campfire\_Camp_Fuel_Roaring_FirewoodLit.nif
@@ -217,6 +221,7 @@ Scripts\_Camp_Compatibility.pex
 Scripts\_Camp_ConditionValues.pex
 Scripts\_Camp_CraftingObjectEffectScript.pex
 Scripts\_Camp_DebugSpouseAliasScript.pex
+Scripts\_Camp_Deconstruct.pex
 Scripts\_Camp_DeleteLargeFire.pex
 Scripts\_Camp_EquipMonitor.pex
 Scripts\_Camp_ExitBug.pex
@@ -343,6 +348,7 @@ Scripts\Source\_Camp_Compatibility.psc
 Scripts\Source\_Camp_ConditionValues.psc
 Scripts\Source\_Camp_CraftingObjectEffectScript.psc
 Scripts\Source\_Camp_DebugSpouseAliasScript.psc
+Scripts\Source\_Camp_Deconstruct.psc
 Scripts\Source\_Camp_DeleteLargeFire.psc
 Scripts\Source\_Camp_EquipMonitor.psc
 Scripts\Source\_Camp_ExitBug.psc
@@ -355,7 +361,7 @@ Scripts\Source\_Camp_IndicatorFuture.psc
 Scripts\Source\_Camp_IndicatorTrigger.psc
 Scripts\Source\_Camp_LegacyMenu.psc
 Scripts\Source\_Camp_LegalAreaCheck.psc
-Scripts\Source\_Camp_LightMethod.pex
+Scripts\Source\_Camp_LightMethod.psc
 Scripts\Source\_Camp_Main.psc
 Scripts\Source\_Camp_NextBug.psc
 Scripts\Source\_Camp_ObjectFuture.psc
