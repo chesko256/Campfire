@@ -4,7 +4,8 @@ import CampUtil
 
 int burn_duration = 1
 
-bool property isWood = false auto
+bool property isBranches = false auto
+bool property isKindling = false auto
 bool property isBooks = false auto
 
 int property count_books = 0 auto
@@ -16,8 +17,10 @@ int property count_firewood = 0 auto
 Furniture property _Camp_Campfire auto
 Activator property _Camp_Fuel_Fragile_BranchesLit auto
 Activator property _Camp_Fuel_Fragile_BooksLit auto
+Activator property _Camp_Fuel_Fragile_KindlingLit auto
 Activator property _Camp_Fuel_Fragile_BranchesUnlit auto
 Activator property _Camp_Fuel_Fragile_BooksUnlit auto
+Activator property _Camp_Fuel_Fragile_KindlingUnlit auto
 MiscObject property RuinedBook auto
 MiscObject property RuinedBook02 auto
 Light property _Camp_Campfire_Light_2 auto
@@ -36,9 +39,13 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
 			(f as CampCampfire).supplied_deadwood += count_deadwood
 			(f as CampCampfire).supplied_firewood += count_firewood
 			_Camp_LastUsedCampfireSize.SetValueInt(1)
-			if isWood
+			if isBranches
 				(f as CampCampfire).SetFuel(_Camp_Fuel_Fragile_BranchesLit, 	\
 											_Camp_Fuel_Fragile_BranchesUnlit, \
+											_Camp_Campfire_Light_2, burn_duration)
+			elseif isKindling
+				(f as CampCampfire).SetFuel(_Camp_Fuel_Fragile_KindlingLit, 	\
+											_Camp_Fuel_Fragile_KindlingUnlit, \
 											_Camp_Campfire_Light_2, burn_duration)
 			elseif isBooks
 				(f as CampCampfire).SetFuel(_Camp_Fuel_Fragile_BooksLit, 	\
