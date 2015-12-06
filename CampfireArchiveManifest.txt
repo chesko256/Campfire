@@ -172,6 +172,7 @@ meshes\campfire\_Camp_Torch_MISC.nif
 meshes\campfire\_Camp_VisionItemFoundFX.nif
 meshes\campfire\_camp_walkingstickshield3.nif
 meshes\campfire\_camp_walkingstickshieldGO.nif
+meshes\campfire\_Camp_WoodShavings.nif
 Scripts\BladesSparringScript.pex
 Scripts\C00TrainerScript.pex
 Scripts\C00VilkasScript.pex
@@ -452,3 +453,5 @@ textures\campfire\_Camp_redfxfirefly.dds
 textures\campfire\_Camp_StoneQuiver.dds
 textures\campfire\_Camp_StoneQuiver_n.dds
 textures\campfire\_Camp_woodfiresfull.dds
+textures\campfire\_Camp_WoodShavings.dds
+textures\campfire\_Camp_WoodShavings_n.dds
