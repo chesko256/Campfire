@@ -228,6 +228,7 @@ Scripts\_Camp_IndicatorFuture.pex
 Scripts\_Camp_IndicatorTrigger.pex
 Scripts\_Camp_LegacyMenu.pex
 Scripts\_Camp_LegalAreaCheck.pex
+Scripts\_Camp_LightMethod.pex
 Scripts\_Camp_Main.pex
 Scripts\_Camp_NextBug.pex
 Scripts\_Camp_ObjectFuture.pex
@@ -353,6 +354,7 @@ Scripts\Source\_Camp_IndicatorFuture.psc
 Scripts\Source\_Camp_IndicatorTrigger.psc
 Scripts\Source\_Camp_LegacyMenu.psc
 Scripts\Source\_Camp_LegalAreaCheck.psc
+Scripts\Source\_Camp_LightMethod.pex
 Scripts\Source\_Camp_Main.psc
 Scripts\Source\_Camp_NextBug.psc
 Scripts\Source\_Camp_ObjectFuture.psc
