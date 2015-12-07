@@ -20,26 +20,31 @@ GlobalVariable property _Camp_LastUsedCampfireStage auto
 
 Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)
 	if akNewContainer == PlayerRef
+		ObjectReference torch
 		_Camp_LastUsedCampfireStage.SetValueInt(5)
 		if is_flames
 			FlamesVFX()
 		elseif is_torch
-			TorchVFX()
+			torch = TorchVFX()
 		elseif is_stone
 			StoneVFX()
 		endif
 
 		(GetLastUsedCampfire() as CampCampfire).LightFire(always_light)
+		if torch
+			Wait(1.5)
+			torch.Delete()
+		endif
 		PlayerRef.RemoveItem(this_item, 1, true)
 	endif
 EndEvent
 
 function FlamesVFX()
-	GetLastUsedCampfire().PlayImpactEffect(MAGFirebolt01ImpactSet)
+	GetLastUsedCampfire().PlayImpactEffect(MAGFirebolt01ImpactSet, afPickDirZ = 1)
 	Wait(0.45)
 endFunction
 
-function TorchVFX()
+ObjectReference function TorchVFX()
 	ObjectReference t = GetLastUsedCampfire().PlaceAtMe(Torch01, 1, true)
 	t.MoveTo(t, afZOffset = 75.0)
 	t.Enable()
@@ -52,9 +57,9 @@ function TorchVFX()
 
 	;bump the torch
 	t.ApplyHavokImpulse(0.0, 0.0, -1.0, 5.0)
-	Wait(1.0)
+	Wait(0.8)
 	t.DisableNoWait(true)
-	t.Delete()
+	return t
 endFunction
 
 function StoneVFX()

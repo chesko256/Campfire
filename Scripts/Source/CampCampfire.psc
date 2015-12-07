@@ -298,8 +298,7 @@ ObjectReference property myCookPotSnapMarkerFuture auto hidden
 
 ObjectReference property myPerkNodeController auto hidden
 ObjectReference property myPerkNavController auto hidden
-
-GlobalVariable property _Camp_PerkRank_Firecraft auto
+GlobalVariable property _Camp_PerkRank_Resourceful auto
 
 int EMBERS_DURATION = 4
 int ASH_DURATION = 24
@@ -741,7 +740,7 @@ EndEvent
 
 function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int aiBurnDuration)
     CampDebug(1, "Fuel set: " + akFuelLit + "," + akFuelUnlit + "," + akLight)
-    burn_duration = aiBurnDuration * ((_Camp_PerkRank_Firecraft.GetValueInt() * 0.25) + 1)
+    burn_duration = aiBurnDuration * ((_Camp_PerkRank_Resourceful.GetValueInt() * 0.25) + 1)
 
     ;If there is pre-existing fuel, get rid of it
     TryToDisableAndDeleteRef(myFuelUnlit)
@@ -1147,3 +1146,7 @@ float function GetRemainingDisplayTime()
     float remaining_burn_time = total_burn_time - ((Utility.GetCurrentGameTime() - last_update_registration_time) * 24.0)
     return remaining_burn_time
 endFunction
+
+
+GlobalVariable property _Camp_PerkRank_Firecraft auto
+{This script no longer uses this property as of Campfire 1.6.}

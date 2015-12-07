@@ -5,6 +5,8 @@ import CampUtil
 import _CampInternal
 
 int property SKSE_MIN_VERSION = 10703 autoReadOnly
+GlobalVariable property _Camp_PreviousVersion auto
+GlobalVariable property _Camp_CampfireVersion auto
 
 ;#PROPERTIES=====================================================================================================================
 actor property PlayerRef auto
@@ -88,6 +90,8 @@ GlobalVariable property _Camp_HotkeyHarvestWood auto
 GlobalVariable property _Camp_HotkeyInstincts auto
 GlobalVariable property _Camp_Setting_TrackFollowers auto
 GlobalVariable property _Camp_HarvestWoodEnabled auto
+GlobalVariable property _Camp_PerkRank_Resourceful auto
+GlobalVariable property _Camp_PerkRank_Firecraft auto
 
 ConstructibleObject property _Camp_FireMiscRecipe_TinderStraw auto
 ConstructibleObject property _Camp_FireMiscRecipe_TinderStraw_perk1 auto
@@ -114,11 +118,13 @@ Spell property _Camp_LegacyConfig_Spell auto
 Spell property _Camp_FollowerDetectSpell auto
 Message property _Camp_CriticalError_SKSE auto
 Message property _Camp_CriticalError_FrostfallLegacy auto
+Message property _Camp_Upgrade_1_6_Msg auto
 Weather property DLC2AshStorm auto hidden
 
 ;#Upgrade Flags====================================================================
 bool Upgraded_1_1 = false
 bool Upgraded_1_4 = false
+bool Upgraded_1_6 = false
 
 Event OnPlayerLoadGame()
 	RunCompatibility()
@@ -159,6 +165,13 @@ function RunCompatibility()
 	if !Upgraded_1_4
 		Upgrade_1_4()
 	endif
+
+	if !Upgraded_1_6
+		Upgrade_1_6()
+	endif
+
+	; Update the previous version value with the current version
+	_Camp_PreviousVersion.SetValue(_Camp_CampfireVersion.GetValue())
 
 	bool skse_loaded = SKSE.GetVersion()
 	if skse_loaded
@@ -628,6 +641,15 @@ function Upgrade_1_4()
 	EnchantmentResistDisease.AddForm(WAF_ClothingCloak)
 	EnchantmentResistPoison.AddForm(WAF_ClothingCloak)
 	Upgraded_1_4 = true
+endFunction
+
+function Upgrade_1_6()
+	if _Camp_PerkRank_Resourceful.GetValueInt() > 0 && _Camp_PerkRank_Firecraft.GetValueInt() == 0
+		; Player upgraded from previous version of skill tree. Show message and refund points.
+		_Camp_Upgrade_1_6_Msg.Show()
+		CampConfig.RefundCampingSkillPoints()
+	endif
+	Upgraded_1_6 = true
 endFunction
 
 function CampfirePerkSystemRegister(Activator akNodeController, int aiIndex, string asPluginName)
