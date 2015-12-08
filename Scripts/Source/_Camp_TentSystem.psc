@@ -200,10 +200,12 @@ function ShowMainMenu(ObjectReference akTent)
 			Message.ResetHelpMessage("Activate")
 			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
 		endif
-		PlayerLieDown(akTent)
-	elseif i == 2									;Lantern
+		PlayerLieDown(akTent) 						;Sleep
+	elseif i == 2
+		TentObject.myBedRoll.Activate(PlayerRef)
+	elseif i == 3									;Lantern
 		ToggleLantern(akTent)
-	elseif i == 3									;Pack
+	elseif i == 4									;Pack
 		PackTent(akTent)
 	else
 		;exit
