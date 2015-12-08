@@ -15,7 +15,6 @@ ReferenceAlias property Follower3 auto
 ReferenceAlias property Animal auto
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
-	
     if akTarget.GetRace() == DogCompanionRace || akTarget.IsInFaction(PlayerPotentialAnimalFaction) || akTarget.IsInFaction(DogFaction)
         CampDebug(1, "Registering animal: " + self)
         RegisterAnimal(akTarget)
