@@ -16,21 +16,22 @@ ReferenceAlias property Animal auto
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	
-    if akTarget.GetRace() != DogCompanionRace && !akTarget.IsInFaction(PlayerPotentialAnimalFaction) && !akTarget.IsInFaction(DogFaction)
-        CampDebug(1, "Registering follower:" + self)
-        RegisterFollower(akTarget)
-    else
+    if akTarget.GetRace() == DogCompanionRace || akTarget.IsInFaction(PlayerPotentialAnimalFaction) || akTarget.IsInFaction(DogFaction)
         CampDebug(1, "Registering animal: " + self)
         RegisterAnimal(akTarget)
+    else
+        CampDebug(1, "Registering follower:" + self)
+        RegisterFollower(akTarget)
     endif
 EndEvent
 
 Event OnEffectFinish(Actor akTarget, Actor akCaster)
-    CampDebug(1, "Unregistering actor: " + akTarget.GetBaseObject().GetName() + " self " + self)
-    if akTarget.GetRace() != DogCompanionRace
-        UnregisterFollower(akTarget)
-    else
+    if akTarget.GetRace() == DogCompanionRace || akTarget.IsInFaction(PlayerPotentialAnimalFaction) || akTarget.IsInFaction(DogFaction)
+        CampDebug(1, "Unregistering animal: " + self)
         UnregisterAnimal(akTarget)
+    else
+        CampDebug(1, "Unregistering follower: " + self)
+        UnregisterFollower(akTarget)
     endif
 EndEvent
 
