@@ -7,6 +7,68 @@ Complete Camping System
 Change Log
 
 ===================================================
+Release 1.6 (12/8/2015)
+
+Features and Changes
+
+    When building campfires, you can now select how you would like to light it as part of the crafting process.
+        Selecting "Light Fire (Flames Spell)" has a 100% chance of success, but grants no Camping skill progress. Requires having the Flames spell.
+        Selecting "Light Fire (Torch)" has a 100% chance of success, but grants no Camping skill progress. Requires having a torch.
+        Selecting "Light Fire (Strike Stone)" has the ordinary chance of success as indicated by the type of tinder used, and grants Camping skill progress.
+
+    Fires created from kindling now have their own unique graphics (previously re-used the branch graphics).
+
+    Firecraft is now the first perk in the Camping skill tree (swapped places with Resourceful).
+        Firecraft now only provides a bonus to how easily campfires are lit when using Strike Stone.
+        Resourceful provides a bonus to both wood gathered and how long campfires last.
+        Your perk points will be refunded automatically after upgrading if invalid perk progress is detected.
+
+    As part of the above change, the "Manual Fire Lighting" option has been removed, in order to avoid confusion and keep players in the guided crafting system during campfire construction.
+        Attacking the campfire with a Flame spell or torch will still work, with 100% success, if tinder has been placed.
+
+    You can now create 1x "Wood Shavings" from 1 Branches or 1 Kindling.
+
+    "Wood Shavings" can be used as tinder, with a 35% chance of success in clear weather, and 5% chance in adverse weather.
+
+    You can now create 4x "Roll of Paper" from 1 Ruined Book.
+
+    "Roll of Paper" can be used as tinder, with a 55% chance of success in clear weather, and 25% chance in adverse weather.
+
+    You can now deconstruct several existing items for Kindling.
+        Broom (4x Kindling)
+        Wooden Bowl (3x Kindling)
+        Wooden Ladle (3x Kindling)
+        Wooden Plate (3x Kindling)
+        Flute (3x Kindling)
+        Drum (6x Kindling)
+        Lute (6x Kindling)
+        Bucket (6x Kindling)
+
+Chesko's Note: This means that, with a single wooden plate or other item listed above, you have everything you need to start the most basic campfire! Go forth and channel your inner MacGuyver.
+
+    Lit campfires now show how long they have left before they burn out in in-game hours and minutes.
+
+    You can now add fuel to an existing fire by selecting "Replenish Fuel" from the campfire crafting menu. This will reset the duration of the campfire. The fuel cost of replenishing a fire is less than starting a new one.
+        Starting (stage 1) campfires cannot be replenished.
+
+    Torches can now be broken down into 1 Kindling and 1 Linen Wrap when using Create Item.
+
+    The Longbow recipe now requires 1 firewood (was 2). Alternative recipe still requires 2 deadwood.
+
+    There is now a "Sleep" option when clicking on a bed roll. Lying down first is now optional.
+
+Bug Fixes
+
+    Fixed a bug where the day could reset to the previous day if harvesting wood after 11PM.
+
+    Fixed a bug with horses being improperly registered as followers when using Immersive Horses, which could cause unwanted behavior.
+
+    Fixed a bug with animal follower registration, causing unwanted behavior. This improves compatibility with Pets of Skyrim.
+
+    Several magic fires in and around Winterhold were not being detected as heat sources properly. (Fixes bug in Frostfall 3.)
+
+    Added a fail-safe for a rare case of OnTentEnter / OnTentLeave events being sent out of order, causing the system to think the player is always inside a tent. We now clear the player's "currently used tent" value each time the player changes areas.
+
 Release 1.5.2 (11/23/2015)
 
 Bug Fixes
