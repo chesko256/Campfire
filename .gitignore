@@ -26,6 +26,7 @@
 !Chesko_Frostfall.esp
 !Frostfall.esp
 !LastSeed.esp
+!AbundanceLost.esp
 !campfire_steam_splash.jpg
 
 #Interface
@@ -73,6 +74,8 @@
 !_Seed*.psc
 !Seed*.pex
 !Seed*.psc
+!_AL*.psc
+!_AL*.pex
 
 #Brawl Bug Patch Scripts
 !BladesSparringScript.pex
