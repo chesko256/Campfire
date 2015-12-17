@@ -2,26 +2,22 @@ scriptname _HN_FoodMarker extends ObjectReference
 
 import Utility
 
-Potion property FoodType auto
-{The type of food to spawn.}
+Actor property PlayerRef auto
 
-FormList property _AL_WealthyLocations auto
-{The wealthy locations formlist.}
+int property FoodType auto
+{The type of food. See _HN_FoodSpawnSystem.}
 
-GlobalVariable property SpawnChanceGlobal auto
-{The global that determines if this food should spawn.}
-
-GlobalVariable property _AL_MaxScriptBackOffTime auto
-{How long to wait, maximum, during the randomized back-off period.}
-
-float property SpawnChanceOverride = 0.0 auto
-{Manually override the chance the reference will spawn.}
+Potion property FoodToSpawn auto
+{The food to spawn.}
 
 Faction property OwnerFactionOverride auto
 {Manually override the faction owner of the spawned reference.}
 
 ActorBase property OwnerActorOverride auto
 {Manually override the actor owner of the spawned reference.}
+
+bool property ProducedByOwner auto
+{Whether or not this food is produced by the owner. Helps override regional shortages.}
 
 ObjectReference ref
 bool ready = true
@@ -35,16 +31,9 @@ Event OnCellAttach()
 	attached = true
 	; debug.trace(self + " attached to cell.")
 	if ready
-		Wait(RandomFloat(0.0, _AL_MaxScriptBackOffTime.GetValue()))
-		float roll = RandomFloat()
-		float chance
-		if SpawnChanceOverride != 0.0
-			chance = SpawnChanceOverride
-		else
-			chance = SpawnChanceGlobal.GetValue()
-		endif
-		if roll <= chance ; plus wealthy bonus, etc
-			ref = self.PlaceAtMe(FoodType, abInitiallyDisabled = true)
+		bool success = ShouldFoodSpawn(FoodType, ProducedByOwner, PlayerRef.GetCurrentLocation())
+		if success
+			ref = self.PlaceAtMe(FoodToSpawn, abInitiallyDisabled = true)
 			debug.trace(self + " spawned " + ref)
 			this_cell = self.GetParentCell()
 			owner_faction = GetFoodFactionOwner(this_cell)
