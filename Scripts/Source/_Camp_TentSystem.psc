@@ -68,7 +68,7 @@ function UpdateTentUseState(ObjectReference akTent)
 			SetCurrentTent(None)
 		endif
 		EO_TurnOn()
-		SendEvent_OnBedrollSitLay(TentObject, true)
+		SendEvent_OnBedrollSitLay(akTent, true)
 
 		_Camp_FadeDown.Apply()
 		wait(0.5)
@@ -106,7 +106,7 @@ function UpdateTentUseState(ObjectReference akTent)
 			SetCurrentTent(None)
 		endif
 		EO_TurnOn()
-		SendEvent_OnBedrollSitLay(TentObject, true)
+		SendEvent_OnBedrollSitLay(akTent, true)
 
 		if TentObject.myExitFront && TentObject.myExitFront.IsEnabled() && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
 			PlayerRef.SplineTranslateToRef(TentObject.myExitFront, 1.0, 65.0)
