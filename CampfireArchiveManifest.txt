@@ -152,6 +152,7 @@ meshes\campfire\_camp_largeleathertent_cutthroughexterior.nif
 meshes\campfire\_camp_largeleathertent_cutthroughinterior.nif
 meshes\campfire\_Camp_LargeLeatherTent_ExtraCollision.nif
 meshes\campfire\_camp_largeleathertent_groundfx.nif
+meshes\campfire\_Camp_MageSphere01.nif
 meshes\campfire\_Camp_PerkArtPlane.nif
 meshes\campfire\_Camp_PerkArtProjectile_Tent.nif
 meshes\campfire\_Camp_PerkSystemEnterExp.nif
@@ -456,6 +457,7 @@ textures\campfire\_Camp_Cloak_Fur_Ornament_n.dds
 textures\campfire\_Camp_Cloak_Linen.dds
 textures\campfire\_Camp_enchantingchalkground.dds
 textures\campfire\_camp_leathertentroll.dds
+textures\campfire\_Camp_MageSphereTex.dds
 textures\campfire\_Camp_PerkArt_Axe.dds
 textures\campfire\_Camp_PerkSystemEnterGrad.dds
 textures\campfire\_Camp_redfxfirefly.dds

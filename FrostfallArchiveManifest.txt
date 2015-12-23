@@ -14,7 +14,6 @@ Interface\Translations\Frostfall_JAPANESE.txt
 Interface\Translations\Frostfall_POLISH.txt
 Interface\Translations\Frostfall_RUSSIAN.txt
 Interface\Translations\Frostfall_SPANISH.txt
-meshes\frostfall\_DE_MageSphere01.nif
 meshes\frostfall\_de_shelter_cookingpotfurniture.nif
 meshes\frostfall\_de_shelter_cookingpotfurniture_steam.nif
 meshes\frostfall\_Frost_BranchTreeCluster.nif
@@ -199,7 +198,6 @@ Scripts\Source\_Frost_WoodHarvestingQuestScript.psc
 Scripts\Source\_Frost_WoodHarvestNodeController.psc
 Scripts\Source\_Frost_WoodpileAliasScript.psc
 Scripts\Source\_Frost_WoodpileNodeController.psc
-textures\frostfall\_DE_MageSphereTex.dds
 textures\frostfall\_Frost_bookart0.dds
 textures\frostfall\_Frost_bookart1.dds
 textures\frostfall\_Frost_bookart2.dds
