@@ -1,137 +1,68 @@
-scriptname _Frost_ConjuredShelter extends _Camp_PlaceableObjectBase
+scriptname CampConjuredShelter extends CampTentEx
 
 import _CampInternal
 import CampUtil
 import TentSystem
 
-Float property Setting_BedRollScale = 1.0 auto
-{ DESCRIPTION: Optional: The scale to render the player's and follower's bed rolls. 1.0 by default. }
-
-Float property Setting_PlayerSitAngle = 0.0 auto
-{ DESCRIPTION: Optional: The compass direction adjustment applied to the player's sitting position. 0.0 by default. }
-
-ObjectReference property RequiredPositionRef_PlayerBed auto
-{ DESCRIPTION: Required: The player's bed roll (main interactible) position reference. }
-
-Activator property ShelterAsset_LargeTentTriggerVolume auto
-{ DESCRIPTION: Optional: A trigger box activator for walk-in tents that lets the system know that you are standing inside of it. If not included, the system will only consider the player to be "inside" the tent when sitting or lying down in it. }
-
-Static property ShelterAsset_SphereModel auto
+Static property TentAsset_SphereModel auto
 { DESCRIPTION: Optional: The tent static object. }
 
-Static property ShelterAsset_ShelterModelExterior auto
-{ DESCRIPTION: Optional: The tent static object exterior (for use with Toggle View feature). }
-
-Static property ShelterAsset_BaseStatic1 auto
+Static property TentAsset_BaseStatic1 auto
 { DESCRIPTION: Optional: A static that acts as the base of the shelter. Inherits the scale of the Position Ref and is high on the placement order. }
 
-Static property ShelterAsset_BaseStatic2 auto
+Static property TentAsset_BaseStatic2 auto
 { DESCRIPTION: Optional: A static that acts as the base of the shelter. Inherits the scale of the Position Ref and is high on the placement order. }
 
-Static property ShelterAsset_BaseStatic3 auto
+Static property TentAsset_BaseStatic3 auto
 { DESCRIPTION: Optional: A static that acts as the base of the shelter. Inherits the scale of the Position Ref and is high on the placement order. }
 
-Static property ShelterAsset_BaseStatic4 auto
+Static property TentAsset_BaseStatic4 auto
 { DESCRIPTION: Optional: A static that acts as the base of the shelter. Inherits the scale of the Position Ref and is high on the placement order. }
 
-Static property ShelterAsset_BaseStatic5 auto
+Static property TentAsset_BaseStatic5 auto
 { DESCRIPTION: Optional: A static that acts as the base of the shelter. Inherits the scale of the Position Ref and is high on the placement order. }
 
-Static property ShelterAsset_BaseStatic6 auto
+Static property TentAsset_BaseStatic6 auto
 { DESCRIPTION: Optional: A static that acts as the base of the shelter. Inherits the scale of the Position Ref and is high on the placement order. }
 
-Static property ShelterAsset_BaseStatic7 auto
+Static property TentAsset_BaseStatic7 auto
 { DESCRIPTION: Optional: A static that acts as the base of the shelter. Inherits the scale of the Position Ref and is high on the placement order. }
 
-Static property ShelterAsset_ClutterStatic1 auto
+Static property TentAsset_ClutterStatic6 auto
 { DESCRIPTION: Optional: A static to place in or around the shelter. }
 
-Static property ShelterAsset_ClutterStatic2 auto
+Static property TentAsset_ClutterStatic7 auto
 { DESCRIPTION: Optional: A static to place in or around the shelter. }
 
-Static property ShelterAsset_ClutterStatic3 auto
-{ DESCRIPTION: Optional: A static to place in or around the shelter. }
-
-Static property ShelterAsset_ClutterStatic4 auto
-{ DESCRIPTION: Optional: A static to place in or around the shelter. }
-
-Static property ShelterAsset_ClutterStatic5 auto
-{ DESCRIPTION: Optional: A static to place in or around the shelter. }
-
-Static property ShelterAsset_ClutterStatic6 auto
-{ DESCRIPTION: Optional: A static to place in or around the shelter. }
-
-Static property ShelterAsset_ClutterStatic7 auto
-{ DESCRIPTION: Optional: A static to place in or around the shelter. }
-
-MiscObject property ShelterAsset_ClutterMisc1 auto
+MiscObject property TentAsset_ClutterMisc1 auto
 { DESCRIPTION: Optional: A MiscObject to place in or around the shelter. }
 
-MiscObject property ShelterAsset_ClutterMisc2 auto
+MiscObject property TentAsset_ClutterMisc2 auto
 { DESCRIPTION: Optional: A MiscObject to place in or around the shelter. }
 
-MiscObject property ShelterAsset_ClutterMisc3 auto
+MiscObject property TentAsset_ClutterMisc3 auto
 { DESCRIPTION: Optional: A MiscObject to place in or around the shelter. }
 
-MiscObject property ShelterAsset_ClutterMisc4 auto
+MiscObject property TentAsset_ClutterMisc4 auto
 { DESCRIPTION: Optional: A MiscObject to place in or around the shelter. }
 
-MiscObject property ShelterAsset_ClutterMisc5 auto
+MiscObject property TentAsset_ClutterMisc5 auto
 { DESCRIPTION: Optional: A MiscObject to place in or around the shelter. }
 
-MiscObject property ShelterAsset_ClutterMisc6 auto
+MiscObject property TentAsset_ClutterMisc6 auto
 { DESCRIPTION: Optional: A MiscObject to place in or around the shelter. }
 
-MiscObject property ShelterAsset_ClutterMisc7 auto
+MiscObject property TentAsset_ClutterMisc7 auto
 { DESCRIPTION: Optional: A MiscObject to place in or around the shelter. }
 
-Activator property ShelterAsset_ClutterActivator1 auto
-{ DESCRIPTION: Optional: An activator to place in or around the tent. }
-
-Activator property ShelterAsset_ClutterActivator2 auto
-{ DESCRIPTION: Optional: An activator to place in or around the tent. }
-
-Activator property ShelterAsset_ClutterActivator3 auto
-{ DESCRIPTION: Optional: An activator to place in or around the tent. }
-
-Furniture property ShelterAsset_ClutterFurniture1 auto
+Furniture property TentAsset_ClutterFurniture6 auto
 { DESCRIPTION: Optional: A furniture object to place in or around the tent. }
 
-Furniture property ShelterAsset_ClutterFurniture2 auto
+Furniture property TentAsset_ClutterFurniture7 auto
 { DESCRIPTION: Optional: A furniture object to place in or around the tent. }
-
-Furniture property ShelterAsset_ClutterFurniture3 auto
-{ DESCRIPTION: Optional: A furniture object to place in or around the tent. }
-
-Furniture property ShelterAsset_ClutterFurniture4 auto
-{ DESCRIPTION: Optional: A furniture object to place in or around the tent. }
-
-Furniture property ShelterAsset_ClutterFurniture5 auto
-{ DESCRIPTION: Optional: A furniture object to place in or around the tent. }
-
-Furniture property ShelterAsset_ClutterFurniture6 auto
-{ DESCRIPTION: Optional: A furniture object to place in or around the tent. }
-
-Furniture property ShelterAsset_ClutterFurniture7 auto
-{ DESCRIPTION: Optional: A furniture object to place in or around the tent. }
-
-Activator property ShelterAsset_ShelterDestructionCollider auto
-{ DESCRIPTION: Optional: Activator that passes its OnHit data to this object. Used to allow hitting the shelter object to destroy the tent. }
-
-ObjectReference property PositionRef_AnimalLayDownMarker auto
-{ DESCRIPTION: Optional: Position reference of marker that animals will lie down at. }
 
 ObjectReference property PositionRef_Sphere auto
 { DESCRIPTION: Optional: The shelter (tent, structure) position reference. }
-
-ObjectReference property PositionRef_Light1 auto
-{ DESCRIPTION: Optional: The first Light's position reference. }
-
-ObjectReference property PositionRef_Light2 auto
-{ DESCRIPTION: Optional: The second Light's position reference. }
-
-ObjectReference property PositionRef_Light3 auto
-{ DESCRIPTION: Optional: The third Light's position reference. }
 
 ObjectReference property PositionRef_BaseStatic1 auto
 { DESCRIPTION: Optional: Shelter base position reference. Scale is used during placement. }
@@ -153,21 +84,6 @@ ObjectReference property PositionRef_BaseStatic6 auto
 
 ObjectReference property PositionRef_BaseStatic7 auto
 { DESCRIPTION: Optional: Shelter base position reference. Scale is used during placement. }
-
-ObjectReference property PositionRef_ClutterStatic1 auto
-{ DESCRIPTION: Optional: Clutter position reference. }
-
-ObjectReference property PositionRef_ClutterStatic2 auto
-{ DESCRIPTION: Optional: Clutter position reference. }
-
-ObjectReference property PositionRef_ClutterStatic3 auto
-{ DESCRIPTION: Optional: Clutter position reference. }
-
-ObjectReference property PositionRef_ClutterStatic4 auto
-{ DESCRIPTION: Optional: Clutter position reference. }
-
-ObjectReference property PositionRef_ClutterStatic5 auto
-{ DESCRIPTION: Optional: Clutter position reference. }
 
 ObjectReference property PositionRef_ClutterStatic6 auto
 { DESCRIPTION: Optional: Clutter position reference. }
@@ -196,367 +112,20 @@ ObjectReference property PositionRef_ClutterMisc6 auto
 ObjectReference property PositionRef_ClutterMisc7 auto
 { DESCRIPTION: Optional: Clutter position reference. }
 
-ObjectReference property PositionRef_ClutterActivator1 auto
-{ DESCRIPTION: Optional: Clutter position reference. }
-
-ObjectReference property PositionRef_ClutterActivator2 auto
-{ DESCRIPTION: Optional: Clutter position reference. }
-
-ObjectReference property PositionRef_ClutterActivator3 auto
-{ DESCRIPTION: Optional: Clutter position reference. }
-
-ObjectReference property PositionRef_ClutterFurniture1 auto
-{ DESCRIPTION: Optional: Clutter position reference. }
-
-ObjectReference property PositionRef_ClutterFurniture2 auto
-{ DESCRIPTION: Optional: Clutter position reference. }
-
-ObjectReference property PositionRef_ClutterFurniture3 auto
-{ DESCRIPTION: Optional: Clutter position reference. }
-
-ObjectReference property PositionRef_ClutterFurniture4 auto
-{ DESCRIPTION: Optional: Clutter position reference. }
-
-ObjectReference property PositionRef_ClutterFurniture5 auto
-{ DESCRIPTION: Optional: Clutter position reference. }
-
 ObjectReference property PositionRef_ClutterFurniture6 auto
 { DESCRIPTION: Optional: Clutter position reference. }
 
 ObjectReference property PositionRef_ClutterFurniture7 auto
 { DESCRIPTION: Optional: Clutter position reference. }
 
-ObjectReference property PositionRef_Player_Backpack auto
-{ DESCRIPTION: Optional: Position reference of player's backpack. }
-
-ObjectReference property PositionRef_Player_Shield auto
-{ DESCRIPTION: Optional: Position reference of player's shield. }
-
-ObjectReference property PositionRef_Player_ShieldInterior auto
-{ DESCRIPTION: Optional: Position reference of player's shield when in an interior (usually lying flat). }
-
-ObjectReference property PositionRef_Player_WeaponMainHand auto
-{ DESCRIPTION: Optional: Position reference of player's main hand weapon. }
-
-ObjectReference property PositionRef_Player_WeaponOffHand auto
-{ DESCRIPTION: Optional: Position reference of player's off hand weapon. }
-
-ObjectReference property PositionRef_Player_WeaponTwoHand auto
-{ DESCRIPTION: Optional: Position reference of player's two-handed weapon. }
-
-ObjectReference property PositionRef_Player_WeaponBow auto
-{ DESCRIPTION: Optional: Position reference of player's bow. }
-
-ObjectReference property PositionRef_Player_ArmorHelm auto
-{ DESCRIPTION: Optional: Position reference of player's head gear. }
-
-ObjectReference property PositionRef_Player_ArmorCuirass auto
-{ DESCRIPTION: Optional: Position reference of player's body gear. }
-
-ObjectReference property PositionRef_Player_ArmorGauntlets auto
-{ DESCRIPTION: Optional: Position reference of player's hand gear. }
-
-ObjectReference property PositionRef_Player_ArmorBoots auto
-{ DESCRIPTION: Optional: Position reference of player's foot gear. }
-
-ObjectReference property PositionRef_CenterObjectOverride auto
-{ DESCRIPTION: Optional: Set this to specify a different object as the one which all other tent objects "orbit" when rotated. Uses the Shelter or Player Bed if left blank. }
-
-ObjectReference property PositionRef_Follower1_Bed auto
-{ DESCRIPTION: Optional: The first follower's bed furniture position reference. }
-
-ObjectReference property PositionRef_Follower1_Shield auto
-{ DESCRIPTION: Optional: The first follower's shield position reference. }
-
-ObjectReference property PositionRef_Follower1_WeaponMainHand auto
-{ DESCRIPTION: Optional: The first follower's main hand weapon position reference. }
-
-ObjectReference property PositionRef_Follower1_WeaponOffHand auto
-{ DESCRIPTION: Optional: The first follower's off hand weapon position reference. }
-
-ObjectReference property PositionRef_Follower1_WeaponTwoHand auto
-{ DESCRIPTION: Optional: The first follower's two-handed weapon position reference. }
-
-ObjectReference property PositionRef_Follower1_WeaponBow auto
-{ DESCRIPTION: Optional: The first follower's bow position reference. }
-
-ObjectReference property PositionRef_Follower2_Bed auto
-{ DESCRIPTION: Optional: The second follower's bed furniture position reference. }
-
-ObjectReference property PositionRef_Follower2_Shield auto
-{ DESCRIPTION: Optional: The second follower's shield position reference. }
-
-ObjectReference property PositionRef_Follower2_WeaponMainHand auto
-{ DESCRIPTION: Optional: The second follower's main hand weapon position reference. }
-
-ObjectReference property PositionRef_Follower2_WeaponOffHand auto
-{ DESCRIPTION: Optional: The second follower's off hand weapon position reference. }
-
-ObjectReference property PositionRef_Follower2_WeaponTwoHand auto
-{ DESCRIPTION: Optional: The second follower's two-handed weapon position reference. }
-
-ObjectReference property PositionRef_Follower2_WeaponBow auto
-{ DESCRIPTION: Optional: The second follower's bow position reference. }
-
-ObjectReference property PositionRef_Follower3_Bed auto
-{ DESCRIPTION: Optional: The third follower's bed furniture position reference. }
-
-ObjectReference property PositionRef_Follower3_Shield auto
-{ DESCRIPTION: Optional: The third follower's shield position reference. }
-
-ObjectReference property PositionRef_Follower3_WeaponMainHand auto
-{ DESCRIPTION: Optional: The third follower's main hand weapon position reference. }
-
-ObjectReference property PositionRef_Follower3_WeaponOffHand auto
-{ DESCRIPTION: Optional: The third follower's off hand weapon position reference. }
-
-ObjectReference property PositionRef_Follower3_WeaponTwoHand auto
-{ DESCRIPTION: Optional: The third follower's two-handed weapon position reference. }
-
-ObjectReference property PositionRef_Follower3_WeaponBow auto
-{ DESCRIPTION: Optional: The third follower's bow position reference. }
-
 ; PRIVATE
 ;Run-time objects
 ObjectReference property mySphere auto hidden
-ObjectReference property myTentExterior auto hidden
-ObjectReference property myLargeTentTriggerVolume auto hidden
-ObjectReference property myLightLit auto hidden
-ObjectReference property myLightUnlit auto hidden
-ObjectReference property myLightLight auto hidden
-ObjectReference property myLightLit2 auto hidden
-ObjectReference property myLightUnlit2 auto hidden
-ObjectReference property myLightLight2 auto hidden
-ObjectReference property myLightLit3 auto hidden
-ObjectReference property myLightUnlit3 auto hidden
-ObjectReference property myLightLight3 auto hidden
-ObjectReference property myPlayerMarker_MainWeapon auto hidden
-ObjectReference property myPlayerMarker_OffHandWeapon auto hidden
-ObjectReference property myPlayerMarker_BigWeapon auto hidden
-ObjectReference property myPlayerMarker_Bow auto hidden
-ObjectReference property myPlayerMarker_Helm auto hidden
-ObjectReference property myPlayerMarker_Boots auto hidden
-ObjectReference property myPlayerMarker_Gauntlets auto hidden
-ObjectReference property myPlayerMarker_Cuirass auto hidden
-ObjectReference property myPlayerMarker_Backpack auto hidden
-ObjectReference property myPlayerMarker_Shield auto hidden
-ObjectReference property myPlayerMarker_ShieldInterior auto hidden
-ObjectReference property myFollowerAMarker_MainWeapon auto hidden
-ObjectReference property myFollowerAMarker_OffHandWeapon auto hidden
-ObjectReference property myFollowerAMarker_BigWeapon auto hidden
-ObjectReference property myFollowerAMarker_Bow auto hidden
-ObjectReference property myFollowerAMarker_Shield auto hidden
-ObjectReference property myFollowerBMarker_MainWeapon auto hidden
-ObjectReference property myFollowerBMarker_OffHandWeapon auto hidden
-ObjectReference property myFollowerBMarker_BigWeapon auto hidden
-ObjectReference property myFollowerBMarker_Bow auto hidden
-ObjectReference property myFollowerBMarker_Shield auto hidden
-ObjectReference property myFollowerCMarker_MainWeapon auto hidden
-ObjectReference property myFollowerCMarker_OffHandWeapon auto hidden
-ObjectReference property myFollowerCMarker_BigWeapon auto hidden
-ObjectReference property myFollowerCMarker_Bow auto hidden
-ObjectReference property myFollowerCMarker_Shield auto hidden
-ObjectReference property myBaseStatic1 auto hidden
-ObjectReference property myBaseStatic2 auto hidden
-ObjectReference property myBaseStatic3 auto hidden
-ObjectReference property myBaseStatic4 auto hidden
-ObjectReference property myBaseStatic5 auto hidden
-ObjectReference property myBaseStatic6 auto hidden
-ObjectReference property myBaseStatic7 auto hidden
-ObjectReference property myClutterStatic1 auto hidden
-ObjectReference property myClutterStatic2 auto hidden
-ObjectReference property myClutterStatic3 auto hidden
-ObjectReference property myClutterStatic4 auto hidden
-ObjectReference property myClutterStatic5 auto hidden
-ObjectReference property myClutterStatic6 auto hidden
-ObjectReference property myClutterStatic7 auto hidden
-ObjectReference property myClutterMisc1 auto hidden
-ObjectReference property myClutterMisc2 auto hidden
-ObjectReference property myClutterMisc3 auto hidden
-ObjectReference property myClutterMisc4 auto hidden
-ObjectReference property myClutterMisc5 auto hidden
-ObjectReference property myClutterMisc6 auto hidden
-ObjectReference property myClutterMisc7 auto hidden
-ObjectReference property myClutterActivator1 auto hidden
-ObjectReference property myClutterActivator2 auto hidden
-ObjectReference property myClutterActivator3 auto hidden
-ObjectReference property myClutterFurniture1 auto hidden
-ObjectReference property myClutterFurniture2 auto hidden
-ObjectReference property myClutterFurniture3 auto hidden
-ObjectReference property myClutterFurniture4 auto hidden
-ObjectReference property myClutterFurniture5 auto hidden
-ObjectReference property myClutterFurniture6 auto hidden
-ObjectReference property myClutterFurniture7 auto hidden
-ObjectReference property myPlayerSitMarker auto hidden
-ObjectReference property myPlayerLayDownMarker auto hidden
-ObjectReference property myPlayerWithSpouseLayDownMarker auto hidden
-ObjectReference property mySpouseLayDownMarker auto hidden
-ObjectReference property myAnimalLayDownMarker auto hidden
-ObjectReference property myBedRoll auto hidden
-ObjectReference property mySpareBedRoll1 auto hidden
-ObjectReference property mySpareBedRoll2 auto hidden
-ObjectReference property mySpareBedRoll3 auto hidden
-ObjectReference property mySpareBedRoll1SitMarker auto hidden
-ObjectReference property mySpareBedRoll2SitMarker auto hidden
-ObjectReference property mySpareBedRoll3SitMarker auto hidden
-ObjectReference property myShelterCollider auto hidden
+
 
 ;Futures
 ObjectReference property mySphereFuture auto hidden
-ObjectReference property myLightLitFuture auto hidden
-ObjectReference property myLightUnlitFuture auto hidden
-ObjectReference property myLightLightFuture auto hidden
-ObjectReference property myLightLit2Future auto hidden
-ObjectReference property myLightUnlit2Future auto hidden
-ObjectReference property myLightLight2Future auto hidden
-ObjectReference property myLightLit3Future auto hidden
-ObjectReference property myLightUnlit3Future auto hidden
-ObjectReference property myLightLight3Future auto hidden
-ObjectReference property myPlayerMarker_MainWeaponFuture auto hidden
-ObjectReference property myPlayerMarker_OffHandWeaponFuture auto hidden
-ObjectReference property myPlayerMarker_BigWeaponFuture auto hidden
-ObjectReference property myPlayerMarker_BowFuture auto hidden
-ObjectReference property myPlayerMarker_HelmFuture auto hidden
-ObjectReference property myPlayerMarker_BootsFuture auto hidden
-ObjectReference property myPlayerMarker_GauntletsFuture auto hidden
-ObjectReference property myPlayerMarker_CuirassFuture auto hidden
-ObjectReference property myPlayerMarker_BackpackFuture auto hidden
-ObjectReference property myPlayerMarker_ShieldFuture auto hidden
-ObjectReference property myPlayerMarker_ShieldInteriorFuture auto hidden
-ObjectReference property myFollowerAMarker_MainWeaponFuture auto hidden
-ObjectReference property myFollowerAMarker_OffHandWeaponFuture auto hidden
-ObjectReference property myFollowerAMarker_BigWeaponFuture auto hidden
-ObjectReference property myFollowerAMarker_BowFuture auto hidden
-ObjectReference property myFollowerAMarker_ShieldFuture auto hidden
-ObjectReference property myFollowerBMarker_MainWeaponFuture auto hidden
-ObjectReference property myFollowerBMarker_OffHandWeaponFuture auto hidden
-ObjectReference property myFollowerBMarker_BigWeaponFuture auto hidden
-ObjectReference property myFollowerBMarker_BowFuture auto hidden
-ObjectReference property myFollowerBMarker_ShieldFuture auto hidden
-ObjectReference property myFollowerCMarker_MainWeaponFuture auto hidden
-ObjectReference property myFollowerCMarker_OffHandWeaponFuture auto hidden
-ObjectReference property myFollowerCMarker_BigWeaponFuture auto hidden
-ObjectReference property myFollowerCMarker_BowFuture auto hidden
-ObjectReference property myFollowerCMarker_ShieldFuture auto hidden
-ObjectReference property myBaseStatic1Future auto hidden
-ObjectReference property myBaseStatic2Future auto hidden
-ObjectReference property myBaseStatic3Future auto hidden
-ObjectReference property myBaseStatic4Future auto hidden
-ObjectReference property myBaseStatic5Future auto hidden
-ObjectReference property myBaseStatic6Future auto hidden
-ObjectReference property myBaseStatic7Future auto hidden
-ObjectReference property myClutterStatic1Future auto hidden
-ObjectReference property myClutterStatic2Future auto hidden
-ObjectReference property myClutterStatic3Future auto hidden
-ObjectReference property myClutterStatic4Future auto hidden
-ObjectReference property myClutterStatic5Future auto hidden
-ObjectReference property myClutterStatic6Future auto hidden
-ObjectReference property myClutterStatic7Future auto hidden
-ObjectReference property myClutterMisc1Future auto hidden
-ObjectReference property myClutterMisc2Future auto hidden
-ObjectReference property myClutterMisc3Future auto hidden
-ObjectReference property myClutterMisc4Future auto hidden
-ObjectReference property myClutterMisc5Future auto hidden
-ObjectReference property myClutterMisc6Future auto hidden
-ObjectReference property myClutterMisc7Future auto hidden
-ObjectReference property myClutterActivator1Future auto hidden
-ObjectReference property myClutterActivator2Future auto hidden
-ObjectReference property myClutterActivator3Future auto hidden
-ObjectReference property myClutterFurniture1Future auto hidden
-ObjectReference property myClutterFurniture2Future auto hidden
-ObjectReference property myClutterFurniture3Future auto hidden
-ObjectReference property myClutterFurniture4Future auto hidden
-ObjectReference property myClutterFurniture5Future auto hidden
-ObjectReference property myClutterFurniture6Future auto hidden
-ObjectReference property myClutterFurniture7Future auto hidden
-ObjectReference property myPlayerSitMarkerFuture auto hidden
-ObjectReference property myPlayerLayDownMarkerFuture auto hidden
-ObjectReference property myPlayerWithSpouseLayDownMarkerFuture auto hidden
-ObjectReference property mySpouseLayDownMarkerFuture auto hidden
-ObjectReference property myAnimalLayDownMarkerFuture auto hidden
-ObjectReference property myBedRollFuture auto hidden
-ObjectReference property mySpareBedRoll1Future auto hidden
-ObjectReference property mySpareBedRoll2Future auto hidden
-ObjectReference property mySpareBedRoll3Future auto hidden
-ObjectReference property mySpareBedRoll1SitMarkerFuture auto hidden
-ObjectReference property mySpareBedRoll2SitMarkerFuture auto hidden
-ObjectReference property mySpareBedRoll3SitMarkerFuture auto hidden
-ObjectReference property myShelterColliderFuture auto hidden
-ObjectReference property myLargeTentTriggerVolumeFuture auto hidden
 
-Ammo property myQuiver auto hidden
-Armor property myShield auto hidden
-Armor property myHelm auto hidden
-Armor property myBackpack auto hidden
-Armor property myBoots auto hidden
-Armor property myGauntlets auto hidden
-Armor property myCuirass auto hidden
-Weapon property myMainWeapon auto hidden
-Weapon property myOffHandWeapon auto hidden
-Weapon property myBigWeapon auto hidden
-Weapon property myBow auto hidden
-
-ObjectReference property myDisplayQuiver auto hidden
-ObjectReference property myDisplayShield auto hidden
-ObjectReference property myDisplayHelm auto hidden
-ObjectReference property myDisplayBackpack auto hidden
-ObjectReference property myDisplayBoots auto hidden
-ObjectReference property myDisplayGauntlets auto hidden
-ObjectReference property myDisplayCuirass auto hidden
-ObjectReference property myDisplayMainWeapon auto hidden
-ObjectReference property myDisplayOffHandWeapon auto hidden
-ObjectReference property myDisplayBigWeapon auto hidden
-ObjectReference property myDisplayBow auto hidden
-
-Armor property myFollowerAShield auto hidden
-Weapon property myFollowerAMainWeapon auto hidden
-Weapon property myFollowerAOffHandWeapon auto hidden
-Weapon property myFollowerABigWeapon auto hidden
-Weapon property myFollowerABow auto hidden
-
-Armor property myFollowerBShield auto hidden
-Weapon property myFollowerBMainWeapon auto hidden
-Weapon property myFollowerBOffHandWeapon auto hidden
-Weapon property myFollowerBBigWeapon auto hidden
-Weapon property myFollowerBBow auto hidden
-
-Armor property myFollowerCShield auto hidden
-Weapon property myFollowerCMainWeapon auto hidden
-Weapon property myFollowerCOffHandWeapon auto hidden
-Weapon property myFollowerCBigWeapon auto hidden
-Weapon property myFollowerCBow auto hidden
-
-ObjectReference property myDisplayFollowerAShield auto hidden
-ObjectReference property myDisplayFollowerAMainWeapon auto hidden
-ObjectReference property myDisplayFollowerAOffHandWeapon auto hidden
-ObjectReference property myDisplayFollowerABigWeapon auto hidden
-ObjectReference property myDisplayFollowerABow auto hidden
-
-ObjectReference property myDisplayFollowerBShield auto hidden
-ObjectReference property myDisplayFollowerBMainWeapon auto hidden
-ObjectReference property myDisplayFollowerBOffHandWeapon auto hidden
-ObjectReference property myDisplayFollowerBBigWeapon auto hidden
-ObjectReference property myDisplayFollowerBBow auto hidden
-
-ObjectReference property myDisplayFollowerCShield auto hidden
-ObjectReference property myDisplayFollowerCMainWeapon auto hidden
-ObjectReference property myDisplayFollowerCOffHandWeapon auto hidden
-ObjectReference property myDisplayFollowerCBigWeapon auto hidden
-ObjectReference property myDisplayFollowerCBow auto hidden
-
-bool property bLanternLit = false auto hidden
-bool property bGettingUp = false auto hidden
-
-; Some frequently used resources need to be declared locally in order to
-; keep TentSystem from becoming overloaded with requests.
-Static XMarker
-Furniture _Camp_Bedroll_ActualF
-Furniture _Camp_Bedroll_NPC_F
-Furniture _Camp_Bedroll_SpouseF
-Furniture _Camp_TentLayDownMarker
-Furniture _Camp_TentSitMarker
-Furniture _Camp_TentSitMarkerSandbox
-Form DogLayingDownIdleMarker
 
 ;Misc
 EffectShader property ShockDisintegrate01FXS auto
@@ -565,14 +134,6 @@ Activator property SummonTargetFXActivator auto
 
 float property ShelterID auto hidden
 int property mySoundID auto hidden
-
-function Update()
-	UpdateTentUseState(self)
-endFunction
-
-Event OnActivate(ObjectReference akActionRef)
-	ActivateTent(akActionRef, self)
-endEvent
 
 ;@Override _Camp_PlaceableObjectBase
 function PlaceObjects()
@@ -596,100 +157,100 @@ function PlaceObjects()
 		endif
 	endif
 
-	if ShelterAsset_SphereModel && PositionRef_Sphere
+	if TentAsset_SphereModel && PositionRef_Sphere
 		PlaceObject_Sphere()
 	endif
-	if ShelterAsset_ShelterDestructionCollider && PositionRef_Sphere
+	if TentAsset_ShelterDestructionCollider && PositionRef_Sphere
 		PlaceObject_ShelterCollider()
 	endif
-	if ShelterAsset_LargeTentTriggerVolume
+	if TentAsset_LargeTentTriggerVolume
 		PlaceObject_LargeTentTriggerVolume()
 	endif
-	if ShelterAsset_BaseStatic1 && PositionRef_BaseStatic1
+	if TentAsset_BaseStatic1 && PositionRef_BaseStatic1
 		PlaceObject_BaseStatic1()
 	endif
-	if ShelterAsset_BaseStatic2 && PositionRef_BaseStatic2
+	if TentAsset_BaseStatic2 && PositionRef_BaseStatic2
 		PlaceObject_BaseStatic2()
 	endif
-	if ShelterAsset_BaseStatic3 && PositionRef_BaseStatic3
+	if TentAsset_BaseStatic3 && PositionRef_BaseStatic3
 		PlaceObject_BaseStatic3()
 	endif
-	if ShelterAsset_BaseStatic4 && PositionRef_BaseStatic4
+	if TentAsset_BaseStatic4 && PositionRef_BaseStatic4
 		PlaceObject_BaseStatic4()
 	endif
-	if ShelterAsset_BaseStatic5 && PositionRef_BaseStatic5
+	if TentAsset_BaseStatic5 && PositionRef_BaseStatic5
 		PlaceObject_BaseStatic5()
 	endif
-	if ShelterAsset_BaseStatic6 && PositionRef_BaseStatic6
+	if TentAsset_BaseStatic6 && PositionRef_BaseStatic6
 		PlaceObject_BaseStatic6()
 	endif
-	if ShelterAsset_BaseStatic7 && PositionRef_BaseStatic7
+	if TentAsset_BaseStatic7 && PositionRef_BaseStatic7
 		PlaceObject_BaseStatic7()
 	endif
-	if ShelterAsset_ClutterStatic1 && PositionRef_ClutterStatic1
+	if TentAsset_ClutterStatic1 && PositionRef_ClutterStatic1
 		PlaceObject_ClutterStatic1()
 	endif
-	if ShelterAsset_ClutterStatic2 && PositionRef_ClutterStatic2
+	if TentAsset_ClutterStatic2 && PositionRef_ClutterStatic2
 		PlaceObject_ClutterStatic2()
 	endif
-	if ShelterAsset_ClutterStatic3 && PositionRef_ClutterStatic3
+	if TentAsset_ClutterStatic3 && PositionRef_ClutterStatic3
 		PlaceObject_ClutterStatic3()
 	endif
-	if ShelterAsset_ClutterStatic4 && PositionRef_ClutterStatic4
+	if TentAsset_ClutterStatic4 && PositionRef_ClutterStatic4
 		PlaceObject_ClutterStatic4()
 	endif
-	if ShelterAsset_ClutterStatic5 && PositionRef_ClutterStatic5
+	if TentAsset_ClutterStatic5 && PositionRef_ClutterStatic5
 		PlaceObject_ClutterStatic5()
 	endif
-	if ShelterAsset_ClutterStatic6 && PositionRef_ClutterStatic6
+	if TentAsset_ClutterStatic6 && PositionRef_ClutterStatic6
 		PlaceObject_ClutterStatic6()
 	endif
-	if ShelterAsset_ClutterStatic7 && PositionRef_ClutterStatic7
+	if TentAsset_ClutterStatic7 && PositionRef_ClutterStatic7
 		PlaceObject_ClutterStatic7()
 	endif
-	if ShelterAsset_ClutterMisc1 && PositionRef_ClutterMisc1
+	if TentAsset_ClutterMisc1 && PositionRef_ClutterMisc1
 		PlaceObject_ClutterMisc1()
 	endif
-	if ShelterAsset_ClutterMisc2 && PositionRef_ClutterMisc2
+	if TentAsset_ClutterMisc2 && PositionRef_ClutterMisc2
 		PlaceObject_ClutterMisc2()
 	endif
-	if ShelterAsset_ClutterMisc3 && PositionRef_ClutterMisc3
+	if TentAsset_ClutterMisc3 && PositionRef_ClutterMisc3
 		PlaceObject_ClutterMisc3()
 	endif
-	if ShelterAsset_ClutterMisc4 && PositionRef_ClutterMisc4
+	if TentAsset_ClutterMisc4 && PositionRef_ClutterMisc4
 		PlaceObject_ClutterMisc4()
 	endif
-	if ShelterAsset_ClutterMisc5 && PositionRef_ClutterMisc5
+	if TentAsset_ClutterMisc5 && PositionRef_ClutterMisc5
 		PlaceObject_ClutterMisc5()
 	endif
-	if ShelterAsset_ClutterActivator1 && PositionRef_ClutterActivator1
+	if TentAsset_ClutterActivator1 && PositionRef_ClutterActivator1
 		PlaceObject_ClutterActivator1()
 	endif
-	if ShelterAsset_ClutterActivator2 && PositionRef_ClutterActivator2
+	if TentAsset_ClutterActivator2 && PositionRef_ClutterActivator2
 		PlaceObject_ClutterActivator2()
 	endif
-	if ShelterAsset_ClutterActivator3 && PositionRef_ClutterActivator3
+	if TentAsset_ClutterActivator3 && PositionRef_ClutterActivator3
 		PlaceObject_ClutterActivator3()
 	endif
-	if ShelterAsset_ClutterFurniture1 && PositionRef_ClutterFurniture1
+	if TentAsset_ClutterFurniture1 && PositionRef_ClutterFurniture1
 		PlaceObject_ClutterFurniture1()
 	endif
-	if ShelterAsset_ClutterFurniture2 && PositionRef_ClutterFurniture2
+	if TentAsset_ClutterFurniture2 && PositionRef_ClutterFurniture2
 		PlaceObject_ClutterFurniture2()
 	endif
-	if ShelterAsset_ClutterFurniture3 && PositionRef_ClutterFurniture3
+	if TentAsset_ClutterFurniture3 && PositionRef_ClutterFurniture3
 		PlaceObject_ClutterFurniture3()
 	endif
-	if ShelterAsset_ClutterFurniture4 && PositionRef_ClutterFurniture4
+	if TentAsset_ClutterFurniture4 && PositionRef_ClutterFurniture4
 		PlaceObject_ClutterFurniture4()
 	endif
-	if ShelterAsset_ClutterFurniture5 && PositionRef_ClutterFurniture5
+	if TentAsset_ClutterFurniture5 && PositionRef_ClutterFurniture5
 		PlaceObject_ClutterFurniture5()
 	endif
-	if ShelterAsset_ClutterFurniture6 && PositionRef_ClutterFurniture6
+	if TentAsset_ClutterFurniture6 && PositionRef_ClutterFurniture6
 		PlaceObject_ClutterFurniture6()
 	endif
-	if ShelterAsset_ClutterFurniture7 && PositionRef_ClutterFurniture7
+	if TentAsset_ClutterFurniture7 && PositionRef_ClutterFurniture7
 		PlaceObject_ClutterFurniture7()
 	endif
 	if PositionRef_Light1
@@ -1448,7 +1009,6 @@ function GenerateDebugReport()
 	CampDebug(1, "======================================================================")
 	CampDebug(1, "**SELF**: " + self)
 	CampDebug(1, "mySphere: " + mySphere)
-	CampDebug(1, "mySphere: " + mySphere)
 	CampDebug(1, "myLargeTentTriggerVolume: " + myLargeTentTriggerVolume)
 	CampDebug(1, "myLightLit: " + myLightLit)
 	CampDebug(1, "myLightUnlit: " + myLightUnlit)
@@ -1506,139 +1066,139 @@ function GenerateDebugReport()
 endFunction
 
 function PlaceObject_Sphere()
-	mySphereFuture = PlacementSystem.PlaceObject(self, ShelterAsset_SphereModel, PositionRef_Sphere, initially_disabled = true, is_temp = is_temporary)
+	mySphereFuture = PlacementSystem.PlaceObject(self, TentAsset_SphereModel, PositionRef_Sphere, initially_disabled = true, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ShelterCollider()
-	myShelterColliderFuture = PlacementSystem.PlaceObject(self, ShelterAsset_ShelterDestructionCollider, PositionRef_Sphere, initially_disabled = true, is_temp = is_temporary)
+	myShelterColliderFuture = PlacementSystem.PlaceObject(self, TentAsset_ShelterDestructionCollider, PositionRef_Sphere, initially_disabled = true, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_LargeTentTriggerVolume()
-	myLargeTentTriggerVolumeFuture = PlacementSystem.PlaceObject(self, ShelterAsset_LargeTentTriggerVolume, PositionRef_Sphere, is_temp = is_temporary)
+	myLargeTentTriggerVolumeFuture = PlacementSystem.PlaceObject(self, TentAsset_LargeTentTriggerVolume, PositionRef_Sphere, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_BaseStatic1()
-	myBaseStatic1Future = PlacementSystem.PlaceObject(self, ShelterAsset_BaseStatic1, PositionRef_BaseStatic1, is_temp = is_temporary)
+	myBaseStatic1Future = PlacementSystem.PlaceObject(self, TentAsset_BaseStatic1, PositionRef_BaseStatic1, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_BaseStatic2()
-	myBaseStatic2Future = PlacementSystem.PlaceObject(self, ShelterAsset_BaseStatic2, PositionRef_BaseStatic2, is_temp = is_temporary)
+	myBaseStatic2Future = PlacementSystem.PlaceObject(self, TentAsset_BaseStatic2, PositionRef_BaseStatic2, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_BaseStatic3()
-	myBaseStatic3Future = PlacementSystem.PlaceObject(self, ShelterAsset_BaseStatic3, PositionRef_BaseStatic3, is_temp = is_temporary)
+	myBaseStatic3Future = PlacementSystem.PlaceObject(self, TentAsset_BaseStatic3, PositionRef_BaseStatic3, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_BaseStatic4()
-	myBaseStatic4Future = PlacementSystem.PlaceObject(self, ShelterAsset_BaseStatic4, PositionRef_BaseStatic4, is_temp = is_temporary)
+	myBaseStatic4Future = PlacementSystem.PlaceObject(self, TentAsset_BaseStatic4, PositionRef_BaseStatic4, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_BaseStatic5()
-	myBaseStatic5Future = PlacementSystem.PlaceObject(self, ShelterAsset_BaseStatic5, PositionRef_BaseStatic5, is_temp = is_temporary)
+	myBaseStatic5Future = PlacementSystem.PlaceObject(self, TentAsset_BaseStatic5, PositionRef_BaseStatic5, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_BaseStatic6()
-	myBaseStatic6Future = PlacementSystem.PlaceObject(self, ShelterAsset_BaseStatic6, PositionRef_BaseStatic6, is_temp = is_temporary)
+	myBaseStatic6Future = PlacementSystem.PlaceObject(self, TentAsset_BaseStatic6, PositionRef_BaseStatic6, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_BaseStatic7()
-	myBaseStatic7Future = PlacementSystem.PlaceObject(self, ShelterAsset_BaseStatic7, PositionRef_BaseStatic7, is_temp = is_temporary)
+	myBaseStatic7Future = PlacementSystem.PlaceObject(self, TentAsset_BaseStatic7, PositionRef_BaseStatic7, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterStatic1()
-	myClutterStatic1Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterStatic1, PositionRef_ClutterStatic1, is_temp = is_temporary)
+	myClutterStatic1Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterStatic1, PositionRef_ClutterStatic1, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterStatic2()
-	myClutterStatic2Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterStatic2, PositionRef_ClutterStatic2, is_temp = is_temporary)
+	myClutterStatic2Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterStatic2, PositionRef_ClutterStatic2, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterStatic3()
-	myClutterStatic3Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterStatic3, PositionRef_ClutterStatic3, is_temp = is_temporary)
+	myClutterStatic3Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterStatic3, PositionRef_ClutterStatic3, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterStatic4()
-	myClutterStatic4Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterStatic4, PositionRef_ClutterStatic4, is_temp = is_temporary)
+	myClutterStatic4Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterStatic4, PositionRef_ClutterStatic4, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterStatic5()
-	myClutterStatic5Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterStatic5, PositionRef_ClutterStatic5, is_temp = is_temporary)
+	myClutterStatic5Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterStatic5, PositionRef_ClutterStatic5, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterStatic6()
-	myClutterStatic6Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterStatic6, PositionRef_ClutterStatic6, is_temp = is_temporary)
+	myClutterStatic6Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterStatic6, PositionRef_ClutterStatic6, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterStatic7()
-	myClutterStatic7Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterStatic7, PositionRef_ClutterStatic7, is_temp = is_temporary)
+	myClutterStatic7Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterStatic7, PositionRef_ClutterStatic7, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterMisc1()
-	myClutterMisc1Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterMisc1, PositionRef_ClutterMisc1, is_temp = is_temporary)
+	myClutterMisc1Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc1, PositionRef_ClutterMisc1, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterMisc2()
-	myClutterMisc2Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterMisc2, PositionRef_ClutterMisc2, is_temp = is_temporary)
+	myClutterMisc2Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc2, PositionRef_ClutterMisc2, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterMisc3()
-	myClutterMisc3Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterMisc3, PositionRef_ClutterMisc3, is_temp = is_temporary)
+	myClutterMisc3Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc3, PositionRef_ClutterMisc3, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterMisc4()
-	myClutterMisc4Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterMisc4, PositionRef_ClutterMisc4, is_temp = is_temporary)
+	myClutterMisc4Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc4, PositionRef_ClutterMisc4, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterMisc5()
-	myClutterMisc5Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterMisc5, PositionRef_ClutterMisc5, is_temp = is_temporary)
+	myClutterMisc5Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc5, PositionRef_ClutterMisc5, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterMisc6()
-	myClutterMisc6Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterMisc6, PositionRef_ClutterMisc6, is_temp = is_temporary)
+	myClutterMisc6Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc6, PositionRef_ClutterMisc6, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterMisc7()
-	myClutterMisc7Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterMisc7, PositionRef_ClutterMisc7, is_temp = is_temporary)
+	myClutterMisc7Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc7, PositionRef_ClutterMisc7, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterActivator1()
-	myClutterActivator1Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterActivator1, PositionRef_ClutterActivator1, is_temp = is_temporary)
+	myClutterActivator1Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterActivator1, PositionRef_ClutterActivator1, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterActivator2()
-	myClutterActivator2Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterActivator2, PositionRef_ClutterActivator2, is_temp = is_temporary)
+	myClutterActivator2Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterActivator2, PositionRef_ClutterActivator2, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterActivator3()
-	myClutterActivator3Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterActivator3, PositionRef_ClutterActivator3, is_temp = is_temporary)
+	myClutterActivator3Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterActivator3, PositionRef_ClutterActivator3, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterFurniture1()
-	myClutterFurniture1Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterFurniture1, PositionRef_ClutterFurniture1, is_temp = is_temporary)
+	myClutterFurniture1Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterFurniture1, PositionRef_ClutterFurniture1, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterFurniture2()
-	myClutterFurniture2Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterFurniture2, PositionRef_ClutterFurniture2, is_temp = is_temporary)
+	myClutterFurniture2Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterFurniture2, PositionRef_ClutterFurniture2, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterFurniture3()
-	myClutterFurniture3Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterFurniture3, PositionRef_ClutterFurniture3, is_temp = is_temporary)
+	myClutterFurniture3Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterFurniture3, PositionRef_ClutterFurniture3, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterFurniture4()
-	myClutterFurniture4Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterFurniture4, PositionRef_ClutterFurniture4, is_temp = is_temporary)
+	myClutterFurniture4Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterFurniture4, PositionRef_ClutterFurniture4, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterFurniture5()
-	myClutterFurniture5Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterFurniture5, PositionRef_ClutterFurniture5, is_temp = is_temporary)
+	myClutterFurniture5Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterFurniture5, PositionRef_ClutterFurniture5, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterFurniture6()
-	myClutterFurniture6Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterFurniture6, PositionRef_ClutterFurniture6, is_temp = is_temporary)
+	myClutterFurniture6Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterFurniture6, PositionRef_ClutterFurniture6, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_ClutterFurniture7()
-	myClutterFurniture7Future = PlacementSystem.PlaceObject(self, ShelterAsset_ClutterFurniture7, PositionRef_ClutterFurniture7, is_temp = is_temporary)
+	myClutterFurniture7Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterFurniture7, PositionRef_ClutterFurniture7, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_PlayerMainWeapon()
