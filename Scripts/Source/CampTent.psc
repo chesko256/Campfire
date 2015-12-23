@@ -648,25 +648,25 @@ function PlaceObjects()
 
 	if Conjured
 		if Conjured.TentAsset_BaseStatic1 && Conjured.PositionRef_BaseStatic1
-			PlaceObject_BaseStatic1(Conjured)
+			PlaceObject_BaseStatic1()
 		endif
 		if Conjured.TentAsset_BaseStatic2 && Conjured.PositionRef_BaseStatic2
-			PlaceObject_BaseStatic2(Conjured)
+			PlaceObject_BaseStatic2()
 		endif
 		if Conjured.TentAsset_BaseStatic3 && Conjured.PositionRef_BaseStatic3
-			PlaceObject_BaseStatic3(Conjured)
+			PlaceObject_BaseStatic3()
 		endif
 		if Conjured.TentAsset_BaseStatic4 && Conjured.PositionRef_BaseStatic4
-			PlaceObject_BaseStatic4(Conjured)
+			PlaceObject_BaseStatic4()
 		endif
 		if Conjured.TentAsset_BaseStatic5 && Conjured.PositionRef_BaseStatic5
-			PlaceObject_BaseStatic5(Conjured)
+			PlaceObject_BaseStatic5()
 		endif
 		if Conjured.TentAsset_BaseStatic6 && Conjured.PositionRef_BaseStatic6
-			PlaceObject_BaseStatic6(Conjured)
+			PlaceObject_BaseStatic6()
 		endif
 		if Conjured.TentAsset_BaseStatic7 && Conjured.PositionRef_BaseStatic7
-			PlaceObject_BaseStatic7(Conjured)
+			PlaceObject_BaseStatic7()
 		endif
 	endif
 
@@ -709,10 +709,10 @@ function PlaceObjects()
 
 	if Conjured
 		if Conjured.TentAsset_ClutterStatic6 && Conjured.PositionRef_ClutterStatic6
-			PlaceObject_ClutterStatic6(Conjured)
+			PlaceObject_ClutterStatic6()
 		endif
 		if Conjured.TentAsset_ClutterStatic7 && Conjured.PositionRef_ClutterStatic7
-			PlaceObject_ClutterStatic7(Conjured)
+			PlaceObject_ClutterStatic7()
 		endif
 	endif
 
@@ -751,31 +751,31 @@ function PlaceObjects()
 
 	if Conjured
 		if Conjured.TentAsset_ClutterFurniture6 && Conjured.PositionRef_ClutterFurniture6
-			PlaceObject_ClutterFurniture6(Conjured)
+			PlaceObject_ClutterFurniture6()
 		endif
 		if Conjured.TentAsset_ClutterFurniture7 && Conjured.PositionRef_ClutterFurniture7
-			PlaceObject_ClutterFurniture7(Conjured)
+			PlaceObject_ClutterFurniture7()
 		endif
 		if Conjured.TentAsset_ClutterMisc1 && Conjured.PositionRef_ClutterMisc1
-			PlaceObject_ClutterMisc1(Conjured)
+			PlaceObject_ClutterMisc1()
 		endif
 		if Conjured.TentAsset_ClutterMisc2 && Conjured.PositionRef_ClutterMisc2
-			PlaceObject_ClutterMisc2(Conjured)
+			PlaceObject_ClutterMisc2()
 		endif
 		if Conjured.TentAsset_ClutterMisc3 && Conjured.PositionRef_ClutterMisc3
-			PlaceObject_ClutterMisc3(Conjured)
+			PlaceObject_ClutterMisc3()
 		endif
 		if Conjured.TentAsset_ClutterMisc4 && Conjured.PositionRef_ClutterMisc4
-			PlaceObject_ClutterMisc4(Conjured)
+			PlaceObject_ClutterMisc4()
 		endif
 		if Conjured.TentAsset_ClutterMisc5 && Conjured.PositionRef_ClutterMisc5
-			PlaceObject_ClutterMisc5(Conjured)
+			PlaceObject_ClutterMisc5()
 		endif
 		if Conjured.TentAsset_ClutterMisc6 && Conjured.PositionRef_ClutterMisc6
-			PlaceObject_ClutterMisc6(Conjured)
+			PlaceObject_ClutterMisc6()
 		endif
 		if Conjured.TentAsset_ClutterMisc7 && Conjured.PositionRef_ClutterMisc7
-			PlaceObject_ClutterMisc7(Conjured)
+			PlaceObject_ClutterMisc7()
 		endif
 	endif
 
@@ -1978,41 +1978,41 @@ function PlaceObject_Follower3Shield(CampTentEx Extended)
 endFunction
 
 ; Conjured Shelter function stubs - overridden by CampConjuredShelter
-function PlaceObject_BaseStatic1(CampConjuredShelter Conjured)
+function PlaceObject_BaseStatic1()
 endFunction
-function PlaceObject_BaseStatic2(CampConjuredShelter Conjured)
+function PlaceObject_BaseStatic2()
 endFunction
-function PlaceObject_BaseStatic3(CampConjuredShelter Conjured)
+function PlaceObject_BaseStatic3()
 endFunction
-function PlaceObject_BaseStatic4(CampConjuredShelter Conjured)
+function PlaceObject_BaseStatic4()
 endFunction
-function PlaceObject_BaseStatic5(CampConjuredShelter Conjured)
+function PlaceObject_BaseStatic5()
 endFunction
-function PlaceObject_BaseStatic6(CampConjuredShelter Conjured)
+function PlaceObject_BaseStatic6()
 endFunction
-function PlaceObject_BaseStatic7(CampConjuredShelter Conjured)
+function PlaceObject_BaseStatic7()
 endFunction
-function PlaceObject_ClutterMisc1(CampConjuredShelter Conjured)
+function PlaceObject_ClutterMisc1()
 endFunction
-function PlaceObject_ClutterMisc2(CampConjuredShelter Conjured)
+function PlaceObject_ClutterMisc2()
 endFunction
-function PlaceObject_ClutterMisc3(CampConjuredShelter Conjured)
+function PlaceObject_ClutterMisc3()
 endFunction
-function PlaceObject_ClutterMisc4(CampConjuredShelter Conjured)
+function PlaceObject_ClutterMisc4()
 endFunction
-function PlaceObject_ClutterMisc5(CampConjuredShelter Conjured)
+function PlaceObject_ClutterMisc5()
 endFunction
-function PlaceObject_ClutterMisc6(CampConjuredShelter Conjured)
+function PlaceObject_ClutterMisc6()
 endFunction
-function PlaceObject_ClutterMisc7(CampConjuredShelter Conjured)
+function PlaceObject_ClutterMisc7()
 endFunction
-function PlaceObject_ClutterFurniture6(CampConjuredShelter Conjured)
+function PlaceObject_ClutterFurniture6()
 endFunction
-function PlaceObject_ClutterFurniture7(CampConjuredShelter Conjured)
+function PlaceObject_ClutterFurniture7()
 endFunction
-function PlaceObject_ClutterStatic6(CampConjuredShelter Conjured)
+function PlaceObject_ClutterStatic6()
 endFunction
-function PlaceObject_ClutterStatic7(CampConjuredShelter Conjured)
+function PlaceObject_ClutterStatic7()
 endFunction
 
 
