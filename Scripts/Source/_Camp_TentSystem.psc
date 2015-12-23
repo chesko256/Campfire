@@ -202,10 +202,10 @@ function ShowMainMenu(ObjectReference akTent)
 			Message.ResetHelpMessage("Activate")
 			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
 		endif
-		PlayerLieDown(akTent) 						;Sleep
-	elseif i == 2
+		PlayerLieDown(akTent)
+	elseif i == 2	 								;Sleep
 		TentObject.myBedRoll.Activate(PlayerRef)
-	elseif i == 3									;Lantern
+	elseif i == 3									;Light
 		ToggleLantern(akTent)
 	elseif i == 4									;Pack
 		PackTent(akTent)
@@ -219,7 +219,7 @@ function ShowSitMenu(ObjectReference akTent)
 	CheckTentFeatures(TentObject)
 	int i
 	i = _Camp_TentSitMenu.Show(0, 0)
-	if i == 0										;Lantern
+	if i == 0										;Light
 		ToggleLantern(akTent)
 	elseif i == 1									;Talk To...
 		ShowTalkMenu()
@@ -266,7 +266,7 @@ function ShowLayMenu(ObjectReference akTent)
 			_Camp_Black.PopTo(_Camp_FadeUp)
 		endif
 		TentObject.bGettingUp = false
-	elseif i == 1									;Lantern
+	elseif i == 1									;Light
 		ToggleLantern(akTent)
 	elseif i == 2 									;Talk To...
 		ShowTalkMenu()
