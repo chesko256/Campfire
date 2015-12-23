@@ -198,7 +198,7 @@ function UnDisplayFollowerShield(CampTent akTentObject, int aiBedrollIndex, Acto
 	TentAPI.UnDisplayFollowerShield(akTentObject, aiBedrollIndex, akActor)
 endFunction
 
-Static function GetLantern(bool bOn = false, bool bHanging = false) global
+Static function GetLantern(bool bOn = false, bool bHanging = false, bool bSilverCandlestick = false) global
 	_Camp_TentSystem TentAPI = GetAPI()
 	if TentAPI == none
 		RaiseTentAPIError()
@@ -209,13 +209,21 @@ Static function GetLantern(bool bOn = false, bool bHanging = false) global
 		if bHanging
 			return TentAPI._Camp_Tent_LanternOnHang
 		else
-			return TentAPI._Camp_Tent_LanternOnGround
+			if bSilverCandlestick
+				return TentAPI.SilverCandleStick02
+			else	
+				return TentAPI._Camp_Tent_LanternOnGround
+			endif
 		endif
 	else
 		if bHanging
 			return TentAPI._Camp_Tent_LanternOffHang
 		else
-			return TentAPI._Camp_Tent_LanternOffGround
+			if bSilverCandlestick
+				return TentAPI._Camp_SilverCandleStick02Off
+			else
+				return TentAPI._Camp_Tent_LanternOffGround
+			endif
 		endif
 	endif
 endFunction

@@ -38,6 +38,8 @@ Static property _Camp_Tent_LanternOnGround auto
 Static property _Camp_Tent_LanternOffGround auto
 Static property _Camp_Tent_LanternOnHang auto
 Static property _Camp_Tent_LanternOffHang auto
+Static property SilverCandleStick02 auto
+Static property _Camp_SilverCandlestick02Off auto
 Static property _Camp_Tent_BedrollHayNoGround01 auto
 Static property _Camp_Tent_BedrollHayNoGround02 auto
 Static property _Camp_Tent_BedrollHayNoGround03 auto

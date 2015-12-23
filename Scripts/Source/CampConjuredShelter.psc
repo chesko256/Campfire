@@ -135,6 +135,7 @@ Activator property SummonTargetFXActivator auto
 float property ShelterID auto hidden
 int property mySoundID auto hidden
 
+;/
 ;@Override _Camp_PlaceableObjectBase
 function PlaceObjects()
 	 ; Cache shared resources locally
@@ -1373,54 +1374,4 @@ function DestroyMyself()
 	TentSystem.DestroyTent(self)
 endFunction
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-;
-
-
-
+/;
