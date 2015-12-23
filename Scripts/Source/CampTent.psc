@@ -899,6 +899,8 @@ endFunction
 
 ;@Override _Camp_PlaceableObjectBase
 function GetResults()
+	CampConjuredShelter Conjured = self as CampConjuredShelter
+	
 	if myTentFuture
 		myTent = GetFuture(myTentFuture).get_result()
 		myTentFuture = None
@@ -1334,7 +1336,6 @@ function GetResults()
         mySpareBedRoll3Future = None
 	endif
 
-	CampConjuredShelter Conjured = self as CampConjuredShelter
 	if Conjured
 		Conjured.WarpInObjects()
 	endif
