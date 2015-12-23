@@ -13,6 +13,15 @@ import CampUtil
 
 ; OPTIONAL PROPERTIES
 
+;/********p* CampCampfire/Setting_IsCampfireConjured
+* SYNTAX
+*/;
+bool property Setting_IsCampfireConjured = false auto
+;/*
+* DESCRIPTION
+{ Optional: Whether or not this campfire is part of a conjured shelter. This prevents certain options from appearing in the campfire menu. Default: False }
+;*********/;
+
 ;/********p* CampCampfire/FireAsset_SitFurniture1
 * SYNTAX
 */;
@@ -1118,7 +1127,9 @@ Event OnUpdateGameTime()
     CampDebug(0, "Campfire remaining time " + Math.Floor(remaining_time))
 
     if remaining_time < 1
-        TakeDown()
+        if !Setting_IsCampfireConjured
+            TakeDown()
+        endif
     else
         if remaining_time <= ASH_DURATION
             BurnToAshes()
