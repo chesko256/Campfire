@@ -1041,30 +1041,37 @@ function GetResults()
 	endif
 	if myBaseStatic1Future
 		myBaseStatic1 = GetFuture(myBaseStatic1Future).get_result()
+		myBaseStatic1.SetScale(Conjured.PositionRef_BaseStatic1.GetScale())
 		myBaseStatic1Future = None
 	endif
 	if myBaseStatic2Future
 		myBaseStatic2 = GetFuture(myBaseStatic2Future).get_result()
+		myBaseStatic2.SetScale(Conjured.PositionRef_BaseStatic2.GetScale())
 		myBaseStatic2Future = None
 	endif
 	if myBaseStatic3Future
 		myBaseStatic3 = GetFuture(myBaseStatic3Future).get_result()
+		myBaseStatic3.SetScale(Conjured.PositionRef_BaseStatic3.GetScale())
 		myBaseStatic3Future = None
 	endif
 	if myBaseStatic4Future
 		myBaseStatic4 = GetFuture(myBaseStatic4Future).get_result()
+		myBaseStatic4.SetScale(Conjured.PositionRef_BaseStatic4.GetScale())
 		myBaseStatic4Future = None
 	endif
 	if myBaseStatic5Future
 		myBaseStatic5 = GetFuture(myBaseStatic5Future).get_result()
+		myBaseStatic5.SetScale(Conjured.PositionRef_BaseStatic5.GetScale())
 		myBaseStatic5Future = None
 	endif
 	if myBaseStatic6Future
 		myBaseStatic6 = GetFuture(myBaseStatic6Future).get_result()
+		myBaseStatic6.SetScale(Conjured.PositionRef_BaseStatic6.GetScale())
 		myBaseStatic6Future = None
 	endif
 	if myBaseStatic7Future
 		myBaseStatic7 = GetFuture(myBaseStatic7Future).get_result()
+		myBaseStatic7.SetScale(Conjured.PositionRef_BaseStatic7.GetScale())
 		myBaseStatic7Future = None
 	endif
 	if myClutterStatic1Future
