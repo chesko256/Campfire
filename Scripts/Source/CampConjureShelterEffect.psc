@@ -9,6 +9,8 @@ Activator property Required_ShelterToSpawn auto
 { DESCRIPTION: Required: The conjured shelter activator to spawn. }
 float property Setting_SpawnDistanceFromPlayer = 130.0 auto
 { DESCRIPTION: Optional: How far away (in front of the player) to spawn the shelter. Default: 130.0}
+Scroll property Setting_ScrollToReturn auto
+{ DESCRIPTION: Optional: The scroll to return to the player if this effect fails. Used on Scroll effects. }
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	if !LegalToCampHere() && IsCrimeToPlaceInTowns(Required_ShelterToSpawn)
@@ -16,6 +18,9 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 		if i == 0
 			; continue
 		else
+			if Setting_ScrollToReturn
+				Game.GetPlayer().AddItem(Setting_ScrollToReturn, 1, true)
+			endif
 			return
 		endif
 	endif
