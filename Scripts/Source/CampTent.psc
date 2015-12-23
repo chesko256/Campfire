@@ -1327,6 +1327,11 @@ function GetResults()
         mySpareBedRoll3Future = None
 	endif
 
+	CampConjuredShelter Conjured = self as CampConjuredShelter
+	if Conjured
+		Conjured.WarpInObjects()
+	endif
+
 	if GetLogLevel() <= 1
 		GenerateDebugReport()
 	endif

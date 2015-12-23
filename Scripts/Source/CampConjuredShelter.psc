@@ -424,6 +424,108 @@ function TakeDown()
 	/;
 endFunction
 
+function WarpInObjects()
+	if myBaseStatic1
+		myBaseStatic1.EnableNoWait()
+		PlayWarpInEffect(myBaseStatic1)
+	endif
+	if myBaseStatic2
+		myBaseStatic2.EnableNoWait()
+		PlayWarpInEffect(myBaseStatic2)
+	endif
+	if myBaseStatic3
+		myBaseStatic3.EnableNoWait()
+		PlayWarpInEffect(myBaseStatic3)
+	endif
+	if myBaseStatic4
+		myBaseStatic4.EnableNoWait()
+		PlayWarpInEffect(myBaseStatic4)
+	endif
+	if myBaseStatic5
+		myBaseStatic5.EnableNoWait()
+		PlayWarpInEffect(myBaseStatic5)
+	endif
+	if myBaseStatic6
+		myBaseStatic6.EnableNoWait()
+		PlayWarpInEffect(myBaseStatic6)
+	endif
+	if myBaseStatic7
+		myBaseStatic7.EnableNoWait()
+		PlayWarpInEffect(myBaseStatic7)
+	endif
+	Utility.Wait(0.3)
+	if myClutterFurniture1
+		myClutterFurniture1.EnableNoWait()
+		PlayWarpInEffect(myClutterFurniture1)
+	endif
+	if myClutterFurniture2
+		myClutterFurniture2.EnableNoWait()
+		PlayWarpInEffect(myClutterFurniture2)		
+	endif
+	if myClutterFurniture3
+		myClutterFurniture3.EnableNoWait()
+		PlayWarpInEffect(myClutterFurniture3)		
+	endif
+	if myClutterFurniture4
+		myClutterFurniture4.EnableNoWait()
+		PlayWarpInEffect(myClutterFurniture4)		
+	endif
+	if myClutterFurniture5
+		myClutterFurniture5.EnableNoWait()
+		PlayWarpInEffect(myClutterFurniture5)		
+	endif
+	if myClutterFurniture6
+		myClutterFurniture6.EnableNoWait()
+		PlayWarpInEffect(myClutterFurniture6)		
+	endif
+	if myClutterFurniture7
+		myClutterFurniture7.EnableNoWait()
+		PlayWarpInEffect(myClutterFurniture7)		
+	endif
+	Utility.Wait(0.3)
+	if myClutterStatic1
+		myClutterStatic1.EnableNoWait()
+		PlayWarpInEffect(myClutterStatic1)
+	endif
+	if myClutterStatic2
+		myClutterStatic2.EnableNoWait()
+		PlayWarpInEffect(myClutterStatic2)
+	endif
+	if myClutterStatic3
+		myClutterStatic3.EnableNoWait()
+		PlayWarpInEffect(myClutterStatic3)
+	endif
+	if myClutterStatic4
+		myClutterStatic4.EnableNoWait()
+		PlayWarpInEffect(myClutterStatic4)
+	endif
+	if myClutterStatic5
+		myClutterStatic5.EnableNoWait()
+		PlayWarpInEffect(myClutterStatic5)
+	endif
+	if myClutterStatic6
+		myClutterStatic6.EnableNoWait()
+		PlayWarpInEffect(myClutterStatic6)
+	endif
+	if myClutterStatic7
+		myClutterStatic7.EnableNoWait()
+		PlayWarpInEffect(myClutterStatic7)
+	endif
+	Utility.Wait(0.3)
+	if mySpareBedRoll1
+		mySpareBedRoll1.EnableNoWait()
+		PlayWarpInEffect(mySpareBedRoll1)
+	endif
+	if mySpareBedRoll2
+		mySpareBedRoll2.EnableNoWait()
+		PlayWarpInEffect(mySpareBedRoll2)
+	endif
+	if mySpareBedRoll3
+		mySpareBedRoll3.EnableNoWait()
+		PlayWarpInEffect(mySpareBedRoll3)
+	endif
+endFunction
+
 function PlayWarpInEffect(ObjectReference akObject)
 	if Is3DLoadedFinite(akObject)
 		MGTeleportInEffect.Play(akObject, 3.0)
@@ -510,25 +612,25 @@ endFunction
 ;endFunction
 
 ; Warp-in objects
-function PlaceObject_BaseStatic1(CampConjuredShelter Conjured)
+function PlaceObject_BaseStatic1()
 	myBaseStatic1Future = PlacementSystem.PlaceObject(self, TentAsset_BaseStatic1, PositionRef_BaseStatic1, initially_disabled = true, is_temp = is_temporary)
 endFunction
-function PlaceObject_BaseStatic2(CampConjuredShelter Conjured)
+function PlaceObject_BaseStatic2()
 	myBaseStatic2Future = PlacementSystem.PlaceObject(self, TentAsset_BaseStatic2, PositionRef_BaseStatic2, initially_disabled = true, is_temp = is_temporary)
 endFunction
-function PlaceObject_BaseStatic3(CampConjuredShelter Conjured)
+function PlaceObject_BaseStatic3()
 	myBaseStatic3Future = PlacementSystem.PlaceObject(self, TentAsset_BaseStatic3, PositionRef_BaseStatic3, initially_disabled = true, is_temp = is_temporary)
 endFunction
-function PlaceObject_BaseStatic4(CampConjuredShelter Conjured)
+function PlaceObject_BaseStatic4()
 	myBaseStatic4Future = PlacementSystem.PlaceObject(self, TentAsset_BaseStatic4, PositionRef_BaseStatic4, initially_disabled = true, is_temp = is_temporary)
 endFunction
-function PlaceObject_BaseStatic5(CampConjuredShelter Conjured)
+function PlaceObject_BaseStatic5()
 	myBaseStatic5Future = PlacementSystem.PlaceObject(self, TentAsset_BaseStatic5, PositionRef_BaseStatic5, initially_disabled = true, is_temp = is_temporary)
 endFunction
-function PlaceObject_BaseStatic6(CampConjuredShelter Conjured)
+function PlaceObject_BaseStatic6()
 	myBaseStatic6Future = PlacementSystem.PlaceObject(self, TentAsset_BaseStatic6, PositionRef_BaseStatic6, initially_disabled = true, is_temp = is_temporary)
 endFunction
-function PlaceObject_BaseStatic7(CampConjuredShelter Conjured)
+function PlaceObject_BaseStatic7()
 	myBaseStatic7Future = PlacementSystem.PlaceObject(self, TentAsset_BaseStatic7, PositionRef_BaseStatic7, initially_disabled = true, is_temp = is_temporary)
 endFunction
 
@@ -548,10 +650,10 @@ function PlaceObject_ClutterFurniture5(CampTentEx Extended)
 	myClutterFurniture5Future = PlacementSystem.PlaceObject(self, Extended.TentAsset_ClutterFurniture5, Extended.PositionRef_ClutterFurniture5, initially_disabled = true, is_temp = is_temporary)
 endFunction
 function PlaceObject_ClutterFurniture6()
-	myClutterFurniture6Future = PlacementSystem.PlaceObject(self, Conjured.TentAsset_ClutterFurniture6, Conjured.PositionRef_ClutterFurniture6, initially_disabled = true, is_temp = is_temporary)
+	myClutterFurniture6Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterFurniture6, PositionRef_ClutterFurniture6, initially_disabled = true, is_temp = is_temporary)
 endFunction
 function PlaceObject_ClutterFurniture7()
-	myClutterFurniture7Future = PlacementSystem.PlaceObject(self, Conjured.TentAsset_ClutterFurniture7, Conjured.PositionRef_ClutterFurniture7, initially_disabled = true, is_temp = is_temporary)
+	myClutterFurniture7Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterFurniture7, PositionRef_ClutterFurniture7, initially_disabled = true, is_temp = is_temporary)
 endFunction
 function PlaceObject_ClutterStatic1()
 	myClutterStatic1Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterStatic1, PositionRef_ClutterStatic1, initially_disabled = true, is_temp = is_temporary)
