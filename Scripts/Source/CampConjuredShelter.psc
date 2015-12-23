@@ -38,25 +38,25 @@ Static property TentAsset_ClutterStatic7 auto
 { DESCRIPTION: Optional: A static to place in or around the shelter. }
 
 MiscObject property TentAsset_ClutterMisc1 auto
-{ DESCRIPTION: Optional: A MiscObject to place in or around the shelter. }
+{ DESCRIPTION: Optional: A MiscObject to place in or around the shelter. MiscObjects placed this way cannot be picked up, and do not simulate physics. }
 
 MiscObject property TentAsset_ClutterMisc2 auto
-{ DESCRIPTION: Optional: A MiscObject to place in or around the shelter. }
+{ DESCRIPTION: Optional: A MiscObject to place in or around the shelter. MiscObjects placed this way cannot be picked up, and do not simulate physics. }
 
 MiscObject property TentAsset_ClutterMisc3 auto
-{ DESCRIPTION: Optional: A MiscObject to place in or around the shelter. }
+{ DESCRIPTION: Optional: A MiscObject to place in or around the shelter. MiscObjects placed this way cannot be picked up, and do not simulate physics. }
 
 MiscObject property TentAsset_ClutterMisc4 auto
-{ DESCRIPTION: Optional: A MiscObject to place in or around the shelter. }
+{ DESCRIPTION: Optional: A MiscObject to place in or around the shelter. MiscObjects placed this way cannot be picked up, and do not simulate physics. }
 
 MiscObject property TentAsset_ClutterMisc5 auto
-{ DESCRIPTION: Optional: A MiscObject to place in or around the shelter. }
+{ DESCRIPTION: Optional: A MiscObject to place in or around the shelter. MiscObjects placed this way cannot be picked up, and do not simulate physics. }
 
 MiscObject property TentAsset_ClutterMisc6 auto
-{ DESCRIPTION: Optional: A MiscObject to place in or around the shelter. }
+{ DESCRIPTION: Optional: A MiscObject to place in or around the shelter. MiscObjects placed this way cannot be picked up, and do not simulate physics. }
 
 MiscObject property TentAsset_ClutterMisc7 auto
-{ DESCRIPTION: Optional: A MiscObject to place in or around the shelter. }
+{ DESCRIPTION: Optional: A MiscObject to place in or around the shelter. MiscObjects placed this way cannot be picked up, and do not simulate physics. }
 
 Furniture property TentAsset_ClutterFurniture6 auto
 { DESCRIPTION: Optional: A furniture object to place in or around the tent. }
@@ -740,23 +740,23 @@ endFunction
 
 ; Non-warping objects
 function PlaceObject_ClutterMisc1()
-	myClutterMisc1Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc1, PositionRef_ClutterMisc1, is_temp = is_temporary)
+	myClutterMisc1Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc1, PositionRef_ClutterMisc1, is_temp = is_temporary, is_interaction_disabled = true)
 endFunction
 function PlaceObject_ClutterMisc2()
-	myClutterMisc2Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc2, PositionRef_ClutterMisc2, is_temp = is_temporary)
+	myClutterMisc2Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc2, PositionRef_ClutterMisc2, is_temp = is_temporary, is_interaction_disabled = true)
 endFunction
 function PlaceObject_ClutterMisc3()
-	myClutterMisc3Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc3, PositionRef_ClutterMisc3, is_temp = is_temporary)
+	myClutterMisc3Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc3, PositionRef_ClutterMisc3, is_temp = is_temporary, is_interaction_disabled = true)
 endFunction
 function PlaceObject_ClutterMisc4()
-	myClutterMisc4Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc4, PositionRef_ClutterMisc4, is_temp = is_temporary)
+	myClutterMisc4Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc4, PositionRef_ClutterMisc4, is_temp = is_temporary, is_interaction_disabled = true)
 endFunction
 function PlaceObject_ClutterMisc5()
-	myClutterMisc5Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc5, PositionRef_ClutterMisc5, is_temp = is_temporary)
+	myClutterMisc5Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc5, PositionRef_ClutterMisc5, is_temp = is_temporary, is_interaction_disabled = true)
 endFunction
 function PlaceObject_ClutterMisc6()
-	myClutterMisc6Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc6, PositionRef_ClutterMisc6, is_temp = is_temporary)
+	myClutterMisc6Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc6, PositionRef_ClutterMisc6, is_temp = is_temporary, is_interaction_disabled = true)
 endFunction
 function PlaceObject_ClutterMisc7()
-	myClutterMisc7Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc7, PositionRef_ClutterMisc7, is_temp = is_temporary)
+	myClutterMisc7Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc7, PositionRef_ClutterMisc7, is_temp = is_temporary, is_interaction_disabled = true)
 endFunction
