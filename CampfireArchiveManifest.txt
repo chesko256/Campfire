@@ -167,6 +167,7 @@ meshes\campfire\_camp_smallleathertent_cutthroughexterior.nif
 meshes\campfire\_camp_smallleathertent_cutthroughinterior.nif
 meshes\campfire\_Camp_SmallLeatherTent_ExtraCollision.nif
 meshes\campfire\_Camp_SmallTentTrigger.nif
+meshes\campfire\_Camp_SilverCandlestick02Off.nif
 meshes\campfire\_Camp_StoneArrow.nif
 meshes\campfire\_Camp_StoneArrowFlight.nif
 meshes\campfire\_Camp_StrawMisc.nif
