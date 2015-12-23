@@ -7,8 +7,12 @@ import _CampInternal
 ; Resolved in CK
 Actor property PlayerRef auto
 message property _Camp_Tent_FollowerBedroll auto
+message property _Camp_Tent_FollowerBed auto
 Armor property _Camp_WalkingStickShield auto
 GlobalVariable property _Camp_Setting_FollowersRemoveGearInTents auto
+
+bool property Setting_IsBed = false auto
+{ DESCRIPTION: Optional: Whether or not this is a bed (instead of a bed roll). }
 
 ; Set by CampTent at runtime
 CampTent property TentObject auto hidden
@@ -30,7 +34,11 @@ Event OnActivate(ObjectReference akActionRef)
 	if !in_use
 		CampDebug(0, "Activated by " + akActionRef)
 		if (akActionRef as Actor) == PlayerRef
-			_Camp_Tent_FollowerBedroll.Show()
+			if Setting_IsBed
+				_Camp_Tent_FollowerBed.Show()
+			else
+				_Camp_Tent_FollowerBedroll.Show()
+			endif
 		elseif IsTrackedFollower(akActionRef as Actor)
 			in_use = true
 			self.BlockActivation(false)

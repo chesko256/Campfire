@@ -4,8 +4,8 @@ import _CampInternal
 import CampUtil
 import TentSystem
 
-int property Setting_SpareBedType = 0 auto
-{ DESCRIPTION: Optional: What type of bed to spawn for followers. 0 = Bed Roll; 1 = CommonBed01; 2 = NobleBedSingle01; 3 = OrcBedSingle01; 4 = DweFurnitureBedSingle01. }
+int property Setting_SpareBedType = 1 auto
+{ DESCRIPTION: Optional: What type of bed to spawn for followers. All beds are 'single'. 0 = Bed Roll; 1 = CommonBed; 2 = UpperBed; 3 = NobleBed; 4 = OrcBed; 5 = DwemerBed. }
 
 Static property TentAsset_SphereModel auto
 { DESCRIPTION: Optional: The tent static object. }
@@ -680,54 +680,60 @@ endFunction
 function PlaceObject_SpareBedRoll1(CampTentEx Extended)
 	;@TODO
 	Furniture spare_bed
-	if Setting_SpareBedType == 0
+	if Setting_SpareBedType == 0		; Bed Roll
 		spare_bed = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
-	elseif Setting_SpareBedType == 1
-		spare_bed = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
-	elseif Setting_SpareBedType == 2
-		spare_bed = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
-	elseif Setting_SpareBedType == 3
-		spare_bed = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
-	elseif Setting_SpareBedType == 4
-		spare_bed = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
-	else
-		spare_bed = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
+	elseif Setting_SpareBedType == 1	; Common
+		spare_bed = Game.GetFormFromFile(0x0205DE67, "Campfire.esm") as Furniture
+	elseif Setting_SpareBedType == 2	; Upper
+		spare_bed = Game.GetFormFromFile(0x0205DE6B, "Campfire.esm") as Furniture
+	elseif Setting_SpareBedType == 3	; Noble
+		spare_bed = Game.GetFormFromFile(0x0205DE69, "Campfire.esm") as Furniture
+	elseif Setting_SpareBedType == 4	; Orcish
+		spare_bed = Game.GetFormFromFile(0x0205DE6A, "Campfire.esm") as Furniture
+	elseif Setting_SpareBedType == 5	; Dwemer
+		spare_bed = Game.GetFormFromFile(0x0205DE68, "Campfire.esm") as Furniture
+	else 								; Fall back to Common
+		spare_bed = Game.GetFormFromFile(0x0205DE67, "Campfire.esm") as Furniture
 	endif
 	mySpareBedRoll1Future = PlacementSystem.PlaceObject(self, spare_bed, Extended.PositionRef_Follower1_Bed, initially_disabled = true, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_SpareBedRoll2(CampTentEx Extended)
 	Furniture spare_bed
-	if Setting_SpareBedType == 0
+	if Setting_SpareBedType == 0		; Bed Roll
 		spare_bed = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
-	elseif Setting_SpareBedType == 1
-		spare_bed = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
-	elseif Setting_SpareBedType == 2
-		spare_bed = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
-	elseif Setting_SpareBedType == 3
-		spare_bed = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
-	elseif Setting_SpareBedType == 4
-		spare_bed = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
-	else
-		spare_bed = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
+	elseif Setting_SpareBedType == 1	; Common
+		spare_bed = Game.GetFormFromFile(0x0205DE67, "Campfire.esm") as Furniture
+	elseif Setting_SpareBedType == 2	; Upper
+		spare_bed = Game.GetFormFromFile(0x0205DE6B, "Campfire.esm") as Furniture
+	elseif Setting_SpareBedType == 3	; Noble
+		spare_bed = Game.GetFormFromFile(0x0205DE69, "Campfire.esm") as Furniture
+	elseif Setting_SpareBedType == 4	; Orcish
+		spare_bed = Game.GetFormFromFile(0x0205DE6A, "Campfire.esm") as Furniture
+	elseif Setting_SpareBedType == 5	; Dwemer
+		spare_bed = Game.GetFormFromFile(0x0205DE68, "Campfire.esm") as Furniture
+	else 								; Fall back to Common
+		spare_bed = Game.GetFormFromFile(0x0205DE67, "Campfire.esm") as Furniture
 	endif
 	mySpareBedRoll2Future = PlacementSystem.PlaceObject(self, spare_bed, Extended.PositionRef_Follower2_Bed, initially_disabled = true, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_SpareBedRoll3(CampTentEx Extended)
 	Furniture spare_bed
-	if Setting_SpareBedType == 0
+	if Setting_SpareBedType == 0		; Bed Roll
 		spare_bed = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
-	elseif Setting_SpareBedType == 1
-		spare_bed = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
-	elseif Setting_SpareBedType == 2
-		spare_bed = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
-	elseif Setting_SpareBedType == 3
-		spare_bed = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
-	elseif Setting_SpareBedType == 4
-		spare_bed = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
-	else
-		spare_bed = Game.GetFormFromFile(0x02038CBF, "Campfire.esm") as Furniture
+	elseif Setting_SpareBedType == 1	; Common
+		spare_bed = Game.GetFormFromFile(0x0205DE67, "Campfire.esm") as Furniture
+	elseif Setting_SpareBedType == 2	; Upper
+		spare_bed = Game.GetFormFromFile(0x0205DE6B, "Campfire.esm") as Furniture
+	elseif Setting_SpareBedType == 3	; Noble
+		spare_bed = Game.GetFormFromFile(0x0205DE69, "Campfire.esm") as Furniture
+	elseif Setting_SpareBedType == 4	; Orcish
+		spare_bed = Game.GetFormFromFile(0x0205DE6A, "Campfire.esm") as Furniture
+	elseif Setting_SpareBedType == 5	; Dwemer
+		spare_bed = Game.GetFormFromFile(0x0205DE68, "Campfire.esm") as Furniture
+	else 								; Fall back to Common
+		spare_bed = Game.GetFormFromFile(0x0205DE67, "Campfire.esm") as Furniture
 	endif
 	mySpareBedRoll3Future = PlacementSystem.PlaceObject(self, spare_bed, Extended.PositionRef_Follower3_Bed, initially_disabled = true, is_temp = is_temporary)
 endFunction
