@@ -30,6 +30,7 @@ Message property _Camp_TentLayMenu auto
 Message property _Camp_TentPickUpError auto
 Message property _Camp_Help_TentActivate auto
 Message property _Camp_TalkMenu auto
+Message property _Camp_PlacementIllegal auto
 ObjectReference property _Camp_Anchor auto
 ObjectReference property _Camp_Tent_InteractTriggerREF auto
 Light property _Camp_LanternLight auto

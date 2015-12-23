@@ -184,6 +184,7 @@ Scripts\C00TrainerScript.pex
 Scripts\C00VilkasScript.pex
 Scripts\CampCampfire.pex
 Scripts\CampConjuredShelter.pex
+Scripts\CampConjureShelterEffect.pex
 Scripts\CampCookingPot.pex
 Scripts\CampfireAPI.pex
 Scripts\CampfireData.pex
@@ -312,6 +313,7 @@ Scripts\Source\C00TrainerScript.psc
 Scripts\Source\C00VilkasScript.psc
 Scripts\Source\CampCampfire.psc
 Scripts\Source\CampConjuredShelter.psc
+Scripts\Source\CampConjureShelterEffect.psc
 Scripts\Source\CampCookingPot.psc
 Scripts\Source\CampfireAPI.psc
 Scripts\Source\CampfireData.psc
