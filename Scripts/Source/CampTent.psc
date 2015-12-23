@@ -343,7 +343,7 @@ ObjectReference property PositionRef_CenterObjectOverride auto
 ;*********/;
 
 ; PRIVATE
-;Run-time objects
+; Run-time objects
 ObjectReference property myTent auto hidden
 ObjectReference property myTentExterior auto hidden
 ObjectReference property myNormalTent auto hidden
@@ -416,7 +416,27 @@ ObjectReference property mySpareBedRoll3SitMarker auto hidden
 ObjectReference property myWard auto hidden
 ObjectReference property myShelterCollider auto hidden
 
-;Futures
+; Conjured Shelter-specific objects
+ObjectReference property myBaseStatic1 auto hidden
+ObjectReference property myBaseStatic2 auto hidden
+ObjectReference property myBaseStatic3 auto hidden
+ObjectReference property myBaseStatic4 auto hidden
+ObjectReference property myBaseStatic5 auto hidden
+ObjectReference property myBaseStatic6 auto hidden
+ObjectReference property myBaseStatic7 auto hidden
+ObjectReference property myClutterStatic6 auto hidden
+ObjectReference property myClutterStatic7 auto hidden
+ObjectReference property myClutterMisc1 auto hidden
+ObjectReference property myClutterMisc2 auto hidden
+ObjectReference property myClutterMisc3 auto hidden
+ObjectReference property myClutterMisc4 auto hidden
+ObjectReference property myClutterMisc5 auto hidden
+ObjectReference property myClutterMisc6 auto hidden
+ObjectReference property myClutterMisc7 auto hidden
+ObjectReference property myClutterFurniture6 auto hidden
+ObjectReference property myClutterFurniture7 auto hidden
+
+; Futures
 ObjectReference property myTentFuture auto hidden
 ObjectReference property myNormalTentFuture auto hidden
 ObjectReference property mySnowTentFuture auto hidden
@@ -487,6 +507,26 @@ ObjectReference property mySpareBedRoll3SitMarkerFuture auto hidden
 ObjectReference property myWardFuture auto hidden
 ObjectReference property myShelterColliderFuture auto hidden
 ObjectReference property myLargeTentTriggerVolumeFuture auto hidden
+
+; Conjured Shelter-specific futures
+ObjectReference property myBaseStatic1Future auto hidden
+ObjectReference property myBaseStatic2Future auto hidden
+ObjectReference property myBaseStatic3Future auto hidden
+ObjectReference property myBaseStatic4Future auto hidden
+ObjectReference property myBaseStatic5Future auto hidden
+ObjectReference property myBaseStatic6Future auto hidden
+ObjectReference property myBaseStatic7Future auto hidden
+ObjectReference property myClutterStatic6Future auto hidden
+ObjectReference property myClutterStatic7Future auto hidden
+ObjectReference property myClutterMisc1Future auto hidden
+ObjectReference property myClutterMisc2Future auto hidden
+ObjectReference property myClutterMisc3Future auto hidden
+ObjectReference property myClutterMisc4Future auto hidden
+ObjectReference property myClutterMisc5Future auto hidden
+ObjectReference property myClutterMisc6Future auto hidden
+ObjectReference property myClutterMisc7Future auto hidden
+ObjectReference property myClutterFurniture6Future auto hidden
+ObjectReference property myClutterFurniture7Future auto hidden
 
 Ammo property myQuiver auto hidden
 Armor property myShield auto hidden
@@ -574,6 +614,7 @@ endEvent
 ;@Override _Camp_PlaceableObjectBase
 function PlaceObjects()
 	CampTentEx Extended = self as CampTentEx
+	CampConjuredShelter Conjured = self as CampConjuredShelter
 
 	; Cache shared resources locally
 	XMarker = Game.GetFormFromFile(0x0000003B, "Skyrim.esm") as Static
@@ -593,6 +634,30 @@ function PlaceObjects()
 			CenterObject = PositionRef_Shelter
 		else
 			CenterObject = RequiredPositionRef_PlayerBed
+		endif
+	endif
+
+	if Conjured
+		if Conjured.TentAsset_BaseStatic1 && Conjured.PositionRef_BaseStatic1
+			PlaceObject_BaseStatic1(Conjured)
+		endif
+		if Conjured.TentAsset_BaseStatic2 && Conjured.PositionRef_BaseStatic2
+			PlaceObject_BaseStatic2(Conjured)
+		endif
+		if Conjured.TentAsset_BaseStatic3 && Conjured.PositionRef_BaseStatic3
+			PlaceObject_BaseStatic3(Conjured)
+		endif
+		if Conjured.TentAsset_BaseStatic4 && Conjured.PositionRef_BaseStatic4
+			PlaceObject_BaseStatic4(Conjured)
+		endif
+		if Conjured.TentAsset_BaseStatic5 && Conjured.PositionRef_BaseStatic5
+			PlaceObject_BaseStatic5(Conjured)
+		endif
+		if Conjured.TentAsset_BaseStatic6 && Conjured.PositionRef_BaseStatic6
+			PlaceObject_BaseStatic6(Conjured)
+		endif
+		if Conjured.TentAsset_BaseStatic7 && Conjured.PositionRef_BaseStatic7
+			PlaceObject_BaseStatic7(Conjured)
 		endif
 	endif
 
@@ -632,6 +697,16 @@ function PlaceObjects()
 	if TentAsset_ClutterStatic5 && PositionRef_ClutterStatic5
 		PlaceObject_ClutterStatic5()
 	endif
+
+	if Conjured
+		if Conjured.TentAsset_ClutterStatic6 && Conjured.PositionRef_ClutterStatic6
+			PlaceObject_ClutterStatic6(Conjured)
+		endif
+		if Conjured.TentAsset_ClutterStatic7 && Conjured.PositionRef_ClutterStatic7
+			PlaceObject_ClutterStatic7(Conjured)
+		endif
+	endif
+
 	if Extended
 		if Extended.TentAsset_ClutterActivator1 && Extended.PositionRef_ClutterActivator1
 			PlaceObject_ClutterActivator1(Extended)
@@ -664,6 +739,37 @@ function PlaceObjects()
 			PlaceObject_ClutterFurniture5(Extended)
 		endif
 	endif
+
+	if Conjured
+		if Conjured.TentAsset_ClutterFurniture6 && Conjured.PositionRef_ClutterFurniture6
+			PlaceObject_ClutterFurniture6(Conjured)
+		endif
+		if Conjured.TentAsset_ClutterFurniture7 && Conjured.PositionRef_ClutterFurniture7
+			PlaceObject_ClutterFurniture7(Conjured)
+		endif
+		if Conjured.TentAsset_ClutterMisc1 && Conjured.PositionRef_ClutterMisc1
+			PlaceObject_ClutterMisc1(Conjured)
+		endif
+		if Conjured.TentAsset_ClutterMisc2 && Conjured.PositionRef_ClutterMisc2
+			PlaceObject_ClutterMisc2(Conjured)
+		endif
+		if Conjured.TentAsset_ClutterMisc3 && Conjured.PositionRef_ClutterMisc3
+			PlaceObject_ClutterMisc3(Conjured)
+		endif
+		if Conjured.TentAsset_ClutterMisc4 && Conjured.PositionRef_ClutterMisc4
+			PlaceObject_ClutterMisc4(Conjured)
+		endif
+		if Conjured.TentAsset_ClutterMisc5 && Conjured.PositionRef_ClutterMisc5
+			PlaceObject_ClutterMisc5(Conjured)
+		endif
+		if Conjured.TentAsset_ClutterMisc6 && Conjured.PositionRef_ClutterMisc6
+			PlaceObject_ClutterMisc6(Conjured)
+		endif
+		if Conjured.TentAsset_ClutterMisc7 && Conjured.PositionRef_ClutterMisc7
+			PlaceObject_ClutterMisc7(Conjured)
+		endif
+	endif
+
 	if PositionRef_Lantern1
 		PlaceObject_Lantern1()
 	endif
@@ -924,6 +1030,34 @@ function GetResults()
 		endif
 		myWardFuture = None
 	endif
+	if myBaseStatic1Future
+		myBaseStatic1 = GetFuture(myBaseStatic1Future).get_result()
+		myBaseStatic1Future = None
+	endif
+	if myBaseStatic2Future
+		myBaseStatic2 = GetFuture(myBaseStatic2Future).get_result()
+		myBaseStatic2Future = None
+	endif
+	if myBaseStatic3Future
+		myBaseStatic3 = GetFuture(myBaseStatic3Future).get_result()
+		myBaseStatic3Future = None
+	endif
+	if myBaseStatic4Future
+		myBaseStatic4 = GetFuture(myBaseStatic4Future).get_result()
+		myBaseStatic4Future = None
+	endif
+	if myBaseStatic5Future
+		myBaseStatic5 = GetFuture(myBaseStatic5Future).get_result()
+		myBaseStatic5Future = None
+	endif
+	if myBaseStatic6Future
+		myBaseStatic6 = GetFuture(myBaseStatic6Future).get_result()
+		myBaseStatic6Future = None
+	endif
+	if myBaseStatic7Future
+		myBaseStatic7 = GetFuture(myBaseStatic7Future).get_result()
+		myBaseStatic7Future = None
+	endif
 	if myClutterStatic1Future
 		myClutterStatic1 = GetFuture(myClutterStatic1Future).get_result()
 		myClutterStatic1Future = None
@@ -943,6 +1077,14 @@ function GetResults()
 	if myClutterStatic5Future
 		myClutterStatic5 = GetFuture(myClutterStatic5Future).get_result()
 		myClutterStatic5Future = None
+	endif
+	if myClutterStatic6Future
+		myClutterStatic6 = GetFuture(myClutterStatic6Future).get_result()
+		myClutterStatic6Future = None
+	endif
+	if myClutterStatic7Future
+		myClutterStatic7 = GetFuture(myClutterStatic7Future).get_result()
+		myClutterStatic7Future = None
 	endif
 	if myClutterActivator1Future
 		myClutterActivator1 = GetFuture(myClutterActivator1Future).get_result()
@@ -983,6 +1125,42 @@ function GetResults()
 	if myClutterFurniture5Future
 		myClutterFurniture5 = GetFuture(myClutterFurniture5Future).get_result()
 		myClutterFurniture5Future = None
+	endif
+	if myClutterFurniture6Future
+		myClutterFurniture6 = GetFuture(myClutterFurniture6Future).get_result()
+		myClutterFurniture6Future = None
+	endif
+	if myClutterFurniture7Future
+		myClutterFurniture7 = GetFuture(myClutterFurniture7Future).get_result()
+		myClutterFurniture7Future = None
+	endif
+	if myClutterMisc1Future
+		myClutterMisc1 = GetFuture(myClutterMisc1Future).get_result()
+		myClutterMisc1Future = None
+	endif
+	if myClutterMisc2Future
+		myClutterMisc2 = GetFuture(myClutterMisc2Future).get_result()
+		myClutterMisc2Future = None
+	endif
+	if myClutterMisc3Future
+		myClutterMisc3 = GetFuture(myClutterMisc3Future).get_result()
+		myClutterMisc3Future = None
+	endif
+	if myClutterMisc4Future
+		myClutterMisc4 = GetFuture(myClutterMisc4Future).get_result()
+		myClutterMisc4Future = None
+	endif
+	if myClutterMisc5Future
+		myClutterMisc5 = GetFuture(myClutterMisc5Future).get_result()
+		myClutterMisc5Future = None
+	endif
+	if myClutterMisc6Future
+		myClutterMisc6 = GetFuture(myClutterMisc6Future).get_result()
+		myClutterMisc6Future = None
+	endif
+	if myClutterMisc7Future
+		myClutterMisc7 = GetFuture(myClutterMisc7Future).get_result()
+		myClutterMisc7Future = None
 	endif
 	if myLanternUnlitFuture
 		myLanternUnlit = GetFuture(myLanternUnlitFuture).get_result()
@@ -1154,6 +1332,8 @@ function TakeDown()
 	ForceStopUsingFurniture(myClutterFurniture3)
 	ForceStopUsingFurniture(myClutterFurniture4)
 	ForceStopUsingFurniture(myClutterFurniture5)
+	ForceStopUsingFurniture(myClutterFurniture6)
+	ForceStopUsingFurniture(myClutterFurniture7)
 	ForceStopUsingFurniture(myPlayerSitMarker)
 	ForceStopUsingFurniture(myPlayerLayDownMarker)
 	ForceStopUsingFurniture(myPlayerWithSpouseLayDownMarker)
@@ -1275,11 +1455,20 @@ function TakeDown()
 	myPlayerMarker_Backpack = None
 	myPlayerMarker_Shield = None
 	myPlayerMarker_ShieldInterior = None
+	myBaseStatic1 = None
+	myBaseStatic2 = None
+	myBaseStatic3 = None
+	myBaseStatic4 = None
+	myBaseStatic5 = None
+	myBaseStatic6 = None
+	myBaseStatic7 = None
 	myClutterStatic1 = None
 	myClutterStatic2 = None
 	myClutterStatic3 = None
 	myClutterStatic4 = None
 	myClutterStatic5 = None
+	myClutterStatic6 = None
+	myClutterStatic7 = None
 	myClutterActivator1 = None
 	myClutterActivator2 = None
 	myClutterActivator3 = None
@@ -1290,6 +1479,8 @@ function TakeDown()
 	myClutterFurniture3 = None
 	myClutterFurniture4 = None
 	myClutterFurniture5 = None
+	myClutterFurniture6 = None
+	myClutterFurniture7 = None
 	myPlayerSitMarker = None
 	myPlayerLayDownMarker = None
 	myPlayerWithSpouseLayDownMarker = None
