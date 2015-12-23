@@ -257,6 +257,15 @@ function DestroyTent(ObjectReference akTent) global
 	TentAPI.DestroyTent(akTent)
 endFunction
 
+Message function GetCampingIllegalMessage() global
+	_Camp_TentSystem TentAPI = GetAPI()
+	if TentAPI == none
+		RaiseTentAPIError()
+		return None
+	endif
+	return TentAPI._Camp_PlacementIllegal
+endFunction
+
 function RaiseTentAPIError() global
 	CampDebug(3, "Fatal Tent API error occurred.")
 endFunction
