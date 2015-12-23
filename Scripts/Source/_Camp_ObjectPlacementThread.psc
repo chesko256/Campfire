@@ -25,6 +25,7 @@ bool _InitiallyDisabled = false
 bool _IsPropped = false
 bool _IsHanging = false
 bool _IsTemp = false
+bool _IsInteractionDisabled = false
 
 ;Passed in externally, to avoid setting a property on many threads.
 Static XMarker
@@ -35,7 +36,8 @@ ObjectReference function get_async(Activator akFuture, ObjectReference akFutureA
 						float x_local_ang_adjust = 0.0, float y_local_ang_adjust = 0.0, float z_local_ang_adjust = 0.0, 							\
 						float z_global_ang_adjust = 0.0, float z_hanging_offset = 0.0, bool inverted_local_y = false, 								\
 						float x_pos_offset = 0.0, float y_pos_offset = 0.0,	float z_pos_offset,														\
-						bool initially_disabled = false, bool is_propped = false, bool is_hanging = false, bool is_temp = false)
+						bool initially_disabled = false, bool is_propped = false, bool is_hanging = false, bool is_temp = false,					\
+						bool is_interaction_disabled = false)
 	
 	CampDebug(0, "get_async")
 	thread_queued = true
@@ -64,6 +66,7 @@ ObjectReference function get_async(Activator akFuture, ObjectReference akFutureA
 	_IsPropped = is_propped
 	_IsHanging = is_hanging
 	_IsTemp = is_temp
+	_IsInteractionDisabled = is_interaction_disabled
 	
 	future = akFutureAnchor.PlaceAtMe(akFuture)
 	CampDebug(0, "Returning future: " + future)
@@ -76,7 +79,7 @@ Event OnUpdate()
 		relative_position = GetRelativePosition(_RelativeCenterObject, _ObjectPositionReference, _XPosOffset, _YPosOffset)
 		ObjectReference result = PlaceAtMeRelative(_Origin, _FormToPlace, _OriginAngle, relative_position, \
 				_ZGlobalAngAdjust, _XLocalAngAdjust, _YLocalAngAdjust, _ZLocalAngAdjust, \
-				_ZHangingOffset, _InvertedLocalY, _XPosOffset, _YPosOffset, _ZPosOffset, _InitiallyDisabled, _IsPropped, _IsHanging, _IsTemp)
+				_ZHangingOffset, _InvertedLocalY, _XPosOffset, _YPosOffset, _ZPosOffset, _InitiallyDisabled, _IsPropped, _IsHanging, _IsTemp, _IsInteractionDisabled)
 		(future as _Camp_ObjectFuture).result = result
 		clear_thread_vars()
 		thread_queued = false
@@ -229,7 +232,8 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
 										   float[] fRelativePos, float fZGlobalAngAdjust = 0.0, float fXLocalAngAdjust = 0.0,  \
 										   float fYLocalAngAdjust = 0.0, float fZLocalAngAdjust = 0.0, float fZHangingOffset = 0.0, \
 										   bool abInvertedLocalY = false, float afXPosOffset = 0.0, float afYPosOffset = 0.0, float afZPosOffset = 0.0,	\
-										   bool bInitiallyDisabled = false, bool abIsPropped = false, bool abIsHanging = false, bool abIsTemp = false)
+										   bool bInitiallyDisabled = false, bool abIsPropped = false, bool abIsHanging = false, bool abIsTemp = false, 	\
+										   bool bDisableInteraction = false)
 
 	ObjectReference myObject
     ObjectReference myTempMarker = akOrigin.PlaceAtMe(XMarker)
@@ -262,6 +266,16 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
 	
 	myObject = myTempMarker.PlaceAtMe(akFormToPlace, abForcePersist = spawn_persistent, abInitiallyDisabled = bInitiallyDisabled)
     
+    if bDisableInteraction
+    	int i = 0
+    	while !myObject.Is3DLoaded() && i < 50
+    		Utility.Wait(0.1)
+    		i += 1
+    	endWhile
+    	myObject.SetMotionType(myObject.Motion_Keyframed)
+		myObject.BlockActivation()
+    endif
+
     TryToDisableAndDeleteRef(myTempMarker)
 
     return myObject
