@@ -8,6 +8,7 @@ bool enable_update = false
 FormList property _Camp_HeatSources_Fire auto
 FormList property _Camp_HeatSources_Fire_Small auto
 message property _Camp_CookingPotError auto
+message property _Camp_CookingPotErrorNotification auto
 
 function Initialize()
 	parent.Initialize()
@@ -43,11 +44,15 @@ endFunction
 Event OnActivate(ObjectReference akActionRef)
 	if akActionRef == Game.GetPlayer()
 		if myExtraActivator1.IsDisabled()
-			int i = _Camp_CookingPotError.Show()
-			if i == 0
-				PickUp()
+			if Setting_IsConjured
+				_Camp_CookingPotErrorNotification.Show()
 			else
-				;pass
+				int i = _Camp_CookingPotError.Show()
+				if i == 0
+					PickUp()
+				else
+					;pass
+				endif
 			endif
 		else
 			UseObject(akActionRef)

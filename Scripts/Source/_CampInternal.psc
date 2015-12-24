@@ -107,7 +107,7 @@ function SetLastUsedCampfire(ObjectReference akCampfire) global
 		return
 	endif
 	Campfire.LastUsedCampfire = akCampfire
-	if akCampfire && (akCampfire as CampCampfire).Setting_IsCampfireConjured == true
+	if akCampfire && (akCampfire as CampCampfire).Setting_IsConjured == true
 		(Campfire._Camp_MainQuest as _Camp_ConditionValues).IsCurrentCampfireConjured = true
 	else
 		(Campfire._Camp_MainQuest as _Camp_ConditionValues).IsCurrentCampfireConjured = false

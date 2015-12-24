@@ -24,6 +24,15 @@ bool property Setting_Flammable = False auto
 * Optional: Whether or not this object can be destroyed by fire. }
 ;*********/;
 
+;/********p* _Camp_PlaceableObjectBase/Setting_IsConjured
+* SYNTAX
+*/;
+bool property Setting_IsConjured = False auto
+{
+* DESCRIPTION
+* Optional: Whether or not this object is part of a conjured shelter. }
+;*********/;
+
 ; PRIVATE
 MiscObject property Required_InventoryItem auto hidden
 _Camp_ObjectPlacementThreadManager property PlacementSystem auto hidden
