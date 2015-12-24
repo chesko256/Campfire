@@ -209,7 +209,7 @@ function ShowMainMenu(ObjectReference akTent)
 		TentObject.myBedRoll.Activate(PlayerRef)
 	elseif i == 3									;Light
 		ToggleLantern(akTent)
-	elseif i == 4									;Pack
+	elseif i == 4 || i == 5							;Pack or Dismiss
 		PackTent(akTent)
 	else
 		;exit
@@ -1024,8 +1024,16 @@ endFunction
 
 function PackTent(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
-	PlayerRef.AddItem(TentObject.Required_InventoryItem, abSilent = true)
-	ITMGenericArmorUp.Play(akTent)
+	
+	bool is_conjured = false
+	if !TentObject.Setting_IsConjured
+		is_conjured = true
+	endif
+
+	if !is_conjured
+		PlayerRef.AddItem(TentObject.Required_InventoryItem, abSilent = true)
+		ITMGenericArmorUp.Play(akTent)
+	endif
 
 	;Move activation trigger to the anchor
 	_Camp_Tent_InteractTriggerREF.MoveTo(_Camp_Anchor)
@@ -1051,7 +1059,11 @@ function PackTent(ObjectReference akTent)
 	endif
 	
 	;Delete markers and furniture
-	TentObject.TakeDown()
+	if is_conjured
+		(akTent as CampConjuredShelter).TakeDown()
+	else
+		(akTent as CampTent).TakeDown()
+	endif
 
 	;Move activation triggers to the anchor
 	_Camp_Tent_InteractTriggerREF.MoveTo(_Camp_Anchor)
