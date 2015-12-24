@@ -39,3 +39,4 @@ bool property IsArtOfTheCatchLoaded = false auto conditional hidden
 bool property IsRidingFlyingMount = false auto conditional hidden
 bool property TreesAreNearby = false auto conditional hidden
 bool property IsCurrentCampfireConjured = false auto conditional hidden
+bool property IsCurrentTentConjured = false auto conditional hidden
