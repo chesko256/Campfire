@@ -1024,9 +1024,10 @@ endFunction
 
 function PackTent(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
+	CampConjuredShelter ShelterObject = akTent as CampConjuredShelter
 	
 	bool is_conjured = false
-	if !TentObject.Setting_IsConjured
+	if TentObject.Setting_IsConjured
 		is_conjured = true
 	endif
 
@@ -1060,9 +1061,9 @@ function PackTent(ObjectReference akTent)
 	
 	;Delete markers and furniture
 	if is_conjured
-		(akTent as CampConjuredShelter).TakeDown()
+		ShelterObject.TakeDown()
 	else
-		(akTent as CampTent).TakeDown()
+		TentObject.TakeDown()
 	endif
 
 	;Move activation triggers to the anchor
