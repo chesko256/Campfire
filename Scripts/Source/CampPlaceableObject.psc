@@ -57,34 +57,40 @@ Event OnActivate(ObjectReference akActionRef)
 EndEvent
 
 function UseObject(ObjectReference akActionRef)
+	if Setting_IsConjured
+		ToggleAndUse()
+		return
+	endif
+
 	if akActionRef == Game.GetPlayer() && !in_use
 		int i = GetObjectMainMenu().Show()
 		if i == 0										;Use
-			in_use = true
-			self.BlockActivation(false)
-			self.Activate(Game.GetPlayer())
-			
-			;Wait until the player is "using" the object, or enough time passes.
-            int j = 0
-            while !self.IsFurnitureInUse() && j < 50
-                utility.wait(0.1)
-                j += 1
-            endWhile
-
-            ;Wait until they finish.
-            while self.IsFurnitureInUse()
-                utility.wait(0.1)
-            endWhile
-
-			;Return to the previous state.
-            self.BlockActivation()
-            in_use = false
+			ToggleAndUse()
 		elseif i == 1									;Pick Up
 			PickUp()
 		else
 			;exit
 		endif
 	endif
+endFunction
+
+function ToggleAndUse()
+	in_use = true
+	self.BlockActivation(false)
+	self.Activate(Game.GetPlayer())			
+	;Wait until the player is "using" the object, or enough time passes.
+    int j = 0
+    while !self.IsFurnitureInUse() && j < 50
+        utility.wait(0.1)
+        j += 1
+    endWhile
+    ;Wait until they finish.
+    while self.IsFurnitureInUse()
+        utility.wait(0.1)
+    endWhile
+	;Return to the previous state.
+    self.BlockActivation()
+    in_use = false
 endFunction
 
 function PickUp()

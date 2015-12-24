@@ -13,15 +13,6 @@ import CampUtil
 
 ; OPTIONAL PROPERTIES
 
-;/********p* CampCampfire/Setting_IsCampfireConjured
-* SYNTAX
-*/;
-bool property Setting_IsCampfireConjured = false auto
-;/*
-* DESCRIPTION
-{ Optional: Whether or not this campfire is part of a conjured shelter. This prevents certain options from appearing in the campfire menu. Default: False }
-;*********/;
-
 ;/********p* CampCampfire/FireAsset_SitFurniture1
 * SYNTAX
 */;
@@ -518,12 +509,14 @@ function PlaceObjects()
     if FireAsset_ClutterFurniture2 && PositionRef_ClutterFurniture2
         PlaceObject_ClutterFurniture2()
     endif
+    if PositionRef_CookPotSnapMarker
+        PlaceObject_myCookPotSnapMarker()
+    endif
 
     ;Required
     PlaceObject_mySteam()
     PlaceObject_myEmbers()
     PlaceObject_myAshes()
-    PlaceObject_myCookPotSnapMarker()
 endFunction
 
 function GetResults()
@@ -545,6 +538,9 @@ function GetResults()
     endif
     if myAshesFuture
         myAshes = GetFuture(myAshesFuture).get_result()
+        if Setting_IsConjured
+            myAshes.SetScale(0.7)
+        endif
         myAshesFuture = None
     endif
     if mySitFurniture1Future
@@ -761,6 +757,13 @@ function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int 
     myFuelLit = self.PlaceAtMe(akFuelLit, abInitiallyDisabled = true)
     myLight = self.PlaceAtMe(akLight, abInitiallyDisabled = true)
     myLight.MoveTo(myLight, afZOffset = 100.0)
+
+    if Setting_IsConjured
+        myFuelLit.SetScale(0.7)
+        myFuelLit.SetAngle(0.0, 0.0, myFuelLit.GetAngleZ() + 45.0)
+        myFuelUnlit.SetScale(0.7)
+        myFuelUnlit.SetAngle(0.0, 0.0, myFuelLit.GetAngleZ() + 45.0)
+    endif
 
     if campfire_stage == 2
         LightFire(true)
@@ -1127,7 +1130,7 @@ Event OnUpdateGameTime()
     CampDebug(0, "Campfire remaining time " + Math.Floor(remaining_time))
 
     if remaining_time < 1
-        if !Setting_IsCampfireConjured
+        if !Setting_IsConjured
             TakeDown()
         endif
     else
