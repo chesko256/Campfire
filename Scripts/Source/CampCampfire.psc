@@ -762,7 +762,7 @@ function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int 
         myFuelLit.SetScale(0.7)
         myFuelLit.SetAngle(0.0, 0.0, myFuelLit.GetAngleZ() + 45.0)
         myFuelUnlit.SetScale(0.7)
-        myFuelUnlit.SetAngle(0.0, 0.0, myFuelLit.GetAngleZ() + 45.0)
+        myFuelUnlit.SetAngle(0.0, 0.0, myFuelUnlit.GetAngleZ() + 45.0)
     endif
 
     if campfire_stage == 2
