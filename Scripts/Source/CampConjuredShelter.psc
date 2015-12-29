@@ -139,7 +139,7 @@ float property ShelterID auto hidden
 int property mySoundID auto hidden
 
 function TakeDown()
-	;/SetCurrentTent(None)
+	SetCurrentTent(None)
 	(self as _Camp_PlaceableObjectBase).TakeDown()
 
 	ForceStopUsingFurniture(myClutterFurniture1)
@@ -254,20 +254,22 @@ function TakeDown()
 	WarpOutRef(myClutterFurniture6)
 	WarpOutRef(myClutterFurniture7)
 	WarpOutRef(myBedRoll)
-	WarpOutRef(myLightLit)
-	WarpOutRef(myLightUnlit)
-	WarpOutRef(myLightLight)
-	WarpOutRef(myLightLit2)
-	WarpOutRef(myLightUnlit2)
-	WarpOutRef(myLightLight2)
-	WarpOutRef(myLightLit3)
-	WarpOutRef(myLightUnlit3)
-	WarpOutRef(myLightLight3)
+	WarpOutRef(myLanternLit)
+	WarpOutRef(myLanternUnlit)
+	WarpOutRef(myLanternLight)
+	WarpOutRef(myLanternLit2)
+	WarpOutRef(myLanternUnlit2)
+	WarpOutRef(myLanternLight2)
+	WarpOutRef(myLanternLit3)
+	WarpOutRef(myLanternUnlit3)
+	WarpOutRef(myLanternLight3)
 	WarpOutRef(mySpareBedRoll1)
 	WarpOutRef(mySpareBedRoll2)
 	WarpOutRef(mySpareBedRoll3)
 
 	Utility.Wait(1.2)
+
+	; Warp out the sphere
 
 	; Remove references
 	TryToDisableAndDeleteRef(myBaseStatic1)
@@ -304,15 +306,15 @@ function TakeDown()
 	TryToDisableAndDeleteRef(myClutterFurniture6)
 	TryToDisableAndDeleteRef(myClutterFurniture7)
 	TryToDisableAndDeleteRef(myBedRoll)
-	TryToDisableAndDeleteRef(myLightLit)
-	TryToDisableAndDeleteRef(myLightUnlit)
-	TryToDisableAndDeleteRef(myLightLight)
-	TryToDisableAndDeleteRef(myLightLit2)
-	TryToDisableAndDeleteRef(myLightUnlit2)
-	TryToDisableAndDeleteRef(myLightLight2)
-	TryToDisableAndDeleteRef(myLightLit3)
-	TryToDisableAndDeleteRef(myLightUnlit3)
-	TryToDisableAndDeleteRef(myLightLight3)
+	TryToDisableAndDeleteRef(myLanternLit)
+	TryToDisableAndDeleteRef(myLanternUnlit)
+	TryToDisableAndDeleteRef(myLanternLight)
+	TryToDisableAndDeleteRef(myLanternLit2)
+	TryToDisableAndDeleteRef(myLanternUnlit2)
+	TryToDisableAndDeleteRef(myLanternLight2)
+	TryToDisableAndDeleteRef(myLanternLit3)
+	TryToDisableAndDeleteRef(myLanternUnlit3)
+	TryToDisableAndDeleteRef(myLanternLight3)
 	TryToDisableAndDeleteRef(mySpareBedRoll1)
 	TryToDisableAndDeleteRef(mySpareBedRoll2)
 	TryToDisableAndDeleteRef(mySpareBedRoll3)
@@ -347,6 +349,8 @@ function TakeDown()
 	myClutterActivator1 = None
 	myClutterActivator2 = None
 	myClutterActivator3 = None
+	myClutterActivator4 = None
+	myClutterActivator5 = None
 	myClutterFurniture1 = None
 	myClutterFurniture2 = None
 	myClutterFurniture3 = None
@@ -360,15 +364,15 @@ function TakeDown()
 	mySpouseLayDownMarker = None
 	myAnimalLayDownMarker = None
 	myBedRoll = None
-	myLightLit = None
-	myLightUnlit = None
-	myLightLight = None
-	myLightLit2 = None
-	myLightUnlit2 = None
-	myLightLight2 = None
-	myLightLit3 = None
-	myLightUnlit3 = None
-	myLightLight3 = None
+	myLanternLit = None
+	myLanternUnlit = None
+	myLanternLight = None
+	myLanternLit2 = None
+	myLanternUnlit2 = None
+	myLanternLight2 = None
+	myLanternLit3 = None
+	myLanternUnlit3 = None
+	myLanternLight3 = None
 	mySpareBedRoll1 = None
 	mySpareBedRoll2 = None
 	mySpareBedRoll3 = None
@@ -421,7 +425,6 @@ function TakeDown()
 	myDisplayFollowerCBow = None
 
 	TryToDisableAndDeleteRef(self)
-	/;
 endFunction
 
 function WarpInObjects()

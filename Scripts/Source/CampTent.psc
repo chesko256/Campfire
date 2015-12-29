@@ -16,7 +16,14 @@ import _CampInternal
 import CampUtil
 import TentSystem
 
-; REQUIRED PROPERTIES
+;/********p* CampTent/Setting_PlayerUsesFullBed
+* SYNTAX
+*/;
+bool property Setting_PlayerUsesFullBed = false auto
+{
+* DESCRIPTION
+* Optional: Whether or not the player's bedding is a full-sized bed. If true, the player's ability to sit and lay down in the bedding is disabled. }
+;*********/;
 
 ;/********p* CampTent/Setting_BedRollScale
 * SYNTAX
