@@ -33,6 +33,15 @@ bool property Setting_IsConjured = False auto
 * Optional: Whether or not this object is part of a conjured shelter. }
 ;*********/;
 
+;/********p* _Camp_PlaceableObjectBase/UniqueConjuredObjectGlobal
+* SYNTAX
+*/;
+GlobalVariable property UniqueConjuredObjectGlobal auto
+{
+* DESCRIPTION
+* Optional: If set, and if Setting_IsConjured is TRUE, only one of this type of conjured object can be spawned at any given time. If not set, this object can be spawned any number of times. }
+;*********/;
+
 ; PRIVATE
 MiscObject property Required_InventoryItem auto hidden
 _Camp_ObjectPlacementThreadManager property PlacementSystem auto hidden
@@ -62,11 +71,13 @@ int damage_stage = 0
 Event OnInit()
 	CampDebug(0, self + " OnInit()")
 	int i = 0
-    while !self.Is3DLoaded() && i < 50
-        utility.wait(0.1)
-        i += 1
-        CampDebug(0, self + " i = " + i)
-    endWhile
+	if self.IsEnabled()
+    	while !self.Is3DLoaded() && i < 50
+        	utility.wait(0.1)
+        	i += 1
+        	CampDebug(0, self + " waiting for initial 3D Loaded. (i = " + i + ")")
+    	endWhile
+    endif
 	;We need to get out of OnInit() quickly, so member functions on this object can be called.
 	RegisterForSingleUpdate(0.1)
 endEvent
@@ -80,7 +91,7 @@ Event OnUpdate()
 endEvent
 
 function Update()
-	;pass
+	; override
 endFunction
 
 function Initialize()
@@ -91,6 +102,7 @@ function Initialize()
 	PlaceBaseObjects()
 	PlaceObjects()
 	PlacementSystem.wait_all()
+	GetBaseResults()
 	GetResults()
 	initialized = true
 	CampDebug(0, "Base initialized")
@@ -101,7 +113,7 @@ function RotateOnStartUp()
 endFunction
 
 function PlaceObjects()
-	; Pass
+	; override
 endFunction
 
 function PlaceBaseObjects()
@@ -111,6 +123,10 @@ function PlaceBaseObjects()
 endFunction
 
 function GetResults()
+	; override
+endFunction
+
+function GetBaseResults()
 	CampDebug(0, "Base get results")
 	if myFire1Future
 		myFire1 = GetFuture(myFire1Future).get_result()

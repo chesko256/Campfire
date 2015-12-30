@@ -139,7 +139,6 @@ function PlaceObjects()
 endFunction
 
 function GetResults()
-	parent.GetResults()
 	if myExtraStatic1Future
 		myExtraStatic1 = GetFuture(myExtraStatic1Future).get_result()
 	endif

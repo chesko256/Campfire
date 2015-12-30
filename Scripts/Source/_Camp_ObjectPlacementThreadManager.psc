@@ -129,7 +129,15 @@ Event OnInit()
     PlacementIndicatorThread2 = CampfireObjectPlacementSystem as _Camp_ObjectPlacementIndicatorThread02
     PlacementIndicatorThread3 = CampfireObjectPlacementSystem as _Camp_ObjectPlacementIndicatorThread03
 EndEvent
- 
+
+function RequestLockGrant()
+
+endFunction
+
+function RequestLockRelease()
+
+endFunction
+
 ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to_place,                                         \
                               ObjectReference object_position_reference,                                                        \
                               float x_local_ang_adjust = 0.0, float y_local_ang_adjust = 0.0, float z_local_ang_adjust = 0.0,   \

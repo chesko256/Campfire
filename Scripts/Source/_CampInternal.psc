@@ -120,11 +120,23 @@ function SetTentConjured(ObjectReference akTent) global
 		RaiseCampAPIError()
 		return
 	endif
-	Campfire.LastUsedCampfire = akTent
 	if akTent && (akTent as _Camp_PlaceableObjectBase).Setting_IsConjured == true
 		(Campfire._Camp_MainQuest as _Camp_ConditionValues).IsCurrentTentConjured = true
 	else
 		(Campfire._Camp_MainQuest as _Camp_ConditionValues).IsCurrentTentConjured = false
+	endif
+endFunction
+
+function SetTentPlayerFullBed(ObjectReference akTent) global
+	CampfireAPI Campfire = GetPublicAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return
+	endif
+	if akTent && (akTent as CampTent).Setting_PlayerUsesFullBed == true
+		(Campfire._Camp_MainQuest as _Camp_ConditionValues).IsCurrentTentUsingFullBed = true
+	else
+		(Campfire._Camp_MainQuest as _Camp_ConditionValues).IsCurrentTentUsingFullBed = false
 	endif
 endFunction
 

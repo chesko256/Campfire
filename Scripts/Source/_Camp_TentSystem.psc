@@ -141,6 +141,7 @@ function ActivateTent(ObjectReference akActionRef, ObjectReference akTent)
 		was_hit = false
 		CampTent TentObject = akTent as CampTent
 		SetTentConjured(akTent)
+		SetTentPlayerFullBed(akTent)
 		int iSitState = (akActionRef as Actor).GetSitState()
 		if iSitState == 0
 			ShowMainMenu(akTent)

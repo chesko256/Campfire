@@ -942,6 +942,36 @@ bool function IsCurrentTentWarm() global
 	endif
 endFunction
 
+;/********f* CampUtil/IsCurrentTentConjured
+* API VERSION ADDED
+* 4
+*
+* DESCRIPTION
+* Is the current tent conjured?
+*
+* SYNTAX
+*/;
+bool function IsCurrentTentConjured() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* True if the current tent is flagged as being conjured, or false if not or if there is no tent in use by the player.
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+
+	if Campfire.CurrentTent && (Campfire.CurrentTent as CampTent).Setting_IsConjured == true
+		return true
+	else
+		return false
+	endif
+endFunction
+
 ;/********f* CampUtil/CurrentTentHasShelter
 * API VERSION ADDED
 * 3
@@ -1041,6 +1071,35 @@ bool function IsPlaceableObjectTemporary(Form akBaseObject) global
 		return false
 	endif
 	if akBaseObject.HasKeyword(Campfire.isCampfireObjectTemporary)
+		return true
+	else
+		return false
+	endif
+endFunction
+
+;/********f* CampUtil/IsPlaceableObjectConjured
+* API VERSION ADDED
+* 4
+*
+* DESCRIPTION
+* Returns whether or not this placeable object is conjured.
+*
+* SYNTAX
+*/;
+bool function IsPlaceableObjectConjured(Form akBaseObject) global
+;/*
+* PARAMETERS
+* akBaseObject: The base object to check.
+*
+* RETURN VALUE
+* True if the Form is conjured, False if not or not a placeable object.
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+	if (akBaseObject as _Camp_PlaceableObjectBase) && ((akBaseObject as _Camp_PlaceableObjectBase).Setting_IsConjured == true)
 		return true
 	else
 		return false
