@@ -482,7 +482,6 @@ function SelectExterior(ObjectReference akTent, bool abInTent)
 
 	bool snow = false
 	bool ash = false
-	bool separate_exterior = TentObject.myTent && TentObject.myNormalTent
 
 	if SnowyWeather
 		if Compatibility.isDLC2Loaded && myWeather == Compatibility.DLC2AshStorm
