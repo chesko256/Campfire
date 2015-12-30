@@ -274,6 +274,9 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
     	endWhile
     	myObject.SetMotionType(myObject.Motion_Keyframed)
 		myObject.BlockActivation()
+		
+		; Move the object back to the spawn position; it might have fallen
+		myObject.MoveTo(myTempMarker)
     endif
 
     TryToDisableAndDeleteRef(myTempMarker)

@@ -1312,6 +1312,15 @@ function GetResults()
 		endif
 		myBedRollFuture = None
 	endif
+	
+	; Conjured shelters - enable the bed reference now.
+	if self.IsDisabled()
+		self.EnableNoWait()
+		if Conjured
+			(self as CampConjuredShelter).PlayWarpInEffect(self)
+		endif
+	endif
+	
 	if mySpareBedRoll1Future
 		mySpareBedRoll1 = GetFuture(mySpareBedRoll1Future).get_result()
 		if Setting_BedRollScale != 1.0

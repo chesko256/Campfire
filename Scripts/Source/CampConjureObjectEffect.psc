@@ -34,9 +34,9 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 	mySpawnMarker.SetPosition(Game.GetPlayer().GetPositionX() + fDistance[0], Game.GetPlayer().GetPositionY() + fDistance[1], Game.GetPlayer().GetPositionZ())
 	mySpawnMarker.SetAngle(0.0, 0.0, mySpawnMarker.GetAngleZ())
 	if Required_ActivatorToSpawn
-		mySpawnMarker.PlaceAtMe(Required_ActivatorToSpawn)
+		mySpawnMarker.PlaceAtMe(Required_ActivatorToSpawn, abInitiallyDisabled = true)
 	else
-		mySpawnMarker.PlaceAtMe(Required_FurnitureToSpawn)
+		mySpawnMarker.PlaceAtMe(Required_FurnitureToSpawn, abInitiallyDisabled = true)
 	endif
 	mySpawnMarker.Disable()
 	mySpawnMarker.Delete()
