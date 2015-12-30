@@ -146,7 +146,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
 
     int thread_limit = _Camp_Setting_MaxThreads.GetValueInt()
 	while !future
-        CampDebug(0, "Checking threads")
+        CampDebug(0, "Checking threads for placement of " + form_to_place)
 		if !thread01.queued() && thread_limit >= 1
             CampDebug(0, "Queuing thread 01")
             future = thread01.get_async(_Camp_ObjectPlacementFutureActivator, _Camp_ObjectPlacementFutureAnchor,    \

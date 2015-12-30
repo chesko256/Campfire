@@ -234,7 +234,7 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
 										   bool abInvertedLocalY = false, float afXPosOffset = 0.0, float afYPosOffset = 0.0, float afZPosOffset = 0.0,	\
 										   bool bInitiallyDisabled = false, bool abIsPropped = false, bool abIsHanging = false, bool abIsTemp = false, 	\
 										   bool bDisableInteraction = false)
-
+	
 	ObjectReference myObject
     ObjectReference myTempMarker = akOrigin.PlaceAtMe(XMarker)
     myTempMarker.MoveTo(myTempMarker, fRelativePos[0], fRelativePos[1], fRelativePos[2])
