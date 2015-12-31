@@ -99,11 +99,19 @@ function Initialize()
 	RotateOnStartUp()
 	OriginAng = GetAngleData(self)
 	is_temporary = IsPlaceableObjectTemporary(self.GetBaseObject())
+
+	; Make sure the placement system is available.
+	PlacementSystem.RequestLock(self)
+
 	PlaceBaseObjects()
 	PlaceObjects()
 	PlacementSystem.wait_all()
 	GetBaseResults()
 	GetResults()
+
+	; Make the placement system available again.
+	PlacementSystem.ReleaseLock(self)
+
 	initialized = true
 	CampDebug(0, "Base initialized")
 endFunction

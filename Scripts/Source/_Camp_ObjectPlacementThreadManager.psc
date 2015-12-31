@@ -4,6 +4,8 @@ import math
 import CampUtil
 import _CampInternal
 
+bool locked = false
+
 _Camp_Compatibility property Compatibility auto
 
 ;Object Placement
@@ -130,12 +132,20 @@ Event OnInit()
     PlacementIndicatorThread3 = CampfireObjectPlacementSystem as _Camp_ObjectPlacementIndicatorThread03
 EndEvent
 
-function RequestLockGrant()
-
+function RequestLock(ObjectReference akObject)
+    int i = 0
+    while locked && i < 30
+        CampDebug(1, akObject + ": Waiting until placement system available. (Timeout in " + (30 - i) + ")")
+        Utility.Wait(1)
+        i += 1
+    endWhile
+    CampDebug(1, akObject + ": Placement system lock granted.")
+    locked = true
 endFunction
 
-function RequestLockRelease()
-
+function ReleaseLock(ObjectReference akObject)
+    CampDebug(1, akObject + ": Placement system lock released.")
+    locked = false
 endFunction
 
 ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to_place,                                         \
