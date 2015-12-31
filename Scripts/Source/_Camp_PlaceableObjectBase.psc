@@ -30,7 +30,16 @@ bool property Setting_Flammable = False auto
 bool property Setting_IsConjured = False auto
 {
 * DESCRIPTION
-* Optional: Whether or not this object is part of a conjured shelter. }
+* Optional: Whether or not this object is conjured. }
+;*********/;
+
+;/********p* _Camp_PlaceableObjectBase/Setting_BypassMenu
+* SYNTAX
+*/;
+bool property Setting_BypassMenu = False auto
+{
+* DESCRIPTION
+* Optional: If true, no menu will be shown when clicking on this object and the default action will be taken. The intended use is that this object is created and destroyed by another object, like a conjured shelter. Otherwise, you would have no way to destroy the object once placed. }
 ;*********/;
 
 ;/********p* _Camp_PlaceableObjectBase/UniqueConjuredObjectGlobal

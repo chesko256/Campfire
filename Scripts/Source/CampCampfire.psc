@@ -337,8 +337,8 @@ Event OnActivate(ObjectReference akActionRef)
 EndEvent
 
 function DoActivate(ObjectReference akActionRef)
+    SetSelectedObjectConjured(self)
     SetLastUsedCampfire(self)
-    
     ; Should we refund the player fuel because it was put out?
     if campfire_stage == 3 && campfire_size > 1
         RefundRemainingFuel()
