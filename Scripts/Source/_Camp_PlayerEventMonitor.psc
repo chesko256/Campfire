@@ -8,6 +8,7 @@ _Camp_ConditionValues property Conditions auto
 
 Event OnLocationChange(Location akOldLoc, Location akNewLoc)
 	SetCurrentTent(none)
+	GetPlacementSystem().locked = false
 	if IsRefInInterior(PlayerRef)
 		Conditions.IsPlayerInInterior = true
 	else

@@ -4,7 +4,7 @@ import math
 import CampUtil
 import _CampInternal
 
-bool locked = false
+bool property locked = false auto hidden
 
 _Camp_Compatibility property Compatibility auto
 
