@@ -57,7 +57,9 @@ Event OnActivate(ObjectReference akActionRef)
 EndEvent
 
 function UseObject(ObjectReference akActionRef)
-	if Setting_IsConjured
+	SetSelectedObjectConjured(self)
+	
+	if Setting_BypassMenu
 		ToggleAndUse()
 		return
 	endif
@@ -66,7 +68,7 @@ function UseObject(ObjectReference akActionRef)
 		int i = GetObjectMainMenu().Show()
 		if i == 0										;Use
 			ToggleAndUse()
-		elseif i == 1									;Pick Up
+		elseif i == 1 || i == 2							;Pick Up / Dispel
 			PickUp()
 		else
 			;exit

@@ -107,10 +107,18 @@ function SetLastUsedCampfire(ObjectReference akCampfire) global
 		return
 	endif
 	Campfire.LastUsedCampfire = akCampfire
-	if akCampfire && (akCampfire as _Camp_PlaceableObjectBase).Setting_IsConjured == true
-		(Campfire._Camp_MainQuest as _Camp_ConditionValues).IsCurrentCampfireConjured = true
+endFunction
+
+function SetSelectedObjectConjured(ObjectReference akObject) global
+	CampfireAPI Campfire = GetPublicAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return
+	endif
+	if akObject && (akObject as _Camp_PlaceableObjectBase).Setting_IsConjured == true
+		(Campfire._Camp_MainQuest as _Camp_ConditionValues).IsSelectedObjectConjured = true
 	else
-		(Campfire._Camp_MainQuest as _Camp_ConditionValues).IsCurrentCampfireConjured = false
+		(Campfire._Camp_MainQuest as _Camp_ConditionValues).IsSelectedObjectConjured = false
 	endif
 endFunction
 

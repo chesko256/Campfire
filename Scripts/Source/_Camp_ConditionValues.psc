@@ -38,6 +38,6 @@ bool property IsArtOfTheCatchLoaded = false auto conditional hidden
 ; Misc
 bool property IsRidingFlyingMount = false auto conditional hidden
 bool property TreesAreNearby = false auto conditional hidden
-bool property IsCurrentCampfireConjured = false auto conditional hidden
+bool property IsSelectedObjectConjured = false auto conditional hidden
 bool property IsCurrentTentConjured = false auto conditional hidden
 bool property IsCurrentTentUsingFullBed = false auto conditional hidden
