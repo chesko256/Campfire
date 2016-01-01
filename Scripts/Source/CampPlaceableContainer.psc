@@ -58,6 +58,8 @@ Event OnActivate(ObjectReference akActionRef)
 EndEvent
 
 function UseObject(ObjectReference akActionRef)
+	SetSelectedObjectConjured(self)
+	
 	if Setting_BypassMenu
 		Required_LinkedContainerRef.Activate(Game.GetPlayer())
 		return

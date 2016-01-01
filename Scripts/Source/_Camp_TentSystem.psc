@@ -1066,14 +1066,6 @@ function PackTent(ObjectReference akTent)
 	else
 		TentObject.TakeDown()
 	endif
-
-	;Move activation triggers to the anchor
-	_Camp_Tent_InteractTriggerREF.MoveTo(_Camp_Anchor)
-	
-	wait(0.2)
-
-	;Finally, delete myself
-	TryToDisableAndDeleteRef(akTent)
 endFunction
 
 function CleanUpTent(ObjectReference akTent)

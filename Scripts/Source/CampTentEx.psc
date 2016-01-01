@@ -10,6 +10,8 @@ scriptname CampTentEx extends CampTent
 * SitFurniture, and LieDownFurniture Position References are required for the tent to work.
 ;*********/;
 
+import _CampInternal
+
 ; OPTIONAL PROPERTIES
 
 ;/********p* CampTentEx/TentAsset_ClutterActivator1
@@ -371,3 +373,8 @@ ObjectReference property PositionRef_Follower3_WeaponBow auto
 * DESCRIPTION
 * Optional: The third follower's bow position reference. }
 ;*********/;
+
+function TakeDown()
+	CampDebug(0, "CampTentEx taking down " + self)
+	parent.TakeDown()
+endFunction
