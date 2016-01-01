@@ -44,7 +44,7 @@ endFunction
 Event OnActivate(ObjectReference akActionRef)
 	if akActionRef == Game.GetPlayer()
 		if myExtraActivator1.IsDisabled()
-			if Setting_IsConjured
+			if Setting_BypassMenu
 				_Camp_CookingPotErrorNotification.Show()
 			else
 				int i = _Camp_CookingPotError.Show()

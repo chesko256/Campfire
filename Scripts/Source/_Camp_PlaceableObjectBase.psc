@@ -199,6 +199,7 @@ function DestroyMyself()
 endFunction
 
 function TakeDown()
+	CampDebug(0, "_Camp_PlaceableObjectBase taking down " + self)
 	TryToDisableAndDeleteRef(myFire1)
 	TryToDisableAndDeleteRef(myFire2)
 	TryToDisableAndDeleteRef(myFire3)

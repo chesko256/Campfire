@@ -53,14 +53,14 @@ function TryToEnableRef(ObjectReference akReference, bool bFadeIn = false) globa
 endFunction
 
 function TryToDisableRef(ObjectReference akReference, bool bFadeOut = false) global
-	;A more concise way to disable references without checking for None first (to avoid Papyrus log errors, etc)
+	; A more concise way to disable references without checking for None first (to avoid Papyrus log errors, etc)
 	if akReference
 		akReference.Disable(bFadeOut)
 	endif
 endFunction
 
 function TryToDisableAndDeleteRef(ObjectReference akReference, bool bFadeOut = false) global
-	;A more concise way to disable and delete references without checking for None first (to avoid Papyrus log errors, etc)
+	; A more concise way to disable and delete references without checking for None first (to avoid Papyrus log errors, etc)
 	if akReference
 		akReference.Disable(bFadeOut)
 		akReference.Delete()
@@ -70,6 +70,27 @@ function TryToDisableAndDeleteRef(ObjectReference akReference, bool bFadeOut = f
 			CampDebug(2, "Placed object " + akReference + " failed to disable/delete on first attempt, trying again.")
 			akReference.Disable(bFadeOut)
 			akReference.Delete()
+		endif
+	endif
+endFunction
+
+function TryToDisableAndDeletePotentialPlaceableObjectRef(ObjectReference akReference, bool bFadeOut = false) global
+	; A more concise way to disable and delete references without checking for None first (to avoid Papyrus log errors, etc)
+	; Handles objects that could potentially be Campfire Placeable Objects.
+	if akReference
+
+		if (akReference as _Camp_PlaceableObjectBase)
+			(akReference as _Camp_PlaceableObjectBase).TakeDown()
+		else
+			akReference.Disable(bFadeOut)
+			akReference.Delete()
+	
+			if akReference && akReference.IsEnabled()
+				; Try one more time
+				CampDebug(2, "Placed object " + akReference + " failed to disable/delete on first attempt, trying again.")
+				akReference.Disable(bFadeOut)
+				akReference.Delete()
+			endif
 		endif
 	endif
 endFunction

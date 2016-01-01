@@ -1362,8 +1362,15 @@ function GetResults()
 endFunction
 
 function TakeDown()
+	CampDebug(0, "CampTent taking down " + self)
 	SetCurrentTent(None)
 	parent.TakeDown()
+
+	; No way to do parent.parent.FunctionCall(), so return now.
+	if (self as CampConjuredShelter)
+		CampDebug(0, "CampTent is CampConjuredShelter, returning.")
+		return
+	endif
 
 	ForceStopUsingFurniture(myClutterFurniture1)
 	ForceStopUsingFurniture(myClutterFurniture2)
@@ -1410,18 +1417,20 @@ function TakeDown()
 	TryToDisableAndDeleteRef(myClutterMisc5)
 	TryToDisableAndDeleteRef(myClutterMisc6)
 	TryToDisableAndDeleteRef(myClutterMisc7)
-	TryToDisableAndDeleteRef(myClutterActivator1)
-	TryToDisableAndDeleteRef(myClutterActivator2)
-	TryToDisableAndDeleteRef(myClutterActivator3)
-	TryToDisableAndDeleteRef(myClutterActivator4)
-	TryToDisableAndDeleteRef(myClutterActivator5)
-	TryToDisableAndDeleteRef(myClutterFurniture1)
-	TryToDisableAndDeleteRef(myClutterFurniture2)
-	TryToDisableAndDeleteRef(myClutterFurniture3)
-	TryToDisableAndDeleteRef(myClutterFurniture4)
-	TryToDisableAndDeleteRef(myClutterFurniture5)
-	TryToDisableAndDeleteRef(myClutterFurniture6)
-	TryToDisableAndDeleteRef(myClutterFurniture7)
+
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterActivator1)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterActivator2)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterActivator3)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterActivator4)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterActivator5)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterFurniture1)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterFurniture2)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterFurniture3)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterFurniture4)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterFurniture5)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterFurniture6)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterFurniture7)
+
 	TryToDisableAndDeleteRef(myBaseStatic1)
 	TryToDisableAndDeleteRef(myBaseStatic2)
 	TryToDisableAndDeleteRef(myBaseStatic3)
