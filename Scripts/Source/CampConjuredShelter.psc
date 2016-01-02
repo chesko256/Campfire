@@ -293,18 +293,18 @@ function TakeDown()
 	TryToDisableAndDeleteRef(myClutterStatic5)
 	TryToDisableAndDeleteRef(myClutterStatic6)
 	TryToDisableAndDeleteRef(myClutterStatic7)
-	TryToDisableAndDeleteRef(myClutterActivator1)
-	TryToDisableAndDeleteRef(myClutterActivator2)
-	TryToDisableAndDeleteRef(myClutterActivator3)
-	TryToDisableAndDeleteRef(myClutterActivator4)
-	TryToDisableAndDeleteRef(myClutterActivator5)
-	TryToDisableAndDeleteRef(myClutterFurniture1)
-	TryToDisableAndDeleteRef(myClutterFurniture2)
-	TryToDisableAndDeleteRef(myClutterFurniture3)
-	TryToDisableAndDeleteRef(myClutterFurniture4)
-	TryToDisableAndDeleteRef(myClutterFurniture5)
-	TryToDisableAndDeleteRef(myClutterFurniture6)
-	TryToDisableAndDeleteRef(myClutterFurniture7)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterActivator1)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterActivator2)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterActivator3)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterActivator4)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterActivator5)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterFurniture1)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterFurniture2)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterFurniture3)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterFurniture4)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterFurniture5)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterFurniture6)
+	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterFurniture7)
 	TryToDisableAndDeleteRef(myBedRoll)
 	TryToDisableAndDeleteRef(myLanternLit)
 	TryToDisableAndDeleteRef(myLanternUnlit)
@@ -529,13 +529,29 @@ function WarpInObjects()
 	endif
 
 	Utility.Wait(1)
-	myClutterMisc1.EnableNoWait(true)
-	myClutterMisc2.EnableNoWait(true)
-	myClutterMisc3.EnableNoWait(true)
-	myClutterMisc4.EnableNoWait(true)
-	myClutterMisc5.EnableNoWait(true)
-	myClutterMisc6.EnableNoWait(true)
-	myClutterMisc7.EnableNoWait(true)
+
+	; Move these objects back into view
+	if myClutterMisc1
+		myClutterMisc1.SetPosition(myClutterMisc1.GetPositionX(), myClutterMisc1.GetPositionY(), myClutterMisc1.GetPositionZ() + 2000.0)
+	endif
+	if myClutterMisc2
+		myClutterMisc2.SetPosition(myClutterMisc2.GetPositionX(), myClutterMisc2.GetPositionY(), myClutterMisc2.GetPositionZ() + 2000.0)
+	endif
+	if myClutterMisc3
+		myClutterMisc3.SetPosition(myClutterMisc3.GetPositionX(), myClutterMisc3.GetPositionY(), myClutterMisc3.GetPositionZ() + 2000.0)
+	endif
+	if myClutterMisc4
+		myClutterMisc4.SetPosition(myClutterMisc4.GetPositionX(), myClutterMisc4.GetPositionY(), myClutterMisc4.GetPositionZ() + 2000.0)
+	endif
+	if myClutterMisc5
+		myClutterMisc5.SetPosition(myClutterMisc5.GetPositionX(), myClutterMisc5.GetPositionY(), myClutterMisc5.GetPositionZ() + 2000.0)
+	endif
+	if myClutterMisc6
+		myClutterMisc6.SetPosition(myClutterMisc6.GetPositionX(), myClutterMisc6.GetPositionY(), myClutterMisc6.GetPositionZ() + 2000.0)
+	endif
+	if myClutterMisc7
+		myClutterMisc7.SetPosition(myClutterMisc7.GetPositionX(), myClutterMisc7.GetPositionY(), myClutterMisc7.GetPositionZ() + 2000.0)
+	endif
 endFunction
 
 function PlayWarpInEffect(ObjectReference akObject)
@@ -752,23 +768,23 @@ endFunction
 
 ; Non-warping objects
 function PlaceObject_ClutterMisc1()
-	myClutterMisc1Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc1, PositionRef_ClutterMisc1, initially_disabled = true, is_temp = is_temporary, is_interaction_disabled = true)
+	myClutterMisc1Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc1, PositionRef_ClutterMisc1, is_temp = is_temporary, is_interaction_disabled = true)
 endFunction
 function PlaceObject_ClutterMisc2()
-	myClutterMisc2Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc2, PositionRef_ClutterMisc2, initially_disabled = true, is_temp = is_temporary, is_interaction_disabled = true)
+	myClutterMisc2Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc2, PositionRef_ClutterMisc2, is_temp = is_temporary, is_interaction_disabled = true)
 endFunction
 function PlaceObject_ClutterMisc3()
-	myClutterMisc3Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc3, PositionRef_ClutterMisc3, initially_disabled = true, is_temp = is_temporary, is_interaction_disabled = true)
+	myClutterMisc3Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc3, PositionRef_ClutterMisc3, is_temp = is_temporary, is_interaction_disabled = true)
 endFunction
 function PlaceObject_ClutterMisc4()
-	myClutterMisc4Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc4, PositionRef_ClutterMisc4, initially_disabled = true, is_temp = is_temporary, is_interaction_disabled = true)
+	myClutterMisc4Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc4, PositionRef_ClutterMisc4, is_temp = is_temporary, is_interaction_disabled = true)
 endFunction
 function PlaceObject_ClutterMisc5()
-	myClutterMisc5Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc5, PositionRef_ClutterMisc5, initially_disabled = true, is_temp = is_temporary, is_interaction_disabled = true)
+	myClutterMisc5Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc5, PositionRef_ClutterMisc5, is_temp = is_temporary, is_interaction_disabled = true)
 endFunction
 function PlaceObject_ClutterMisc6()
-	myClutterMisc6Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc6, PositionRef_ClutterMisc6, initially_disabled = true, is_temp = is_temporary, is_interaction_disabled = true)
+	myClutterMisc6Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc6, PositionRef_ClutterMisc6, is_temp = is_temporary, is_interaction_disabled = true)
 endFunction
 function PlaceObject_ClutterMisc7()
-	myClutterMisc7Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc7, PositionRef_ClutterMisc7, initially_disabled = true, is_temp = is_temporary, is_interaction_disabled = true)
+	myClutterMisc7Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc7, PositionRef_ClutterMisc7, is_temp = is_temporary, is_interaction_disabled = true)
 endFunction

@@ -9,6 +9,8 @@ scriptname CampPlaceableObjectEx extends CampPlaceableObject
 * attached to an Activator or Furniture object that serves as the main interactible.
 ;*********/;
 
+import _CampInternal
+
 ;/********p* CampPlaceableObject/Asset_ExtraStatic1
 * SYNTAX
 */;
@@ -341,3 +343,8 @@ ObjectReference property RequiredPositionRef_CenterObject auto
 * DESCRIPTION
 * Required: Set this to specify the position reference of the object that all other objects "orbit" when rotated. }
 ;*********/;
+
+function TakeDown()
+	CampDebug(0, "CampPlaceableObjectEx taking down " + self)
+	parent.TakeDown()
+endFunction

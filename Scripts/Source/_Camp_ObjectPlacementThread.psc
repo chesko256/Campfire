@@ -105,6 +105,7 @@ function clear_thread_vars()
 	_IsPropped = false
 	_IsHanging = false
 	_IsTemp = false
+	_IsInteractionDisabled = false
 endFunction
 
 float[] function GetPosXYZRotateAroundRef(ObjectReference akOrigin, ObjectReference akObject, float afXPosOffset, float afYPosOffset, float fAngleX, float fAngleY, float fAngleZ)
@@ -262,6 +263,11 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
 	bool spawn_persistent = true
 	if abIsTemp
 		spawn_persistent = false
+	endif
+
+	; Move miscellaneous items out of view to start with
+	if bDisableInteraction
+		myTempMarker.SetPosition(myTempMarker.GetPositionX(), myTempMarker.GetPositionY(), myTempMarker.GetPositionZ() - 2000.0)
 	endif
 	
 	myObject = myTempMarker.PlaceAtMe(akFormToPlace, abForcePersist = spawn_persistent, abInitiallyDisabled = bInitiallyDisabled)
