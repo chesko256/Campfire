@@ -80,6 +80,7 @@ meshes\campfire\_Camp_Cloak_Linen_F_1.nif
 meshes\campfire\_Camp_Cloak_Linen_M_0.nif
 meshes\campfire\_Camp_Cloak_Linen_M_1.nif
 meshes\campfire\_Camp_ConjuredCampfireBase.nif
+meshes\campfire\_Camp_ConjuredShelterTrigger.nif
 meshes\campfire\_camp_cookingpotfurniture.nif
 meshes\campfire\_camp_cookingpothangingfurniture.nif
 meshes\campfire\_camp_cookingpotfurniture_steam.nif
