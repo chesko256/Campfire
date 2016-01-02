@@ -667,6 +667,10 @@ function PlaceObject_Sphere()
 	Static SphereModel = Game.GetFormFromFile(0x0205DE6D, "Campfire.esm") as Static
 	mySphereFuture = PlacementSystem.PlaceObject(self, SphereModel, PositionRef_Sphere, initially_disabled = true, is_temp = is_temporary)
 endFunction
+function PlaceObject_LargeTentTriggerVolume()
+	Activator TriggerModel = Game.GetFormFromFile(0x02062F53, "Campfire.esm") as Activator
+	myLargeTentTriggerVolumeFuture = PlacementSystem.PlaceObject(self, TriggerModel, PositionRef_Sphere, is_temp = is_temporary)
+endFunction
 
 ; Warp-in objects
 function PlaceObject_BaseStatic1()
