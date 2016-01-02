@@ -199,6 +199,33 @@ function SetCurrentTent(ObjectReference akTent) global
 	endif
 endFunction
 
+Quest function GetCrimeTrackingQuest() global
+	_CampfireInternalAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+	return Campfire._Camp_CampingCrimeTracking
+endFunction
+
+ReferenceAlias function GetCrimeIllegalItemAlias(int aiAlias) global
+	_CampfireInternalAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+
+	if aiAlias == 1
+		Campfire.IllegalItem1
+	elseif aiAlias == 2
+		Campfire.IllegalItem2
+	elseif aiAlias == 3
+		Campfire.IllegalItem3
+	else
+		return None
+	endif
+endFunction
+
 Message function GetObjectMainMenu() global
 	_CampfireInternalAPI Campfire = GetAPI()
 	if Campfire == none

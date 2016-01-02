@@ -30,7 +30,7 @@ bool property Setting_Flammable = False auto
 bool property Setting_IsConjured = False auto
 {
 * DESCRIPTION
-* Optional: Whether or not this object is conjured. }
+* Optional: Whether or not this object is conjured. This changes certain menu choices so that things make more sense for a conjured object ("dispel" instead of "pick up", etc) }
 ;*********/;
 
 ;/********p* _Camp_PlaceableObjectBase/Setting_BypassMenu
@@ -48,7 +48,7 @@ bool property Setting_BypassMenu = False auto
 GlobalVariable property UniqueConjuredObjectGlobal auto
 {
 * DESCRIPTION
-* Optional: If set, and if Setting_IsConjured is TRUE, only one of this type of conjured object can be spawned at any given time. If not set, this object can be spawned any number of times. }
+* Optional: If set, and if Setting_IsConjured is True, only one of this type of conjured object can be spawned at any given time. If not set, this object can be spawned any number of times. (Note: If different kinds of objects share the same UniqueConjuredObjectGlobal, only one of those objects can be spawned into the world even though they are of different types.) }
 ;*********/;
 
 ; PRIVATE

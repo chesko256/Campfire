@@ -193,7 +193,7 @@ ObjectReference property PositionRef_Shelter auto
 ObjectReference property PositionRef_Ward auto
 {
 * DESCRIPTION
-* Optional: The ward position reference. }
+* Optional: The ward position reference. The "ward" is the walking stick seen near the front of most tents. }
 ;*********/;
 
 ;/********p* CampTent/PositionRef_Lantern1
@@ -1917,19 +1917,19 @@ endFunction
 
 function PlaceObject_Lantern1()
 	myLanternUnlitFuture = PlacementSystem.PlaceObject(self, TentSystem.GetLantern(bOn = false, bHanging = false, bSilverCandlestick = Setting_UseSilverCandlestick), PositionRef_Lantern1, is_temp = is_temporary)
-	myLanternLitFuture = PlacementSystem.PlaceObject(self, TentSystem.GetLantern(bOn = true, bHanging = false), PositionRef_Lantern1, initially_disabled = true, is_temp = is_temporary)
+	myLanternLitFuture = PlacementSystem.PlaceObject(self, TentSystem.GetLantern(bOn = true, bHanging = false, bSilverCandlestick = Setting_UseSilverCandlestick), PositionRef_Lantern1, initially_disabled = true, is_temp = is_temporary)
 	myLanternLightFuture = PlacementSystem.PlaceObject(self, TentSystem.GetLanternLight(), PositionRef_Lantern1, initially_disabled = true, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_Lantern2(CampTentEx Extended)
 	myLanternUnlit2Future = PlacementSystem.PlaceObject(self, TentSystem.GetLantern(bOn = false, bHanging = false, bSilverCandlestick = Setting_UseSilverCandlestick), Extended.PositionRef_Lantern2, is_temp = is_temporary)
-	myLanternLit2Future = PlacementSystem.PlaceObject(self, TentSystem.GetLantern(bOn = true, bHanging = false), Extended.PositionRef_Lantern2, initially_disabled = true, is_temp = is_temporary)
+	myLanternLit2Future = PlacementSystem.PlaceObject(self, TentSystem.GetLantern(bOn = true, bHanging = false, bSilverCandlestick = Setting_UseSilverCandlestick), Extended.PositionRef_Lantern2, initially_disabled = true, is_temp = is_temporary)
 	myLanternLight2Future = PlacementSystem.PlaceObject(self, TentSystem.GetLanternLight(), Extended.PositionRef_Lantern2, initially_disabled = true, is_temp = is_temporary)
 endFunction
 
 function PlaceObject_Lantern3(CampTentEx Extended)
 	myLanternUnlit3Future = PlacementSystem.PlaceObject(self, TentSystem.GetLantern(bOn = false, bHanging = false, bSilverCandlestick = Setting_UseSilverCandlestick), Extended.PositionRef_Lantern3, is_temp = is_temporary)
-	myLanternLit3Future = PlacementSystem.PlaceObject(self, TentSystem.GetLantern(bOn = true, bHanging = false), Extended.PositionRef_Lantern3, initially_disabled = true, is_temp = is_temporary)
+	myLanternLit3Future = PlacementSystem.PlaceObject(self, TentSystem.GetLantern(bOn = true, bHanging = false, bSilverCandlestick = Setting_UseSilverCandlestick), Extended.PositionRef_Lantern3, initially_disabled = true, is_temp = is_temporary)
 	myLanternLight3Future = PlacementSystem.PlaceObject(self, TentSystem.GetLanternLight(), Extended.PositionRef_Lantern3, initially_disabled = true, is_temp = is_temporary)
 endFunction
 
