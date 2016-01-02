@@ -8,13 +8,19 @@ int property Setting_SpareBedType = 1 auto
 { DESCRIPTION: Optional: What type of bed to spawn for followers. All beds are 'single'. 0 = Bed Roll; 1 = CommonBed; 2 = UpperBed; 3 = NobleBed; 4 = OrcBed; 5 = DwemerBed. Default: 1 }
 
 bool property Setting_UseShelterSphere = false auto
-{ DESCRIPTION: Optional: Whether or not to use the magic blue force field as shelter. If True, other Shelter models will not be placed, and TentAsset_LargeTentTriggerVolume does not need to be specified. Default: False }
+{ DESCRIPTION: Optional: Whether or not to use the magic blue force field as shelter. If True, the following properties do NOT need to be filled, and will be ignored:
+TentAsset_ShelterModel
+TentAsset_ShelterDestructionCollider
+TentAsset_ShelterModelExterior
+TentAsset_ShelterModelMaterialSnow
+TentAsset_ShelterModelMaterialAsh
+TentAsset_LargeTentTriggerVolume
+PositionRef_Shelter (fill PositionRef_Sphere instead)
+
+Default: False }
 
 float property Setting_ShelterSphereScale = 1.0 auto
 { DESCRIPTION: Optional: The scale of the shelter sphere. The sphere collision trigger box is scaled automatically to match. Default: 1.0 }
-
-Static property TentAsset_SphereModel auto
-{ DESCRIPTION: Optional: The tent static object. }
 
 Static property TentAsset_BaseStatic1 auto
 { DESCRIPTION: Optional: A static that acts as the base of the shelter. Inherits the scale of the Position Ref and is high on the placement order. }
@@ -131,10 +137,8 @@ ObjectReference property PositionRef_ClutterFurniture7 auto
 ;Run-time objects
 ObjectReference property mySphere auto hidden
 
-
 ;Futures
 ObjectReference property mySphereFuture auto hidden
-
 
 ;Misc
 EffectShader property ShockDisintegrate01FXS auto
@@ -273,8 +277,10 @@ function TakeDown()
 	Utility.Wait(1.2)
 
 	; Warp out the sphere
+	DispelSphere()
 
 	; Remove references
+	TryToDisableAndDeleteRef(mySphere)
 	TryToDisableAndDeleteRef(myBaseStatic1)
 	TryToDisableAndDeleteRef(myBaseStatic2)
 	TryToDisableAndDeleteRef(myBaseStatic3)
@@ -321,7 +327,6 @@ function TakeDown()
 	TryToDisableAndDeleteRef(mySpareBedRoll1)
 	TryToDisableAndDeleteRef(mySpareBedRoll2)
 	TryToDisableAndDeleteRef(mySpareBedRoll3)
-	TryToDisableAndDeleteRef(mySphere)
 
 	; Clear properties to ensure proper reference removal
 	myPlayerMarker_MainWeapon = None
@@ -576,13 +581,13 @@ function WarpInObjects()
 endFunction
 
 function PlayWarpInEffect(ObjectReference akObject)
-	if Is3DLoadedFinite(akObject)
+	if akObject && Is3DLoadedFinite(akObject)
 		MGTeleportInEffect.Play(akObject, 3.0)
 	endif
 endFunction
 
 function WarpOutRef(ObjectReference akObject)
-	if akObject && Is3DLoadedFinite(akObject)
+	if akObject && akObject.IsEnabled() && Is3DLoadedFinite(akObject)
 		ShockDisintegrate01FXS.Play(akObject)
 		Utility.Wait(0.1)
 	endif
@@ -603,62 +608,65 @@ bool function Is3DLoadedFinite(ObjectReference akObject)
 endFunction
 
 function SummonSphere()
-	;/if mySphere
-		float mySphereScale = PositionRef_Sphere.GetScale()		
-		mySphere.SetScale(mySphereScale / 10.0)
+	PlacementSystem = CampUtil.GetPlacementSystem()
+	PlaceObject_Sphere()
+	PlacementSystem.wait_all()
+	if mySphereFuture
+		mySphere = GetFuture(mySphereFuture).get_result()
+		mySphereFuture = None
+	endif
+
+	if mySphere
+		mySphere.SetScale(Setting_ShelterSphereScale / 10.0)
 		mySphere.PlaceAtMe(SummonTargetFXActivator)
-		mySphere.Enable()	
-		mySphere.SetScale(mySphereScale / 9.0)
-		mySphere.SetScale(mySphereScale / 8.0)
-		mySphere.SetScale(mySphereScale / 7.0)
-		mySphere.SetScale(mySphereScale / 6.0)
-		mySphere.SetScale(mySphereScale / 5.0)
-		mySphere.SetScale(mySphereScale / 4.0)
-		mySphere.SetScale(mySphereScale / 3.0)
-		mySphere.SetScale(mySphereScale / 2.0)
-		mySphere.SetScale(mySphereScale / 1.8)
-		mySphere.SetScale(mySphereScale / 1.6)
-		mySphere.SetScale(mySphereScale / 1.4)
-		mySphere.SetScale(mySphereScale / 1.2)
-		mySphere.SetScale(mySphereScale)
-		mySphere.SetScale(mySphereScale / 0.8)
-		mySphere.SetScale(mySphereScale / 0.6)
+		mySphere.Enable()
+		mySphere.SetScale(Setting_ShelterSphereScale / 9.0)
+		mySphere.SetScale(Setting_ShelterSphereScale / 8.0)
+		mySphere.SetScale(Setting_ShelterSphereScale / 7.0)
+		mySphere.SetScale(Setting_ShelterSphereScale / 6.0)
+		mySphere.SetScale(Setting_ShelterSphereScale / 5.0)
+		mySphere.SetScale(Setting_ShelterSphereScale / 4.0)
+		mySphere.SetScale(Setting_ShelterSphereScale / 3.0)
+		mySphere.SetScale(Setting_ShelterSphereScale / 2.0)
+		mySphere.SetScale(Setting_ShelterSphereScale / 1.8)
+		mySphere.SetScale(Setting_ShelterSphereScale / 1.6)
+		mySphere.SetScale(Setting_ShelterSphereScale / 1.4)
+		mySphere.SetScale(Setting_ShelterSphereScale / 1.2)
+		mySphere.SetScale(Setting_ShelterSphereScale)
+		mySphere.SetScale(Setting_ShelterSphereScale / 0.8)
+		mySphere.SetScale(Setting_ShelterSphereScale / 0.6)
 		;Bounce the sphere effect
 		float fDivisor = 0.61
 		while fDivisor < 1.0
-			mySphere.SetScale(mySphereScale / fDivisor)
+			mySphere.SetScale(Setting_ShelterSphereScale / fDivisor)
 			fDivisor += 0.01
 		endWhile
 	endif
-	/;
 endFunction
 
 function DispelSphere()
-	;/if mySphere
+	if mySphere
 		;Suck in the sphere
 		mySphere.PlaceAtMe(SummonTargetFXActivator)
 		Utility.Wait(1.0)
-		float mySphereScale = PositionRef_Sphere.GetScale()
 		float fDivisor = 1.0
 		while fDivisor < 1.6
-			mySphere.SetScale(mySphereScale / fDivisor)
+			mySphere.SetScale(Setting_ShelterSphereScale / fDivisor)
 			fDivisor += 0.01
 		endWhile
 
 		fDivisor = 1.5
 		while fDivisor < 20.0
-			mySphere.SetScale(mySphereScale / fDivisor)
+			mySphere.SetScale(Setting_ShelterSphereScale / fDivisor)
 			fDivisor += 1.0
 		endWhile
-		mySphere.Disable()
-		mySphere.Delete()
 	endif
-	/;
 endFunction
 
-;function PlaceObject_Sphere()
-;	mySphereFuture = PlacementSystem.PlaceObject(self, TentAsset_SphereModel, PositionRef_Sphere, initially_disabled = true, is_temp = is_temporary)
-;endFunction
+function PlaceObject_Sphere()
+	Static SphereModel = Game.GetFormFromFile(0x0205DE6D, "Campfire.esm") as Static
+	mySphereFuture = PlacementSystem.PlaceObject(self, SphereModel, PositionRef_Sphere, initially_disabled = true, is_temp = is_temporary)
+endFunction
 
 ; Warp-in objects
 function PlaceObject_BaseStatic1()

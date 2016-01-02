@@ -653,6 +653,10 @@ function PlaceObjects()
 		endif
 	endif
 
+	if Conjured && Conjured.Setting_UseShelterSphere
+		Conjured.SummonSphere()
+	endif
+
 	if Conjured
 		if Conjured.TentAsset_BaseStatic1 && Conjured.PositionRef_BaseStatic1
 			PlaceObject_BaseStatic1()
@@ -677,24 +681,29 @@ function PlaceObjects()
 		endif
 	endif
 
-	if TentAsset_ShelterModel && PositionRef_Shelter
-		PlaceObject_Tent()
+	if Conjured && Conjured.Setting_UseShelterSphere
+		; Pass
+	else
+		if TentAsset_ShelterModel && PositionRef_Shelter
+			PlaceObject_Tent()
+		endif
+		if TentAsset_ShelterDestructionCollider && PositionRef_Shelter
+			PlaceObject_ShelterCollider()
+		endif
+		if TentAsset_ShelterModelExterior && PositionRef_Shelter
+			PlaceObject_NormalTent()
+		endif
+		if TentAsset_ShelterModelMaterialSnow && PositionRef_Shelter
+			PlaceObject_SnowTent()
+		endif
+		if TentAsset_ShelterModelMaterialAsh && PositionRef_Shelter
+			PlaceObject_AshTent()
+		endif
+		if TentAsset_LargeTentTriggerVolume
+			PlaceObject_LargeTentTriggerVolume()
+		endif
 	endif
-	if TentAsset_ShelterDestructionCollider && PositionRef_Shelter
-		PlaceObject_ShelterCollider()
-	endif
-	if TentAsset_ShelterModelExterior && PositionRef_Shelter
-		PlaceObject_NormalTent()
-	endif
-	if TentAsset_ShelterModelMaterialSnow && PositionRef_Shelter
-		PlaceObject_SnowTent()
-	endif
-	if TentAsset_ShelterModelMaterialAsh && PositionRef_Shelter
-		PlaceObject_AshTent()
-	endif
-	if TentAsset_LargeTentTriggerVolume
-		PlaceObject_LargeTentTriggerVolume()
-	endif
+
 	if PositionRef_Ward
 		PlaceObject_Ward()
 	endif
@@ -877,10 +886,12 @@ function PlaceObjects()
 			PlaceObject_Follower3Shield(Extended)
 		endif
 	endif
-	PlaceObject_PlayerSitMarker()
-	PlaceObject_PlayerLayDownMarker()
-	PlaceObject_PlayerWithSpouseLayDownMarker()
-	PlaceObject_SpouseLayDownMarker()
+	if !Setting_PlayerUsesFullBed
+		PlaceObject_PlayerSitMarker()
+		PlaceObject_PlayerLayDownMarker()
+		PlaceObject_PlayerWithSpouseLayDownMarker()
+		PlaceObject_SpouseLayDownMarker()
+	endif
 	if PositionRef_AnimalLayDownMarker
 		PlaceObject_AnimalLayDownMarker()
 	endif
