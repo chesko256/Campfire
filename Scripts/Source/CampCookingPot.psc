@@ -60,10 +60,19 @@ Event OnActivate(ObjectReference akActionRef)
 	endif
 EndEvent
 
-;@Overrides CampPlaceableObject
+;@Overrides CampPlaceableObjectEx
 function PickUp()
 	enable_update = false
+	UnregisterForUpdate()
 	parent.PickUp()
+endFunction
+
+;@Overrides CampPlaceableObjectEx
+function TakeDown()
+	CampDebug(0, "CampCookingPot taking down " + self)
+	enable_update = false
+	UnregisterForUpdate()
+	parent.TakeDown()
 endFunction
 
 ; myExtraActivator1 = _Camp_CookingPot_Steam
