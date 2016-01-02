@@ -682,7 +682,8 @@ function PlaceObjects()
 	endif
 
 	if Conjured && Conjured.Setting_UseShelterSphere
-		; Pass
+		; Place the special sphere trigger volume
+		PlaceObject_LargeTentTriggerVolume()
 	else
 		if TentAsset_ShelterModel && PositionRef_Shelter
 			PlaceObject_Tent()
@@ -947,7 +948,12 @@ function GetResults()
 	if myLargeTentTriggerVolumeFuture
 		myLargeTentTriggerVolume = GetFuture(myLargeTentTriggerVolumeFuture).get_result()
 		if myLargeTentTriggerVolume
-			(myLargeTentTriggerVolume as CampLargeTentTriggerVolumeScript).ParentTent = self
+			if Conjured && Conjured.Setting_UseShelterSphere
+				myLargeTentTriggerVolume.SetScale(Conjured.Setting_ShelterSphereScale)
+				(myLargeTentTriggerVolume as CampShelterSphereTriggerVolumeScript).ParentTent = self				
+			else
+				(myLargeTentTriggerVolume as CampLargeTentTriggerVolumeScript).ParentTent = self
+			endif
 		endif
 		myLargeTentTriggerVolumeFuture = None
 	endif

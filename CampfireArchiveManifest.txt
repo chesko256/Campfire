@@ -198,6 +198,7 @@ Scripts\CampPlaceableMiscItem.pex
 Scripts\CampPlaceableObject.pex
 Scripts\CampPlaceableObjectEx.pex
 Scripts\CampPlacementIndicator.pex
+Scripts\CampShelterSphereTriggerVolumeScript.pex
 Scripts\CampTent.pex
 Scripts\CampTentEx.pex
 Scripts\CampTentShelterCollider.pex
@@ -327,6 +328,7 @@ Scripts\Source\CampPlaceableMiscItem.psc
 Scripts\Source\CampPlaceableObject.psc
 Scripts\Source\CampPlaceableObjectEx.psc
 Scripts\Source\CampPlacementIndicator.psc
+Scripts\Source\CampShelterSphereTriggerVolumeScript.psc
 Scripts\Source\CampTent.psc
 Scripts\Source\CampTentEx.psc
 Scripts\Source\CampTentShelterCollider.psc
