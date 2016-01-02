@@ -15,7 +15,9 @@ Scroll property Setting_ScrollToReturn auto
 { DESCRIPTION: Optional: The scroll to return to the player if this effect fails. Used on Scroll effects. }
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
+	bool placement_is_illegal = false
 	if !LegalToCampHere() && (IsCrimeToPlaceInTowns(Required_ActivatorToSpawn) || IsCrimeToPlaceInTowns(Required_FurnitureToSpawn))
+		placement_is_illegal = true
 		int i = GetCampingIllegalMessage().Show()
 		if i == 0
 			; continue
@@ -33,14 +35,42 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 	ObjectReference mySpawnMarker = PlaceAndWaitFor3DLoaded(Game.GetPlayer(), XMarker)
 	mySpawnMarker.SetPosition(Game.GetPlayer().GetPositionX() + fDistance[0], Game.GetPlayer().GetPositionY() + fDistance[1], Game.GetPlayer().GetPositionZ())
 	mySpawnMarker.SetAngle(0.0, 0.0, mySpawnMarker.GetAngleZ())
+
+	ObjectReference campitem
 	if Required_ActivatorToSpawn
-		mySpawnMarker.PlaceAtMe(Required_ActivatorToSpawn, abInitiallyDisabled = true)
+		campitem = mySpawnMarker.PlaceAtMe(Required_ActivatorToSpawn, abInitiallyDisabled = true)
 	else
-		mySpawnMarker.PlaceAtMe(Required_FurnitureToSpawn, abInitiallyDisabled = true)
+		campitem = mySpawnMarker.PlaceAtMe(Required_FurnitureToSpawn, abInitiallyDisabled = true)
 	endif
 	mySpawnMarker.Disable()
 	mySpawnMarker.Delete()
 	mySpawnMarker = None
+
+	; Raise optional SKSE event
+    SendEvent_OnObjectPlaced(campitem)
+
+	if placement_is_illegal
+    	;Raise the ire of those around you
+    	Quest crime_tracking_quest = GetCrimeTrackingQuest()
+    	ReferenceAlias illegal_item_1 = GetCrimeIllegalItemAlias(1)
+    	ReferenceAlias illegal_item_2 = GetCrimeIllegalItemAlias(2)
+    	ReferenceAlias illegal_item_3 = GetCrimeIllegalItemAlias(3)
+	
+    	crime_tracking_quest.Stop()
+    	int i = 0
+    	while !crime_tracking_quest.IsStopped() && i < 30
+        	utility.wait(0.1)
+        	i += 1
+    	endWhile
+    	crime_tracking_quest.Start()
+    	if !illegal_item_1.GetRef()
+        	illegal_item_1.ForceRefTo(campitem)
+    	elseif !illegal_item_2.GetRef()
+        	illegal_item_2.ForceRefTo(campitem)
+    	elseif !illegal_item_3.GetRef()
+        	illegal_item_3.ForceRefTo(campitem)
+    	endif
+    endif
 endEvent
 
 float[] function GetOffsets(Actor akSource, Float afDistance = 100.0, float afOffset = 0.0)

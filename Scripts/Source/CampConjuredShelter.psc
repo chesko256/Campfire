@@ -5,7 +5,13 @@ import CampUtil
 import TentSystem
 
 int property Setting_SpareBedType = 1 auto
-{ DESCRIPTION: Optional: What type of bed to spawn for followers. All beds are 'single'. 0 = Bed Roll; 1 = CommonBed; 2 = UpperBed; 3 = NobleBed; 4 = OrcBed; 5 = DwemerBed. }
+{ DESCRIPTION: Optional: What type of bed to spawn for followers. All beds are 'single'. 0 = Bed Roll; 1 = CommonBed; 2 = UpperBed; 3 = NobleBed; 4 = OrcBed; 5 = DwemerBed. Default: 1 }
+
+bool property Setting_UseShelterSphere = false auto
+{ DESCRIPTION: Optional: Whether or not to use the magic blue force field as shelter. If True, other Shelter models will not be placed, and TentAsset_LargeTentTriggerVolume does not need to be specified. Default: False }
+
+float property Setting_ShelterSphereScale = 1.0 auto
+{ DESCRIPTION: Optional: The scale of the shelter sphere. The sphere collision trigger box is scaled automatically to match. Default: 1.0 }
 
 Static property TentAsset_SphereModel auto
 { DESCRIPTION: Optional: The tent static object. }
@@ -255,13 +261,10 @@ function TakeDown()
 	WarpOutRef(myClutterFurniture7)
 	WarpOutRef(myLanternLit)
 	WarpOutRef(myLanternUnlit)
-	WarpOutRef(myLanternLight)
 	WarpOutRef(myLanternLit2)
 	WarpOutRef(myLanternUnlit2)
-	WarpOutRef(myLanternLight2)
 	WarpOutRef(myLanternLit3)
 	WarpOutRef(myLanternUnlit3)
-	WarpOutRef(myLanternLight3)
 	WarpOutRef(mySpareBedRoll1)
 	WarpOutRef(mySpareBedRoll2)
 	WarpOutRef(mySpareBedRoll3)
@@ -528,7 +531,7 @@ function WarpInObjects()
 		PlayWarpInEffect(mySpareBedRoll3)
 	endif
 
-	Utility.Wait(1)
+	Utility.Wait(2)
 
 	; Move these objects back into view
 	if myClutterMisc1
@@ -551,6 +554,24 @@ function WarpInObjects()
 	endif
 	if myClutterMisc7
 		myClutterMisc7.SetPosition(myClutterMisc7.GetPositionX(), myClutterMisc7.GetPositionY(), myClutterMisc7.GetPositionZ() + 2000.0)
+	endif
+	if myLanternUnlit
+		myLanternUnlit.SetPosition(myLanternUnlit.GetPositionX(), myLanternUnlit.GetPositionY(), myLanternUnlit.GetPositionZ() + 2000.0)
+	endif
+	if myLanternUnlit2
+		myLanternUnlit2.SetPosition(myLanternUnlit2.GetPositionX(), myLanternUnlit2.GetPositionY(), myLanternUnlit2.GetPositionZ() + 2000.0)
+	endif
+	if myLanternUnlit3
+		myLanternUnlit3.SetPosition(myLanternUnlit3.GetPositionX(), myLanternUnlit3.GetPositionY(), myLanternUnlit3.GetPositionZ() + 2000.0)
+	endif
+	if myLanternLit
+		myLanternLit.SetPosition(myLanternLit.GetPositionX(), myLanternLit.GetPositionY(), myLanternLit.GetPositionZ() + 2000.0)
+	endif
+	if myLanternLit2
+		myLanternLit2.SetPosition(myLanternLit2.GetPositionX(), myLanternLit2.GetPositionY(), myLanternLit2.GetPositionZ() + 2000.0)
+	endif
+	if myLanternLit3
+		myLanternLit3.SetPosition(myLanternLit3.GetPositionX(), myLanternLit3.GetPositionY(), myLanternLit3.GetPositionZ() + 2000.0)
 	endif
 endFunction
 
@@ -787,4 +808,22 @@ function PlaceObject_ClutterMisc6()
 endFunction
 function PlaceObject_ClutterMisc7()
 	myClutterMisc7Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterMisc7, PositionRef_ClutterMisc7, is_temp = is_temporary, is_interaction_disabled = true)
+endFunction
+
+function PlaceObject_Lantern1()
+	myLanternUnlitFuture = PlacementSystem.PlaceObject(self, TentSystem.GetLantern(bOn = false, bHanging = false, bSilverCandlestick = Setting_UseSilverCandlestick), PositionRef_Lantern1, is_interaction_disabled = true, is_temp = is_temporary)
+	myLanternLitFuture = PlacementSystem.PlaceObject(self, TentSystem.GetLantern(bOn = true, bHanging = false, bSilverCandlestick = Setting_UseSilverCandlestick), PositionRef_Lantern1, initially_disabled = true, is_interaction_disabled = true, is_temp = is_temporary)
+	myLanternLightFuture = PlacementSystem.PlaceObject(self, TentSystem.GetLanternLight(), PositionRef_Lantern1, initially_disabled = true, is_temp = is_temporary)
+endFunction
+
+function PlaceObject_Lantern2(CampTentEx Extended)
+	myLanternUnlit2Future = PlacementSystem.PlaceObject(self, TentSystem.GetLantern(bOn = false, bHanging = false, bSilverCandlestick = Setting_UseSilverCandlestick), Extended.PositionRef_Lantern2, is_interaction_disabled = true, is_temp = is_temporary)
+	myLanternLit2Future = PlacementSystem.PlaceObject(self, TentSystem.GetLantern(bOn = true, bHanging = false, bSilverCandlestick = Setting_UseSilverCandlestick), Extended.PositionRef_Lantern2, initially_disabled = true, is_interaction_disabled = true, is_temp = is_temporary)
+	myLanternLight2Future = PlacementSystem.PlaceObject(self, TentSystem.GetLanternLight(), Extended.PositionRef_Lantern2, initially_disabled = true, is_temp = is_temporary)
+endFunction
+
+function PlaceObject_Lantern3(CampTentEx Extended)
+	myLanternUnlit3Future = PlacementSystem.PlaceObject(self, TentSystem.GetLantern(bOn = false, bHanging = false, bSilverCandlestick = Setting_UseSilverCandlestick), Extended.PositionRef_Lantern3, is_interaction_disabled = true, is_temp = is_temporary)
+	myLanternLit3Future = PlacementSystem.PlaceObject(self, TentSystem.GetLantern(bOn = true, bHanging = false, bSilverCandlestick = Setting_UseSilverCandlestick), Extended.PositionRef_Lantern3, initially_disabled = true, is_interaction_disabled = true, is_temp = is_temporary)
+	myLanternLight3Future = PlacementSystem.PlaceObject(self, TentSystem.GetLanternLight(), Extended.PositionRef_Lantern3, initially_disabled = true, is_temp = is_temporary)
 endFunction
