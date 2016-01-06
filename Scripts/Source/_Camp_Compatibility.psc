@@ -78,7 +78,7 @@ Activator property _Camp_PerkNavControllerAct auto
 Activator property _Camp_PerkNodeController_Camping auto
 
 GlobalVariable property _Camp_PerkNodeControllersSorted auto ; Constant value = 1
-GlobalVariable property _Camp_PerkNodeControllerCount auto hidden
+GlobalVariable property _Camp_PerkNodeControllerCount auto
 GlobalVariable property EndurancePerkPoints auto hidden
 GlobalVariable property EndurancePerkPointProgress auto hidden
 GlobalVariable property ProvisioningPerkPoints auto hidden
@@ -675,7 +675,7 @@ function CampfirePerkSystemRegister(Activator akNodeController, string asPluginN
 	PerkNodeControllers[index] = akNodeController
 	_Camp_PerkNodeControllerCount.SetValueInt(index + 1)
 	debug.trace("[Campfire] Registered Campfire Perk System mod: " + asPluginName)
-
+	reg_locked = false
 	return true
 endFunction
 

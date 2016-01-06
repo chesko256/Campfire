@@ -827,16 +827,8 @@ endFunction
 
 bool function ShowPerkDesc(int idx)
     _Camp_Compatibility cp = GetCompatibilitySystem()
-    int i = 0
-    if idx == 0
-        i = _Camp_Campfire_Skill_Camping.Show(CampingPerkPoints.GetValueInt(), CampingPerkPointProgress.GetValue() * 100.0)
-    elseif idx == 1
-        i = _Camp_Campfire_Skill_Endurance.Show(cp.EndurancePerkPoints.GetValueInt(), cp.EndurancePerkPointProgress.GetValue() * 100.0)
-    elseif idx == 2
-        i = _Camp_Campfire_Skill_Provisioning.Show(cp.ProvisioningPerkPoints.GetValueInt(), cp.ProvisioningPerkPointProgress.GetValue() * 100.0)
-    elseif idx == 3
-        i = _Camp_Campfire_Skill_Fishing.Show(cp.FishingPerkPoints.GetValueInt(), cp.FishingPerkPointProgress.GetValue() * 100.0)
-    endif
+    _Camp_PerkNodeController controller = (cp.PerkNodeControllers[idx] as _Camp_PerkNodeControllerBehavior)
+    controller.required_perk_description.Show(controller.required_perk_points_available.GetValueInt(), controller.required_perk_point_progress.GetValue() * 100.0)
 
     if i == 0
         return true

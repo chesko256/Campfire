@@ -1,6 +1,7 @@
 scriptname _Camp_PerkNodeControllerBehavior extends _Camp_PerkNodeController
 
 message property _Camp_PerkGeneral_UpgradeVerify auto
+message property required_perk_description auto
 GlobalVariable property required_perk_points_available auto
 GlobalVariable property required_perk_point_progress auto
 _Camp_ConditionValues property Conditions auto
