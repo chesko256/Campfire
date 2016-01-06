@@ -3,6 +3,7 @@ Scriptname _Camp_Compatibility extends ReferenceAlias
 import debug
 import CampUtil
 import _CampInternal
+import _Camp_ArrayHelper
 
 int property SKSE_MIN_VERSION = 10703 autoReadOnly
 GlobalVariable property _Camp_PreviousVersion auto
@@ -76,6 +77,8 @@ Worldspace property DLC2WS auto hidden						;Solstheim
 Activator property _Camp_PerkNavControllerAct auto
 Activator property _Camp_PerkNodeController_Camping auto
 
+GlobalVariable property _Camp_PerkNodeControllersSorted auto ; Constant value = 1
+GlobalVariable property _Camp_PerkNodeControllerCount auto hidden
 GlobalVariable property EndurancePerkPoints auto hidden
 GlobalVariable property EndurancePerkPointProgress auto hidden
 GlobalVariable property ProvisioningPerkPoints auto hidden
@@ -125,8 +128,10 @@ Weather property DLC2AshStorm auto hidden
 bool Upgraded_1_1 = false
 bool Upgraded_1_4 = false
 bool Upgraded_1_6 = false
+bool Upgraded_1_7 = false
 
 Event OnPlayerLoadGame()
+	CampfirePerkSystemSortOnStartup()
 	RunCompatibility()
 	if isSKYUILoaded && isSKSELoaded
 		CampConfig.LoadProfileOnStartup()
@@ -530,8 +535,6 @@ function RunCompatibility()
 		EndurancePerkPointProgress = Game.GetFormFromFile(0x00064028, "Frostfall.esp") as GlobalVariable
 		Activator node_controller = Game.GetFormFromFile(0x00064026, "Frostfall.esp") as Activator
 		CampfirePerkSystemRegister(node_controller, 1, "Frostfall.esp")
-	else
-		CampfirePerkSystemUnregister(1, "Frostfall.esp")
 	endif
 	
 	if isLastSeedLoaded
@@ -539,8 +542,6 @@ function RunCompatibility()
 		ProvisioningPerkPointProgress = Game.GetFormFromFile(0x00006B10, "LastSeed.esp") as GlobalVariable
 		Activator node_controller = Game.GetFormFromFile(0x00006B0E, "LastSeed.esp") as Activator
 		CampfirePerkSystemRegister(node_controller, 2, "LastSeed.esp")
-	else
-		CampfirePerkSystemUnregister(2, "LastSeed.esp")
 	endif
 
 	if isArtOfTheCatchLoaded
@@ -548,8 +549,6 @@ function RunCompatibility()
 		FishingPerkPointProgress = Game.GetFormFromFile(0x00002340, "ArtOfTheCatch.esp") as GlobalVariable
 		Activator node_controller = Game.GetFormFromFile(0x00002341, "ArtOfTheCatch.esp") as Activator
 		CampfirePerkSystemRegister(node_controller, 3, "ArtOfTheCatch.esp")
-	else
-		CampfirePerkSystemUnregister(3, "ArtOfTheCatch.esp")
 	endif
 
 	;#Region SKSE + Mod Support Section
@@ -652,17 +651,37 @@ function Upgrade_1_6()
 	Upgraded_1_6 = true
 endFunction
 
-function CampfirePerkSystemRegister(Activator akNodeController, int aiIndex, string asPluginName)
-	if PerkNodeControllers[aiIndex] == None
-		PerkNodeControllers[aiIndex] = akNodeController
-		debug.trace("[Campfire] Registered Campfire Perk System mod: " + asPluginName)
-	endif
+function Upgrade_1_7()
+	PerkNodeControllers = new Activator[64]
+	CampfirePerkSystemRegister(_Camp_PerkNodeController_Camping, 0, "Campfire.esm")
+	Upgraded_1_7 = true
 endFunction
 
-function CampfirePerkSystemUnregister(int aiIndex, string asPluginName)
-	PerkNodeControllers[aiIndex] = None
-	; Suppress this for normal users.
-	CampDebug(1, "Unregistered Campfire Perk System mod: " + asPluginName)
+bool reg_locked = false
+function CampfirePerkSystemRegister(Activator akNodeController, string asPluginName)
+	int i = 0
+	while reg_locked && _Camp_PerkNodeControllersSorted.GetValueInt() != 2 && i < 100
+		i += 1
+		Utility.Wait(0.2)
+	endWhile
+	reg_locked = true
+
+	int index = ArrayCount(PerkNodeControllers)
+	if index >= PerkNodeControllers.Length
+		; We're full!
+		return false
+	endif
+	
+	PerkNodeControllers[index] = akNodeController
+	_Camp_PerkNodeControllerCount.SetValueInt(index + 1)
+	debug.trace("[Campfire] Registered Campfire Perk System mod: " + asPluginName)
+
+	return true
+endFunction
+
+function CampfirePerkSystemSortOnStartup()
+	bool b = ArraySort(PerkNodeControllers)
+	_Camp_PerkNodeControllersSorted.SetValueInt(2)
 endFunction
 
 function VanillaGameLoadUp()
