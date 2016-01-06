@@ -1106,6 +1106,32 @@ bool function IsPlaceableObjectConjured(Form akBaseObject) global
 	endif
 endFunction
 
+;/********f* CampUtil/RegisterPerkTree
+* API VERSION ADDED
+* 4
+*
+* DESCRIPTION
+* Register a new Campfire perk tree on startup.
+*
+* SYNTAX
+*/;
+bool function RegisterPerkTree(Activator akPerkNodeController, string asPluginName) global
+;/*
+* PARAMETERS
+* akPerkNodeController: The perk node controller to register.
+* asPluginName: The plug-in name that this node controller is from. Only seen in Papyrus logs.
+*
+* RETURN VALUE
+* True if the perk tree was successfully registered. Returns false if there is no available room for an additional perk tree.
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+	return GetCompatibilitySystem().CampfirePerkSystemRegister(akPerkNodeController, asPluginName)
+endFunction
+
 ;/********f* CampUtil/GetCampfireSettingBool
 * API VERSION ADDED
 * 2

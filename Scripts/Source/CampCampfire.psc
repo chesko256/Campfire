@@ -299,6 +299,7 @@ ObjectReference property myCookPotSnapMarkerFuture auto hidden
 ObjectReference property myPerkNodeController auto hidden
 ObjectReference property myPerkNavController auto hidden
 GlobalVariable property _Camp_PerkRank_Resourceful auto
+GlobalVariable property _Camp_PerkNodeControllerCount auto
 
 int EMBERS_DURATION = 4
 int ASH_DURATION = 24
@@ -857,7 +858,7 @@ function ShowNextPerkTree()
     bool tree_found = false
     int i = current_skill_index + 1
     while !tree_found && i != current_skill_index
-        if i > 3
+        if i > (_Camp_PerkNodeControllerCount.GetValueInt() - 1)
             i = 0
         endif
         if cs.PerkNodeControllers[i]
@@ -880,7 +881,7 @@ function ShowPrevPerkTree()
     int i = current_skill_index - 1
     while !tree_found && i != current_skill_index
         if i < 0
-            i = 3
+            i = (_Camp_PerkNodeControllerCount.GetValueInt() - 1)
         endif
         if cs.PerkNodeControllers[i]
             tree_found = true
