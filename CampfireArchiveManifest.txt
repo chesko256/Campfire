@@ -215,6 +215,7 @@ Scripts\TentSystem.pex
 Scripts\_CampfireInternalAPI.pex
 Scripts\_CampInternal.pex
 Scripts\_CampTentEx_LargeHideTent.pex
+Scripts\_Camp_ArrayHelper.pex
 Scripts\_Camp_BackpackReclaim.pex
 Scripts\_Camp_BackpackToggle.pex
 Scripts\_Camp_CampCrimeGuardScript.pex
@@ -345,6 +346,7 @@ Scripts\Source\TentSystem.psc
 Scripts\Source\_CampfireInternalAPI.psc
 Scripts\Source\_CampInternal.psc
 Scripts\Source\_CampTentEx_LargeHideTent.psc
+Scripts\Source\_Camp_ArrayHelper.psc
 Scripts\Source\_Camp_BackpackReclaim.psc
 Scripts\Source\_Camp_BackpackToggle.psc
 Scripts\Source\_Camp_CampCrimeGuardScript.psc
