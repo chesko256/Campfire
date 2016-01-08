@@ -826,12 +826,15 @@ function ShowPerkTree(int idx)
 endFunction
 
 bool function ShowPerkDesc(int idx)
-    _Camp_Compatibility cp = GetCompatibilitySystem()
-    _Camp_PerkNodeController controller = (cp.PerkNodeControllers[idx] as _Camp_PerkNodeControllerBehavior)
-    int i = controller.required_perk_description.Show(controller.required_perk_points_available.GetValueInt(), controller.required_perk_point_progress.GetValue() * 100.0)
+    if myPerkNodeController
+        _Camp_PerkNodeControllerBehavior controller = (myPerkNodeController as _Camp_PerkNodeControllerBehavior)
+        int i = controller.required_skill_description.Show(controller.required_perk_points_available.GetValueInt(), controller.required_perk_point_progress.GetValue() * 100.0)
 
-    if i == 0
-        return true
+        if i == 0
+            return true
+        else
+            return false
+        endif
     else
         return false
     endif

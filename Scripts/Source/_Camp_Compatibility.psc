@@ -534,21 +534,21 @@ function RunCompatibility()
 		EndurancePerkPoints = Game.GetFormFromFile(0x00064027, "Frostfall.esp") as GlobalVariable
 		EndurancePerkPointProgress = Game.GetFormFromFile(0x00064028, "Frostfall.esp") as GlobalVariable
 		Activator node_controller = Game.GetFormFromFile(0x00064026, "Frostfall.esp") as Activator
-		CampfirePerkSystemRegister(node_controller, 1, "Frostfall.esp")
+		bool b = CampfirePerkSystemRegister(node_controller, "Frostfall.esp")
 	endif
 	
 	if isLastSeedLoaded
 		ProvisioningPerkPoints = Game.GetFormFromFile(0x00006B0F, "LastSeed.esp") as GlobalVariable
 		ProvisioningPerkPointProgress = Game.GetFormFromFile(0x00006B10, "LastSeed.esp") as GlobalVariable
 		Activator node_controller = Game.GetFormFromFile(0x00006B0E, "LastSeed.esp") as Activator
-		CampfirePerkSystemRegister(node_controller, 2, "LastSeed.esp")
+		bool b = CampfirePerkSystemRegister(node_controller, "LastSeed.esp")
 	endif
 
 	if isArtOfTheCatchLoaded
 		FishingPerkPoints = Game.GetFormFromFile(0x0000233F, "ArtOfTheCatch.esp") as GlobalVariable
 		FishingPerkPointProgress = Game.GetFormFromFile(0x00002340, "ArtOfTheCatch.esp") as GlobalVariable
 		Activator node_controller = Game.GetFormFromFile(0x00002341, "ArtOfTheCatch.esp") as Activator
-		CampfirePerkSystemRegister(node_controller, 3, "ArtOfTheCatch.esp")
+		bool b = CampfirePerkSystemRegister(node_controller, "ArtOfTheCatch.esp")
 	endif
 
 	;#Region SKSE + Mod Support Section
@@ -628,7 +628,7 @@ endFunction
 
 function Upgrade_1_1()
 	PerkNodeControllers = new Activator[4]
-	CampfirePerkSystemRegister(_Camp_PerkNodeController_Camping, 0, "Campfire.esm")
+	bool b = CampfirePerkSystemRegister(_Camp_PerkNodeController_Camping, "Campfire.esm")
 	Upgraded_1_1 = true
 endFunction
 
@@ -653,12 +653,12 @@ endFunction
 
 function Upgrade_1_7()
 	PerkNodeControllers = new Activator[64]
-	CampfirePerkSystemRegister(_Camp_PerkNodeController_Camping, 0, "Campfire.esm")
+	bool b = CampfirePerkSystemRegister(_Camp_PerkNodeController_Camping, "Campfire.esm")
 	Upgraded_1_7 = true
 endFunction
 
 bool reg_locked = false
-function CampfirePerkSystemRegister(Activator akNodeController, string asPluginName)
+bool function CampfirePerkSystemRegister(Activator akNodeController, string asPluginName)
 	int i = 0
 	while reg_locked && _Camp_PerkNodeControllersSorted.GetValueInt() != 2 && i < 100
 		i += 1
