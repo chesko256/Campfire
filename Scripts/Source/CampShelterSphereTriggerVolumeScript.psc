@@ -23,11 +23,10 @@ int instanceID
 ; The rumble sound FX instance ID.
 
 Event OnTriggerEnter(ObjectReference akActionRef)
-	if ParentTent
-		SetCurrentTent(ParentTent)
-	endif
-
 	if akActionRef == PlayerRef
+		if ParentTent
+			SetCurrentTent(ParentTent)
+		endif
 		MAGWardTestDeflect.Play(PlayerRef)
 		_Camp_EnterSphereEffect.Play(PlayerRef)
 		FXCameraAttachDustFineEffect.Play(PlayerRef, time_limit)
@@ -40,13 +39,14 @@ Event OnTriggerEnter(ObjectReference akActionRef)
 EndEvent
 
 Event OnTriggerLeave(ObjectReference akActionRef)
-	SetCurrentTent(None)
-
 	if akActionRef == PlayerRef
+		SetCurrentTent(None)
 		MAGWardTestDeflect.Play(PlayerRef)
 		_Camp_EnterSphereEffect.Play(PlayerRef)
 		FXCameraAttachDustFineEffect.Stop(PlayerRef)
-		Sound.StopInstance(instanceID)
+		if instanceID
+			Sound.StopInstance(instanceID)
+		endif
 	else
 		MAGWardTestDeflect.Play(akActionRef)
 		_Camp_EnterSphereEffect.Play(akActionRef)
@@ -55,5 +55,7 @@ EndEvent
 
 Event OnUnLoad()
 	FXCameraAttachDustFineEffect.Stop(PlayerRef)
-	Sound.StopInstance(instanceID)
+	if instanceID
+		Sound.StopInstance(instanceID)
+	endif
 EndEvent
