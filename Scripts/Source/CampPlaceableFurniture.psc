@@ -1,5 +1,4 @@
-scriptname CampPlaceableObject extends _Camp_PlaceableObjectBase
-{For the placement of Campfire FURNITURE objects. For Activators, please use CampPlaceableScriptedActivator.}
+scriptname CampPlaceableFurniture extends _Camp_PlaceableObjectBase
 
 import CampUtil
 import _CampInternal
@@ -325,14 +324,7 @@ function PlaceObject_ExtraLight3(CampPlaceableObjectEx Extended)
 endFunction
 
 function TakeDown()
-	CampDebug(0, self + " TakeDown (CampPlaceableObject)")
 	parent.TakeDown()
-
-	; No way to do parent.parent.FunctionCall(), so return now.
-	if (self as CampConjuredPlaceableObject)
-		CampDebug(0, "CampPlaceableObject is CampConjuredPlaceableObject, returning.")
-		return
-	endif
 
 	ForceStopUsingFurniture(self)
 	ForceStopUsingFurniture(myExtraFurniture1)

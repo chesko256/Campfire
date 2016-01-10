@@ -145,6 +145,7 @@ EffectShader property ShockDisintegrate01FXS auto
 VisualEffect property MGTeleportInEffect auto
 Activator property SummonTargetFXActivator auto
 
+;@TODO: REMOVE
 float property ShelterID auto hidden
 int property mySoundID auto hidden
 

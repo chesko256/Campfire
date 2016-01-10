@@ -375,6 +375,6 @@ ObjectReference property PositionRef_Follower3_WeaponBow auto
 ;*********/;
 
 function TakeDown()
-	CampDebug(0, "CampTentEx taking down " + self)
+	CampDebug(0, self + " TakeDown (CampTentEx)")
 	parent.TakeDown()
 endFunction

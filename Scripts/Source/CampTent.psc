@@ -1379,7 +1379,7 @@ function GetResults()
 endFunction
 
 function TakeDown()
-	CampDebug(0, "CampTent taking down " + self)
+	CampDebug(0, self + " TakeDown (CampTent)")
 	SetCurrentTent(None)
 	parent.TakeDown()
 
