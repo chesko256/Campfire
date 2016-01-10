@@ -540,43 +540,43 @@ function WarpInObjects()
 
 	; Move these objects back into view
 	if myClutterMisc1
-		myClutterMisc1.SetPosition(myClutterMisc1.GetPositionX(), myClutterMisc1.GetPositionY(), myClutterMisc1.GetPositionZ() + 2000.0)
+		myClutterMisc1.SetPosition(myClutterMisc1.GetPositionX(), myClutterMisc1.GetPositionY(), myClutterMisc1.GetPositionZ() + 500.0)
 	endif
 	if myClutterMisc2
-		myClutterMisc2.SetPosition(myClutterMisc2.GetPositionX(), myClutterMisc2.GetPositionY(), myClutterMisc2.GetPositionZ() + 2000.0)
+		myClutterMisc2.SetPosition(myClutterMisc2.GetPositionX(), myClutterMisc2.GetPositionY(), myClutterMisc2.GetPositionZ() + 500.0)
 	endif
 	if myClutterMisc3
-		myClutterMisc3.SetPosition(myClutterMisc3.GetPositionX(), myClutterMisc3.GetPositionY(), myClutterMisc3.GetPositionZ() + 2000.0)
+		myClutterMisc3.SetPosition(myClutterMisc3.GetPositionX(), myClutterMisc3.GetPositionY(), myClutterMisc3.GetPositionZ() + 500.0)
 	endif
 	if myClutterMisc4
-		myClutterMisc4.SetPosition(myClutterMisc4.GetPositionX(), myClutterMisc4.GetPositionY(), myClutterMisc4.GetPositionZ() + 2000.0)
+		myClutterMisc4.SetPosition(myClutterMisc4.GetPositionX(), myClutterMisc4.GetPositionY(), myClutterMisc4.GetPositionZ() + 500.0)
 	endif
 	if myClutterMisc5
-		myClutterMisc5.SetPosition(myClutterMisc5.GetPositionX(), myClutterMisc5.GetPositionY(), myClutterMisc5.GetPositionZ() + 2000.0)
+		myClutterMisc5.SetPosition(myClutterMisc5.GetPositionX(), myClutterMisc5.GetPositionY(), myClutterMisc5.GetPositionZ() + 500.0)
 	endif
 	if myClutterMisc6
-		myClutterMisc6.SetPosition(myClutterMisc6.GetPositionX(), myClutterMisc6.GetPositionY(), myClutterMisc6.GetPositionZ() + 2000.0)
+		myClutterMisc6.SetPosition(myClutterMisc6.GetPositionX(), myClutterMisc6.GetPositionY(), myClutterMisc6.GetPositionZ() + 500.0)
 	endif
 	if myClutterMisc7
-		myClutterMisc7.SetPosition(myClutterMisc7.GetPositionX(), myClutterMisc7.GetPositionY(), myClutterMisc7.GetPositionZ() + 2000.0)
+		myClutterMisc7.SetPosition(myClutterMisc7.GetPositionX(), myClutterMisc7.GetPositionY(), myClutterMisc7.GetPositionZ() + 500.0)
 	endif
 	if myLanternUnlit
-		myLanternUnlit.SetPosition(myLanternUnlit.GetPositionX(), myLanternUnlit.GetPositionY(), myLanternUnlit.GetPositionZ() + 2000.0)
+		myLanternUnlit.SetPosition(myLanternUnlit.GetPositionX(), myLanternUnlit.GetPositionY(), myLanternUnlit.GetPositionZ() + 500.0)
 	endif
 	if myLanternUnlit2
-		myLanternUnlit2.SetPosition(myLanternUnlit2.GetPositionX(), myLanternUnlit2.GetPositionY(), myLanternUnlit2.GetPositionZ() + 2000.0)
+		myLanternUnlit2.SetPosition(myLanternUnlit2.GetPositionX(), myLanternUnlit2.GetPositionY(), myLanternUnlit2.GetPositionZ() + 500.0)
 	endif
 	if myLanternUnlit3
-		myLanternUnlit3.SetPosition(myLanternUnlit3.GetPositionX(), myLanternUnlit3.GetPositionY(), myLanternUnlit3.GetPositionZ() + 2000.0)
+		myLanternUnlit3.SetPosition(myLanternUnlit3.GetPositionX(), myLanternUnlit3.GetPositionY(), myLanternUnlit3.GetPositionZ() + 500.0)
 	endif
 	if myLanternLit
-		myLanternLit.SetPosition(myLanternLit.GetPositionX(), myLanternLit.GetPositionY(), myLanternLit.GetPositionZ() + 2000.0)
+		myLanternLit.SetPosition(myLanternLit.GetPositionX(), myLanternLit.GetPositionY(), myLanternLit.GetPositionZ() + 500.0)
 	endif
 	if myLanternLit2
-		myLanternLit2.SetPosition(myLanternLit2.GetPositionX(), myLanternLit2.GetPositionY(), myLanternLit2.GetPositionZ() + 2000.0)
+		myLanternLit2.SetPosition(myLanternLit2.GetPositionX(), myLanternLit2.GetPositionY(), myLanternLit2.GetPositionZ() + 500.0)
 	endif
 	if myLanternLit3
-		myLanternLit3.SetPosition(myLanternLit3.GetPositionX(), myLanternLit3.GetPositionY(), myLanternLit3.GetPositionZ() + 2000.0)
+		myLanternLit3.SetPosition(myLanternLit3.GetPositionX(), myLanternLit3.GetPositionY(), myLanternLit3.GetPositionZ() + 500.0)
 	endif
 endFunction
 

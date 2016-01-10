@@ -42,10 +42,10 @@ bool property Setting_BypassMenu = False auto
 * Optional: If true, no menu will be shown when clicking on this object and the default action will be taken. The intended use is that this object is created and destroyed by another object, like a conjured shelter. Otherwise, you would have no way to destroy the object once placed. }
 ;*********/;
 
-;/********p* _Camp_PlaceableObjectBase/UniqueConjuredObjectGlobal
+;/********p* _Camp_PlaceableObjectBase/UniqueConjuredObjectIDGlobal
 * SYNTAX
 */;
-GlobalVariable property UniqueConjuredObjectGlobal auto
+GlobalVariable property UniqueConjuredObjectIDGlobal auto
 {
 * DESCRIPTION
 * Optional: If set, and if Setting_IsConjured is True, only one of this type of conjured object can be spawned at any given time. If not set, this object can be spawned any number of times. (Note: If different kinds of objects share the same UniqueConjuredObjectGlobal, only one of those objects can be spawned into the world even though they are of different types.) }
@@ -73,6 +73,7 @@ ObjectReference property myFire5Future auto hidden
 ObjectReference property myFire6Future auto hidden
 ObjectReference property mySmokeFuture auto hidden
 
+int conjured_object_id = -1
 bool block_spell_hits = false
 int fire_level = 0
 int damage_stage = 0
@@ -99,11 +100,25 @@ Event OnUpdate()
 	Update()
 endEvent
 
+Event OnActivate(ObjectReference akActionRef)
+	if !initialized
+		return
+	endif
+	UseObject(akActionRef)
+EndEvent
+
 function Update()
 	; override
 endFunction
 
 function Initialize()
+	if Setting_IsConjured && UniqueConjuredObjectIDGlobal
+		conjured_object_id = UpdateConjuredObjectID(UniqueConjuredObjectIDGlobal)
+		if GetCompatibilitySystem().isSKSELoaded
+			RegisterForModEvent("Campfire_OnConjuredObjectIDUpdated", "OnConjuredObjectIDUpdated")
+		endif
+	endif
+
 	PlacementSystem = CampUtil.GetPlacementSystem()
 	RotateOnStartUp()
 	OriginAng = GetAngleData(self)
@@ -130,6 +145,10 @@ function RotateOnStartUp()
 endFunction
 
 function PlaceObjects()
+	; override
+endFunction
+
+function UseObject(ObjectReference akActionRef)
 	; override
 endFunction
 
@@ -446,3 +465,17 @@ function ForceStopUsingFurniture(ObjectReference akFurnitureRef)
 		endif
 	endif
 endFunction
+
+Event OnConjuredObjectIDUpdated()
+	int i = 0
+	while !initialized && i < 120
+		Utility.Wait(1)
+		i += 1
+	endWhile
+
+	if UniqueConjuredObjectIDGlobal && conjured_object_id != -1
+		if conjured_object_id != UniqueConjuredObjectIDGlobal.GetValueInt()
+			TakeDown()
+		endif
+	endif
+endEvent

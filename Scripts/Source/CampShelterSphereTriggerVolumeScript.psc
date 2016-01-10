@@ -24,6 +24,14 @@ int instanceID
 
 Event OnTriggerEnter(ObjectReference akActionRef)
 	if akActionRef == PlayerRef
+		
+		; Delay up to 3 seconds for ParentTent to initially populate
+		int i = 0
+		while !ParentTent && i < 30
+			Utility.Wait(0.1)
+			i += 1
+		endWhile
+
 		if ParentTent
 			SetCurrentTent(ParentTent)
 		endif

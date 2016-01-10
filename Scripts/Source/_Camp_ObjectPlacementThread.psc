@@ -39,7 +39,7 @@ ObjectReference function get_async(Activator akFuture, ObjectReference akFutureA
 						bool initially_disabled = false, bool is_propped = false, bool is_hanging = false, bool is_temp = false,					\
 						bool is_interaction_disabled = false)
 	
-	CampDebug(0, "get_async")
+	CampDebug(0, self + " get_async")
 	thread_queued = true
 
 	_OriginAngle = new float[3]
@@ -106,6 +106,7 @@ function clear_thread_vars()
 	_IsHanging = false
 	_IsTemp = false
 	_IsInteractionDisabled = false
+	debug.trace("TEMP MSG: " + self + " thread vars cleared.")
 endFunction
 
 float[] function GetPosXYZRotateAroundRef(ObjectReference akOrigin, ObjectReference akObject, float afXPosOffset, float afYPosOffset, float fAngleX, float fAngleY, float fAngleZ)
@@ -267,7 +268,7 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
 
 	; Move miscellaneous items / lights out of view to start with
 	if bDisableInteraction
-		myTempMarker.SetPosition(myTempMarker.GetPositionX(), myTempMarker.GetPositionY(), myTempMarker.GetPositionZ() - 2000.0)
+		myTempMarker.SetPosition(myTempMarker.GetPositionX(), myTempMarker.GetPositionY(), myTempMarker.GetPositionZ() - 500.0)
 	endif
 	
 	myObject = myTempMarker.PlaceAtMe(akFormToPlace, abForcePersist = spawn_persistent, abInitiallyDisabled = bInitiallyDisabled)

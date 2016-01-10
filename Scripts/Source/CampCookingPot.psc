@@ -42,6 +42,9 @@ function Update()
 endFunction
 
 Event OnActivate(ObjectReference akActionRef)
+	if !initialized
+		return
+	endif
 	if akActionRef == Game.GetPlayer()
 		if myExtraActivator1.IsDisabled()
 			if Setting_BypassMenu
