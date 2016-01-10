@@ -345,6 +345,6 @@ ObjectReference property RequiredPositionRef_CenterObject auto
 ;*********/;
 
 function TakeDown()
-	CampDebug(0, "CampPlaceableObjectEx taking down " + self)
+	CampDebug(0, self + " TakeDown (CampPlaceableObjectEx)")
 	parent.TakeDown()
 endFunction
