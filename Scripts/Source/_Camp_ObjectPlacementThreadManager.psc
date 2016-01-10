@@ -139,11 +139,15 @@ function RequestLock(ObjectReference akObject)
         Utility.Wait(1)
         i += 1
     endWhile
+    if i >= 30
+        CampDebug(3, akObject + ": Timed out waiting for placement system lock. Continuing anyway.")
+    endif
     CampDebug(1, akObject + ": Placement system lock granted.")
     locked = true
 endFunction
 
 function ReleaseLock(ObjectReference akObject)
+    Utility.Wait(0.5)
     CampDebug(1, akObject + ": Placement system lock released.")
     locked = false
 endFunction
@@ -155,7 +159,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                               float x_pos_offset = 0.0, float y_pos_offset = 0.0, float z_pos_offset = 0.0,                     \
                               bool initially_disabled = false, bool is_propped = false, bool is_hanging = false,                \
                               bool is_temp = false, bool is_interaction_disabled = false)
-    int i = 0
+
 	ObjectReference future
 
     float[] origin_angle = (origin_object as _Camp_PlaceableObjectBase).OriginAng

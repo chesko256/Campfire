@@ -292,19 +292,19 @@ function RescueMovePlayerAndFollowers(ObjectReference akDestinationObject, float
 		_Frost_RescueDestinationMarker.SetPosition(x, y, z)
 		_Frost_RescueDestinationMarker.SetAngle(0.0, 0.0, az)
 	endif
-	PlayerRef.MoveTo(_Frost_RescueDestinationMarker, abMatchRotation = true)
-	if follower1
+	if follower1 && follower1.GetDistance(PlayerRef) <= 2000.0
 		follower1.MoveTo(_Frost_RescueDestinationMarker)
 	endif
-	if follower2
+	if follower2 && follower2.GetDistance(PlayerRef) <= 2000.0
 		follower2.MoveTo(_Frost_RescueDestinationMarker)
 	endif
-	if follower3
+	if follower3 && follower3.GetDistance(PlayerRef) <= 2000.0
 		follower3.MoveTo(_Frost_RescueDestinationMarker)
 	endif
-	if animal
+	if animal && animal.GetDistance(PlayerRef) <= 2000.0
 		animal.MoveTo(_Frost_RescueDestinationMarker)
 	endif
+	PlayerRef.MoveTo(_Frost_RescueDestinationMarker, abMatchRotation = true)
 endFunction
 
 function FindAndMoveToCOCMarker()

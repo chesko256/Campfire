@@ -623,9 +623,9 @@ function Update()
 	UpdateTentUseState(self)
 endFunction
 
-Event OnActivate(ObjectReference akActionRef)
+function UseObject(ObjectReference akActionRef)
 	ActivateTent(akActionRef, self)
-endEvent
+endFunction
 
 ;@Override _Camp_PlaceableObjectBase
 function PlaceObjects()

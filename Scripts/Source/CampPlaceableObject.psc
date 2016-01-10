@@ -51,11 +51,6 @@ function Initialize()
 	parent.Initialize()
 endFunction
 
-Event OnActivate(ObjectReference akActionRef)
-	CampDebug(0, "Got activate")
-	UseObject(akActionRef)
-EndEvent
-
 function UseObject(ObjectReference akActionRef)
 	SetSelectedObjectConjured(self)
 	

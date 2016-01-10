@@ -13,6 +13,15 @@ import CampUtil
 
 ; OPTIONAL PROPERTIES
 
+;/********p* CampCampfire/Setting_IsPartOfConjuredShelter
+* SYNTAX
+*/;
+bool property Setting_IsPartOfConjuredShelter auto
+;/*
+* DESCRIPTION
+{ Optional: Whether or not this campfire is part of a conjured shelter. If true, it will not remove itself from the world over time. }
+;*********/;
+
 ;/********p* CampCampfire/FireAsset_SitFurniture1
 * SYNTAX
 */;
@@ -1126,7 +1135,7 @@ Event OnUpdateGameTime()
     CampDebug(0, "Campfire remaining time " + Math.Floor(remaining_time))
 
     if remaining_time < 1
-        if !Setting_IsConjured
+        if !Setting_IsPartOfConjuredShelter
             TakeDown()
         endif
     else

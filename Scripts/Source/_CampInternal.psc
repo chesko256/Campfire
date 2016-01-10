@@ -253,6 +253,21 @@ _Camp_Strings function GetCampfireStrings() global
 	return (Campfire.CampfireStrings as _Camp_Strings)
 endFunction
 
+int function UpdateConjuredObjectID(GlobalVariable akGlobal) global
+	if akGlobal
+		int new_value = akGlobal.GetValueInt() + 1
+		akGlobal.SetValueInt(new_value)
+		CampDebug(0, "Sending event Campfire_OnConjuredObjectIDUpdated")
+    	int handle = ModEvent.Create("Campfire_OnConjuredObjectIDUpdated")
+    	if handle
+    		ModEvent.Send(handle)
+   		endif
+   		return new_value
+   	else
+   		return -1
+   	endif
+endFunction
+
 function ExitMenus() global
 	Game.DisablePlayerControls()
 	Game.EnablePlayerControls()
