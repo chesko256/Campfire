@@ -75,12 +75,15 @@ Sound property _Frost_Female_FreezingSM auto
 Sound property _Frost_Female_FreezingToDeathSM auto
 Sound property _Frost_Male_FreezingSM auto
 Sound property _Frost_Male_FreezingToDeathSM auto
+Static property CampfireHeatsourceOverrideNormal auto
+Static property CampfireHeatsourceOverrideWarm auto
 Spell property _Frost_InnerFireSpell auto
 Spell property _Frost_NoWait_Spell auto
 Potion property _Frost_FrostbittenPotionBody auto
 Potion property _Frost_FrostbittenPotionHead auto
 Potion property _Frost_FrostbittenPotionHands auto
 Potion property _Frost_FrostbittenPotionFeet auto
+ReferenceAlias property HeatSource auto
 Keyword property ActorTypeDragon auto
 Keyword property ActorTypeUndead auto
 Keyword property _Frost_FrostbiteBodyKW auto
@@ -627,6 +630,21 @@ function ExposureValueUpdate(float game_hours_passed)
 
 	FrostDebug(0, "@@@@ Exposure ::: near_heat: " + near_heat + ", in_interior: " + in_interior + ", in_tent: " + in_tent + ", tent_is_warm: " + tent_is_warm)
 
+	; Override
+	ObjectReference heat_source_ref = HeatSource.GetRef()
+	if heat_source_ref
+		if heat_source_ref.GetBaseObject() == CampfireHeatsourceOverrideNormal
+			FrostDebug(0, "@@@@ Exposure ::: Heat source is Normal-type override.")
+			GetWarmer(heat_amount, EXPOSURE_LEVEL_1, game_hours_passed)
+			return
+		elseif heat_source_ref.GetBaseObject() == CampfireHeatsourceOverrideWarm
+			FrostDebug(0, "@@@@ Exposure ::: Heat source is Warm-type override.")
+			GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
+			return
+		endif
+	endif
+
+	; Normal
 	if in_interior
 		if near_heat
 			GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
