@@ -8,6 +8,7 @@ EffectShader property ShockDisintegrate01FXS auto
 VisualEffect property MGTeleportInEffect auto
 
 function TakeDown()
+	CampDebug(0, self + " TakeDown (CampConjuredScriptedActivator)")
 	parent.TakeDown()
 
 	ForceStopUsingFurniture(myExtraFurniture1)

@@ -307,7 +307,7 @@ function PlaceObject_ExtraLight3(CampPlaceableScriptedActivatorEx Extended)
 endFunction
 
 function TakeDown()
-	CampDebug(0, self + " TakeDown (CampPlaceableObject)")
+	CampDebug(0, self + " TakeDown (CampPlaceableScriptedActivator)")
 	parent.TakeDown()
 
 	; No way to do parent.parent.FunctionCall(), so return now.
