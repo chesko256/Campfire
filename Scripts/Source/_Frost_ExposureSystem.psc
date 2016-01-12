@@ -879,8 +879,8 @@ function AdvanceEnduranceSkill()
 
         int next_level = EndurancePerkPointsEarned.GetValueInt() + 1
 
-        ; 40, 80, 120, 160...
-        float ticks_required = 40 * next_level
+        ; 200, 400, 600, 800...
+        float ticks_required = 200 * next_level
 
         float new_progress = (1.0 / ticks_required)
         float current_progress = EndurancePerkPointProgress.GetValue()
