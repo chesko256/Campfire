@@ -1,17 +1,17 @@
-;/********s* CampPlaceableObject/CampPlaceableObjectEx
+;/********s* CampPlaceableObject/CampPlaceableScriptedActivatorEx
 * SCRIPTNAME
 */;
-scriptname CampPlaceableObjectEx extends CampPlaceableObject
+scriptname CampPlaceableScriptedActivatorEx extends CampPlaceableScriptedActivator
 ;/*
 * OVERVIEW
-* The `CampPlaceableObjectEx` script is an expanded version of CampPlaceableObject, for creating
+* The `CampPlaceableScriptedActivatorEx` script is an expanded version of CampPlaceableScriptedActivator, for creating
 * more elaborate multi-part placeable objects (such as a barrel with a lantern and a chair). Can be
-* attached to a Furniture object that serves as the main interactible.
+* attached to an Activator object that serves as the main interactible.
 ;*********/;
 
 import _CampInternal
 
-;/********p* CampPlaceableObjectEx/Asset_ExtraStatic1
+;/********p* CampPlaceableScriptedActivatorEx/Asset_ExtraStatic1
 * SYNTAX
 */;
 Static property Asset_ExtraStatic1 auto
@@ -20,7 +20,7 @@ Static property Asset_ExtraStatic1 auto
 * Optional: A static to place near this object. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/Asset_ExtraStatic2
+;/********p* CampPlaceableScriptedActivatorEx/Asset_ExtraStatic2
 * SYNTAX
 */;
 Static property Asset_ExtraStatic2 auto
@@ -29,7 +29,7 @@ Static property Asset_ExtraStatic2 auto
 * Optional: A static to place near this object. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/Asset_ExtraStatic3
+;/********p* CampPlaceableScriptedActivatorEx/Asset_ExtraStatic3
 * SYNTAX
 */;
 Static property Asset_ExtraStatic3 auto
@@ -38,7 +38,7 @@ Static property Asset_ExtraStatic3 auto
 * Optional: A static to place near this object. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/Asset_ExtraStatic4
+;/********p* CampPlaceableScriptedActivatorEx/Asset_ExtraStatic4
 * SYNTAX
 */;
 Static property Asset_ExtraStatic4 auto
@@ -47,7 +47,7 @@ Static property Asset_ExtraStatic4 auto
 * Optional: A static to place near this object. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/Asset_ExtraStatic5
+;/********p* CampPlaceableScriptedActivatorEx/Asset_ExtraStatic5
 * SYNTAX
 */;
 Static property Asset_ExtraStatic5 auto
@@ -56,7 +56,7 @@ Static property Asset_ExtraStatic5 auto
 * Optional: A static to place near this object. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/Asset_ExtraActivator1
+;/********p* CampPlaceableScriptedActivatorEx/Asset_ExtraActivator1
 * SYNTAX
 */;
 Activator property Asset_ExtraActivator1 auto
@@ -65,7 +65,7 @@ Activator property Asset_ExtraActivator1 auto
 * Optional: An activator to place near this object. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/Asset_ExtraActivator2
+;/********p* CampPlaceableScriptedActivatorEx/Asset_ExtraActivator2
 * SYNTAX
 */;
 Activator property Asset_ExtraActivator2 auto
@@ -74,7 +74,7 @@ Activator property Asset_ExtraActivator2 auto
 * Optional: An activator to place near this object. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/Asset_ExtraActivator3
+;/********p* CampPlaceableScriptedActivatorEx/Asset_ExtraActivator3
 * SYNTAX
 */;
 Activator property Asset_ExtraActivator3 auto
@@ -83,7 +83,7 @@ Activator property Asset_ExtraActivator3 auto
 * Optional: An activator to place near this object. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/Asset_ExtraActivator4
+;/********p* CampPlaceableScriptedActivatorEx/Asset_ExtraActivator4
 * SYNTAX
 */;
 Activator property Asset_ExtraActivator4 auto
@@ -92,7 +92,7 @@ Activator property Asset_ExtraActivator4 auto
 * Optional: An activator to place near this object. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/Asset_ExtraActivator5
+;/********p* CampPlaceableScriptedActivatorEx/Asset_ExtraActivator5
 * SYNTAX
 */;
 Activator property Asset_ExtraActivator5 auto
@@ -101,7 +101,7 @@ Activator property Asset_ExtraActivator5 auto
 * Optional: An activator to place near this object. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/Asset_ExtraFurniture1
+;/********p* CampPlaceableScriptedActivatorEx/Asset_ExtraFurniture1
 * SYNTAX
 */;
 Furniture property Asset_ExtraFurniture1 auto
@@ -110,7 +110,7 @@ Furniture property Asset_ExtraFurniture1 auto
 * Optional: A piece of furniture to place near this object. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/Asset_ExtraFurniture2
+;/********p* CampPlaceableScriptedActivatorEx/Asset_ExtraFurniture2
 * SYNTAX
 */;
 Furniture property Asset_ExtraFurniture2 auto
@@ -119,7 +119,7 @@ Furniture property Asset_ExtraFurniture2 auto
 * Optional: A piece of furniture to place near this object. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/Asset_ExtraFurniture3
+;/********p* CampPlaceableScriptedActivatorEx/Asset_ExtraFurniture3
 * SYNTAX
 */;
 Furniture property Asset_ExtraFurniture3 auto
@@ -128,7 +128,7 @@ Furniture property Asset_ExtraFurniture3 auto
 * Optional: A piece of furniture to place near this object. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/Asset_ExtraFurniture4
+;/********p* CampPlaceableScriptedActivatorEx/Asset_ExtraFurniture4
 * SYNTAX
 */;
 Furniture property Asset_ExtraFurniture4 auto
@@ -137,7 +137,7 @@ Furniture property Asset_ExtraFurniture4 auto
 * Optional: A piece of furniture to place near this object. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/Asset_ExtraFurniture5
+;/********p* CampPlaceableScriptedActivatorEx/Asset_ExtraFurniture5
 * SYNTAX
 */;
 Furniture property Asset_ExtraFurniture5 auto
@@ -146,7 +146,7 @@ Furniture property Asset_ExtraFurniture5 auto
 * Optional: A piece of furniture to place near this object. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/Asset_ExtraLight1
+;/********p* CampPlaceableScriptedActivatorEx/Asset_ExtraLight1
 * SYNTAX
 */;
 Light property Asset_ExtraLight1 auto
@@ -155,7 +155,7 @@ Light property Asset_ExtraLight1 auto
 * Optional: A light source to place near this object. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/Asset_ExtraLight2
+;/********p* CampPlaceableScriptedActivatorEx/Asset_ExtraLight2
 * SYNTAX
 */;
 Light property Asset_ExtraLight2 auto
@@ -164,7 +164,7 @@ Light property Asset_ExtraLight2 auto
 * Optional: A light source to place near this object. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/Asset_ExtraLight3
+;/********p* CampPlaceableScriptedActivatorEx/Asset_ExtraLight3
 * SYNTAX
 */;
 Light property Asset_ExtraLight3 auto
@@ -173,7 +173,7 @@ Light property Asset_ExtraLight3 auto
 * Optional: A light source to place near this object. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/PositionRef_ExtraStatic1
+;/********p* CampPlaceableScriptedActivatorEx/PositionRef_ExtraStatic1
 * SYNTAX
 */;
 ObjectReference property PositionRef_ExtraStatic1 auto
@@ -182,7 +182,7 @@ ObjectReference property PositionRef_ExtraStatic1 auto
 * Optional: Extra Static object position reference. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/PositionRef_ExtraStatic2
+;/********p* CampPlaceableScriptedActivatorEx/PositionRef_ExtraStatic2
 * SYNTAX
 */;
 ObjectReference property PositionRef_ExtraStatic2 auto
@@ -191,7 +191,7 @@ ObjectReference property PositionRef_ExtraStatic2 auto
 * Optional: Extra Static object position reference. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/PositionRef_ExtraStatic3
+;/********p* CampPlaceableScriptedActivatorEx/PositionRef_ExtraStatic3
 * SYNTAX
 */;
 ObjectReference property PositionRef_ExtraStatic3 auto
@@ -200,7 +200,7 @@ ObjectReference property PositionRef_ExtraStatic3 auto
 * Optional: Extra Static object position reference. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/PositionRef_ExtraStatic4
+;/********p* CampPlaceableScriptedActivatorEx/PositionRef_ExtraStatic4
 * SYNTAX
 */;
 ObjectReference property PositionRef_ExtraStatic4 auto
@@ -209,7 +209,7 @@ ObjectReference property PositionRef_ExtraStatic4 auto
 * Optional: Extra Static object position reference. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/PositionRef_ExtraStatic5
+;/********p* CampPlaceableScriptedActivatorEx/PositionRef_ExtraStatic5
 * SYNTAX
 */;
 ObjectReference property PositionRef_ExtraStatic5 auto
@@ -218,7 +218,7 @@ ObjectReference property PositionRef_ExtraStatic5 auto
 * Optional: Extra Static object position reference. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/PositionRef_ExtraActivator1
+;/********p* CampPlaceableScriptedActivatorEx/PositionRef_ExtraActivator1
 * SYNTAX
 */;
 ObjectReference property PositionRef_ExtraActivator1 auto
@@ -227,7 +227,7 @@ ObjectReference property PositionRef_ExtraActivator1 auto
 * Optional: Extra Activator object position reference. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/PositionRef_ExtraActivator2
+;/********p* CampPlaceableScriptedActivatorEx/PositionRef_ExtraActivator2
 * SYNTAX
 */;
 ObjectReference property PositionRef_ExtraActivator2 auto
@@ -236,7 +236,7 @@ ObjectReference property PositionRef_ExtraActivator2 auto
 * Optional: Extra Activator object position reference. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/PositionRef_ExtraActivator3
+;/********p* CampPlaceableScriptedActivatorEx/PositionRef_ExtraActivator3
 * SYNTAX
 */;
 ObjectReference property PositionRef_ExtraActivator3 auto
@@ -245,7 +245,7 @@ ObjectReference property PositionRef_ExtraActivator3 auto
 * Optional: Extra Activator object position reference. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/PositionRef_ExtraActivator4
+;/********p* CampPlaceableScriptedActivatorEx/PositionRef_ExtraActivator4
 * SYNTAX
 */;
 ObjectReference property PositionRef_ExtraActivator4 auto
@@ -254,7 +254,7 @@ ObjectReference property PositionRef_ExtraActivator4 auto
 * Optional: Extra Activator object position reference. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/PositionRef_ExtraActivator5
+;/********p* CampPlaceableScriptedActivatorEx/PositionRef_ExtraActivator5
 * SYNTAX
 */;
 ObjectReference property PositionRef_ExtraActivator5 auto
@@ -263,7 +263,7 @@ ObjectReference property PositionRef_ExtraActivator5 auto
 * Optional: Extra Activator object position reference. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/PositionRef_ExtraFurniture1
+;/********p* CampPlaceableScriptedActivatorEx/PositionRef_ExtraFurniture1
 * SYNTAX
 */;
 ObjectReference property PositionRef_ExtraFurniture1 auto
@@ -272,7 +272,7 @@ ObjectReference property PositionRef_ExtraFurniture1 auto
 * Optional: Extra Furniture object position reference. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/PositionRef_ExtraFurniture2
+;/********p* CampPlaceableScriptedActivatorEx/PositionRef_ExtraFurniture2
 * SYNTAX
 */;
 ObjectReference property PositionRef_ExtraFurniture2 auto
@@ -281,7 +281,7 @@ ObjectReference property PositionRef_ExtraFurniture2 auto
 * Optional: Extra Furniture object position reference. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/PositionRef_ExtraFurniture3
+;/********p* CampPlaceableScriptedActivatorEx/PositionRef_ExtraFurniture3
 * SYNTAX
 */;
 ObjectReference property PositionRef_ExtraFurniture3 auto
@@ -290,7 +290,7 @@ ObjectReference property PositionRef_ExtraFurniture3 auto
 * Optional: Extra Furniture object position reference. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/PositionRef_ExtraFurniture4
+;/********p* CampPlaceableScriptedActivatorEx/PositionRef_ExtraFurniture4
 * SYNTAX
 */;
 ObjectReference property PositionRef_ExtraFurniture4 auto
@@ -299,7 +299,7 @@ ObjectReference property PositionRef_ExtraFurniture4 auto
 * Optional: Extra Furniture object position reference. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/PositionRef_ExtraFurniture5
+;/********p* CampPlaceableScriptedActivatorEx/PositionRef_ExtraFurniture5
 * SYNTAX
 */;
 ObjectReference property PositionRef_ExtraFurniture5 auto
@@ -308,7 +308,7 @@ ObjectReference property PositionRef_ExtraFurniture5 auto
 * Optional: Extra Furniture object position reference. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/PositionRef_ExtraLight1
+;/********p* CampPlaceableScriptedActivatorEx/PositionRef_ExtraLight1
 * SYNTAX
 */;
 ObjectReference property PositionRef_ExtraLight1 auto
@@ -317,7 +317,7 @@ ObjectReference property PositionRef_ExtraLight1 auto
 * Optional: Extra Light object position reference. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/PositionRef_ExtraLight2
+;/********p* CampPlaceableScriptedActivatorEx/PositionRef_ExtraLight2
 * SYNTAX
 */;
 ObjectReference property PositionRef_ExtraLight2 auto
@@ -326,7 +326,7 @@ ObjectReference property PositionRef_ExtraLight2 auto
 * Optional: Extra Light object position reference. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/PositionRef_ExtraLight3
+;/********p* CampPlaceableScriptedActivatorEx/PositionRef_ExtraLight3
 * SYNTAX
 */;
 ObjectReference property PositionRef_ExtraLight3 auto
@@ -335,7 +335,7 @@ ObjectReference property PositionRef_ExtraLight3 auto
 * Optional: Extra Light object position reference. }
 ;*********/;
 
-;/********p* CampPlaceableObjectEx/RequiredPositionRef_CenterObject
+;/********p* CampPlaceableScriptedActivatorEx/RequiredPositionRef_CenterObject
 * SYNTAX
 */;
 ObjectReference property RequiredPositionRef_CenterObject auto
@@ -345,6 +345,6 @@ ObjectReference property RequiredPositionRef_CenterObject auto
 ;*********/;
 
 function TakeDown()
-	CampDebug(0, self + " TakeDown (CampPlaceableObjectEx)")
+	CampDebug(0, self + " TakeDown (CampPlaceableScriptedActivatorEx)")
 	parent.TakeDown()
 endFunction
