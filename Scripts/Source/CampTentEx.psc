@@ -6,8 +6,7 @@ scriptname CampTentEx extends CampTent
 * OVERVIEW
 * This script is an expanded version of CampTent, and includes a larger number of optional properties 
 * in order to create more elaborate tents. CampTentEx includes support for up to 3 follower bed rolls,
-* 2 additional lanterns, new clutter options, and more. As with CampTent, only the PlayerBed, 
-* SitFurniture, and LieDownFurniture Position References are required for the tent to work.
+* 2 additional lanterns, new clutter options, and more.
 ;*********/;
 
 import _CampInternal
