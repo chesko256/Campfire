@@ -1117,206 +1117,218 @@ endFunction
 
 function COSLoadUp()
 	bool loaded
-	string sCOSPluginName
-	
-	loaded = IsPluginLoaded(0x0200F615, "Complete Crafting Overhaul_Remade.esp")
-	sCOSPluginName = "Complete Crafting Overhaul_Remade.esp"
 
-	if !loaded
-		loaded = IsPluginLoaded(0x0200F615, "Cloaks.esp")
-		sCOSPluginName = "Cloaks.esp"
+	loaded = IsPluginLoaded(0x0200F615, "Complete Crafting Overhaul_Remade.esp")
+	if loaded
+		SendEvent_ModDatastoreName("Complete Crafting Overhaul Remade")
+		AddCOSDatastoreEntries("Complete Crafting Overhaul_Remade.esp")
 	endif
-	
+
+	loaded = IsPluginLoaded(0x0200F615, "Cloaks.esp")
+	if loaded
+		SendEvent_ModDatastoreName("Cloaks of Skyrim")
+		AddCOSDatastoreEntries("Cloaks.esp")
+	endif
 	if !loaded
 		loaded = IsPluginLoaded(0x0200F615, "Cloaks - Player Only.esp")
-		sCOSPluginName = "Cloaks - Player Only.esp"
+		if loaded
+			SendEvent_ModDatastoreName("Cloaks of Skyrim")
+			AddCOSDatastoreEntries("Cloaks - Player Only.esp")
+		endif
 	endif
-	
 	if !loaded
 		loaded = IsPluginLoaded(0x0200F615, "Cloaks - No Imperial.esp")
-		sCOSPluginName = "Cloaks - No Imperial.esp"
+		if loaded
+			SendEvent_ModDatastoreName("Cloaks of Skyrim")
+			AddCOSDatastoreEntries("Cloaks - No Imperial.esp")
+		endif
 	endif
-	
-	if !loaded
-		return
-	endif
-	
+endFunction
+
+function AddCOSDatastoreEntries(string asPluginName)
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
 	; Check if already loaded
-	if handler.DatastoreHasEntry("58747___" + sCOSPluginName, 7)
+	if handler.DatastoreHasEntry("58747___" + asPluginName, 7)
 		return
 	endif
 
-	SendEvent_ModDatastoreName("Cloaks of Skyrim")
-
 	;==========BURLAP CLOAKS===========
-	handler.AddDatastoreEntryByKey("58747___" + sCOSPluginName, 7, 5, 5) ; CloakForswornAlt
-	handler.AddDatastoreEntryByKey("53213___" + sCOSPluginName, 7, 5, 5) ; CloakBurned
-	handler.AddDatastoreEntryByKey("49074___" + sCOSPluginName, 7, 5, 5) ; CloakAshlander1
-	handler.AddDatastoreEntryByKey("33856___" + sCOSPluginName, 7, 5, 5) ; CloakHjarvoBlanket
-	handler.AddDatastoreEntryByKey("62998___" + sCOSPluginName, 7, 5, 5) ; CloakDwemerCeremonial
-	handler.AddDatastoreEntryByKey("62977___" + sCOSPluginName, 7, 5, 5) ; CloakAshlander2
-	handler.AddDatastoreEntryByKey("61588___" + sCOSPluginName, 7, 5, 5) ; CloakNecroAlt
-	handler.AddDatastoreEntryByKey("28327___" + sCOSPluginName, 7, 5, 5) ; CloakDwemer
-	handler.AddDatastoreEntryByKey("28329___" + sCOSPluginName, 7, 5, 5) ; CloakDwemerAlt
-	handler.AddDatastoreEntryByKey("53221___" + sCOSPluginName, 7, 5, 5) ; CloakWarmSands
-	handler.AddDatastoreEntryByKey("67140___" + sCOSPluginName, 7, 5, 5) ; CloakDragonPriest
-	handler.AddDatastoreEntryByKey("58751___" + sCOSPluginName, 7, 5, 5) ; CloakWildHunt
-	handler.AddDatastoreEntryByKey("61587___" + sCOSPluginName, 7, 5, 5) ; CloakNecro
-	handler.AddDatastoreEntryByKey("75456___" + sCOSPluginName, 7, 5, 5) ; CloakShortLover
-	handler.AddDatastoreEntryByKey("75455___" + sCOSPluginName, 7, 5, 5) ; CloakShortRedEagle
-	handler.AddDatastoreEntryByKey("76856___" + sCOSPluginName, 7, 5, 5) ; CloakShortBlackTalos
-	handler.AddDatastoreEntryByKey("76854___" + sCOSPluginName, 7, 5, 5) ; CloakShortSilverhand
-	handler.AddDatastoreEntryByKey("76852___" + sCOSPluginName, 7, 5, 5) ; CloakShortStormcloak
-	handler.AddDatastoreEntryByKey("76850___" + sCOSPluginName, 7, 5, 5) ; CloakShortMossy
-	handler.AddDatastoreEntryByKey("74045___" + sCOSPluginName, 7, 5, 5) ; CloakDPOtar
-	handler.AddDatastoreEntryByKey("74046___" + sCOSPluginName, 7, 5, 5) ; CloakDPVokun
-	handler.AddDatastoreEntryByKey("74047___" + sCOSPluginName, 7, 5, 5) ; CloakDPVolsung
-	handler.AddDatastoreEntryByKey("74048___" + sCOSPluginName, 7, 5, 5) ; CloakDPRahgot
-	handler.AddDatastoreEntryByKey("74043___" + sCOSPluginName, 7, 5, 5) ; CloakDPKrosis
-	handler.AddDatastoreEntryByKey("74044___" + sCOSPluginName, 7, 5, 5) ; CloakDPMorokei
-	handler.AddDatastoreEntryByKey("68520___" + sCOSPluginName, 7, 5, 5) ; CloakDPHevnoraak
-	handler.AddDatastoreEntryByKey("68522___" + sCOSPluginName, 7, 5, 5) ; CloakDPNahkriin
-	handler.AddDatastoreEntryByKey("62979___" + sCOSPluginName, 7, 5, 5) ; CloakBlackBurlap
-	handler.AddDatastoreEntryByKey("62980___" + sCOSPluginName, 7, 5, 5) ; CloakBlueBurlap
-	handler.AddDatastoreEntryByKey("62981___" + sCOSPluginName, 7, 5, 5) ; CloakBrownBurlap
-	handler.AddDatastoreEntryByKey("62982___" + sCOSPluginName, 7, 5, 5) ; CloakCrimsonBurlap
-	handler.AddDatastoreEntryByKey("62983___" + sCOSPluginName, 7, 5, 5) ; CloakGreenBurlap
-	handler.AddDatastoreEntryByKey("62984___" + sCOSPluginName, 7, 5, 5) ; CloakGreyBurlap
-	handler.AddDatastoreEntryByKey("62985___" + sCOSPluginName, 7, 5, 5) ; CloakWhiteBurlap
-	handler.AddDatastoreEntryByKey("74062___" + sCOSPluginName, 7, 5, 5) ; CloakShortBlueBurlap
-	handler.AddDatastoreEntryByKey("74063___" + sCOSPluginName, 7, 5, 5) ; CloakShortBlackBurlap
-	handler.AddDatastoreEntryByKey("74066___" + sCOSPluginName, 7, 5, 5) ; CloakShortBrownBurlap
-	handler.AddDatastoreEntryByKey("74068___" + sCOSPluginName, 7, 5, 5) ; CloakShortCrimsonBurlap
-	handler.AddDatastoreEntryByKey("74070___" + sCOSPluginName, 7, 5, 5) ; CloakShortGreenBurlap
-	handler.AddDatastoreEntryByKey("74072___" + sCOSPluginName, 7, 5, 5) ; CloakShortGreyBurlap
-	handler.AddDatastoreEntryByKey("74074___" + sCOSPluginName, 7, 5, 5) ; CloakShortWhiteBurlap
+	handler.AddDatastoreEntryByKey("58747___" + asPluginName, 7, 5, 5) ; CloakForswornAlt
+	handler.AddDatastoreEntryByKey("53213___" + asPluginName, 7, 5, 5) ; CloakBurned
+	handler.AddDatastoreEntryByKey("49074___" + asPluginName, 7, 5, 5) ; CloakAshlander1
+	handler.AddDatastoreEntryByKey("33856___" + asPluginName, 7, 5, 5) ; CloakHjarvoBlanket
+	handler.AddDatastoreEntryByKey("62998___" + asPluginName, 7, 5, 5) ; CloakDwemerCeremonial
+	handler.AddDatastoreEntryByKey("62977___" + asPluginName, 7, 5, 5) ; CloakAshlander2
+	handler.AddDatastoreEntryByKey("61588___" + asPluginName, 7, 5, 5) ; CloakNecroAlt
+	handler.AddDatastoreEntryByKey("28327___" + asPluginName, 7, 5, 5) ; CloakDwemer
+	handler.AddDatastoreEntryByKey("28329___" + asPluginName, 7, 5, 5) ; CloakDwemerAlt
+	handler.AddDatastoreEntryByKey("53221___" + asPluginName, 7, 5, 5) ; CloakWarmSands
+	handler.AddDatastoreEntryByKey("67140___" + asPluginName, 7, 5, 5) ; CloakDragonPriest
+	handler.AddDatastoreEntryByKey("58751___" + asPluginName, 7, 5, 5) ; CloakWildHunt
+	handler.AddDatastoreEntryByKey("61587___" + asPluginName, 7, 5, 5) ; CloakNecro
+	handler.AddDatastoreEntryByKey("75456___" + asPluginName, 7, 5, 5) ; CloakShortLover
+	handler.AddDatastoreEntryByKey("75455___" + asPluginName, 7, 5, 5) ; CloakShortRedEagle
+	handler.AddDatastoreEntryByKey("76856___" + asPluginName, 7, 5, 5) ; CloakShortBlackTalos
+	handler.AddDatastoreEntryByKey("76854___" + asPluginName, 7, 5, 5) ; CloakShortSilverhand
+	handler.AddDatastoreEntryByKey("76852___" + asPluginName, 7, 5, 5) ; CloakShortStormcloak
+	handler.AddDatastoreEntryByKey("76850___" + asPluginName, 7, 5, 5) ; CloakShortMossy
+	handler.AddDatastoreEntryByKey("74045___" + asPluginName, 7, 5, 5) ; CloakDPOtar
+	handler.AddDatastoreEntryByKey("74046___" + asPluginName, 7, 5, 5) ; CloakDPVokun
+	handler.AddDatastoreEntryByKey("74047___" + asPluginName, 7, 5, 5) ; CloakDPVolsung
+	handler.AddDatastoreEntryByKey("74048___" + asPluginName, 7, 5, 5) ; CloakDPRahgot
+	handler.AddDatastoreEntryByKey("74043___" + asPluginName, 7, 5, 5) ; CloakDPKrosis
+	handler.AddDatastoreEntryByKey("74044___" + asPluginName, 7, 5, 5) ; CloakDPMorokei
+	handler.AddDatastoreEntryByKey("68520___" + asPluginName, 7, 5, 5) ; CloakDPHevnoraak
+	handler.AddDatastoreEntryByKey("68522___" + asPluginName, 7, 5, 5) ; CloakDPNahkriin
+	handler.AddDatastoreEntryByKey("62979___" + asPluginName, 7, 5, 5) ; CloakBlackBurlap
+	handler.AddDatastoreEntryByKey("62980___" + asPluginName, 7, 5, 5) ; CloakBlueBurlap
+	handler.AddDatastoreEntryByKey("62981___" + asPluginName, 7, 5, 5) ; CloakBrownBurlap
+	handler.AddDatastoreEntryByKey("62982___" + asPluginName, 7, 5, 5) ; CloakCrimsonBurlap
+	handler.AddDatastoreEntryByKey("62983___" + asPluginName, 7, 5, 5) ; CloakGreenBurlap
+	handler.AddDatastoreEntryByKey("62984___" + asPluginName, 7, 5, 5) ; CloakGreyBurlap
+	handler.AddDatastoreEntryByKey("62985___" + asPluginName, 7, 5, 5) ; CloakWhiteBurlap
+	handler.AddDatastoreEntryByKey("74062___" + asPluginName, 7, 5, 5) ; CloakShortBlueBurlap
+	handler.AddDatastoreEntryByKey("74063___" + asPluginName, 7, 5, 5) ; CloakShortBlackBurlap
+	handler.AddDatastoreEntryByKey("74066___" + asPluginName, 7, 5, 5) ; CloakShortBrownBurlap
+	handler.AddDatastoreEntryByKey("74068___" + asPluginName, 7, 5, 5) ; CloakShortCrimsonBurlap
+	handler.AddDatastoreEntryByKey("74070___" + asPluginName, 7, 5, 5) ; CloakShortGreenBurlap
+	handler.AddDatastoreEntryByKey("74072___" + asPluginName, 7, 5, 5) ; CloakShortGreyBurlap
+	handler.AddDatastoreEntryByKey("74074___" + asPluginName, 7, 5, 5) ; CloakShortWhiteBurlap
 	
 	;==========LINEN CLOAKS===========
-	handler.AddDatastoreEntryByKey("58748___" + sCOSPluginName, 7, 10, 10) ; CloakImperialGold
-	handler.AddDatastoreEntryByKey("40785___" + sCOSPluginName, 7, 10, 10) ; CloakKvatch
-	handler.AddDatastoreEntryByKey("46316___" + sCOSPluginName, 7, 10, 10) ; CloakVaermina
-	handler.AddDatastoreEntryByKey("32476___" + sCOSPluginName, 7, 10, 10) ; CloakFallWinterhold
-	handler.AddDatastoreEntryByKey("25551___" + sCOSPluginName, 7, 10, 10) ; CloakThalmorAlt
-	handler.AddDatastoreEntryByKey("24169___" + sCOSPluginName, 7, 10, 10) ; CloakThalmor
-	handler.AddDatastoreEntryByKey("25552___" + sCOSPluginName, 7, 10, 10) ; CloakThalmorAltEnch
-	handler.AddDatastoreEntryByKey("58749___" + sCOSPluginName, 7, 10, 10) ; CloakImperialSilver
-	handler.AddDatastoreEntryByKey("62995___" + sCOSPluginName, 7, 10, 10) ; CloakDwemerPurple
-	handler.AddDatastoreEntryByKey("53223___" + sCOSPluginName, 7, 10, 10) ; CloakSolitudeLinen
-	handler.AddDatastoreEntryByKey("42172___" + sCOSPluginName, 7, 10, 10) ; CloakMarkarthLinen
-	handler.AddDatastoreEntryByKey("42170___" + sCOSPluginName, 7, 10, 10) ; CloakFalkreathLinen
-	handler.AddDatastoreEntryByKey("38022___" + sCOSPluginName, 7, 10, 10) ; CloakRiftenLinen
-	handler.AddDatastoreEntryByKey("22786___" + sCOSPluginName, 7, 10, 10) ; CloakLinenBrownHealth02
-	handler.AddDatastoreEntryByKey("21380___" + sCOSPluginName, 7, 10, 10) ; CloakWhiterunLinen
-	handler.AddDatastoreEntryByKey("21390___" + sCOSPluginName, 7, 10, 10) ; CloakBrownLinen
-	handler.AddDatastoreEntryByKey("21391___" + sCOSPluginName, 7, 10, 10) ; CloakCrimsonLinen
-	handler.AddDatastoreEntryByKey("21392___" + sCOSPluginName, 7, 10, 10) ; CloakDawnstarLinen
-	handler.AddDatastoreEntryByKey("21393___" + sCOSPluginName, 7, 10, 10) ; CloakGreenLinen
-	handler.AddDatastoreEntryByKey("21394___" + sCOSPluginName, 7, 10, 10) ; CloakGreyLinen
-	handler.AddDatastoreEntryByKey("21395___" + sCOSPluginName, 7, 10, 10) ; CloakHjaalmarchLinen
-	handler.AddDatastoreEntryByKey("21396___" + sCOSPluginName, 7, 10, 10) ; CloakStormcloakLinen
-	handler.AddDatastoreEntryByKey("21397___" + sCOSPluginName, 7, 10, 10) ; CloakWhiteLinen
-	handler.AddDatastoreEntryByKey("21379___" + sCOSPluginName, 7, 10, 10) ; CloakBlackLinen
-	handler.AddDatastoreEntryByKey("22785___" + sCOSPluginName, 7, 10, 10) ; CloakLinenBrownHealth01
-	handler.AddDatastoreEntryByKey("22784___" + sCOSPluginName, 7, 10, 10) ; CloakLinenBlackResist02
-	handler.AddDatastoreEntryByKey("22783___" + sCOSPluginName, 7, 10, 10) ; CloakLinenBlackResist01
-	handler.AddDatastoreEntryByKey("25557___" + sCOSPluginName, 7, 10, 10) ; CloakBlueLinen
-	handler.AddDatastoreEntryByKey("25563___" + sCOSPluginName, 7, 10, 10) ; CloakWinterholdLinen
-	handler.AddDatastoreEntryByKey("72658___" + sCOSPluginName, 7, 10, 10) ; CloakShortBlack
-	handler.AddDatastoreEntryByKey("74064___" + sCOSPluginName, 7, 10, 10) ; CloakShortBlue
-	handler.AddDatastoreEntryByKey("74065___" + sCOSPluginName, 7, 10, 10) ; CloakShortBrown
-	handler.AddDatastoreEntryByKey("74067___" + sCOSPluginName, 7, 10, 10) ; CloakShortCrimson
-	handler.AddDatastoreEntryByKey("74069___" + sCOSPluginName, 7, 10, 10) ; CloakShortGreen
-	handler.AddDatastoreEntryByKey("74071___" + sCOSPluginName, 7, 10, 10) ; CloakShortGrey
-	handler.AddDatastoreEntryByKey("74073___" + sCOSPluginName, 7, 10, 10) ; CloakShortWhite
-	handler.AddDatastoreEntryByKey("83903___" + sCOSPluginName, 7, 10, 10) ; CloakShortCollege
-	handler.AddDatastoreEntryByKey("1066944___" + sCOSPluginName, 7, 10, 10) ; CloakShortDawnstar
-	handler.AddDatastoreEntryByKey("1066945___" + sCOSPluginName, 7, 10, 10) ; CloakShortFalkreath
-	handler.AddDatastoreEntryByKey("1066946___" + sCOSPluginName, 7, 10, 10) ; CloakShortHjaalmarch
-	handler.AddDatastoreEntryByKey("1066947___" + sCOSPluginName, 7, 10, 10) ; CloakShortMarkarth
-	handler.AddDatastoreEntryByKey("1066948___" + sCOSPluginName, 7, 10, 10) ; CloakShortRiften
-	handler.AddDatastoreEntryByKey("1066949___" + sCOSPluginName, 7, 10, 10) ; CloakShortSolitude
-	handler.AddDatastoreEntryByKey("1066950___" + sCOSPluginName, 7, 10, 10) ; CloakShortWhiterun
-	handler.AddDatastoreEntryByKey("1066951___" + sCOSPluginName, 7, 10, 10) ; CloakShortWinterhold
+	handler.AddDatastoreEntryByKey("58748___" + asPluginName, 7, 10, 10) ; CloakImperialGold
+	handler.AddDatastoreEntryByKey("40785___" + asPluginName, 7, 10, 10) ; CloakKvatch
+	handler.AddDatastoreEntryByKey("46316___" + asPluginName, 7, 10, 10) ; CloakVaermina
+	handler.AddDatastoreEntryByKey("32476___" + asPluginName, 7, 10, 10) ; CloakFallWinterhold
+	handler.AddDatastoreEntryByKey("25551___" + asPluginName, 7, 10, 10) ; CloakThalmorAlt
+	handler.AddDatastoreEntryByKey("24169___" + asPluginName, 7, 10, 10) ; CloakThalmor
+	handler.AddDatastoreEntryByKey("25552___" + asPluginName, 7, 10, 10) ; CloakThalmorAltEnch
+	handler.AddDatastoreEntryByKey("58749___" + asPluginName, 7, 10, 10) ; CloakImperialSilver
+	handler.AddDatastoreEntryByKey("62995___" + asPluginName, 7, 10, 10) ; CloakDwemerPurple
+	handler.AddDatastoreEntryByKey("53223___" + asPluginName, 7, 10, 10) ; CloakSolitudeLinen
+	handler.AddDatastoreEntryByKey("42172___" + asPluginName, 7, 10, 10) ; CloakMarkarthLinen
+	handler.AddDatastoreEntryByKey("42170___" + asPluginName, 7, 10, 10) ; CloakFalkreathLinen
+	handler.AddDatastoreEntryByKey("38022___" + asPluginName, 7, 10, 10) ; CloakRiftenLinen
+	handler.AddDatastoreEntryByKey("22786___" + asPluginName, 7, 10, 10) ; CloakLinenBrownHealth02
+	handler.AddDatastoreEntryByKey("21380___" + asPluginName, 7, 10, 10) ; CloakWhiterunLinen
+	handler.AddDatastoreEntryByKey("21390___" + asPluginName, 7, 10, 10) ; CloakBrownLinen
+	handler.AddDatastoreEntryByKey("21391___" + asPluginName, 7, 10, 10) ; CloakCrimsonLinen
+	handler.AddDatastoreEntryByKey("21392___" + asPluginName, 7, 10, 10) ; CloakDawnstarLinen
+	handler.AddDatastoreEntryByKey("21393___" + asPluginName, 7, 10, 10) ; CloakGreenLinen
+	handler.AddDatastoreEntryByKey("21394___" + asPluginName, 7, 10, 10) ; CloakGreyLinen
+	handler.AddDatastoreEntryByKey("21395___" + asPluginName, 7, 10, 10) ; CloakHjaalmarchLinen
+	handler.AddDatastoreEntryByKey("21396___" + asPluginName, 7, 10, 10) ; CloakStormcloakLinen
+	handler.AddDatastoreEntryByKey("21397___" + asPluginName, 7, 10, 10) ; CloakWhiteLinen
+	handler.AddDatastoreEntryByKey("21379___" + asPluginName, 7, 10, 10) ; CloakBlackLinen
+	handler.AddDatastoreEntryByKey("22785___" + asPluginName, 7, 10, 10) ; CloakLinenBrownHealth01
+	handler.AddDatastoreEntryByKey("22784___" + asPluginName, 7, 10, 10) ; CloakLinenBlackResist02
+	handler.AddDatastoreEntryByKey("22783___" + asPluginName, 7, 10, 10) ; CloakLinenBlackResist01
+	handler.AddDatastoreEntryByKey("25557___" + asPluginName, 7, 10, 10) ; CloakBlueLinen
+	handler.AddDatastoreEntryByKey("25563___" + asPluginName, 7, 10, 10) ; CloakWinterholdLinen
+	handler.AddDatastoreEntryByKey("72658___" + asPluginName, 7, 10, 10) ; CloakShortBlack
+	handler.AddDatastoreEntryByKey("74064___" + asPluginName, 7, 10, 10) ; CloakShortBlue
+	handler.AddDatastoreEntryByKey("74065___" + asPluginName, 7, 10, 10) ; CloakShortBrown
+	handler.AddDatastoreEntryByKey("74067___" + asPluginName, 7, 10, 10) ; CloakShortCrimson
+	handler.AddDatastoreEntryByKey("74069___" + asPluginName, 7, 10, 10) ; CloakShortGreen
+	handler.AddDatastoreEntryByKey("74071___" + asPluginName, 7, 10, 10) ; CloakShortGrey
+	handler.AddDatastoreEntryByKey("74073___" + asPluginName, 7, 10, 10) ; CloakShortWhite
+	handler.AddDatastoreEntryByKey("83903___" + asPluginName, 7, 10, 10) ; CloakShortCollege
+	handler.AddDatastoreEntryByKey("1066944___" + asPluginName, 7, 10, 10) ; CloakShortDawnstar
+	handler.AddDatastoreEntryByKey("1066945___" + asPluginName, 7, 10, 10) ; CloakShortFalkreath
+	handler.AddDatastoreEntryByKey("1066946___" + asPluginName, 7, 10, 10) ; CloakShortHjaalmarch
+	handler.AddDatastoreEntryByKey("1066947___" + asPluginName, 7, 10, 10) ; CloakShortMarkarth
+	handler.AddDatastoreEntryByKey("1066948___" + asPluginName, 7, 10, 10) ; CloakShortRiften
+	handler.AddDatastoreEntryByKey("1066949___" + asPluginName, 7, 10, 10) ; CloakShortSolitude
+	handler.AddDatastoreEntryByKey("1066950___" + asPluginName, 7, 10, 10) ; CloakShortWhiterun
+	handler.AddDatastoreEntryByKey("1066951___" + asPluginName, 7, 10, 10) ; CloakShortWinterhold
 		
 	;==========HIDE CLOAKS===========
-	handler.AddDatastoreEntryByKey("50454___" + sCOSPluginName, 7, 12, 40) ; CloakForsworn
-	handler.AddDatastoreEntryByKey("53219___" + sCOSPluginName, 7, 12, 40) ; CloakNorthPaladin
-	handler.AddDatastoreEntryByKey("38016___" + sCOSPluginName, 7, 12, 40) ; CloakHuntersFolly
-	handler.AddDatastoreEntryByKey("29714___" + sCOSPluginName, 7, 12, 40) ; CloakCrow
-	handler.AddDatastoreEntryByKey("31094___" + sCOSPluginName, 7, 12, 40) ; CloakNya
-	handler.AddDatastoreEntryByKey("31096___" + sCOSPluginName, 7, 12, 40) ; CloakGreyFox
-	handler.AddDatastoreEntryByKey("24170___" + sCOSPluginName, 7, 12, 40) ; CloakGreybeard
-	handler.AddDatastoreEntryByKey("4820___" + sCOSPluginName, 7, 12, 40) ; CloakBrownHealth01
-	handler.AddDatastoreEntryByKey("4822___" + sCOSPluginName, 7, 12, 40) ; CloakBlackResist01
-	handler.AddDatastoreEntryByKey("4823___" + sCOSPluginName, 7, 12, 40) ; CloakBlackResist02
-	handler.AddDatastoreEntryByKey("4821___" + sCOSPluginName, 7, 12, 40) ; CloakBrownHealth02
-	handler.AddDatastoreEntryByKey("62997___" + sCOSPluginName, 7, 12, 40) ; CloakDwemerPurpleAlt
-	handler.AddDatastoreEntryByKey("42171___" + sCOSPluginName, 7, 12, 40) ; CloakMarkarth
-	handler.AddDatastoreEntryByKey("42169___" + sCOSPluginName, 7, 12, 40) ; CloakFalkreath
-	handler.AddDatastoreEntryByKey("38021___" + sCOSPluginName, 7, 12, 40) ; CloakRiften
-	handler.AddDatastoreEntryByKey("25554___" + sCOSPluginName, 7, 12, 40) ; CloakBlue
-	handler.AddDatastoreEntryByKey("18617___" + sCOSPluginName, 7, 12, 40) ; CloakHjaalmarch
-	handler.AddDatastoreEntryByKey("18618___" + sCOSPluginName, 7, 12, 40) ; CloakDawnstar
-	handler.AddDatastoreEntryByKey("3435___" + sCOSPluginName, 7, 12, 40) ; CloakCrimson
-	handler.AddDatastoreEntryByKey("3432___" + sCOSPluginName, 7, 12, 40) ; CloakGreen
-	handler.AddDatastoreEntryByKey("10340___" + sCOSPluginName, 7, 12, 40) ; CloakStormcloak
-	handler.AddDatastoreEntryByKey("3431___" + sCOSPluginName, 7, 12, 40) ; CloakBlack
-	handler.AddDatastoreEntryByKey("3430___" + sCOSPluginName, 7, 12, 40) ; CloakBrown
-	handler.AddDatastoreEntryByKey("3433___" + sCOSPluginName, 7, 12, 40) ; CloakGrey
-	handler.AddDatastoreEntryByKey("17235___" + sCOSPluginName, 7, 12, 40) ; CloakWhite
-	handler.AddDatastoreEntryByKey("22787___" + sCOSPluginName, 7, 12, 40) ; CloakWhiterun
-	handler.AddDatastoreEntryByKey("25562___" + sCOSPluginName, 7, 12, 40) ; CloakWinterhold
-	handler.AddDatastoreEntryByKey("25564___" + sCOSPluginName, 7, 12, 40) ; CloakSolitude
-	handler.AddDatastoreEntryByKey("57362___" + sCOSPluginName, 7, 12, 40) ; CloakHimirHide
+	handler.AddDatastoreEntryByKey("50454___" + asPluginName, 7, 12, 40) ; CloakForsworn
+	handler.AddDatastoreEntryByKey("53219___" + asPluginName, 7, 12, 40) ; CloakNorthPaladin
+	handler.AddDatastoreEntryByKey("38016___" + asPluginName, 7, 12, 40) ; CloakHuntersFolly
+	handler.AddDatastoreEntryByKey("29714___" + asPluginName, 7, 12, 40) ; CloakCrow
+	handler.AddDatastoreEntryByKey("31094___" + asPluginName, 7, 12, 40) ; CloakNya
+	handler.AddDatastoreEntryByKey("31096___" + asPluginName, 7, 12, 40) ; CloakGreyFox
+	handler.AddDatastoreEntryByKey("24170___" + asPluginName, 7, 12, 40) ; CloakGreybeard
+	handler.AddDatastoreEntryByKey("4820___" + asPluginName, 7, 12, 40) ; CloakBrownHealth01
+	handler.AddDatastoreEntryByKey("4822___" + asPluginName, 7, 12, 40) ; CloakBlackResist01
+	handler.AddDatastoreEntryByKey("4823___" + asPluginName, 7, 12, 40) ; CloakBlackResist02
+	handler.AddDatastoreEntryByKey("4821___" + asPluginName, 7, 12, 40) ; CloakBrownHealth02
+	handler.AddDatastoreEntryByKey("62997___" + asPluginName, 7, 12, 40) ; CloakDwemerPurpleAlt
+	handler.AddDatastoreEntryByKey("42171___" + asPluginName, 7, 12, 40) ; CloakMarkarth
+	handler.AddDatastoreEntryByKey("42169___" + asPluginName, 7, 12, 40) ; CloakFalkreath
+	handler.AddDatastoreEntryByKey("38021___" + asPluginName, 7, 12, 40) ; CloakRiften
+	handler.AddDatastoreEntryByKey("25554___" + asPluginName, 7, 12, 40) ; CloakBlue
+	handler.AddDatastoreEntryByKey("18617___" + asPluginName, 7, 12, 40) ; CloakHjaalmarch
+	handler.AddDatastoreEntryByKey("18618___" + asPluginName, 7, 12, 40) ; CloakDawnstar
+	handler.AddDatastoreEntryByKey("3435___" + asPluginName, 7, 12, 40) ; CloakCrimson
+	handler.AddDatastoreEntryByKey("3432___" + asPluginName, 7, 12, 40) ; CloakGreen
+	handler.AddDatastoreEntryByKey("10340___" + asPluginName, 7, 12, 40) ; CloakStormcloak
+	handler.AddDatastoreEntryByKey("3431___" + asPluginName, 7, 12, 40) ; CloakBlack
+	handler.AddDatastoreEntryByKey("3430___" + asPluginName, 7, 12, 40) ; CloakBrown
+	handler.AddDatastoreEntryByKey("3433___" + asPluginName, 7, 12, 40) ; CloakGrey
+	handler.AddDatastoreEntryByKey("17235___" + asPluginName, 7, 12, 40) ; CloakWhite
+	handler.AddDatastoreEntryByKey("22787___" + asPluginName, 7, 12, 40) ; CloakWhiterun
+	handler.AddDatastoreEntryByKey("25562___" + asPluginName, 7, 12, 40) ; CloakWinterhold
+	handler.AddDatastoreEntryByKey("25564___" + asPluginName, 7, 12, 40) ; CloakSolitude
+	handler.AddDatastoreEntryByKey("57362___" + asPluginName, 7, 12, 40) ; CloakHimirHide
 	
 	;Cloaks of Skyrim 1.2
-	handler.AddDatastoreEntryByKey("94961___" + sCOSPluginName, 7, 10, 10) ; CloakDaedric
-	handler.AddDatastoreEntryByKey("100481___" + sCOSPluginName, 7, 10, 10) ; CloakComp
-	handler.AddDatastoreEntryByKey("89445___" + sCOSPluginName, 7, 10, 10) ; CloakShortImperial
-	handler.AddDatastoreEntryByKey("94961___" + sCOSPluginName, 7, 12, 40) ; CloakScale
+	handler.AddDatastoreEntryByKey("94961___" + asPluginName, 7, 10, 10) ; CloakDaedric
+	handler.AddDatastoreEntryByKey("100481___" + asPluginName, 7, 10, 10) ; CloakComp
+	handler.AddDatastoreEntryByKey("89445___" + asPluginName, 7, 10, 10) ; CloakShortImperial
+	handler.AddDatastoreEntryByKey("94961___" + asPluginName, 7, 12, 40) ; CloakScale
 endFunction
 
 function COSDGLoadUp()
 	bool loaded
-	string sCOSDGPluginName
 
 	loaded = IsPluginLoaded(0x00005905, "Complete Crafting Overhaul_Remade.esp")
-	sCOSDGPluginName = "Complete Crafting Overhaul_Remade.esp"
-	if !loaded
-		loaded = IsPluginLoaded(0x00000D64, "Cloaks - Dawnguard.esp")
-		sCOSDGPluginName = "Cloaks - Dawnguard.esp"
+	if loaded
+		SendEvent_ModDatastoreName("Complete Crafting Overhaul Remade")
+		AddCOSDGDatastoreEntries("Complete Crafting Overhaul_Remade.esp")
+	endif
+
+	loaded = IsPluginLoaded(0x00000D64, "Cloaks - Dawnguard.esp")
+	if loaded
+		SendEvent_ModDatastoreName("Cloaks of Skyrim - Dawnguard")
+		AddCOSDGDatastoreEntries("Cloaks - Dawnguard.esp")
 	endif
 	if !loaded
 		loaded = IsPluginLoaded(0x00000D64, "Cloaks - Player Only - Dawnguard.esp")
-		sCOSDGPluginName = "Cloaks - Player Only - Dawnguard.esp"
+		if loaded
+			SendEvent_ModDatastoreName("Cloaks of Skyrim - Dawnguard")
+			AddCOSDGDatastoreEntries("Cloaks - Player Only - Dawnguard.esp")
+		endif
 	endif
 	if !loaded
 		loaded = IsPluginLoaded(0x00000D64, "Cloaks - No Imperial - Dawnguard.esp")
-		sCOSDGPluginName = "Cloaks - No Imperial - Dawnguard.esp"
+		if loaded
+			SendEvent_ModDatastoreName("Cloaks of Skyrim - Dawnguard")
+			AddCOSDGDatastoreEntries("Cloaks - No Imperial - Dawnguard.esp")
+		endif
 	endif
-	if !loaded
-		return
-	endif
+endFunction
 
+function AddCOSDGDatastoreEntries(string asPluginName)
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
-	if sCOSDGPluginName == "Complete Crafting Overhaul_Remade.esp"
+	if asPluginName == "Complete Crafting Overhaul_Remade.esp"
 		; Check if already loaded
-		if handler.DatastoreHasEntry("22789___" + sCOSDGPluginName, 7)
+		if handler.DatastoreHasEntry("22789___" + asPluginName, 7)
 			return
 		endif
 
-		handler.AddDatastoreEntryByKey("22789___" + sCOSDGPluginName, 7, 10, 10) ; CloakDawnguard
-		handler.AddDatastoreEntryByKey("22790___" + sCOSDGPluginName, 7, 10, 10) ; CloakShortDawnguard
+		handler.AddDatastoreEntryByKey("22789___" + asPluginName, 7, 10, 10) ; CloakDawnguard
+		handler.AddDatastoreEntryByKey("22790___" + asPluginName, 7, 10, 10) ; CloakShortDawnguard
 	else
 		; Check if already loaded
-		if handler.DatastoreHasEntry("3428___" + sCOSDGPluginName, 7)
+		if handler.DatastoreHasEntry("3428___" + asPluginName, 7)
 			return
 		endif
-		handler.AddDatastoreEntryByKey("3428___" + sCOSDGPluginName, 7, 10, 10) ; CloakDawnguard
-		handler.AddDatastoreEntryByKey("3429___" + sCOSDGPluginName, 7, 10, 10) ; CloakShortDawnguard
+		handler.AddDatastoreEntryByKey("3428___" + asPluginName, 7, 10, 10) ; CloakDawnguard
+		handler.AddDatastoreEntryByKey("3429___" + asPluginName, 7, 10, 10) ; CloakShortDawnguard
 	endif
 endFunction
 
@@ -1342,7 +1354,6 @@ bool function GetWICPluginLoaded()
 endFunction
 
 function WICLoadUp()
-	;Determine if one or more Winter is Coming plugins is loaded.
 	bool loaded
 
 	loaded = IsPluginLoaded(0x01001DD7, "Complete Crafting Overhaul_Remade.esp")
@@ -1369,9 +1380,6 @@ function WICLoadUp()
 			SendEvent_ModDatastoreName("Winter is Coming - Cloaks")
 			AddWICDatastoreEntries("1nivWICCloaksCRAFT.esp")
 		endif
-	endif
-	if !loaded
-		return
 	endif
 endFunction
 
