@@ -166,6 +166,7 @@ bool added_spell_books = false
 ;#Upgrade Flags====================================================================
 GlobalVariable property _Frost_Setting_1PAnimationAllowed auto
 GlobalVariable property _Frost_Upgraded_3_0_1 auto
+GlobalVariable property _Frost_Upgraded_3_0_2 auto
 
 Event OnPlayerLoadGame()
 	RunCompatibility()
@@ -207,9 +208,12 @@ function RunCompatibility()
 	trace("[Frostfall]             unloaded files may follow. This is NORMAL and can be ignored.   		                    ")
 	trace("[Frostfall]======================================================================================================")
 	
-	; Upgrade code goes here
 	if _Frost_Upgraded_3_0_1.GetValueInt() != 2
 		Upgrade_3_0_1()
+	endif
+
+	if _Frost_Upgraded_3_0_2.GetValueInt() != 2
+		Upgrade_3_0_2()
 	endif
 
 	; Update the previous version value with the current version
@@ -466,6 +470,24 @@ function Upgrade_3_0_1()
 	
 	trace("[Frostfall] Upgraded to 3.0.1.")
 	_Frost_Upgraded_3_0_1.SetValueInt(2)
+endFunction
+
+function Upgrade_3_0_2()
+	; Include the Conjured Shelter spells in leveled lists.
+	
+	;75
+	LItemSpellTomes75AllConjuration.AddForm(_Frost_SpellTomeConjureShelterLesser, 1, 1)
+	LItemSpellTomes75Conjuration.AddForm(_Frost_SpellTomeConjureShelterLesser, 1, 1)
+	LItemSpellTomes75Spells.AddForm(_Frost_SpellTomeConjureShelterLesser, 1, 1)
+	LItemScroll75Skill.AddForm(_Frost_ScrollConjureShelterLesser, 1, 1)
+
+	;100
+	LItemSpellTomes100Conjuration.AddForm(_Frost_SpellTomeConjureShelterGreater, 1, 1)
+	MGRitualConjurationBooks.AddForm(_Frost_SpellTomeConjureShelterGreater, 1, 1)
+	LItemScroll100Skill.AddForm(_Frost_ScrollConjureShelterGreater, 1, 1)
+
+	trace("[Frostfall] Upgraded to 3.0.2.")
+	_Frost_Upgraded_3_0_2.SetValueInt(2)
 endFunction
 
 function RunCompatibilityArmors()
