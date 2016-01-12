@@ -186,6 +186,7 @@ Scripts\BladesSparringScript.pex
 Scripts\C00TrainerScript.pex
 Scripts\C00VilkasScript.pex
 Scripts\CampCampfire.pex
+Scripts\CampConjuredContainer.pex
 Scripts\CampConjuredPlaceableObject.pex
 Scripts\CampConjuredScriptedActivator.pex
 Scripts\CampConjuredShelter.pex
@@ -321,6 +322,7 @@ Scripts\Source\BladesSparringScript.psc
 Scripts\Source\C00TrainerScript.psc
 Scripts\Source\C00VilkasScript.psc
 Scripts\Source\CampCampfire.psc
+Scripts\Source\CampConjuredContainer.psc
 Scripts\Source\CampConjuredPlaceableObject.psc
 Scripts\Source\CampConjuredScriptedActivator.psc
 Scripts\Source\CampConjuredShelter.psc
