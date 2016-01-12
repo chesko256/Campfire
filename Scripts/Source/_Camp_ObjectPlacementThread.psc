@@ -106,7 +106,6 @@ function clear_thread_vars()
 	_IsHanging = false
 	_IsTemp = false
 	_IsInteractionDisabled = false
-	debug.trace("TEMP MSG: " + self + " thread vars cleared.")
 endFunction
 
 float[] function GetPosXYZRotateAroundRef(ObjectReference akOrigin, ObjectReference akObject, float afXPosOffset, float afYPosOffset, float fAngleX, float fAngleY, float fAngleZ)

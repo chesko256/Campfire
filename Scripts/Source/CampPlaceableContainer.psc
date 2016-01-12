@@ -257,7 +257,14 @@ function PlaceObject_ExtraLight3(CampPlaceableContainerEx Extended)
 endFunction
 
 function TakeDown()
+	CampDebug(0, self + " TakeDown (CampPlaceableContainer)")
 	parent.TakeDown()
+
+	; No way to do parent.parent.FunctionCall(), so return now.
+	if (self as CampConjuredContainer)
+		CampDebug(0, "CampPlaceableContainer is CampConjuredContainer, returning.")
+		return
+	endif
 
 	ForceStopUsingFurniture(myExtraFurniture1)
 	ForceStopUsingFurniture(myExtraFurniture2)
