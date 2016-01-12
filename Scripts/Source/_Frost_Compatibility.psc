@@ -523,14 +523,13 @@ function RunCompatibilityArmors()
 		if !isWICLoaded
 			;Winter is Coming - Cloaks was removed since the last save.
 		else
-			WICLoadUpCloaks()
+			WICLoadUp()
 		endif
 	else
 		isWICLoaded = GetWICPluginLoaded()
 		if isWICLoaded
 			;Winter is Coming - Cloaks was just added.
 			WICLoadUp()
-			WICLoadUpCloaks()
 		endif
 	endif
 
@@ -1343,112 +1342,6 @@ bool function GetWICPluginLoaded()
 endFunction
 
 function WICLoadUp()
-	;Determine if Winter is Coming is loaded.
-	bool loaded
-	string sWICPluginName
-
-	loaded = IsPluginLoaded(0x01001DD7, "Complete Crafting Overhaul_Remade.esp")
-	sWICPluginName = "Complete Crafting Overhaul_Remade.esp"
-	if !loaded
-		loaded = IsPluginLoaded(0x01001DD7, "1nivWICCloaks.esp")
-		sWICPluginName = "1nivWICCloaks.esp"
-	endif
-	if !loaded
-		loaded = IsPluginLoaded(0x01001DD7, "1nivWICCloaksNoGuards.esp")
-		sWICPluginName = "1nivWICCloaksNoGuards.esp"
-	endif
-	if !loaded
-		loaded = IsPluginLoaded(0x01001DD7, "1nivWICCloaksCRAFT.esp")
-		sWICPluginName = "1nivWICCloaksCRAFT.esp"
-	endif
-	if !loaded
-		return
-	endif
-
-	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
-
-	; Check if already loaded
-	if handler.DatastoreHasEntry("10445___" + sWICPluginName, 3)
-		return
-	endif
-
-	SendEvent_ModDatastoreName("Winter is Coming - Cloaks")
-
-	handler.AddDatastoreEntryByKey("10445___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearComBrown
-	handler.AddDatastoreEntryByKey("14581___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearComCave
-	handler.AddDatastoreEntryByKey("14582___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearComSnow
-	handler.AddDatastoreEntryByKey("110288___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearComSteelBrown
-	handler.AddDatastoreEntryByKey("110289___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearComSteelCave
-	handler.AddDatastoreEntryByKey("110290___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearComSteelSnow
-	handler.AddDatastoreEntryByKey("76952___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearComStuddedBrown
-	handler.AddDatastoreEntryByKey("76953___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearComStuddedCave
-	handler.AddDatastoreEntryByKey("76954___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearComStuddedSnow
-	handler.AddDatastoreEntryByKey("14586___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearOrnateBrown
-	handler.AddDatastoreEntryByKey("14587___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearOrnateCave
-	handler.AddDatastoreEntryByKey("14588___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearOrnateSnow
-	handler.AddDatastoreEntryByKey("110291___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearOrnateSteelBrown
-	handler.AddDatastoreEntryByKey("110292___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearOrnateSteelCave
-	handler.AddDatastoreEntryByKey("110293___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearOrnateSteelSnow
-	handler.AddDatastoreEntryByKey("78336___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearOrnateStuddedBrown
-	handler.AddDatastoreEntryByKey("78337___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearOrnateStuddedCave
-	handler.AddDatastoreEntryByKey("78338___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearOrnateStuddedSnow
-	handler.AddDatastoreEntryByKey("14583___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearTrimBrown
-	handler.AddDatastoreEntryByKey("14584___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearTrimCave
-	handler.AddDatastoreEntryByKey("14585___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearTrimSnow
-	handler.AddDatastoreEntryByKey("110294___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearTrimSteelBrown
-	handler.AddDatastoreEntryByKey("110295___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearTrimSteelCave
-	handler.AddDatastoreEntryByKey("110296___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearTrimSteelSnow
-	handler.AddDatastoreEntryByKey("78339___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearTrimStuddedBrown
-	handler.AddDatastoreEntryByKey("78340___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearTrimStuddedCave
-	handler.AddDatastoreEntryByKey("78341___" + sWICPluginName, 3, 45, 14) ; 1nivHoodBearTrimStuddedSnow
-	handler.AddDatastoreEntryByKey("50540___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinComBlack
-	handler.AddDatastoreEntryByKey("111757___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinComSteelBlack
-	handler.AddDatastoreEntryByKey("111756___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinComSteelTimber
-	handler.AddDatastoreEntryByKey("111758___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinComSteelWhite
-	handler.AddDatastoreEntryByKey("81140___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinComStuddedBlack
-	handler.AddDatastoreEntryByKey("81141___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinComStuddedTimber
-	handler.AddDatastoreEntryByKey("81142___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinComStuddedWhite
-	handler.AddDatastoreEntryByKey("50539___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinComTimber
-	handler.AddDatastoreEntryByKey("50541___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinComWhite
-	handler.AddDatastoreEntryByKey("88117___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinRareBlack
-	handler.AddDatastoreEntryByKey("111754___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinRareSteelBlack
-	handler.AddDatastoreEntryByKey("111753___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinRareSteelTimber
-	handler.AddDatastoreEntryByKey("111755___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinRareSteelWhite
-	handler.AddDatastoreEntryByKey("88120___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinRareStuddedBlack
-	handler.AddDatastoreEntryByKey("88119___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinRareStuddedTimber
-	handler.AddDatastoreEntryByKey("88121___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinRareStuddedWhite
-	handler.AddDatastoreEntryByKey("89500___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinRareTimber
-	handler.AddDatastoreEntryByKey("88118___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinRareWhite
-	handler.AddDatastoreEntryByKey("50543___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimBBlack
-	handler.AddDatastoreEntryByKey("111760___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimBSteelBlack
-	handler.AddDatastoreEntryByKey("111759___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimBSteelTimber
-	handler.AddDatastoreEntryByKey("111761___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimBSteelWhite
-	handler.AddDatastoreEntryByKey("81143___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimBStuddedBlack
-	handler.AddDatastoreEntryByKey("81144___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimBStuddedTimber
-	handler.AddDatastoreEntryByKey("81145___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimBStuddedWhite
-	handler.AddDatastoreEntryByKey("50542___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimBTimber
-	handler.AddDatastoreEntryByKey("50544___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimBWhite
-	handler.AddDatastoreEntryByKey("90880___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimRareBlack
-	handler.AddDatastoreEntryByKey("113156___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimRareSteelBlack
-	handler.AddDatastoreEntryByKey("113155___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimRareSteelTimber
-	handler.AddDatastoreEntryByKey("113157___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimRareSteelWhite
-	handler.AddDatastoreEntryByKey("90882___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimRareStuddedBlack
-	handler.AddDatastoreEntryByKey("90883___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimRareStuddedTimber
-	handler.AddDatastoreEntryByKey("90884___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimRareStuddedWhite
-	handler.AddDatastoreEntryByKey("89501___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimRareTimber
-	handler.AddDatastoreEntryByKey("90881___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimRareWhite
-	handler.AddDatastoreEntryByKey("50546___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimWBlack
-	handler.AddDatastoreEntryByKey("111763___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimWSteelBlack
-	handler.AddDatastoreEntryByKey("111762___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimWSteelTimber
-	handler.AddDatastoreEntryByKey("111764___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimWSteelWhite
-	handler.AddDatastoreEntryByKey("81146___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimWStuddedBlack
-	handler.AddDatastoreEntryByKey("81147___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimWStuddedTimber
-	handler.AddDatastoreEntryByKey("81148___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimWStuddedWhite
-	handler.AddDatastoreEntryByKey("50545___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimWTimber
-	handler.AddDatastoreEntryByKey("50547___" + sWICPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimWWhite
-endFunction
-
-function WICLoadUpCloaks()
 	;Determine if one or more Winter is Coming plugins is loaded.
 	bool loaded
 
@@ -1486,9 +1379,82 @@ function AddWICDatastoreEntries(string asPluginName)
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
 	; Check if already loaded
-	if handler.DatastoreHasEntry("7639___" + asPluginName, 7)
+	if handler.DatastoreHasEntry("7639___" + asPluginName, 7) ; 1nivCloakBearClawComBrown
 		return
 	endif
+
+	handler.AddDatastoreEntryByKey("10445___" + asPluginName, 3, 45, 14) ; 1nivHoodBearComBrown
+	handler.AddDatastoreEntryByKey("14581___" + asPluginName, 3, 45, 14) ; 1nivHoodBearComCave
+	handler.AddDatastoreEntryByKey("14582___" + asPluginName, 3, 45, 14) ; 1nivHoodBearComSnow
+	handler.AddDatastoreEntryByKey("110288___" + asPluginName, 3, 45, 14) ; 1nivHoodBearComSteelBrown
+	handler.AddDatastoreEntryByKey("110289___" + asPluginName, 3, 45, 14) ; 1nivHoodBearComSteelCave
+	handler.AddDatastoreEntryByKey("110290___" + asPluginName, 3, 45, 14) ; 1nivHoodBearComSteelSnow
+	handler.AddDatastoreEntryByKey("76952___" + asPluginName, 3, 45, 14) ; 1nivHoodBearComStuddedBrown
+	handler.AddDatastoreEntryByKey("76953___" + asPluginName, 3, 45, 14) ; 1nivHoodBearComStuddedCave
+	handler.AddDatastoreEntryByKey("76954___" + asPluginName, 3, 45, 14) ; 1nivHoodBearComStuddedSnow
+	handler.AddDatastoreEntryByKey("14586___" + asPluginName, 3, 45, 14) ; 1nivHoodBearOrnateBrown
+	handler.AddDatastoreEntryByKey("14587___" + asPluginName, 3, 45, 14) ; 1nivHoodBearOrnateCave
+	handler.AddDatastoreEntryByKey("14588___" + asPluginName, 3, 45, 14) ; 1nivHoodBearOrnateSnow
+	handler.AddDatastoreEntryByKey("110291___" + asPluginName, 3, 45, 14) ; 1nivHoodBearOrnateSteelBrown
+	handler.AddDatastoreEntryByKey("110292___" + asPluginName, 3, 45, 14) ; 1nivHoodBearOrnateSteelCave
+	handler.AddDatastoreEntryByKey("110293___" + asPluginName, 3, 45, 14) ; 1nivHoodBearOrnateSteelSnow
+	handler.AddDatastoreEntryByKey("78336___" + asPluginName, 3, 45, 14) ; 1nivHoodBearOrnateStuddedBrown
+	handler.AddDatastoreEntryByKey("78337___" + asPluginName, 3, 45, 14) ; 1nivHoodBearOrnateStuddedCave
+	handler.AddDatastoreEntryByKey("78338___" + asPluginName, 3, 45, 14) ; 1nivHoodBearOrnateStuddedSnow
+	handler.AddDatastoreEntryByKey("14583___" + asPluginName, 3, 45, 14) ; 1nivHoodBearTrimBrown
+	handler.AddDatastoreEntryByKey("14584___" + asPluginName, 3, 45, 14) ; 1nivHoodBearTrimCave
+	handler.AddDatastoreEntryByKey("14585___" + asPluginName, 3, 45, 14) ; 1nivHoodBearTrimSnow
+	handler.AddDatastoreEntryByKey("110294___" + asPluginName, 3, 45, 14) ; 1nivHoodBearTrimSteelBrown
+	handler.AddDatastoreEntryByKey("110295___" + asPluginName, 3, 45, 14) ; 1nivHoodBearTrimSteelCave
+	handler.AddDatastoreEntryByKey("110296___" + asPluginName, 3, 45, 14) ; 1nivHoodBearTrimSteelSnow
+	handler.AddDatastoreEntryByKey("78339___" + asPluginName, 3, 45, 14) ; 1nivHoodBearTrimStuddedBrown
+	handler.AddDatastoreEntryByKey("78340___" + asPluginName, 3, 45, 14) ; 1nivHoodBearTrimStuddedCave
+	handler.AddDatastoreEntryByKey("78341___" + asPluginName, 3, 45, 14) ; 1nivHoodBearTrimStuddedSnow
+	handler.AddDatastoreEntryByKey("50540___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinComBlack
+	handler.AddDatastoreEntryByKey("111757___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinComSteelBlack
+	handler.AddDatastoreEntryByKey("111756___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinComSteelTimber
+	handler.AddDatastoreEntryByKey("111758___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinComSteelWhite
+	handler.AddDatastoreEntryByKey("81140___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinComStuddedBlack
+	handler.AddDatastoreEntryByKey("81141___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinComStuddedTimber
+	handler.AddDatastoreEntryByKey("81142___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinComStuddedWhite
+	handler.AddDatastoreEntryByKey("50539___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinComTimber
+	handler.AddDatastoreEntryByKey("50541___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinComWhite
+	handler.AddDatastoreEntryByKey("88117___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinRareBlack
+	handler.AddDatastoreEntryByKey("111754___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinRareSteelBlack
+	handler.AddDatastoreEntryByKey("111753___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinRareSteelTimber
+	handler.AddDatastoreEntryByKey("111755___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinRareSteelWhite
+	handler.AddDatastoreEntryByKey("88120___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinRareStuddedBlack
+	handler.AddDatastoreEntryByKey("88119___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinRareStuddedTimber
+	handler.AddDatastoreEntryByKey("88121___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinRareStuddedWhite
+	handler.AddDatastoreEntryByKey("89500___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinRareTimber
+	handler.AddDatastoreEntryByKey("88118___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinRareWhite
+	handler.AddDatastoreEntryByKey("50543___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimBBlack
+	handler.AddDatastoreEntryByKey("111760___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimBSteelBlack
+	handler.AddDatastoreEntryByKey("111759___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimBSteelTimber
+	handler.AddDatastoreEntryByKey("111761___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimBSteelWhite
+	handler.AddDatastoreEntryByKey("81143___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimBStuddedBlack
+	handler.AddDatastoreEntryByKey("81144___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimBStuddedTimber
+	handler.AddDatastoreEntryByKey("81145___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimBStuddedWhite
+	handler.AddDatastoreEntryByKey("50542___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimBTimber
+	handler.AddDatastoreEntryByKey("50544___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimBWhite
+	handler.AddDatastoreEntryByKey("90880___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimRareBlack
+	handler.AddDatastoreEntryByKey("113156___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimRareSteelBlack
+	handler.AddDatastoreEntryByKey("113155___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimRareSteelTimber
+	handler.AddDatastoreEntryByKey("113157___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimRareSteelWhite
+	handler.AddDatastoreEntryByKey("90882___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimRareStuddedBlack
+	handler.AddDatastoreEntryByKey("90883___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimRareStuddedTimber
+	handler.AddDatastoreEntryByKey("90884___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimRareStuddedWhite
+	handler.AddDatastoreEntryByKey("89501___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimRareTimber
+	handler.AddDatastoreEntryByKey("90881___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimRareWhite
+	handler.AddDatastoreEntryByKey("50546___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimWBlack
+	handler.AddDatastoreEntryByKey("111763___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimWSteelBlack
+	handler.AddDatastoreEntryByKey("111762___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimWSteelTimber
+	handler.AddDatastoreEntryByKey("111764___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimWSteelWhite
+	handler.AddDatastoreEntryByKey("81146___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimWStuddedBlack
+	handler.AddDatastoreEntryByKey("81147___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimWStuddedTimber
+	handler.AddDatastoreEntryByKey("81148___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimWStuddedWhite
+	handler.AddDatastoreEntryByKey("50545___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimWTimber
+	handler.AddDatastoreEntryByKey("50547___" + asPluginName, 3, 45, 14) ; 1nivHoodWolfSkinTrimWWhite
 
 	handler.AddDatastoreEntryByKey("7639___" + asPluginName, 7, 40, 12) ; 1nivCloakBearClawComBrown
 	handler.AddDatastoreEntryByKey("56156___" + asPluginName, 7, 40, 12) ; 1nivCloakBearClawComBrownEnchF
