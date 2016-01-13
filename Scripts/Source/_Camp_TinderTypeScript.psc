@@ -2,11 +2,10 @@ Scriptname _Camp_TinderTypeScript extends ObjectReference
 
 import CampUtil
 
-float property light_chance auto
-{The chance (0.0 to 1.0) that the player has of successfully lighting a fire with this tinder.}
+float property base_light_time auto
+{The number of seconds that the player requires to successfully light a fire with this tinder.}
 
 Book property this_item auto
-Furniture property _Camp_Campfire auto
 Actor property PlayerRef auto
 
 GlobalVariable property _Camp_LastUsedCampfireSize auto
@@ -15,7 +14,7 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
 	if akNewContainer == PlayerRef
 		ObjectReference f = GetLastUsedCampfire()
 		if f
-			(f as CampCampfire).SetTinder(light_chance)
+			(f as CampCampfire).SetTinder(base_light_time)
 		endif
 		PlayerRef.RemoveItem(this_item, 1, true)
 	endif
