@@ -36,9 +36,13 @@ Event OnControlDown(string control)
 			tent.Activate(PlayerRef)
 		elseif campfire
 			ObjectReference player_sit_marker = (campfire as CampCampfire).mySitFurniture2
+			ObjectReference player_lighting_marker = (campfire as CampCampfire).FireLightingReference
 			if player_sit_marker && player_sit_marker.IsFurnitureInUse() && PlayerRef.GetSitState() == 3
 				CampDebug(0, "Activating campfire " + campfire)
 				campfire.Activate(PlayerRef)
+			elseif player_lighting_marker && player_lighting_marker.IsFurnitureInUse() && PlayerRef.GetSitState() == 3
+				CampDebug(0, "Cancelling lighting attempt with marker " + player_lighting_marker + " with campfire " + campfire)
+				player_lighting_marker.Activate(PlayerRef)
 			endif
 		endif
 	endif
