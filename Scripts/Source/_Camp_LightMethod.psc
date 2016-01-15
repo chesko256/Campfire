@@ -17,24 +17,38 @@ ImpactDataSet property MAGFirebolt01ImpactSet auto
 ImpactDataSet property WPNzBluntImpactSet auto
 Activator property FXSparkFountainToggleLight auto
 GlobalVariable property _Camp_LastUsedCampfireStage auto
+Furniture property _Camp_CampfireLightStoneMarker auto
 
 Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)
 	if akNewContainer == PlayerRef
-		ObjectReference torch
-		_Camp_LastUsedCampfireStage.SetValueInt(5)
-		if is_flames
-			FlamesVFX()
-		elseif is_torch
-			torch = TorchVFX()
-		elseif is_stone
-			StoneVFX()
-		endif
+		ObjectReference last_used_campfire = GetLastUsedCampfire()
+		last_used_campfire.Activate(PlayerRef)
 
-		(GetLastUsedCampfire() as CampCampfire).LightFire(always_light)
-		if torch
-			Wait(1.5)
-			torch.Delete()
-		endif
+		int i = 0
+		while last_used_campfire.IsFurnitureInUse() && i < 50
+			Utility.Wait(0.1)
+			i += 1
+		endWhile
+
+		ObjectReference light_marker = PlayerRef.PlaceAtMe(_Camp_CampfireLightStoneMarker)
+		; Set the total fire lighting wait time
+		light_marker.Activate(PlayerRef)
+
+		;ObjectReference torch
+		;_Camp_LastUsedCampfireStage.SetValueInt(5)
+		;if is_flames
+			;FlamesVFX()
+		;elseif is_torch
+			;torch = TorchVFX()
+		;elseif is_stone
+			;StoneVFX()
+		;endif
+
+		;(GetLastUsedCampfire() as CampCampfire).LightFire(always_light)
+		;if torch
+			;Wait(1.5)
+			;torch.Delete()
+		;endif
 		PlayerRef.RemoveItem(this_item, 1, true)
 	endif
 EndEvent

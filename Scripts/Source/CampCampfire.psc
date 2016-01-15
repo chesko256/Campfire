@@ -333,6 +333,8 @@ float remaining_time                            ;total time this campfire will l
 float current_light_chance = 0.0
 int current_skill_index = 0
 
+ObjectReference property FireLightingReference auto hidden
+
 function Initialize()
     self.BlockActivation()
     parent.Initialize()
@@ -377,48 +379,7 @@ function DoActivate(ObjectReference akActionRef)
         endif
 
         if i == 0
-            in_use = true
-            self.BlockActivation(false)
-            self.Activate(PlayerRef)
-
-            ;Wait until the player is "using" the object, or enough time passes.
-            int j = 0
-            while !self.IsFurnitureInUse() && j < 50
-                utility.wait(0.1)
-                j += 1
-            endWhile
-
-            ;Do they need the Clear Weather item?
-            Weather inc_weather = Weather.GetCurrentWeather()
-            Weather out_weather = Weather.GetOutgoingWeather()
-            
-            int inc_weatherclass = 0
-            int out_weatherclass = 0
-            if inc_weather
-                inc_weatherclass = inc_weather.GetClassification()
-            endif
-            if out_weather
-                out_weatherclass = out_weather.GetClassification()
-            endif
-
-            float trans = Weather.GetCurrentWeatherTransition()
-            if (inc_weatherclass <= 1 && trans >= 0.5) || (trans < 0.5 && out_weatherclass <= 1)
-                PlayerRef.AddItem(_Camp_CampfireItem_GoodWeather, 1, true)
-            endif
-
-            ;Wait until they finish.
-            while self.IsFurnitureInUse()
-                utility.wait(0.1)
-            endWhile
-
-            int count = PlayerRef.GetItemCount(_Camp_CampfireItem_GoodWeather)
-            int a_count = PlayerRef.GetItemCount(_Camp_BlankItem)
-            PlayerRef.RemoveItem(_Camp_CampfireItem_GoodWeather, count, true)
-            PlayerRef.RemoveItem(_Camp_BlankItem, a_count, true)
-
-            ;Return to the previous state.
-            self.BlockActivation()
-            in_use = false
+            PlayerUseCampfire()
         elseif i == 1
             ;Sit
             SetWasFirstPerson()
@@ -460,6 +421,44 @@ function DoActivate(ObjectReference akActionRef)
             ;Cancel
         endif
     endif
+endFunction
+
+function PlayerUseCampfire()
+    in_use = true
+    self.BlockActivation(false)
+    self.Activate(PlayerRef)
+    ;Wait until the player is "using" the object, or enough time passes.
+    int j = 0
+    while !self.IsFurnitureInUse() && j < 50
+        utility.wait(0.1)
+        j += 1
+    endWhile
+    ;Do they need the Clear Weather item?
+    Weather inc_weather = Weather.GetCurrentWeather()
+    Weather out_weather = Weather.GetOutgoingWeather()            
+    int inc_weatherclass = 0
+    int out_weatherclass = 0
+    if inc_weather
+        inc_weatherclass = inc_weather.GetClassification()
+    endif
+    if out_weather
+        out_weatherclass = out_weather.GetClassification()
+    endif
+    float trans = Weather.GetCurrentWeatherTransition()
+    if (inc_weatherclass <= 1 && trans >= 0.5) || (trans < 0.5 && out_weatherclass <= 1)
+        PlayerRef.AddItem(_Camp_CampfireItem_GoodWeather, 1, true)
+    endif
+    ;Wait until they finish.
+    while self.IsFurnitureInUse()
+        utility.wait(1)
+    endWhile
+    int count = PlayerRef.GetItemCount(_Camp_CampfireItem_GoodWeather)
+    int a_count = PlayerRef.GetItemCount(_Camp_BlankItem)
+    PlayerRef.RemoveItem(_Camp_CampfireItem_GoodWeather, count, true)
+    PlayerRef.RemoveItem(_Camp_BlankItem, a_count, true)
+    ;Return to the previous state.
+    self.BlockActivation()
+    in_use = false
 endFunction
 
 function ShowTalkMenu()
