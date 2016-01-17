@@ -42,7 +42,7 @@ Event OnControlDown(string control)
 				campfire.Activate(PlayerRef)
 			elseif player_lighting_marker && player_lighting_marker.IsFurnitureInUse() && PlayerRef.GetSitState() == 3
 				CampDebug(0, "Cancelling lighting attempt with marker " + player_lighting_marker + " with campfire " + campfire)
-				player_lighting_marker.Activate(PlayerRef)
+				(player_lighting_marker as _Camp_LightFireFurnScript).StopLighting()
 			endif
 		endif
 	endif
