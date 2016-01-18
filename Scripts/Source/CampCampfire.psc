@@ -639,6 +639,7 @@ function TakeDown()
     ForceStopUsingFurniture(mySitFurniture2)
     ForceStopUsingFurniture(mySitFurniture3)
     ForceStopUsingFurniture(mySitFurniture4)
+    ForceStopUsingFurniture(FireLightingReference)
 
     TryToDisableAndDeleteRef(mySteam)
     TryToDisableAndDeleteRef(myFuelLit)
@@ -657,6 +658,7 @@ function TakeDown()
     TryToDisableAndDeleteRef(mySitFurniture2)
     TryToDisableAndDeleteRef(mySitFurniture3)
     TryToDisableAndDeleteRef(mySitFurniture4)
+    TryToDisableAndDeleteRef(FireLightingReference)
 
     myPerkNodeController = None
     myPerkNavController = None
@@ -677,6 +679,7 @@ function TakeDown()
     mySitFurniture2 = None
     mySitFurniture3 = None
     mySitFurniture4 = None
+    FireLightingReference = None
 
     if GetLastUsedCampfire() == self
         SetLastUsedCampfire(None)

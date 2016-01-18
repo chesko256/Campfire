@@ -112,6 +112,7 @@ meshes\campfire\_Camp_Fuel_Roaring_DeadwoodLit.nif
 meshes\campfire\_Camp_Fuel_Roaring_DeadwoodUnlit.nif
 meshes\campfire\_Camp_Fuel_Roaring_FirewoodLit.nif
 meshes\campfire\_Camp_Fuel_Roaring_FirewoodUnlit.nif
+meshes\campfire\_camp_fxfirecloakhandeffects.nif
 meshes\campfire\_camp_haypiletentmiscobject_1br.nif
 meshes\campfire\_Camp_Indicator_CampfireBase.nif
 meshes\campfire\_Camp_Indicator_CookingPot.nif
@@ -248,6 +249,7 @@ Scripts\_Camp_IndicatorFuture.pex
 Scripts\_Camp_IndicatorTrigger.pex
 Scripts\_Camp_LegacyMenu.pex
 Scripts\_Camp_LegalAreaCheck.pex
+Scripts\_Camp_LightFireFurnScript.pex
 Scripts\_Camp_LightMethod.pex
 Scripts\_Camp_Main.pex
 Scripts\_Camp_NextBug.pex
@@ -384,6 +386,7 @@ Scripts\Source\_Camp_IndicatorFuture.psc
 Scripts\Source\_Camp_IndicatorTrigger.psc
 Scripts\Source\_Camp_LegacyMenu.psc
 Scripts\Source\_Camp_LegalAreaCheck.psc
+Scripts\Source\_Camp_LightFireFurnScript.psc
 Scripts\Source\_Camp_LightMethod.psc
 Scripts\Source\_Camp_Main.psc
 Scripts\Source\_Camp_NextBug.psc

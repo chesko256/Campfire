@@ -35,6 +35,9 @@ bool property IsFrostfallLoaded = false auto conditional hidden
 bool property IsLastSeedLoaded = false auto conditional hidden
 bool property IsArtOfTheCatchLoaded = false auto conditional hidden
 
+; Campfire Lighting
+bool property IsLightingFireFlameSpell = false auto conditional hidden
+
 ; Misc
 bool property IsRidingFlyingMount = false auto conditional hidden
 bool property TreesAreNearby = false auto conditional hidden
