@@ -7,7 +7,6 @@ bool property always_light auto
 {Whether or not to always light the fire and discard the tinder light chance.}
 
 bool property is_flames = false auto
-bool property is_torch = false auto
 bool property is_stone = false auto
 
 Actor property PlayerRef auto
@@ -18,6 +17,7 @@ ImpactDataSet property WPNzBluntImpactSet auto
 Activator property FXSparkFountainToggleLight auto
 GlobalVariable property _Camp_LastUsedCampfireStage auto
 Furniture property _Camp_CampfireLightStoneMarker auto
+Furniture property _Camp_CampfireLightFlamesMarker auto
 
 Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)
 	if akNewContainer == PlayerRef
@@ -30,9 +30,15 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
 			i += 1
 		endWhile
 
-		ObjectReference light_marker = PlayerRef.PlaceAtMe(_Camp_CampfireLightStoneMarker)
-		; Set the total fire lighting wait time
-		light_marker.Activate(PlayerRef)
+		if is_stone
+			ObjectReference light_marker = PlayerRef.PlaceAtMe(_Camp_CampfireLightStoneMarker)
+			light_marker.Activate(PlayerRef)
+			; Set the total fire lighting wait time
+		elseif is_flames
+			ObjectReference light_marker = PlayerRef.PlaceAtMe(_Camp_CampfireLightFlamesMarker)
+			light_marker.Activate(PlayerRef)
+			; Set the total fire lighting wait time
+		endif
 
 		;ObjectReference torch
 		;_Camp_LastUsedCampfireStage.SetValueInt(5)
@@ -53,7 +59,7 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
 	endif
 EndEvent
 
-function FlamesVFX()
+;/function FlamesVFX()
 	GetLastUsedCampfire().PlayImpactEffect(MAGFirebolt01ImpactSet, afPickDirZ = 1)
 	Wait(0.45)
 endFunction
@@ -91,3 +97,4 @@ function StoneVFX()
 	sparks.Disable()
 	sparks.Delete()
 endFunction
+/;
