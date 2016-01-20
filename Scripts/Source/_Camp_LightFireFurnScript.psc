@@ -119,7 +119,7 @@ endFunction
 
 function FlameFX()
 	sound_id = MAGCloakFireLP.Play(PlayerRef)
-	Sound.SetInstanceVolume(sound_id, 0.5)
+	Sound.SetInstanceVolume(sound_id, 0.65)
 	(_CampInternal.GetPublicAPI()._Camp_MainQuest as _Camp_ConditionValues).IsLightingFireFlameSpell = true
 endFunction
 
