@@ -11,15 +11,17 @@ bool property is_flamespell auto
 
 Actor property PlayerRef auto
 GlobalVariable property _Camp_LastUsedCampfireStage auto
+GlobalVariable property _Camp_PerkRank_Firecraft auto
 ReferenceAlias property _Camp_PlayerAlias auto
 ImpactDataSet property _Camp_SparkIDS auto
+Explosion property _Camp_LightWithOilExplosion auto
 static property XMarker auto
 Sound property MAGCloakFireLP auto
 
-float property total_required_seconds = 30.0 auto hidden
-
 float old_percentage = 1.0
+float total_required_seconds
 float remaining_seconds
+bool was_hit = false
 bool in_use = false
 int stone_fx_counter = 0
 ObjectReference parent_campfire
@@ -33,15 +35,21 @@ Event OnActivate(ObjectReference akActionRef)
 		(_Camp_PlayerAlias as _Camp_PlayerHitMonitor).FireLightingReference = self
 		parent_campfire = GetLastUsedCampfire()
 		(parent_campfire as CampCampfire).FireLightingReference = self
-		; remaining_seconds = total_required_seconds
+		
+		int modifier_rank
+		if is_stone
+			modifier_rank = _Camp_PerkRank_Firecraft.GetValueInt()
+		elseif is_flamespell
+			modifier_rank = Math.Floor(PlayerRef.GetAV("Destruction") / 20)
+		endif
+		total_required_seconds = (parent_campfire as CampCampfire).base_time_to_light - (modifier_rank * 5)
+		remaining_seconds = total_required_seconds
 
 		int j = 0
 		while !self.IsFurnitureInUse() && j < 50
 			j += 1
 			Utility.Wait(0.1)
 		endWhile
-
-		remaining_seconds = 30.0
 
 		if is_stone
 			spark_marker = PlayerRef.PlaceAtMe(XMarker)
@@ -65,20 +73,30 @@ Event OnUpdate()
 		StopLighting()
 	endif
 
-	if self.IsFurnitureInUse()	
+	if self.IsFurnitureInUse()
+		if is_stone
+			stone_fx_counter += 1
+			StoneFX()
+		endif
 		if percentage <= 0.33 && old_percentage > 0.33
 			(parent_campfire as CampCampfire).mySteam.Enable()
 			RegisterForSingleUpdate(1)
 		elseif percentage <= 0.0
 			CampDebug(1, "Campfire lit!")
 			(parent_campfire as CampCampfire).mySteam.DisableNoWait(true)
-			(parent_campfire as CampCampfire).LightFire()
-			if sound_id != 0
-				Sound.StopInstance(sound_id)
+			if (parent_campfire as CampCampfire).is_tinder_oil
+				; dramatic pause...
+				Utility.Wait(1.0)
+				parent_campfire.PlaceAtMe(_Camp_LightWithOilExplosion)
 			endif
-			(_CampInternal.GetPublicAPI()._Camp_MainQuest as _Camp_ConditionValues).IsLightingFireFlameSpell = false
+			(parent_campfire as CampCampfire).LightFire()
 			
-			; Advance camping skill
+			if is_stone
+				(parent_campfire as CampCampfire).AdvanceCampingSkill()
+			elseif is_flamespell
+				Game.AdvanceSkill("Destruction", 66.0)	; Equivalent to 1x cast of Fireball
+			endif
+
 			self.Activate(PlayerRef)
 
 			int i = 0
@@ -87,14 +105,10 @@ Event OnUpdate()
 				i += 1
 			endWhile
 
-			(parent_campfire as CampCampfire).PlayerUseCampfire()
+			(parent_campfire as CampCampfire).RegisterForCampfireCallback(0.1)
 			
 			TakeDown()
 		else
-			if is_stone
-				stone_fx_counter += 1
-				StoneFX()
-			endif
 			RegisterForSingleUpdate(1)
 		endif
 	else
@@ -105,14 +119,15 @@ Event OnUpdate()
 	old_percentage = percentage
 EndEvent
 
-bool was_hit = false
 function PlayerHitEvent(ObjectReference akAggressor, Form akSource, Projectile akProjectile)
     was_hit = true
 endFunction
 
 function StoneFX()
-	if stone_fx_counter >= 3
+	if stone_fx_counter <= 3
 		spark_marker.PlayImpactEffect(_Camp_SparkIDS)
+	endif
+	if stone_fx_counter >= 5
 		stone_fx_counter = 0
 	endif
 endFunction

@@ -869,5 +869,5 @@ function FollowerBuildCampfire()
 					 _Camp_Fuel_Flickering_BranchesUnlit,	\
 					 _Camp_Campfire_Light_3, 3)
 
-	campfire.LightFire(abBypassLightingChance = true)
+	campfire.LightFire()
 endFunction
