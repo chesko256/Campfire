@@ -41,9 +41,17 @@ Event OnActivate(ObjectReference akActionRef)
 			modifier_rank = _Camp_PerkRank_Firecraft.GetValueInt()
 		elseif is_flamespell
 			modifier_rank = Math.Floor(PlayerRef.GetAV("Destruction") / 20)
+			if modifier_rank > 4
+				modifier_rank = 4
+			endif
 		endif
-		total_required_seconds = (parent_campfire as CampCampfire).base_time_to_light - (modifier_rank * 5)
+		total_required_seconds = (parent_campfire as CampCampfire).base_time_to_light - (modifier_rank * 10)
+		if total_required_seconds <= 0
+			total_required_seconds = 1
+		endif
 		remaining_seconds = total_required_seconds
+		CampDebug(0, "Campfire lighting modifier rank " + modifier_rank)
+		CampDebug(0, "Campfire lighting total seconds " + total_required_seconds)
 
 		int j = 0
 		while !self.IsFurnitureInUse() && j < 50
@@ -79,7 +87,9 @@ Event OnUpdate()
 			StoneFX()
 		endif
 		if percentage <= 0.33 && old_percentage > 0.33
-			(parent_campfire as CampCampfire).mySteam.Enable()
+			if !(parent_campfire as CampCampfire).is_tinder_oil
+				(parent_campfire as CampCampfire).mySteam.Enable()
+			endif
 			RegisterForSingleUpdate(1)
 		elseif percentage <= 0.0
 			CampDebug(1, "Campfire lit!")
