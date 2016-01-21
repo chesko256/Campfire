@@ -258,6 +258,7 @@ GlobalVariable property CampingPerkPointsTotal auto
 GlobalVariable property CampingPerkPointProgress auto
 GlobalVariable property CampfireCanCookFood auto
 MiscObject property _Camp_CampfireItem_GoodWeather auto
+MiscObject property _Camp_CampfireItem_DestructionSkill auto
 MiscObject property RuinedBook auto
 MiscObject property _Camp_DeadwoodBranch auto
 MiscObject property _Camp_Kindling auto
@@ -327,10 +328,11 @@ bool eligible_for_deletion = false
 
 int property campfire_stage = 0 auto hidden     ;0 = empty or ash, 1 = embers, 2 = burning, 3 = unlit fuel no tinder, 4 = unlit fuel and tinder, 5 = attempting to be lit
 int property campfire_size = 0 auto hidden      ;0 = not built, 1 = fragile, 2 = flickering, 3 = crackling, 4 = roaring
+float property base_time_to_light = 0.0 auto hidden ; The base time to light with the supplied tinder (modified by skill)
+bool property is_tinder_oil = false auto hidden ; Is the tinder oil?
 float last_update_registration_time             ;when this campfire last registered
 float burn_duration                             ;how long this campfire will burn (set by fuel)
 float remaining_time                            ;total time this campfire will last
-float current_light_chance = 0.0
 int current_skill_index = 0
 
 ObjectReference property FireLightingReference auto hidden
@@ -342,6 +344,15 @@ function Initialize()
     remaining_time = ASH_DURATION
     RegisterForSingleUpdateGameTime(remaining_time)
     CampDebug(0, "Campfire registered for update in " + remaining_time + " hours.")
+endFunction
+
+function Update()
+    ; Only used to cause player to use the campfire in a non-blocking way from another script
+    PlayerUseCampfire()
+endFunction
+
+function RegisterForCampfireCallback(float seconds_to_callback)
+    RegisterForSingleUpdate(seconds_to_callback)
 endFunction
 
 Event OnActivate(ObjectReference akActionRef)
@@ -448,13 +459,18 @@ function PlayerUseCampfire()
     if (inc_weatherclass <= 1 && trans >= 0.5) || (trans < 0.5 && out_weatherclass <= 1)
         PlayerRef.AddItem(_Camp_CampfireItem_GoodWeather, 1, true)
     endif
+    if (PlayerRef.GetAV("Destruction") >= 20.0)
+        PlayerRef.AddItem(_Camp_CampfireItem_DestructionSkill, 1, true)
+    endif
     ;Wait until they finish.
     while self.IsFurnitureInUse()
         utility.wait(1)
     endWhile
-    int count = PlayerRef.GetItemCount(_Camp_CampfireItem_GoodWeather)
+    int gw_count = PlayerRef.GetItemCount(_Camp_CampfireItem_GoodWeather)
+    int ds_count = PlayerRef.GetItemCount(_Camp_CampfireItem_DestructionSkill)
     int a_count = PlayerRef.GetItemCount(_Camp_BlankItem)
-    PlayerRef.RemoveItem(_Camp_CampfireItem_GoodWeather, count, true)
+    PlayerRef.RemoveItem(_Camp_CampfireItem_GoodWeather, gw_count, true)
+    PlayerRef.RemoveItem(_Camp_CampfireItem_DestructionSkill, ds_count, true)
     PlayerRef.RemoveItem(_Camp_BlankItem, a_count, true)
     ;Return to the previous state.
     self.BlockActivation()
@@ -734,21 +750,8 @@ function PlaceObject_myCookPotSnapMarker()
     myCookPotSnapMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_CampfireCookPotSnapMarker, PositionRef_CookPotSnapMarker, is_hanging = true, is_temp = is_temporary)
 endFunction
 
-Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
-    if akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11
-        CampDebug(0, "Torch bash!")
-        if campfire_size > 0 && campfire_stage == 4
-            LightFire(true)
-        endif
-    endif
-EndEvent
-
 Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
-    if akEffect.HasKeyword(GetMagicDamageFireKeyword())
-        if campfire_size > 0 && campfire_stage == 4
-            LightFire(true)
-        endif
-    elseif akEffect.HasKeyword(GetMagicDamageFrostKeyword())
+    if akEffect.HasKeyword(GetMagicDamageFrostKeyword())
         if campfire_size > 0 && campfire_stage == 2
             PutOutFire()
         endif
@@ -778,7 +781,7 @@ function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int 
     endif
 
     if campfire_stage == 2
-        LightFire(true)
+        LightFire()
     else
         PlaceFuel()
     endif
@@ -999,11 +1002,12 @@ function DepleteAllRefundFuel()
     supplied_branches = 0
 endFunction
 
-function SetTinder(float afLightChance)
+function SetTinder(float afBaseTimeToLight, bool abIsTinderOil)
     campfire_stage = 4
     _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
-    current_light_chance = afLightChance
-    CampDebug(1, "Set tinder with light chance of " + current_light_chance)
+    base_time_to_light = afBaseTimeToLight
+    is_tinder_oil = abIsTinderOil
+    CampDebug(1, "Set tinder with time to light of " + base_time_to_light)
 
     ;Do they need the Dummy Item?
     if PlayerRef.GetItemCount(_Camp_BlankItem) == 0
@@ -1027,31 +1031,9 @@ function PlaceFuel()
     _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
 endFunction
 
-function LightFire(bool abBypassLightingChance = false)
+function LightFire()
     CampDebug(0, "LightFire")
-    if !abBypassLightingChance
-        if current_light_chance > 0.0
-            float result = Utility.RandomFloat()
-            CampDebug(0, "Campfire lighting chance result: " + result + " (needed " + current_light_chance + " or less).")
-            if result <= current_light_chance
-                self.PlayImpactEffect(MAGFlames01ImpactSet)
-                AdvanceCampingSkill()
-            else
-                campfire_stage = 3
-                _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
-                _Camp_Campfire_LightFail.Show()
-                FXFireOut.Play(self)
-                mySteam.Enable()
-                utility.wait(2)
-                mySteam.Disable(true)
-                return
-            endif
-        else
-            return
-        endif
-    endif
-
-    current_light_chance = 0.0
+    base_time_to_light = 0.0
     myFuelUnlit.DisableNoWait()
     myFuelLit.EnableNoWait()
     myLight.EnableNoWait()
