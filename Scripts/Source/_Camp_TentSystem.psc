@@ -12,6 +12,8 @@ _Camp_ConditionValues property ConditionVars auto
 Quest property DBEntranceQuest auto
 Actor property PlayerRef auto
 Armor property _Camp_WalkingStickShield auto
+GlobalVariable property GameDay auto
+GlobalVariable property _Camp_LastSleptDay auto
 GlobalVariable property _Camp_Setting_CampingArmorTakeOff auto
 GlobalVariable property _Camp_Setting_TakeOff_Helm auto
 GlobalVariable property _Camp_Setting_TakeOff_Cuirass auto
@@ -56,10 +58,21 @@ Weapon property _Camp_DummyWeapon auto
 Form property BFXFireVol01 auto
 VisualEffect property _Camp_ForceBlackVFX auto
 
+; Followers
 ReferenceAlias property Follower1 auto
 ReferenceAlias property Follower2 auto
 ReferenceAlias property Follower3 auto
 ReferenceAlias property Spouse auto
+
+; Camping Skill
+GlobalVariable property CampingPerkPointsEarned auto
+GlobalVariable property CampingPerkPointsTotal auto
+GlobalVariable property CampingPerkPointProgress auto
+GlobalVariable property CampingPerkPoints auto
+Message property _Camp_PerkEarned auto
+Message property _Camp_PerkAdvancement auto
+
+bool slept_in_tent = false
 
 ; From OnUpdate on CampTent / CampTentEx
 function UpdateTentUseState(ObjectReference akTent)
@@ -154,6 +167,11 @@ function ActivateTent(ObjectReference akActionRef, ObjectReference akTent)
 	endif
 endFunction
 
+Event OnSleepStart(float afSleepStartTime, float afDesiredSleepEndTime)
+	CampDebug(1, "Player slept in tent (" + self + ")")
+	slept_in_tent = true
+EndEvent
+
 function ActivateLayDownMarker(CampTent TentObject, bool abLayingDown = true)
 	Actor f1 = Follower1.GetReference() as Actor
 	Actor f2 = Follower2.GetReference() as Actor
@@ -208,7 +226,7 @@ function ShowMainMenu(ObjectReference akTent)
 		endif
 		PlayerLieDown(akTent)
 	elseif i == 2	 								;Sleep
-		TentObject.myBedRoll.Activate(PlayerRef)
+		PlayerSleep(TentObject)
 	elseif i == 3									;Light
 		ToggleLantern(akTent)
 	elseif i == 4 || i == 5							;Pack or Dismiss
@@ -257,7 +275,7 @@ function ShowLayMenu(ObjectReference akTent)
 		if PlayerRef
 			PlayerRef.MoveTo(akTent)				;  //Get up
 			wait(0.4)
-			TentObject.myBedRoll.Activate(PlayerRef);  //Spawns sleep menu
+			PlayerSleep(TentObject)
 			wait(0.4)
 			ActivateLayDownMarker(TentObject)
 			wait(3.5)
@@ -389,7 +407,7 @@ function PlayerLieDown(ObjectReference akTent)
 	
 	;Don't lie down in tent if on the Dark Brotherhood entrance quest
 	if DBEntranceQuest.GetStage() == 20 && DBEntranceQuestScript.pSleepyTime == 1
-		TentObject.myBedRoll.Activate(PlayerRef)
+		PlayerSleep(TentObject)
 		return
 	endif
 
@@ -401,7 +419,7 @@ function PlayerLieDown(ObjectReference akTent)
 
 		if DLC2MQ03B.IsCompleted() == false && PlayerRef.IsInLocation(DLC2SolstheimLocation)
 			if PlayerRef.GetWorldspace() == DLC2SolstheimWorld
-				TentObject.myBedRoll.Activate(PlayerRef)
+				PlayerSleep(TentObject)
 				return
 			endif
 		endif
@@ -411,6 +429,7 @@ function PlayerLieDown(ObjectReference akTent)
 		; The large tent trigger volume is not provided, so treat as a small tent
 		SetCurrentTent(akTent)
 	endif
+
 	EO_TurnOff()
 	SendEvent_OnBedrollSitLay(TentObject)
 
@@ -439,6 +458,22 @@ function PlayerLieDown(ObjectReference akTent)
 	endif
 	
 	TentObject.RegisterForSingleUpdate(1.0)
+endFunction
+
+function PlayerSleep(CampTent akTentObject)
+	self.RegisterForSleep()
+	int game_day_before_sleep = GameDay.GetValueInt()
+	akTentObject.myBedRoll.Activate(PlayerRef);  //Spawns sleep menu
+	self.UnregisterForSleep()
+
+	; Advance camping skill if necessary
+	if slept_in_tent && !TentObject.Setting_IsConjured
+		slept_in_tent = false
+		if GameDay.GetValueInt() > _Camp_LastSleptDay.GetValueInt()
+			_Camp_LastSleptDay.SetValue(game_day_before_sleep)
+			AdvanceCampingSkill()
+		endif
+	endif
 endFunction
 
 function DisplayPlayerTentEquipment(ObjectReference akTent, bool bLimited = false)
@@ -1139,4 +1174,39 @@ function SetWasFirstPerson()
 	else
 		_Camp_WasFirstPersonBeforeUse.SetValueInt(1)
 	endif
+endFunction
+
+function AdvanceCampingSkill()
+    if CampingPerkPointsEarned.GetValueInt() < CampingPerkPointsTotal.GetValueInt()
+        CampDebug(1, "Advancing Camping skill.")
+        int next_level = CampingPerkPointsEarned.GetValueInt() + 1
+
+        ; 3, 5, 7, 9, 10, 11, 12, 13...
+        float actions_required
+        if next_level <= 4
+            actions_required = (2 * next_level) + 1
+        else
+            actions_required = (9 + (next_level - 4))
+        endif
+
+        float progress_value = (1.0 / actions_required)
+        CampingPerkPointProgress.SetValue(CampingPerkPointProgress.GetValue() + progress_value)
+        CampDebug(1, "Camping perk progress value: " + CampingPerkPointProgress.GetValue())
+
+        if (CampingPerkPointProgress.GetValue() + 0.01) >= 1.0
+            CampDebug(1, "Granting a Camping perk point.")
+            ; Grant perk point
+            _Camp_PerkEarned.Show()
+            CampingPerkPointsEarned.SetValueInt(CampingPerkPointsEarned.GetValueInt() + 1)
+            CampingPerkPoints.SetValueInt(CampingPerkPoints.GetValueInt() + 1)
+
+            if CampingPerkPointsEarned.GetValueInt() >= CampingPerkPointsTotal.GetValueInt()
+                CampingPerkPointProgress.SetValue(1.0)
+            else
+                CampingPerkPointProgress.SetValue(0.0)
+            endif
+        else
+            _Camp_PerkAdvancement.Show()
+        endif
+    endif
 endFunction
