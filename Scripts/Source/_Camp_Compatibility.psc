@@ -97,15 +97,7 @@ GlobalVariable property _Camp_PerkRank_Resourceful auto
 GlobalVariable property _Camp_PerkRank_Firecraft auto
 
 ConstructibleObject property _Camp_FireMiscRecipe_TinderStraw auto
-ConstructibleObject property _Camp_FireMiscRecipe_TinderStraw_perk1 auto
-ConstructibleObject property _Camp_FireMiscRecipe_TinderStraw_perk2 auto
-ConstructibleObject property _Camp_FireMiscRecipe_TinderStraw_perk3 auto
-ConstructibleObject property _Camp_FireMiscRecipe_TinderStraw_perk4 auto
 ConstructibleObject property _Camp_FireMiscRecipe_BW_TinderStraw auto
-ConstructibleObject property _Camp_FireMiscRecipe_BW_TinderStraw_perk1 auto
-ConstructibleObject property _Camp_FireMiscRecipe_BW_TinderStraw_perk2 auto
-ConstructibleObject property _Camp_FireMiscRecipe_BW_TinderStraw_perk3 auto
-ConstructibleObject property _Camp_FireMiscRecipe_BW_TinderStraw_perk4 auto
 ConstructibleObject property _Camp_RecipeLeatherValeDeerHideDLC1 auto
 ConstructibleObject property _Camp_RecipeLeatherValeSabreCatHideDLC1 auto
 ConstructibleObject property _Camp_RecipeTanningLeatherValeDeerHideDLC1 auto
@@ -555,15 +547,7 @@ function RunCompatibility()
 	if isHFLoaded && isSKSELoaded
 		form Straw = Game.GetFormFromFile(0x00005A68, "HearthFires.esm")				;Straw
 		_Camp_FireMiscRecipe_TinderStraw.SetNthIngredient(Straw, 0)
-		_Camp_FireMiscRecipe_TinderStraw_perk1.SetNthIngredient(Straw, 0)
-		_Camp_FireMiscRecipe_TinderStraw_perk2.SetNthIngredient(Straw, 0)
-		_Camp_FireMiscRecipe_TinderStraw_perk3.SetNthIngredient(Straw, 0)
-		_Camp_FireMiscRecipe_TinderStraw_perk4.SetNthIngredient(Straw, 0)
 		_Camp_FireMiscRecipe_BW_TinderStraw.SetNthIngredient(Straw, 0)
-		_Camp_FireMiscRecipe_BW_TinderStraw_perk1.SetNthIngredient(Straw, 0)
-		_Camp_FireMiscRecipe_BW_TinderStraw_perk2.SetNthIngredient(Straw, 0)
-		_Camp_FireMiscRecipe_BW_TinderStraw_perk3.SetNthIngredient(Straw, 0)
-		_Camp_FireMiscRecipe_BW_TinderStraw_perk4.SetNthIngredient(Straw, 0)
 	endif
 	
 	if isDLC1Loaded && isSKSELoaded

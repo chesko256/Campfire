@@ -311,6 +311,17 @@ ObjectReference property myPerkNavController auto hidden
 GlobalVariable property _Camp_PerkRank_Resourceful auto
 GlobalVariable property _Camp_PerkNodeControllerCount auto
 
+Message property _Camp_Tutorial_FireBuilding_1 auto
+Message property _Camp_Tutorial_FireBuilding_2 auto
+Message property _Camp_Tutorial_FireBuilding_3 auto
+Message property _Camp_Tutorial_FireBuilding_4 auto
+Message property _Camp_Tutorial_FireBuilding_5 auto
+GlobalVariable property _Camp_Tutorial_FireBuilding1_Displayed auto
+GlobalVariable property _Camp_Tutorial_FireBuilding2_Displayed auto
+GlobalVariable property _Camp_Tutorial_FireBuilding3_Displayed auto
+GlobalVariable property _Camp_Tutorial_FireBuilding4_Displayed auto
+GlobalVariable property _Camp_Tutorial_FireBuilding5_Displayed auto
+
 int EMBERS_DURATION = 4
 int ASH_DURATION = 24
 
@@ -462,6 +473,9 @@ function PlayerUseCampfire()
     if (PlayerRef.GetAV("Destruction") >= 20.0)
         PlayerRef.AddItem(_Camp_CampfireItem_DestructionSkill, 1, true)
     endif
+
+    ShowTutorial(1)
+
     ;Wait until they finish.
     while self.IsFurnitureInUse()
         utility.wait(1)
@@ -492,6 +506,34 @@ function ShowTalkMenu()
 
     if follower
         follower.Activate(PlayerRef)
+    endif
+endFunction
+
+function ShowTutorial(int aiTutorialIndex)
+    if aiTutorialIndex == 1 && _Camp_Tutorial_FireBuilding1_Displayed.GetValueInt() != 2
+        int i = _Camp_Tutorial_FireBuilding_1.Show()
+        if i == 0
+            _Camp_Tutorial_FireBuilding1_Displayed.SetValueInt(2)
+            ShowTutorial(2)
+        elseif i == 1
+            _Camp_Tutorial_FireBuilding1_Displayed.SetValueInt(2)
+            _Camp_Tutorial_FireBuilding2_Displayed.SetValueInt(2)
+            _Camp_Tutorial_FireBuilding3_Displayed.SetValueInt(2)
+            _Camp_Tutorial_FireBuilding4_Displayed.SetValueInt(2)
+            _Camp_Tutorial_FireBuilding5_Displayed.SetValueInt(2)
+        endif
+    elseif aiTutorialIndex == 2 && _Camp_Tutorial_FireBuilding2_Displayed.GetValueInt() != 2
+        _Camp_Tutorial_FireBuilding_2.Show()
+        _Camp_Tutorial_FireBuilding2_Displayed.SetValueInt(2)
+    elseif aiTutorialIndex == 3 && _Camp_Tutorial_FireBuilding3_Displayed.GetValueInt() != 2
+        _Camp_Tutorial_FireBuilding_3.Show()
+        _Camp_Tutorial_FireBuilding3_Displayed.SetValueInt(2)
+    elseif aiTutorialIndex == 4 && _Camp_Tutorial_FireBuilding4_Displayed.GetValueInt() != 2
+        _Camp_Tutorial_FireBuilding_4.Show()
+        _Camp_Tutorial_FireBuilding4_Displayed.SetValueInt(2)
+    elseif aiTutorialIndex == 5 && _Camp_Tutorial_FireBuilding5_Displayed.GetValueInt() != 2
+        _Camp_Tutorial_FireBuilding_5.Show()
+        _Camp_Tutorial_FireBuilding5_Displayed.SetValueInt(2)
     endif
 endFunction
 
@@ -1013,6 +1055,7 @@ function SetTinder(float afBaseTimeToLight, bool abIsTinderOil)
     if PlayerRef.GetItemCount(_Camp_BlankItem) == 0
         PlayerRef.AddItem(_Camp_BlankItem, 1, true)
     endif
+    ShowTutorial(4)
 endFunction
 
 function PlaceFuel()
@@ -1029,6 +1072,7 @@ function PlaceFuel()
     CampDebug(1, "Campfire registered for update in " + ASH_DURATION + " hours.")
     campfire_stage = 3
     _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
+    ShowTutorial(3)
 endFunction
 
 function LightFire()
@@ -1046,6 +1090,7 @@ function LightFire()
     CampDebug(1, "Campfire registered for update in " + burn_duration + " hours.")
     campfire_stage = 2
     _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
+    ShowTutorial(5)
 endFunction
 
 function PutOutFire()

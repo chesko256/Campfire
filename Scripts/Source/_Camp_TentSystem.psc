@@ -467,7 +467,7 @@ function PlayerSleep(CampTent akTentObject)
 	self.UnregisterForSleep()
 
 	; Advance camping skill if necessary
-	if slept_in_tent && !TentObject.Setting_IsConjured
+	if slept_in_tent && !akTentObject.Setting_IsConjured
 		slept_in_tent = false
 		if GameDay.GetValueInt() > _Camp_LastSleptDay.GetValueInt()
 			_Camp_LastSleptDay.SetValue(game_day_before_sleep)
