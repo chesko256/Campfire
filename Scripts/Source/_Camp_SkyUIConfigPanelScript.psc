@@ -27,6 +27,7 @@ GlobalVariable property _Camp_Setting_AdvancedPlacement auto
 GlobalVariable property _Camp_Setting_CompatibilityEO auto
 GlobalVariable property _Camp_Setting_AutoSaveLoad auto
 GlobalVariable property _Camp_Setting_CurrentProfile auto
+GlobalVariable property _Camp_Setting_EnableTutorials auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 GlobalVariable property _Camp_HotkeyCreateItem auto
 GlobalVariable property _Camp_HotkeyBuildCampfire auto
@@ -89,6 +90,8 @@ int Advanced_CampingSkillRestore_OID
 int Advanced_CampingSkillRestoreSlider_OID
 
 int Help_TroubleshootingMenu_OID
+int Help_SettingEnableTutorials_OID
+int Help_ResetTutorials_OID
 int Guide_Topic1
 int Guide_Topic2
 int Guide_Topic3
@@ -344,9 +347,18 @@ function PageReset_Help()
 	SetCursorFillMode(TOP_TO_BOTTOM)
 	
 	AddHeaderOption("$CampfireHelpHeaderTroubleshooting")
-
 	Help_TroubleshootingMenu_OID = AddMenuOption("$CampfireHelpTroubleshootingSelectProblem", TroubleshootingList[TroubleshootingIndex])
 	
+	AddEmptyOption()
+
+	AddHeaderOption("$CampfireHelpHeaderTutorials")
+	if _Camp_Setting_EnableTutorials.GetValueInt() == 2
+		Help_SettingEnableTutorials_OID = AddToggleOption("$CampfireHelpEnableTutorials", true)
+	else
+		Help_SettingEnableTutorials_OID = AddToggleOption("$CampfireHelpEnableTutorials", false)
+	endif
+	Help_ResetTutorials_OID = AddTextOption("", "$CampfireHelpResetTutorials")
+
 	SetCursorPosition(1) ; Move cursor to top right position
 	AddHeaderOption("$CampfireGuideHeader")
 	Guide_Topic1 = AddTextOption("$CampfireGuideTopic1", "")
