@@ -44,6 +44,12 @@ GlobalVariable property _Camp_PerkRank_KeenSenses auto
 GlobalVariable property _Camp_PerkRank_Resourceful auto
 GlobalVariable property _Camp_PerkRank_Trailblazer auto
 
+GlobalVariable property _Camp_Tutorial_FireBuilding1_Displayed auto
+GlobalVariable property _Camp_Tutorial_FireBuilding2_Displayed auto
+GlobalVariable property _Camp_Tutorial_FireBuilding3_Displayed auto
+GlobalVariable property _Camp_Tutorial_FireBuilding4_Displayed auto
+GlobalVariable property _Camp_Tutorial_FireBuilding5_Displayed auto
+
 Actor property PlayerRef auto
 ReferenceAlias property Follower1 auto
 ReferenceAlias property Follower2 auto
@@ -443,6 +449,11 @@ event OnOptionHighlight(int option)
 	elseif option == Advanced_CampingSkillRestore_OID
 		SetInfoText("$CampfireOptionHighlightSettingRestore")
 
+	elseif option == Help_SettingEnableTutorials_OID
+		SetInfoText("$CampfireOptionHighlightSettingTutorials")
+	elseif option == Help_ResetTutorials_OID
+		SetInfoText("$CampfireOptionHighlightSettingResetTutorials")
+
 	elseif option == SaveLoad_SelectProfile_OID
 		SetInfoText("$CampfireOptionHighlightSettingSelectProfile")
 	elseif option == SaveLoad_RenameProfile_OID
@@ -583,6 +594,21 @@ event OnOptionSelect(int option)
 			SetToggleOptionValue(Advanced_SettingAdvancedPlacement_OID, true)
 		endif
 		SaveSettingToCurrentProfile("advanced_placement_mode", _Camp_Setting_AdvancedPlacement.GetValueInt())
+	elseif option == Help_SettingEnableTutorials_OID
+		if _Camp_Setting_EnableTutorials.GetValueInt() == 2
+			_Camp_Setting_EnableTutorials.SetValueInt(1)
+			SetToggleOptionValue(Help_SettingEnableTutorials_OID, false)
+		else
+			_Camp_Setting_EnableTutorials.SetValueInt(2)
+			SetToggleOptionValue(Help_SettingEnableTutorials_OID, true)
+		endif
+		SaveSettingToCurrentProfile("enable_tutorials", _Camp_Setting_EnableTutorials.GetValueInt())
+	elseif option == Help_ResetTutorials_OID
+		bool b = ShowMessage("$CampfireTutorialResetPrompt")
+		if b
+			ShowMessage("$CampfireTutorialResetDone", false)
+			ResetTutorials()
+		endif
 	elseif option == Advanced_SettingEOCompatibility_OID
 		if _Camp_Setting_CompatibilityEO.GetValueInt() == 2
 			_Camp_Setting_CompatibilityEO.SetValueInt(1)
@@ -733,6 +759,9 @@ event OnOptionDefault(int option)
 	elseif option == Advanced_SettingEOCompatibility_OID
 		_Camp_Setting_CompatibilityEO.SetValueInt(1)
 		SetToggleOptionValue(Advanced_SettingEOCompatibility_OID, false)
+	elseif option == Help_SettingEnableTutorials_OID
+		_Camp_Setting_EnableTutorials.SetValueInt(2)
+		SaveSettingToCurrentProfile("enable_tutorials", _Camp_Setting_EnableTutorials.GetValueInt())
 	endif
 	if option == Gameplay_HotkeyCreateItem_OID
 		UnregisterForKey(_Camp_HotkeyCreateItem.GetValueInt())
@@ -1116,6 +1145,10 @@ function SwitchToProfile(int aiProfileIndex)
 	if val != -1
 		_Camp_Setting_CompatibilityEO.SetValueInt(val)
 	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "enable_tutorials")
+	if val != -1
+		_Camp_Setting_EnableTutorials.SetValueInt(val)
+	endif
 
 	val = LoadSettingFromProfile(aiProfileIndex, "hotkey_create_item")
 	if val != -1 && val != 0
@@ -1180,6 +1213,7 @@ function GenerateDefaultProfile(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "advanced_placement_mode", 2)
 	JsonUtil.SetIntValue(profile_path, "max_placement_threads", 20)
 	JsonUtil.SetIntValue(profile_path, "eo_compatibility", 1)
+	JsonUtil.SetIntValue(profile_path, "enable_tutorials", 2)
 	JsonUtil.SetIntValue(profile_path, "hotkey_create_item", 0)
 	JsonUtil.SetIntValue(profile_path, "hotkey_build_campfire", 0)
 	JsonUtil.SetIntValue(profile_path, "hotkey_harvest_wood", 0)
@@ -1206,6 +1240,7 @@ function SaveAllSettings(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "advanced_placement_mode", _Camp_Setting_AdvancedPlacement.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "max_placement_threads", _Camp_Setting_MaxThreads.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "eo_compatibility", _Camp_Setting_CompatibilityEO.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "enable_tutorials", _Camp_Setting_EnableTutorials.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "hotkey_create_item", _Camp_HotkeyCreateItem.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "hotkey_build_campfire", _Camp_HotkeyBuildCampfire.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "hotkey_harvest_wood", _Camp_HotkeyHarvestWood.GetValueInt())
@@ -1233,6 +1268,14 @@ function RefundCampingSkillPoints()
 	ClearCampingPerks()
 	CampingPerkPoints.SetValueInt(CampingPerkPointsEarned.GetValueInt())
 	CampingPerkPointProgress.SetValue(0.0)
+endFunction
+
+function ResetTutorials()
+	_Camp_Tutorial_FireBuilding1_Displayed.SetValueInt(1)
+	_Camp_Tutorial_FireBuilding2_Displayed.SetValueInt(1)
+	_Camp_Tutorial_FireBuilding3_Displayed.SetValueInt(1)
+	_Camp_Tutorial_FireBuilding4_Displayed.SetValueInt(1)
+	_Camp_Tutorial_FireBuilding5_Displayed.SetValueInt(1)
 endFunction
 
 GlobalVariable property _Camp_Setting_ManualFireLighting auto

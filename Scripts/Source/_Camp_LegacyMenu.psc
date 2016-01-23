@@ -40,6 +40,10 @@ Message property _Camp_legacyconfig_advancedplacement_off auto
 Message property _Camp_legacyconfig_placementthreads auto
 Message property _Camp_legacyconfig_detectfollowers_on auto
 Message property _Camp_legacyconfig_detectfollowers_off auto
+Message property _Camp_legacyconfig_tutorials_on auto
+Message property _Camp_legacyconfig_tutorials_off auto
+Message property _Camp_legacyconfig_tutorials_resetconfirm auto
+Message property _Camp_legacyconfig_tutorials_resetdone auto
 Message property _Camp_legacyconfig_helpstuckplacement auto
 Message property _Camp_TroubleshootingConfirmMsg auto
 Message property _Camp_legacyconfig_campingskill auto
@@ -64,6 +68,7 @@ GlobalVariable property _Camp_Setting_FollowersRemoveGearInTents auto
 GlobalVariable property _Camp_Setting_AdvancedPlacement auto
 GlobalVariable property _Camp_Setting_MaxThreads auto
 GlobalVariable property _Camp_Setting_TrackFollowers auto
+GlobalVariable property _Camp_Setting_EnableTutorials auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 GlobalVariable property _Camp_LegacyConfigCampingRestore auto
 GlobalVariable property CampingPerkPoints auto
@@ -75,6 +80,12 @@ GlobalVariable property _Camp_PerkRank_HighSpirits auto
 GlobalVariable property _Camp_PerkRank_KeenSenses auto
 GlobalVariable property _Camp_PerkRank_Resourceful auto
 GlobalVariable property _Camp_PerkRank_Trailblazer auto
+
+GlobalVariable property _Camp_Tutorial_FireBuilding1_Displayed auto
+GlobalVariable property _Camp_Tutorial_FireBuilding2_Displayed auto
+GlobalVariable property _Camp_Tutorial_FireBuilding3_Displayed auto
+GlobalVariable property _Camp_Tutorial_FireBuilding4_Displayed auto
+GlobalVariable property _Camp_Tutorial_FireBuilding5_Displayed auto
 
 ;References
 Actor property PlayerRef auto
@@ -241,6 +252,9 @@ function menu_help()
     if i == 0
         menu_troubleshooting()
     elseif i == 1
+        MenuHandler_Tutorials(_Camp_legacyconfig_tutorials_on, _Camp_legacyconfig_tutorials_off, _Camp_legacyconfig_tutorials_resetconfirm, _Camp_legacyconfig_tutorials_resetdone, _Camp_Setting_EnableTutorials)
+        menu_help()
+    elseif i == 2
         menu_root()
     endif
 endFunction
@@ -280,6 +294,40 @@ function MenuHandler_Toggle(Message akMessageOn, Message akMessageOff, GlobalVar
             akSetting.SetValueInt(2)
             MenuHandler_Toggle(akMessageOn, akMessageOff, akSetting)
         elseif i == 1
+            ;return
+        endif
+    endif
+endFunction
+
+;Format: On/Off, Execute, Back
+;akSetting: 2 = ON, 1 = OFF
+function MenuHandler_Tutorials(Message akMessageOn, Message akMessageOff, Message akMessageExecuteConfirm, Message akMessageExecuteDone, GlobalVariable akSetting)
+    if akSetting.GetValueInt() == 2
+        int i = akMessageOn.Show()
+        if i == 0
+            akSetting.SetValueInt(1)
+            MenuHandler_Toggle(akMessageOn, akMessageOff, akSetting)
+        elseif i == 1
+            bool b = MenuHandler_Execute(akMessageExecuteConfirm)
+            if b
+                akMessageExecuteDone.Show()
+                ResetTutorials()
+            endif
+        elseif i == 2
+            ;return
+        endif
+    elseif akSetting.GetValueInt() == 1
+        int i = akMessageOff.Show()
+        if i == 0
+            akSetting.SetValueInt(2)
+            MenuHandler_Toggle(akMessageOn, akMessageOff, akSetting)
+        elseif i == 1
+            bool b = MenuHandler_Execute(akMessageExecuteConfirm)
+            if b
+                akMessageExecuteDone.Show()
+                ResetTutorials()
+            endif
+        elseif i == 2
             ;return
         endif
     endif
@@ -337,6 +385,14 @@ function RefundCampingSkillPoints()
     ClearCampingPerks()
     CampingPerkPoints.SetValueInt(CampingPerkPointsEarned.GetValueInt())
     CampingPerkPointProgress.SetValue(0.0)
+endFunction
+
+function ResetTutorials()
+    _Camp_Tutorial_FireBuilding1_Displayed.SetValueInt(1)
+    _Camp_Tutorial_FireBuilding2_Displayed.SetValueInt(1)
+    _Camp_Tutorial_FireBuilding3_Displayed.SetValueInt(1)
+    _Camp_Tutorial_FireBuilding4_Displayed.SetValueInt(1)
+    _Camp_Tutorial_FireBuilding5_Displayed.SetValueInt(1)
 endFunction
 
 Message property _Camp_legacyconfig_manuallighting_on auto
