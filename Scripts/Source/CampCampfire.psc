@@ -343,6 +343,7 @@ float last_lit_time
 
 bool in_use = false
 bool eligible_for_deletion = false
+bool attached = true
 
 int property campfire_stage = 0 auto hidden     ;0 = empty or ash, 1 = embers, 2 = burning, 3 = unlit fuel no tinder, 4 = unlit fuel and tinder, 5 = attempting to be lit
 int property campfire_size = 0 auto hidden      ;0 = not built, 1 = fragile, 2 = flickering, 3 = crackling, 4 = roaring
@@ -378,6 +379,13 @@ Event OnActivate(ObjectReference akActionRef)
 EndEvent
 
 function DoActivate(ObjectReference akActionRef)
+    if eligible_for_deletion
+        CampDebug(1, "Campfire " + self + " unqueued for deletion.")
+        eligible_for_deletion = false
+        remaining_time = ASH_DURATION
+        RegisterForSingleUpdateGameTime(remaining_time)
+    endif
+
     SetSelectedObjectConjured(self)
     SetLastUsedCampfire(self)
     ; Should we refund the player fuel because it was put out?
@@ -565,7 +573,12 @@ function ShowTutorial(int aiTutorialIndex)
     endif
 endFunction
 
+Event OnCellAttach()
+    attached = true    
+EndEvent
+
 Event OnCellDetach()
+    attached = false
     if eligible_for_deletion
         TakeDown()
     endif
@@ -1194,7 +1207,12 @@ Event OnUpdateGameTime()
 
     if remaining_time < 1
         if !Setting_IsPartOfConjuredShelter
-            TakeDown()
+            if attached
+                CampDebug(1, "Campfire " + self + " queued for deletion.")
+                eligible_for_deletion = true
+            else
+                TakeDown()
+            endif
         endif
     else
         if remaining_time <= ASH_DURATION

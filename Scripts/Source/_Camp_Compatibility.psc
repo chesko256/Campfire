@@ -615,8 +615,9 @@ bool function IsPluginLoaded(int iFormID, string sPluginName)
 endFunction
 
 function Upgrade_1_1()
-	PerkNodeControllers = new Activator[4]
-	bool b = CampfirePerkSystemRegister(_Camp_PerkNodeController_Camping, "Campfire.esm")
+	; Deprecated changes as of 1.7.
+	; PerkNodeControllers = new Activator[4]
+	; bool b = CampfirePerkSystemRegister(_Camp_PerkNodeController_Camping, "Campfire.esm")
 	Upgraded_1_1 = true
 endFunction
 
