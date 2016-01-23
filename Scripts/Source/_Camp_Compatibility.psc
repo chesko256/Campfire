@@ -167,6 +167,10 @@ function RunCompatibility()
 		Upgrade_1_6()
 	endif
 
+	if !Upgraded_1_7
+		Upgrade_1_7()
+	endif
+
 	; Update the previous version value with the current version
 	_Camp_PreviousVersion.SetValue(_Camp_CampfireVersion.GetValue())
 

@@ -545,7 +545,7 @@ function ShowTutorial(int aiTutorialIndex)
     elseif aiTutorialIndex == 5 && _Camp_Tutorial_FireBuilding5_Displayed.GetValueInt() != 2
         _Camp_Tutorial_FireBuilding_5.Show()
         _Camp_Tutorial_FireBuilding5_Displayed.SetValueInt(2)
-    elseif aiTutorialIndex == 11
+    elseif aiTutorialIndex == 11 && _Camp_Tutorial_SkillSystem1_Displayed.GetValueInt() != 2
         int i = _Camp_Tutorial_SkillSystem_1.Show()
         if i == 0
             _Camp_Tutorial_SkillSystem1_Displayed.SetValueInt(2)
@@ -556,10 +556,10 @@ function ShowTutorial(int aiTutorialIndex)
             _Camp_Tutorial_SkillSystem2_Displayed.SetValueInt(2)
             _Camp_Tutorial_SkillSystem3_Displayed.SetValueInt(2)
         endif
-    elseif aiTutorialIndex == 12
+    elseif aiTutorialIndex == 12 && _Camp_Tutorial_SkillSystem2_Displayed.GetValueInt() != 2
         _Camp_Tutorial_SkillSystem_2.Show()
         _Camp_Tutorial_SkillSystem2_Displayed.SetValueInt(2)
-    elseif aiTutorialIndex == 13
+    elseif aiTutorialIndex == 13 && _Camp_Tutorial_SkillSystem3_Displayed.GetValueInt() != 2
         _Camp_Tutorial_SkillSystem_3.Show()
         _Camp_Tutorial_SkillSystem3_Displayed.SetValueInt(2)
     endif
