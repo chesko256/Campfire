@@ -317,11 +317,17 @@ Message property _Camp_Tutorial_FireBuilding_2 auto
 Message property _Camp_Tutorial_FireBuilding_3 auto
 Message property _Camp_Tutorial_FireBuilding_4 auto
 Message property _Camp_Tutorial_FireBuilding_5 auto
+Message property _Camp_Tutorial_SkillSystem_1 auto
+Message property _Camp_Tutorial_SkillSystem_2 auto
+Message property _Camp_Tutorial_SkillSystem_3 auto
 GlobalVariable property _Camp_Tutorial_FireBuilding1_Displayed auto
 GlobalVariable property _Camp_Tutorial_FireBuilding2_Displayed auto
 GlobalVariable property _Camp_Tutorial_FireBuilding3_Displayed auto
 GlobalVariable property _Camp_Tutorial_FireBuilding4_Displayed auto
 GlobalVariable property _Camp_Tutorial_FireBuilding5_Displayed auto
+GlobalVariable property _Camp_Tutorial_SkillSystem1_Displayed auto
+GlobalVariable property _Camp_Tutorial_SkillSystem2_Displayed auto
+GlobalVariable property _Camp_Tutorial_SkillSystem3_Displayed auto
 
 int EMBERS_DURATION = 4
 int ASH_DURATION = 24
@@ -539,6 +545,23 @@ function ShowTutorial(int aiTutorialIndex)
     elseif aiTutorialIndex == 5 && _Camp_Tutorial_FireBuilding5_Displayed.GetValueInt() != 2
         _Camp_Tutorial_FireBuilding_5.Show()
         _Camp_Tutorial_FireBuilding5_Displayed.SetValueInt(2)
+    elseif aiTutorialIndex == 11
+        int i = _Camp_Tutorial_SkillSystem_1.Show()
+        if i == 0
+            _Camp_Tutorial_SkillSystem1_Displayed.SetValueInt(2)
+            ShowTutorial(12)
+            ShowTutorial(13)
+        elseif i == 1
+            _Camp_Tutorial_SkillSystem1_Displayed.SetValueInt(2)
+            _Camp_Tutorial_SkillSystem2_Displayed.SetValueInt(2)
+            _Camp_Tutorial_SkillSystem3_Displayed.SetValueInt(2)
+        endif
+    elseif aiTutorialIndex == 12
+        _Camp_Tutorial_SkillSystem_2.Show()
+        _Camp_Tutorial_SkillSystem2_Displayed.SetValueInt(2)
+    elseif aiTutorialIndex == 13
+        _Camp_Tutorial_SkillSystem_3.Show()
+        _Camp_Tutorial_SkillSystem3_Displayed.SetValueInt(2)
     endif
 endFunction
 
@@ -858,6 +881,7 @@ bool function ShowSkills()
 endFunction
 
 function EnterTreeSystem(int idx)
+    ShowTutorial(11)
     self.PlaceAtMe(_Camp_PerkSystemEnterExplosion01)
     _Camp_UISkillsPerkEnter.Play(self)
     ShowBugNav()
