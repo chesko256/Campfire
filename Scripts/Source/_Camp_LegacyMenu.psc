@@ -86,6 +86,9 @@ GlobalVariable property _Camp_Tutorial_FireBuilding2_Displayed auto
 GlobalVariable property _Camp_Tutorial_FireBuilding3_Displayed auto
 GlobalVariable property _Camp_Tutorial_FireBuilding4_Displayed auto
 GlobalVariable property _Camp_Tutorial_FireBuilding5_Displayed auto
+GlobalVariable property _Camp_Tutorial_SkillSystem1_Displayed auto
+GlobalVariable property _Camp_Tutorial_SkillSystem2_Displayed auto
+GlobalVariable property _Camp_Tutorial_SkillSystem3_Displayed auto
 
 ;References
 Actor property PlayerRef auto
@@ -393,6 +396,9 @@ function ResetTutorials()
     _Camp_Tutorial_FireBuilding3_Displayed.SetValueInt(1)
     _Camp_Tutorial_FireBuilding4_Displayed.SetValueInt(1)
     _Camp_Tutorial_FireBuilding5_Displayed.SetValueInt(1)
+    _Camp_Tutorial_SkillSystem1_Displayed.SetValueInt(1)
+    _Camp_Tutorial_SkillSystem2_Displayed.SetValueInt(1)
+    _Camp_Tutorial_SkillSystem3_Displayed.SetValueInt(1)
 endFunction
 
 Message property _Camp_legacyconfig_manuallighting_on auto
