@@ -311,6 +311,7 @@ ObjectReference property myPerkNavController auto hidden
 GlobalVariable property _Camp_PerkRank_Resourceful auto
 GlobalVariable property _Camp_PerkNodeControllerCount auto
 
+GlobalVariable property _Camp_Setting_EnableTutorials auto
 Message property _Camp_Tutorial_FireBuilding_1 auto
 Message property _Camp_Tutorial_FireBuilding_2 auto
 Message property _Camp_Tutorial_FireBuilding_3 auto
@@ -510,6 +511,10 @@ function ShowTalkMenu()
 endFunction
 
 function ShowTutorial(int aiTutorialIndex)
+    if _Camp_Setting_EnableTutorials.GetValueInt() == 1
+        return
+    endif
+
     if aiTutorialIndex == 1 && _Camp_Tutorial_FireBuilding1_Displayed.GetValueInt() != 2
         int i = _Camp_Tutorial_FireBuilding_1.Show()
         if i == 0
