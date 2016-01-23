@@ -168,7 +168,7 @@ function ActivateTent(ObjectReference akActionRef, ObjectReference akTent)
 endFunction
 
 Event OnSleepStart(float afSleepStartTime, float afDesiredSleepEndTime)
-	CampDebug(1, "Player slept in tent (" + self + ")")
+	CampDebug(1, "Player slept in tent.")
 	slept_in_tent = true
 EndEvent
 
@@ -461,16 +461,22 @@ function PlayerLieDown(ObjectReference akTent)
 endFunction
 
 function PlayerSleep(CampTent akTentObject)
+	CampDebug(0, "Player selected sleeping.")
 	self.RegisterForSleep()
-	int game_day_before_sleep = GameDay.GetValueInt()
+	int game_day_of_sleep_start = GameDay.GetValueInt()
 	akTentObject.myBedRoll.Activate(PlayerRef);  //Spawns sleep menu
+
+	; Block until we exit menus.
+	Utility.Wait(0.5)
 	self.UnregisterForSleep()
 
 	; Advance camping skill if necessary
+	CampDebug(0, "slept_in_tent " + slept_in_tent + ", IsConjured " + akTentObject.Setting_IsConjured)
 	if slept_in_tent && !akTentObject.Setting_IsConjured
 		slept_in_tent = false
-		if GameDay.GetValueInt() > _Camp_LastSleptDay.GetValueInt()
-			_Camp_LastSleptDay.SetValue(game_day_before_sleep)
+		if game_day_of_sleep_start > _Camp_LastSleptDay.GetValueInt()
+			CampDebug(0, "Day is newer than last slept day, advancing Camping.")
+			_Camp_LastSleptDay.SetValue(game_day_of_sleep_start)
 			AdvanceCampingSkill()
 		endif
 	endif
