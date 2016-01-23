@@ -113,6 +113,7 @@ Spell property _Camp_LegacyConfig_Spell auto
 Spell property _Camp_FollowerDetectSpell auto
 Message property _Camp_CriticalError_SKSE auto
 Message property _Camp_CriticalError_FrostfallLegacy auto
+Message property _Camp_CriticalError_FrostfallLegacyDetails auto
 Message property _Camp_Upgrade_1_6_Msg auto
 Weather property DLC2AshStorm auto hidden
 
@@ -137,12 +138,37 @@ Event OnPlayerLoadGame()
 	endif
 endEvent
 
+
+
 function FatalErrorFrostfallLegacy()
 	trace("[Campfire][ERROR] Detected Frostfall legacy version (2.6 or less). Expected 3.0 or newer.")
-	while true
-		_Camp_CriticalError_FrostfallLegacy.Show()
-		utility.wait(3.0)
-	endWhile
+	int idx
+	string author
+	_Camp_Strings str = GetCampfireStrings()
+	if isSKSELoaded
+		idx = Game.GetModByName("Chesko_Frostfall.esp")
+		author = Game.GetModAuthor(idx)
+	endif
+
+	if isSKSELoaded
+		if idx != 255
+			while true
+				; Frostfall Legacy was detected and resolved to a specific position in the load order. Prevent continued play.
+				MessageBox(str.FrostfallCriticalError1 + str.FrostfallCriticalError2 + Game.GetModName(idx) + str.FrostfallCriticalError3 + idx + str.FrostfallCriticalError4 + author + ")")
+				utility.wait(3.0)
+			endWhile
+		else
+			; Something strange happened - GetFormFromFile found Frostfall, but GetModByName didn't. Allow continued play.
+			Quest found_plugin = Game.GetFormFromFile(0x0286F3, "Chesko_Frostfall.esp") as Quest
+			MessageBox(str.FrostfallCriticalErrorUnknown1 + str.FrostfallCriticalErrorUnknown2 + found_plugin + str.FrostfallCriticalErrorUnknown3)
+		endif
+	else
+		while true
+			; Frostfall Legacy was detected but SKSE is not loaded, so debug info is limited. Prevent continued play.
+			MessageBox(str.FrostfallCriticalError1 + str.FrostfallCriticalError2NoSKSE)
+			utility.wait(3.0)
+		endWhile
+	endif
 endFunction
 
 function RunCompatibility()
@@ -316,7 +342,7 @@ function RunCompatibility()
 		endif
 	endif
 
-	isFrostfallLegacyLoaded = IsPluginLoaded(0x02000D63, "Chesko_Frostfall.esp")
+	isFrostfallLegacyLoaded = IsPluginLoaded(0x0286F3, "Chesko_Frostfall.esp")
 	if isFrostfallLegacyLoaded
 		FatalErrorFrostfallLegacy()
 	endif
