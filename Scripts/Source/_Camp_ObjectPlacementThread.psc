@@ -267,7 +267,7 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
 
 	; Move miscellaneous items / lights out of view to start with
 	if bDisableInteraction
-		myTempMarker.SetPosition(myTempMarker.GetPositionX(), myTempMarker.GetPositionY(), myTempMarker.GetPositionZ() - 500.0)
+		myTempMarker.SetPosition(myTempMarker.GetPositionX(), myTempMarker.GetPositionY(), myTempMarker.GetPositionZ() - 350.0)
 	endif
 	
 	myObject = myTempMarker.PlaceAtMe(akFormToPlace, abForcePersist = spawn_persistent, abInitiallyDisabled = bInitiallyDisabled)
@@ -275,6 +275,10 @@ ObjectReference function PlaceAtMeRelative(ObjectReference akOrigin, Form akForm
     if bDisableInteraction && akFormToPlace as MiscObject
     	int i = 0
     	while !myObject.Is3DLoaded() && i < 50
+    		if myObject.IsDisabled()
+    			CampDebug(0, "myObject " + myObject + " incorrectly spawned as disabled.")
+    			myObject.EnableNoWait()
+    		endif
     		Utility.Wait(0.1)
     		i += 1
     	endWhile
