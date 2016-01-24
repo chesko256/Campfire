@@ -13,211 +13,211 @@ import CampUtil
 
 ; OPTIONAL PROPERTIES
 
-;/********p* CampCampfire/Setting_IsPartOfConjuredShelter
+;/********p* CampCampfire/Setting_DisableAgeOut
 * SYNTAX
 */;
-bool property Setting_IsPartOfConjuredShelter auto
-;/*
+bool property Setting_DisableAgeOut auto
+{
 * DESCRIPTION
-{ Optional: Whether or not this campfire is part of a conjured shelter. If true, it will not remove itself from the world over time. }
+* Optional: If true, this campfire will not "age out" (delete itself) from the world after 24 hours. Handy for use with Conjured Shelters, where the shelter is responsible for destroying this object. }
 ;*********/;
 
 ;/********p* CampCampfire/FireAsset_SitFurniture1
 * SYNTAX
 */;
 furniture property FireAsset_SitFurniture1 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: An optional furniture to sit on. }
+* Optional: An optional furniture to sit on. }
 ;*********/;
 
 ;/********p* CampCampfire/FireAsset_SitFurniture2
 * SYNTAX
 */;
 furniture property FireAsset_SitFurniture2 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: An optional furniture to sit on. }
+* Optional: An optional furniture to sit on. }
 ;*********/;
 
 ;/********p* CampCampfire/FireAsset_SitFurniture3
 * SYNTAX
 */;
 furniture property FireAsset_SitFurniture3 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: An optional furniture to sit on. }
+* Optional: An optional furniture to sit on. }
 ;*********/;
 
 ;/********p* CampCampfire/FireAsset_SitFurniture4
 * SYNTAX
 */;
 furniture property FireAsset_SitFurniture4 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: An optional furniture to sit on. }
+* Optional: An optional furniture to sit on. }
 ;*********/;
 
 ;/********p* CampCampfire/FireAsset_ClutterStatic1
 * SYNTAX
 */;
 static property FireAsset_ClutterStatic1 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: A static to place in or around the fire. }
+* Optional: A static to place in or around the fire. }
 ;*********/;
 
 ;/********p* CampCampfire/FireAsset_ClutterStatic2
 * SYNTAX
 */;
 static property FireAsset_ClutterStatic2 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: A static to place in or around the fire. }
+* Optional: A static to place in or around the fire. }
 ;*********/;
 
 ;/********p* CampCampfire/FireAsset_ClutterActivator1
 * SYNTAX
 */;
 Activator property FireAsset_ClutterActivator1 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: An activator to place in or around the fire. }
+* Optional: An activator to place in or around the fire. }
 ;*********/;
 
 ;/********p* CampCampfire/FireAsset_ClutterActivator2
 * SYNTAX
 */;
 Activator property FireAsset_ClutterActivator2 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: An activator to place in or around the fire. }
+* Optional: An activator to place in or around the fire. }
 ;*********/;
 
 ;/********p* CampCampfire/FireAsset_ClutterFurniture1
 * SYNTAX
 */;
 Furniture property FireAsset_ClutterFurniture1 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: A furniture to place in or around the fire. }
+* Optional: A furniture to place in or around the fire. }
 ;*********/;
 
 ;/********p* CampCampfire/FireAsset_ClutterFurniture2
 * SYNTAX
 */;
 Furniture property FireAsset_ClutterFurniture2 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: A furniture to place in or around the fire. }
+* Optional: A furniture to place in or around the fire. }
 ;*********/;
 
 ;/********p* CampCampfire/RequiredPositionRef_CampfireBase
 * SYNTAX
 */;
 ObjectReference property RequiredPositionRef_CampfireBase auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of the campfire base. }
+* Optional: Position reference of the campfire base. }
 ;*********/;
 
 ;/********p* CampCampfire/PositionRef_SitFurniture1
 * SYNTAX
 */;
 ObjectReference property PositionRef_SitFurniture1 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of the sit furniture. }
+* Optional: Position reference of the sit furniture. }
 ;*********/;
 
 ;/********p* CampCampfire/PositionRef_SitFurniture2
 * SYNTAX
 */;
 ObjectReference property PositionRef_SitFurniture2 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of the sit furniture. }
+* Optional: Position reference of the sit furniture. }
 ;*********/;
 
 ;/********p* CampCampfire/PositionRef_SitFurniture3
 * SYNTAX
 */;
 ObjectReference property PositionRef_SitFurniture3 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of the sit furniture. }
+* Optional: Position reference of the sit furniture. }
 ;*********/;
 
 ;/********p* CampCampfire/PositionRef_SitFurniture4
 * SYNTAX
 */;
 ObjectReference property PositionRef_SitFurniture4 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of the sit furniture. }
+* Optional: Position reference of the sit furniture. }
 ;*********/;
 
 ;/********p* CampCampfire/PositionRef_ClutterStatic1
 * SYNTAX
 */;
 ObjectReference property PositionRef_ClutterStatic1 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of the clutter static. }
+* Optional: Position reference of the clutter static. }
 ;*********/;
 
 ;/********p* CampCampfire/PositionRef_ClutterStatic2
 * SYNTAX
 */;
 ObjectReference property PositionRef_ClutterStatic2 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of the clutter static. }
+* Optional: Position reference of the clutter static. }
 ;*********/;
 
 ;/********p* CampCampfire/PositionRef_ClutterActivator1
 * SYNTAX
 */;
 ObjectReference property PositionRef_ClutterActivator1 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of the clutter activator. }
+* Optional: Position reference of the clutter activator. }
 ;*********/;
 
 ;/********p* CampCampfire/PositionRef_ClutterActivator2
 * SYNTAX
 */;
 ObjectReference property PositionRef_ClutterActivator2 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of the clutter activator. }
+* Optional: Position reference of the clutter activator. }
 ;*********/;
 
 ;/********p* CampCampfire/PositionRef_ClutterFurniture1
 * SYNTAX
 */;
 ObjectReference property PositionRef_ClutterFurniture1 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of the clutter furniture. }
+* Optional: Position reference of the clutter furniture. }
 ;*********/;
 
 ;/********p* CampCampfire/PositionRef_ClutterFurniture2
 * SYNTAX
 */;
 ObjectReference property PositionRef_ClutterFurniture2 auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of the clutter furniture. }
+* Optional: Position reference of the clutter furniture. }
 ;*********/;
 
 ;/********p* CampCampfire/PositionRef_CookPotSnapMarker
 * SYNTAX
 */;
 ObjectReference property PositionRef_CookPotSnapMarker auto
-;/*
+{
 * DESCRIPTION
-{ Optional: Position reference of the cook pot snap marker. }
+* Optional: Position reference of the cook pot snap marker. }
 ;*********/;
 
 ; PRIVATE
@@ -1206,7 +1206,7 @@ Event OnUpdateGameTime()
     CampDebug(0, "Campfire remaining time " + Math.Floor(remaining_time))
 
     if remaining_time < 1
-        if !Setting_IsPartOfConjuredShelter
+        if !Setting_DisableAgeOut
             if attached
                 CampDebug(1, "Campfire " + self + " queued for deletion.")
                 eligible_for_deletion = true

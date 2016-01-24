@@ -136,6 +136,10 @@ function Initialize()
 	; Make the placement system available again.
 	PlacementSystem.ReleaseLock(self)
 
+	if Setting_IsConjured
+		RegisterForSingleUpdateGameTime(24.0)
+	endif
+
 	initialized = true
 	CampDebug(0, "Base initialized")
 endFunction
@@ -465,6 +469,10 @@ function ForceStopUsingFurniture(ObjectReference akFurnitureRef)
 		endif
 	endif
 endFunction
+
+Event OnUpdateGameTime()
+	TakeDown()
+endEvent
 
 Event OnConjuredObjectIDUpdated()
 	int i = 0
