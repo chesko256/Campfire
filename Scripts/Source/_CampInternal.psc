@@ -216,11 +216,11 @@ ReferenceAlias function GetCrimeIllegalItemAlias(int aiAlias) global
 	endif
 
 	if aiAlias == 1
-		Campfire.IllegalItem1
+		return Campfire.IllegalItem1
 	elseif aiAlias == 2
-		Campfire.IllegalItem2
+		return Campfire.IllegalItem2
 	elseif aiAlias == 3
-		Campfire.IllegalItem3
+		return Campfire.IllegalItem3
 	else
 		return None
 	endif
