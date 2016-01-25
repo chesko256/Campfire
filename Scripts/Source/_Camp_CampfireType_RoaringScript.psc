@@ -6,6 +6,8 @@ int burn_duration = 12
 
 bool property isDeadwood = false auto
 bool property isFirewood = false auto
+bool property Setting_IsFuelRefresh = false auto
+{Is this a fuel refresh item?}
 
 int property count_books = 0 auto
 int property count_branches = 0 auto
@@ -22,11 +24,6 @@ Light property _Camp_Campfire_Light_5 auto
 Book property this_item auto
 Actor property PlayerRef auto
 GlobalVariable property _Camp_LastUsedCampfireSize auto
-GlobalVariable property _Camp_PerkRank_HighSpirits auto
-Spell property _Camp_InspiredSpell2 auto
-Spell property _Camp_InspiredSpell2_Perk1 auto
-Spell property _Camp_InspiredSpell2_Perk2 auto
-Message property _Camp_Inspired2Message auto
 
 Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)
     if akNewContainer == PlayerRef
@@ -42,24 +39,14 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
             if isDeadwood
                 (f as CampCampfire).SetFuel(_Camp_Fuel_Roaring_DeadwoodLit,       \
                                             _Camp_Fuel_Roaring_DeadwoodUnlit,     \
-                                            _Camp_Campfire_Light_5, burn_duration)
+                                            _Camp_Campfire_Light_5, burn_duration, Setting_IsFuelRefresh)
             elseif isFirewood
                 (f as CampCampfire).SetFuel(_Camp_Fuel_Roaring_FirewoodLit,       \
                                             _Camp_Fuel_Roaring_FirewoodUnlit,     \
-                                            _Camp_Campfire_Light_5, burn_duration)
+                                            _Camp_Campfire_Light_5, burn_duration, Setting_IsFuelRefresh)
             endif
+            (f as CampCampfire).SetBonusLevel(2)
         endif
         PlayerRef.RemoveItem(this_item, 1, true)
-
-        ;Set the inspired spell
-        int perk_rank = _Camp_PerkRank_HighSpirits.GetValueInt()
-        if perk_rank == 0
-            PlayerRef.AddSpell(_Camp_InspiredSpell2, false)
-        elseif perk_rank == 1
-            PlayerRef.AddSpell(_Camp_InspiredSpell2_Perk1, false)
-        elseif perk_rank == 2
-            PlayerRef.AddSpell(_Camp_InspiredSpell2_Perk2, false)
-        endif
-        _Camp_Inspired2Message.Show()
     endif
 endEvent

@@ -112,6 +112,15 @@ Furniture property FireAsset_ClutterFurniture2 auto
 * Optional: A furniture to place in or around the fire. }
 ;*********/;
 
+;/********p* CampCampfire/FireAsset_UpliftedTriggerVolume
+* SYNTAX
+*/;
+Activator property FireAsset_UpliftedTriggerVolume auto
+{
+* DESCRIPTION
+* Optional: A trigger volume that grants a bonus when the player exits it. }
+;*********/;
+
 ;/********p* CampCampfire/RequiredPositionRef_CampfireBase
 * SYNTAX
 */;
@@ -286,6 +295,7 @@ ObjectReference property mySitFurniture2 auto hidden
 ObjectReference property mySitFurniture3 auto hidden
 ObjectReference property mySitFurniture4 auto hidden
 ObjectReference property myCookPotSnapMarker auto hidden
+ObjectReference property myUpliftedTriggerVolume auto hidden
 
 ;Futures
 ObjectReference property myFuelLitFuture auto hidden
@@ -305,6 +315,7 @@ ObjectReference property mySitFurniture2Future auto hidden
 ObjectReference property mySitFurniture3Future auto hidden
 ObjectReference property mySitFurniture4Future auto hidden
 ObjectReference property myCookPotSnapMarkerFuture auto hidden
+ObjectReference property myUpliftedTriggerVolumeFuture auto hidden
 
 ObjectReference property myPerkNodeController auto hidden
 ObjectReference property myPerkNavController auto hidden
@@ -625,6 +636,7 @@ function PlaceObjects()
     PlaceObject_mySteam()
     PlaceObject_myEmbers()
     PlaceObject_myAshes()
+    PlaceObject_myUpliftedTriggerVolume()
 endFunction
 
 function GetResults()
@@ -695,6 +707,13 @@ function GetResults()
         myCookPotSnapMarker = GetFuture(myCookPotSnapMarkerFuture).get_result()
         myCookPotSnapMarkerFuture = None
     endif
+    if myUpliftedTriggerVolumeFuture
+        myUpliftedTriggerVolume = GetFuture(myUpliftedTriggerVolumeFuture).get_result()
+        if myUpliftedTriggerVolume
+            myUpliftedTriggerVolume.MoveTo(myUpliftedTriggerVolume, afZOffset = -300.0)
+        endif
+        myUpliftedTriggerVolumeFuture = None
+    endif
 
     if GetLogLevel() <= 1
         GenerateDebugReport()
@@ -722,10 +741,12 @@ function GenerateDebugReport()
     CampDebug(1, "mySitFurniture3: " + mySitFurniture3)
     CampDebug(1, "mySitFurniture4: " + mySitFurniture4)
     CampDebug(1, "myCookPotSnapMarker: " + myCookPotSnapMarker)
+    CampDebug(1, "myUpliftedTriggerVolume: " + myUpliftedTriggerVolume)
     CampDebug(1, "======================================================================")
 endFunction
 
 function TakeDown()
+    (myUpliftedTriggerVolume as _Camp_UpliftedTriggerVolumeScript).FireBurnedOut()
     if myPerkNodeController
         (myPerkNodeController as _Camp_PerkNodeController).TakeDown()
     endif
@@ -758,6 +779,7 @@ function TakeDown()
     TryToDisableAndDeleteRef(mySitFurniture3)
     TryToDisableAndDeleteRef(mySitFurniture4)
     TryToDisableAndDeleteRef(FireLightingReference)
+    TryToDisableAndDeleteRef(myUpliftedTriggerVolume)
 
     myPerkNodeController = None
     myPerkNavController = None
@@ -779,6 +801,7 @@ function TakeDown()
     mySitFurniture3 = None
     mySitFurniture4 = None
     FireLightingReference = None
+    myUpliftedTriggerVolume = None
 
     if GetLastUsedCampfire() == self
         SetLastUsedCampfire(None)
@@ -832,6 +855,9 @@ endFunction
 function PlaceObject_myCookPotSnapMarker()
     myCookPotSnapMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_CampfireCookPotSnapMarker, PositionRef_CookPotSnapMarker, is_hanging = true, is_temp = is_temporary)
 endFunction
+function PlaceObject_myUpliftedTriggerVolume()
+    myUpliftedTriggerVolumeFuture = PlacementSystem.PlaceObject(self, FireAsset_UpliftedTriggerVolume, RequiredPositionRef_CampfireBase, is_temp = is_temporary)
+endFunction
 
 Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
     if akEffect.HasKeyword(GetMagicDamageFrostKeyword())
@@ -841,7 +867,7 @@ Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
     endif
 EndEvent
 
-function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int aiBurnDuration)
+function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int aiBurnDuration, bool abFuelRefresh = false)
     CampDebug(1, "Fuel set: " + akFuelLit + "," + akFuelUnlit + "," + akLight)
     burn_duration = aiBurnDuration * ((_Camp_PerkRank_Resourceful.GetValueInt() * 0.25) + 1)
 
@@ -864,7 +890,7 @@ function SetFuel(Activator akFuelLit, Activator akFuelUnlit, Light akLight, int 
     endif
 
     if campfire_stage == 2
-        LightFire()
+        LightFire(abFuelRefresh)
     else
         PlaceFuel()
     endif
@@ -1117,7 +1143,7 @@ function PlaceFuel()
     ShowTutorial(3)
 endFunction
 
-function LightFire()
+function LightFire(bool abFuelRefresh = false)
     CampDebug(0, "LightFire")
     base_time_to_light = 0.0
     myFuelUnlit.DisableNoWait()
@@ -1126,7 +1152,9 @@ function LightFire()
     myEmbers.DisableNoWait()
     myAshes.EnableNoWait(true)
     RegisterForSingleUpdateGameTime(burn_duration)
-    last_lit_time = Utility.GetCurrentGameTime()
+    if !abFuelRefresh
+        last_lit_time = Utility.GetCurrentGameTime()
+    endif
     last_update_registration_time = Utility.GetCurrentGameTime()
     remaining_time = burn_duration + EMBERS_DURATION + ASH_DURATION
     CampDebug(1, "Campfire registered for update in " + burn_duration + " hours.")
@@ -1146,6 +1174,7 @@ function PutOutFire()
     myFuelUnlit.EnableNoWait()
     myFuelLit.DisableNoWait()
     myLight.DisableNoWait()
+    (myUpliftedTriggerVolume as _Camp_UpliftedTriggerVolumeScript).FireBurnedOut()
     RegisterForSingleUpdateGameTime(ASH_DURATION)
     last_put_out_time = Utility.GetCurrentGameTime()
     last_update_registration_time = Utility.GetCurrentGameTime()
@@ -1172,8 +1201,10 @@ function BurnToEmbers()
     myLight.DisableNoWait(true)
     myEmbers.EnableNoWait()
     myAshes.EnableNoWait()
+    (myUpliftedTriggerVolume as _Camp_UpliftedTriggerVolumeScript).FireBurnedOut()
     last_update_registration_time = Utility.GetCurrentGameTime()
     RegisterForSingleUpdateGameTime(remaining_time - ASH_DURATION)
+
     CampDebug(1, "Campfire registered for update in " + (remaining_time - ASH_DURATION) + " hours.")
     campfire_stage = 1
     campfire_size = 0
@@ -1188,6 +1219,7 @@ function BurnToAshes()
     myLight.DisableNoWait()
     myEmbers.DisableNoWait(true)
     myAshes.EnableNoWait()
+    (myUpliftedTriggerVolume as _Camp_UpliftedTriggerVolumeScript).FireBurnedOut()
     last_update_registration_time = Utility.GetCurrentGameTime()
     RegisterForSingleUpdateGameTime(remaining_time)
     CampDebug(1, "Campfire registered for update in " + remaining_time + " hours.")
@@ -1242,6 +1274,11 @@ float function GetRemainingDisplayTime()
     return remaining_burn_time
 endFunction
 
+function SetBonusLevel(int aiBonusLevel)
+    if myUpliftedTriggerVolume
+        (myUpliftedTriggerVolume as _Camp_UpliftedTriggerVolumeScript).bonus_level = aiBonusLevel
+    endif
+endFunction
 
 GlobalVariable property _Camp_PerkRank_Firecraft auto
 {This script no longer uses this property as of Campfire 1.6.}
