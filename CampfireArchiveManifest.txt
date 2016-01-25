@@ -224,6 +224,7 @@ Scripts\_CampTentEx_LargeHideTent.pex
 Scripts\_Camp_ArrayHelper.pex
 Scripts\_Camp_BackpackReclaim.pex
 Scripts\_Camp_BackpackToggle.pex
+Scripts\_Camp_BookToPaperScript.pex
 Scripts\_Camp_CampCrimeGuardScript.pex
 Scripts\_Camp_CampfireSitScript.pex
 Scripts\_Camp_CampfireType_CracklingScript.pex
@@ -361,6 +362,7 @@ Scripts\Source\_CampTentEx_LargeHideTent.psc
 Scripts\Source\_Camp_ArrayHelper.psc
 Scripts\Source\_Camp_BackpackReclaim.psc
 Scripts\Source\_Camp_BackpackToggle.psc
+Scripts\Source\_Camp_BookToPaperScript.psc
 Scripts\Source\_Camp_CampCrimeGuardScript.psc
 Scripts\Source\_Camp_CampfireSitScript.psc
 Scripts\Source\_Camp_CampfireType_CracklingScript.psc

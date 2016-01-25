@@ -10,6 +10,15 @@ CampfireAPI function GetPublicAPI() global
 	return (Game.GetFormFromFile(0x00024095, "Campfire.esm") as Quest) as CampfireAPI
 endFunction
 
+Message function GetNotInitializedError() global
+	_CampfireInternalAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+	return Campfire._Camp_NotInitializedError
+endFunction
+
 Keyword function GetMagicDamageFireKeyword() global
 	_CampfireInternalAPI Campfire = GetAPI()
 	if Campfire == none
