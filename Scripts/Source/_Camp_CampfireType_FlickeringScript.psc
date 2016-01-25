@@ -7,6 +7,8 @@ int burn_duration = 3
 bool property isBranches = false auto
 bool property isKindling = false auto
 bool property isBooks = false auto
+bool property Setting_IsFuelRefresh = false auto
+{Is this a fuel refresh item?}
 
 int property count_books = 0 auto
 int property count_branches = 0 auto
@@ -42,15 +44,15 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
 			if isBranches
 				(f as CampCampfire).SetFuel(_Camp_Fuel_Flickering_BranchesLit,		\
 											_Camp_Fuel_Flickering_BranchesUnlit,	\
-											_Camp_Campfire_Light_3, burn_duration)
+											_Camp_Campfire_Light_3, burn_duration, Setting_IsFuelRefresh)
 			elseif isKindling
 				(f as CampCampfire).SetFuel(_Camp_Fuel_Flickering_KindlingLit,		\
 											_Camp_Fuel_Flickering_KindlingUnlit,	\
-											_Camp_Campfire_Light_3, burn_duration)
+											_Camp_Campfire_Light_3, burn_duration, Setting_IsFuelRefresh)
 			elseif isBooks
 				(f as CampCampfire).SetFuel(_Camp_Fuel_Flickering_BooksLit, 		\
 											_Camp_Fuel_Flickering_BooksUnlit, 		\
-											_Camp_Campfire_Light_3, burn_duration)
+											_Camp_Campfire_Light_3, burn_duration, Setting_IsFuelRefresh)
 				SubtractBooks()
 			endif
 		endif

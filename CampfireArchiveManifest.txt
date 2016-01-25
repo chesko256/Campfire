@@ -179,6 +179,7 @@ meshes\campfire\_Camp_StrawMisc.nif
 meshes\campfire\_Camp_TanningRack_MISC.nif
 meshes\campfire\_Camp_tentward.nif
 meshes\campfire\_Camp_Torch_MISC.nif
+meshes\campfire\_Camp_UpliftedTrigger.nif
 meshes\campfire\_Camp_VisionItemFoundFX.nif
 meshes\campfire\_camp_walkingstickshield3.nif
 meshes\campfire\_camp_walkingstickshieldGO.nif
@@ -313,6 +314,7 @@ Scripts\_Camp_SwapCraftedTorch.pex
 Scripts\_Camp_TentSystem.pex
 Scripts\_Camp_Tent_InteractTriggerScript.pex
 Scripts\_Camp_TinderTypeScript.pex
+Scripts\_Camp_UpliftedTriggerVolumeScript.pex
 Scripts\_Camp_VendorStock.pex
 Scripts\_Camp_VisionDetectItemScript.pex
 Scripts\_Camp_WoodChoppingFurnitureScript.pex
@@ -451,6 +453,7 @@ Scripts\Source\_Camp_SwapCraftedTorch.psc
 Scripts\Source\_Camp_TentSystem.psc
 Scripts\Source\_Camp_Tent_InteractTriggerScript.psc
 Scripts\Source\_Camp_TinderTypeScript.psc
+Scripts\Source\_Camp_UpliftedTriggerVolumeScript.psc
 Scripts\Source\_Camp_VendorStock.psc
 Scripts\Source\_Camp_VisionDetectItemScript.psc
 Scripts\Source\_Camp_WoodChoppingFurnitureScript.psc
