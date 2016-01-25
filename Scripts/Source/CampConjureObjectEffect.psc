@@ -9,7 +9,7 @@ Activator property Required_ActivatorToSpawn auto
 { DESCRIPTION: Required: The conjured activator to spawn. Fill this OR the FurnitureToSpawn, not both. }
 Furniture property Required_FurnitureToSpawn auto
 { DESCRIPTION: Required: The conjured furniture to spawn. Fill this OR the ActivatorToSpawn, not both. }
-float property Setting_SpawnDistanceFromPlayer = 130.0 auto
+float property Setting_SpawnDistanceFromPlayer = 70.0 auto
 { DESCRIPTION: Optional: How far away (in front of the player) to spawn the shelter. Default: 130.0}
 Scroll property Setting_ScrollToReturn auto
 { DESCRIPTION: Optional: The scroll to return to the player if this effect fails. Used on Scroll effects. }

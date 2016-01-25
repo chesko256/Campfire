@@ -513,7 +513,7 @@ function StartPlacement(ObjectReference akIndicator)
     Game.DisablePlayerControls(false, false, false, false, false, true, false, false)
     was_hit = false
     akIndicator.SetAngle(0.0, 0.0, 0.0)
-    _Camp_CurrentlyPlacingObject.SetValue(2)
+    _Camp_CurrentlyPlacingObject.SetValueInt(2)
     if _Camp_Setting_AdvancedPlacement.GetValueInt() == 2
         _Camp_IndicatorTriggerRef.MoveTo(PlayerRef)
     endif
@@ -521,6 +521,7 @@ endFunction
 
 function StopPlacement()
     Game.EnablePlayerControls()
+    _Camp_CurrentlyPlacingObject.SetValueInt(1)
     _Camp_IndicatorTriggerRef.MoveTo(_Camp_Anchor)
     _Camp_ZTestShooterREF_A.MoveTo(_Camp_Anchor)
     _Camp_ZTestShooterREF_B.MoveTo(_Camp_Anchor)
@@ -544,7 +545,6 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
     if !PlayerCanPlaceObjects(abPlayerBusyCheck = false) || was_hit
         was_hit = false
         StopPlacement()
-        _Camp_CurrentlyPlacingObject.SetValue(1)
         return false
     endif
     
@@ -564,7 +564,6 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
             endif
         endif
         _Camp_Placement_Cancelled.Show()
-        _Camp_CurrentlyPlacingObject.SetValue(1)
         return false
 
     ;Scenario: placing object (advanced)
@@ -652,11 +651,10 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
                 return false
             elseif ibutton == 1
                 StopPlacement()
-                _Camp_CurrentlyPlacingObject.SetValue(1)
                 _Camp_Placement_Cancelled.Show()
                 return false
             elseif ibutton == 2     ;Back
-                _Camp_CurrentlyPlacingObject.SetValue(2)
+                _Camp_CurrentlyPlacingObject.SetValueInt(2)
                 return true
             endif
         else
@@ -694,7 +692,7 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
                 _Camp_Placement_Cancelled.Show()
                 return false
             elseif ibutton == 2     ;Back
-                _Camp_CurrentlyPlacingObject.SetValue(2)
+                _Camp_CurrentlyPlacingObject.SetValueInt(2)
                 return true
             endif
         endif
@@ -704,6 +702,28 @@ endFunction
 function UpdateIndicatorPositionSimple(ObjectReference akIndicator, float afDistance, float afHeightOffset = 1.0, float afRotationOffset = 0.0)
     float[] center_point = new float[2]
     center_point = GetOffsets(PlayerRef, afDistance)
+
+    PlacementIndicatorThread1.get_async(center_point[0], center_point[1], 0.0, 0.0)
+    SendEvent_OnIndicatorUpdateStart()
+
+    bool waiting = true
+    int i = 0
+    While waiting
+        if !(_Camp_IndicatorFutureRefA as _Camp_IndicatorFuture).done()
+            i += 1
+            Utility.wait(0.01)
+            if i >= 50
+                ;Our threads became locked up. Clear and resume, possibly throw an error.
+                i = 0
+                return
+            endif
+        else
+            waiting = false
+        endif
+    endWhile
+
+    float a = (_Camp_IndicatorFutureRefA as _Camp_IndicatorFuture).get_result()
+
     float[] player_position = new float[3]
     player_position = GetPositionData(PlayerRef)
 
@@ -713,7 +733,7 @@ function UpdateIndicatorPositionSimple(ObjectReference akIndicator, float afDist
 
     akIndicator.TranslateTo(player_position[0] + center_point[0],         \
                                 player_position[1] + center_point[1],     \
-                                player_position[2] + afHeightOffset,      \
+                                a + afHeightOffset,                       \
                                 0.0, 0.0,                                 \
                                 PlayerRef.GetAngleZ() + afRotationOffset, \
                                 5000.0, 0.0)
