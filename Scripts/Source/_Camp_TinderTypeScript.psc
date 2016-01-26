@@ -2,8 +2,10 @@ Scriptname _Camp_TinderTypeScript extends ObjectReference
 
 import CampUtil
 
-float property base_light_time auto
-{The number of seconds that the player requires to successfully light a fire with this tinder.}
+int property quality_rank auto
+{The quality of this tinder. Ranges from 1 (best) to 5 (worst).}
+bool property is_bad_weather = false auto
+{Is this the bad weather version of this tinder?}
 bool property is_oil = false auto
 {Is this tinder oil?}
 
@@ -16,7 +18,10 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
 	if akNewContainer == PlayerRef
 		ObjectReference f = GetLastUsedCampfire()
 		if f
-			(f as CampCampfire).SetTinder(base_light_time, is_oil)
+			if is_bad_weather
+				quality_rank += 2
+			endif
+			(f as CampCampfire).SetTinder(quality_rank, is_oil)
 		endif
 		PlayerRef.RemoveItem(this_item, 1, true)
 	endif
