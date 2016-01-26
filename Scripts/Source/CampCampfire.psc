@@ -261,6 +261,7 @@ GlobalVariable property _Camp_LastUsedCampfireStage auto
 GlobalVariable property _Camp_Setting_ManualFireLighting auto
 GlobalVariable property _Camp_LastSelectedSkill auto
 GlobalVariable property _Camp_WasFirstPersonBeforeUse auto
+GlobalVariable property _Camp_TinderQualityTimeRate auto
 GlobalVariable property CampingPerkPoints auto
 GlobalVariable property CampingPerkPointsEarned auto
 GlobalVariable property CampingPerkPointsTotal auto
@@ -1112,10 +1113,13 @@ function DepleteAllRefundFuel()
     supplied_branches = 0
 endFunction
 
-function SetTinder(float afBaseTimeToLight, bool abIsTinderOil)
+function SetTinder(int aiQualityRank, bool abIsTinderOil)
     campfire_stage = 4
     _Camp_LastUsedCampfireStage.SetValueInt(campfire_stage)
-    base_time_to_light = afBaseTimeToLight
+    base_time_to_light = aiQualityRank * _Camp_TinderQualityTimeRate.GetValue()
+    if base_time_to_light < 1.0
+        base_time_to_light = 1.0
+    endif
     is_tinder_oil = abIsTinderOil
     CampDebug(1, "Set tinder with time to light of " + base_time_to_light)
 

@@ -8,6 +8,7 @@ import _Camp_ArrayHelper
 int property SKSE_MIN_VERSION = 10703 autoReadOnly
 GlobalVariable property _Camp_PreviousVersion auto
 GlobalVariable property _Camp_CampfireVersion auto
+GlobalVariable property _Camp_IsBeta auto
 
 ;#PROPERTIES=====================================================================================================================
 actor property PlayerRef auto
@@ -115,6 +116,7 @@ Message property _Camp_CriticalError_SKSE auto
 Message property _Camp_CriticalError_FrostfallLegacy auto
 Message property _Camp_CriticalError_FrostfallLegacyDetails auto
 Message property _Camp_Upgrade_1_6_Msg auto
+Message property _Camp_BetaMessage auto
 Weather property DLC2AshStorm auto hidden
 
 ;#Upgrade Flags====================================================================
@@ -172,6 +174,10 @@ function FatalErrorFrostfallLegacy()
 endFunction
 
 function RunCompatibility()
+	if _Camp_IsBeta.GetValueInt() == 2
+		_Camp_BetaMessage.Show(_Camp_CampfireVersion.GetValue())
+	endif
+
 	VanillaGameLoadUp()
 
 	trace("[Campfire]======================================================================================================")
