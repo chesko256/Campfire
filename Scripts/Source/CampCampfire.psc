@@ -482,6 +482,10 @@ function PlayerUseCampfire()
         utility.wait(0.1)
         j += 1
     endWhile
+
+    ;Do they need the Blank item?
+    PlayerRef.AddItem(_Camp_BlankItem, 1, true)
+
     ;Do they need the Clear Weather item?
     Weather inc_weather = Weather.GetCurrentWeather()
     Weather out_weather = Weather.GetOutgoingWeather()            
@@ -497,6 +501,8 @@ function PlayerUseCampfire()
     if (inc_weatherclass <= 1 && trans >= 0.5) || (trans < 0.5 && out_weatherclass <= 1)
         PlayerRef.AddItem(_Camp_CampfireItem_GoodWeather, 1, true)
     endif
+
+    ;Do they need the Destruction Skill item?
     if (PlayerRef.GetAV("Destruction") >= 20.0)
         PlayerRef.AddItem(_Camp_CampfireItem_DestructionSkill, 1, true)
     endif
@@ -1122,11 +1128,7 @@ function SetTinder(int aiQualityRank, bool abIsTinderOil)
     endif
     is_tinder_oil = abIsTinderOil
     CampDebug(1, "Set tinder with time to light of " + base_time_to_light)
-
-    ;Do they need the Dummy Item?
-    if PlayerRef.GetItemCount(_Camp_BlankItem) == 0
-        PlayerRef.AddItem(_Camp_BlankItem, 1, true)
-    endif
+    
     ShowTutorial(4)
 endFunction
 
