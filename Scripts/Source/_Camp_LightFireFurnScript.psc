@@ -17,6 +17,7 @@ ImpactDataSet property _Camp_SparkIDS auto
 Explosion property _Camp_LightWithOilExplosion auto
 static property XMarker auto
 Sound property MAGCloakFireLP auto
+Spell property _Camp_LightFireFXFlamesSpell auto
 
 float old_percentage = 1.0
 float total_required_seconds
@@ -145,7 +146,7 @@ endFunction
 function FlameFX()
 	sound_id = MAGCloakFireLP.Play(PlayerRef)
 	Sound.SetInstanceVolume(sound_id, 0.65)
-	(_CampInternal.GetPublicAPI()._Camp_MainQuest as _Camp_ConditionValues).IsLightingFireFlameSpell = true
+	PlayerRef.AddSpell(_Camp_LightFireFXFlamesSpell, false)
 endFunction
 
 function StopLighting()
@@ -161,7 +162,7 @@ function TakeDown()
 		spark_marker.Disable()
 		spark_marker.Delete()
 	endif
-	(_CampInternal.GetPublicAPI()._Camp_MainQuest as _Camp_ConditionValues).IsLightingFireFlameSpell = false
+	PlayerRef.RemoveSpell(_Camp_LightFireFXFlamesSpell)
 	(_Camp_PlayerAlias as _Camp_PlayerHitMonitor).FireLightingReference = none
 	(parent_campfire as CampCampfire).FireLightingReference = none
 	(parent_campfire as CampCampfire).mySteam.DisableNoWait(true)
