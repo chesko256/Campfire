@@ -1,4 +1,4 @@
-scriptname _Camp_PerkNodeControllerBehavior extends _Camp_PerkNodeController
+scriptname CampPerkNodeControllerBehavior extends CampPerkNodeController
 
 message property _Camp_PerkGeneral_UpgradeVerify auto
 { Auto-fill in the CK. }

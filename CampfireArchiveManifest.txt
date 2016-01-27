@@ -197,6 +197,9 @@ Scripts\CampCookingPot.pex
 Scripts\CampfireAPI.pex
 Scripts\CampfireData.pex
 Scripts\CampLargeTentTriggerVolumeScript.pex
+Scripts\CampPerkNode.pex
+Scripts\CampPerkNodeController.pex
+Scripts\CampPerkNodeControllerBehavior.pex
 Scripts\CampPlaceableContainer.pex
 Scripts\CampPlaceableContainerEx.pex
 Scripts\CampPlaceableMiscItem.pex
@@ -293,9 +296,6 @@ Scripts\_Camp_ObjectPlacementThread29.pex
 Scripts\_Camp_ObjectPlacementThread30.pex
 Scripts\_Camp_ObjectPlacementThreadManager.pex
 Scripts\_Camp_PerkNavController.pex
-Scripts\_Camp_PerkNode.pex
-Scripts\_Camp_PerkNodeController.pex
-Scripts\_Camp_PerkNodeControllerBehavior.pex
 Scripts\_Camp_PF_IllegalCampPkg.pex
 Scripts\_Camp_PlaceableObjectBase.pex
 Scripts\_Camp_PlayerEventMonitor.pex
@@ -336,6 +336,9 @@ Scripts\Source\CampCookingPot.psc
 Scripts\Source\CampfireAPI.psc
 Scripts\Source\CampfireData.psc
 Scripts\Source\CampLargeTentTriggerVolumeScript.psc
+Scripts\Source\CampPerkNode.psc
+Scripts\Source\CampPerkNodeController.psc
+Scripts\Source\CampPerkNodeControllerBehavior.psc
 Scripts\Source\CampPlaceableContainer.psc
 Scripts\Source\CampPlaceableContainerEx.psc
 Scripts\Source\CampPlaceableMiscItem.psc
@@ -432,9 +435,6 @@ Scripts\Source\_Camp_ObjectPlacementThread29.psc
 Scripts\Source\_Camp_ObjectPlacementThread30.psc
 Scripts\Source\_Camp_ObjectPlacementThreadManager.psc
 Scripts\Source\_Camp_PerkNavController.psc
-Scripts\Source\_Camp_PerkNode.psc
-Scripts\Source\_Camp_PerkNodeController.psc
-Scripts\Source\_Camp_PerkNodeControllerBehavior.psc
 Scripts\Source\_Camp_PF_IllegalCampPkg.psc
 Scripts\Source\_Camp_PlaceableObjectBase.psc
 Scripts\Source\_Camp_PlayerEventMonitor.psc
