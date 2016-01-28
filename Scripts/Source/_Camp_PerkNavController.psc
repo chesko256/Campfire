@@ -66,7 +66,7 @@ endFunction
 function PlaceObjects()
     CenterObject = PerkNavController_PositionRef
 
-    if GetCompatibilitySystem().multiple_perk_trees
+    if GetCompatibilitySystem()._Camp_PerkNodeControllerCount.GetValueInt() > 1
     	PerkPrevBugFuture = PlaceObject_Bug(_Camp_PerkPrevBug, PerkPrevBug_PositionRef)
     	PerkNextBugFuture = PlaceObject_Bug(_Camp_PerkNextBug, PerkNextBug_PositionRef)
     endif
