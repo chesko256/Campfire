@@ -17,14 +17,14 @@ endFunction
 
 function NodeActivated(ObjectReference akNodeRef)
     bool eligible_for_increase = false
-    _Camp_PerkNode node = akNodeRef as _Camp_PerkNode
-    _Camp_PerkNode dsnode1 = None
-    _Camp_PerkNode dsnode2 = None
+    CampPerkNode node = akNodeRef as CampPerkNode
+    CampPerkNode dsnode1 = None
+    CampPerkNode dsnode2 = None
     if node.downstream_node_1
-        dsnode1 = node.downstream_node_1_ref as _Camp_PerkNode
+        dsnode1 = node.downstream_node_1_ref as CampPerkNode
     endif
     if node.downstream_node_2
-        dsnode2 = node.downstream_node_2_ref as _Camp_PerkNode
+        dsnode2 = node.downstream_node_2_ref as CampPerkNode
     endif
 
     bool is_starting_node = false
@@ -63,7 +63,7 @@ function ExitNodeActivated()
     TakeDown()
 endFunction
 
-function ShowPerkDescription(_Camp_PerkNode akPerkNode, bool abEligibleForIncrease = false)
+function ShowPerkDescription(CampPerkNode akPerkNode, bool abEligibleForIncrease = false)
     if abEligibleForIncrease
         Conditions.IsPerkEligible = true
     else
@@ -78,16 +78,21 @@ function ShowPerkDescription(_Camp_PerkNode akPerkNode, bool abEligibleForIncrea
     endif
 
     int i
-    if akPerkNode.double_perk_description_values
+    if akPerkNode.required_description_value_count == 2
         i = akPerkNode.perk_description.Show((desc_val * akPerkNode.description_value_iterator) + akPerkNode.description_value_modifier, \
                                              (desc_val * akPerkNode.secondary_description_value_iterator) + akPerkNode.secondary_description_value_modifier, \
                                              akPerkNode.perk_global.GetValueInt(), \    
                                              akPerkNode.perk_max_rank_global.GetValueInt(), \           
                                              required_perk_points_available.GetValueInt(), \
                                              (required_perk_point_progress.GetValue() * 100.0))
-    else
+    elseif akPerkNode.required_description_value_count == 1
         i = akPerkNode.perk_description.Show((desc_val * akPerkNode.description_value_iterator) + akPerkNode.description_value_modifier, \
                                              akPerkNode.perk_global.GetValueInt(), \    
+                                             akPerkNode.perk_max_rank_global.GetValueInt(), \           
+                                             required_perk_points_available.GetValueInt(), \
+                                             (required_perk_point_progress.GetValue() * 100.0))
+    else
+        i = akPerkNode.perk_description.Show(akPerkNode.perk_global.GetValueInt(), \    
                                              akPerkNode.perk_max_rank_global.GetValueInt(), \           
                                              required_perk_points_available.GetValueInt(), \
                                              (required_perk_point_progress.GetValue() * 100.0))
