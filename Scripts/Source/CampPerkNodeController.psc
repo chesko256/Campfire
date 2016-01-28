@@ -3,164 +3,137 @@ scriptname CampPerkNodeController extends _Camp_PlaceableObjectBase
 
 import _CampInternal
 
-Activator property PerkNode0 auto
-{ The 0th perk node. The origin (starting) node. }
-Activator property PerkNode1 auto
+Activator property PerkNode00 auto
+{ The 0th perk node. }
+Activator property PerkNode01 auto
 { The 1st perk node. }
-Activator property PerkNode2 auto
+Activator property PerkNode02 auto
 { The 2nd perk node. }
-Activator property PerkNode3 auto
+Activator property PerkNode03 auto
 { The 3rd perk node. }
-Activator property PerkNode4 auto
+Activator property PerkNode04 auto
 { The 4th perk node. }
-Activator property PerkNode5 auto
+Activator property PerkNode05 auto
 { The 5th perk node. }
-Activator property PerkNode6 auto
+Activator property PerkNode06 auto
 { The 6th perk node. }
-Activator property PerkNode7 auto
+Activator property PerkNode07 auto
 { The 7th perk node. }
-Activator property PerkNode8 auto
+Activator property PerkNode08 auto
 { The 8th perk node. }
-Activator property PerkNode9 auto
+Activator property PerkNode09 auto
 { The 9th perk node. }
 Activator property PerkNode10 auto
 { The 10th perk node. }
 Activator property PerkNode11 auto
 { The 11th perk node. }
-Activator property PerkLine0 auto
+Activator property PerkLine00 auto
 { The 0th perk line. }
-Activator property PerkLine1 auto
+Activator property PerkLine01 auto
 { The 1st perk line. }
-Activator property PerkLine2 auto
+Activator property PerkLine02 auto
 { The 2nd perk line. }
-Activator property PerkLine3 auto
+Activator property PerkLine03 auto
 { The 3rd perk line. }
-Activator property PerkLine4 auto
+Activator property PerkLine04 auto
 { The 4th perk line. }
-Activator property PerkLine5 auto
+Activator property PerkLine05 auto
 { The 5th perk line. }
-Activator property PerkLine6 auto
+Activator property PerkLine06 auto
 { The 6th perk line. }
-Activator property PerkLine7 auto
+Activator property PerkLine07 auto
 { The 7th perk line. }
-Activator property PerkLine8 auto
+Activator property PerkLine08 auto
 { The 8th perk line. }
-Activator property PerkLine9 auto
+Activator property PerkLine09 auto
 { The 9th perk line. }
 Activator property PerkLine10 auto
 { The 10th perk line. }
 Activator property PerkLine11 auto
 { The 11th perk line. }
 Static property PerkArtPlane auto
-{ The perk art plane graphic object. }
+{ The perk art. }
 Sound property UISkillsGlow auto
-{ Auto-fill in CK. }
 
-ObjectReference property PerkNode0Future auto hidden
-ObjectReference property PerkNode1Future auto hidden
-ObjectReference property PerkNode2Future auto hidden
-ObjectReference property PerkNode3Future auto hidden
-ObjectReference property PerkNode4Future auto hidden
-ObjectReference property PerkNode5Future auto hidden
-ObjectReference property PerkNode6Future auto hidden
-ObjectReference property PerkNode7Future auto hidden
-ObjectReference property PerkNode8Future auto hidden
-ObjectReference property PerkNode9Future auto hidden
+ObjectReference property PerkNode00Future auto hidden
+ObjectReference property PerkNode01Future auto hidden
+ObjectReference property PerkNode02Future auto hidden
+ObjectReference property PerkNode03Future auto hidden
+ObjectReference property PerkNode04Future auto hidden
+ObjectReference property PerkNode05Future auto hidden
+ObjectReference property PerkNode06Future auto hidden
+ObjectReference property PerkNode07Future auto hidden
+ObjectReference property PerkNode08Future auto hidden
+ObjectReference property PerkNode09Future auto hidden
 ObjectReference property PerkNode10Future auto hidden
 ObjectReference property PerkNode11Future auto hidden
-ObjectReference property PerkLine0Future auto hidden
-ObjectReference property PerkLine1Future auto hidden
-ObjectReference property PerkLine2Future auto hidden
-ObjectReference property PerkLine3Future auto hidden
-ObjectReference property PerkLine4Future auto hidden
-ObjectReference property PerkLine5Future auto hidden
-ObjectReference property PerkLine6Future auto hidden
-ObjectReference property PerkLine7Future auto hidden
-ObjectReference property PerkLine8Future auto hidden
-ObjectReference property PerkLine9Future auto hidden
+ObjectReference property PerkLine00Future auto hidden
+ObjectReference property PerkLine01Future auto hidden
+ObjectReference property PerkLine02Future auto hidden
+ObjectReference property PerkLine03Future auto hidden
+ObjectReference property PerkLine04Future auto hidden
+ObjectReference property PerkLine05Future auto hidden
+ObjectReference property PerkLine06Future auto hidden
+ObjectReference property PerkLine07Future auto hidden
+ObjectReference property PerkLine08Future auto hidden
+ObjectReference property PerkLine09Future auto hidden
 ObjectReference property PerkLine10Future auto hidden
 ObjectReference property PerkLine11Future auto hidden
 ObjectReference property PerkArtPlaneFuture auto hidden
 
 ObjectReference property myCampfire auto hidden
 ObjectReference property myPerkArtPlane auto hidden
-ObjectReference property myPerkNode0 auto hidden
-ObjectReference property myPerkNode1 auto hidden
-ObjectReference property myPerkNode2 auto hidden
-ObjectReference property myPerkNode3 auto hidden
-ObjectReference property myPerkNode4 auto hidden
-ObjectReference property myPerkNode5 auto hidden
-ObjectReference property myPerkNode6 auto hidden
-ObjectReference property myPerkNode7 auto hidden
-ObjectReference property myPerkNode8 auto hidden
-ObjectReference property myPerkNode9 auto hidden
+ObjectReference property myPerkNode00 auto hidden
+ObjectReference property myPerkNode01 auto hidden
+ObjectReference property myPerkNode02 auto hidden
+ObjectReference property myPerkNode03 auto hidden
+ObjectReference property myPerkNode04 auto hidden
+ObjectReference property myPerkNode05 auto hidden
+ObjectReference property myPerkNode06 auto hidden
+ObjectReference property myPerkNode07 auto hidden
+ObjectReference property myPerkNode08 auto hidden
+ObjectReference property myPerkNode09 auto hidden
 ObjectReference property myPerkNode10 auto hidden
 ObjectReference property myPerkNode11 auto hidden
-ObjectReference property myPerkLine0 auto hidden
-ObjectReference property myPerkLine1 auto hidden
-ObjectReference property myPerkLine2 auto hidden
-ObjectReference property myPerkLine3 auto hidden
-ObjectReference property myPerkLine4 auto hidden
-ObjectReference property myPerkLine5 auto hidden
-ObjectReference property myPerkLine6 auto hidden
-ObjectReference property myPerkLine7 auto hidden
-ObjectReference property myPerkLine8 auto hidden
-ObjectReference property myPerkLine9 auto hidden
+ObjectReference property myPerkLine00 auto hidden
+ObjectReference property myPerkLine01 auto hidden
+ObjectReference property myPerkLine02 auto hidden
+ObjectReference property myPerkLine03 auto hidden
+ObjectReference property myPerkLine04 auto hidden
+ObjectReference property myPerkLine05 auto hidden
+ObjectReference property myPerkLine06 auto hidden
+ObjectReference property myPerkLine07 auto hidden
+ObjectReference property myPerkLine08 auto hidden
+ObjectReference property myPerkLine09 auto hidden
 ObjectReference property myPerkLine10 auto hidden
 ObjectReference property myPerkLine11 auto hidden
 
 ObjectReference property PerkNodeController_PositionRef auto
-{ The perk node controller position reference. }
-ObjectReference property PerkNode0_PositionRef auto
-{ The 0th perk node position reference. }
-ObjectReference property PerkNode1_PositionRef auto
-{ The 1st perk node position reference. }
-ObjectReference property PerkNode2_PositionRef auto
-{ The 2nd perk node position reference. }
-ObjectReference property PerkNode3_PositionRef auto
-{ The 3rd perk node position reference. }
-ObjectReference property PerkNode4_PositionRef auto
-{ The 4th perk node position reference. }
-ObjectReference property PerkNode5_PositionRef auto
-{ The 5th perk node position reference. }
-ObjectReference property PerkNode6_PositionRef auto
-{ The 6th perk node position reference. }
-ObjectReference property PerkNode7_PositionRef auto
-{ The 7th perk node position reference. }
-ObjectReference property PerkNode8_PositionRef auto
-{ The 8th perk node position reference. }
-ObjectReference property PerkNode9_PositionRef auto
-{ The 9th perk node position reference. }
+ObjectReference property PerkNode00_PositionRef auto
+ObjectReference property PerkNode01_PositionRef auto
+ObjectReference property PerkNode02_PositionRef auto
+ObjectReference property PerkNode03_PositionRef auto
+ObjectReference property PerkNode04_PositionRef auto
+ObjectReference property PerkNode05_PositionRef auto
+ObjectReference property PerkNode06_PositionRef auto
+ObjectReference property PerkNode07_PositionRef auto
+ObjectReference property PerkNode08_PositionRef auto
+ObjectReference property PerkNode09_PositionRef auto
 ObjectReference property PerkNode10_PositionRef auto
-{ The 10th perk node position reference. }
 ObjectReference property PerkNode11_PositionRef auto
-{ The 11th perk node position reference. }
-ObjectReference property PerkLine0_PositionRef auto
-{ The 0th perk line position reference. }
-ObjectReference property PerkLine1_PositionRef auto
-{ The 1st perk line position reference. }
-ObjectReference property PerkLine2_PositionRef auto
-{ The 2nd perk line position reference. }
-ObjectReference property PerkLine3_PositionRef auto
-{ The 3rd perk line position reference. }
-ObjectReference property PerkLine4_PositionRef auto
-{ The 4th perk line position reference. }
-ObjectReference property PerkLine5_PositionRef auto
-{ The 5th perk line position reference. }
-ObjectReference property PerkLine6_PositionRef auto
-{ The 6th perk line position reference. }
-ObjectReference property PerkLine7_PositionRef auto
-{ The 7th perk line position reference. }
-ObjectReference property PerkLine8_PositionRef auto
-{ The 8th perk line position reference. }
-ObjectReference property PerkLine9_PositionRef auto
-{ The 9th perk line position reference. }
+ObjectReference property PerkLine00_PositionRef auto
+ObjectReference property PerkLine01_PositionRef auto
+ObjectReference property PerkLine02_PositionRef auto
+ObjectReference property PerkLine03_PositionRef auto
+ObjectReference property PerkLine04_PositionRef auto
+ObjectReference property PerkLine05_PositionRef auto
+ObjectReference property PerkLine06_PositionRef auto
+ObjectReference property PerkLine07_PositionRef auto
+ObjectReference property PerkLine08_PositionRef auto
+ObjectReference property PerkLine09_PositionRef auto
 ObjectReference property PerkLine10_PositionRef auto
-{ The 10th perk line position reference. }
 ObjectReference property PerkLine11_PositionRef auto
-{ The 11th perk line position reference. }
 ObjectReference property PerkArtPlane_PositionRef auto
-{ The perk art plane graphic object position reference. }
 
 ObjectReference[] property NodeRefMap auto hidden
 ObjectReference[] property LineRefMap auto hidden
@@ -184,29 +157,29 @@ function Initialize()
     NodeActMap = new Activator[12]
     LineActMap = new Activator[12]
 
-    NodeActMap[0] = PerkNode0
-    NodeActMap[1] = PerkNode1
-    NodeActMap[2] = PerkNode2
-    NodeActMap[3] = PerkNode3
-    NodeActMap[4] = PerkNode4
-    NodeActMap[5] = PerkNode5
-    NodeActMap[6] = PerkNode6
-    NodeActMap[7] = PerkNode7
-    NodeActMap[8] = PerkNode8
-    NodeActMap[9] = PerkNode9
+    NodeActMap[0] = PerkNode00
+    NodeActMap[1] = PerkNode01
+    NodeActMap[2] = PerkNode02
+    NodeActMap[3] = PerkNode03
+    NodeActMap[4] = PerkNode04
+    NodeActMap[5] = PerkNode05
+    NodeActMap[6] = PerkNode06
+    NodeActMap[7] = PerkNode07
+    NodeActMap[8] = PerkNode08
+    NodeActMap[9] = PerkNode09
     NodeActMap[10] = PerkNode10
     NodeActMap[11] = PerkNode11
 
-    LineActMap[0] = PerkLine0
-    LineActMap[1] = PerkLine1
-    LineActMap[2] = PerkLine2
-    LineActMap[3] = PerkLine3
-    LineActMap[4] = PerkLine4
-    LineActMap[5] = PerkLine5
-    LineActMap[6] = PerkLine6
-    LineActMap[7] = PerkLine7
-    LineActMap[8] = PerkLine8
-    LineActMap[9] = PerkLine9
+    LineActMap[0] = PerkLine00
+    LineActMap[1] = PerkLine01
+    LineActMap[2] = PerkLine02
+    LineActMap[3] = PerkLine03
+    LineActMap[4] = PerkLine04
+    LineActMap[5] = PerkLine05
+    LineActMap[6] = PerkLine06
+    LineActMap[7] = PerkLine07
+    LineActMap[8] = PerkLine08
+    LineActMap[9] = PerkLine09
     LineActMap[10] = PerkLine10
     LineActMap[11] = PerkLine11
 
@@ -216,35 +189,35 @@ endFunction
 ;@Override _Camp_PlaceableObjectBase
 function PlaceObjects()
     CenterObject = PerkNodeController_PositionRef
-    if PerkNode0 && PerkNode0_PositionRef
-        PerkNode0Future = PlaceObject_PerkNode(PerkNode0, PerkNode0_PositionRef)
+    if PerkNode00 && PerkNode00_PositionRef
+        PerkNode00Future = PlaceObject_PerkNode(PerkNode00, PerkNode00_PositionRef)
     endif
-    if PerkNode1 && PerkNode1_PositionRef
-        PerkNode1Future = PlaceObject_PerkNode(PerkNode1, PerkNode1_PositionRef)
+    if PerkNode01 && PerkNode01_PositionRef
+        PerkNode01Future = PlaceObject_PerkNode(PerkNode01, PerkNode01_PositionRef)
     endif
-    if PerkNode2 && PerkNode2_PositionRef
-        PerkNode2Future = PlaceObject_PerkNode(PerkNode2, PerkNode2_PositionRef)
+    if PerkNode02 && PerkNode02_PositionRef
+        PerkNode02Future = PlaceObject_PerkNode(PerkNode02, PerkNode02_PositionRef)
     endif
-    if PerkNode3 && PerkNode3_PositionRef
-        PerkNode3Future = PlaceObject_PerkNode(PerkNode3, PerkNode3_PositionRef)
+    if PerkNode03 && PerkNode03_PositionRef
+        PerkNode03Future = PlaceObject_PerkNode(PerkNode03, PerkNode03_PositionRef)
     endif
-    if PerkNode4 && PerkNode4_PositionRef
-        PerkNode4Future = PlaceObject_PerkNode(PerkNode4, PerkNode4_PositionRef)
+    if PerkNode04 && PerkNode04_PositionRef
+        PerkNode04Future = PlaceObject_PerkNode(PerkNode04, PerkNode04_PositionRef)
     endif
-    if PerkNode5 && PerkNode5_PositionRef
-        PerkNode5Future = PlaceObject_PerkNode(PerkNode5, PerkNode5_PositionRef)
+    if PerkNode05 && PerkNode05_PositionRef
+        PerkNode05Future = PlaceObject_PerkNode(PerkNode05, PerkNode05_PositionRef)
     endif
-    if PerkNode6 && PerkNode6_PositionRef
-        PerkNode6Future = PlaceObject_PerkNode(PerkNode6, PerkNode6_PositionRef)
+    if PerkNode06 && PerkNode06_PositionRef
+        PerkNode06Future = PlaceObject_PerkNode(PerkNode06, PerkNode06_PositionRef)
     endif
-    if PerkNode7 && PerkNode7_PositionRef
-        PerkNode7Future = PlaceObject_PerkNode(PerkNode7, PerkNode7_PositionRef)
+    if PerkNode07 && PerkNode07_PositionRef
+        PerkNode07Future = PlaceObject_PerkNode(PerkNode07, PerkNode07_PositionRef)
     endif
-    if PerkNode8 && PerkNode8_PositionRef
-        PerkNode8Future = PlaceObject_PerkNode(PerkNode8, PerkNode8_PositionRef)
+    if PerkNode08 && PerkNode08_PositionRef
+        PerkNode08Future = PlaceObject_PerkNode(PerkNode08, PerkNode08_PositionRef)
     endif
-    if PerkNode9 && PerkNode9_PositionRef
-        PerkNode9Future = PlaceObject_PerkNode(PerkNode9, PerkNode9_PositionRef)
+    if PerkNode09 && PerkNode09_PositionRef
+        PerkNode09Future = PlaceObject_PerkNode(PerkNode09, PerkNode09_PositionRef)
     endif
     if PerkNode10 && PerkNode10_PositionRef
         PerkNode10Future = PlaceObject_PerkNode(PerkNode10, PerkNode10_PositionRef)
@@ -252,35 +225,35 @@ function PlaceObjects()
     if PerkNode11 && PerkNode11_PositionRef
         PerkNode11Future = PlaceObject_PerkNode(PerkNode11, PerkNode11_PositionRef)
     endif
-    if PerkLine0_PositionRef
-        PerkLine0Future = PlaceObject_PerkLine(PerkLine0, PerkLine0_PositionRef)
+    if PerkLine00_PositionRef
+        PerkLine00Future = PlaceObject_PerkLine(PerkLine00, PerkLine00_PositionRef)
     endif
-    if PerkLine1_PositionRef
-        PerkLine1Future = PlaceObject_PerkLine(PerkLine1, PerkLine1_PositionRef)
+    if PerkLine01_PositionRef
+        PerkLine01Future = PlaceObject_PerkLine(PerkLine01, PerkLine01_PositionRef)
     endif
-    if PerkLine2_PositionRef
-        PerkLine2Future = PlaceObject_PerkLine(PerkLine2, PerkLine2_PositionRef)
+    if PerkLine02_PositionRef
+        PerkLine02Future = PlaceObject_PerkLine(PerkLine02, PerkLine02_PositionRef)
     endif
-    if PerkLine3_PositionRef
-        PerkLine3Future = PlaceObject_PerkLine(PerkLine3, PerkLine3_PositionRef)
+    if PerkLine03_PositionRef
+        PerkLine03Future = PlaceObject_PerkLine(PerkLine03, PerkLine03_PositionRef)
     endif
-    if PerkLine4_PositionRef
-        PerkLine4Future = PlaceObject_PerkLine(PerkLine4, PerkLine4_PositionRef)
+    if PerkLine04_PositionRef
+        PerkLine04Future = PlaceObject_PerkLine(PerkLine04, PerkLine04_PositionRef)
     endif
-    if PerkLine5_PositionRef
-        PerkLine5Future = PlaceObject_PerkLine(PerkLine5, PerkLine5_PositionRef)
+    if PerkLine05_PositionRef
+        PerkLine05Future = PlaceObject_PerkLine(PerkLine05, PerkLine05_PositionRef)
     endif
-    if PerkLine6_PositionRef
-        PerkLine6Future = PlaceObject_PerkLine(PerkLine6, PerkLine6_PositionRef)
+    if PerkLine06_PositionRef
+        PerkLine06Future = PlaceObject_PerkLine(PerkLine06, PerkLine06_PositionRef)
     endif
-    if PerkLine7_PositionRef
-        PerkLine7Future = PlaceObject_PerkLine(PerkLine7, PerkLine7_PositionRef)
+    if PerkLine07_PositionRef
+        PerkLine07Future = PlaceObject_PerkLine(PerkLine07, PerkLine07_PositionRef)
     endif
-    if PerkLine8_PositionRef
-        PerkLine8Future = PlaceObject_PerkLine(PerkLine8, PerkLine8_PositionRef)
+    if PerkLine08_PositionRef
+        PerkLine08Future = PlaceObject_PerkLine(PerkLine08, PerkLine08_PositionRef)
     endif
-    if PerkLine9_PositionRef
-        PerkLine9Future = PlaceObject_PerkLine(PerkLine9, PerkLine9_PositionRef)
+    if PerkLine09_PositionRef
+        PerkLine09Future = PlaceObject_PerkLine(PerkLine09, PerkLine09_PositionRef)
     endif
     if PerkLine10_PositionRef
         PerkLine10Future = PlaceObject_PerkLine(PerkLine10, PerkLine10_PositionRef)
@@ -307,94 +280,94 @@ function GetResults()
     endif
     ;utility.wait(2.0)
 
-    if PerkLine0Future
-        myPerkLine0 = GetFuture(PerkLine0Future).get_result()
-        if myPerkLine0
-            myPerkLine0.SetScale(PerkLine0_PositionRef.GetScale())
-            myPerkLine0.EnableNoWait()
-            LineRefMap[0] = myPerkLine0
-            PerkLine0Future = None
+    if PerkLine00Future
+        myPerkLine00 = GetFuture(PerkLine00Future).get_result()
+        if myPerkLine00
+            myPerkLine00.SetScale(PerkLine00_PositionRef.GetScale())
+            myPerkLine00.EnableNoWait()
+            LineRefMap[0] = myPerkLine00
+            PerkLine00Future = None
         endif
     endif
-    if PerkLine1Future
-        myPerkLine1 = GetFuture(PerkLine1Future).get_result()
-        if myPerkLine1
-            myPerkLine1.SetScale(PerkLine1_PositionRef.GetScale())
-            myPerkLine1.EnableNoWait()
-            LineRefMap[1] = myPerkLine1
-            PerkLine1Future = None
+    if PerkLine01Future
+        myPerkLine01 = GetFuture(PerkLine01Future).get_result()
+        if myPerkLine01
+            myPerkLine01.SetScale(PerkLine01_PositionRef.GetScale())
+            myPerkLine01.EnableNoWait()
+            LineRefMap[1] = myPerkLine01
+            PerkLine01Future = None
         endif
     endif
-    if PerkLine2Future
-        myPerkLine2 = GetFuture(PerkLine2Future).get_result()
-        if myPerkLine2
-            myPerkLine2.SetScale(PerkLine2_PositionRef.GetScale())
-            myPerkLine2.EnableNoWait()
-            LineRefMap[2] = myPerkLine2
-            PerkLine2Future = None
+    if PerkLine02Future
+        myPerkLine02 = GetFuture(PerkLine02Future).get_result()
+        if myPerkLine02
+            myPerkLine02.SetScale(PerkLine02_PositionRef.GetScale())
+            myPerkLine02.EnableNoWait()
+            LineRefMap[2] = myPerkLine02
+            PerkLine02Future = None
         endif
     endif
-    if PerkLine3Future
-        myPerkLine3 = GetFuture(PerkLine3Future).get_result()
-        if myPerkLine3
-            myPerkLine3.SetScale(PerkLine3_PositionRef.GetScale())
-            myPerkLine3.EnableNoWait()
-            LineRefMap[3] = myPerkLine3
-            PerkLine3Future = None
+    if PerkLine03Future
+        myPerkLine03 = GetFuture(PerkLine03Future).get_result()
+        if myPerkLine03
+            myPerkLine03.SetScale(PerkLine03_PositionRef.GetScale())
+            myPerkLine03.EnableNoWait()
+            LineRefMap[3] = myPerkLine03
+            PerkLine03Future = None
         endif
     endif
-    if PerkLine4Future
-        myPerkLine4 = GetFuture(PerkLine4Future).get_result()
-        if myPerkLine4
-            myPerkLine4.SetScale(PerkLine4_PositionRef.GetScale())
-            myPerkLine4.EnableNoWait()
-            LineRefMap[4] = myPerkLine4
-            PerkLine4Future = None
+    if PerkLine04Future
+        myPerkLine04 = GetFuture(PerkLine04Future).get_result()
+        if myPerkLine04
+            myPerkLine04.SetScale(PerkLine04_PositionRef.GetScale())
+            myPerkLine04.EnableNoWait()
+            LineRefMap[4] = myPerkLine04
+            PerkLine04Future = None
         endif
     endif
-    if PerkLine5Future
-        myPerkLine5 = GetFuture(PerkLine5Future).get_result()
-        if myPerkLine5
-            myPerkLine5.SetScale(PerkLine5_PositionRef.GetScale())
-            myPerkLine5.EnableNoWait()
-            LineRefMap[5] = myPerkLine5
-            PerkLine5Future = None
+    if PerkLine05Future
+        myPerkLine05 = GetFuture(PerkLine05Future).get_result()
+        if myPerkLine05
+            myPerkLine05.SetScale(PerkLine05_PositionRef.GetScale())
+            myPerkLine05.EnableNoWait()
+            LineRefMap[5] = myPerkLine05
+            PerkLine05Future = None
         endif
     endif
-    if PerkLine6Future
-        myPerkLine6 = GetFuture(PerkLine6Future).get_result()
-        if myPerkLine6
-            myPerkLine6.SetScale(PerkLine6_PositionRef.GetScale())
-            myPerkLine6.EnableNoWait()
-            LineRefMap[6] = myPerkLine6
-            PerkLine6Future = None
+    if PerkLine06Future
+        myPerkLine06 = GetFuture(PerkLine06Future).get_result()
+        if myPerkLine06
+            myPerkLine06.SetScale(PerkLine06_PositionRef.GetScale())
+            myPerkLine06.EnableNoWait()
+            LineRefMap[6] = myPerkLine06
+            PerkLine06Future = None
         endif
     endif
-    if PerkLine7Future
-        myPerkLine7 = GetFuture(PerkLine7Future).get_result()
-        if myPerkLine7
-            myPerkLine7.SetScale(PerkLine7_PositionRef.GetScale())
-            myPerkLine7.EnableNoWait()
-            LineRefMap[7] = myPerkLine7
-            PerkLine7Future = None
+    if PerkLine07Future
+        myPerkLine07 = GetFuture(PerkLine07Future).get_result()
+        if myPerkLine07
+            myPerkLine07.SetScale(PerkLine07_PositionRef.GetScale())
+            myPerkLine07.EnableNoWait()
+            LineRefMap[7] = myPerkLine07
+            PerkLine07Future = None
         endif
     endif
-    if PerkLine8Future
-        myPerkLine8 = GetFuture(PerkLine8Future).get_result()
-        if myPerkLine8
-            myPerkLine8.SetScale(PerkLine8_PositionRef.GetScale())
-            myPerkLine8.EnableNoWait()
-            LineRefMap[8] = myPerkLine8
-            PerkLine8Future = None
+    if PerkLine08Future
+        myPerkLine08 = GetFuture(PerkLine08Future).get_result()
+        if myPerkLine08
+            myPerkLine08.SetScale(PerkLine08_PositionRef.GetScale())
+            myPerkLine08.EnableNoWait()
+            LineRefMap[8] = myPerkLine08
+            PerkLine08Future = None
         endif
     endif
-    if PerkLine9Future
-        myPerkLine9 = GetFuture(PerkLine9Future).get_result()
-        if myPerkLine9
-            myPerkLine9.SetScale(PerkLine9_PositionRef.GetScale())
-            myPerkLine9.EnableNoWait()
-            LineRefMap[9] = myPerkLine9
-            PerkLine9Future = None
+    if PerkLine09Future
+        myPerkLine09 = GetFuture(PerkLine09Future).get_result()
+        if myPerkLine09
+            myPerkLine09.SetScale(PerkLine09_PositionRef.GetScale())
+            myPerkLine09.EnableNoWait()
+            LineRefMap[9] = myPerkLine09
+            PerkLine09Future = None
         endif
     endif
     if PerkLine10Future
@@ -416,84 +389,84 @@ function GetResults()
         endif
     endif
 
-    if PerkNode0Future
-        myPerkNode0 = GetFuture(PerkNode0Future).get_result()
-        if myPerkNode0
-            (myPerkNode0 as CampPerkNode).AssignController(self)
-            NodeRefMap[0] = myPerkNode0
-            PerkNode0Future = None
+    if PerkNode00Future
+        myPerkNode00 = GetFuture(PerkNode00Future).get_result()
+        if myPerkNode00
+            (myPerkNode00 as CampPerkNode).AssignController(self)
+            NodeRefMap[0] = myPerkNode00
+            PerkNode00Future = None
         endif
     endif
-    if PerkNode1Future
-        myPerkNode1 = GetFuture(PerkNode1Future).get_result()
-        if myPerkNode1
-            (myPerkNode1 as CampPerkNode).AssignController(self)
-            NodeRefMap[1] = myPerkNode1
-            PerkNode1Future = None
+    if PerkNode01Future
+        myPerkNode01 = GetFuture(PerkNode01Future).get_result()
+        if myPerkNode01
+            (myPerkNode01 as CampPerkNode).AssignController(self)
+            NodeRefMap[1] = myPerkNode01
+            PerkNode01Future = None
         endif
     endif
-    if PerkNode2Future
-        myPerkNode2 = GetFuture(PerkNode2Future).get_result()
-        if myPerkNode2
-            (myPerkNode2 as CampPerkNode).AssignController(self)
-            NodeRefMap[2] = myPerkNode2
-            PerkNode2Future = None
+    if PerkNode02Future
+        myPerkNode02 = GetFuture(PerkNode02Future).get_result()
+        if myPerkNode02
+            (myPerkNode02 as CampPerkNode).AssignController(self)
+            NodeRefMap[2] = myPerkNode02
+            PerkNode02Future = None
         endif
     endif
-    if PerkNode3Future
-        myPerkNode3 = GetFuture(PerkNode3Future).get_result()
-        if myPerkNode3
-            (myPerkNode3 as CampPerkNode).AssignController(self)
-            NodeRefMap[3] = myPerkNode3
-            PerkNode3Future = None
+    if PerkNode03Future
+        myPerkNode03 = GetFuture(PerkNode03Future).get_result()
+        if myPerkNode03
+            (myPerkNode03 as CampPerkNode).AssignController(self)
+            NodeRefMap[3] = myPerkNode03
+            PerkNode03Future = None
         endif
     endif
-    if PerkNode4Future
-        myPerkNode4 = GetFuture(PerkNode4Future).get_result()
-        if myPerkNode4
-            (myPerkNode4 as CampPerkNode).AssignController(self)
-            NodeRefMap[4] = myPerkNode4
-            PerkNode4Future = None
+    if PerkNode04Future
+        myPerkNode04 = GetFuture(PerkNode04Future).get_result()
+        if myPerkNode04
+            (myPerkNode04 as CampPerkNode).AssignController(self)
+            NodeRefMap[4] = myPerkNode04
+            PerkNode04Future = None
         endif
     endif
-    if PerkNode5Future
-        myPerkNode5 = GetFuture(PerkNode5Future).get_result()
-        if myPerkNode5
-            (myPerkNode5 as CampPerkNode).AssignController(self)
-            NodeRefMap[5] = myPerkNode5
-            PerkNode5Future = None
+    if PerkNode05Future
+        myPerkNode05 = GetFuture(PerkNode05Future).get_result()
+        if myPerkNode05
+            (myPerkNode05 as CampPerkNode).AssignController(self)
+            NodeRefMap[5] = myPerkNode05
+            PerkNode05Future = None
         endif
     endif
-    if PerkNode6Future
-        myPerkNode6 = GetFuture(PerkNode6Future).get_result()
-        if myPerkNode6
-            (myPerkNode6 as CampPerkNode).AssignController(self)
-            NodeRefMap[6] = myPerkNode6
-            PerkNode6Future = None
+    if PerkNode06Future
+        myPerkNode06 = GetFuture(PerkNode06Future).get_result()
+        if myPerkNode06
+            (myPerkNode06 as CampPerkNode).AssignController(self)
+            NodeRefMap[6] = myPerkNode06
+            PerkNode06Future = None
         endif
     endif
-    if PerkNode7Future
-        myPerkNode7 = GetFuture(PerkNode7Future).get_result()
-        if myPerkNode7
-            (myPerkNode7 as CampPerkNode).AssignController(self)
-            NodeRefMap[7] = myPerkNode7
-            PerkNode7Future = None
+    if PerkNode07Future
+        myPerkNode07 = GetFuture(PerkNode07Future).get_result()
+        if myPerkNode07
+            (myPerkNode07 as CampPerkNode).AssignController(self)
+            NodeRefMap[7] = myPerkNode07
+            PerkNode07Future = None
         endif
     endif
-    if PerkNode8Future
-        myPerkNode8 = GetFuture(PerkNode8Future).get_result()
-        if myPerkNode8
-            (myPerkNode8 as CampPerkNode).AssignController(self)
-            NodeRefMap[8] = myPerkNode8
-            PerkNode8Future = None
+    if PerkNode08Future
+        myPerkNode08 = GetFuture(PerkNode08Future).get_result()
+        if myPerkNode08
+            (myPerkNode08 as CampPerkNode).AssignController(self)
+            NodeRefMap[8] = myPerkNode08
+            PerkNode08Future = None
         endif
     endif
-    if PerkNode9Future
-        myPerkNode9 = GetFuture(PerkNode9Future).get_result()
-        if myPerkNode9
-            (myPerkNode9 as CampPerkNode).AssignController(self)
-            NodeRefMap[9] = myPerkNode9
-            PerkNode9Future = None
+    if PerkNode09Future
+        myPerkNode09 = GetFuture(PerkNode09Future).get_result()
+        if myPerkNode09
+            (myPerkNode09 as CampPerkNode).AssignController(self)
+            NodeRefMap[9] = myPerkNode09
+            PerkNode09Future = None
         endif
     endif
     if PerkNode10Future
@@ -513,35 +486,35 @@ function GetResults()
         endif
     endif
 
-    if myPerkNode0
-        (myPerkNode0 as CampPerkNode).AssignDownstreamNodes()
+    if myPerkNode00
+        (myPerkNode00 as CampPerkNode).AssignDownstreamNodes()
     endif
-    if myPerkNode1
-        (myPerkNode1 as CampPerkNode).AssignDownstreamNodes()
+    if myPerkNode01
+        (myPerkNode01 as CampPerkNode).AssignDownstreamNodes()
     endif
-    if myPerkNode2
-        (myPerkNode2 as CampPerkNode).AssignDownstreamNodes()
+    if myPerkNode02
+        (myPerkNode02 as CampPerkNode).AssignDownstreamNodes()
     endif
-    if myPerkNode3
-        (myPerkNode3 as CampPerkNode).AssignDownstreamNodes()
+    if myPerkNode03
+        (myPerkNode03 as CampPerkNode).AssignDownstreamNodes()
     endif
-    if myPerkNode4
-        (myPerkNode4 as CampPerkNode).AssignDownstreamNodes()
+    if myPerkNode04
+        (myPerkNode04 as CampPerkNode).AssignDownstreamNodes()
     endif
-    if myPerkNode5
-        (myPerkNode5 as CampPerkNode).AssignDownstreamNodes()
+    if myPerkNode05
+        (myPerkNode05 as CampPerkNode).AssignDownstreamNodes()
     endif
-    if myPerkNode6
-        (myPerkNode6 as CampPerkNode).AssignDownstreamNodes()
+    if myPerkNode06
+        (myPerkNode06 as CampPerkNode).AssignDownstreamNodes()
     endif
-    if myPerkNode7
-        (myPerkNode7 as CampPerkNode).AssignDownstreamNodes()
+    if myPerkNode07
+        (myPerkNode07 as CampPerkNode).AssignDownstreamNodes()
     endif
-    if myPerkNode8
-        (myPerkNode8 as CampPerkNode).AssignDownstreamNodes()
+    if myPerkNode08
+        (myPerkNode08 as CampPerkNode).AssignDownstreamNodes()
     endif
-    if myPerkNode9
-        (myPerkNode9 as CampPerkNode).AssignDownstreamNodes()
+    if myPerkNode09
+        (myPerkNode09 as CampPerkNode).AssignDownstreamNodes()
     endif
     if myPerkNode10
         (myPerkNode10 as CampPerkNode).AssignDownstreamNodes()
@@ -559,55 +532,55 @@ function TakeDown()
         i += 1
     endWhile
     (myCampfire as CampCampfire).myPerkNodeController = None
-    TryToDisableAndDeleteRef(myPerkNode0)
-    TryToDisableAndDeleteRef(myPerkNode1)
-    TryToDisableAndDeleteRef(myPerkNode2)
-    TryToDisableAndDeleteRef(myPerkNode3)
-    TryToDisableAndDeleteRef(myPerkNode4)
-    TryToDisableAndDeleteRef(myPerkNode5)
-    TryToDisableAndDeleteRef(myPerkNode6)
-    TryToDisableAndDeleteRef(myPerkNode7)
-    TryToDisableAndDeleteRef(myPerkNode8)
-    TryToDisableAndDeleteRef(myPerkNode9)
+    TryToDisableAndDeleteRef(myPerkNode00)
+    TryToDisableAndDeleteRef(myPerkNode01)
+    TryToDisableAndDeleteRef(myPerkNode02)
+    TryToDisableAndDeleteRef(myPerkNode03)
+    TryToDisableAndDeleteRef(myPerkNode04)
+    TryToDisableAndDeleteRef(myPerkNode05)
+    TryToDisableAndDeleteRef(myPerkNode06)
+    TryToDisableAndDeleteRef(myPerkNode07)
+    TryToDisableAndDeleteRef(myPerkNode08)
+    TryToDisableAndDeleteRef(myPerkNode09)
     TryToDisableAndDeleteRef(myPerkNode10)
     TryToDisableAndDeleteRef(myPerkNode11)
-    TryToDisableAndDeleteRef(myPerkLine0)
-    TryToDisableAndDeleteRef(myPerkLine1)
-    TryToDisableAndDeleteRef(myPerkLine2)
-    TryToDisableAndDeleteRef(myPerkLine3)
-    TryToDisableAndDeleteRef(myPerkLine4)
-    TryToDisableAndDeleteRef(myPerkLine5)
-    TryToDisableAndDeleteRef(myPerkLine6)
-    TryToDisableAndDeleteRef(myPerkLine7)
-    TryToDisableAndDeleteRef(myPerkLine8)
-    TryToDisableAndDeleteRef(myPerkLine9)
+    TryToDisableAndDeleteRef(myPerkLine00)
+    TryToDisableAndDeleteRef(myPerkLine01)
+    TryToDisableAndDeleteRef(myPerkLine02)
+    TryToDisableAndDeleteRef(myPerkLine03)
+    TryToDisableAndDeleteRef(myPerkLine04)
+    TryToDisableAndDeleteRef(myPerkLine05)
+    TryToDisableAndDeleteRef(myPerkLine06)
+    TryToDisableAndDeleteRef(myPerkLine07)
+    TryToDisableAndDeleteRef(myPerkLine08)
+    TryToDisableAndDeleteRef(myPerkLine09)
     TryToDisableAndDeleteRef(myPerkLine10)
     TryToDisableAndDeleteRef(myPerkLine11)
     TryToDisableAndDeleteRef(myPerkArtPlane)
 
     myCampfire = None
-    myPerkNode0 = None
-    myPerkNode1 = None
-    myPerkNode2 = None
-    myPerkNode3 = None
-    myPerkNode4 = None
-    myPerkNode5 = None
-    myPerkNode6 = None
-    myPerkNode7 = None
-    myPerkNode8 = None
-    myPerkNode9 = None
+    myPerkNode00 = None
+    myPerkNode01 = None
+    myPerkNode02 = None
+    myPerkNode03 = None
+    myPerkNode04 = None
+    myPerkNode05 = None
+    myPerkNode06 = None
+    myPerkNode07 = None
+    myPerkNode08 = None
+    myPerkNode09 = None
     myPerkNode10 = None
     myPerkNode11 = None
-    myPerkLine0 = None
-    myPerkLine1 = None
-    myPerkLine2 = None
-    myPerkLine3 = None
-    myPerkLine4 = None
-    myPerkLine5 = None
-    myPerkLine6 = None
-    myPerkLine7 = None
-    myPerkLine8 = None
-    myPerkLine9 = None
+    myPerkLine00 = None
+    myPerkLine01 = None
+    myPerkLine02 = None
+    myPerkLine03 = None
+    myPerkLine04 = None
+    myPerkLine05 = None
+    myPerkLine06 = None
+    myPerkLine07 = None
+    myPerkLine08 = None
+    myPerkLine09 = None
     myPerkLine10 = None
     myPerkLine11 = None
     myPerkArtPlane = None
