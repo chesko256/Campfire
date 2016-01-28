@@ -488,6 +488,7 @@ textures\campfire\_Camp_enchantingchalkground.dds
 textures\campfire\_camp_leathertentroll.dds
 textures\campfire\_Camp_MageSphereTex.dds
 textures\campfire\_Camp_PerkArt_Axe.dds
+textures\campfire\_Camp_PerkArt_Example.dds
 textures\campfire\_Camp_PerkSystemEnterGrad.dds
 textures\campfire\_Camp_redfxfirefly.dds
 textures\campfire\_Camp_StoneQuiver.dds
