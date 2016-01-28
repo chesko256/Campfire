@@ -18,5 +18,8 @@ Event OnPlayerLoadGame()
 EndEvent
 
 function AttemptRegistration()
-	bool b = CampUtil.RegisterPerkTree(required_node_controller, mod_name)
+	GlobalVariable campfire_version = Game.GetFormFromFile(0x051666, "Campfire.esm") as GlobalVariable
+	if campfire_version && campfire_version.GetValue() >= 1.7
+		bool b = CampUtil.RegisterPerkTree(required_node_controller, mod_name)
+	endif
 endFunction
