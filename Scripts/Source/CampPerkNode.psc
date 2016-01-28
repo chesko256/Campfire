@@ -1,17 +1,18 @@
 scriptname CampPerkNode extends ObjectReference
 
+; Required
 GlobalVariable property required_current_rank_global auto
 { The global that represents the current rank of this perk. }
 GlobalVariable property required_max_rank_global auto
 { The global that represents the max possible rank of this perk. }
-Sound property _Camp_UISkillsPerkSelect auto
-{ Auto-fill in CK. }
-message property perk_description auto
-{ This node's perk description. }
-message property skill_description auto
-{ The overall skill description. }
 int property required_description_value_count = 1 auto
 { How many description values to display. Can range from 0 (no numeric display values in description) to 2. }
+message property required_perk_description auto
+{ This node's perk description. }
+message property required_skill_description auto
+{ The overall skill description. }
+
+; Optional
 int property description_value_modifier = 1 auto
 { The display value starting offset. For instance, modifier = 5 and iterator = 5 at rank 0 will show 10, rank 1 will show 15, etc. }
 int property description_value_iterator = 1 auto
@@ -20,10 +21,6 @@ int property secondary_description_value_modifier = 1 auto
 { The display value starting offset. For instance, modifier = 5 and iterator = 5 at rank 0 will show 10, rank 1 will show 15, etc. }
 int property secondary_description_value_iterator = 1 auto
 { The display value to count up by, per rank. Shows the NEXT rank value. For instance, iterator = 5 at rank 0 will show 5, rank 1 will show 10, and so on. }
-ObjectReference property downstream_node_1_ref auto hidden
-ObjectReference property downstream_node_2_ref auto hidden
-ObjectReference property downstream_line_1_ref auto hidden
-ObjectReference property downstream_line_2_ref auto hidden
 Activator property downstream_node_1 auto
 { A connected node below this one in the tree. If no downstream node, this node is implicitly the origin (starting) node. }
 Activator property downstream_node_2 auto
@@ -33,16 +30,25 @@ Activator property downstream_line_1 auto
 Activator property downstream_line_2 auto
 { A connected line activator that connects to downstream node 2. }
 
-int property current_rank auto hidden
+; Auto-fill
+Sound property _Camp_UISkillsPerkSelect auto
+{ Auto-fill in CK. }
 
+; Run-time objects
+ObjectReference property downstream_node_1_ref auto hidden
+ObjectReference property downstream_node_2_ref auto hidden
+ObjectReference property downstream_line_1_ref auto hidden
+ObjectReference property downstream_line_2_ref auto hidden
 ObjectReference property controller auto hidden
+
+int property current_rank auto hidden
 
 Event OnInit()
     
 EndEvent
 
 Event OnActivate(ObjectReference akActionRef)
-    (controller as _Camp_PerkNodeControllerBehavior).NodeActivated(self)
+    (controller as CampPerkNodeControllerBehavior).NodeActivated(self)
 EndEvent
 
 function AssignController(ObjectReference akController)
@@ -78,7 +84,7 @@ endFunction
 
 function UpdateLines()
     if current_rank > 0
-        if downstream_node_1_ref && downstream_line_1_ref && (downstream_node_1_ref as _Camp_PerkNode).current_rank > 0
+        if downstream_node_1_ref && downstream_line_1_ref && (downstream_node_1_ref as CampPerkNode).current_rank > 0
             int i = 0
             while !downstream_line_1_ref.Is3DLoaded() && i < 50
                 utility.wait(0.1)
@@ -86,7 +92,7 @@ function UpdateLines()
             endWhile
             downstream_line_1_ref.PlayAnimation("Unlock")
         endif
-        if downstream_node_2_ref && downstream_line_2_ref && (downstream_node_2_ref as _Camp_PerkNode).current_rank > 0
+        if downstream_node_2_ref && downstream_line_2_ref && (downstream_node_2_ref as CampPerkNode).current_rank > 0
             int i = 0
             while !downstream_line_2_ref.Is3DLoaded() && i < 50
                 utility.wait(0.1)
@@ -98,7 +104,7 @@ function UpdateLines()
 endFunction
 
 function AssignDownstreamNodes()
-    _Camp_PerkNodeController ctrlr = controller as _Camp_PerkNodeController
+    CampPerkNodeController ctrlr = controller as CampPerkNodeController
     if downstream_node_1
         int idx = ctrlr.NodeActMap.Find(downstream_node_1)
         if idx != -1

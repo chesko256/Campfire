@@ -33,13 +33,13 @@ function NodeActivated(ObjectReference akNodeRef)
     endif
 
     bool downstream_node_purchased = false
-    if (dsnode1 && dsnode1.perk_global.GetValueInt() >= 1) || \
-       (dsnode2 && dsnode2.perk_global.GetValueInt() >= 1)
+    if (dsnode1 && dsnode1.required_current_rank_global.GetValueInt() >= 1) || \
+       (dsnode2 && dsnode2.required_current_rank_global.GetValueInt() >= 1)
        downstream_node_purchased = true
     endif
 
     bool below_max_rank = false
-    if node.perk_global.GetValueInt() < node.perk_max_rank_global.GetValueInt()
+    if node.required_current_rank_global.GetValueInt() < node.required_max_rank_global.GetValueInt()
         below_max_rank = true
     endif
 
@@ -71,29 +71,29 @@ function ShowPerkDescription(CampPerkNode akPerkNode, bool abEligibleForIncrease
     endif
 
     int desc_val
-    if akPerkNode.perk_global.GetValueInt() < akPerkNode.perk_max_rank_global.GetValueInt()
-        desc_val = akPerkNode.perk_global.GetValueInt() + 1
+    if akPerkNode.required_current_rank_global.GetValueInt() < akPerkNode.required_max_rank_global.GetValueInt()
+        desc_val = akPerkNode.required_current_rank_global.GetValueInt() + 1
     else
-        desc_val = akPerkNode.perk_max_rank_global.GetValueInt()
+        desc_val = akPerkNode.required_max_rank_global.GetValueInt()
     endif
 
     int i
     if akPerkNode.required_description_value_count == 2
-        i = akPerkNode.perk_description.Show((desc_val * akPerkNode.description_value_iterator) + akPerkNode.description_value_modifier, \
+        i = akPerkNode.required_perk_description.Show((desc_val * akPerkNode.description_value_iterator) + akPerkNode.description_value_modifier, \
                                              (desc_val * akPerkNode.secondary_description_value_iterator) + akPerkNode.secondary_description_value_modifier, \
-                                             akPerkNode.perk_global.GetValueInt(), \    
-                                             akPerkNode.perk_max_rank_global.GetValueInt(), \           
+                                             akPerkNode.required_current_rank_global.GetValueInt(), \    
+                                             akPerkNode.required_max_rank_global.GetValueInt(), \           
                                              required_perk_points_available.GetValueInt(), \
                                              (required_perk_point_progress.GetValue() * 100.0))
     elseif akPerkNode.required_description_value_count == 1
-        i = akPerkNode.perk_description.Show((desc_val * akPerkNode.description_value_iterator) + akPerkNode.description_value_modifier, \
-                                             akPerkNode.perk_global.GetValueInt(), \    
-                                             akPerkNode.perk_max_rank_global.GetValueInt(), \           
+        i = akPerkNode.required_perk_description.Show((desc_val * akPerkNode.description_value_iterator) + akPerkNode.description_value_modifier, \
+                                             akPerkNode.required_current_rank_global.GetValueInt(), \    
+                                             akPerkNode.required_max_rank_global.GetValueInt(), \           
                                              required_perk_points_available.GetValueInt(), \
                                              (required_perk_point_progress.GetValue() * 100.0))
     else
-        i = akPerkNode.perk_description.Show(akPerkNode.perk_global.GetValueInt(), \    
-                                             akPerkNode.perk_max_rank_global.GetValueInt(), \           
+        i = akPerkNode.required_perk_description.Show(akPerkNode.required_current_rank_global.GetValueInt(), \    
+                                             akPerkNode.required_max_rank_global.GetValueInt(), \           
                                              required_perk_points_available.GetValueInt(), \
                                              (required_perk_point_progress.GetValue() * 100.0))
     endif
@@ -108,7 +108,7 @@ function ShowPerkDescription(CampPerkNode akPerkNode, bool abEligibleForIncrease
             SendEvent_CampfirePerkPurchased()
         endif
     elseif i == 1
-        akPerkNode.skill_description.Show(required_perk_points_available.GetValueInt(), \
+        akPerkNode.required_skill_description.Show(required_perk_points_available.GetValueInt(), \
                                              (required_perk_point_progress.GetValue() * 100.0))
         ShowPerkDescription(akPerkNode, abEligibleForIncrease)
     endif

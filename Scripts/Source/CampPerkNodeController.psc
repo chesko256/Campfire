@@ -4,7 +4,7 @@ scriptname CampPerkNodeController extends _Camp_PlaceableObjectBase
 import _CampInternal
 
 Activator property PerkNode0 auto
-{ The 0th perk node. }
+{ The 0th perk node. The origin (starting) node. }
 Activator property PerkNode1 auto
 { The 1st perk node. }
 Activator property PerkNode2 auto
@@ -419,7 +419,7 @@ function GetResults()
     if PerkNode0Future
         myPerkNode0 = GetFuture(PerkNode0Future).get_result()
         if myPerkNode0
-            (myPerkNode0 as _Camp_PerkNode).AssignController(self)
+            (myPerkNode0 as CampPerkNode).AssignController(self)
             NodeRefMap[0] = myPerkNode0
             PerkNode0Future = None
         endif
@@ -427,7 +427,7 @@ function GetResults()
     if PerkNode1Future
         myPerkNode1 = GetFuture(PerkNode1Future).get_result()
         if myPerkNode1
-            (myPerkNode1 as _Camp_PerkNode).AssignController(self)
+            (myPerkNode1 as CampPerkNode).AssignController(self)
             NodeRefMap[1] = myPerkNode1
             PerkNode1Future = None
         endif
@@ -435,7 +435,7 @@ function GetResults()
     if PerkNode2Future
         myPerkNode2 = GetFuture(PerkNode2Future).get_result()
         if myPerkNode2
-            (myPerkNode2 as _Camp_PerkNode).AssignController(self)
+            (myPerkNode2 as CampPerkNode).AssignController(self)
             NodeRefMap[2] = myPerkNode2
             PerkNode2Future = None
         endif
@@ -443,7 +443,7 @@ function GetResults()
     if PerkNode3Future
         myPerkNode3 = GetFuture(PerkNode3Future).get_result()
         if myPerkNode3
-            (myPerkNode3 as _Camp_PerkNode).AssignController(self)
+            (myPerkNode3 as CampPerkNode).AssignController(self)
             NodeRefMap[3] = myPerkNode3
             PerkNode3Future = None
         endif
@@ -451,7 +451,7 @@ function GetResults()
     if PerkNode4Future
         myPerkNode4 = GetFuture(PerkNode4Future).get_result()
         if myPerkNode4
-            (myPerkNode4 as _Camp_PerkNode).AssignController(self)
+            (myPerkNode4 as CampPerkNode).AssignController(self)
             NodeRefMap[4] = myPerkNode4
             PerkNode4Future = None
         endif
@@ -459,7 +459,7 @@ function GetResults()
     if PerkNode5Future
         myPerkNode5 = GetFuture(PerkNode5Future).get_result()
         if myPerkNode5
-            (myPerkNode5 as _Camp_PerkNode).AssignController(self)
+            (myPerkNode5 as CampPerkNode).AssignController(self)
             NodeRefMap[5] = myPerkNode5
             PerkNode5Future = None
         endif
@@ -467,7 +467,7 @@ function GetResults()
     if PerkNode6Future
         myPerkNode6 = GetFuture(PerkNode6Future).get_result()
         if myPerkNode6
-            (myPerkNode6 as _Camp_PerkNode).AssignController(self)
+            (myPerkNode6 as CampPerkNode).AssignController(self)
             NodeRefMap[6] = myPerkNode6
             PerkNode6Future = None
         endif
@@ -475,7 +475,7 @@ function GetResults()
     if PerkNode7Future
         myPerkNode7 = GetFuture(PerkNode7Future).get_result()
         if myPerkNode7
-            (myPerkNode7 as _Camp_PerkNode).AssignController(self)
+            (myPerkNode7 as CampPerkNode).AssignController(self)
             NodeRefMap[7] = myPerkNode7
             PerkNode7Future = None
         endif
@@ -483,7 +483,7 @@ function GetResults()
     if PerkNode8Future
         myPerkNode8 = GetFuture(PerkNode8Future).get_result()
         if myPerkNode8
-            (myPerkNode8 as _Camp_PerkNode).AssignController(self)
+            (myPerkNode8 as CampPerkNode).AssignController(self)
             NodeRefMap[8] = myPerkNode8
             PerkNode8Future = None
         endif
@@ -491,7 +491,7 @@ function GetResults()
     if PerkNode9Future
         myPerkNode9 = GetFuture(PerkNode9Future).get_result()
         if myPerkNode9
-            (myPerkNode9 as _Camp_PerkNode).AssignController(self)
+            (myPerkNode9 as CampPerkNode).AssignController(self)
             NodeRefMap[9] = myPerkNode9
             PerkNode9Future = None
         endif
@@ -499,7 +499,7 @@ function GetResults()
     if PerkNode10Future
         myPerkNode10 = GetFuture(PerkNode10Future).get_result()
         if myPerkNode10
-            (myPerkNode10 as _Camp_PerkNode).AssignController(self)
+            (myPerkNode10 as CampPerkNode).AssignController(self)
             NodeRefMap[10] = myPerkNode10
             PerkNode10Future = None
         endif
@@ -507,47 +507,47 @@ function GetResults()
     if PerkNode11Future
         myPerkNode11 = GetFuture(PerkNode11Future).get_result()
         if myPerkNode11
-            (myPerkNode11 as _Camp_PerkNode).AssignController(self)
+            (myPerkNode11 as CampPerkNode).AssignController(self)
             NodeRefMap[11] = myPerkNode11
             PerkNode11Future = None
         endif
     endif
 
     if myPerkNode0
-        (myPerkNode0 as _Camp_PerkNode).AssignDownstreamNodes()
+        (myPerkNode0 as CampPerkNode).AssignDownstreamNodes()
     endif
     if myPerkNode1
-        (myPerkNode1 as _Camp_PerkNode).AssignDownstreamNodes()
+        (myPerkNode1 as CampPerkNode).AssignDownstreamNodes()
     endif
     if myPerkNode2
-        (myPerkNode2 as _Camp_PerkNode).AssignDownstreamNodes()
+        (myPerkNode2 as CampPerkNode).AssignDownstreamNodes()
     endif
     if myPerkNode3
-        (myPerkNode3 as _Camp_PerkNode).AssignDownstreamNodes()
+        (myPerkNode3 as CampPerkNode).AssignDownstreamNodes()
     endif
     if myPerkNode4
-        (myPerkNode4 as _Camp_PerkNode).AssignDownstreamNodes()
+        (myPerkNode4 as CampPerkNode).AssignDownstreamNodes()
     endif
     if myPerkNode5
-        (myPerkNode5 as _Camp_PerkNode).AssignDownstreamNodes()
+        (myPerkNode5 as CampPerkNode).AssignDownstreamNodes()
     endif
     if myPerkNode6
-        (myPerkNode6 as _Camp_PerkNode).AssignDownstreamNodes()
+        (myPerkNode6 as CampPerkNode).AssignDownstreamNodes()
     endif
     if myPerkNode7
-        (myPerkNode7 as _Camp_PerkNode).AssignDownstreamNodes()
+        (myPerkNode7 as CampPerkNode).AssignDownstreamNodes()
     endif
     if myPerkNode8
-        (myPerkNode8 as _Camp_PerkNode).AssignDownstreamNodes()
+        (myPerkNode8 as CampPerkNode).AssignDownstreamNodes()
     endif
     if myPerkNode9
-        (myPerkNode9 as _Camp_PerkNode).AssignDownstreamNodes()
+        (myPerkNode9 as CampPerkNode).AssignDownstreamNodes()
     endif
     if myPerkNode10
-        (myPerkNode10 as _Camp_PerkNode).AssignDownstreamNodes()
+        (myPerkNode10 as CampPerkNode).AssignDownstreamNodes()
     endif
     if myPerkNode11
-        (myPerkNode11 as _Camp_PerkNode).AssignDownstreamNodes()
+        (myPerkNode11 as CampPerkNode).AssignDownstreamNodes()
     endif
     InteractionLocked = false
 endFunction

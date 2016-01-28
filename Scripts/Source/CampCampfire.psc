@@ -755,7 +755,7 @@ endFunction
 function TakeDown()
     (myUpliftedTriggerVolume as _Camp_UpliftedTriggerVolumeScript).FireBurnedOut()
     if myPerkNodeController
-        (myPerkNodeController as _Camp_PerkNodeController).TakeDown()
+        (myPerkNodeController as CampPerkNodeController).TakeDown()
     endif
     if myPerkNavController
         (myPerkNavController as _Camp_PerkNavController).TakeDown()
@@ -935,7 +935,7 @@ function EnterTreeSystem(int idx)
     current_skill_index = idx
     _Camp_LastSelectedSkill.SetValueInt(idx)
     if myPerkNodeController
-        (myPerkNodeController as _Camp_PerkNodeControllerBehavior).AssignCampfire(self)
+        (myPerkNodeController as CampPerkNodeControllerBehavior).AssignCampfire(self)
     endif
     if myPerkNavController
         (myPerkNavController as _Camp_PerkNavController).AssignCampfire(self)
@@ -958,7 +958,7 @@ endFunction
 
 bool function ShowPerkDesc(int idx)
     if myPerkNodeController
-        _Camp_PerkNodeControllerBehavior controller = (myPerkNodeController as _Camp_PerkNodeControllerBehavior)
+        CampPerkNodeControllerBehavior controller = (myPerkNodeController as CampPerkNodeControllerBehavior)
         int i = controller.required_skill_description.Show(controller.required_perk_points_available.GetValueInt(), controller.required_perk_point_progress.GetValue() * 100.0)
 
         if i == 0
@@ -974,7 +974,7 @@ endFunction
 ; Called by the Nav Controller if necessary
 function TakeDownPerkTree()
     if myPerkNodeController
-        (myPerkNodeController as _Camp_PerkNodeController).TakeDown()
+        (myPerkNodeController as CampPerkNodeController).TakeDown()
     endif
 endFunction
 
@@ -993,7 +993,7 @@ function ShowNextPerkTree()
             current_skill_index = i
             _Camp_LastSelectedSkill.SetValueInt(i)
             if myPerkNodeController
-                (myPerkNodeController as _Camp_PerkNodeControllerBehavior).AssignCampfire(self)
+                (myPerkNodeController as CampPerkNodeControllerBehavior).AssignCampfire(self)
             endif
         endif
         i += 1
@@ -1015,7 +1015,7 @@ function ShowPrevPerkTree()
             current_skill_index = i
             _Camp_LastSelectedSkill.SetValueInt(i)
             if myPerkNodeController
-                (myPerkNodeController as _Camp_PerkNodeControllerBehavior).AssignCampfire(self)
+                (myPerkNodeController as CampPerkNodeControllerBehavior).AssignCampfire(self)
             endif
         endif
         i -= 1
@@ -1172,7 +1172,7 @@ endFunction
 function PutOutFire()
     CampDebug(0, "PutOutFire")
     if myPerkNodeController
-        (myPerkNodeController as _Camp_PerkNodeController).TakeDown()
+        (myPerkNodeController as CampPerkNodeController).TakeDown()
     endif
     if myPerkNavController
         (myPerkNavController as _Camp_PerkNavController).TakeDown()
@@ -1197,7 +1197,7 @@ endFunction
 function BurnToEmbers()
     CampDebug(0, "BurnToEmbers")
     if myPerkNodeController
-        (myPerkNodeController as _Camp_PerkNodeController).TakeDown()
+        (myPerkNodeController as CampPerkNodeController).TakeDown()
     endif
     if myPerkNavController
         (myPerkNavController as _Camp_PerkNavController).TakeDown()
