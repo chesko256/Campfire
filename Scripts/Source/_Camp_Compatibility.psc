@@ -686,6 +686,10 @@ bool function CampfirePerkSystemRegister(Activator akNodeController, string asPl
 	return true
 endFunction
 
+bool function CampfirePerkSystemUnregister(Activator akNodeController, string asPluginName = "Unknown")
+	; pass
+endFunction
+
 function CampfirePerkSystemSortOnStartup()
 	bool b = ArraySort(PerkNodeControllers)
 	_Camp_PerkNodeControllersSorted.SetValueInt(2)
