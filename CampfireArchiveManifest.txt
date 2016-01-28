@@ -200,6 +200,7 @@ Scripts\CampLargeTentTriggerVolumeScript.pex
 Scripts\CampPerkNode.pex
 Scripts\CampPerkNodeController.pex
 Scripts\CampPerkNodeControllerBehavior.pex
+Scripts\CampPerkSystemRegister.pex
 Scripts\CampPlaceableContainer.pex
 Scripts\CampPlaceableContainerEx.pex
 Scripts\CampPlaceableMiscItem.pex
@@ -339,6 +340,7 @@ Scripts\Source\CampLargeTentTriggerVolumeScript.psc
 Scripts\Source\CampPerkNode.psc
 Scripts\Source\CampPerkNodeController.psc
 Scripts\Source\CampPerkNodeControllerBehavior.psc
+Scripts\Source\CampPerkSystemRegister.psc
 Scripts\Source\CampPlaceableContainer.psc
 Scripts\Source\CampPlaceableContainerEx.psc
 Scripts\Source\CampPlaceableMiscItem.psc

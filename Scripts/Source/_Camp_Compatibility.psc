@@ -80,12 +80,6 @@ Activator property _Camp_PerkNodeController_Camping auto
 
 GlobalVariable property _Camp_PerkNodeControllersSorted auto ; Constant value = 1
 GlobalVariable property _Camp_PerkNodeControllerCount auto
-GlobalVariable property EndurancePerkPoints auto hidden
-GlobalVariable property EndurancePerkPointProgress auto hidden
-GlobalVariable property ProvisioningPerkPoints auto hidden
-GlobalVariable property ProvisioningPerkPointProgress auto hidden
-GlobalVariable property FishingPerkPoints auto hidden
-GlobalVariable property FishingPerkPointProgress auto hidden
 
 ;#Misc=============================================================================
 GlobalVariable property _Camp_HotkeyCreateItem auto
@@ -96,6 +90,7 @@ GlobalVariable property _Camp_Setting_TrackFollowers auto
 GlobalVariable property _Camp_HarvestWoodEnabled auto
 GlobalVariable property _Camp_PerkRank_Resourceful auto
 GlobalVariable property _Camp_PerkRank_Firecraft auto
+GlobalVariable property _Camp_LastSelectedSkill auto
 
 ConstructibleObject property _Camp_FireMiscRecipe_TinderStraw auto
 ConstructibleObject property _Camp_FireMiscRecipe_BW_TinderStraw auto
@@ -186,6 +181,8 @@ function RunCompatibility()
 	trace("[Campfire]======================================================================================================")
 	
 	isFrostfallLoaded = false
+
+	_Camp_LastSelectedSkill.SetValueInt(0)
 
 	if !Upgraded_1_1
 		Upgrade_1_1()
@@ -558,27 +555,6 @@ function RunCompatibility()
 		
 	endif
 
-	if isFrostfallLoaded
-		EndurancePerkPoints = Game.GetFormFromFile(0x00064027, "Frostfall.esp") as GlobalVariable
-		EndurancePerkPointProgress = Game.GetFormFromFile(0x00064028, "Frostfall.esp") as GlobalVariable
-		Activator node_controller = Game.GetFormFromFile(0x00064026, "Frostfall.esp") as Activator
-		bool b = CampfirePerkSystemRegister(node_controller, "Frostfall.esp")
-	endif
-	
-	if isLastSeedLoaded
-		ProvisioningPerkPoints = Game.GetFormFromFile(0x00006B0F, "LastSeed.esp") as GlobalVariable
-		ProvisioningPerkPointProgress = Game.GetFormFromFile(0x00006B10, "LastSeed.esp") as GlobalVariable
-		Activator node_controller = Game.GetFormFromFile(0x00006B0E, "LastSeed.esp") as Activator
-		bool b = CampfirePerkSystemRegister(node_controller, "LastSeed.esp")
-	endif
-
-	if isArtOfTheCatchLoaded
-		FishingPerkPoints = Game.GetFormFromFile(0x0000233F, "ArtOfTheCatch.esp") as GlobalVariable
-		FishingPerkPointProgress = Game.GetFormFromFile(0x00002340, "ArtOfTheCatch.esp") as GlobalVariable
-		Activator node_controller = Game.GetFormFromFile(0x00002341, "ArtOfTheCatch.esp") as Activator
-		bool b = CampfirePerkSystemRegister(node_controller, "ArtOfTheCatch.esp")
-	endif
-
 	;#Region SKSE + Mod Support Section
 	if isHFLoaded && isSKSELoaded
 		form Straw = Game.GetFormFromFile(0x00005A68, "HearthFires.esm")				;Straw
@@ -623,7 +599,6 @@ function RunCompatibility()
 		RegisterForEventsOnLoad()
 	endif
 	AddStartupSpells()
-	CountPerkTrees()
 endFunction
 
 bool function IsPluginLoaded(int iFormID, string sPluginName)
@@ -679,7 +654,7 @@ function Upgrade_1_7()
 endFunction
 
 bool reg_locked = false
-bool function CampfirePerkSystemRegister(Activator akNodeController, string asPluginName)
+bool function CampfirePerkSystemRegister(Activator akNodeController, string asPluginName = "Unknown")
 	int i = 0
 	while reg_locked && _Camp_PerkNodeControllersSorted.GetValueInt() != 2 && i < 100
 		i += 1
@@ -692,10 +667,21 @@ bool function CampfirePerkSystemRegister(Activator akNodeController, string asPl
 		; We're full!
 		return false
 	endif
+
+	int j = 0
+	while j < PerkNodeControllers.Length
+		if PerkNodeControllers[j] == akNodeController
+			; We've already registered this node controller.
+			return true
+		else
+			j += 1
+		endif
+	endWhile
 	
 	PerkNodeControllers[index] = akNodeController
 	_Camp_PerkNodeControllerCount.SetValueInt(index + 1)
-	debug.trace("[Campfire] Registered Campfire Perk System mod: " + asPluginName)
+	debug.trace("[Campfire] Registered Campfire Skill System mod: " + asPluginName)
+	CampDebug(0, "Current PerkNodeControllers: " + PerkNodeControllers)
 	reg_locked = false
 	return true
 endFunction
@@ -770,22 +756,6 @@ function AddStartupSpells()
 	if _Camp_Setting_TrackFollowers.GetValueInt() == 2
 		PlayerRef.AddSpell(_Camp_FollowerDetectSpell, false)
 	endif
-endFunction
-
-function CountPerkTrees()
-    int i = 0
-    int count = 0
-    while i < PerkNodeControllers.Length
-        if PerkNodeControllers[i] != None
-            count += 1
-        endif
-        i += 1
-    endWhile
-    if count > 1
-    	multiple_perk_trees = true
-    else
-    	multiple_perk_trees = false
-    endif
 endFunction
 
 function RegisterForKeysOnLoad()
