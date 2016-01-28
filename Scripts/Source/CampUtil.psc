@@ -1111,11 +1111,16 @@ endFunction
 * 4
 *
 * DESCRIPTION
-* Register a new Campfire perk tree on startup.
+* Register a new Campfire perk tree.
+*
+* NOTES
+* Unless you have a specific reason to control the availability of the perk tree, you should use
+* the CampPerkSystemRegister script on a Player ReferenceAlias instead of calling this function directly. 
+* See the Campfire Skill System Dev Kit tutorial for more info.
 *
 * SYNTAX
 */;
-bool function RegisterPerkTree(Activator akPerkNodeController, string asPluginName) global
+bool function RegisterPerkTree(Activator akPerkNodeController, string asPluginName = "Unknown") global
 ;/*
 * PARAMETERS
 * akPerkNodeController: The perk node controller to register.
@@ -1129,7 +1134,56 @@ bool function RegisterPerkTree(Activator akPerkNodeController, string asPluginNa
 		RaiseCampAPIError()
 		return false
 	endif
-	return GetCompatibilitySystem().CampfirePerkSystemRegister(akPerkNodeController, asPluginName)
+	
+	_Camp_Compatibility compatibility = GetCompatibilitySystem()
+	
+	int i = 0
+	while !compatibility.PerkNodeControllers && i < 30
+		Utility.Wait(1)
+		i += 1
+	endWhile
+	
+	return compatibility.CampfirePerkSystemRegister(akPerkNodeController, asPluginName)
+endFunction
+
+;/********f* CampUtil/UnregisterPerkTree
+* API VERSION ADDED
+* 4
+*
+* DESCRIPTION
+* Unregister a Campfire perk tree.
+*
+* NOTES
+* In general, you do not need to manually unregister a perk tree. It will be automatically purged when
+* the mod the node controller belongs to is uninstalled.
+*
+* SYNTAX
+*/;
+bool function UnregisterPerkTree(Activator akPerkNodeController, string asPluginName = "Unknown") global
+;/*
+* PARAMETERS
+* akPerkNodeController: The perk node controller to unregister.
+* asPluginName: The mod / plug-in name that this node controller is from. Only seen in Papyrus logs.
+*
+* RETURN VALUE
+* True if the perk tree was successfully unregistered. Returns false if the perk tree was not found.
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+	
+	_Camp_Compatibility compatibility = GetCompatibilitySystem()
+	
+	int i = 0
+	while !compatibility.PerkNodeControllers && i < 30
+		Utility.Wait(1)
+		i += 1
+	endWhile
+	
+	;return compatibility.CampfirePerkSystemRegister(required_node_controller, mod_name)
+	return true
 endFunction
 
 ;/********f* CampUtil/GetCampfireSettingBool
