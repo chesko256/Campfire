@@ -1,24 +1,38 @@
 scriptname CampPerkNode extends ObjectReference
 
-int property current_rank auto hidden
 GlobalVariable property perk_global auto
+{ The global that represents the current rank of this perk. }
 GlobalVariable property perk_max_rank_global auto
+{ The global that represents the max possible rank of this perk. }
 Sound property _Camp_UISkillsPerkSelect auto
 message property perk_description auto
+{ This node's perk description. }
 message property skill_description auto
-bool property double_perk_description_values = false auto
+{ The overall skill description. }
+int property required_description_value_count = 1 auto
+{ How many description values to display. Can range from 0 (no numeric display values in description) to 2. }
 int property description_value_modifier = 1 auto
+{ The display value starting offset. For instance, modifier = 5 and iterator = 5 at rank 0 will show 10, rank 1 will show 15, etc. }
 int property description_value_iterator = 1 auto
+{ The display value to count up by, per rank. Shows the NEXT rank value. For instance, iterator = 5 at rank 0 will show 5, rank 1 will show 10, and so on. }
 int property secondary_description_value_modifier = 1 auto
+{ The display value starting offset. For instance, modifier = 5 and iterator = 5 at rank 0 will show 10, rank 1 will show 15, etc. }
 int property secondary_description_value_iterator = 1 auto
+{ The display value to count up by, per rank. Shows the NEXT rank value. For instance, iterator = 5 at rank 0 will show 5, rank 1 will show 10, and so on. }
 ObjectReference property downstream_node_1_ref auto hidden
 ObjectReference property downstream_node_2_ref auto hidden
 ObjectReference property downstream_line_1_ref auto hidden
 ObjectReference property downstream_line_2_ref auto hidden
 Activator property downstream_node_1 auto
+{ A connected node below this one in the tree. If no downstream node, this node is implicitly the origin (starting) node. }
 Activator property downstream_node_2 auto
+{ A connected node below this one in the tree. If no downstream node, this node is implicitly the origin (starting) node. }
 Activator property downstream_line_1 auto
+{ A connected line activator that connects to downstream node 1. }
 Activator property downstream_line_2 auto
+{ A connected line activator that connects to downstream node 2. }
+
+int property current_rank auto hidden
 
 ObjectReference property controller auto hidden
 
