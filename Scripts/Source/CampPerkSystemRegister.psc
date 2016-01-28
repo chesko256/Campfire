@@ -18,13 +18,5 @@ Event OnPlayerLoadGame()
 EndEvent
 
 function AttemptRegistration()
-	_Camp_Compatibility compatibility = CampUtil.GetCompatibilitySystem()
-	
-	int i = 0
-	while !compatibility.PerkNodeControllers && i < 30
-		Wait(1)
-		i += 1
-	endWhile
-	
-	bool b = CampUtil.GetCompatibilitySystem().CampfirePerkSystemRegister(required_node_controller, mod_name)
+	bool b = CampUtil.RegisterPerkTree(required_node_controller, mod_name)
 endFunction
