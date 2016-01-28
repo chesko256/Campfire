@@ -33,13 +33,13 @@ function NodeActivated(ObjectReference akNodeRef)
     endif
 
     bool downstream_node_purchased = false
-    if (dsnode1 && dsnode1.required_current_rank_global.GetValueInt() >= 1) || \
-       (dsnode2 && dsnode2.required_current_rank_global.GetValueInt() >= 1)
+    if (dsnode1 && dsnode1.required_perk_rank_global.GetValueInt() >= 1) || \
+       (dsnode2 && dsnode2.required_perk_rank_global.GetValueInt() >= 1)
        downstream_node_purchased = true
     endif
 
     bool below_max_rank = false
-    if node.required_current_rank_global.GetValueInt() < node.required_max_rank_global.GetValueInt()
+    if node.required_perk_rank_global.GetValueInt() < node.required_perk_rank_global_max.GetValueInt()
         below_max_rank = true
     endif
 
@@ -71,29 +71,29 @@ function ShowPerkDescription(CampPerkNode akPerkNode, bool abEligibleForIncrease
     endif
 
     int desc_val
-    if akPerkNode.required_current_rank_global.GetValueInt() < akPerkNode.required_max_rank_global.GetValueInt()
-        desc_val = akPerkNode.required_current_rank_global.GetValueInt() + 1
+    if akPerkNode.required_perk_rank_global.GetValueInt() < akPerkNode.required_perk_rank_global_max.GetValueInt()
+        desc_val = akPerkNode.required_perk_rank_global.GetValueInt() + 1
     else
-        desc_val = akPerkNode.required_max_rank_global.GetValueInt()
+        desc_val = akPerkNode.required_perk_rank_global_max.GetValueInt()
     endif
 
     int i
     if akPerkNode.required_description_value_count == 2
         i = akPerkNode.required_perk_description.Show((desc_val * akPerkNode.description_value_iterator) + akPerkNode.description_value_modifier, \
                                              (desc_val * akPerkNode.secondary_description_value_iterator) + akPerkNode.secondary_description_value_modifier, \
-                                             akPerkNode.required_current_rank_global.GetValueInt(), \    
-                                             akPerkNode.required_max_rank_global.GetValueInt(), \           
+                                             akPerkNode.required_perk_rank_global.GetValueInt(), \    
+                                             akPerkNode.required_perk_rank_global_max.GetValueInt(), \           
                                              required_perk_points_available.GetValueInt(), \
                                              (required_perk_point_progress.GetValue() * 100.0))
     elseif akPerkNode.required_description_value_count == 1
         i = akPerkNode.required_perk_description.Show((desc_val * akPerkNode.description_value_iterator) + akPerkNode.description_value_modifier, \
-                                             akPerkNode.required_current_rank_global.GetValueInt(), \    
-                                             akPerkNode.required_max_rank_global.GetValueInt(), \           
+                                             akPerkNode.required_perk_rank_global.GetValueInt(), \    
+                                             akPerkNode.required_perk_rank_global_max.GetValueInt(), \           
                                              required_perk_points_available.GetValueInt(), \
                                              (required_perk_point_progress.GetValue() * 100.0))
     else
-        i = akPerkNode.required_perk_description.Show(akPerkNode.required_current_rank_global.GetValueInt(), \    
-                                             akPerkNode.required_max_rank_global.GetValueInt(), \           
+        i = akPerkNode.required_perk_description.Show(akPerkNode.required_perk_rank_global.GetValueInt(), \    
+                                             akPerkNode.required_perk_rank_global_max.GetValueInt(), \           
                                              required_perk_points_available.GetValueInt(), \
                                              (required_perk_point_progress.GetValue() * 100.0))
     endif

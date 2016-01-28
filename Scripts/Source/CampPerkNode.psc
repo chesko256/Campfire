@@ -1,9 +1,9 @@
 scriptname CampPerkNode extends ObjectReference
 
 ; Required
-GlobalVariable property required_current_rank_global auto
+GlobalVariable property required_perk_rank_global auto
 { The global that represents the current rank of this perk. }
-GlobalVariable property required_max_rank_global auto
+GlobalVariable property required_perk_rank_global_max auto
 { The global that represents the max possible rank of this perk. }
 int property required_description_value_count = 1 auto
 { How many description values to display. Can range from 0 (no numeric display values in description) to 2. }
@@ -65,17 +65,17 @@ function AssignController(ObjectReference akController)
     utility.wait(0.1)
 
     ; Precache the perk rank and set visual state.
-    current_rank = required_current_rank_global.GetValueInt()
+    current_rank = required_perk_rank_global.GetValueInt()
     if current_rank > 0
         self.PlayAnimation("OwnedWild")
     endif
 endFunction
 
 function IncreasePerkRank()
-    current_rank = required_current_rank_global.GetValueInt()
-    if current_rank < required_max_rank_global.GetValueInt()
+    current_rank = required_perk_rank_global.GetValueInt()
+    if current_rank < required_perk_rank_global_max.GetValueInt()
         current_rank += 1
-        required_current_rank_global.SetValueInt(current_rank)
+        required_perk_rank_global.SetValueInt(current_rank)
         self.PlayAnimation("OwnedWild")
         _Camp_UISkillsPerkSelect.Play(self)
         UpdateLines()
