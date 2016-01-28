@@ -1,15 +1,17 @@
 scriptname CampPerkNodeControllerBehavior extends CampPerkNodeController
 
-message property _Camp_PerkGeneral_UpgradeVerify auto
-{ Auto-fill in the CK. }
+
 message property required_skill_description auto
 { Fill with the skill overview description message. }
 GlobalVariable property required_perk_points_available auto
 { Fill with the "points available" skill global variable. Should contain an integer. }
 GlobalVariable property required_perk_point_progress auto
 { Fill with the "skill progress" global variable. Should contain a float, 0.0 (0%) to 1.0 (100%). }
-_Camp_ConditionValues property Conditions auto
-{ Fill to _Camp_MainQuest. }
+
+_Camp_ConditionValues property Conditions auto hidden
+{ Filled at runtime. }
+message property _Camp_PerkGeneral_UpgradeVerify auto hidden
+{ Filled at runtime. }
 
 function AssignCampfire(ObjectReference akCampfire)
     myCampfire = akCampfire
@@ -64,6 +66,14 @@ function ExitNodeActivated()
 endFunction
 
 function ShowPerkDescription(CampPerkNode akPerkNode, bool abEligibleForIncrease = false)
+    if !Conditions
+        Conditions = ((Game.GetFormFromFile(0x022033, "Campfire.esm") as Quest) as _Camp_ConditionValues)
+    endif
+
+    if !_Camp_PerkGeneral_UpgradeVerify
+        _Camp_PerkGeneral_UpgradeVerify = Game.GetFormFromFile(0x043826, "Campfire.esm") as Message
+    endif
+
     if abEligibleForIncrease
         Conditions.IsPerkEligible = true
     else

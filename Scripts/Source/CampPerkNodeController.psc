@@ -53,7 +53,9 @@ Activator property PerkLine11 auto
 { The 11th perk line. }
 Static property PerkArtPlane auto
 { The perk art. }
-Sound property UISkillsGlow auto
+
+Sound property UISkillsGlow auto hidden
+{ Fill in CK. }
 
 ObjectReference property PerkNode00Future auto hidden
 ObjectReference property PerkNode01Future auto hidden
