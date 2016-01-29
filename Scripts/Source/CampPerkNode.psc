@@ -30,10 +30,6 @@ Activator property downstream_line_1 auto
 Activator property downstream_line_2 auto
 { A connected line activator that connects to downstream node 2. }
 
-; Auto-fill
-Sound property _Camp_UISkillsPerkSelect auto
-{ Auto-fill in CK. }
-
 ; Run-time objects
 ObjectReference property downstream_node_1_ref auto hidden
 ObjectReference property downstream_node_2_ref auto hidden
@@ -77,7 +73,8 @@ function IncreasePerkRank()
         current_rank += 1
         required_perk_rank_global.SetValueInt(current_rank)
         self.PlayAnimation("OwnedWild")
-        _Camp_UISkillsPerkSelect.Play(self)
+        Sound select_sound = Game.GetFormFromFile(0x04844A, "Campfire.esm") as Sound ; _Camp_UISkillsPerkSelect
+        select_sound.Play(self)
         UpdateLines()
     endif
 endFunction

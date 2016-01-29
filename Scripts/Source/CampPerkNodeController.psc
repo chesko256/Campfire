@@ -54,9 +54,6 @@ Activator property PerkLine11 auto
 Static property PerkArtPlane auto
 { The perk art. }
 
-Sound property UISkillsGlow auto hidden
-{ Fill in CK. }
-
 ObjectReference property PerkNode00Future auto hidden
 ObjectReference property PerkNode01Future auto hidden
 ObjectReference property PerkNode02Future auto hidden
@@ -278,7 +275,8 @@ function GetResults()
             utility.wait(0.1)
             i += 1
         endWhile
-        UISkillsGlow.Play(myPerkArtPlane)
+        Sound skill_glow_sound = Game.GetFormFromFile(0x06CC5D, "Skyrim.esm") as Sound ; UISkillsGlow
+        skill_glow_sound.Play(myPerkArtPlane)
     endif
     ;utility.wait(2.0)
 
