@@ -123,15 +123,24 @@ bool Upgraded_1_7 = false
 Event OnPlayerLoadGame()
 	CampfirePerkSystemSortOnStartup()
 	RunCompatibility()
+	
 	if isSKYUILoaded && isSKSELoaded
 		CampConfig.LoadProfileOnStartup()
 	else
 		RegisterForKeysOnLoad()
 	endif
-	CheckHarvestWoodDisabled()
+
 	if isSKSELoaded
 		RegisterForControlsOnLoad()
 		RegisterForEventsOnLoad()
+	endif
+
+	AddStartupSpells()
+	CheckHarvestWoodDisabled()
+
+	; Notify that we are finished loading up.
+	if isSKSELoaded
+		SendEvent_CampfireLoaded()
 	endif
 endEvent
 
@@ -589,16 +598,6 @@ function RunCompatibility()
 	trace("[Campfire]======================================================================================================")
 	trace("[Campfire]                            Campfire compatibility check complete.   		                           ")
 	trace("[Campfire]======================================================================================================")
-
-	if isSKYUILoaded && isSKSELoaded
-		CampConfig.LoadProfileOnStartup()
-	endif
-
-	if isSKSELoaded
-		RegisterForControlsOnLoad()
-		RegisterForEventsOnLoad()
-	endif
-	AddStartupSpells()
 endFunction
 
 bool function IsPluginLoaded(int iFormID, string sPluginName)
@@ -791,5 +790,12 @@ endFunction
 function CheckHarvestWoodDisabled()
 	if _Camp_HarvestWoodEnabled.GetValueInt() != 2
 		PlayerRef.RemoveSpell(_Camp_HarvestWoodSpell)
+	endif
+endFunction
+
+function SendEvent_CampfireLoaded()
+	int handle = ModEvent.Create("Campfire_Loaded")
+	if handle
+		ModEvent.Send(handle)
 	endif
 endFunction

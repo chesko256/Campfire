@@ -173,6 +173,9 @@ Event OnPlayerLoadGame()
 	RegisterForKeysOnLoad()
 	RegisterForControlsOnLoad()
 	RegisterForEventsOnLoad()
+
+	; Notify that we are finished loading up.
+	SendEvent_FrostfallLoaded()
 endEvent
 
 function FatalErrorSKSE(int version)
@@ -2144,4 +2147,11 @@ function SendEvent_ModDatastoreName(string sname)
     	ModEvent.PushString(handle, sname)
         ModEvent.Send(handle)
     endif
+endFunction
+
+function SendEvent_FrostfallLoaded()
+	int handle = ModEvent.Create("Frostfall_Loaded")
+	if handle
+		ModEvent.Send(handle)
+	endif
 endFunction

@@ -18,7 +18,7 @@ event OnInit()
 	endif
 	
 	PlayerAlias.ForceRefTo(PlayerRef)
-	Compatibility.RunCompatibility()
+	Compatibility.OnPlayerLoadGame()
 endEvent
 
 function RegisterForControlsOnLoad()
