@@ -99,6 +99,7 @@ Event StartFrostfall()
 	Utility.Wait(2.0)
 	StartAllSystems()
 	FrostUtil.GetCompatibilitySystem().RunCompatibility()
+	FrostUtil.GetCompatibilitySystem().SendEvent_FrostfallLoaded()
 	CheckInitialEquipment()
 endEvent
 
