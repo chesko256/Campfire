@@ -21,5 +21,7 @@ function AttemptRegistration()
 	GlobalVariable campfire_version = Game.GetFormFromFile(0x051666, "Campfire.esm") as GlobalVariable
 	if campfire_version && campfire_version.GetValue() >= 1.7
 		bool b = CampUtil.RegisterPerkTree(required_node_controller, mod_name)
+	else
+		debug.trace("[Campfire] ERROR: Unable to register Campfire Skill System for " + mod_name + ". Campfire was not found or the version loaded is not compatible. Expected 1.7 or higher, got " + campfire_version.GetValue())
 	endif
 endFunction
