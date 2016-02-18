@@ -8,7 +8,7 @@ GlobalVariable property required_perk_points_available auto
 GlobalVariable property required_perk_point_progress auto
 { Fill with the "skill progress" global variable. Should contain a float, 0.0 (0%) to 1.0 (100%). }
 
-_Camp_ConditionValues property Conditions auto hidden
+GlobalVariable property CampfireIsPerkEligibleToBuy auto hidden
 { Filled at runtime. }
 message property _Camp_PerkGeneral_UpgradeVerify auto hidden
 { Filled at runtime. }
@@ -66,8 +66,8 @@ function ExitNodeActivated()
 endFunction
 
 function ShowPerkDescription(CampPerkNode akPerkNode, bool abEligibleForIncrease = false)
-    if !Conditions
-        Conditions = ((Game.GetFormFromFile(0x022033, "Campfire.esm") as Quest) as _Camp_ConditionValues)
+    if !CampfireIsPerkEligibleToBuy
+        CampfireIsPerkEligibleToBuy = Game.GetFormFromFile(0x01CC0D02, "Update.esm") as GlobalVariable
     endif
 
     if !_Camp_PerkGeneral_UpgradeVerify
@@ -75,9 +75,9 @@ function ShowPerkDescription(CampPerkNode akPerkNode, bool abEligibleForIncrease
     endif
 
     if abEligibleForIncrease
-        Conditions.IsPerkEligible = true
+        CampfireIsPerkEligibleToBuy.SetValueInt(1)
     else
-        Conditions.IsPerkEligible = false
+        CampfireIsPerkEligibleToBuy.SetValueInt(0)
     endif
 
     int desc_val
