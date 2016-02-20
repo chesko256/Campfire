@@ -9,11 +9,6 @@
 #Whitelist directories:
 !*/
 
-#Tutorial files
-!Basketweaving.esp
-!tutorials/t5/*
-!tutorials/t5/textures/*
-
 #Build files
 !Campfire_BuildRelease.py
 !Frostfall_BuildRelease.py
@@ -114,6 +109,7 @@
 !CampDevTutorials/Tutorial2/*
 !CampDevTutorials/Tutorial3/*
 !CampDevTutorials/Tutorial4/*
+!CampDevTutorials/Tutorial5/*
 
 #Documentation
 !Scripts/Source/doc/*
