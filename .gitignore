@@ -18,6 +18,13 @@
 !FrostfallArchiveBuilder.txt
 !FrostfallArchiveManifest.txt
 
+#Manifest Validation
+!manifestcheck.py
+!_Camp_ManifestCheck.bat
+!_Frost_ManifestCheck.bat
+!_Seed_ManifestCheck.bat
+!_HN_ManifestCheck.bat
+
 #Top-level files
 !Campfire.esp
 !Campfire.esm
