@@ -1444,29 +1444,29 @@ Event StartupAlmostDone()
 		SetTextOptionValue(Overview_InfoLine7_OID, "$FrostfallGeneralExitMenuPrompt")
 	endif
 endEvent
-Event BodyDatastoreUpdate(float progress)
+Event BodyDatastoreUpdate(bool done)
 	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine1_OID
-		SetTextOptionValue(Overview_InfoLine1_OID, ((progress * 100.0) as int) + "%")
+		SetTextOptionValue(Overview_InfoLine1_OID, "$FrostfallModArmorsDone")
 	endif
 endEvent
-Event HeadDatastoreUpdate(float progress)
+Event HeadDatastoreUpdate(bool done)
 	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine2_OID
-		SetTextOptionValue(Overview_InfoLine2_OID, ((progress * 100.0) as int) + "%")
+		SetTextOptionValue(Overview_InfoLine2_OID, "$FrostfallModArmorsDone")
 	endif
 endEvent
-Event HandsDatastoreUpdate(float progress)
+Event HandsDatastoreUpdate(bool done)
 	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine3_OID
-		SetTextOptionValue(Overview_InfoLine3_OID, ((progress * 100.0) as int) + "%")
+		SetTextOptionValue(Overview_InfoLine3_OID, "$FrostfallModArmorsDone")
 	endif
 endEvent
-Event FeetDatastoreUpdate(float progress)
+Event FeetDatastoreUpdate(bool done)
 	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine4_OID
-		SetTextOptionValue(Overview_InfoLine4_OID, ((progress * 100.0) as int) + "%")
+		SetTextOptionValue(Overview_InfoLine4_OID, "$FrostfallModArmorsDone")
 	endif
 endEvent
-Event CloakDatastoreUpdate(float progress)
+Event CloakDatastoreUpdate(bool done)
 	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine5_OID
-		SetTextOptionValue(Overview_InfoLine5_OID, ((progress * 100.0) as int) + "%")
+		SetTextOptionValue(Overview_InfoLine5_OID, "$FrostfallModArmorsDone")
 	endif
 endEvent
 Event ModDatastoreUpdate(bool working)
