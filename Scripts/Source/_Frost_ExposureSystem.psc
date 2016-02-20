@@ -77,6 +77,7 @@ Sound property _Frost_Male_FreezingSM auto
 Sound property _Frost_Male_FreezingToDeathSM auto
 Static property CampfireHeatsourceOverrideNormal auto
 Static property CampfireHeatsourceOverrideWarm auto
+Static property XMarker auto
 Spell property _Frost_InnerFireSpell auto
 Spell property _Frost_NoWait_Spell auto
 Potion property _Frost_FrostbittenPotionBody auto
@@ -554,17 +555,55 @@ function HandleMaxExposure()
 			endif
 			i += 1
 		endWhile
-		; Now, kill the player.			
-		_Frost_ExposureDeathMsg.Show()
-		Utility.Wait(3)
-		PlayerRef.Kill()
 
+		if PlayerRef.IsOnMount()
+			_Frost_ExposureDeathMsg.Show()
+			Utility.Wait(3)
+			KnockPlayerOffHorse()
+			PlayerRef.Kill()
+		else
+			_Frost_ExposureDeathMsg.Show()
+			Utility.Wait(3)
+			PlayerRef.Kill()
+		endif
 	elseif _Frost_Setting_MaxExposureMode.GetValueInt() == 2
+		if PlayerRef.IsOnMount()
+			KnockPlayerOffHorse()
+		endif
+
 		SendEvent_OnRescuePlayer(PlayerRef.IsSwimming())
 	else
 		; Do nothing.
 	endif
 endFunction
+
+function KnockPlayerOffHorse()
+	knocking_off_horse = false
+	RegisterForCameraState()
+	ObjectReference heading = PlayerRef.PlaceAtMe(XMarker)
+	float[] heading_pos = GetOffsets(PlayerRef, 500.0, 90.0)
+	heading.MoveTo(PlayerRef, heading_pos[0], heading_pos[1])
+	Utility.Wait(0.2)
+	heading.PushActorAway(PlayerRef, 5.0)
+	Utility.Wait(0.5)
+	int i = 0
+	while knocking_off_horse && i < 30
+		Utility.Wait(0.5)
+		i += 1
+	endWhile
+	UnregisterForCameraState()
+	heading.Disable()
+	heading.Delete()
+endFunction
+
+bool knocking_off_horse = false
+Event OnPlayerCameraState(int oldState, int newState)
+	if newState == 11
+		knocking_off_horse = true
+	else
+		knocking_off_horse = false
+	endif
+EndEvent
 
 bool function PlayerIsInDialogue()
 	if UI.IsMenuOpen("Dialogue Menu")
@@ -930,6 +969,21 @@ function SetExposure(float value, bool force_meter_display = false)
 	endif
 	ExposureEffectsUpdate()
 endFunction
+
+float[] function GetOffsets(Actor akSource, Float afDistance = 100.0, float afOffset = 0.0)
+	Float A = akSource.GetAngleZ() + afOffset
+	Float YDist = Sin(A)
+	Float XDist = Cos(A)
+
+	XDist *= afDistance
+	YDist *= afDistance
+
+	Float[] Offsets = New Float[2]
+	Offsets[0] = YDist
+	Offsets[1] = XDist
+	Return Offsets
+EndFunction
+
 
 Event OnInnerFireMeditate(bool abMeditating)
 	if abMeditating

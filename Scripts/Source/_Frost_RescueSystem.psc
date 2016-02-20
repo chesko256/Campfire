@@ -237,6 +237,7 @@ endFunction
 function RescueStart(bool bInWater = false)
 	Game.ForceFirstPerson()
 	Game.DisablePlayerControls(true,true,true,true,true,true)
+	Utility.Wait(0.2)
 	
 	if bInWater == false
 		PlayerRef.PlayIdle(TG05_KnockOut)
