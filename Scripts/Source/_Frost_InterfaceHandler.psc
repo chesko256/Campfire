@@ -337,6 +337,8 @@ function HandleWetnessMeterUpdate(bool bSkipDisplayHandling = false)
 	last_wetness = wetness
 endFunction
 
+int color_counter
+
 function HandleWeathersenseMeterUpdate(int temp_level, bool bSkipDisplayHandling = false)
 	if _Frost_Setting_MeterDisplayMode.GetValueInt() == 1 									; Always On
 		WeathersenseMeter.Alpha = _Frost_Setting_MeterOpacity.GetValue()
@@ -347,36 +349,28 @@ function HandleWeathersenseMeterUpdate(int temp_level, bool bSkipDisplayHandling
 		return
 	endif
 
+	color_counter += 1
+	debug.trace("Setting color. Count: " + color_counter)
 	if temp_level == 10
 		WeathersenseMeter.SetPercent(1.0)
-		WeathersenseMeter.SetColors(0x0A7A1D, 0x15F43A)
 	elseif temp_level == 9
 		WeathersenseMeter.SetPercent(0.9)
-		WeathersenseMeter.SetColors(0x2D7B3A, 0x5BF775)
 	elseif temp_level == 8
 		WeathersenseMeter.SetPercent(0.8)
-		WeathersenseMeter.SetColors(0x567D5D, 0xADFBBA)
 	elseif temp_level == 7
 		WeathersenseMeter.SetPercent(0.7)
-		WeathersenseMeter.SetColors(0x6F7E71, 0xDEFDE3)
 	elseif temp_level == 6
 		WeathersenseMeter.SetPercent(0.6)
-		WeathersenseMeter.SetColors(0x33517C, 0x66A3F8)
 	elseif temp_level == 5
 		WeathersenseMeter.SetPercent(0.5)
-		WeathersenseMeter.SetColors(0x33517C, 0x66A3F8)
 	elseif temp_level == 4
 		WeathersenseMeter.SetPercent(0.4)
-		WeathersenseMeter.SetColors(0x33517C, 0x66A3F8)
 	elseif temp_level == 3
 		WeathersenseMeter.SetPercent(0.3)
-		WeathersenseMeter.SetColors(0x33517C, 0x66A3F8)
 	elseif temp_level == 2
 		WeathersenseMeter.SetPercent(0.2)
-		WeathersenseMeter.SetColors(0x33517C, 0x66A3F8)
 	elseif temp_level == 1
 		WeathersenseMeter.SetPercent(0.1)
-		WeathersenseMeter.SetColors(0x33517C, 0x66A3F8)
 	endif
 
 	last_temp_level = temp_level
