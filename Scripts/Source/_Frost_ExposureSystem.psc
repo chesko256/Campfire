@@ -415,21 +415,25 @@ float function GetDistanceMoved()
 endFunction
 
 bool function GetFastTravelled(float afDistance)
-	if this_worldspace == last_worldspace && afDistance > 30000.0
-		if !FrostUtil.IsNearFastTravelException()
-			if was_in_interior == in_interior
-				; Across a large distance, we did not move from interior to exterior / vice versa
-				return true
-			else
-				return false
-			endif
-		else
-			; We traveled while near a carriage; set the player's EP to 100 post-travel
-			return true
-		endif
-	else
+	if afDistance <= 30000.0
 		return false
 	endif
+
+	if FrostUtil.IsNearFastTravelException()
+		return true
+	endif
+
+	if this_worldspace != last_worldspace && ((this_update_game_time - last_update_game_time) * 24.0) < 1.0
+		return false
+	endif
+
+	if was_in_interior != in_interior
+		return false
+	endif
+
+	; We traveled a large distance in the same worldspace (or across a significant timespan)
+	; not near a fast travel exception and did not zone in/out of an interior. We fast travelled.
+	return true
 endFunction
 
 function SetAfterFastTravelCondition()
