@@ -337,8 +337,6 @@ function HandleWetnessMeterUpdate(bool bSkipDisplayHandling = false)
 	last_wetness = wetness
 endFunction
 
-int color_counter
-
 function HandleWeathersenseMeterUpdate(int temp_level, bool bSkipDisplayHandling = false)
 	if _Frost_Setting_MeterDisplayMode.GetValueInt() == 1 									; Always On
 		WeathersenseMeter.Alpha = _Frost_Setting_MeterOpacity.GetValue()
@@ -349,8 +347,6 @@ function HandleWeathersenseMeterUpdate(int temp_level, bool bSkipDisplayHandling
 		return
 	endif
 
-	color_counter += 1
-	debug.trace("Setting color. Count: " + color_counter)
 	if temp_level == 10
 		WeathersenseMeter.SetPercent(1.0)
 	elseif temp_level == 9
