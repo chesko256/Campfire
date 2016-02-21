@@ -92,6 +92,8 @@ Keyword property _Frost_FrostbiteHeadKW auto
 Keyword property _Frost_FrostbiteHandsKW auto
 Keyword property _Frost_FrostbiteFeetKW auto
 
+Quest property DLC2DialogueRavenRock auto hidden
+
 float property MIN_EXPOSURE = 0.0 autoReadOnly
 float property MAX_EXPOSURE = 120.0 autoReadOnly
 int property HEAT_FACTOR = 5 autoReadOnly
@@ -131,6 +133,7 @@ bool was_in_interior = false
 bool near_heat = false
 bool was_near_heat = false
 bool can_display_limit_msg = true
+bool recently_fast_travelled = false
 
 function RegisterForEvents()
 	RegisterForModEvent("Frost_OnInnerFireMeditate", "OnInnerFireMeditate")
@@ -165,16 +168,36 @@ function Update()
 endFunction
 
 function UpdateExposure()
+	if recently_fast_travelled
+		FrostDebug(1, "Player fast travelled.")
+		StoreLastPlayerState()
+		return
+	endif
+
+	if FrostUtil.GetCompatibilitySystem().isDLC2Loaded
+		if !DLC2DialogueRavenRock
+			DLC2DialogueRavenRock = Game.GetFormFromFile(0x018B0F, "Dragonborn.esm") as Quest
+		endif
+		if (DLC2DialogueRavenRock as DLC2DialogueRRQuestScript).RidingTheBoat == true
+			FrostDebug(1, "Player is riding the boat to Solstheim.")
+			StoreLastPlayerState()
+			return
+		endif
+	endif
+
 	if _Frost_Setting_ExposurePauseDialogue.GetValueInt() == 2 && PlayerIsInDialogue()
+		StoreLastPlayerState()
 		return
 	endif
 
 	if _Frost_Setting_ExposurePauseCombat.GetValueInt() == 2 && PlayerRef.IsInCombat()
+		StoreLastPlayerState()
 		return
 	endif
 
 	ObjectReference exception = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Frost_ExposureExceptions, PlayerRef, 600.0)
 	if exception
+		StoreLastPlayerState()
 		return
 	endif
 
@@ -229,10 +252,10 @@ function ModAttributeExposure(float amount, float limit, bool allow_skill_advanc
 			; This update would push us above the limit, cap at the limit
 			exposure = limit
 			advance_skill = false
-			if limit < MAX_EXPOSURE && limit > MIN_EXPOSURE
+			if limit < MAX_EXPOSURE && limit > EXPOSURE_LEVEL_1
 				; Something is preventing the player from getting colder, display message.
 				if can_display_limit_msg
-					if in_tent || in_shelter
+					if (in_tent || in_shelter)
 						_Frost_ExposureCap_ColdShelter.Show()
 					endif
 					can_display_limit_msg = false
@@ -249,7 +272,7 @@ function ModAttributeExposure(float amount, float limit, bool allow_skill_advanc
 			; This update would push us below the limit, cap at the limit
 			exposure = limit
 			advance_skill = false
-			if limit < MAX_EXPOSURE && limit > MIN_EXPOSURE
+			if limit < MAX_EXPOSURE && limit > EXPOSURE_LEVEL_1
 				; Something is preventing the player from getting warmer, display message.
 				if !in_interior && (near_heat || in_tent || is_meditating) && can_display_limit_msg
 					_Frost_ExposureCap_Warm.Show()
@@ -296,8 +319,8 @@ function RefreshPlayerStateData()
 	in_interior = CampUtil.IsRefInInterior(PlayerRef)
 	distance_moved = GetDistanceMoved()
 	
-	bool fast_travelled = GetFastTravelled(distance_moved)
-	if fast_travelled
+	recently_fast_travelled = GetFastTravelled(distance_moved)
+	if recently_fast_travelled
 		SetAfterFastTravelCondition()
 	endif
 endFunction
@@ -1039,8 +1062,3 @@ endFunction
 
 ;@TODO: If the point delta on the limit is < 1, don't display limit message.
 ;@TODO: In rain, coverage should determine if you lose exposure, even in warm areas.
-
-; Campfire stuff
-;@TODO: Smelters still aren't working as heat sources.
-;@TODO: Add way to put out campfire without frost spell
-;@TODO: Kick people out of attached furniture objects before pick up

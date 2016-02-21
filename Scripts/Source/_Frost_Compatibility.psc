@@ -785,6 +785,9 @@ function DLC2LoadUp()
 	if !(_Frost_FastTravelExceptions.HasForm(Book7))
 		_Frost_FastTravelExceptions.AddForm(Book7)
 	endif
+
+	; Make an exposure exception for the ship that takes you to Solstheim
+	
 endFunction
 
 function WTHLoadUp()
