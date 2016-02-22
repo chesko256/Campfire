@@ -12,11 +12,13 @@
 #Build files
 !Campfire_BuildRelease.py
 !Frostfall_BuildRelease.py
+!CampDevKit_BuildRelease.py
 !Archive.exe
 !CampfireArchiveBuilder.txt
 !CampfireArchiveManifest.txt
 !FrostfallArchiveBuilder.txt
 !FrostfallArchiveManifest.txt
+!CampDevKitArchiveManifest.txt
 
 #Manifest Validation
 !manifestcheck.py
