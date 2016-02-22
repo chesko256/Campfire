@@ -1,3 +1,4 @@
+readmes\CampDevKit_readme.txt
 meshes\campfire\_Camp_DefaultIndicator.nif
 meshes\campfire\_Camp_DefaultMiscItem.nif
 meshes\campfire\_Camp_PerkArtPlane.nif
@@ -35,11 +36,11 @@ Scripts\_Camp_ObjectFuture.pex
 Scripts\_Camp_ObjectPlacementThreadManager.pex
 Scripts\_Camp_PlaceableObjectBase.pex
 Scripts\_Camp_TinderTypeScript.pex
-CampDevKit\RequiredExternals\Scripts\Source\CampfireAPI.psc
-CampDevKit\RequiredExternals\Scripts\Source\CampfireData.psc
-CampDevKit\RequiredExternals\Scripts\Source\CampUtil.psc
-CampDevKit\RequiredExternals\Scripts\Source\_Camp_Compatibility.psc
-CampDevKit\RequiredExternals\Scripts\Source\_Camp_LegalAreaCheck.psc
-CampDevKit\RequiredExternals\Scripts\Source\_Camp_ObjectPlacementThreadManager.psc
-CampDevKit\RequiredExternals\Scripts\Source\_Camp_TentSystem.psc
-CampDevKit\RequiredExternals\meshes\TriggerBox_Template.nif
+externals Scripts\Source\CampfireAPI.psc
+externals Scripts\Source\CampfireData.psc
+externals Scripts\Source\CampUtil.psc
+externals Scripts\Source\_Camp_Compatibility.psc
+externals Scripts\Source\_Camp_LegalAreaCheck.psc
+externals Scripts\Source\_Camp_ObjectPlacementThreadManager.psc
+externals Scripts\Source\_Camp_TentSystem.psc
+externals meshes\campfire\TriggerBox_Template.nif
