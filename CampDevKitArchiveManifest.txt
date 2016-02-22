@@ -32,6 +32,7 @@ Scripts\CampTentShelterCollider.pex
 Scripts\CampUsableMiscItem.pex
 Scripts\CampUsableObject.pex
 Scripts\_Camp_CampTentNPCBedrollScript.pex
+Scripts\_Camp_Compatibility.pex
 Scripts\_Camp_ObjectFuture.pex
 Scripts\_Camp_ObjectPlacementThreadManager.pex
 Scripts\_Camp_PlaceableObjectBase.pex
