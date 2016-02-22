@@ -134,6 +134,7 @@ bool near_heat = false
 bool was_near_heat = false
 bool can_display_limit_msg = true
 bool recently_fast_travelled = false
+bool ism_running = false
 
 function RegisterForEvents()
 	RegisterForModEvent("Frost_OnInnerFireMeditate", "OnInnerFireMeditate")
@@ -521,18 +522,31 @@ endFunction
 function ApplyVisualEffects()
 	; Make sure to clear ISM if a vampire, or existing effect if setting toggled off
 	if _Frost_Setting_FullScreenEffects.GetValueInt() == 1
-		ImageSpaceModifier.RemoveCrossFade(4.0)
+		if ism_running
+			_Frost_ColdISM_Level3.Remove()
+			_Frost_ColdISM_Level4.Remove()
+			_Frost_ColdISM_Level5.Remove()
+			ism_running = false
+		endif
 		return
 	endif
 
 	if exposure_level <= 2
-		ImageSpaceModifier.RemoveCrossFade(4.0)
+		if ism_running
+			_Frost_ColdISM_Level3.Remove()
+			_Frost_ColdISM_Level4.Remove()
+			_Frost_ColdISM_Level5.Remove()
+			ism_running = false
+		endif
 	elseif exposure_level == 3
 		_Frost_ColdISM_Level3.ApplyCrossFade(4.0)
+		ism_running = true
 	elseif exposure_level == 4
 		_Frost_ColdISM_Level4.ApplyCrossFade(4.0)
+		ism_running = true
 	elseif exposure_level == 5
 		_Frost_ColdISM_Level5.ApplyCrossFade(4.0)
+		ism_running = true
 	endif
 endFunction
 
