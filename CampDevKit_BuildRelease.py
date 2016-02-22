@@ -20,8 +20,6 @@ user_input = raw_input("Enter the release version: ")
 
 os.chdir("..\\")
 
-# Build the temp directory
-print "Creating temp directories..."
 # Build the directories
 dirname = "./CampDevKit " + user_input + " Release"
 if not os.path.isdir(dirname):
@@ -42,10 +40,12 @@ print "Copying project files..."
 with open("./Campfire/CampDevKitArchiveManifest.txt") as manifest:
     lines = manifest.readlines()
     for line in lines:
-    	if line.startswith("CampDevKit"):
-    		shutil.copy(".\\Campfire\\" + line.rstrip('\n'), dirname + "/" + line.lstrip('CampDevKit\\RequiredExternals\\').rstrip('\n'))
-    	else:
-    		shutil.copy(".\\Campfire\\" + line.rstrip('\n'), dirname + "/" + line.rstrip('\n'))
+        if line.startswith("externals"):
+            print "Copying " + dirname + "/" + line.lstrip("externals ").rstrip('\n')
+            shutil.copy(".\\Campfire\\CampDevKit\\RequiredExternals\\" + line.lstrip('externals ').rstrip('\n'), dirname + "/" + line.lstrip('externals ').rstrip('\n'))
+        else:
+            print "Copying " + dirname + "/" + line.rstrip('\n')
+            shutil.copy(".\\Campfire\\" + line.rstrip('\n'), dirname + "/" + line.rstrip('\n'))
 
 # Create release zip
 zip_name_ver = user_input.replace(".", "_")
