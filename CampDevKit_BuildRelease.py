@@ -41,10 +41,8 @@ with open("./Campfire/CampDevKitArchiveManifest.txt") as manifest:
     lines = manifest.readlines()
     for line in lines:
         if line.startswith("externals"):
-            print "Copying " + dirname + "/" + line.lstrip("externals ").rstrip('\n')
             shutil.copy(".\\Campfire\\CampDevKit\\RequiredExternals\\" + line.lstrip('externals ').rstrip('\n'), dirname + "/" + line.lstrip('externals ').rstrip('\n'))
         else:
-            print "Copying " + dirname + "/" + line.rstrip('\n')
             shutil.copy(".\\Campfire\\" + line.rstrip('\n'), dirname + "/" + line.rstrip('\n'))
 
 # Create release zip
