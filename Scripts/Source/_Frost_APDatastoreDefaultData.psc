@@ -687,8 +687,6 @@ function SetDefaults_Body()
 	AddDatastoreEntryByKey("118186___Dragonborn.esm", 1, 110, 35) ; DLC2DarkElfOutfit 		@MULTI
 	AddDatastoreEntryByKey("225381___Dragonborn.esm", 1, 110, 35) ; DLC2DarkElfOutfitBlue	@MULTI
 	AddDatastoreEntryByKey("225382___Dragonborn.esm", 1, 110, 35) ; DLC2DarkElfOutfitRed	@MULTI
-
-	SendEvent_ProgressUpdate("Frost_BodyDatastoreUpdate", true)
 endFunction
 
 function SetDefaults_Hands()
@@ -1233,8 +1231,6 @@ function SetDefaults_Hands()
 	;
 	;##############################
 	AddDatastoreEntryByKey("267721___Campfire.esm", 2, 21, 14) ; _Camp_ArmorSonsGauntlets
-
-	SendEvent_ProgressUpdate("Frost_HandsDatastoreUpdate", true)
 endFunction
 
 function SetDefaults_Head()
@@ -1939,8 +1935,6 @@ function SetDefaults_Head()
 	AddDatastoreEntryByKey("236846___Dragonborn.esm", 3, 10, 0) ; DLC2MKMiraakMask2L
 	AddDatastoreEntryByKey("237475___Dragonborn.esm", 3, 10, 0) ; DLC2MKMiraakMask3H
 	AddDatastoreEntryByKey("236847___Dragonborn.esm", 3, 10, 0) ; DLC2MKMiraakMask3L
-
-	SendEvent_ProgressUpdate("Frost_HeadDatastoreUpdate", true)
 endFunction
 
 function SetDefaults_Feet()
@@ -2430,8 +2424,6 @@ function SetDefaults_Feet()
 	;
 	;##############################
 	AddDatastoreEntryByKey("267720___Campfire.esm", 4, 21, 14) ; _Camp_ArmorSonsBoots
-
-	SendEvent_ProgressUpdate("Frost_FeetDatastoreUpdate", true)
 endFunction
 
 function SetDefaults_Cloak()
@@ -2465,8 +2457,6 @@ function SetDefaults_Cloak()
 	;##############################
 	AddDatastoreEntryByKey("356637___Frostfall.esp", 7, 10, 10) ; _Frost_Cloak_BoundLesser
 	AddDatastoreEntryByKey("359400___Frostfall.esp", 7, 25, 25) ; _Frost_Cloak_BoundGreater
-
-	SendEvent_ProgressUpdate("Frost_CloakDatastoreUpdate", true)
 endFunction
 
 function SetDefaults_Shield()
@@ -2475,14 +2465,6 @@ endFunction
 
 ; @Overridden by _Frost_ArmorProtectionDatastoreHandler
 function AddDatastoreEntryByKey(string asKey, int aiGearType, int aiWarmth, int aiCoverage)
-endFunction
-
-function SendEvent_ProgressUpdate(string progress_event, bool done)
-    int handle = ModEvent.Create(progress_event)
-    if handle
-    	ModEvent.PushBool(handle, done)
-        ModEvent.Send(handle)
-    endif
 endFunction
 
 ; Stuff to add

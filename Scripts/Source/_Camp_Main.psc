@@ -13,6 +13,7 @@ event OnInit()
 		self.Start()
 		return
 	endif
+	debug.trace("[Campfire] Performing first-time setup.")
 	if !_Camp_FollowerQuest.IsRunning()
 		_Camp_FollowerQuest.Start()
 	endif
@@ -22,7 +23,6 @@ event OnInit()
 endEvent
 
 function RegisterForControlsOnLoad()
-	CampDebug(0, "Registering for controls!")
 	RegisterForControl("Jump")
 endFunction
 

@@ -1182,8 +1182,7 @@ bool function UnregisterPerkTree(Activator akPerkNodeController, string asPlugin
 		i += 1
 	endWhile
 	
-	;return compatibility.CampfirePerkSystemRegister(required_node_controller, mod_name)
-	return true
+	return compatibility.CampfirePerkSystemUnregister(akPerkNodeController, asPluginName)
 endFunction
 
 ;/********f* CampUtil/GetCampfireSettingBool

@@ -153,8 +153,8 @@ scroll property _Frost_ScrollBearskin auto
 scroll property _Frost_ScrollConjureShelterLesser auto
 scroll property _Frost_ScrollConjureShelterGreater auto
 
-;#Campfire Perk System=============================================================
-
+;#Campfire Skill System============================================================
+Activator property _Frost_PerkNodeController_Endurance auto
 
 ;#Misc=============================================================================
 Message property _Frost_CriticalError_SKSE auto
@@ -465,6 +465,7 @@ function RunCompatibility()
 	RegisterForEventsOnLoad()
 	RegisterForMenusOnLoad()
 	AddStartupSpells()
+	RegisterCampfireSkill()
 endFunction
 
 function Upgrade_3_0_1()
@@ -2160,5 +2161,14 @@ function SendEvent_FrostfallLoaded()
 	int handle = ModEvent.Create("Frostfall_Loaded")
 	if handle
 		ModEvent.Send(handle)
+	endif
+endFunction
+
+function RegisterCampfireSkill()
+	GlobalVariable CampfireAPIVersion = Game.GetFormFromFile(0x03F1BE, "Campfire.esm") as GlobalVariable
+	if CampfireAPIVersion && CampfireAPIVersion.GetValueInt() >= 4
+		bool b = CampUtil.RegisterPerkTree(_Frost_PerkNodeController_Endurance, "Frostfall.esp")
+	else
+		debug.trace("[Campfire] ERROR: Unable to register Campfire Skill System for Frostfall.esp. Campfire was not found or the version loaded is not compatible. Expected CampUtil API 4 or higher, got " + CampfireAPIVersion.GetValueInt())
 	endif
 endFunction
