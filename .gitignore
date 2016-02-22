@@ -57,6 +57,7 @@
 !readmes/Frostfall*.txt
 !readmes/Campfire*.txt
 !readmes/LastSeed*.txt
+!readmes/CampDevKit*.txt
 
 #Sound
 !sound/fx/frostfall/*
