@@ -78,7 +78,7 @@ Worldspace property DLC2WS auto hidden						;Solstheim
 Activator property _Camp_PerkNavControllerAct auto
 Activator property _Camp_PerkNodeController_Camping auto
 
-GlobalVariable property _Camp_PerkNodeControllersSorted auto ; Constant value = 1
+; GlobalVariable property _Camp_PerkNodeControllersSorted auto ; Constant value = 1
 GlobalVariable property _Camp_PerkNodeControllerCount auto
 
 ;#Misc=============================================================================
@@ -190,8 +190,6 @@ function RunCompatibility()
 	trace("[Campfire]======================================================================================================")
 	
 	isFrostfallLoaded = false
-
-	_Camp_LastSelectedSkill.SetValueInt(0)
 
 	if !Upgraded_1_1
 		Upgrade_1_1()
@@ -655,7 +653,7 @@ endFunction
 bool reg_locked = false
 bool function CampfirePerkSystemRegister(Activator akNodeController, string asPluginName = "Unknown")
 	int i = 0
-	while reg_locked && _Camp_PerkNodeControllersSorted.GetValueInt() != 2 && i < 100
+	while reg_locked && i < 100
 		i += 1
 		Utility.Wait(0.2)
 	endWhile
@@ -686,12 +684,35 @@ bool function CampfirePerkSystemRegister(Activator akNodeController, string asPl
 endFunction
 
 bool function CampfirePerkSystemUnregister(Activator akNodeController, string asPluginName = "Unknown")
-	; pass
+	bool found_controller = false
+
+	int num_controllers = ArrayCount(PerkNodeControllers)
+	int i = 0
+	while i < num_controllers
+		if PerkNodeControllers[i] == akNodeController
+			; Remove this controller.
+			PerkNodeControllers[i] = None
+			debug.trace("[Campfire] Unregistered Campfire Skill System mod: " + asPluginName)
+			found_controller = true
+		else
+			i += 1
+		endif
+	endWhile
+
+	if found_controller
+		bool b = ArraySort(PerkNodeControllers)
+		_Camp_PerkNodeControllerCount.SetValueInt(ArrayCount(PerkNodeControllers))
+		_Camp_LastSelectedSkill.SetValueInt(0)
+		return true
+	else
+		return false
+	endif
 endFunction
 
 function CampfirePerkSystemSortOnStartup()
 	bool b = ArraySort(PerkNodeControllers)
-	_Camp_PerkNodeControllersSorted.SetValueInt(2)
+	_Camp_PerkNodeControllerCount.SetValueInt(ArrayCount(PerkNodeControllers))
+	_Camp_LastSelectedSkill.SetValueInt(0)
 endFunction
 
 function VanillaGameLoadUp()

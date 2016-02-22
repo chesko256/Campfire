@@ -8,28 +8,8 @@ bool function ArrayAddForm(Activator[] myArray, Activator myActivator) global
 
 	int i = 0
 	while i < myArray.Length
-		if myArray[i] == none
+		if IsNone(myArray[i])
 			myArray[i] = myActivator
-			return true
-		else
-			i += 1
-		endif
-	endWhile
-	return false
-endFunction
-
-bool function ArrayRemoveForm(Activator[] myArray, Activator myActivator, bool bSort = false) global
-;Removes a form from the array, if found. Sorts the array using ArraySort() if bSort is true.
-	;		false		=		Error (Form not found)
-	;		true		=		Success
- 
-	int i = 0
-	while i < myArray.Length
-		if myArray[i] == myActivator
-			myArray[i] = none
-			if bSort == true
-				ArraySort(myArray)
-			endif
 			return true
 		else
 			i += 1
@@ -46,7 +26,8 @@ bool function ArraySort(Activator[] myArray, int i = 0) global
 	 bool bFirstNoneFound = false
 	 int iFirstNonePos = i
 	 while i < myArray.Length
-		  if myArray[i] == none
+		  if IsNone(myArray[i])
+		  	   myArray[i] = none
 			   if bFirstNoneFound == false
 					bFirstNoneFound = true
 					iFirstNonePos = i
@@ -57,7 +38,7 @@ bool function ArraySort(Activator[] myArray, int i = 0) global
 		  else
 			   if bFirstNoneFound == true
 			   ;check to see if it's a couple of blank entries in a row
-					if !(myArray[i] == none)
+					if !(IsNone(myArray[i]))
 						 myArray[iFirstNonePos] = myArray[i]
 						 myArray[i] = none
  
@@ -82,7 +63,7 @@ int function ArrayCount(Activator[] myArray) global
 	int i = 0
 	int myCount = 0
 	while i < myArray.Length
-		if myArray[i] != none
+		if !(IsNone(myArray[i]))
 			myCount += 1
 			i += 1
 		else
@@ -90,4 +71,21 @@ int function ArrayCount(Activator[] myArray) global
 		endif
 	endWhile
 	return myCount
+endFunction
+
+; Array elements that contain forms from unloaded mods
+; will fail '== None' checks because they are
+; 'Activator<None>' objects. Check FormID as well.
+bool function IsNone(Form akForm) global
+	int i = 0
+	if akForm
+		i = akForm.GetFormID()
+		if i == 0
+			return true
+		else
+			return false
+		endif
+	else
+		return true
+	endif
 endFunction

@@ -7,21 +7,36 @@ Activator property required_node_controller auto
 String property mod_name = "Unknown" auto
 { Optional: The name of the mod / plug-in. Displayed only in Papyrus log. }
 
+bool campfire_is_loaded = false
+
 Event OnInit()
+	RegisterForModEvent("Campfire_Loaded", "OnCampfireLoaded")
 	Wait(RandomFloat(3.0, 6.0))
 	AttemptRegistration()
 EndEvent
 
 Event OnPlayerLoadGame()
+	RegisterForModEvent("Campfire_Loaded", "OnCampfireLoaded")
 	Wait(RandomFloat(3.0, 6.0))
 	AttemptRegistration()
 EndEvent
 
+Event OnCampfireLoaded()
+	campfire_is_loaded = true
+endEvent
+
 function AttemptRegistration()
-	GlobalVariable campfire_version = Game.GetFormFromFile(0x051666, "Campfire.esm") as GlobalVariable
-	if campfire_version && campfire_version.GetValue() >= 1.7
+	int i = 0
+	while !campfire_is_loaded && i < 20
+		Wait(0.5)
+		i += 1
+	endWhile
+
+	GlobalVariable CampfireAPIVersion = Game.GetFormFromFile(0x03F1BE, "Campfire.esm") as GlobalVariable
+	if CampfireAPIVersion && CampfireAPIVersion.GetValueInt() >= 4
 		bool b = CampUtil.RegisterPerkTree(required_node_controller, mod_name)
 	else
-		debug.trace("[Campfire] ERROR: Unable to register Campfire Skill System for " + mod_name + ". Campfire was not found or the version loaded is not compatible. Expected 1.7 or higher, got " + campfire_version.GetValue())
+		debug.trace("[Campfire] ERROR: Unable to register Campfire Skill System for " + mod_name + ". Campfire was not found or the version loaded is not compatible. Expected API 4 or higher, got " + CampfireAPIVersion.GetValueInt())
 	endif
+	campfire_is_loaded = false
 endFunction

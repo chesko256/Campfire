@@ -6,6 +6,7 @@ import FrostUtil
 import _FrostInternal
 
 Actor property PlayerRef auto
+Activator property _Frost_PerkNodeController_Endurance auto
 ReferenceAlias property PlayerAlias auto
 ReferenceAlias property RiverwoodFriend auto
 GlobalVariable property _Frost_DatastoreInitialized auto
@@ -114,6 +115,7 @@ Event StopFrostfall()
 	endif
 	PlayerRef.RemoveSpell(_Frost_NoWait_Spell)
 	GetInterfaceHandler().RemoveAllMeters()
+	UnregisterCampfireSkill()
 endEvent
 
 function StartAllSystems()
@@ -217,4 +219,13 @@ function SendEvent_StartupAlmostDone()
     if handle
         ModEvent.Send(handle)
     endif
+endFunction
+
+function UnregisterCampfireSkill()
+	GlobalVariable CampfireAPIVersion = Game.GetFormFromFile(0x03F1BE, "Campfire.esm") as GlobalVariable
+	if CampfireAPIVersion && CampfireAPIVersion.GetValueInt() >= 4
+		bool b = CampUtil.UnregisterPerkTree(_Frost_PerkNodeController_Endurance, "Frostfall.esp")
+	else
+		debug.trace("[Campfire] ERROR: Unable to register Campfire Skill System for Frostfall.esp. Campfire was not found or the version loaded is not compatible. Expected CampUtil API 4 or higher, got " + CampfireAPIVersion.GetValueInt())
+	endif
 endFunction
