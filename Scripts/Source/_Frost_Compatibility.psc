@@ -39,6 +39,7 @@ bool property isNFHLoaded auto hidden						;Northborn Fur Hoods
 bool property isWICLoaded auto hidden						;Winter is Coming
 bool property isCOSLoaded auto hidden						;Cloaks of Skyrim
 bool property isCOSDGLoaded auto hidden						;Cloaks of Skyrim - Dawnguard
+bool property isHDTCloaksLoaded auto hidden					;Illustrious HDT Cloaks
 bool property isAEALoaded auto hidden						;Aesir Armor
 bool property isWACLoaded auto hidden						;Wet and Cold
 bool property isSSILoaded auto hidden						;Summerset Isle
@@ -499,7 +500,6 @@ function Upgrade_3_0_2()
 endFunction
 
 function RunCompatibilityArmors()
-	SendEvent_ModDatastoreUpdate(true)
 	if isIMALoaded
 		isIMALoaded = IsPluginLoaded(0x00014836, "Hothtrooper44_ArmorCompilation.esp")
 		if !isIMALoaded
@@ -598,8 +598,22 @@ function RunCompatibilityArmors()
 			WACLoadUp()
 		endif
 	endif
-	SendEvent_ModDatastoreName("")
-	SendEvent_ModDatastoreUpdate(false)
+
+	;/if isHDTCloaksLoaded
+		isHDTCloaksLoaded = IsPluginLoaded()
+		if !isHDTCloaksLoaded
+			; Illustrious HDT Cloaks was removed since the last save.
+		else
+			HDTCloaksLoadUp()
+		endif
+	else
+		isHDTCloaksLoaded = IsPluginLoaded()
+		if isHDTCloaksLoaded
+			; Illustrious HDT Cloaks was just added.
+			HDTCloaksLoadUp()
+		endif
+	endif
+	/;
 endFunction
 
 
@@ -1104,7 +1118,7 @@ function NFHLoadUp()
 		return
 	endif
 
-	SendEvent_ModDatastoreName("Fur Hoods HD")
+	
 
 	handler.AddDatastoreEntryByKey("18655___Northborn Fur Hoods.esp", 3, 45, 14) ; ArmorFurHoodNsLtWhite
 	handler.AddDatastoreEntryByKey("18654___Northborn Fur Hoods.esp", 3, 45, 14) ; ArmorFurHoodNsLtBlack
@@ -1131,26 +1145,22 @@ function COSLoadUp()
 
 	loaded = IsPluginLoaded(0x0200F615, "Complete Crafting Overhaul_Remade.esp")
 	if loaded
-		SendEvent_ModDatastoreName("Complete Crafting Overhaul Remade")
 		AddCOSDatastoreEntries("Complete Crafting Overhaul_Remade.esp")
 	endif
 
 	loaded = IsPluginLoaded(0x0200F615, "Cloaks.esp")
 	if loaded
-		SendEvent_ModDatastoreName("Cloaks of Skyrim")
 		AddCOSDatastoreEntries("Cloaks.esp")
 	endif
 	if !loaded
 		loaded = IsPluginLoaded(0x0200F615, "Cloaks - Player Only.esp")
 		if loaded
-			SendEvent_ModDatastoreName("Cloaks of Skyrim")
 			AddCOSDatastoreEntries("Cloaks - Player Only.esp")
 		endif
 	endif
 	if !loaded
 		loaded = IsPluginLoaded(0x0200F615, "Cloaks - No Imperial.esp")
 		if loaded
-			SendEvent_ModDatastoreName("Cloaks of Skyrim")
 			AddCOSDatastoreEntries("Cloaks - No Imperial.esp")
 		endif
 	endif
@@ -1297,26 +1307,22 @@ function COSDGLoadUp()
 
 	loaded = IsPluginLoaded(0x00005905, "Complete Crafting Overhaul_Remade.esp")
 	if loaded
-		SendEvent_ModDatastoreName("Complete Crafting Overhaul Remade")
 		AddCOSDGDatastoreEntries("Complete Crafting Overhaul_Remade.esp")
 	endif
 
 	loaded = IsPluginLoaded(0x00000D64, "Cloaks - Dawnguard.esp")
 	if loaded
-		SendEvent_ModDatastoreName("Cloaks of Skyrim - Dawnguard")
 		AddCOSDGDatastoreEntries("Cloaks - Dawnguard.esp")
 	endif
 	if !loaded
 		loaded = IsPluginLoaded(0x00000D64, "Cloaks - Player Only - Dawnguard.esp")
 		if loaded
-			SendEvent_ModDatastoreName("Cloaks of Skyrim - Dawnguard")
 			AddCOSDGDatastoreEntries("Cloaks - Player Only - Dawnguard.esp")
 		endif
 	endif
 	if !loaded
 		loaded = IsPluginLoaded(0x00000D64, "Cloaks - No Imperial - Dawnguard.esp")
 		if loaded
-			SendEvent_ModDatastoreName("Cloaks of Skyrim - Dawnguard")
 			AddCOSDGDatastoreEntries("Cloaks - No Imperial - Dawnguard.esp")
 		endif
 	endif
@@ -1341,6 +1347,10 @@ function AddCOSDGDatastoreEntries(string asPluginName)
 		handler.AddDatastoreEntryByKey("3428___" + asPluginName, 7, 10, 10) ; CloakDawnguard
 		handler.AddDatastoreEntryByKey("3429___" + asPluginName, 7, 10, 10) ; CloakShortDawnguard
 	endif
+endFunction
+
+function HDTCloaksLoadUp()
+
 endFunction
 
 bool function GetWICPluginLoaded()
@@ -1369,26 +1379,22 @@ function WICLoadUp()
 
 	loaded = IsPluginLoaded(0x01001DD7, "Complete Crafting Overhaul_Remade.esp")
 	if loaded
-		SendEvent_ModDatastoreName("Complete Crafting Overhaul Remade")
 		AddWICDatastoreEntries("Complete Crafting Overhaul_Remade.esp")
 	endif
 
 	loaded = IsPluginLoaded(0x01001DD7, "1nivWICCloaks.esp")
 	if loaded
-		SendEvent_ModDatastoreName("Winter is Coming - Cloaks")
 		AddWICDatastoreEntries("1nivWICCloaks.esp")
 	endif
 	if !loaded
 		loaded = IsPluginLoaded(0x01001DD7, "1nivWICCloaksNoGuards.esp")
 		if loaded
-			SendEvent_ModDatastoreName("Winter is Coming - Cloaks")
 			AddWICDatastoreEntries("1nivWICCloaksNoGuards.esp")
 		endif
 	endif
 	if !loaded
 		loaded = IsPluginLoaded(0x01001DD7, "1nivWICCloaksCRAFT.esp")
 		if loaded
-			SendEvent_ModDatastoreName("Winter is Coming - Cloaks")
 			AddWICDatastoreEntries("1nivWICCloaksCRAFT.esp")
 		endif
 	endif
@@ -1548,8 +1554,6 @@ function AEALoadUp()
 		return
 	endif
 
-	SendEvent_ModDatastoreName("Aesir Armor")
-
 	handler.AddDatastoreEntryByKey("20056___AesirArmor.esp", 7, 40, 12) ; cloak fur
 	handler.AddDatastoreEntryByKey("130085___AesirArmor.esp", 7, 40, 12) ; cloak fur
 	handler.AddDatastoreEntryByKey("98064___AesirArmor.esp", 7, 40, 12) ; cloak fur
@@ -1617,8 +1621,6 @@ function WACLoadUp()
 		return
 	endif
 
-	SendEvent_ModDatastoreName("Wet and Cold")
-
 	handler.AddDatastoreEntryByKey("860640___WetandCold.esp", 7, 10, 10) ; _WetCloak1 linen
 	handler.AddDatastoreEntryByKey("860649___WetandCold.esp", 7, 10, 10) ; _WetCloak1_Black linen
 	handler.AddDatastoreEntryByKey("864795___WetandCold.esp", 7, 10, 10) ; _WetCloak1_Blue linen
@@ -1676,8 +1678,6 @@ function IMALoadUp()
 	if handler.DatastoreHasEntry("20258___Hothtrooper44_ArmorCompilation.esp", 1)
 		return
 	endif
-
-	SendEvent_ModDatastoreName("Immersive Armors")
 
 	handler.AddDatastoreEntryByKey("20258___Hothtrooper44_ArmorCompilation.esp", 1, 125, 54) ; IAAkaviriSamuraiCuirass
 	handler.AddDatastoreEntryByKey("144010___Hothtrooper44_ArmorCompilation.esp", 1, 140, 109) ; IAAlduinCuirass
@@ -2139,22 +2139,6 @@ function IMALoadUp()
 	handler.AddDatastoreEntryByKey("10335___Hothtrooper44_ArmorCompilation.esp", 99, 0, 0) ; IASeadogEyepatch			@IGNORE
 	handler.AddDatastoreEntryByKey("145659___Hothtrooper44_ArmorCompilation.esp", 99, 0, 0) ; IABosmerMask 				@IGNORE
 	handler.AddDatastoreEntryByKey("139153___Hothtrooper44_ArmorCompilation.esp", 99, 0, 0) ; IARitualBoethiahShroud	@IGNORE
-endFunction
-
-function SendEvent_ModDatastoreUpdate(bool working)
-    int handle = ModEvent.Create("Frost_ModDatastoreUpdate")
-    if handle
-    	ModEvent.PushBool(handle, working)
-        ModEvent.Send(handle)
-    endif
-endFunction
-
-function SendEvent_ModDatastoreName(string sname)
-    int handle = ModEvent.Create("Frost_ModDatastoreName")
-    if handle
-    	ModEvent.PushString(handle, sname)
-        ModEvent.Send(handle)
-    endif
 endFunction
 
 function SendEvent_FrostfallLoaded()

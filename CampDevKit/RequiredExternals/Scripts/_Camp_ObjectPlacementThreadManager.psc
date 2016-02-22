@@ -22,7 +22,8 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
                               float x_local_ang_adjust = 0.0, float y_local_ang_adjust = 0.0, float z_local_ang_adjust = 0.0,   \
                               float z_global_ang_adjust = 0.0, float z_hanging_offset = 0.0, bool inverted_local_y = false,     \
                               float x_pos_offset = 0.0, float y_pos_offset = 0.0, float z_pos_offset = 0.0,                     \
-                              bool initially_disabled = false, bool is_propped = false, bool is_hanging = false)
+                              bool initially_disabled = false, bool is_propped = false, bool is_hanging = false,                \
+                              bool is_temp = false, bool is_interaction_disabled = false)
 endFunction
 
 function wait_all()

@@ -109,7 +109,6 @@
 
 #CampDevKit Files
 !CampDevKit/*
-!CampDevKit/Source/*
 
 #CampDevTutorial Files
 !CampDevTutorials/Tutorial1/*
