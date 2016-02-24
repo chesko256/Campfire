@@ -17,6 +17,36 @@ E-mail - chesko.tesmod@gmail.com
 This changelog is mainly for posterity purposes. This mod has evolved a lot in the amount of time it's been in development. Read on only if you enjoy watching me change my mind many, many times.
 
 ===========================================
+Frostfall 3.0.2 Change Log
+===========================================
+FEATURES AND CHANGES
+----------------------------
+    Campfire 1.7 is now required.
+    Due to improvements in PapyrusUtil 3.2, Frostfall 3 now starts up in 5 seconds or less.
+    Conjured Shelter, Lesser and Conjured Shelter, Greater have been added back to Frostfall, and work consistently with all of Campfire's current features.
+    Conjured Shelters remain in the world for 24 hours before despawning. (Was 12 hours in Frostfall 2.6)
+    The rate at which Endurance skill is gained has been substantially reduced.
+
+BUG FIXES
+----------------------------
+    Fixed a bug where using Complete Crafting Overhaul with one of the stand-alone cloak plug-ins (Cloaks of Skyrim, Winter is Coming, etc) would result in the cloaks from the stand-alone plug-in not receiving Warmth or Coverage values.
+    Fixed a bug where certain NPCs that were once your temporary followers could awaken with you at another location after being rescued.
+    Fixed a bug where the player could become stuck if succumbing to exposure while on horseback and "Rescue" is selected.
+    Fixed a bug where the Bound Cloaks could be disenchanted.
+    Fixed a bug where the player's debuffs would wear off at exactly 100 Exposure if "Nothing" was selected for Max Exposure.
+    Fixed an issue when using Frostfall 3 with Requiem that caused a swirling magical effect to play on the player under certain conditions.
+    Fixed a bug where the player would be freezing when they arrived after fast travelling to a cold area.
+    Fixed a bug where the player would be freezing when they arrived after taking a carriage to a cold area.
+    Fixed a bug where the player's exposure and wetness was not properly reduced following fast travel.
+    Fixed a bug where the player's exposure would continue to increase when riding the boat to Solstheim.
+    Fixed a bug where the message "You can't seem to get any warmer / your shelter prevents you from getting colder" was playing more often than intended.
+    Fixed a bug where the temperature meter would become stuck if the "Always On" setting was used.
+    Fixed a bug where the temperature meter could lose its color periodically. It is now always a fixed color; the meter's range is now the sole indicator of temperature.
+    Fixed a bug where a certain skeleton would provide the player with an infinite number of the "Kindle" spell tome after killing it.
+    Fixed a bug where full screen effects from the base game and other mods were being cancelled by Frostfall.
+
+
+===========================================
 Frostfall 3.0.1 Change Log
 ===========================================
 CHANGES
