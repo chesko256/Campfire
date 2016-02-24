@@ -7,6 +7,68 @@ Complete Camping System
 Change Log
 
 ===================================================
+Release 1.7 (2/23/2016)
+
+Features and Changes
+
+    All additions and changes to the back-end necessary to support Conjured Shelters in Frostfall 3.
+
+    Included PapyrusUtil version updated to 3.2.
+
+    Changes to campfires: Much feedback has been received regarding how campfires currently work, and what users find fun and not-so-fun. With that feedback in mind:
+        The visual and sound effects when lighting campfires have been completely overhauled. Lighting with Strike Stone now has more satisfying sparks and sounds. Lighting with Magic now has more appropriate magical sound and visual effects. Lighting the fire with Dwarven Oil now provides a much more satisfying effect as the oil bursts into flames.
+        No more random chance of failure. Poorer quality tinder now simply requires longer to light. The player will attempt to light the campfire continuously until it is lit. (Example: Canis Root in clear weather had a 55% chance of success in the old system. It now requires 21 seconds to light without any skill modifiers, and lights instantly at max rank in one of the skills listed below.) This better complements and is easier to balance against Frostfall, where time matters a great deal when in adverse conditions.
+        If the player moves or is attacked while lighting a campfire, the attempt fails and the tinder is lost.
+        Only one tinder item is used per attempt.
+        When smoke begins rising from the campfire, this indicates that the campfire is almost lit.
+        It is more difficult (will take longer) to light a campfire in adverse weather.
+        "Light (Strike Stone)" advances the Camping skill.
+        The Firecraft perk increases the speed of lighting a campfire with Strike Stone. Each rank reduces the lighting time by 7 seconds, up to 28 seconds.
+        "Light (Fire Magic)" advances the Destruction magic skill (equivalent to a single cast of the Fireball spell).
+        "Light (Fire Magic)" requires 20 Destruction skill or higher in order to use, and no longer requires possessing the Flames spell.
+        The Destruction skill level increases the speed of lighting a campfire with Magic. Every 20 points reduces the lighting time by 7 seconds, up to 28 seconds.
+        "Light Fire - Torch" was removed.
+
+    Tutorials were added.
+        A short in-game tutorial for building campfires was added.
+        A short in-game tutorial explaining how the Campfire Skill System works was added.
+        The SkyUI MCM and legacy config menus now have "Enable Tutorials" and "Reset Tutorials" settings.
+
+    Improvements were made to the way Campfire detects Legacy Frostfall.
+        The form checked to detect legacy Frostfall was changed, which improves detection accuracy.
+        Many important pieces of debug information (detected load order position, author, and reverse name lookup of offending plug-in) were added to the error message to aid the user in troubleshooting the problem.
+        A more obscure error case is now handled where legacy Frostfall was detected but its position in the load order couldn't be resolved.
+
+    All required steps in the campfire building process have been renamed with the prefix "Build Fire - ", for clarity.
+
+    Sleeping in a tent you have placed now grants Camping skill progress, once per in-game day. (Conjured Shelters do not grant this skill, instead increasing your Conjuration skill on cast.)
+
+    The "Uplifted" and "Inspired" bonuses for large campfires now apply when you walk away from, put out, or destroy your campfire, or allow it to burn out naturally, instead of when it is lit or upgraded. This way, you will wake up the next morning with a full timer on your bonus if you fall asleep to a crackling campfire and awaken to embers.
+
+    The Campfire Dev Kit was updated:
+        Modders can now create their own skill trees using the Campfire Dev Kit. See Tutorial 5 for more information.
+        Modders can now create their own conjured items and shelters using the Campfire Dev Kit. A tutorial will be forthcoming soon.
+        Please see the Campfire Dev Kit change log for more information.
+
+    Added 2 new injected records that acts as an invisible heat source for Frostfall. This can be useful for modders creating outdoor hot springs, etc. See this page (http://skyrimsurvival.com/home/frostfall/compatibility-modders/) for more information.
+
+    When interacting with a tent, "Use Lantern" has been renamed "Use Light".
+
+    We now wait until campfires are no longer in an active cell before attempting to delete them because they've been unlit for 24 hours. (Can no longer pop out of existence in front of the player)
+
+    Additional Fur Plate recipes are visible by default when viewing the Create Item crafting system, to help alleviate confusion regarding how Fur Plates can be created.
+
+Bug Fixes
+
+    Fixed a bug where the player could get more fuel refunded to them when destroying a campfire than they put in.
+    Fixed a bug where converting ruined books to paper rolls would not actually remove the ruined books from the player's inventory.
+    When placing objects with Advanced Placement deactivated, objects could occasionally spawn under the ground if the ground was sloped enough, because the item's position was based on the player's. We now take a single sample of the terrain height and place it there instead.
+    Fixed a flaw related to placing two Placeable Objects at nearly the same time.
+    Fixed a flaw in the way all placed objects keep track of certain objects.
+    Fixed a bug where certain functions were being called more frequently than required when placing certain objects.
+    Placeable objects can no longer be activated / used before they are fully initialized.
+    Made minor enhancements to the way in which the system stops placing objects, to prepare for the next one.
+
 Release 1.6 (12/8/2015)
 
 Features and Changes
