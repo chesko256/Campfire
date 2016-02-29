@@ -7,6 +7,17 @@ Complete Camping System
 Change Log
 
 ===================================================
+Release 1.7.1 (2/28/2016)
+
+Features and Changes
+
+    This update supports creating tinder items using the Campfire Dev Kit without a direct dependency on Campfire.
+        Added the following injected records:
+        01CC0E0B - _Camp_CampfireItem_GoodWeather (MiscObject)
+        01CC0E0C - _Camp_LastUsedCampfireSize (GlobalVariable)
+        01CC0E0D - _Camp_LastUsedCampfireStage (GlobalVariable)
+
+
 Release 1.7 (2/23/2016)
 
 Features and Changes
