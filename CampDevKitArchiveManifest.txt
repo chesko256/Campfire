@@ -140,8 +140,8 @@ Scripts\_Camp_ZReporterBScript.pex
 Scripts\_Camp_ZReporterCScript.pex
 Scripts\_Camp_TentSitLayScript.pex
 Scripts\Source\CampUtil.psc
-externals Scripts\Source\CampfireAPI.psc
-externals Scripts\Source\CampfireData.psc
+Scripts\Source\CampfireAPI.psc
+Scripts\Source\CampfireData.psc
 externals Scripts\Source\_Camp_Compatibility.psc
 externals Scripts\Source\_Camp_LegalAreaCheck.psc
 externals Scripts\Source\_Camp_ObjectPlacementThreadManager.psc
