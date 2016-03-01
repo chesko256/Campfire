@@ -30,6 +30,7 @@ accept files:
   CampPlaceableMiscItem.psc
   CampUsableMiscItem.psc
   CampPlacementIndicator.psc
+  FrostUtil.psc
 items:
   SCRIPTNAME
   OVERVIEW

@@ -1,0 +1,367 @@
+<h2 id="overview">Overview</h2>
+<p>The <code>FrostUtil</code> script is the primary way most mods should interact with Frostfall and contains many helpful functions. To call any of the following functions, download the SDK and in your script include the line: <pre>import FrostUtil</pre> Alternatively, you can call <code>FrostUtil.FunctionName()</code> without importing FrostUtil. }</p>
+<h4 id="global-functions">Global Functions</h4>
+<ul>
+<li><a href="#FrostUtil_GetAPIVersion">GetAPIVersion</a></li>
+<li><a href="#FrostUtil_GetFrostfallVersion">GetFrostfallVersion</a></li>
+<li><a href="#FrostUtil_IsPlayerNearFire">IsPlayerNearFire</a></li>
+<li><a href="#FrostUtil_GetPlayerHeatSourceLevel">GetPlayerHeatSourceLevel</a></li>
+<li><a href="#FrostUtil_GetPlayerHeatSourceDistance">GetPlayerHeatSourceDistance</a></li>
+<li><a href="#FrostUtil_IsPlayerTakingShelter">IsPlayerTakingShelter</a></li>
+<li><a href="#FrostUtil_IsNearFastTravelException">IsNearFastTravelException</a></li>
+<li><a href="#FrostUtil_GetCurrentTemperature">GetCurrentTemperature</a></li>
+<li><a href="#FrostUtil_GetCurrentWeatherActual">GetCurrentWeatherActual</a></li>
+<li><a href="#FrostUtil_GetWeatherClassificationActual">GetWeatherClassificationActual</a></li>
+<li><a href="#FrostUtil_IsWeatherSevere">IsWeatherSevere</a></li>
+<li><a href="#FrostUtil_IsRefInOblivion">IsRefInOblivion</a></li>
+<li><a href="#FrostUtil_GetPlayerWetness">GetPlayerWetness</a></li>
+<li><a href="#FrostUtil_GetPlayerWetnessLevel">GetPlayerWetnessLevel</a></li>
+<li><a href="#FrostUtil_GetPlayerExposure">GetPlayerExposure</a></li>
+<li><a href="#FrostUtil_GetPlayerExposureLevel">GetPlayerExposureLevel</a></li>
+<li><a href="#FrostUtil_ModPlayerExposure">ModPlayerExposure</a></li>
+<li><a href="#FrostUtil_GetPlayerWarmth">GetPlayerWarmth</a></li>
+<li><a href="#FrostUtil_GetPlayerCoverage">GetPlayerCoverage</a></li>
+<li><a href="#FrostUtil_GetPlayerArmorWarmth">GetPlayerArmorWarmth</a></li>
+<li><a href="#FrostUtil_GetPlayerArmorCoverage">GetPlayerArmorCoverage</a></li>
+</ul>
+<h3 id="global-functions-1">Global Functions</h3>
+<h4 id="getapiversion"><a name="FrostUtil_GetAPIVersion"></a>GetAPIVersion</h4>
+<p>Get the FrostUtil API version number.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>float function GetAPIVersion() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The FrostUtil API version number. This is NOT the same thing as the version number of Frostfall. FrostUtil's API version number will increment only when changes have been made to the API itself.</p>
+<p><strong>Examples</strong></p>
+<pre><code>float ver = FrostUtil.GetAPIVersion()</code></pre>
+<hr />
+<h4 id="getfrostfallversion"><a name="FrostUtil_GetFrostfallVersion"></a>GetFrostfallVersion</h4>
+<p>Get the Frostfall mod version number.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>float function GetFrostfallVersion() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The Frostfall version number.</p>
+<p><strong>Examples</strong></p>
+<pre><code>float ver = FrostUtil.GetFrostfallVersion()</code></pre>
+<hr />
+<h4 id="isplayernearfire"><a name="FrostUtil_IsPlayerNearFire"></a>IsPlayerNearFire</h4>
+<p>Whether or not the player is currently near a fire. Note:</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function IsPlayerNearFire() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>True if near a fire; false otherwise.</p>
+<p><strong>Examples</strong></p>
+<pre><code>;Is the player near a fire?
+bool near_fire = FrostUtil.IsPlayerNearFire()</code></pre>
+<p><strong>Notes</strong></p>
+<p>This does NOT indicate if the player is near a heat source; there are heat sources that are not fires. Fires have special properties in Frostfall and Campfire, which include drying the player when wet, and being able to cook food using a cooking pot.</p>
+<p>To determine if the player is near a heat source of any kind, use `<a href="#robo4">GetPlayerHeatSourceLevel</a>()` instead.</p>
+<hr />
+<h4 id="getplayerheatsourcelevel"><a name="FrostUtil_GetPlayerHeatSourceLevel"></a>GetPlayerHeatSourceLevel</h4>
+<p>The level (size) of the player's current nearby heat source.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>int function GetPlayerHeatSourceLevel() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>Possible return values: 0 = Player is not near a heat source. 1 = Current heat source is &quot;small&quot; (e.g. bowls of burning embers, &quot;fragile&quot; campfires in Campfire) 2 = Current heat source is &quot;medium&quot; (e.g. most campfires and other fireplaces) 3 = Current heat source is &quot;large&quot; (e.g. giant campfires, &quot;roaring&quot; campfires in Campfire)</p>
+<p><strong>Examples</strong></p>
+<pre><code>;Is the player near heat?
+int heat = FrostUtil.GetPlayerHeatSourceLevel()
+if heat &gt; 0
+    debug.notification(&quot;Player is near a heat source!&quot;)
+endif</code></pre>
+<p><strong>Notes</strong></p>
+<p>This function does NOT determine if the heat source is a fire or not; there are heat sources that are not fires. To determine if the player is near a fire, use `<a href="#robo3">IsPlayerNearFire</a>()`.</p>
+<hr />
+<h4 id="getplayerheatsourcedistance"><a name="FrostUtil_GetPlayerHeatSourceDistance"></a>GetPlayerHeatSourceDistance</h4>
+<p>The distance from the player to the player's current nearby heat source.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>float function GetPlayerHeatSourceDistance() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>0.0 to 600.0 - The distance from the player to the heat source. Frostfall does not detect heat sources more than 600 units away. -1.0 - No current heat source detected.</p>
+<p><strong>Examples</strong></p>
+<pre><code>;How far away is the heat source?
+float dist = FrostUtil.GetPlayerHeatSourceDistance()
+if dist &lt;= 300.0
+    debug.notification(&quot;The player is really close to the heat source!&quot;)
+endif</code></pre>
+<hr />
+<h4 id="isplayertakingshelter"><a name="FrostUtil_IsPlayerTakingShelter"></a>IsPlayerTakingShelter</h4>
+<p>Whether or not the player is taking shelter underneath an outcropping / building. If the player is &quot;sheltered&quot;, the player will dry off if wet, regardless of current weather conditions.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function IsPlayerTakingShelter() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>True if taking shelter, false if not.</p>
+<p><strong>Examples</strong></p>
+<pre><code>;Is the player underneath something?
+bool sheltered = FrostUtil.IsPlayerTakingShelter()</code></pre>
+<p><strong>Notes</strong></p>
+<p>This function does not return true if the player is inside a Campfire-based tent; it only returns true if a ray emitting upward from the player's head collides with an obstruction. For tent detection, use <a href="#robo22">CampUtil</a>.<a href="#robo43">GetCurrentTent</a>().</p>
+<hr />
+<h4 id="isnearfasttravelexception"><a name="FrostUtil_IsNearFastTravelException"></a>IsNearFastTravelException</h4>
+<p>Whether or not the player near a &quot;fast travel exception&quot;. If a player is nearby one of these objects, the Exposure System will re-enable the player's Fast Travel controls. This is used in cases where there is an expectation for Fast Travel be enabled when near these objects (like Apocrypha's Black Books.)</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function IsNearFastTravelException() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>True if near a &quot;fast travel exception&quot; object, false if not.</p>
+<p><strong>Examples</strong></p>
+<pre><code>;Is the player near a fast travel exception?
+bool near_ft_exception = FrostUtil.IsNearFastTravelException()</code></pre>
+<hr />
+<h4 id="getcurrenttemperature"><a name="FrostUtil_GetCurrentTemperature"></a>GetCurrentTemperature</h4>
+<p>Returns the current area temperature, based on location, weather, weather severity, and time of day.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>int function GetCurrentTemperature() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>Greater than 10: A &quot;warm&quot; area. Exposure will decrease. The higher the number, the faster it will decrease. 10: A &quot;neutral&quot; area. Exposure will not increase or decrease. Less than 10: A &quot;cold&quot; area. Exposure will increase. The lower the number, the faster it will increase.</p>
+<p><strong>Examples</strong></p>
+<pre><code>int temp = FrostUtil.GetCurrentTemperature()
+if temp &lt; 10
+    debug.notification(&quot;It&#39;s cold!&quot;)
+endif</code></pre>
+<p><strong>Notes</strong></p>
+<p>The return values of this function correspond very roughly with degrees celsius.</p>
+<hr />
+<h4 id="getcurrentweatheractual"><a name="FrostUtil_GetCurrentWeatherActual"></a>GetCurrentWeatherActual</h4>
+<p>Returns the current weather somewhat more accurately than the default `GetCurrentWeather()` function. This function returns the outgoing weather if the weather is currently transitioning out (and thus is still currently visible). Otherwise, returns the current weather.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>Weather function GetCurrentWeatherActual() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The current weather.</p>
+<p><strong>Examples</strong></p>
+<pre><code>;What is the current weather, really?
+Weather wthr = FrostUtil.GetCurrentWeatherActual()</code></pre>
+<hr />
+<h4 id="getweatherclassificationactual"><a name="FrostUtil_GetWeatherClassificationActual"></a>GetWeatherClassificationActual</h4>
+<p>Returns the classification of the weather returned by `<a href="#robo9">GetCurrentWeatherActual</a>()`.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>int function GetWeatherClassificationActual(Weather akWeather) global</code></pre>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>akWeather: The Weather to check.</li>
+</ul>
+<p><strong>Return Value</strong></p>
+<p>The current weather classification.</p>
+<p><strong>Examples</strong></p>
+<pre><code>;What is the current weather classification, really?
+int class = FrostUtil.GetWeatherClassificationActual()</code></pre>
+<hr />
+<h4 id="isweathersevere"><a name="FrostUtil_IsWeatherSevere"></a>IsWeatherSevere</h4>
+<p>True if this weather is in the severe weather list that Frostfall maintains, false if not.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function IsWeatherSevere(Weather akWeather) global</code></pre>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>akWeather: The Weather to check.</li>
+</ul>
+<p><strong>Return Value</strong></p>
+<p>Whether or not this weather is severe.</p>
+<p><strong>Examples</strong></p>
+<pre><code>if FrostUtil.IsWeatherSevere(FrostUtil.GetCurrentWeatherActual())
+    debug.notification(&quot;Better stay indoors!&quot;)
+endif</code></pre>
+<hr />
+<h4 id="isrefinoblivion"><a name="FrostUtil_IsRefInOblivion"></a>IsRefInOblivion</h4>
+<p>Whether or not the reference is in a base game or DLC Oblivion worldspace.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function IsRefInOblivion(ObjectReference akReference) global</code></pre>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>akReference: The object reference to check.</li>
+</ul>
+<p><strong>Return Value</strong></p>
+<p>True if the reference is in Oblivion.</p>
+<p><strong>Examples</strong></p>
+<pre><code>;Is the box in Oblivion?
+if IsRefInOblivion(Box)
+    Debug.Trace(&quot;Box is in Oblivion!&quot;)
+endif</code></pre>
+<p><strong>Notes</strong></p>
+<p>The following Worldspaces are considered Oblivion worldspaces: Soul Cairn Apocrypha</p>
+<hr />
+<h4 id="getplayerwetness"><a name="FrostUtil_GetPlayerWetness"></a>GetPlayerWetness</h4>
+<p>Return the player's current wetness value.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>float function GetPlayerWetness() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The player's current wetness value. 0.0 = Not wet &gt;0.0 - 199.9 = Damp 200.0 - 549.9 = Wet 550.0 - 750.0 = Drenched</p>
+<p><strong>Examples</strong></p>
+<pre><code>float wetness = FrostUtil.GetPlayerWetness()</code></pre>
+<hr />
+<h4 id="getplayerwetnesslevel"><a name="FrostUtil_GetPlayerWetnessLevel"></a>GetPlayerWetnessLevel</h4>
+<p>Return the player's current wetness level. May be easier to use than `<a href="#robo13">GetPlayerWetness</a>()` if you don't need to know the actual wetness value.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>int function GetPlayerWetnessLevel() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The player's current wetness level. 0 = Not wet 1 = Damp 2 = Wet 3 = Drenched</p>
+<p><strong>Examples</strong></p>
+<pre><code>;Is the player drenched?
+int wet_level = FrostUtil.GetPlayerWetnessLevel()
+if wet_level == 3
+    debug.notification(&quot;You&#39;re soaked!&quot;)
+endif</code></pre>
+<hr />
+<h4 id="getplayerexposure"><a name="FrostUtil_GetPlayerExposure"></a>GetPlayerExposure</h4>
+<p>Return the player's current exposure value.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>float function GetPlayerExposure() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The player's current exposure. 0.0 - 19.9 = Warm 20.0 - 39.9 = Comfortable 40.0 - 59.9 = Cold 60.0 - 79.9 = Very Cold 80.0 - 99.9 = Freezing 100.0 - 120.0 = Freezing to Death</p>
+<p><strong>Examples</strong></p>
+<pre><code>;Is the player cold?
+float exp = FrostUtil.GetPlayerExposure()
+if exp &gt;= 40.0
+    debug.notification(&quot;Brrr!&quot;)
+endif</code></pre>
+<hr />
+<h4 id="getplayerexposurelevel"><a name="FrostUtil_GetPlayerExposureLevel"></a>GetPlayerExposureLevel</h4>
+<p>Return the player's current exposure level. May be easier to use than `<a href="#robo15">GetPlayerExposure</a>()` if you don't need to know the actual exposure value.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>int function GetPlayerExposureLevel() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The player's current exposure level. -1 = Completely Warm 0 = Warm 1 = Comfortable 2 = Cold 3 = Very Cold 4 = Freezing 5 = Freezing to Death 6 = Maximum Exposure</p>
+<p><strong>Examples</strong></p>
+<pre><code>;Is the player cold?
+float exp_level = FrostUtil.GetPlayerExposureLevel()
+if exp_level &gt;= 2
+    debug.notification(&quot;Brrr!&quot;)
+endif</code></pre>
+<hr />
+<h4 id="modplayerexposure"><a name="FrostUtil_ModPlayerExposure"></a>ModPlayerExposure</h4>
+<p>Modify the player's current exposure by the given amount. Using this function will correctly process the exposure change and notify the UI layer (meters, etc) of the change and display them as appropriate. Using this function is the only safe method of directly modifying the player's exposure value.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>function ModPlayerExposure(float amount, float limit = -1.0) global</code></pre>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><p>amount: The amount to modify the player's exposure by. Positive numbers increase exposure, negative values decrease exposure.</p></li>
+<li><p>limit (optional): The value at which you should stop the exposure change, if this value is reached. A value of -1.0 indicates that there is no limit. (Example: calling FrostUtil.ModPlayerExposure(35.0, 50.0) when the player's current exposure is 40.0 will increase the player's exposure to 50.0, not 75.0)</p></li>
+</ul>
+<p><strong>Return Value</strong></p>
+<p>None</p>
+<p><strong>Examples</strong></p>
+<pre><code>;The player did something that should make them warmer.
+FrostUtil.ModPlayerExposure(-15.0)
+;The player did something that should make them warmer, but not below &quot;Cold&quot;.
+FrostUtil.ModPlayerExposure(-15.0, 40.0)
+;The player did something that should make them colder.
+FrostUtil.ModPlayerExposure(20.0)
+;The player did something that should make them colder, but not above &quot;Freezing&quot;.
+FrostUtil.ModPlayerExposure(20.0, 80.0)</code></pre>
+<hr />
+<h4 id="getplayerwarmth"><a name="FrostUtil_GetPlayerWarmth"></a>GetPlayerWarmth</h4>
+<p>Returns the player's total Warmth value.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>int function GetPlayerWarmth() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The player's Warmth value.</p>
+<p><strong>Examples</strong></p>
+<pre><code>;How bundled up is the player?
+int warmth = FrostUtil.GetPlayerWarmth()</code></pre>
+<hr />
+<h4 id="getplayercoverage"><a name="FrostUtil_GetPlayerCoverage"></a>GetPlayerCoverage</h4>
+<p>Returns the player's total Coverage value.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>int function GetPlayerCoverage() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The player's Coverage value.</p>
+<p><strong>Examples</strong></p>
+<pre><code>;How covered is the player?
+int coverage = FrostUtil.GetPlayerCoverage()</code></pre>
+<hr />
+<h4 id="getplayerarmorwarmth"><a name="FrostUtil_GetPlayerArmorWarmth"></a>GetPlayerArmorWarmth</h4>
+<p>Returns the sum of the Warmth values of all gear worn by the player.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>int function GetPlayerArmorWarmth() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The total Warmth of all player worn gear.</p>
+<p><strong>Examples</strong></p>
+<pre><code>;How warm are the player&#39;s clothes?
+int gear_warmth = FrostUtil.GetPlayerArmorWarmth()</code></pre>
+<p><strong>Notes</strong></p>
+<p>There are many different sources of Warmth, so this function does not return the player's total Warmth value. If you want the total Warmth, use `<a href="#robo18">GetPlayerWarmth</a>()` instead.</p>
+<hr />
+<h4 id="getplayerarmorcoverage"><a name="FrostUtil_GetPlayerArmorCoverage"></a>GetPlayerArmorCoverage</h4>
+<p>Returns the sum of the Coverage values of all gear worn by the player.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>int function GetPlayerArmorCoverage() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>The total Coverage of all player worn gear.</p>
+<p><strong>Examples</strong></p>
+<pre><code>;How warm are the player&#39;s clothes?
+int gear_coverage = FrostUtil.GetPlayerArmorCoverage()</code></pre>
+<p><strong>Notes</strong></p>
+<p>There are many different sources of Coverage, so this function does not return the player's total Coverage value. If you want the total Coverage, use `<a href="#robo19">GetPlayerCoverage</a>()` instead.</p>

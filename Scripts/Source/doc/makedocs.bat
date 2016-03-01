@@ -8,6 +8,7 @@ pandoc.exe "./output/CampPlaceableObjectEx_psc.xml" -f docbook -t markdown_githu
 pandoc.exe "./output/CampPlaceableMiscItem_psc.xml" -f docbook -t markdown_github -o "./output/CampPlaceableMiscItem_psc.txt" --base-header-level=3
 pandoc.exe "./output/CampUsableMiscItem_psc.xml" -f docbook -t markdown_github -o "./output/CampUsableMiscItem_psc.txt" --base-header-level=3
 pandoc.exe "./output/CampPlacementIndicator_psc.xml" -f docbook -t markdown_github -o "./output/CampPlacementIndicator_psc.txt" --base-header-level=3
+pandoc.exe "./output/FrostUtil_psc.xml" -f docbook -t markdown_github -o "./output/FrostUtil_psc.txt" --base-header-level=3
 python githubber.py "CampUtil_psc.txt" "../../../campwiki/CampUtil-API-Reference.md"
 python githubber.py "CampTent_psc.txt" "../../../campwiki/CampTent-Script.md"
 python githubber.py "CampTentEx_psc.txt" "../../../campwiki/CampTentEx-Script.md"
@@ -16,3 +17,6 @@ python githubber.py "CampPlaceableObjectEx_psc.txt" "../../../campwiki/CampPlace
 python githubber.py "CampPlaceableMiscItem_psc.txt" "../../../campwiki/CampPlaceableMiscItem-Script.md"
 python githubber.py "CampUsableMiscItem_psc.txt" "../../../campwiki/CampUsableMiscItem-Script.md"
 python githubber.py "CampPlacementIndicator_psc.txt" "../../../campwiki/CampPlacementIndicator-Script.md"
+python githubber.py "FrostUtil_psc.txt" "../../../campwiki/FrostUtil-API-Reference.md"
+call MakeCampUtilHtml.bat
+call MakeFrostUtilHtml.bat

@@ -6,9 +6,9 @@
 
 **OVERVIEW.**
 
-The \`CampPlaceableObjectEx\` script is an expanded version of CampPlaceableObject, for creating more elaborate multi-part placeable objects (such as a barrel with a lantern and a chair). Can be attached to an Activator or Furniture object that serves as the main interactible.
+The \`CampPlaceableObjectEx\` script is an expanded version of CampPlaceableObject, for creating more elaborate multi-part placeable objects (such as a barrel with a lantern and a chair). Can be attached to a Furniture object that serves as the main interactible.
 
-### CampPlaceableObject/Asset\_ExtraStatic1
+### CampPlaceableObjectEx/Asset\_ExtraStatic1
 
 **DESCRIPTION.**
 

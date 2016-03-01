@@ -12,7 +12,7 @@ The \`CampUtil\` script is the primary way most mods should interact with Campfi
 
 **DESCRIPTION.**
 
-Get the [CampUtil](#robo0) API version number.
+Get the [CampUtil](#robo22) API version number.
 
 **API VERSION ADDED.**
 
@@ -28,7 +28,7 @@ None
 
 **RETURN VALUE.**
 
-The [CampUtil](#robo0) API version number. This is NOT the same thing as the version number of Campfire. [CampUtil](#robo0)'s version number will increment only when changes have been made to the API itself.
+The [CampUtil](#robo22) API version number. This is NOT the same thing as the version number of Campfire. [CampUtil](#robo22)'s version number will increment only when changes have been made to the API itself.
 
 **EXAMPLES.**
 
@@ -610,7 +610,7 @@ Is this tent waterproof?
 
 **PARAMETERS.**
 
-akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo21)(), or use [IsCurrentTentWaterproof](#robo24)() instead.
+akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo43)(), or use [IsCurrentTentWaterproof](#robo47)() instead.
 
 **RETURN VALUE.**
 
@@ -632,11 +632,33 @@ Is this tent warm?
 
 **PARAMETERS.**
 
-akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo21)(), or use [IsCurrentTentWarm](#robo25)() instead.
+akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo43)(), or use [IsCurrentTentWarm](#robo48)() instead.
 
 **RETURN VALUE.**
 
 True if the tent is flagged as being warm, or false if not.
+
+### CampUtil/TentHasShelter
+
+**DESCRIPTION.**
+
+Does this tent have shelter? (Used by Frostfall to determine if the player should warm up additionally when inside it.)
+
+**API VERSION ADDED.**
+
+3
+
+**SYNTAX.**
+
+    bool function TentHasShelter(ObjectReference akTent) global
+
+**PARAMETERS.**
+
+akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo43)(), or use [CurrentTentHasShelter](#robo50)() instead.
+
+**RETURN VALUE.**
+
+Whether or not this tent has shelter.
 
 ### CampUtil/IsCurrentTentWaterproof
 
@@ -681,6 +703,50 @@ None
 **RETURN VALUE.**
 
 True if the current tent is flagged as being warm, or false if not or if there is no tent in use by the player.
+
+### CampUtil/IsCurrentTentConjured
+
+**DESCRIPTION.**
+
+Is the current tent conjured?
+
+**API VERSION ADDED.**
+
+4
+
+**SYNTAX.**
+
+    bool function IsCurrentTentConjured() global
+
+**PARAMETERS.**
+
+None
+
+**RETURN VALUE.**
+
+True if the current tent is flagged as being conjured, or false if not or if there is no tent in use by the player.
+
+### CampUtil/CurrentTentHasShelter
+
+**DESCRIPTION.**
+
+Does the current tent have shelter? (Used by Frostfall to determine if the player should warm up additionally when inside it.)
+
+**API VERSION ADDED.**
+
+3
+
+**SYNTAX.**
+
+    bool function CurrentTentHasShelter() global
+
+**PARAMETERS.**
+
+None
+
+**RETURN VALUE.**
+
+Whether or not the current tent has shelter.
 
 ### CampUtil/IsCrimeToPlaceInTowns
 
@@ -729,6 +795,80 @@ akBaseObject: The base object to check.
 **RETURN VALUE.**
 
 True if the Form will spawn non-persistently, False if not.
+
+### CampUtil/IsPlaceableObjectConjured
+
+**DESCRIPTION.**
+
+Returns whether or not this placeable object is conjured.
+
+**API VERSION ADDED.**
+
+4
+
+**SYNTAX.**
+
+    bool function IsPlaceableObjectConjured(Form akBaseObject) global
+
+**PARAMETERS.**
+
+akBaseObject: The base object to check.
+
+**RETURN VALUE.**
+
+True if the Form is conjured, False if not or not a placeable object.
+
+### CampUtil/RegisterPerkTree
+
+**DESCRIPTION.**
+
+Register a new Campfire perk tree.
+
+**API VERSION ADDED.**
+
+4
+
+**SYNTAX.**
+
+    bool function RegisterPerkTree(Activator akPerkNodeController, string asPluginName = "Unknown") global
+
+**PARAMETERS.**
+
+akPerkNodeController: The perk node controller to register. asPluginName: The plug-in name that this node controller is from. Only seen in Papyrus logs.
+
+**RETURN VALUE.**
+
+True if the perk tree was successfully registered. Returns false if there is no available room for an additional perk tree.
+
+**NOTES.**
+
+Unless you have a specific reason to control the availability of the perk tree, you should use the CampPerkSystemRegister script on a Player ReferenceAlias instead of calling this function directly. See the Campfire Skill System Dev Kit tutorial for more info.
+
+### CampUtil/UnregisterPerkTree
+
+**DESCRIPTION.**
+
+Unregister a Campfire perk tree.
+
+**API VERSION ADDED.**
+
+4
+
+**SYNTAX.**
+
+    bool function UnregisterPerkTree(Activator akPerkNodeController, string asPluginName = "Unknown") global
+
+**PARAMETERS.**
+
+akPerkNodeController: The perk node controller to unregister. asPluginName: The mod / plug-in name that this node controller is from. Only seen in Papyrus logs.
+
+**RETURN VALUE.**
+
+True if the perk tree was successfully unregistered. Returns false if the perk tree was not found.
+
+**NOTES.**
+
+In general, you do not need to manually unregister a perk tree. It will be automatically purged when the mod the node controller belongs to is uninstalled.
 
 ### CampUtil/GetCampfireSettingBool
 
@@ -882,7 +1022,7 @@ akPlacedObject: The base object of the object that was removed. afPositionX: The
 
     Event Campfire_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
             if abIsTent
-                    debug.trace("The player just placed a tent!")
+                    debug.trace("The player just removed a tent!")
             endif
     endEvent
 
@@ -952,7 +1092,7 @@ akTent: The tent the player just "entered". Cast to an ObjectReference (i.e. akT
 
 **NOTES.**
 
-For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player sits or lies down on their bed roll. (Reason: [TentAsset\_LargeTentTriggerVolume](#robo89) has not been set.)
+For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player sits or lies down on their bed roll. (Reason: [TentAsset\_LargeTentTriggerVolume](#robo119) has not been set.)
 
 ### CampUtil/Campfire\_OnTentLeave
 
@@ -984,4 +1124,4 @@ None.
 
 **NOTES.**
 
-This event may fire multiple times for the same tent. This can happen for a number of reasons, such as if the player is standing inside the tent when picking it up. For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player gets up from sitting or lying down on their bed roll. (Reason: [TentAsset\_LargeTentTriggerVolume](#robo89) has not been set.)
+This event may fire multiple times for the same tent. This can happen for a number of reasons, such as if the player is standing inside the tent when picking it up. For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player gets up from sitting or lying down on their bed roll. (Reason: [TentAsset\_LargeTentTriggerVolume](#robo119) has not been set.)
