@@ -126,23 +126,6 @@ _Frost_ShelterSystem function GetShelterSystem() global
 endFunction
 
 
-; Deprecated / Unused Functions ===================================================================
-
-bool function IsWarmEnoughToRemoveGearInTent() global
-    ; This feature is currently unimplemented in Campfire
-    return true
-endFunction
-
-bool function IsWarmEnoughToHarvestWood() global
-    ; This feature was deprecated, always return true
-    return true
-endFunction
-
-function Event_LegacyWoodHarvest() global
-    ;pass
-endFunction
-
-
 ; Public Functions ================================================================================
 
 ;/********f* FrostUtil/GetAPIVersion
@@ -925,4 +908,21 @@ endFunction
 
 function RaiseFrostAPIError() global
     debug.trace("[Frostfall][ERROR] Fatal Frostfall API error occurred.")
+endFunction
+
+
+; Deprecated / Unused Functions ===================================================================
+
+bool function IsWarmEnoughToRemoveGearInTent() global
+    ; This feature is currently unimplemented in Campfire
+    return true
+endFunction
+
+bool function IsWarmEnoughToHarvestWood() global
+    ; This feature was deprecated, always return true
+    return true
+endFunction
+
+function Event_LegacyWoodHarvest() global
+    ;pass
 endFunction
