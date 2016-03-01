@@ -17,6 +17,6 @@ Please see:
 
 http://skyrimsurvival.com/home/frostfall/mod-developers/
 
-for the most current documentation for the Campfire Dev Kit.
+for the most current documentation for the Frostfall Dev Kit.
 
-For accepted use, translation, and licensing, please see Campfire_license.txt
+For accepted use, translation, and licensing, please see Frostfall_license.txt
