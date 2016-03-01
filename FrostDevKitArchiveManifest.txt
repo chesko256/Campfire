@@ -1,0 +1,18 @@
+readmes\FrostDevKit_readme.txt
+Scripts\Source\FrostUtil.psc
+Scripts\Source\FrostfallAPI.psc
+externals Scripts\Source\_FrostInternal.psc
+externals Scripts\Source\_Frost_APDatastoreDefaultData.psc
+externals Scripts\Source\_Frost_ArmorProtectionDatastoreHandler.psc
+externals Scripts\Source\_Frost_BaseSystem.psc
+externals Scripts\Source\_Frost_ClimateSystem.psc
+externals Scripts\Source\_Frost_ClothingSystem.psc
+externals Scripts\Source\_Frost_Compatibility.psc
+externals Scripts\Source\_Frost_CoverageSystem.psc
+externals Scripts\Source\_Frost_ExposureSystem.psc
+externals Scripts\Source\_Frost_HeatSourceSystem.psc
+externals Scripts\Source\_Frost_InterfaceHandler.psc
+externals Scripts\Source\_Frost_RescueSystem.psc
+externals Scripts\Source\_Frost_ShelterSystem.psc
+externals Scripts\Source\_Frost_WarmthSystem.psc
+externals Scripts\Source\_Frost_WetnessSystem.psc
