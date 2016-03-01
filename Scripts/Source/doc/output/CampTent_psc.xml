@@ -16,11 +16,22 @@ scriptname CampTent extends _Camp_PlaceableObjectBase
 <para>
  This script controls all tent behavior. Attach this script to an Activator which will serve as 
  the player's bed roll. Attaching this script and filling out properties in the Creation Kit is 
- how new tents are created; please see the tutorials for more information. Only 3 properties 
- are required in order for the tent to function, with the rest optional. This script supports 
- creating a tent with a single bed roll, a lantern, clutter, and more. See <link linkend="robo44">CampTentEx</link> for even 
+ how new tents are created; please see the tutorials for more information. This script supports 
+ creating a tent with a single bed roll, a lantern, clutter, and more. See <link linkend="robo72">CampTentEx</link> for even 
  more capability.
 </para>
+</section>
+<section>
+<title>
+CampTent/Setting_PlayerUsesFullBed</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Optional: Whether or not the player's bedding is a full-sized bed. If true, the player's ability to sit and lay down in the bedding is disabled. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool property Setting_PlayerUsesFullBed = false auto
+</literallayout>
 </section>
 <section>
 <title>
@@ -44,6 +55,18 @@ CampTent/Setting_PlayerSitAngle</title>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">
 Float property Setting_PlayerSitAngle = 0.0 auto
+</literallayout>
+</section>
+<section>
+<title>
+CampTent/Setting_UseSilverCandlestick</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Optional: If True, will replace all lanterns with SilverCandlestick02 instead. }
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool property Setting_UseSilverCandlestick = false auto
 </literallayout>
 </section>
 <section>
@@ -228,7 +251,7 @@ ObjectReference property PositionRef_Shelter auto
 CampTent/PositionRef_Ward</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: The ward position reference. }
+ Optional: The ward position reference. The "ward" is the walking stick seen near the front of most tents. }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">

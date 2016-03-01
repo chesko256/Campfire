@@ -25,10 +25,16 @@
 <li><a href="#CampUtil_GetCurrentTent">GetCurrentTent</a></li>
 <li><a href="#CampUtil_IsTentWaterproof">IsTentWaterproof</a></li>
 <li><a href="#CampUtil_IsTentWarm">IsTentWarm</a></li>
+<li><a href="#CampUtil_TentHasShelter">TentHasShelter</a></li>
 <li><a href="#CampUtil_IsCurrentTentWaterproof">IsCurrentTentWaterproof</a></li>
 <li><a href="#CampUtil_IsCurrentTentWarm">IsCurrentTentWarm</a></li>
+<li><a href="#CampUtil_IsCurrentTentConjured">IsCurrentTentConjured</a></li>
+<li><a href="#CampUtil_CurrentTentHasShelter">CurrentTentHasShelter</a></li>
 <li><a href="#CampUtil_IsCrimeToPlaceInTowns">IsCrimeToPlaceInTowns</a></li>
 <li><a href="#CampUtil_IsPlaceableObjectTemporary">IsPlaceableObjectTemporary</a></li>
+<li><a href="#CampUtil_IsPlaceableObjectConjured">IsPlaceableObjectConjured</a></li>
+<li><a href="#CampUtil_RegisterPerkTree">RegisterPerkTree</a></li>
+<li><a href="#CampUtil_UnregisterPerkTree">UnregisterPerkTree</a></li>
 <li><a href="#CampUtil_GetCampfireSettingBool">GetCampfireSettingBool</a></li>
 <li><a href="#CampUtil_GetCampfireSettingInt">GetCampfireSettingInt</a></li>
 </ul>
@@ -42,7 +48,7 @@
 </ul>
 <h3 id="global-functions-1">Global Functions</h3>
 <h4 id="getapiversion"><a name="CampUtil_GetAPIVersion"></a>GetAPIVersion</h4>
-<p>Get the <a href="#robo0">CampUtil</a> API version number.</p>
+<p>Get the <a href="#robo22">CampUtil</a> API version number.</p>
 <p><strong>Api version added</strong></p>
 <p>1</p>
 <p><strong>Syntax</strong></p>
@@ -50,7 +56,7 @@
 <p><strong>Parameters</strong></p>
 <p>None</p>
 <p><strong>Return Value</strong></p>
-<p>The <a href="#robo0">CampUtil</a> API version number. This is NOT the same thing as the version number of Campfire. <a href="#robo0">CampUtil</a>'s version number will increment only when changes have been made to the API itself.</p>
+<p>The <a href="#robo22">CampUtil</a> API version number. This is NOT the same thing as the version number of Campfire. <a href="#robo22">CampUtil</a>'s version number will increment only when changes have been made to the API itself.</p>
 <p><strong>Examples</strong></p>
 <pre><code>float ver = CampUtil.GetAPIVersion()</code></pre>
 <hr />
@@ -362,7 +368,7 @@ endif</code></pre>
 <p><strong>Syntax</strong></p>
 <pre><code>bool function IsTentWaterproof(ObjectReference akTent) global</code></pre>
 <p><strong>Parameters</strong></p>
-<p>akTent: The Tent ObjectReference to check. Use the return value of <a href="#robo21">GetCurrentTent</a>(), or use <a href="#robo24">IsCurrentTentWaterproof</a>() instead.</p>
+<p>akTent: The Tent ObjectReference to check. Use the return value of <a href="#robo43">GetCurrentTent</a>(), or use <a href="#robo47">IsCurrentTentWaterproof</a>() instead.</p>
 <p><strong>Return Value</strong></p>
 <p>True if the tent is flagged as being waterproof, or false if not.</p>
 <hr />
@@ -373,9 +379,20 @@ endif</code></pre>
 <p><strong>Syntax</strong></p>
 <pre><code>bool function IsTentWarm(ObjectReference akTent) global</code></pre>
 <p><strong>Parameters</strong></p>
-<p>akTent: The Tent ObjectReference to check. Use the return value of <a href="#robo21">GetCurrentTent</a>(), or use <a href="#robo25">IsCurrentTentWarm</a>() instead.</p>
+<p>akTent: The Tent ObjectReference to check. Use the return value of <a href="#robo43">GetCurrentTent</a>(), or use <a href="#robo48">IsCurrentTentWarm</a>() instead.</p>
 <p><strong>Return Value</strong></p>
 <p>True if the tent is flagged as being warm, or false if not.</p>
+<hr />
+<h4 id="tenthasshelter"><a name="CampUtil_TentHasShelter"></a>TentHasShelter</h4>
+<p>Does this tent have shelter? (Used by Frostfall to determine if the player should warm up additionally when inside it.)</p>
+<p><strong>Api version added</strong></p>
+<p>3</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function TentHasShelter(ObjectReference akTent) global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>akTent: The Tent ObjectReference to check. Use the return value of <a href="#robo43">GetCurrentTent</a>(), or use <a href="#robo50">CurrentTentHasShelter</a>() instead.</p>
+<p><strong>Return Value</strong></p>
+<p>Whether or not this tent has shelter.</p>
 <hr />
 <h4 id="iscurrenttentwaterproof"><a name="CampUtil_IsCurrentTentWaterproof"></a>IsCurrentTentWaterproof</h4>
 <p>Is the current tent waterproof?</p>
@@ -398,6 +415,28 @@ endif</code></pre>
 <p>None</p>
 <p><strong>Return Value</strong></p>
 <p>True if the current tent is flagged as being warm, or false if not or if there is no tent in use by the player.</p>
+<hr />
+<h4 id="iscurrenttentconjured"><a name="CampUtil_IsCurrentTentConjured"></a>IsCurrentTentConjured</h4>
+<p>Is the current tent conjured?</p>
+<p><strong>Api version added</strong></p>
+<p>4</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function IsCurrentTentConjured() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>True if the current tent is flagged as being conjured, or false if not or if there is no tent in use by the player.</p>
+<hr />
+<h4 id="currenttenthasshelter"><a name="CampUtil_CurrentTentHasShelter"></a>CurrentTentHasShelter</h4>
+<p>Does the current tent have shelter? (Used by Frostfall to determine if the player should warm up additionally when inside it.)</p>
+<p><strong>Api version added</strong></p>
+<p>3</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function CurrentTentHasShelter() global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Return Value</strong></p>
+<p>Whether or not the current tent has shelter.</p>
 <hr />
 <h4 id="iscrimetoplaceintowns"><a name="CampUtil_IsCrimeToPlaceInTowns"></a>IsCrimeToPlaceInTowns</h4>
 <p>Is it a crime to place this base object in towns, inside owned houses, etc?</p>
@@ -422,6 +461,43 @@ endif</code></pre>
 <p>akBaseObject: The base object to check.</p>
 <p><strong>Return Value</strong></p>
 <p>True if the Form will spawn non-persistently, False if not.</p>
+<hr />
+<h4 id="isplaceableobjectconjured"><a name="CampUtil_IsPlaceableObjectConjured"></a>IsPlaceableObjectConjured</h4>
+<p>Returns whether or not this placeable object is conjured.</p>
+<p><strong>Api version added</strong></p>
+<p>4</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function IsPlaceableObjectConjured(Form akBaseObject) global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>akBaseObject: The base object to check.</p>
+<p><strong>Return Value</strong></p>
+<p>True if the Form is conjured, False if not or not a placeable object.</p>
+<hr />
+<h4 id="registerperktree"><a name="CampUtil_RegisterPerkTree"></a>RegisterPerkTree</h4>
+<p>Register a new Campfire perk tree.</p>
+<p><strong>Api version added</strong></p>
+<p>4</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function RegisterPerkTree(Activator akPerkNodeController, string asPluginName = &quot;Unknown&quot;) global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>akPerkNodeController: The perk node controller to register. asPluginName: The plug-in name that this node controller is from. Only seen in Papyrus logs.</p>
+<p><strong>Return Value</strong></p>
+<p>True if the perk tree was successfully registered. Returns false if there is no available room for an additional perk tree.</p>
+<p><strong>Notes</strong></p>
+<p>Unless you have a specific reason to control the availability of the perk tree, you should use the CampPerkSystemRegister script on a Player ReferenceAlias instead of calling this function directly. See the Campfire Skill System Dev Kit tutorial for more info.</p>
+<hr />
+<h4 id="unregisterperktree"><a name="CampUtil_UnregisterPerkTree"></a>UnregisterPerkTree</h4>
+<p>Unregister a Campfire perk tree.</p>
+<p><strong>Api version added</strong></p>
+<p>4</p>
+<p><strong>Syntax</strong></p>
+<pre><code>bool function UnregisterPerkTree(Activator akPerkNodeController, string asPluginName = &quot;Unknown&quot;) global</code></pre>
+<p><strong>Parameters</strong></p>
+<p>akPerkNodeController: The perk node controller to unregister. asPluginName: The mod / plug-in name that this node controller is from. Only seen in Papyrus logs.</p>
+<p><strong>Return Value</strong></p>
+<p>True if the perk tree was successfully unregistered. Returns false if the perk tree was not found.</p>
+<p><strong>Notes</strong></p>
+<p>In general, you do not need to manually unregister a perk tree. It will be automatically purged when the mod the node controller belongs to is uninstalled.</p>
 <hr />
 <h4 id="getcampfiresettingbool"><a name="CampUtil_GetCampfireSettingBool"></a>GetCampfireSettingBool</h4>
 <p>Returns the state of the given Campfire setting.</p>
@@ -512,7 +588,7 @@ endEvent
 
 Event Campfire_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
         if abIsTent
-                debug.trace(&quot;The player just placed a tent!&quot;)
+                debug.trace(&quot;The player just removed a tent!&quot;)
         endif
 endEvent</code></pre>
 <p><strong>Notes</strong></p>
@@ -556,7 +632,7 @@ Event Campfire_OnTentEnter(Form akTent, bool abHasShelter)
         endif
 endEvent</code></pre>
 <p><strong>Notes</strong></p>
-<p>For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player sits or lies down on their bed roll. (Reason: <a href="#robo89">TentAsset_LargeTentTriggerVolume</a> has not been set.)</p>
+<p>For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player sits or lies down on their bed roll. (Reason: <a href="#robo119">TentAsset_LargeTentTriggerVolume</a> has not been set.)</p>
 <hr />
 <h4 id="campfire_ontentleave"><a name="CampUtil_Campfire_OnTentLeave"></a>Campfire_OnTentLeave</h4>
 <p>An SKSE Mod Event that fires when the player &quot;leaves&quot; a tent.</p>
@@ -575,4 +651,4 @@ Event Campfire_OnTentLeave()
         debug.trace(&quot;Back to adventuring!&quot;)
 endEvent</code></pre>
 <p><strong>Notes</strong></p>
-<p>This event may fire multiple times for the same tent. This can happen for a number of reasons, such as if the player is standing inside the tent when picking it up. For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player gets up from sitting or lying down on their bed roll. (Reason: <a href="#robo89">TentAsset_LargeTentTriggerVolume</a> has not been set.)</p>
+<p>This event may fire multiple times for the same tent. This can happen for a number of reasons, such as if the player is standing inside the tent when picking it up. For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player gets up from sitting or lying down on their bed roll. (Reason: <a href="#robo119">TentAsset_LargeTentTriggerVolume</a> has not been set.)</p>

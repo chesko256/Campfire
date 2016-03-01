@@ -6,7 +6,17 @@
 
 **OVERVIEW.**
 
-This script controls all tent behavior. Attach this script to an Activator which will serve as the player's bed roll. Attaching this script and filling out properties in the Creation Kit is how new tents are created; please see the tutorials for more information. Only 3 properties are required in order for the tent to function, with the rest optional. This script supports creating a tent with a single bed roll, a lantern, clutter, and more. See [CampTentEx](#robo44) for even more capability.
+This script controls all tent behavior. Attach this script to an Activator which will serve as the player's bed roll. Attaching this script and filling out properties in the Creation Kit is how new tents are created; please see the tutorials for more information. This script supports creating a tent with a single bed roll, a lantern, clutter, and more. See [CampTentEx](#robo72) for even more capability.
+
+### CampTent/Setting\_PlayerUsesFullBed
+
+**DESCRIPTION.**
+
+Optional: Whether or not the player's bedding is a full-sized bed. If true, the player's ability to sit and lay down in the bedding is disabled. }
+
+**SYNTAX.**
+
+    bool property Setting_PlayerUsesFullBed = false auto
 
 ### CampTent/Setting\_BedRollScale
 
@@ -27,6 +37,16 @@ Optional: The compass direction adjustment applied to the player's sitting posit
 **SYNTAX.**
 
     Float property Setting_PlayerSitAngle = 0.0 auto
+
+### CampTent/Setting\_UseSilverCandlestick
+
+**DESCRIPTION.**
+
+Optional: If True, will replace all lanterns with SilverCandlestick02 instead. }
+
+**SYNTAX.**
+
+    bool property Setting_UseSilverCandlestick = false auto
 
 ### CampTent/RequiredPositionRef\_PlayerBed
 
@@ -180,7 +200,7 @@ Optional: The shelter (tent, structure) position reference. }
 
 **DESCRIPTION.**
 
-Optional: The ward position reference. }
+Optional: The ward position reference. The "ward" is the walking stick seen near the front of most tents. }
 
 **SYNTAX.**
 

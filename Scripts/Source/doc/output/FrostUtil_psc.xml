@@ -1,0 +1,738 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" 
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<article lang="en">
+<articleinfo>
+  <title>API Reference</title>
+</articleinfo>
+<section>
+<title>
+Form/CampUtil</title>
+<formalpara><title>SCRIPTNAME</title><para></para></formalpara>
+<literallayout class="monospaced">
+scriptname FrostUtil hidden
+</literallayout>
+<formalpara><title>OVERVIEW</title><para></para></formalpara>
+<para>
+ The `FrostUtil` script is the primary way most mods should interact with Frostfall and contains many helpful functions. To call any of the following functions, download the SDK and in your script include the line:
+ &lt;pre&gt;import FrostUtil&lt;/pre&gt;
+ Alternatively, you can call `FrostUtil.FunctionName()` without importing FrostUtil. }
+</para>
+</section>
+<section>
+<title>
+FrostUtil/GetAPIVersion</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Get the FrostUtil API version number.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+float function GetAPIVersion() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The FrostUtil API version number. This is NOT the same thing as the version number of Frostfall.
+ FrostUtil's API version number will increment only when changes have been made to the API itself.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+float ver = FrostUtil.GetAPIVersion()
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/GetFrostfallVersion</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Get the Frostfall mod version number.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+float function GetFrostfallVersion() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The Frostfall version number.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+float ver = FrostUtil.GetFrostfallVersion()
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/IsPlayerNearFire</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Whether or not the player is currently near a fire. Note: 
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsPlayerNearFire() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if near a fire; false otherwise.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Is the player near a fire?
+bool near_fire = FrostUtil.IsPlayerNearFire()
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ This does NOT indicate if the player is near a heat source; there are heat sources
+ that are not fires. Fires have special properties in Frostfall and Campfire, which 
+ include drying the player when wet, and being able to cook food using a cooking pot.
+</para>
+
+<para>
+ To determine if the player is near a heat source of any kind, use `<link linkend="robo4">GetPlayerHeatSourceLevel</link>()`
+ instead.
+</para>
+</section>
+<section>
+<title>
+FrostUtil/GetPlayerHeatSourceLevel</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ The level (size) of the player's current nearby heat source. 
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+int function GetPlayerHeatSourceLevel() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ Possible return values:
+ 0 = Player is not near a heat source.
+ 1 = Current heat source is "small" (e.g. bowls of burning embers, "fragile" campfires in Campfire)
+ 2 = Current heat source is "medium" (e.g. most campfires and other fireplaces)
+ 3 = Current heat source is "large" (e.g. giant campfires, "roaring" campfires in Campfire)
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Is the player near heat?
+int heat = FrostUtil.GetPlayerHeatSourceLevel()
+if heat &gt; 0
+    debug.notification("Player is near a heat source!")
+endif
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ This function does NOT determine if the heat source is a fire or not; there are heat sources
+ that are not fires. To determine if the player is near a fire, use `<link linkend="robo3">IsPlayerNearFire</link>()`.
+</para>
+</section>
+<section>
+<title>
+FrostUtil/GetPlayerHeatSourceDistance</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ The distance from the player to the player's current nearby heat source. 
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+float function GetPlayerHeatSourceDistance() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ 0.0 to 600.0 - The distance from the player to the heat source. Frostfall
+ does not detect heat sources more than 600 units away.
+ -1.0 - No current heat source detected.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;How far away is the heat source?
+float dist = FrostUtil.GetPlayerHeatSourceDistance()
+if dist &lt;= 300.0
+    debug.notification("The player is really close to the heat source!")
+endif
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/IsPlayerTakingShelter</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Whether or not the player is taking shelter underneath an outcropping / building. If the
+ player is "sheltered", the player will dry off if wet, regardless of current weather conditions.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsPlayerTakingShelter() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if taking shelter, false if not.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Is the player underneath something?
+bool sheltered = FrostUtil.IsPlayerTakingShelter()
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ This function does not return true if the player is inside a Campfire-based tent; it only
+ returns true if a ray emitting upward from the player's head collides with an obstruction.
+ For tent detection, use <link linkend="robo22">CampUtil</link>.<link linkend="robo43">GetCurrentTent</link>().
+</para>
+</section>
+<section>
+<title>
+FrostUtil/IsNearFastTravelException</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Whether or not the player near a "fast travel exception". If a player is nearby one of these objects, the
+ Exposure System will re-enable the player's Fast Travel controls. This is used in cases where there is an
+ expectation for Fast Travel be enabled when near these objects (like Apocrypha's Black Books.)
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsNearFastTravelException() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if near a "fast travel exception" object, false if not.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Is the player near a fast travel exception?
+bool near_ft_exception = FrostUtil.IsNearFastTravelException()
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/GetCurrentTemperature</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Returns the current area temperature, based on location, weather, weather severity, and time of day.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+int function GetCurrentTemperature() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ Greater than 10: A "warm" area. Exposure will decrease. The higher the number, the faster it will decrease.
+ 10: A "neutral" area. Exposure will not increase or decrease.
+ Less than 10: A "cold" area. Exposure will increase. The lower the number, the faster it will increase.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+int temp = FrostUtil.GetCurrentTemperature()
+if temp &lt; 10
+    debug.notification("It's cold!")
+endif
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ The return values of this function correspond very roughly with degrees celsius.
+</para>
+</section>
+<section>
+<title>
+FrostUtil/GetCurrentWeatherActual</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Returns the current weather somewhat more accurately than the default `GetCurrentWeather()` function.
+ This function returns the outgoing weather if the weather is currently transitioning out (and thus is
+ still currently visible). Otherwise, returns the current weather.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Weather function GetCurrentWeatherActual() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The current weather.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;What is the current weather, really?
+Weather wthr = FrostUtil.GetCurrentWeatherActual()
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/GetWeatherClassificationActual</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Returns the classification of the weather returned by `<link linkend="robo9">GetCurrentWeatherActual</link>()`.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+int function GetWeatherClassificationActual(Weather akWeather) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> akWeather: The Weather to check.
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The current weather classification.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;What is the current weather classification, really?
+int class = FrostUtil.GetWeatherClassificationActual()
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/IsWeatherSevere</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ True if this weather is in the severe weather list that Frostfall maintains, false if not.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsWeatherSevere(Weather akWeather) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> akWeather: The Weather to check.
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ Whether or not this weather is severe.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+if FrostUtil.IsWeatherSevere(FrostUtil.<link linkend="robo9">GetCurrentWeatherActual</link>())
+    debug.notification("Better stay indoors!")
+endif
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/IsRefInOblivion</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Whether or not the reference is in a base game or DLC Oblivion worldspace.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsRefInOblivion(ObjectReference akReference) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> akReference: The object reference to check.
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if the reference is in Oblivion.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Is the box in Oblivion?
+if IsRefInOblivion(Box)
+    Debug.Trace("Box is in Oblivion!")
+endif
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ The following Worldspaces are considered Oblivion worldspaces:
+ Soul Cairn
+ Apocrypha
+</para>
+</section>
+<section>
+<title>
+FrostUtil/GetPlayerWetness</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Return the player's current wetness value.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+float function GetPlayerWetness() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The player's current wetness value.
+ 0.0 = Not wet
+ &gt;0.0 - 199.9 = Damp
+ 200.0 - 549.9 = Wet
+ 550.0 - 750.0 = Drenched
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+float wetness = FrostUtil.GetPlayerWetness()
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/GetPlayerWetnessLevel</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Return the player's current wetness level. May be easier to use than `<link linkend="robo13">GetPlayerWetness</link>()` if you don't
+ need to know the actual wetness value.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+int function GetPlayerWetnessLevel() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The player's current wetness level.
+ 0 = Not wet
+ 1 = Damp
+ 2 = Wet
+ 3 = Drenched
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Is the player drenched?
+int wet_level = FrostUtil.GetPlayerWetnessLevel()
+if wet_level == 3
+    debug.notification("You're soaked!")
+endif
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/GetPlayerExposure</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Return the player's current exposure value.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+float function GetPlayerExposure() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The player's current exposure.
+ 0.0 - 19.9 = Warm
+ 20.0 - 39.9 = Comfortable
+ 40.0 - 59.9 = Cold
+ 60.0 - 79.9 = Very Cold
+ 80.0 - 99.9 = Freezing
+ 100.0 - 120.0 = Freezing to Death
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Is the player cold?
+float exp = FrostUtil.GetPlayerExposure()
+if exp &gt;= 40.0
+    debug.notification("Brrr!")
+endif
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/GetPlayerExposureLevel</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Return the player's current exposure level. May be easier to use than `<link linkend="robo15">GetPlayerExposure</link>()` if you don't
+ need to know the actual exposure value.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+int function GetPlayerExposureLevel() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The player's current exposure level.
+ -1 = Completely Warm
+ 0 = Warm
+ 1 = Comfortable
+ 2 = Cold
+ 3 = Very Cold
+ 4 = Freezing
+ 5 = Freezing to Death
+ 6 = Maximum Exposure
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Is the player cold?
+float exp_level = FrostUtil.GetPlayerExposureLevel()
+if exp_level &gt;= 2
+    debug.notification("Brrr!")
+endif
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/ModPlayerExposure</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Modify the player's current exposure by the given amount. Using this
+ function will correctly process the exposure change and notify the UI layer
+ (meters, etc) of the change and display them as appropriate. Using this function
+ is the only safe method of directly modifying the player's exposure value.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+function ModPlayerExposure(float amount, float limit = -1.0) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> amount: The amount to modify the player's exposure by. Positive numbers increase exposure, negative values decrease exposure.
+</para></listitem><listitem><para> limit (optional): The value at which you should stop the exposure change, if this value is reached. A value of -1.0 indicates that there is no limit. (Example: calling FrostUtil.ModPlayerExposure(35.0, 50.0) when the player's current exposure is 40.0 will increase the player's exposure to 50.0, not 75.0)
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;The player did something that should make them warmer.
+FrostUtil.ModPlayerExposure(-15.0)
+;The player did something that should make them warmer, but not below "Cold".
+FrostUtil.ModPlayerExposure(-15.0, 40.0)
+;The player did something that should make them colder.
+FrostUtil.ModPlayerExposure(20.0)
+;The player did something that should make them colder, but not above "Freezing".
+FrostUtil.ModPlayerExposure(20.0, 80.0)
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/GetPlayerWarmth</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Returns the player's total Warmth value.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+int function GetPlayerWarmth() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The player's Warmth value.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;How bundled up is the player?
+int warmth = FrostUtil.GetPlayerWarmth()
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/GetPlayerCoverage</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Returns the player's total Coverage value.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+int function GetPlayerCoverage() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The player's Coverage value.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;How covered is the player?
+int coverage = FrostUtil.GetPlayerCoverage()
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/GetPlayerArmorWarmth</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Returns the sum of the Warmth values of all gear worn by the player.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+int function GetPlayerArmorWarmth() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The total Warmth of all player worn gear.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;How warm are the player's clothes?
+int gear_warmth = FrostUtil.GetPlayerArmorWarmth()
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ There are many different sources of Warmth, so this function does not return
+ the player's total Warmth value. If you want the total Warmth, use `<link linkend="robo18">GetPlayerWarmth</link>()` instead.
+</para>
+</section>
+<section>
+<title>
+FrostUtil/GetPlayerArmorCoverage</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Returns the sum of the Coverage values of all gear worn by the player.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+int function GetPlayerArmorCoverage() global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ The total Coverage of all player worn gear.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;How warm are the player's clothes?
+int gear_coverage = FrostUtil.GetPlayerArmorCoverage()
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ There are many different sources of Coverage, so this function does not return
+ the player's total Coverage value. If you want the total Coverage, use `<link linkend="robo19">GetPlayerCoverage</link>()` instead.
+</para>
+</section>
+</article>
