@@ -13,12 +13,14 @@
 !Campfire_BuildRelease.py
 !Frostfall_BuildRelease.py
 !CampDevKit_BuildRelease.py
+!FrostDevKit_BuildRelease.py
 !Archive.exe
 !CampfireArchiveBuilder.txt
 !CampfireArchiveManifest.txt
 !FrostfallArchiveBuilder.txt
 !FrostfallArchiveManifest.txt
 !CampDevKitArchiveManifest.txt
+!FrostDevKitArchiveManifest.txt
 
 #Manifest Validation
 !manifestcheck.py
@@ -58,6 +60,7 @@
 !readmes/Campfire*.txt
 !readmes/LastSeed*.txt
 !readmes/CampDevKit*.txt
+!readmes/FrostDevKit*.txt
 
 #Sound
 !sound/fx/frostfall/*

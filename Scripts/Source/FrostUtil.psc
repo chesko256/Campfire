@@ -1,8 +1,21 @@
+;/********s* Form/CampUtil
+* SCRIPTNAME
+*/;
 scriptname FrostUtil hidden
+{
+* OVERVIEW
+* The `FrostUtil` script is the primary way most mods should interact with Frostfall and contains many helpful functions. To call any of the following functions, download the SDK and in your script include the line:
+* <pre>import FrostUtil</pre>
+* Alternatively, you can call `FrostUtil.FunctionName()` without importing FrostUtil. }
+;*********/;
 
 FrostfallAPI function GetAPI() global
     return (Game.GetFormFromFile(0x00064590, "Frostfall.esp") as Quest) as FrostfallAPI
 endFunction
+
+; System Access ===================================================================================
+
+; These are not intended for public use and are therefore undocumented.
 
 _Frost_ExposureSystem function GetExposureSystem() global
     FrostfallAPI Frostfall = GetAPI()
@@ -112,6 +125,9 @@ _Frost_ShelterSystem function GetShelterSystem() global
     return Frostfall.Shelter
 endFunction
 
+
+; Deprecated / Unused Functions ===================================================================
+
 bool function IsWarmEnoughToRemoveGearInTent() global
     ; This feature is currently unimplemented in Campfire
     return true
@@ -126,7 +142,30 @@ function Event_LegacyWoodHarvest() global
     ;pass
 endFunction
 
+
+; Public Functions ================================================================================
+
+;/********f* FrostUtil/GetAPIVersion
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Get the FrostUtil API version number.
+*
+* SYNTAX
+*/;
 float function GetAPIVersion() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The FrostUtil API version number. This is NOT the same thing as the version number of Frostfall.
+* FrostUtil's API version number will increment only when changes have been made to the API itself.
+*
+* EXAMPLES
+float ver = FrostUtil.GetAPIVersion()
+;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
@@ -135,7 +174,26 @@ float function GetAPIVersion() global
     return Frostfall._Frost_APIVersion.GetValue()
 endFunction
 
+;/********f* FrostUtil/GetFrostfallVersion
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Get the Frostfall mod version number.
+*
+* SYNTAX
+*/;
 float function GetFrostfallVersion() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The Frostfall version number.
+*
+* EXAMPLES
+float ver = FrostUtil.GetFrostfallVersion()
+;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
@@ -144,7 +202,34 @@ float function GetFrostfallVersion() global
     return Frostfall._Frost_FrostfallVersion.GetValue()
 endFunction
 
+;/********f* FrostUtil/IsPlayerNearFire
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Whether or not the player is currently near a fire. Note: 
+*
+* SYNTAX
+*/;
 bool function IsPlayerNearFire() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* True if near a fire; false otherwise.
+*
+* EXAMPLES
+;Is the player near a fire?
+bool near_fire = FrostUtil.IsPlayerNearFire()
+* NOTES
+* This does NOT indicate if the player is near a heat source; there are heat sources
+* that are not fires. Fires have special properties in Frostfall and Campfire, which 
+* include drying the player when wet, and being able to cook food using a cooking pot.
+*
+* To determine if the player is near a heat source of any kind, use `GetPlayerHeatSourceLevel()`
+* instead.
+;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
@@ -159,7 +244,37 @@ bool function IsPlayerNearFire() global
     endif
 endFunction
 
+;/********f* FrostUtil/GetPlayerHeatSourceLevel
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* The level (size) of the player's current nearby heat source. 
+*
+* SYNTAX
+*/;
 int function GetPlayerHeatSourceLevel() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* Possible return values:
+* 0 = Player is not near a heat source.
+* 1 = Current heat source is "small" (e.g. bowls of burning embers, "fragile" campfires in Campfire)
+* 2 = Current heat source is "medium" (e.g. most campfires and other fireplaces)
+* 3 = Current heat source is "large" (e.g. giant campfires, "roaring" campfires in Campfire)
+*
+* EXAMPLES
+;Is the player near heat?
+int heat = FrostUtil.GetPlayerHeatSourceLevel()
+if heat > 0
+    debug.notification("Player is near a heat source!")
+endif
+* NOTES
+* This function does NOT determine if the heat source is a fire or not; there are heat sources
+* that are not fires. To determine if the player is near a fire, use `IsPlayerNearFire()`.
+;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
@@ -169,7 +284,32 @@ int function GetPlayerHeatSourceLevel() global
     return GetHeatSourceSystem()._Frost_CurrentHeatSourceSize.GetValueInt()
 endFunction
 
+;/********f* FrostUtil/GetPlayerHeatSourceDistance
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* The distance from the player to the player's current nearby heat source. 
+*
+* SYNTAX
+*/;
 float function GetPlayerHeatSourceDistance() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* 0.0 to 600.0 - The distance from the player to the heat source. Frostfall
+* does not detect heat sources more than 600 units away.
+* -1.0 - No current heat source detected.
+*
+* EXAMPLES
+;How far away is the heat source?
+float dist = FrostUtil.GetPlayerHeatSourceDistance()
+if dist <= 300.0
+    debug.notification("The player is really close to the heat source!")
+endif
+;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
@@ -179,7 +319,32 @@ float function GetPlayerHeatSourceDistance() global
     return GetHeatSourceSystem()._Frost_CurrentHeatSourceDistance.GetValue()
 endFunction
 
+;/********f* FrostUtil/IsPlayerTakingShelter
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Whether or not the player is taking shelter underneath an outcropping / building. If the
+* player is "sheltered", the player will dry off if wet, regardless of current weather conditions.
+*
+* SYNTAX
+*/;
 bool function IsPlayerTakingShelter() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* True if taking shelter, false if not.
+*
+* EXAMPLES
+;Is the player underneath something?
+bool sheltered = FrostUtil.IsPlayerTakingShelter()
+* NOTES
+* This function does not return true if the player is inside a Campfire-based tent; it only
+* returns true if a ray emitting upward from the player's head collides with an obstruction.
+* For tent detection, use CampUtil.GetCurrentTent().
+;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
@@ -194,8 +359,29 @@ bool function IsPlayerTakingShelter() global
     endif
 endFunction
 
-
+;/********f* FrostUtil/IsNearFastTravelException
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Whether or not the player near a "fast travel exception". If a player is nearby one of these objects, the
+* Exposure System will re-enable the player's Fast Travel controls. This is used in cases where there is an
+* expectation for Fast Travel be enabled when near these objects (like Apocrypha's Black Books.)
+*
+* SYNTAX
+*/;
 bool function IsNearFastTravelException() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* True if near a "fast travel exception" object, false if not.
+*
+* EXAMPLES
+;Is the player near a fast travel exception?
+bool near_ft_exception = FrostUtil.IsNearFastTravelException()
+;*********/;
 	FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
@@ -208,7 +394,33 @@ bool function IsNearFastTravelException() global
     endif
 endFunction
 
+;/********f* FrostUtil/GetCurrentTemperature
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Returns the current area temperature, based on location, weather, weather severity, and time of day.
+*
+* SYNTAX
+*/;
 int function GetCurrentTemperature() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* Greater than 10: A "warm" area. Exposure will decrease. The higher the number, the faster it will decrease.
+* 10: A "neutral" area. Exposure will not increase or decrease.
+* Less than 10: A "cold" area. Exposure will increase. The lower the number, the faster it will increase.
+*
+* EXAMPLES
+int temp = FrostUtil.GetCurrentTemperature()
+if temp < 10
+    debug.notification("It's cold!")
+endif
+* NOTES
+* The return values of this function correspond very roughly with degrees celsius.
+;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
@@ -217,7 +429,29 @@ int function GetCurrentTemperature() global
     return Frostfall._Frost_CurrentTemperature.GetValueInt()
 endFunction
 
+;/********f* FrostUtil/GetCurrentWeatherActual
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Returns the current weather somewhat more accurately than the default `GetCurrentWeather()` function.
+* This function returns the outgoing weather if the weather is currently transitioning out (and thus is
+* still currently visible). Otherwise, returns the current weather.
+*
+* SYNTAX
+*/;
 Weather function GetCurrentWeatherActual() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The current weather.
+*
+* EXAMPLES
+;What is the current weather, really?
+Weather wthr = FrostUtil.GetCurrentWeatherActual()
+;*********/;
     Weather current_weather
     bool transitioning = !(Weather.GetCurrentWeatherTransition() >= 1.0)
     if transitioning
@@ -228,7 +462,27 @@ Weather function GetCurrentWeatherActual() global
     return current_weather
 endFunction
 
+;/********f* FrostUtil/GetWeatherClassificationActual
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Returns the classification of the weather returned by `GetCurrentWeatherActual()`.
+*
+* SYNTAX
+*/;
 int function GetWeatherClassificationActual(Weather akWeather) global
+;/*
+* PARAMETERS
+* * akWeather: The Weather to check.
+*
+* RETURN VALUE
+* The current weather classification.
+*
+* EXAMPLES
+;What is the current weather classification, really?
+int class = FrostUtil.GetWeatherClassificationActual()
+;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
@@ -258,7 +512,28 @@ int function GetWeatherClassificationActual(Weather akWeather) global
     return 0
 endFunction
 
+;/********f* FrostUtil/IsWeatherSevere
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* True if this weather is in the severe weather list that Frostfall maintains, false if not.
+*
+* SYNTAX
+*/;
 bool function IsWeatherSevere(Weather akWeather) global
+;/*
+* PARAMETERS
+* * akWeather: The Weather to check.
+*
+* RETURN VALUE
+* Whether or not this weather is severe.
+*
+* EXAMPLES
+if FrostUtil.IsWeatherSevere(FrostUtil.GetCurrentWeatherActual())
+    debug.notification("Better stay indoors!")
+endif
+;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
@@ -318,35 +593,35 @@ endif
 endFunction
 
 
-;@TODO: Convert to Undead
-;/********f* FrostUtil/IsPlayerVampire
+;@TODO: Not used
+bool function IsPlayerVampire() global
+    return false
+endFunction
+
+;/********f* FrostUtil/GetPlayerWetness
 * API VERSION ADDED
 * 1
 *
 * DESCRIPTION
-* Whether or not the player is a vampire.
+* Return the player's current wetness value.
 *
 * SYNTAX
 */;
-bool function IsPlayerVampire() global
+float function GetPlayerWetness() global
 ;/*
 * PARAMETERS
-* * None.
+* None
 *
 * RETURN VALUE
-* True if the player is a vampire, false otherwise.
+* The player's current wetness value.
+* 0.0 = Not wet
+* >0.0 - 199.9 = Damp
+* 200.0 - 549.9 = Wet
+* 550.0 - 750.0 = Drenched
 *
 * EXAMPLES
-;Is the player a vampire?
-if IsPlayerVampire()
-    Debug.Trace("Player is a bloodsucker!")
-endif
-* NOTES
-/;
-    return false
-endFunction
-
-float function GetPlayerWetness() global
+float wetness = FrostUtil.GetPlayerWetness()
+;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
@@ -355,7 +630,35 @@ float function GetPlayerWetness() global
     return Frostfall._Frost_AttributeWetness.GetValue()
 endFunction
 
+;/********f* FrostUtil/GetPlayerWetnessLevel
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Return the player's current wetness level. May be easier to use than `GetPlayerWetness()` if you don't
+* need to know the actual wetness value.
+*
+* SYNTAX
+*/;
 int function GetPlayerWetnessLevel() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The player's current wetness level.
+* 0 = Not wet
+* 1 = Damp
+* 2 = Wet
+* 3 = Drenched
+*
+* EXAMPLES
+;Is the player drenched?
+int wet_level = FrostUtil.GetPlayerWetnessLevel()
+if wet_level == 3
+    debug.notification("You're soaked!")
+endif
+;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
@@ -365,7 +668,36 @@ int function GetPlayerWetnessLevel() global
     return Frostfall._Frost_WetLevel.GetValueInt()
 endFunction
 
+;/********f* FrostUtil/GetPlayerExposure
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Return the player's current exposure value.
+*
+* SYNTAX
+*/;
 float function GetPlayerExposure() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The player's current exposure.
+* 0.0 - 19.9 = Warm
+* 20.0 - 39.9 = Comfortable
+* 40.0 - 59.9 = Cold
+* 60.0 - 79.9 = Very Cold
+* 80.0 - 99.9 = Freezing
+* 100.0 - 120.0 = Freezing to Death
+*
+* EXAMPLES
+;Is the player cold?
+float exp = FrostUtil.GetPlayerExposure()
+if exp >= 40.0
+    debug.notification("Brrr!")
+endif
+;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
@@ -374,7 +706,39 @@ float function GetPlayerExposure() global
     return Frostfall._Frost_AttributeExposure.GetValue()
 endFunction
 
+;/********f* FrostUtil/GetPlayerExposureLevel
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Return the player's current exposure level. May be easier to use than `GetPlayerExposure()` if you don't
+* need to know the actual exposure value.
+*
+* SYNTAX
+*/;
 int function GetPlayerExposureLevel() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The player's current exposure level.
+* -1 = Completely Warm
+* 0 = Warm
+* 1 = Comfortable
+* 2 = Cold
+* 3 = Very Cold
+* 4 = Freezing
+* 5 = Freezing to Death
+* 6 = Maximum Exposure
+*
+* EXAMPLES
+;Is the player cold?
+float exp_level = FrostUtil.GetPlayerExposureLevel()
+if exp_level >= 2
+    debug.notification("Brrr!")
+endif
+;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
@@ -384,7 +748,37 @@ int function GetPlayerExposureLevel() global
     return Frostfall._Frost_ExposureLevel.GetValueInt()
 endFunction
 
+;/********f* FrostUtil/ModPlayerExposure
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Modify the player's current exposure by the given amount. Using this
+* function will correctly process the exposure change and notify the UI layer
+* (meters, etc) of the change and display them as appropriate. Using this function
+* is the only safe method of directly modifying the player's exposure value.
+*
+* SYNTAX
+*/;
 function ModPlayerExposure(float amount, float limit = -1.0) global
+;/*
+* PARAMETERS
+* * amount: The amount to modify the player's exposure by. Positive numbers increase exposure, negative values decrease exposure.
+* * limit (optional): The value at which you should stop the exposure change, if this value is reached. A value of -1.0 indicates that there is no limit. (Example: calling FrostUtil.ModPlayerExposure(35.0, 50.0) when the player's current exposure is 40.0 will increase the player's exposure to 50.0, not 75.0)
+*
+* RETURN VALUE
+* None
+*
+* EXAMPLES
+;The player did something that should make them warmer.
+FrostUtil.ModPlayerExposure(-15.0)
+;The player did something that should make them warmer, but not below "Cold".
+FrostUtil.ModPlayerExposure(-15.0, 40.0)
+;The player did something that should make them colder.
+FrostUtil.ModPlayerExposure(20.0)
+;The player did something that should make them colder, but not above "Freezing".
+FrostUtil.ModPlayerExposure(20.0, 80.0)
+;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
@@ -394,7 +788,27 @@ function ModPlayerExposure(float amount, float limit = -1.0) global
     Frostfall.Exposure.ModExposure(amount, limit)
 endFunction
 
+;/********f* FrostUtil/GetPlayerWarmth
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Returns the player's total Warmth value.
+*
+* SYNTAX
+*/;
 int function GetPlayerWarmth() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The player's Warmth value.
+*
+* EXAMPLES
+;How bundled up is the player?
+int warmth = FrostUtil.GetPlayerWarmth()
+;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
@@ -404,7 +818,27 @@ int function GetPlayerWarmth() global
     return Frostfall._Frost_AttributeWarmth.GetValueInt()
 endFunction
 
+;/********f* FrostUtil/GetPlayerCoverage
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Returns the player's total Coverage value.
+*
+* SYNTAX
+*/;
 int function GetPlayerCoverage() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The player's Coverage value.
+*
+* EXAMPLES
+;How covered is the player?
+int coverage = FrostUtil.GetPlayerCoverage()
+;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
@@ -414,15 +848,64 @@ int function GetPlayerCoverage() global
     return Frostfall._Frost_AttributeCoverage.GetValueInt()
 endFunction
 
+;/********f* FrostUtil/GetPlayerArmorWarmth
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Returns the sum of the Warmth values of all gear worn by the player.
+*
+* SYNTAX
+*/;
 int function GetPlayerArmorWarmth() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The total Warmth of all player worn gear.
+*
+* EXAMPLES
+;How warm are the player's clothes?
+int gear_warmth = FrostUtil.GetPlayerArmorWarmth()
+* NOTES
+* There are many different sources of Warmth, so this function does not return
+* the player's total Warmth value. If you want the total Warmth, use `GetPlayerWarmth()` instead.
+;*********/;
     _Frost_ClothingSystem clothing_system = GetClothingSystem()
     return clothing_system.GetArmorWarmth()
 endFunction
 
+;/********f* FrostUtil/GetPlayerArmorCoverage
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Returns the sum of the Coverage values of all gear worn by the player.
+*
+* SYNTAX
+*/;
 int function GetPlayerArmorCoverage() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* The total Coverage of all player worn gear.
+*
+* EXAMPLES
+;How warm are the player's clothes?
+int gear_coverage = FrostUtil.GetPlayerArmorCoverage()
+* NOTES
+* There are many different sources of Coverage, so this function does not return
+* the player's total Coverage value. If you want the total Coverage, use `GetPlayerCoverage()` instead.
+;*********/;
     _Frost_ClothingSystem clothing_system = GetClothingSystem()
     return clothing_system.GetArmorCoverage()
 endFunction
+
+
+; Events ==========================================================================================
 
 function SendEvent_OnPlayerStartSwimming() global
     _FrostInternal.FrostDebug(0, "Sending event Frostfall_OnPlayerStartSwimming")
