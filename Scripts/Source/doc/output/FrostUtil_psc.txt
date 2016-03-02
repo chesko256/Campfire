@@ -186,7 +186,7 @@ True if taking shelter, false if not.
 
 **NOTES.**
 
-This function does not return true if the player is inside a Campfire-based tent; it only returns true if a ray emitting upward from the player's head collides with an obstruction. For tent detection, use [CampUtil](#robo22).[GetCurrentTent](#robo43)().
+This function does not return true if the player is inside a Campfire-based tent; it only returns true if a ray emitting upward from the player's head collides with an obstruction. For tent detection, use [CampUtil](#robo0).[GetCurrentTent](#robo45)().
 
 ### FrostUtil/IsNearFastTravelException
 
@@ -629,3 +629,51 @@ The total Coverage of all player worn gear.
 **NOTES.**
 
 There are many different sources of Coverage, so this function does not return the player's total Coverage value. If you want the total Coverage, use \`[GetPlayerCoverage](#robo19)()\` instead.
+
+### FrostUtil/Frostfall\_OnPlayerStartSwimming
+
+**DESCRIPTION.**
+
+An SKSE Mod Event that is raised when the player begins swimming.
+
+**API VERSION ADDED.**
+
+1
+
+**SYNTAX.**
+
+    Event Frostfall_OnPlayerStartSwimming()
+
+**PARAMETERS.**
+
+None
+
+**EXAMPLES.**
+
+    Event OnInit()
+        RegisterForModEvent("Frostfall_OnPlayerStartSwimming", "Frostfall_OnPlayerStartSwimming")
+    endEvent
+
+### FrostUtil/Frostfall\_OnPlayerStopSwimming
+
+**DESCRIPTION.**
+
+An SKSE Mod Event that is raised when the player stops swimming.
+
+**API VERSION ADDED.**
+
+1
+
+**SYNTAX.**
+
+    Event Frostfall_OnPlayerStopSwimming()
+
+**PARAMETERS.**
+
+None
+
+**EXAMPLES.**
+
+    Event OnInit()
+        RegisterForModEvent("Frostfall_OnPlayerStopSwimming", "Frostfall_OnPlayerStopSwimming")
+    endEvent

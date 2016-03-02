@@ -210,7 +210,7 @@ bool near_fire = FrostUtil.IsPlayerNearFire()
 * that are not fires. Fires have special properties in Frostfall and Campfire, which 
 * include drying the player when wet, and being able to cook food using a cooking pot.
 *
-* To determine if the player is near a heat source of any kind, use `GetPlayerHeatSourceLevel()`
+* To determine if the player is near a heat source of any kind, use GetPlayerHeatSourceLevel()
 * instead.
 ;*********/;
     FrostfallAPI Frostfall = GetAPI()
@@ -256,7 +256,7 @@ if heat > 0
 endif
 * NOTES
 * This function does NOT determine if the heat source is a fire or not; there are heat sources
-* that are not fires. To determine if the player is near a fire, use `IsPlayerNearFire()`.
+* that are not fires. To determine if the player is near a fire, use IsPlayerNearFire().
 ;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
@@ -417,7 +417,7 @@ endFunction
 * 1
 *
 * DESCRIPTION
-* Returns the current weather somewhat more accurately than the default `GetCurrentWeather()` function.
+* Returns the current weather somewhat more accurately than the default GetCurrentWeather() function.
 * This function returns the outgoing weather if the weather is currently transitioning out (and thus is
 * still currently visible). Otherwise, returns the current weather.
 *
@@ -450,7 +450,7 @@ endFunction
 * 1
 *
 * DESCRIPTION
-* Returns the classification of the weather returned by `GetCurrentWeatherActual()`.
+* Returns the classification of the weather returned by GetCurrentWeatherActual().
 *
 * SYNTAX
 */;
@@ -618,7 +618,7 @@ endFunction
 * 1
 *
 * DESCRIPTION
-* Return the player's current wetness level. May be easier to use than `GetPlayerWetness()` if you don't
+* Return the player's current wetness level. May be easier to use than GetPlayerWetness() if you don't
 * need to know the actual wetness value.
 *
 * SYNTAX
@@ -694,7 +694,7 @@ endFunction
 * 1
 *
 * DESCRIPTION
-* Return the player's current exposure level. May be easier to use than `GetPlayerExposure()` if you don't
+* Return the player's current exposure level. May be easier to use than GetPlayerExposure() if you don't
 * need to know the actual exposure value.
 *
 * SYNTAX
@@ -853,7 +853,7 @@ int function GetPlayerArmorWarmth() global
 int gear_warmth = FrostUtil.GetPlayerArmorWarmth()
 * NOTES
 * There are many different sources of Warmth, so this function does not return
-* the player's total Warmth value. If you want the total Warmth, use `GetPlayerWarmth()` instead.
+* the player's total Warmth value. If you want the total Warmth, use GetPlayerWarmth() instead.
 ;*********/;
     _Frost_ClothingSystem clothing_system = GetClothingSystem()
     return clothing_system.GetArmorWarmth()
@@ -881,7 +881,7 @@ int function GetPlayerArmorCoverage() global
 int gear_coverage = FrostUtil.GetPlayerArmorCoverage()
 * NOTES
 * There are many different sources of Coverage, so this function does not return
-* the player's total Coverage value. If you want the total Coverage, use `GetPlayerCoverage()` instead.
+* the player's total Coverage value. If you want the total Coverage, use GetPlayerCoverage() instead.
 ;*********/;
     _Frost_ClothingSystem clothing_system = GetClothingSystem()
     return clothing_system.GetArmorCoverage()

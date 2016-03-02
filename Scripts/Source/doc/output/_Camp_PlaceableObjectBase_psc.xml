@@ -58,7 +58,7 @@ bool property Setting_BypassMenu = False auto
 _Camp_PlaceableObjectBase/UniqueConjuredObjectIDGlobal</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Optional: If set, and if <link linkend="robo209">Setting_IsConjured</link> is True, only one of this type of conjured object can be spawned at any given time. If not set, this object can be spawned any number of times. (Note: If different kinds of objects share the same UniqueConjuredObjectGlobal, only one of those objects can be spawned into the world even though they are of different types.) }
+ Optional: If set, and if <link linkend="robo211">Setting_IsConjured</link> is True, only one of this type of conjured object can be spawned at any given time. If not set, this object can be spawned any number of times. (Note: If different kinds of objects share the same UniqueConjuredObjectGlobal, only one of those objects can be spawned into the world even though they are of different types.) }
 </para>
 <formalpara><title>SYNTAX</title><para></para></formalpara>
 <literallayout class="monospaced">

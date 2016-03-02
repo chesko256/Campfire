@@ -224,7 +224,7 @@ bool sheltered = FrostUtil.IsPlayerTakingShelter()
 <para>
  This function does not return true if the player is inside a Campfire-based tent; it only
  returns true if a ray emitting upward from the player's head collides with an obstruction.
- For tent detection, use <link linkend="robo22">CampUtil</link>.<link linkend="robo43">GetCurrentTent</link>().
+ For tent detection, use <link linkend="robo0">CampUtil</link>.<link linkend="robo45">GetCurrentTent</link>().
 </para>
 </section>
 <section>
@@ -443,11 +443,11 @@ float function GetPlayerWetness() global
 </para>
 <formalpara><title>RETURN VALUE</title><para></para></formalpara>
 <para>
- The player's current wetness value.
- 0.0 = Not wet
- &gt;0.0 - 199.9 = Damp
- 200.0 - 549.9 = Wet
- 550.0 - 750.0 = Drenched
+ The player's current wetness value.    
+ 0.0 = Not wet    
+ &gt;0.0 - 199.9 = Damp    
+ 200.0 - 549.9 = Wet    
+ 550.0 - 750.0 = Drenched    
 </para>
 <formalpara><title>EXAMPLES</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -476,11 +476,11 @@ int function GetPlayerWetnessLevel() global
 </para>
 <formalpara><title>RETURN VALUE</title><para></para></formalpara>
 <para>
- The player's current wetness level.
- 0 = Not wet
- 1 = Damp
- 2 = Wet
- 3 = Drenched
+ The player's current wetness level.    
+ 0 = Not wet    
+ 1 = Damp    
+ 2 = Wet    
+ 3 = Drenched    
 </para>
 <formalpara><title>EXAMPLES</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -512,13 +512,13 @@ float function GetPlayerExposure() global
 </para>
 <formalpara><title>RETURN VALUE</title><para></para></formalpara>
 <para>
- The player's current exposure.
- 0.0 - 19.9 = Warm
- 20.0 - 39.9 = Comfortable
- 40.0 - 59.9 = Cold
- 60.0 - 79.9 = Very Cold
- 80.0 - 99.9 = Freezing
- 100.0 - 120.0 = Freezing to Death
+ The player's current exposure.    
+ 0.0 - 19.9 = Warm    
+ 20.0 - 39.9 = Comfortable    
+ 40.0 - 59.9 = Cold    
+ 60.0 - 79.9 = Very Cold    
+ 80.0 - 99.9 = Freezing    
+ 100.0 - 120.0 = Freezing to Death    
 </para>
 <formalpara><title>EXAMPLES</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -551,15 +551,15 @@ int function GetPlayerExposureLevel() global
 </para>
 <formalpara><title>RETURN VALUE</title><para></para></formalpara>
 <para>
- The player's current exposure level.
- -1 = Completely Warm
- 0 = Warm
- 1 = Comfortable
- 2 = Cold
- 3 = Very Cold
- 4 = Freezing
- 5 = Freezing to Death
- 6 = Maximum Exposure
+ The player's current exposure level.    
+ -1 = Completely Warm    
+ 0 = Warm    
+ 1 = Comfortable    
+ 2 = Cold    
+ 3 = Very Cold    
+ 4 = Freezing    
+ 5 = Freezing to Death    
+ 6 = Maximum Exposure    
 </para>
 <formalpara><title>EXAMPLES</title><para></para></formalpara>
 <literallayout class="monospaced">
@@ -734,5 +734,57 @@ int gear_coverage = FrostUtil.GetPlayerArmorCoverage()
  There are many different sources of Coverage, so this function does not return
  the player's total Coverage value. If you want the total Coverage, use `<link linkend="robo19">GetPlayerCoverage</link>()` instead.
 </para>
+</section>
+<section>
+<title>
+FrostUtil/Frostfall_OnPlayerStartSwimming</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ An SKSE Mod Event that is raised when the player begins swimming.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Event Frostfall_OnPlayerStartSwimming()
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+Event OnInit()
+    RegisterForModEvent("Frostfall_OnPlayerStartSwimming", "Frostfall_OnPlayerStartSwimming")
+endEvent
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/Frostfall_OnPlayerStopSwimming</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ An SKSE Mod Event that is raised when the player stops swimming.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Event Frostfall_OnPlayerStopSwimming()
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+Event OnInit()
+    RegisterForModEvent("Frostfall_OnPlayerStopSwimming", "Frostfall_OnPlayerStopSwimming")
+endEvent
+</literallayout>
 </section>
 </article>

@@ -24,6 +24,11 @@
 <li><a href="#FrostUtil_GetPlayerArmorWarmth">GetPlayerArmorWarmth</a></li>
 <li><a href="#FrostUtil_GetPlayerArmorCoverage">GetPlayerArmorCoverage</a></li>
 </ul>
+<h4 id="member-functions">Member Functions</h4>
+<ul>
+<li><a href="#FrostUtil_Frostfall_OnPlayerStartSwimming">Frostfall_OnPlayerStartSwimming</a></li>
+<li><a href="#FrostUtil_Frostfall_OnPlayerStopSwimming">Frostfall_OnPlayerStopSwimming</a></li>
+</ul>
 <h3 id="global-functions-1">Global Functions</h3>
 <h4 id="getapiversion"><a name="FrostUtil_GetAPIVersion"></a>GetAPIVersion</h4>
 <p>Get the FrostUtil API version number.</p>
@@ -118,7 +123,7 @@ endif</code></pre>
 <pre><code>;Is the player underneath something?
 bool sheltered = FrostUtil.IsPlayerTakingShelter()</code></pre>
 <p><strong>Notes</strong></p>
-<p>This function does not return true if the player is inside a Campfire-based tent; it only returns true if a ray emitting upward from the player's head collides with an obstruction. For tent detection, use <a href="#robo22">CampUtil</a>.<a href="#robo43">GetCurrentTent</a>().</p>
+<p>This function does not return true if the player is inside a Campfire-based tent; it only returns true if a ray emitting upward from the player's head collides with an obstruction. For tent detection, use <a href="#robo0">CampUtil</a>.<a href="#robo45">GetCurrentTent</a>().</p>
 <hr />
 <h4 id="isnearfasttravelexception"><a name="FrostUtil_IsNearFastTravelException"></a>IsNearFastTravelException</h4>
 <p>Whether or not the player near a &quot;fast travel exception&quot;. If a player is nearby one of these objects, the Exposure System will re-enable the player's Fast Travel controls. This is used in cases where there is an expectation for Fast Travel be enabled when near these objects (like Apocrypha's Black Books.)</p>
@@ -365,3 +370,30 @@ int gear_warmth = FrostUtil.GetPlayerArmorWarmth()</code></pre>
 int gear_coverage = FrostUtil.GetPlayerArmorCoverage()</code></pre>
 <p><strong>Notes</strong></p>
 <p>There are many different sources of Coverage, so this function does not return the player's total Coverage value. If you want the total Coverage, use `<a href="#robo19">GetPlayerCoverage</a>()` instead.</p>
+<hr />
+<h3 id="member-functions-1">Member Functions</h3>
+<h4 id="frostfall_onplayerstartswimming"><a name="FrostUtil_Frostfall_OnPlayerStartSwimming"></a>Frostfall_OnPlayerStartSwimming</h4>
+<p>An SKSE Mod Event that is raised when the player begins swimming.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>Event Frostfall_OnPlayerStartSwimming()</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Examples</strong></p>
+<pre><code>Event OnInit()
+    RegisterForModEvent(&quot;Frostfall_OnPlayerStartSwimming&quot;, &quot;Frostfall_OnPlayerStartSwimming&quot;)
+endEvent</code></pre>
+<hr />
+<h4 id="frostfall_onplayerstopswimming"><a name="FrostUtil_Frostfall_OnPlayerStopSwimming"></a>Frostfall_OnPlayerStopSwimming</h4>
+<p>An SKSE Mod Event that is raised when the player stops swimming.</p>
+<p><strong>Api version added</strong></p>
+<p>1</p>
+<p><strong>Syntax</strong></p>
+<pre><code>Event Frostfall_OnPlayerStopSwimming()</code></pre>
+<p><strong>Parameters</strong></p>
+<p>None</p>
+<p><strong>Examples</strong></p>
+<pre><code>Event OnInit()
+    RegisterForModEvent(&quot;Frostfall_OnPlayerStopSwimming&quot;, &quot;Frostfall_OnPlayerStopSwimming&quot;)
+endEvent</code></pre>
