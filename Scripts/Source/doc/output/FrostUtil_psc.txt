@@ -91,7 +91,7 @@ True if near a fire; false otherwise.
 
 This does NOT indicate if the player is near a heat source; there are heat sources that are not fires. Fires have special properties in Frostfall and Campfire, which include drying the player when wet, and being able to cook food using a cooking pot.
 
-To determine if the player is near a heat source of any kind, use \`[GetPlayerHeatSourceLevel](#robo4)()\` instead.
+To determine if the player is near a heat source of any kind, use [GetPlayerHeatSourceLevel](#robo4)() instead.
 
 ### FrostUtil/GetPlayerHeatSourceLevel
 
@@ -113,7 +113,15 @@ None
 
 **RETURN VALUE.**
 
-Possible return values: 0 = Player is not near a heat source. 1 = Current heat source is "small" (e.g. bowls of burning embers, "fragile" campfires in Campfire) 2 = Current heat source is "medium" (e.g. most campfires and other fireplaces) 3 = Current heat source is "large" (e.g. giant campfires, "roaring" campfires in Campfire)
+Possible return values:
+
+-   0 = Player is not near a heat source.
+
+-   1 = Current heat source is "small" (e.g. bowls of burning embers, "fragile" campfires in Campfire)
+
+-   2 = Current heat source is "medium" (e.g. most campfires and other fireplaces)
+
+-   3 = Current heat source is "large" (e.g. giant campfires, "roaring" campfires in Campfire)
 
 **EXAMPLES.**
 
@@ -125,7 +133,7 @@ Possible return values: 0 = Player is not near a heat source. 1 = Current heat s
 
 **NOTES.**
 
-This function does NOT determine if the heat source is a fire or not; there are heat sources that are not fires. To determine if the player is near a fire, use \`[IsPlayerNearFire](#robo3)()\`.
+This function does NOT determine if the heat source is a fire or not; there are heat sources that are not fires. To determine if the player is near a fire, use [IsPlayerNearFire](#robo3)().
 
 ### FrostUtil/GetPlayerHeatSourceDistance
 
@@ -147,7 +155,9 @@ None
 
 **RETURN VALUE.**
 
-0.0 to 600.0 - The distance from the player to the heat source. Frostfall does not detect heat sources more than 600 units away. -1.0 - No current heat source detected.
+-   0.0 to 600.0 - The distance from the player to the heat source. Frostfall does not detect heat sources more than 600 units away.
+
+-   -1.0 - No current heat source detected.
 
 **EXAMPLES.**
 
@@ -186,7 +196,7 @@ True if taking shelter, false if not.
 
 **NOTES.**
 
-This function does not return true if the player is inside a Campfire-based tent; it only returns true if a ray emitting upward from the player's head collides with an obstruction. For tent detection, use [CampUtil](#robo0).[GetCurrentTent](#robo45)().
+This function does not return true if the player is inside a Campfire-based tent; it only returns true if a ray emitting upward from the player's head collides with an obstruction. For tent detection, use [CampUtil](#robo0).[GetCurrentTent](#robo49)().
 
 ### FrostUtil/IsNearFastTravelException
 
@@ -235,7 +245,11 @@ None
 
 **RETURN VALUE.**
 
-Greater than 10: A "warm" area. Exposure will decrease. The higher the number, the faster it will decrease. 10: A "neutral" area. Exposure will not increase or decrease. Less than 10: A "cold" area. Exposure will increase. The lower the number, the faster it will increase.
+-   Greater than 10: A "warm" area. Exposure will decrease. The higher the number, the faster it will decrease.
+
+-   10: A "neutral" area. Exposure will not increase or decrease.
+
+-   Less than 10: A "cold" area. Exposure will increase. The lower the number, the faster it will increase.
 
 **EXAMPLES.**
 
@@ -252,7 +266,7 @@ The return values of this function correspond very roughly with degrees celsius.
 
 **DESCRIPTION.**
 
-Returns the current weather somewhat more accurately than the default \`GetCurrentWeather()\` function. This function returns the outgoing weather if the weather is currently transitioning out (and thus is still currently visible). Otherwise, returns the current weather.
+Returns the current weather somewhat more accurately than the default GetCurrentWeather() function. This function returns the outgoing weather if the weather is currently transitioning out (and thus is still currently visible). Otherwise, returns the current weather.
 
 **API VERSION ADDED.**
 
@@ -279,7 +293,7 @@ The current weather.
 
 **DESCRIPTION.**
 
-Returns the classification of the weather returned by \`[GetCurrentWeatherActual](#robo9)()\`.
+Returns the classification of the weather returned by [GetCurrentWeatherActual](#robo9)().
 
 **API VERSION ADDED.**
 
@@ -383,7 +397,15 @@ None
 
 **RETURN VALUE.**
 
-The player's current wetness value. 0.0 = Not wet \>0.0 - 199.9 = Damp 200.0 - 549.9 = Wet 550.0 - 750.0 = Drenched
+-   The player's current wetness value.
+
+-   0.0 = Not wet
+
+-   \>0.0 - 199.9 = Damp
+
+-   200.0 - 549.9 = Wet
+
+-   550.0 - 750.0 = Drenched
 
 **EXAMPLES.**
 
@@ -393,7 +415,7 @@ The player's current wetness value. 0.0 = Not wet \>0.0 - 199.9 = Damp 200.0 - 5
 
 **DESCRIPTION.**
 
-Return the player's current wetness level. May be easier to use than \`[GetPlayerWetness](#robo13)()\` if you don't need to know the actual wetness value.
+Return the player's current wetness level. May be easier to use than [GetPlayerWetness](#robo13)() if you don't need to know the actual wetness value.
 
 **API VERSION ADDED.**
 
@@ -409,7 +431,15 @@ None
 
 **RETURN VALUE.**
 
-The player's current wetness level. 0 = Not wet 1 = Damp 2 = Wet 3 = Drenched
+-   The player's current wetness level.
+
+-   0 = Not wet
+
+-   1 = Damp
+
+-   2 = Wet
+
+-   3 = Drenched
 
 **EXAMPLES.**
 
@@ -439,7 +469,19 @@ None
 
 **RETURN VALUE.**
 
-The player's current exposure. 0.0 - 19.9 = Warm 20.0 - 39.9 = Comfortable 40.0 - 59.9 = Cold 60.0 - 79.9 = Very Cold 80.0 - 99.9 = Freezing 100.0 - 120.0 = Freezing to Death
+-   The player's current exposure.
+
+-   0.0 - 19.9 = Warm
+
+-   20.0 - 39.9 = Comfortable
+
+-   40.0 - 59.9 = Cold
+
+-   60.0 - 79.9 = Very Cold
+
+-   80.0 - 99.9 = Freezing
+
+-   100.0 - 120.0 = Freezing to Death
 
 **EXAMPLES.**
 
@@ -453,7 +495,7 @@ The player's current exposure. 0.0 - 19.9 = Warm 20.0 - 39.9 = Comfortable 40.0 
 
 **DESCRIPTION.**
 
-Return the player's current exposure level. May be easier to use than \`[GetPlayerExposure](#robo15)()\` if you don't need to know the actual exposure value.
+Return the player's current exposure level. May be easier to use than [GetPlayerExposure](#robo15)() if you don't need to know the actual exposure value.
 
 **API VERSION ADDED.**
 
@@ -469,7 +511,23 @@ None
 
 **RETURN VALUE.**
 
-The player's current exposure level. -1 = Completely Warm 0 = Warm 1 = Comfortable 2 = Cold 3 = Very Cold 4 = Freezing 5 = Freezing to Death 6 = Maximum Exposure
+-   The player's current exposure level.
+
+-   -1 = Completely Warm
+
+-   0 = Warm
+
+-   1 = Comfortable
+
+-   2 = Cold
+
+-   3 = Very Cold
+
+-   4 = Freezing
+
+-   5 = Freezing to Death
+
+-   6 = Maximum Exposure
 
 **EXAMPLES.**
 
@@ -597,7 +655,7 @@ The total Warmth of all player worn gear.
 
 **NOTES.**
 
-There are many different sources of Warmth, so this function does not return the player's total Warmth value. If you want the total Warmth, use \`[GetPlayerWarmth](#robo18)()\` instead.
+There are many different sources of Warmth, so this function does not return the player's total Warmth value. If you want the total Warmth, use [GetPlayerWarmth](#robo18)() instead.
 
 ### FrostUtil/GetPlayerArmorCoverage
 
@@ -628,7 +686,7 @@ The total Coverage of all player worn gear.
 
 **NOTES.**
 
-There are many different sources of Coverage, so this function does not return the player's total Coverage value. If you want the total Coverage, use \`[GetPlayerCoverage](#robo19)()\` instead.
+There are many different sources of Coverage, so this function does not return the player's total Coverage value. If you want the total Coverage, use [GetPlayerCoverage](#robo19)() instead.
 
 ### FrostUtil/Frostfall\_OnPlayerStartSwimming
 
@@ -654,6 +712,10 @@ None
         RegisterForModEvent("Frostfall_OnPlayerStartSwimming", "Frostfall_OnPlayerStartSwimming")
     endEvent
 
+    Event Frostfall_OnPlayerStartSwimming()
+        debug.notification("The player started swimming!")
+    endEvent
+
 ### FrostUtil/Frostfall\_OnPlayerStopSwimming
 
 **DESCRIPTION.**
@@ -676,4 +738,162 @@ None
 
     Event OnInit()
         RegisterForModEvent("Frostfall_OnPlayerStopSwimming", "Frostfall_OnPlayerStopSwimming")
+    endEvent
+
+    Event Frostfall_OnPlayerStopSwimming()
+        debug.notification("The player stopped swimming!")
+    endEvent
+
+### FrostUtil/Frostfall\_Loaded
+
+**DESCRIPTION.**
+
+An SKSE Mod Event that is raised when Frostfall is finished starting up, or after loading a save game with Frostfall enabled.
+
+**API VERSION ADDED.**
+
+1
+
+**SYNTAX.**
+
+    Event Frostfall_Loaded()
+
+**PARAMETERS.**
+
+None
+
+**EXAMPLES.**
+
+    Event OnInit()
+        RegisterForModEvent("Frostfall_Loaded", "Frostfall_Loaded")
+    endEvent
+
+    Event Frostfall_Loaded()
+        debug.notification("Frostfall has finished starting up!")
+    endEvent
+
+**NOTES.**
+
+This event will only be raised if Frostfall is enabled. Therefore, don't rely on this event at game start-up for a critical function as you will not receive it until the player starts up Frostfall or loads a game with Frostfall already enabled.
+
+### FrostUtil/Frost\_OnRescuePlayer
+
+**DESCRIPTION.**
+
+An SKSE Mod Event that is raised when the player is rescued when using the Max Exposure Rescue mechanic.
+
+**API VERSION ADDED.**
+
+1
+
+**SYNTAX.**
+
+    Event Frost_OnRescuePlayer(bool in_water)
+
+**PARAMETERS.**
+
+-   in\_water: Whether or not the player was swimming when they were rescued (mainly used by the rescue system to select a suitable destination).
+
+**EXAMPLES.**
+
+    Event OnInit()
+        RegisterForModEvent("Frost_OnRescuePlayer", "Frost_OnRescuePlayer")
+    endEvent
+
+    Event Frost_OnRescuePlayer(bool in_water)
+        debug.notification("The player was just rescued!")
+    endEvent
+
+### FrostUtil/Frost\_OnTamrielRegionChange
+
+**DESCRIPTION.**
+
+An SKSE Mod Event that is raised when the player moves from one tracked region to another.
+
+**API VERSION ADDED.**
+
+1
+
+**SYNTAX.**
+
+    Event OnTamrielRegionChange(int region, bool in_region)
+
+**PARAMETERS.**
+
+-   region: The ID of the region. See Notes for region IDs.
+
+-   in\_region: If True, the player is entering this region. If False, the player is leaving it.
+
+**EXAMPLES.**
+
+    Event OnInit()
+        RegisterForModEvent("Frost_OnTamrielRegionChange", "Frost_OnTamrielRegionChange")
+    endEvent
+
+    Event Frost_OnTamrielRegionChange(int region, bool in_region)
+        if in_region && region == 11
+            debug.notification("The player just entered Solstheim!")
+        endif
+    endEvent
+
+**NOTES.**
+
+The following are possible region IDs:
+
+-   REGION\_UNKNOWN = -1
+
+-   REGION\_PINEFOREST = 1
+
+-   REGION\_VOLCANICTUNDRA = 2
+
+-   REGION\_FALLFOREST = 3
+
+-   REGION\_REACH = 4
+
+-   REGION\_TUNDRA = 5
+
+-   REGION\_TUNDRAMARSH = 6
+
+-   REGION\_COAST = 7
+
+-   REGION\_SNOW = 8
+
+-   REGION\_OBLIVION = 9
+
+-   REGION\_FALMERVALLEY = 10
+
+-   REGION\_SOLSTHEIM = 11
+
+-   REGION\_WYRMSTOOTH = 20
+
+-   REGION\_DARKEND = 21
+
+### FrostUtil/Frost\_OnInnerFireMeditate
+
+**DESCRIPTION.**
+
+An SKSE Mod Event that is raised when the player begins or ends using the Inner Fire ability.
+
+**API VERSION ADDED.**
+
+1
+
+**SYNTAX.**
+
+    Event Frost_OnInnerFireMeditate(bool abMeditating)
+
+**PARAMETERS.**
+
+-   abMeditating: If True, the player entered the Inner Fire state. If False, they have just left it.
+
+**EXAMPLES.**
+
+    Event OnInit()
+        RegisterForModEvent("Frost_OnInnerFireMeditate", "Frost_OnInnerFireMeditate")
+    endEvent
+
+    Event Frost_OnInnerFireMeditate(bool abMeditating)
+        if abMeditating
+            debug.notification("The player began meditating using Inner Fire!")
+        endif
     endEvent

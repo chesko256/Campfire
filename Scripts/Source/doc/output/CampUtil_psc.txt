@@ -610,7 +610,7 @@ Is this tent waterproof?
 
 **PARAMETERS.**
 
-akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo45)(), or use [IsCurrentTentWaterproof](#robo49)() instead.
+akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo49)(), or use [IsCurrentTentWaterproof](#robo53)() instead.
 
 **RETURN VALUE.**
 
@@ -632,7 +632,7 @@ Is this tent warm?
 
 **PARAMETERS.**
 
-akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo45)(), or use [IsCurrentTentWarm](#robo50)() instead.
+akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo49)(), or use [IsCurrentTentWarm](#robo54)() instead.
 
 **RETURN VALUE.**
 
@@ -654,7 +654,7 @@ Does this tent have shelter? (Used by Frostfall to determine if the player shoul
 
 **PARAMETERS.**
 
-akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo45)(), or use [CurrentTentHasShelter](#robo52)() instead.
+akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo49)(), or use [CurrentTentHasShelter](#robo56)() instead.
 
 **RETURN VALUE.**
 
@@ -1092,7 +1092,7 @@ akTent: The tent the player just "entered". Cast to an ObjectReference (i.e. akT
 
 **NOTES.**
 
-For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player sits or lies down on their bed roll. (Reason: [TentAsset\_LargeTentTriggerVolume](#robo121) has not been set.)
+For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player sits or lies down on their bed roll. (Reason: [TentAsset\_LargeTentTriggerVolume](#robo126) has not been set.)
 
 ### CampUtil/Campfire\_OnTentLeave
 
@@ -1124,4 +1124,36 @@ None.
 
 **NOTES.**
 
-This event may fire multiple times for the same tent. This can happen for a number of reasons, such as if the player is standing inside the tent when picking it up. For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player gets up from sitting or lying down on their bed roll. (Reason: [TentAsset\_LargeTentTriggerVolume](#robo121) has not been set.)
+This event may fire multiple times for the same tent. This can happen for a number of reasons, such as if the player is standing inside the tent when picking it up. For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player gets up from sitting or lying down on their bed roll. (Reason: [TentAsset\_LargeTentTriggerVolume](#robo126) has not been set.)
+
+### CampUtil/Campfire\_Loaded
+
+**DESCRIPTION.**
+
+An SKSE Mod Event that is raised when Campfire is finished starting up, or after loading a save game with Campfire enabled.
+
+**API VERSION ADDED.**
+
+4
+
+**SYNTAX.**
+
+    Event Campfire_Loaded()
+
+**PARAMETERS.**
+
+None
+
+**EXAMPLES.**
+
+    Event OnInit()
+        RegisterForModEvent("Campfire_Loaded", "Campfire_Loaded")
+    endEvent
+
+    Event Campfire_Loaded()
+        debug.notification("Campfire has finished starting up!")
+    endEvent
+
+**NOTES.**
+
+This event will be raised almost immediately after game start-up, as Campfire is always enabled if loaded.

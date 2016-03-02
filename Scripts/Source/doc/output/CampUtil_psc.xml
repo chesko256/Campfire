@@ -664,7 +664,7 @@ bool function IsTentWaterproof(ObjectReference akTent) global
 </literallayout>
 <formalpara><title>PARAMETERS</title><para></para></formalpara>
 <para>
- akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo45">GetCurrentTent</link>(), or use <link linkend="robo49">IsCurrentTentWaterproof</link>() instead.
+ akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo49">GetCurrentTent</link>(), or use <link linkend="robo53">IsCurrentTentWaterproof</link>() instead.
 </para>
 <formalpara><title>RETURN VALUE</title><para></para></formalpara>
 <para>
@@ -688,7 +688,7 @@ bool function IsTentWarm(ObjectReference akTent) global
 </literallayout>
 <formalpara><title>PARAMETERS</title><para></para></formalpara>
 <para>
- akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo45">GetCurrentTent</link>(), or use <link linkend="robo50">IsCurrentTentWarm</link>() instead.
+ akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo49">GetCurrentTent</link>(), or use <link linkend="robo54">IsCurrentTentWarm</link>() instead.
 </para>
 <formalpara><title>RETURN VALUE</title><para></para></formalpara>
 <para>
@@ -712,7 +712,7 @@ bool function TentHasShelter(ObjectReference akTent) global
 </literallayout>
 <formalpara><title>PARAMETERS</title><para></para></formalpara>
 <para>
- akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo45">GetCurrentTent</link>(), or use <link linkend="robo52">CurrentTentHasShelter</link>() instead.
+ akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo49">GetCurrentTent</link>(), or use <link linkend="robo56">CurrentTentHasShelter</link>() instead.
 </para>
 <formalpara><title>RETURN VALUE</title><para></para></formalpara>
 <para>
@@ -1188,7 +1188,7 @@ endEvent
 </literallayout>
 <formalpara><title>NOTES</title><para></para></formalpara>
 <para>
- For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player sits or lies down on their bed roll. (Reason: <link linkend="robo121">TentAsset_LargeTentTriggerVolume</link> has not been set.)
+ For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player sits or lies down on their bed roll. (Reason: <link linkend="robo126">TentAsset_LargeTentTriggerVolume</link> has not been set.)
 </para>
 </section>
 <section>
@@ -1223,7 +1223,42 @@ endEvent
 <formalpara><title>NOTES</title><para></para></formalpara>
 <para>
  This event may fire multiple times for the same tent. This can happen for a number of reasons, such as if the player is standing inside the tent when picking it up.
- For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player gets up from sitting or lying down on their bed roll. (Reason: <link linkend="robo121">TentAsset_LargeTentTriggerVolume</link> has not been set.)
+ For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player gets up from sitting or lying down on their bed roll. (Reason: <link linkend="robo126">TentAsset_LargeTentTriggerVolume</link> has not been set.)
+</para>
+</section>
+<section>
+<title>
+CampUtil/Campfire_Loaded</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ An SKSE Mod Event that is raised when Campfire is finished starting up, or after loading a save game with Campfire enabled.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 4
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+Event Campfire_Loaded()
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+Event OnInit()
+    RegisterForModEvent("Campfire_Loaded", "Campfire_Loaded")
+endEvent
+
+Event Campfire_Loaded()
+    debug.notification("Campfire has finished starting up!")
+endEvent
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ This event will be raised almost immediately after game start-up, as Campfire
+ is always enabled if loaded.
 </para>
 </section>
 </article>

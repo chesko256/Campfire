@@ -8,3 +8,6 @@ Event OnInit()
         utility.wait(1)
     endWhile
 endEvent
+
+function ModAttributeWetness(float amount, float limit)
+endFunction

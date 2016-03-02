@@ -190,7 +190,7 @@ endFunction
 * 1
 *
 * DESCRIPTION
-* Whether or not the player is currently near a fire. Note: 
+* Whether or not the player is currently near a fire.
 *
 * SYNTAX
 */;
@@ -243,10 +243,10 @@ int function GetPlayerHeatSourceLevel() global
 *
 * RETURN VALUE
 * Possible return values:
-* 0 = Player is not near a heat source.
-* 1 = Current heat source is "small" (e.g. bowls of burning embers, "fragile" campfires in Campfire)
-* 2 = Current heat source is "medium" (e.g. most campfires and other fireplaces)
-* 3 = Current heat source is "large" (e.g. giant campfires, "roaring" campfires in Campfire)
+* * 0 = Player is not near a heat source.
+* * 1 = Current heat source is "small" (e.g. bowls of burning embers, "fragile" campfires in Campfire)
+* * 2 = Current heat source is "medium" (e.g. most campfires and other fireplaces)
+* * 3 = Current heat source is "large" (e.g. giant campfires, "roaring" campfires in Campfire)
 *
 * EXAMPLES
 ;Is the player near heat?
@@ -282,9 +282,8 @@ float function GetPlayerHeatSourceDistance() global
 * None
 *
 * RETURN VALUE
-* 0.0 to 600.0 - The distance from the player to the heat source. Frostfall
-* does not detect heat sources more than 600 units away.
-* -1.0 - No current heat source detected.
+* * 0.0 to 600.0 - The distance from the player to the heat source. Frostfall does not detect heat sources more than 600 units away.
+* * -1.0 - No current heat source detected.
 *
 * EXAMPLES
 ;How far away is the heat source?
@@ -392,9 +391,9 @@ int function GetCurrentTemperature() global
 * None
 *
 * RETURN VALUE
-* Greater than 10: A "warm" area. Exposure will decrease. The higher the number, the faster it will decrease.
-* 10: A "neutral" area. Exposure will not increase or decrease.
-* Less than 10: A "cold" area. Exposure will increase. The lower the number, the faster it will increase.
+* * Greater than 10: A "warm" area. Exposure will decrease. The higher the number, the faster it will decrease.
+* * 10: A "neutral" area. Exposure will not increase or decrease.
+* * Less than 10: A "cold" area. Exposure will increase. The lower the number, the faster it will increase.
 *
 * EXAMPLES
 int temp = FrostUtil.GetCurrentTemperature()
@@ -596,11 +595,11 @@ float function GetPlayerWetness() global
 * None
 *
 * RETURN VALUE
-* The player's current wetness value.    
-* 0.0 = Not wet    
-* >0.0 - 199.9 = Damp    
-* 200.0 - 549.9 = Wet    
-* 550.0 - 750.0 = Drenched    
+* * The player's current wetness value.
+* * 0.0 = Not wet
+* * >0.0 - 199.9 = Damp
+* * 200.0 - 549.9 = Wet
+* * 550.0 - 750.0 = Drenched
 *
 * EXAMPLES
 float wetness = FrostUtil.GetPlayerWetness()
@@ -629,11 +628,11 @@ int function GetPlayerWetnessLevel() global
 * None
 *
 * RETURN VALUE
-* The player's current wetness level.    
-* 0 = Not wet    
-* 1 = Damp    
-* 2 = Wet    
-* 3 = Drenched    
+* * The player's current wetness level.    
+* * 0 = Not wet
+* * 1 = Damp
+* * 2 = Wet
+* * 3 = Drenched
 *
 * EXAMPLES
 ;Is the player drenched?
@@ -666,13 +665,13 @@ float function GetPlayerExposure() global
 * None
 *
 * RETURN VALUE
-* The player's current exposure.    
-* 0.0 - 19.9 = Warm    
-* 20.0 - 39.9 = Comfortable    
-* 40.0 - 59.9 = Cold    
-* 60.0 - 79.9 = Very Cold    
-* 80.0 - 99.9 = Freezing    
-* 100.0 - 120.0 = Freezing to Death    
+* * The player's current exposure.
+* * 0.0 - 19.9 = Warm
+* * 20.0 - 39.9 = Comfortable
+* * 40.0 - 59.9 = Cold
+* * 60.0 - 79.9 = Very Cold
+* * 80.0 - 99.9 = Freezing
+* * 100.0 - 120.0 = Freezing to Death
 *
 * EXAMPLES
 ;Is the player cold?
@@ -705,15 +704,15 @@ int function GetPlayerExposureLevel() global
 * None
 *
 * RETURN VALUE
-* The player's current exposure level.    
-* -1 = Completely Warm    
-* 0 = Warm    
-* 1 = Comfortable    
-* 2 = Cold    
-* 3 = Very Cold    
-* 4 = Freezing    
-* 5 = Freezing to Death    
-* 6 = Maximum Exposure    
+* * The player's current exposure level.
+* * -1 = Completely Warm
+* * 0 = Warm
+* * 1 = Comfortable
+* * 2 = Cold
+* * 3 = Very Cold
+* * 4 = Freezing
+* * 5 = Freezing to Death
+* * 6 = Maximum Exposure
 *
 * EXAMPLES
 ;Is the player cold?
@@ -907,6 +906,10 @@ Event Frostfall_OnPlayerStartSwimming()
 Event OnInit()
     RegisterForModEvent("Frostfall_OnPlayerStartSwimming", "Frostfall_OnPlayerStartSwimming")
 endEvent
+
+Event Frostfall_OnPlayerStartSwimming()
+    debug.notification("The player started swimming!")
+endEvent
 ;*********/;
 function SendEvent_OnPlayerStartSwimming() global
     _FrostInternal.FrostDebug(0, "Sending event Frostfall_OnPlayerStartSwimming")
@@ -933,6 +936,10 @@ Event Frostfall_OnPlayerStopSwimming()
 Event OnInit()
     RegisterForModEvent("Frostfall_OnPlayerStopSwimming", "Frostfall_OnPlayerStopSwimming")
 endEvent
+
+Event Frostfall_OnPlayerStopSwimming()
+    debug.notification("The player stopped swimming!")
+endEvent
 ;*********/;
 function SendEvent_OnPlayerStopSwimming() global
     _FrostInternal.FrostDebug(0, "Sending event Frostfall_OnPlayerStopSwimming")
@@ -946,6 +953,125 @@ function RaiseFrostAPIError() global
     debug.trace("[Frostfall][ERROR] Fatal Frostfall API error occurred.")
 endFunction
 
+
+; Mod Event Documentation =========================================================================
+
+;/********e* FrostUtil/Frostfall_Loaded
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* An SKSE Mod Event that is raised when Frostfall is finished starting up, or after loading a save game with Frostfall enabled.
+*
+* SYNTAX
+Event Frostfall_Loaded()
+* 
+* PARAMETERS
+* None
+*
+* EXAMPLES
+Event OnInit()
+    RegisterForModEvent("Frostfall_Loaded", "Frostfall_Loaded")
+endEvent
+
+Event Frostfall_Loaded()
+    debug.notification("Frostfall has finished starting up!")
+endEvent
+* NOTES
+* This event will only be raised if Frostfall is enabled. Therefore, don't rely
+* on this event at game start-up for a critical function as you will not receive it
+* until the player starts up Frostfall or loads a game with Frostfall already enabled.
+;*********/;
+
+;/********e* FrostUtil/Frost_OnRescuePlayer
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* An SKSE Mod Event that is raised when the player is rescued when using the Max Exposure Rescue mechanic.
+*
+* SYNTAX
+Event Frost_OnRescuePlayer(bool in_water)
+* 
+* PARAMETERS
+* * in_water: Whether or not the player was swimming when they were rescued (mainly used by the rescue system to select a suitable destination).
+*
+* EXAMPLES
+Event OnInit()
+    RegisterForModEvent("Frost_OnRescuePlayer", "Frost_OnRescuePlayer")
+endEvent
+
+Event Frost_OnRescuePlayer(bool in_water)
+    debug.notification("The player was just rescued!")
+endEvent
+;*********/;
+
+;/********e* FrostUtil/Frost_OnTamrielRegionChange
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* An SKSE Mod Event that is raised when the player moves from one tracked region to another.
+*
+* SYNTAX
+Event OnTamrielRegionChange(int region, bool in_region)
+* 
+* PARAMETERS
+* * region: The ID of the region. See Notes for region IDs.
+* * in_region: If True, the player is entering this region. If False, the player is leaving it.
+*
+* EXAMPLES
+Event OnInit()
+    RegisterForModEvent("Frost_OnTamrielRegionChange", "Frost_OnTamrielRegionChange")
+endEvent
+
+Event Frost_OnTamrielRegionChange(int region, bool in_region)
+    if in_region && region == 11
+        debug.notification("The player just entered Solstheim!")
+    endif
+endEvent
+* NOTES
+* The following are possible region IDs:
+* * REGION_UNKNOWN = -1
+* * REGION_PINEFOREST = 1 
+* * REGION_VOLCANICTUNDRA = 2 
+* * REGION_FALLFOREST = 3 
+* * REGION_REACH = 4 
+* * REGION_TUNDRA = 5 
+* * REGION_TUNDRAMARSH = 6 
+* * REGION_COAST = 7 
+* * REGION_SNOW = 8 
+* * REGION_OBLIVION = 9 
+* * REGION_FALMERVALLEY = 10
+* * REGION_SOLSTHEIM = 11
+* * REGION_WYRMSTOOTH = 20
+* * REGION_DARKEND = 21
+;*********/;
+
+;/********e* FrostUtil/Frost_OnInnerFireMeditate
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* An SKSE Mod Event that is raised when the player begins or ends using the Inner Fire ability.
+*
+* SYNTAX
+Event Frost_OnInnerFireMeditate(bool abMeditating)
+* 
+* PARAMETERS
+* * abMeditating: If True, the player entered the Inner Fire state. If False, they have just left it.
+*
+* EXAMPLES
+Event OnInit()
+    RegisterForModEvent("Frost_OnInnerFireMeditate", "Frost_OnInnerFireMeditate")
+endEvent
+
+Event Frost_OnInnerFireMeditate(bool abMeditating)
+    if abMeditating
+        debug.notification("The player began meditating using Inner Fire!")
+    endif
+endEvent
+;*********/;
 
 ; Deprecated / Unused Functions ===================================================================
 
