@@ -1608,3 +1608,29 @@ Event Campfire_OnTentLeave()
 	debug.trace("Back to adventuring!")
 endEvent
 ;*********/;
+
+;/********e* CampUtil/Campfire_Loaded
+* API VERSION ADDED
+* 4
+*
+* DESCRIPTION
+* An SKSE Mod Event that is raised when Campfire is finished starting up, or after loading a save game with Campfire enabled.
+*
+* SYNTAX
+Event Campfire_Loaded()
+* 
+* PARAMETERS
+* None
+*
+* EXAMPLES
+Event OnInit()
+    RegisterForModEvent("Campfire_Loaded", "Campfire_Loaded")
+endEvent
+
+Event Campfire_Loaded()
+    debug.notification("Campfire has finished starting up!")
+endEvent
+* NOTES
+* This event will be raised almost immediately after game start-up, as Campfire
+* is always enabled if loaded.
+;*********/;
