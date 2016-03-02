@@ -12,7 +12,7 @@ The \`CampUtil\` script is the primary way most mods should interact with Campfi
 
 **DESCRIPTION.**
 
-Get the [CampUtil](#robo22) API version number.
+Get the [CampUtil](#robo0) API version number.
 
 **API VERSION ADDED.**
 
@@ -28,7 +28,7 @@ None
 
 **RETURN VALUE.**
 
-The [CampUtil](#robo22) API version number. This is NOT the same thing as the version number of Campfire. [CampUtil](#robo22)'s version number will increment only when changes have been made to the API itself.
+The [CampUtil](#robo0) API version number. This is NOT the same thing as the version number of Campfire. [CampUtil](#robo0)'s version number will increment only when changes have been made to the API itself.
 
 **EXAMPLES.**
 
@@ -610,7 +610,7 @@ Is this tent waterproof?
 
 **PARAMETERS.**
 
-akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo43)(), or use [IsCurrentTentWaterproof](#robo47)() instead.
+akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo45)(), or use [IsCurrentTentWaterproof](#robo49)() instead.
 
 **RETURN VALUE.**
 
@@ -632,7 +632,7 @@ Is this tent warm?
 
 **PARAMETERS.**
 
-akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo43)(), or use [IsCurrentTentWarm](#robo48)() instead.
+akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo45)(), or use [IsCurrentTentWarm](#robo50)() instead.
 
 **RETURN VALUE.**
 
@@ -654,7 +654,7 @@ Does this tent have shelter? (Used by Frostfall to determine if the player shoul
 
 **PARAMETERS.**
 
-akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo43)(), or use [CurrentTentHasShelter](#robo50)() instead.
+akTent: The Tent ObjectReference to check. Use the return value of [GetCurrentTent](#robo45)(), or use [CurrentTentHasShelter](#robo52)() instead.
 
 **RETURN VALUE.**
 
@@ -1092,7 +1092,7 @@ akTent: The tent the player just "entered". Cast to an ObjectReference (i.e. akT
 
 **NOTES.**
 
-For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player sits or lies down on their bed roll. (Reason: [TentAsset\_LargeTentTriggerVolume](#robo119) has not been set.)
+For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player sits or lies down on their bed roll. (Reason: [TentAsset\_LargeTentTriggerVolume](#robo121) has not been set.)
 
 ### CampUtil/Campfire\_OnTentLeave
 
@@ -1124,4 +1124,4 @@ None.
 
 **NOTES.**
 
-This event may fire multiple times for the same tent. This can happen for a number of reasons, such as if the player is standing inside the tent when picking it up. For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player gets up from sitting or lying down on their bed roll. (Reason: [TentAsset\_LargeTentTriggerVolume](#robo119) has not been set.)
+This event may fire multiple times for the same tent. This can happen for a number of reasons, such as if the player is standing inside the tent when picking it up. For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player gets up from sitting or lying down on their bed roll. (Reason: [TentAsset\_LargeTentTriggerVolume](#robo121) has not been set.)
