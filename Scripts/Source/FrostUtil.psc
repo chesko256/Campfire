@@ -596,11 +596,11 @@ float function GetPlayerWetness() global
 * None
 *
 * RETURN VALUE
-* The player's current wetness value.
-* 0.0 = Not wet
-* >0.0 - 199.9 = Damp
-* 200.0 - 549.9 = Wet
-* 550.0 - 750.0 = Drenched
+* The player's current wetness value.    
+* 0.0 = Not wet    
+* >0.0 - 199.9 = Damp    
+* 200.0 - 549.9 = Wet    
+* 550.0 - 750.0 = Drenched    
 *
 * EXAMPLES
 float wetness = FrostUtil.GetPlayerWetness()
@@ -629,11 +629,11 @@ int function GetPlayerWetnessLevel() global
 * None
 *
 * RETURN VALUE
-* The player's current wetness level.
-* 0 = Not wet
-* 1 = Damp
-* 2 = Wet
-* 3 = Drenched
+* The player's current wetness level.    
+* 0 = Not wet    
+* 1 = Damp    
+* 2 = Wet    
+* 3 = Drenched    
 *
 * EXAMPLES
 ;Is the player drenched?
@@ -666,13 +666,13 @@ float function GetPlayerExposure() global
 * None
 *
 * RETURN VALUE
-* The player's current exposure.
-* 0.0 - 19.9 = Warm
-* 20.0 - 39.9 = Comfortable
-* 40.0 - 59.9 = Cold
-* 60.0 - 79.9 = Very Cold
-* 80.0 - 99.9 = Freezing
-* 100.0 - 120.0 = Freezing to Death
+* The player's current exposure.    
+* 0.0 - 19.9 = Warm    
+* 20.0 - 39.9 = Comfortable    
+* 40.0 - 59.9 = Cold    
+* 60.0 - 79.9 = Very Cold    
+* 80.0 - 99.9 = Freezing    
+* 100.0 - 120.0 = Freezing to Death    
 *
 * EXAMPLES
 ;Is the player cold?
@@ -705,15 +705,15 @@ int function GetPlayerExposureLevel() global
 * None
 *
 * RETURN VALUE
-* The player's current exposure level.
-* -1 = Completely Warm
-* 0 = Warm
-* 1 = Comfortable
-* 2 = Cold
-* 3 = Very Cold
-* 4 = Freezing
-* 5 = Freezing to Death
-* 6 = Maximum Exposure
+* The player's current exposure level.    
+* -1 = Completely Warm    
+* 0 = Warm    
+* 1 = Comfortable    
+* 2 = Cold    
+* 3 = Very Cold    
+* 4 = Freezing    
+* 5 = Freezing to Death    
+* 6 = Maximum Exposure    
 *
 * EXAMPLES
 ;Is the player cold?
@@ -890,6 +890,24 @@ endFunction
 
 ; Events ==========================================================================================
 
+;/********e* FrostUtil/Frostfall_OnPlayerStartSwimming
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* An SKSE Mod Event that is raised when the player begins swimming.
+*
+* SYNTAX
+Event Frostfall_OnPlayerStartSwimming()
+* 
+* PARAMETERS
+* None
+*
+* EXAMPLES
+Event OnInit()
+    RegisterForModEvent("Frostfall_OnPlayerStartSwimming", "Frostfall_OnPlayerStartSwimming")
+endEvent
+;*********/;
 function SendEvent_OnPlayerStartSwimming() global
     _FrostInternal.FrostDebug(0, "Sending event Frostfall_OnPlayerStartSwimming")
     int handle = ModEvent.Create("Frostfall_OnPlayerStartSwimming")
@@ -898,6 +916,24 @@ function SendEvent_OnPlayerStartSwimming() global
     endif
 endFunction
 
+;/********e* FrostUtil/Frostfall_OnPlayerStopSwimming
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* An SKSE Mod Event that is raised when the player stops swimming.
+*
+* SYNTAX
+Event Frostfall_OnPlayerStopSwimming()
+* 
+* PARAMETERS
+* None
+*
+* EXAMPLES
+Event OnInit()
+    RegisterForModEvent("Frostfall_OnPlayerStopSwimming", "Frostfall_OnPlayerStopSwimming")
+endEvent
+;*********/;
 function SendEvent_OnPlayerStopSwimming() global
     _FrostInternal.FrostDebug(0, "Sending event Frostfall_OnPlayerStopSwimming")
     int handle = ModEvent.Create("Frostfall_OnPlayerStopSwimming")
