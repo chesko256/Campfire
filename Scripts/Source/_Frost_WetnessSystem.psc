@@ -247,6 +247,18 @@ function GetWetter(float limit)
 	endif
 endFunction
 
+function ModWetness(float amount, float limit = -1.0)
+	if limit == -1.0
+		if amount <= 0
+			limit = MIN_WETNESS
+		else
+			limit = MAX_WETNESS
+		endif
+	endif
+	ModAttributeWetness(amount, limit)
+	UpdateWetLevel()
+endFunction
+
 function SetWetness(float value, bool force_meter_display = false)
 	_Frost_AttributeWetness.SetValue(value)
 	FrostfallAttributeWetnessReadOnly.SetValue(value)
