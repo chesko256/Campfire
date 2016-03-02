@@ -9,5 +9,5 @@ Event OnInit()
     endWhile
 endEvent
 
-function ModAttributeWetness(float amount, float limit)
+function ModWetness(float amount, float limit = -1.0)
 endFunction

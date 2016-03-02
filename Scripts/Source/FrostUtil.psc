@@ -533,6 +533,211 @@ endif
     endif
 endFunction
 
+;/********f* FrostUtil/AddSevereWeather
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* Adds a weather to the severe weather list that Frostfall maintains.
+*
+* SYNTAX
+*/;
+function AddSevereWeather(Weather akWeather) global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* None
+*
+* EXAMPLES
+;Add my custom blizzard to the severe weather list
+FrostUtil.AddSevereWeather(my_crazy_blizzard)
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return
+    endif
+
+    if !akWeather
+        return
+    endif
+
+    if Frostfall._Frost_SevereWeatherList.HasForm(akWeather)
+        return
+    else
+        Frostfall._Frost_SevereWeatherList.AddForm(akWeather)
+    endif
+endFunction
+
+;/********f* FrostUtil/RemoveSevereWeather
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* Removes a weather from the severe weather list that Frostfall maintains. Only weather forms added
+* to the list via AddSevereWeather can be removed.
+*
+* SYNTAX
+*/;
+function RemoveSevereWeather(Weather akWeather) global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* None
+*
+* EXAMPLES
+;Remove my custom blizzard to the severe weather list
+FrostUtil.RemoveSevereWeather(my_crazy_blizzard)
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return
+    endif
+
+    if !akWeather
+        return
+    endif
+
+    if Frostfall._Frost_SevereWeatherList.HasForm(akWeather)
+        Frostfall._Frost_SevereWeatherList.RemoveAddedForm(akWeather)
+    else
+        return
+    endif
+endFunction
+
+;/********f* FrostUtil/IsWeatherOvercast
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* True if this weather is in the overcast weather list that Frostfall maintains, false if not.
+*
+* SYNTAX
+*/;
+bool function IsWeatherOvercast(Weather akWeather) global
+;/*
+* PARAMETERS
+* * akWeather: The Weather to check.
+*
+* RETURN VALUE
+* Whether or not this weather is Overcast.
+*
+* EXAMPLES
+if FrostUtil.IsWeatherOvercast(FrostUtil.GetCurrentWeatherActual())
+    debug.notification("Man, it's dreary out.")
+endif
+* NOTES
+* Weather in the overcast weather list must be marked with the "Cloudy" classification.
+* This list is necessary because the base Skyrim game often uses the "Cloudy" classification to denote
+* fog weathers instead of cloudy weathers, and Frostfall needs to be able to differentiate between them.
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return -1
+    endif
+
+    if !akWeather
+        return false
+    endif
+
+    if Frostfall._Frost_OvercastWeatherList.HasForm(akWeather)
+        return true
+    else
+        return false
+    endif
+endFunction
+
+;/********f* FrostUtil/AddOvercastWeather
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* Adds a weather to the overcast weather list that Frostfall maintains.
+*
+* SYNTAX
+*/;
+function AddOvercastWeather(Weather akWeather) global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* None
+*
+* EXAMPLES
+;Add my custom weather to the overcast weather list
+FrostUtil.AddOvercastWeather(my_dreary_weather)
+* NOTES
+* Weather in the overcast weather list must be marked with the "Cloudy" classification.
+* This list is necessary because the base Skyrim game often uses the "Cloudy" classification to denote
+* fog weathers instead of cloudy weathers, and Frostfall needs to be able to differentiate between them.
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return
+    endif
+
+    if !akWeather
+        return
+    endif
+
+    if Frostfall._Frost_OvercastWeatherList.HasForm(akWeather)
+        return
+    else
+        Frostfall._Frost_OvercastWeatherList.AddForm(akWeather)
+    endif
+endFunction
+
+;/********f* FrostUtil/RemoveOvercastWeather
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* Removes a weather from the overcast weather list that Frostfall maintains. Only weather forms added
+* to the list via AddOvercastWeather can be removed.
+*
+* SYNTAX
+*/;
+function RemoveOvercastWeather(Weather akWeather) global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* None
+*
+* EXAMPLES
+;Remove my custom weather from the overcast weather list
+FrostUtil.RemoveOvercastWeather(my_dreary_weather)
+* NOTES
+* Weather in the overcast weather list must be marked with the "Cloudy" classification.
+* This list is necessary because the base Skyrim game often uses the "Cloudy" classification to denote
+* fog weathers instead of cloudy weathers, and Frostfall needs to be able to differentiate between them.
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return
+    endif
+
+    if !akWeather
+        return
+    endif
+
+    if Frostfall._Frost_OvercastWeatherList.HasForm(akWeather)
+        Frostfall._Frost_OvercastWeatherList.RemoveAddedForm(akWeather)
+    else
+        return
+    endif
+endFunction
+
 ;/********f* FrostUtil/IsRefInOblivion
 * API VERSION ADDED
 * 1
@@ -574,10 +779,158 @@ endif
     return false
 endFunction
 
+;/********f* FrostUtil/AddOblivionWorldspace
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* Adds a worldspace to the Oblivion worldspace list that Frostfall maintains. The player does not gain exposure when in planes of Oblivion.
+*
+* SYNTAX
+*/;
+function AddOblivionWorldspace(Worldspace akWorldspace) global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* None
+*
+* EXAMPLES
+;Add my custom worldspace to the Oblivion worldspace list
+FrostUtil.AddOblivionWorldspace(my_infernal_realm)
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return
+    endif
 
-;@TODO: Not used
-bool function IsPlayerVampire() global
-    return false
+    if !akWorldspace
+        return
+    endif
+
+    if Frostfall._Frost_WorldspacesExteriorOblivion.HasForm(akWorldspace)
+        return
+    else
+        Frostfall._Frost_WorldspacesExteriorOblivion.AddForm(akWorldspace)
+    endif
+endFunction
+
+;/********f* FrostUtil/RemoveOblivionWorldspace
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* Removes a worldspace from the Oblivion worldspace list that Frostfall maintains. The player does not gain exposure when in planes of Oblivion.
+* Only Worldspace forms added to the list via AddOblivionWorldspace can be removed.
+*
+* SYNTAX
+*/;
+function RemoveOblivionWorldspace(Worldspace akWorldspace) global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* None
+*
+* EXAMPLES
+;Remove my custom worldspace from the Oblivion worldspace list
+FrostUtil.RemoveOblivionWorldspace(my_infernal_realm)
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return
+    endif
+
+    if !akWorldspace
+        return
+    endif
+
+    if Frostfall._Frost_WorldspacesExteriorOblivion.HasForm(akWorldspace)
+        Frostfall._Frost_WorldspacesExteriorOblivion.RemoveAddedForm(akWorldspace)
+    else
+        return
+    endif
+endFunction
+
+;/********f* FrostUtil/AddFastTravelWorldspaceException
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* Adds a worldspace to the list of worldspaces that Frostfall maintains where fast travel controls should always be enabled.
+*
+* SYNTAX
+*/;
+function AddFastTravelWorldspaceException(Worldspace akWorldspace) global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* None
+*
+* EXAMPLES
+;Add my custom worldspace to the fast travel exception worldspace list
+FrostUtil.AddFastTravelWorldspaceException(my_realm)
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return
+    endif
+
+    if !akWorldspace
+        return
+    endif
+
+    if Frostfall._Frost_WorldspacesFTException.HasForm(akWorldspace)
+        return
+    else
+        Frostfall._Frost_WorldspacesFTException.AddForm(akWorldspace)
+    endif
+endFunction
+
+;/********f* FrostUtil/RemoveFastTravelWorldspaceException
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* Adds a worldspace to the list of worldspaces that Frostfall maintains where fast travel controls should always be enabled. 
+* Only Worldspace forms added to the list via AddFastTravelWorldspaceException can be removed.
+*
+* SYNTAX
+*/;
+function RemoveFastTravelWorldspaceException(Worldspace akWorldspace) global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* None
+*
+* EXAMPLES
+;Remove my custom worldspace from the fast travel exception worldspace list
+FrostUtil.RemoveFastTravelWorldspaceException(my_realm)
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return
+    endif
+
+    if !akWorldspace
+        return
+    endif
+
+    if Frostfall._Frost_WorldspacesFTException.HasForm(akWorldspace)
+        Frostfall._Frost_WorldspacesFTException.RemoveAddedForm(akWorldspace)
+    else
+        return
+    endif
 endFunction
 
 ;/********f* FrostUtil/GetPlayerWetness
@@ -648,6 +1001,46 @@ endif
     endif
 
     return Frostfall._Frost_WetLevel.GetValueInt()
+endFunction
+
+;/********f* FrostUtil/ModPlayerWetness
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Modify the player's current wetness by the given amount. Using this
+* function will correctly process the wetness change and notify the UI layer
+* (meters, etc) of the change and display them as appropriate. Using this function
+* is the only safe method of directly modifying the player's wetness value.
+*
+* SYNTAX
+*/;
+function ModPlayerWetness(float amount, float limit = -1.0) global
+;/*
+* PARAMETERS
+* * amount: The amount to modify the player's wetness by. Positive numbers increase wetness, negative values decrease wetness.
+* * limit (optional): The value at which you should stop the wetness change, if this value is reached. A value of -1.0 indicates that there is no limit. (Example: calling FrostUtil.ModPlayerWetness(35.0, 50.0) when the player's current wetness is 40.0 will increase the player's wetness to 50.0, not 75.0)
+*
+* RETURN VALUE
+* None
+*
+* EXAMPLES
+;The player did something that should make them dry off.
+FrostUtil.ModPlayerWetness(-15.0)
+;The player did something that should make them dry off, but not below "Wet".
+FrostUtil.ModPlayerWetness(-15.0, 200.0)
+;The player did something that should make them wetter.
+FrostUtil.ModPlayerWetness(20.0)
+;The player did something that should make them wetter, but not above "Wet".
+FrostUtil.ModPlayerWetness(20.0, 200.0)
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return
+    endif
+
+    Frostfall.Wetness.ModWetness(amount, limit)
 endFunction
 
 ;/********f* FrostUtil/GetPlayerExposure
@@ -1087,4 +1480,8 @@ endFunction
 
 function Event_LegacyWoodHarvest() global
     ;pass
+endFunction
+
+bool function IsPlayerVampire() global
+    return false
 endFunction
