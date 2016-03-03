@@ -17,6 +17,18 @@ E-mail - chesko.tesmod@gmail.com
 This changelog is mainly for posterity purposes. This mod has evolved a lot in the amount of time it's been in development. Read on only if you enjoy watching me change my mind many, many times.
 
 ===========================================
+Frostfall 3.0.3 Change Log
+===========================================
+Features and Changes
+
+    Added 20 new FrostUtil API functions. See Frostfall Dev Kit change log for more info.
+
+Bug Fixes
+
+    Fixed an issue where it was not possible to sleep in a conjured shelter with "Disable Waiting Outdoors" enabled.
+    ?Fixed an unbound property error on the Rescue System.
+
+===========================================
 Frostfall 3.0.2 Change Log
 ===========================================
 FEATURES AND CHANGES
