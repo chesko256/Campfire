@@ -528,7 +528,7 @@ endif
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
-        return -1
+        return false
     endif
 
     if !akWeather
@@ -648,7 +648,7 @@ endif
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
-        return -1
+        return false
     endif
 
     if !akWeather
@@ -770,9 +770,9 @@ if IsRefInOblivion(Box)
     Debug.Trace("Box is in Oblivion!")
 endif
 * NOTES
-* The following Worldspaces are considered Oblivion worldspaces:
-* Soul Cairn
-* Apocrypha
+* * The following Worldspaces are considered Oblivion worldspaces:
+* * Soul Cairn
+* * Apocrypha
 ;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
@@ -781,6 +781,51 @@ endif
     endif
 
     if Frostfall._Frost_WorldspacesExteriorOblivion.HasForm(akReference.GetWorldSpace())
+        return true
+    else
+        return false
+    endif
+    return false
+endFunction
+
+;/********f* FrostUtil/IsOblivionWorldspace
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Whether or not the worldspace is a base game or DLC Oblivion worldspace.
+*
+* SYNTAX
+*/;
+bool function IsOblivionWorldspace(Worldspace akWorldspace) global
+;/*
+* PARAMETERS
+* * akWorldspace: The worldspace to check.
+*
+* RETURN VALUE
+* True if the worldspace is a plane of Oblivion.
+*
+* EXAMPLES
+;Is the box in Oblivion?
+if IsOblivionWorldspace(infernal_realm)
+    Debug.Trace("This is a plane of Oblivion!")
+endif
+* NOTES
+* * The following Worldspaces are considered Oblivion worldspaces by default:
+* * Soul Cairn
+* * Apocrypha
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return False
+    endif
+
+    if !akWorldspace
+        return false
+    endif
+
+    if Frostfall._Frost_WorldspacesExteriorOblivion.HasForm(akWorldspace)
         return true
     else
         return false
@@ -865,6 +910,47 @@ FrostUtil.RemoveOblivionWorldspace(my_infernal_realm)
     endif
 endFunction
 
+;/********f* FrostUtil/IsExposureException
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* True if this form is in the exposure exception list that Frostfall maintains, false if not. When the player goes near this object (600 units or less),
+* the player will not gain or lose exposure.
+*
+* SYNTAX
+*/;
+bool function IsExposureException(Form akBaseObject) global
+;/*
+* PARAMETERS
+* * akBaseObject: The form to check.
+*
+* RETURN VALUE
+* Whether or not this form is an exposure exception.
+*
+* EXAMPLES
+;Will I turn off exposure mechanics near the dragon?
+if FrostUtil.IsExposureException(SuperDragon)
+    debug.notification("Guess I won't freeze to death near the Super Dragon.")
+endif
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return false
+    endif
+
+    if !akBaseObject
+        return false
+    endif
+
+    if Frostfall._Frost_ExposureExceptions.HasForm(akBaseObject)
+        return true
+    else
+        return false
+    endif
+endFunction
+
 ;/********f* FrostUtil/AddExposureException
 * API VERSION ADDED
 * 2
@@ -940,6 +1026,47 @@ FrostUtil.RemoveExposureException(power_stone)
         Frostfall._Frost_ExposureExceptions.RemoveAddedForm(akBaseObject)
     else
         return
+    endif
+endFunction
+
+;/********f* FrostUtil/IsFastTravelException
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* True if this form is in the fast travel exception list that Frostfall maintains, false if not. When the player goes near this object (600 units or less),
+* fast travel controls will be re-enabled regardless of their fast travel settings.
+*
+* SYNTAX
+*/;
+bool function IsFastTravelException(Form akBaseObject) global
+;/*
+* PARAMETERS
+* * akBaseObject: The form to check.
+*
+* RETURN VALUE
+* Whether or not this form is a fast travel exception.
+*
+* EXAMPLES
+;Will I enable fast travel near the carriage?
+if FrostUtil.IsFastTravelException(carriage)
+    debug.notification("Sally forth!")
+endif
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return false
+    endif
+
+    if !akBaseObject
+        return false
+    endif
+
+    if Frostfall._Frost_FastTravelExceptions.HasForm(akBaseObject)
+        return true
+    else
+        return false
     endif
 endFunction
 
@@ -1020,6 +1147,144 @@ FrostUtil.RemoveFastTravelException(my_horse)
         return
     endif
 endFunction
+
+;/********f* FrostUtil/IsSleepException
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* True if this form is in the sleep exception list that Frostfall maintains, false if not.
+*
+* SYNTAX
+*/;
+bool function IsSleepException(Form akBaseObject) global
+;/*
+* PARAMETERS
+* * akBaseObject: The form to check.
+*
+* RETURN VALUE
+* Whether or not this weather is Overcast.
+*
+* EXAMPLES
+if FrostUtil.IsSleepException(my_bedroll)
+    debug.notification("Time to hit the sack!")
+endif
+* NOTES
+* When the player goes near this object (600 units or less),
+* the player will be able to sleep. This is important if the player has "Disable Waiting Outdoors" enabled, which prevents
+* sleeping unless near an object in this list.
+*
+* Tents created with the Campfire Dev Kit are automatically sleep exception objects. Conjured shelters are not and must
+* be added using AddSleepException().
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return false
+    endif
+
+    if !akBaseObject
+        return false
+    endif
+
+    if Frostfall._Frost_SleepObjects.HasForm(akBaseObject)
+        return true
+    else
+        return false
+    endif
+endFunction
+
+;/********f* FrostUtil/AddSleepException
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* Adds a form to the list of sleep exception objects that Frostfall maintains. When the player goes near this object (600 units or less),
+* the player will be able to sleep. This is important if the player has "Disable Waiting Outdoors" enabled, which prevents
+* sleeping unless near an object in this list.
+*
+* SYNTAX
+*/;
+function AddSleepException(Form akBaseObject) global
+;/*
+* PARAMETERS
+* * akBaseObject: The form to add.
+*
+* RETURN VALUE
+* None
+*
+* EXAMPLES
+;Enable ability to sleep near my bedroll.
+FrostUtil.AddSleepException(my_bedroll)
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return
+    endif
+
+    if !akBaseObject
+        return
+    endif
+
+    if Frostfall._Frost_SleepObjects.HasForm(akBaseObject)
+        return
+    else
+        Frostfall._Frost_SleepObjects.AddForm(akBaseObject)
+    endif
+endFunction
+
+;/********f* FrostUtil/RemoveSleepException
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* Removes a form from the list of sleep exception objects that Frostfall maintains.
+* Only forms added to the list via AddSleepException can be removed.
+*
+* SYNTAX
+*/;
+function RemoveSleepException(Form akBaseObject) global
+;/*
+* PARAMETERS
+* * akBaseObject: The form to remove.
+*
+* RETURN VALUE
+* None
+*
+* EXAMPLES
+;No longer enable fast travel near the horse
+FrostUtil.RemoveSleepException(my_horse)
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return
+    endif
+
+    if !akBaseObject
+        return
+    endif
+
+    if Frostfall._Frost_SleepObjects.HasForm(akBaseObject)
+        Frostfall._Frost_SleepObjects.RemoveAddedForm(akBaseObject)
+    else
+        return
+    endif
+endFunction
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ;/********f* FrostUtil/AddFastTravelWorldspaceException
 * API VERSION ADDED

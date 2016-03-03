@@ -13,8 +13,8 @@ E-mail - chesko.tesmod@gmail.com
 
 ===================================================
 
-Version: 3.0.2
-Date: 2/21/2016
+Version: 3.0.3
+Date: 3/2/2016
 
 Please see:
 
