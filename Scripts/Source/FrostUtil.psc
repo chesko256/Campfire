@@ -212,6 +212,9 @@ bool near_fire = FrostUtil.IsPlayerNearFire()
 *
 * To determine if the player is near a heat source of any kind, use GetPlayerHeatSourceLevel()
 * instead.
+*
+* Keep in mind that Frostfall's Heat Source System only updates every 5 seconds. Therefore,
+* the data returned by this function is not real-time.
 ;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
@@ -257,6 +260,9 @@ endif
 * NOTES
 * This function does NOT determine if the heat source is a fire or not; there are heat sources
 * that are not fires. To determine if the player is near a fire, use IsPlayerNearFire().
+*
+* Keep in mind that Frostfall's Heat Source System only updates every 5 seconds. Therefore,
+* the data returned by this function is not real-time.
 ;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
@@ -291,6 +297,9 @@ float dist = FrostUtil.GetPlayerHeatSourceDistance()
 if dist <= 300.0
     debug.notification("The player is really close to the heat source!")
 endif
+* NOTES
+* Keep in mind that Frostfall's Heat Source System only updates every 5 seconds. Therefore,
+* the data returned by this function is not real-time.
 ;*********/;
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
@@ -851,6 +860,162 @@ FrostUtil.RemoveOblivionWorldspace(my_infernal_realm)
 
     if Frostfall._Frost_WorldspacesExteriorOblivion.HasForm(akWorldspace)
         Frostfall._Frost_WorldspacesExteriorOblivion.RemoveAddedForm(akWorldspace)
+    else
+        return
+    endif
+endFunction
+
+;/********f* FrostUtil/AddExposureException
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* Adds a form to the list of exposure exception objects that Frostfall maintains. When the player goes near this object (600 units or less),
+* the player will not gain or lose exposure.
+*
+* SYNTAX
+*/;
+function AddExposureException(Form akBaseObject) global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* None
+*
+* EXAMPLES
+;Suspend exposure gain and loss near the power stone
+FrostUtil.AddExposureException(power_stone)
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return
+    endif
+
+    if !akBaseObject
+        return
+    endif
+
+    if Frostfall._Frost_ExposureExceptions.HasForm(akBaseObject)
+        return
+    else
+        Frostfall._Frost_ExposureExceptions.AddForm(akBaseObject)
+    endif
+endFunction
+
+;/********f* FrostUtil/RemoveExposureException
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* Removes a form from the list of exposure exception objects that Frostfall maintains.
+* Only forms added to the list via AddExposureException can be removed.
+*
+* SYNTAX
+*/;
+function RemoveExposureException(Form akBaseObject) global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* None
+*
+* EXAMPLES
+;No longer suspend exposure near the power stone
+FrostUtil.RemoveExposureException(power_stone)
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return
+    endif
+
+    if !akBaseObject
+        return
+    endif
+
+    if Frostfall._Frost_ExposureExceptions.HasForm(akBaseObject)
+        Frostfall._Frost_ExposureExceptions.RemoveAddedForm(akBaseObject)
+    else
+        return
+    endif
+endFunction
+
+;/********f* FrostUtil/AddFastTravelException
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* Adds a form to the list of fast travel exception objects that Frostfall maintains. When the player goes near this object (600 units or less),
+* fast travel controls will be re-enabled regardless of their fast travel settings.
+*
+* SYNTAX
+*/;
+function AddFastTravelException(Form akBaseObject) global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* None
+*
+* EXAMPLES
+;Enable fast travel when near the horse.
+FrostUtil.AddFastTravelException(my_horse)
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return
+    endif
+
+    if !akBaseObject
+        return
+    endif
+
+    if Frostfall._Frost_FastTravelExceptions.HasForm(akBaseObject)
+        return
+    else
+        Frostfall._Frost_FastTravelExceptions.AddForm(akBaseObject)
+    endif
+endFunction
+
+;/********f* FrostUtil/RemoveFastTravelException
+* API VERSION ADDED
+* 2
+*
+* DESCRIPTION
+* Removes a form from the list of fast travel exception objects that Frostfall maintains.
+* Only forms added to the list via AddFastTravelException can be removed.
+*
+* SYNTAX
+*/;
+function RemoveFastTravelException(Form akBaseObject) global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* None
+*
+* EXAMPLES
+;No longer enable fast travel near the horse
+FrostUtil.RemoveFastTravelException(my_horse)
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return
+    endif
+
+    if !akBaseObject
+        return
+    endif
+
+    if Frostfall._Frost_FastTravelExceptions.HasForm(akBaseObject)
+        Frostfall._Frost_FastTravelExceptions.RemoveAddedForm(akBaseObject)
     else
         return
     endif
