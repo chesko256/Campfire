@@ -664,7 +664,7 @@ bool function IsTentWaterproof(ObjectReference akTent) global
 </literallayout>
 <formalpara><title>PARAMETERS</title><para></para></formalpara>
 <para>
- akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo49">GetCurrentTent</link>(), or use <link linkend="robo53">IsCurrentTentWaterproof</link>() instead.
+ akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo69">GetCurrentTent</link>(), or use <link linkend="robo73">IsCurrentTentWaterproof</link>() instead.
 </para>
 <formalpara><title>RETURN VALUE</title><para></para></formalpara>
 <para>
@@ -688,7 +688,7 @@ bool function IsTentWarm(ObjectReference akTent) global
 </literallayout>
 <formalpara><title>PARAMETERS</title><para></para></formalpara>
 <para>
- akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo49">GetCurrentTent</link>(), or use <link linkend="robo54">IsCurrentTentWarm</link>() instead.
+ akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo69">GetCurrentTent</link>(), or use <link linkend="robo74">IsCurrentTentWarm</link>() instead.
 </para>
 <formalpara><title>RETURN VALUE</title><para></para></formalpara>
 <para>
@@ -712,7 +712,7 @@ bool function TentHasShelter(ObjectReference akTent) global
 </literallayout>
 <formalpara><title>PARAMETERS</title><para></para></formalpara>
 <para>
- akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo49">GetCurrentTent</link>(), or use <link linkend="robo56">CurrentTentHasShelter</link>() instead.
+ akTent: The Tent ObjectReference to check. Use the return value of <link linkend="robo69">GetCurrentTent</link>(), or use <link linkend="robo76">CurrentTentHasShelter</link>() instead.
 </para>
 <formalpara><title>RETURN VALUE</title><para></para></formalpara>
 <para>
@@ -1188,7 +1188,7 @@ endEvent
 </literallayout>
 <formalpara><title>NOTES</title><para></para></formalpara>
 <para>
- For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player sits or lies down on their bed roll. (Reason: <link linkend="robo126">TentAsset_LargeTentTriggerVolume</link> has not been set.)
+ For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player sits or lies down on their bed roll. (Reason: <link linkend="robo146">TentAsset_LargeTentTriggerVolume</link> has not been set.)
 </para>
 </section>
 <section>
@@ -1223,7 +1223,7 @@ endEvent
 <formalpara><title>NOTES</title><para></para></formalpara>
 <para>
  This event may fire multiple times for the same tent. This can happen for a number of reasons, such as if the player is standing inside the tent when picking it up.
- For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player gets up from sitting or lying down on their bed roll. (Reason: <link linkend="robo126">TentAsset_LargeTentTriggerVolume</link> has not been set.)
+ For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player gets up from sitting or lying down on their bed roll. (Reason: <link linkend="robo146">TentAsset_LargeTentTriggerVolume</link> has not been set.)
 </para>
 </section>
 <section>
