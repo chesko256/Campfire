@@ -369,7 +369,7 @@ endif</code></pre>
 <p><strong>Syntax</strong></p>
 <pre><code>bool function IsTentWaterproof(ObjectReference akTent) global</code></pre>
 <p><strong>Parameters</strong></p>
-<p>akTent: The Tent ObjectReference to check. Use the return value of <a href="#robo49">GetCurrentTent</a>(), or use <a href="#robo53">IsCurrentTentWaterproof</a>() instead.</p>
+<p>akTent: The Tent ObjectReference to check. Use the return value of <a href="#robo69">GetCurrentTent</a>(), or use <a href="#robo73">IsCurrentTentWaterproof</a>() instead.</p>
 <p><strong>Return Value</strong></p>
 <p>True if the tent is flagged as being waterproof, or false if not.</p>
 <hr />
@@ -380,7 +380,7 @@ endif</code></pre>
 <p><strong>Syntax</strong></p>
 <pre><code>bool function IsTentWarm(ObjectReference akTent) global</code></pre>
 <p><strong>Parameters</strong></p>
-<p>akTent: The Tent ObjectReference to check. Use the return value of <a href="#robo49">GetCurrentTent</a>(), or use <a href="#robo54">IsCurrentTentWarm</a>() instead.</p>
+<p>akTent: The Tent ObjectReference to check. Use the return value of <a href="#robo69">GetCurrentTent</a>(), or use <a href="#robo74">IsCurrentTentWarm</a>() instead.</p>
 <p><strong>Return Value</strong></p>
 <p>True if the tent is flagged as being warm, or false if not.</p>
 <hr />
@@ -391,7 +391,7 @@ endif</code></pre>
 <p><strong>Syntax</strong></p>
 <pre><code>bool function TentHasShelter(ObjectReference akTent) global</code></pre>
 <p><strong>Parameters</strong></p>
-<p>akTent: The Tent ObjectReference to check. Use the return value of <a href="#robo49">GetCurrentTent</a>(), or use <a href="#robo56">CurrentTentHasShelter</a>() instead.</p>
+<p>akTent: The Tent ObjectReference to check. Use the return value of <a href="#robo69">GetCurrentTent</a>(), or use <a href="#robo76">CurrentTentHasShelter</a>() instead.</p>
 <p><strong>Return Value</strong></p>
 <p>Whether or not this tent has shelter.</p>
 <hr />
@@ -633,7 +633,7 @@ Event Campfire_OnTentEnter(Form akTent, bool abHasShelter)
         endif
 endEvent</code></pre>
 <p><strong>Notes</strong></p>
-<p>For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player sits or lies down on their bed roll. (Reason: <a href="#robo126">TentAsset_LargeTentTriggerVolume</a> has not been set.)</p>
+<p>For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player sits or lies down on their bed roll. (Reason: <a href="#robo146">TentAsset_LargeTentTriggerVolume</a> has not been set.)</p>
 <hr />
 <h4 id="campfire_ontentleave"><a name="CampUtil_Campfire_OnTentLeave"></a>Campfire_OnTentLeave</h4>
 <p>An SKSE Mod Event that fires when the player &quot;leaves&quot; a tent.</p>
@@ -652,7 +652,7 @@ Event Campfire_OnTentLeave()
         debug.trace(&quot;Back to adventuring!&quot;)
 endEvent</code></pre>
 <p><strong>Notes</strong></p>
-<p>This event may fire multiple times for the same tent. This can happen for a number of reasons, such as if the player is standing inside the tent when picking it up. For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player gets up from sitting or lying down on their bed roll. (Reason: <a href="#robo126">TentAsset_LargeTentTriggerVolume</a> has not been set.)</p>
+<p>This event may fire multiple times for the same tent. This can happen for a number of reasons, such as if the player is standing inside the tent when picking it up. For some tents created with the Campfire Dev Kit, this event may not fire as soon as the player physically enters the tent. It will instead be sent when the player gets up from sitting or lying down on their bed roll. (Reason: <a href="#robo146">TentAsset_LargeTentTriggerVolume</a> has not been set.)</p>
 <hr />
 <h4 id="campfire_loaded"><a name="CampUtil_Campfire_Loaded"></a>Campfire_Loaded</h4>
 <p>An SKSE Mod Event that is raised when Campfire is finished starting up, or after loading a save game with Campfire enabled.</p>

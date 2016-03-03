@@ -81,7 +81,7 @@ float ver = FrostUtil.GetFrostfallVersion()
 FrostUtil/IsPlayerNearFire</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Whether or not the player is currently near a fire. Note: 
+ Whether or not the player is currently near a fire.
 </para>
 <formalpara><title>API VERSION ADDED</title><para></para></formalpara>
 <para>
@@ -114,6 +114,11 @@ bool near_fire = FrostUtil.IsPlayerNearFire()
 <para>
  To determine if the player is near a heat source of any kind, use <link linkend="robo4">GetPlayerHeatSourceLevel</link>()
  instead.
+</para>
+
+<para>
+ Keep in mind that Frostfall's Heat Source System only updates every 5 seconds. Therefore,
+ the data returned by this function is not real-time.
 </para>
 </section>
 <section>
@@ -158,6 +163,11 @@ endif
  This function does NOT determine if the heat source is a fire or not; there are heat sources
  that are not fires. To determine if the player is near a fire, use <link linkend="robo3">IsPlayerNearFire</link>().
 </para>
+
+<para>
+ Keep in mind that Frostfall's Heat Source System only updates every 5 seconds. Therefore,
+ the data returned by this function is not real-time.
+</para>
 </section>
 <section>
 <title>
@@ -191,6 +201,11 @@ if dist &lt;= 300.0
     debug.notification("The player is really close to the heat source!")
 endif
 </literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ Keep in mind that Frostfall's Heat Source System only updates every 5 seconds. Therefore,
+ the data returned by this function is not real-time.
+</para>
 </section>
 <section>
 <title>
@@ -225,7 +240,7 @@ bool sheltered = FrostUtil.IsPlayerTakingShelter()
 <para>
  This function does not return true if the player is inside a Campfire-based tent; it only
  returns true if a ray emitting upward from the player's head collides with an obstruction.
- For tent detection, use <link linkend="robo0">CampUtil</link>.<link linkend="robo49">GetCurrentTent</link>().
+ For tent detection, use <link linkend="robo0">CampUtil</link>.<link linkend="robo69">GetCurrentTent</link>().
 </para>
 </section>
 <section>
@@ -388,6 +403,172 @@ endif
 </section>
 <section>
 <title>
+FrostUtil/AddSevereWeather</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Adds a weather to the severe weather list that Frostfall maintains.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+function AddSevereWeather(Weather akWeather) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Add my custom blizzard to the severe weather list
+FrostUtil.AddSevereWeather(my_crazy_blizzard)
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/RemoveSevereWeather</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Removes a weather from the severe weather list that Frostfall maintains. Only weather forms added
+ to the list via <link linkend="robo12">AddSevereWeather</link> can be removed.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+function RemoveSevereWeather(Weather akWeather) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Remove my custom blizzard to the severe weather list
+FrostUtil.RemoveSevereWeather(my_crazy_blizzard)
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/IsWeatherOvercast</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ True if this weather is in the overcast weather list that Frostfall maintains, false if not.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsWeatherOvercast(Weather akWeather) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> akWeather: The Weather to check.
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ Whether or not this weather is Overcast.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+if FrostUtil.IsWeatherOvercast(FrostUtil.<link linkend="robo9">GetCurrentWeatherActual</link>())
+    debug.notification("Man, it's dreary out.")
+endif
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ Weather in the overcast weather list must be marked with the "Cloudy" classification.
+ This list is necessary because the base Skyrim game often uses the "Cloudy" classification to denote
+ fog weathers instead of cloudy weathers, and Frostfall needs to be able to differentiate between them.
+</para>
+</section>
+<section>
+<title>
+FrostUtil/AddOvercastWeather</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Adds a weather to the overcast weather list that Frostfall maintains.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+function AddOvercastWeather(Weather akWeather) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Add my custom weather to the overcast weather list
+FrostUtil.AddOvercastWeather(my_dreary_weather)
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ Weather in the overcast weather list must be marked with the "Cloudy" classification.
+ This list is necessary because the base Skyrim game often uses the "Cloudy" classification to denote
+ fog weathers instead of cloudy weathers, and Frostfall needs to be able to differentiate between them.
+</para>
+</section>
+<section>
+<title>
+FrostUtil/RemoveOvercastWeather</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Removes a weather from the overcast weather list that Frostfall maintains. Only weather forms added
+ to the list via <link linkend="robo15">AddOvercastWeather</link> can be removed.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+function RemoveOvercastWeather(Weather akWeather) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Remove my custom weather from the overcast weather list
+FrostUtil.RemoveOvercastWeather(my_dreary_weather)
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ Weather in the overcast weather list must be marked with the "Cloudy" classification.
+ This list is necessary because the base Skyrim game often uses the "Cloudy" classification to denote
+ fog weathers instead of cloudy weathers, and Frostfall needs to be able to differentiate between them.
+</para>
+</section>
+<section>
+<title>
 FrostUtil/IsRefInOblivion</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
@@ -417,11 +598,452 @@ if IsRefInOblivion(Box)
 endif
 </literallayout>
 <formalpara><title>NOTES</title><para></para></formalpara>
-<para>
- The following Worldspaces are considered Oblivion worldspaces:
- Soul Cairn
- Apocrypha
+<itemizedlist><listitem><para> The following Worldspaces are considered Oblivion worldspaces:
+</para></listitem><listitem><para> Soul Cairn
+</para></listitem><listitem><para> Apocrypha
+</para></listitem></itemizedlist><para>
 </para>
+</section>
+<section>
+<title>
+FrostUtil/IsOblivionWorldspace</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Whether or not the worldspace is a base game or DLC Oblivion worldspace.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsOblivionWorldspace(Worldspace akWorldspace) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> akWorldspace: The worldspace to check.
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ True if the worldspace is a plane of Oblivion.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Is the box in Oblivion?
+if IsOblivionWorldspace(infernal_realm)
+    Debug.Trace("This is a plane of Oblivion!")
+endif
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<itemizedlist><listitem><para> The following Worldspaces are considered Oblivion worldspaces by default:
+</para></listitem><listitem><para> Soul Cairn
+</para></listitem><listitem><para> Apocrypha
+</para></listitem></itemizedlist><para>
+</para>
+</section>
+<section>
+<title>
+FrostUtil/AddOblivionWorldspace</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Adds a worldspace to the Oblivion worldspace list that Frostfall maintains. The player does not gain exposure when in planes of Oblivion.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+function AddOblivionWorldspace(Worldspace akWorldspace) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Add my custom worldspace to the Oblivion worldspace list
+FrostUtil.AddOblivionWorldspace(my_infernal_realm)
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/RemoveOblivionWorldspace</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Removes a worldspace from the Oblivion worldspace list that Frostfall maintains. The player does not gain exposure when in planes of Oblivion.
+ Only Worldspace forms added to the list via <link linkend="robo19">AddOblivionWorldspace</link> can be removed.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+function RemoveOblivionWorldspace(Worldspace akWorldspace) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Remove my custom worldspace from the Oblivion worldspace list
+FrostUtil.RemoveOblivionWorldspace(my_infernal_realm)
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/IsExposureException</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ True if this form is in the exposure exception list that Frostfall maintains, false if not. When the player goes near this object (600 units or less),
+ the player will not gain or lose exposure.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsExposureException(Form akBaseObject) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> akBaseObject: The form to check.
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ Whether or not this form is an exposure exception.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Will I turn off exposure mechanics near the dragon?
+if FrostUtil.IsExposureException(SuperDragon)
+    debug.notification("Guess I won't freeze to death near the Super Dragon.")
+endif
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/AddExposureException</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Adds a form to the list of exposure exception objects that Frostfall maintains. When the player goes near this object (600 units or less),
+ the player will not gain or lose exposure.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+function AddExposureException(Form akBaseObject) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Suspend exposure gain and loss near the power stone
+FrostUtil.AddExposureException(power_stone)
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/RemoveExposureException</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Removes a form from the list of exposure exception objects that Frostfall maintains.
+ Only forms added to the list via <link linkend="robo22">AddExposureException</link> can be removed.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+function RemoveExposureException(Form akBaseObject) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;No longer suspend exposure near the power stone
+FrostUtil.RemoveExposureException(power_stone)
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/IsFastTravelException</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ True if this form is in the fast travel exception list that Frostfall maintains, false if not. When the player goes near this object (600 units or less),
+ fast travel controls will be re-enabled regardless of their fast travel settings.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsFastTravelException(Form akBaseObject) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> akBaseObject: The form to check.
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ Whether or not this form is a fast travel exception.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Will I enable fast travel near the carriage?
+if FrostUtil.IsFastTravelException(carriage)
+    debug.notification("Sally forth!")
+endif
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/AddFastTravelException</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Adds a form to the list of fast travel exception objects that Frostfall maintains. When the player goes near this object (600 units or less),
+ fast travel controls will be re-enabled regardless of their fast travel settings.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+function AddFastTravelException(Form akBaseObject) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Enable fast travel when near the horse.
+FrostUtil.AddFastTravelException(my_horse)
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/RemoveFastTravelException</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Removes a form from the list of fast travel exception objects that Frostfall maintains.
+ Only forms added to the list via <link linkend="robo25">AddFastTravelException</link> can be removed.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+function RemoveFastTravelException(Form akBaseObject) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;No longer enable fast travel near the horse
+FrostUtil.RemoveFastTravelException(my_horse)
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/IsSleepException</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ True if this form is in the sleep exception list that Frostfall maintains, false if not.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+bool function IsSleepException(Form akBaseObject) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> akBaseObject: The form to check.
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ Whether or not this weather is Overcast.
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+if FrostUtil.IsSleepException(my_bedroll)
+    debug.notification("Time to hit the sack!")
+endif
+</literallayout>
+<formalpara><title>NOTES</title><para></para></formalpara>
+<para>
+ When the player goes near this object (600 units or less),
+ the player will be able to sleep. This is important if the player has "Disable Waiting Outdoors" enabled, which prevents
+ sleeping unless near an object in this list.
+</para>
+
+<para>
+ Tents created with the Campfire Dev Kit are automatically sleep exception objects. Conjured shelters are not and must
+ be added using <link linkend="robo28">AddSleepException</link>().
+</para>
+</section>
+<section>
+<title>
+FrostUtil/AddSleepException</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Adds a form to the list of sleep exception objects that Frostfall maintains. When the player goes near this object (600 units or less),
+ the player will be able to sleep. This is important if the player has "Disable Waiting Outdoors" enabled, which prevents
+ sleeping unless near an object in this list.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+function AddSleepException(Form akBaseObject) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> akBaseObject: The form to add.
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Enable ability to sleep near my bedroll.
+FrostUtil.AddSleepException(my_bedroll)
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/RemoveSleepException</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Removes a form from the list of sleep exception objects that Frostfall maintains.
+ Only forms added to the list via <link linkend="robo28">AddSleepException</link> can be removed.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+function RemoveSleepException(Form akBaseObject) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> akBaseObject: The form to remove.
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;No longer enable fast travel near the horse
+FrostUtil.RemoveSleepException(my_horse)
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/AddFastTravelWorldspaceException</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Adds a worldspace to the list of worldspaces that Frostfall maintains where fast travel controls should always be enabled.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+function AddFastTravelWorldspaceException(Worldspace akWorldspace) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Add my custom worldspace to the fast travel exception worldspace list
+FrostUtil.AddFastTravelWorldspaceException(my_realm)
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/RemoveFastTravelWorldspaceException</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Adds a worldspace to the list of worldspaces that Frostfall maintains where fast travel controls should always be enabled. 
+ Only Worldspace forms added to the list via <link linkend="robo30">AddFastTravelWorldspaceException</link> can be removed.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 2
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+function RemoveFastTravelWorldspaceException(Worldspace akWorldspace) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;Remove my custom worldspace from the fast travel exception worldspace list
+FrostUtil.RemoveFastTravelWorldspaceException(my_realm)
+</literallayout>
 </section>
 <section>
 <title>
@@ -460,7 +1082,7 @@ float wetness = FrostUtil.GetPlayerWetness()
 FrostUtil/GetPlayerWetnessLevel</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Return the player's current wetness level. May be easier to use than <link linkend="robo13">GetPlayerWetness</link>() if you don't
+ Return the player's current wetness level. May be easier to use than <link linkend="robo32">GetPlayerWetness</link>() if you don't
  need to know the actual wetness value.
 </para>
 <formalpara><title>API VERSION ADDED</title><para></para></formalpara>
@@ -490,6 +1112,45 @@ int wet_level = FrostUtil.GetPlayerWetnessLevel()
 if wet_level == 3
     debug.notification("You're soaked!")
 endif
+</literallayout>
+</section>
+<section>
+<title>
+FrostUtil/ModPlayerWetness</title>
+<formalpara><title>DESCRIPTION</title><para></para></formalpara>
+<para>
+ Modify the player's current wetness by the given amount. Using this
+ function will correctly process the wetness change and notify the UI layer
+ (meters, etc) of the change and display them as appropriate. Using this function
+ is the only safe method of directly modifying the player's wetness value.
+</para>
+<formalpara><title>API VERSION ADDED</title><para></para></formalpara>
+<para>
+ 1
+</para>
+<formalpara><title>SYNTAX</title><para></para></formalpara>
+<literallayout class="monospaced">
+function ModPlayerWetness(float amount, float limit = -1.0) global
+</literallayout>
+<formalpara><title>PARAMETERS</title><para></para></formalpara>
+<itemizedlist><listitem><para> amount: The amount to modify the player's wetness by. Positive numbers increase wetness, negative values decrease wetness.
+</para></listitem><listitem><para> limit (optional): The value at which you should stop the wetness change, if this value is reached. A value of -1.0 indicates that there is no limit. (Example: calling FrostUtil.ModPlayerWetness(35.0, 50.0) when the player's current wetness is 40.0 will increase the player's wetness to 50.0, not 75.0)
+</para></listitem></itemizedlist><para>
+</para>
+<formalpara><title>RETURN VALUE</title><para></para></formalpara>
+<para>
+ None
+</para>
+<formalpara><title>EXAMPLES</title><para></para></formalpara>
+<literallayout class="monospaced">
+;The player did something that should make them dry off.
+FrostUtil.ModPlayerWetness(-15.0)
+;The player did something that should make them dry off, but not below "Wet".
+FrostUtil.ModPlayerWetness(-15.0, 200.0)
+;The player did something that should make them wetter.
+FrostUtil.ModPlayerWetness(20.0)
+;The player did something that should make them wetter, but not above "Wet".
+FrostUtil.ModPlayerWetness(20.0, 200.0)
 </literallayout>
 </section>
 <section>
@@ -535,7 +1196,7 @@ endif
 FrostUtil/GetPlayerExposureLevel</title>
 <formalpara><title>DESCRIPTION</title><para></para></formalpara>
 <para>
- Return the player's current exposure level. May be easier to use than <link linkend="robo15">GetPlayerExposure</link>() if you don't
+ Return the player's current exposure level. May be easier to use than <link linkend="robo35">GetPlayerExposure</link>() if you don't
  need to know the actual exposure value.
 </para>
 <formalpara><title>API VERSION ADDED</title><para></para></formalpara>
@@ -699,7 +1360,7 @@ int gear_warmth = FrostUtil.GetPlayerArmorWarmth()
 <formalpara><title>NOTES</title><para></para></formalpara>
 <para>
  There are many different sources of Warmth, so this function does not return
- the player's total Warmth value. If you want the total Warmth, use <link linkend="robo18">GetPlayerWarmth</link>() instead.
+ the player's total Warmth value. If you want the total Warmth, use <link linkend="robo38">GetPlayerWarmth</link>() instead.
 </para>
 </section>
 <section>
@@ -733,7 +1394,7 @@ int gear_coverage = FrostUtil.GetPlayerArmorCoverage()
 <formalpara><title>NOTES</title><para></para></formalpara>
 <para>
  There are many different sources of Coverage, so this function does not return
- the player's total Coverage value. If you want the total Coverage, use <link linkend="robo19">GetPlayerCoverage</link>() instead.
+ the player's total Coverage value. If you want the total Coverage, use <link linkend="robo39">GetPlayerCoverage</link>() instead.
 </para>
 </section>
 <section>

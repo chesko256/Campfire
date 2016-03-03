@@ -42,7 +42,7 @@ Optional: If true, no menu will be shown when clicking on this object and the de
 
 **DESCRIPTION.**
 
-Optional: If set, and if [Setting\_IsConjured](#robo216) is True, only one of this type of conjured object can be spawned at any given time. If not set, this object can be spawned any number of times. (Note: If different kinds of objects share the same UniqueConjuredObjectGlobal, only one of those objects can be spawned into the world even though they are of different types.) }
+Optional: If set, and if [Setting\_IsConjured](#robo236) is True, only one of this type of conjured object can be spawned at any given time. If not set, this object can be spawned any number of times. (Note: If different kinds of objects share the same UniqueConjuredObjectGlobal, only one of those objects can be spawned into the world even though they are of different types.) }
 
 **SYNTAX.**
 
