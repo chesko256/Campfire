@@ -145,4 +145,8 @@ Scripts\Source\CampfireData.psc
 externals Scripts\Source\_Camp_Compatibility.psc
 externals Scripts\Source\_Camp_LegalAreaCheck.psc
 externals Scripts\Source\_Camp_ObjectPlacementThreadManager.psc
+externals Scripts\Source\_Camp_PlaceableObjectBase.psc
 externals Scripts\Source\_Camp_TentSystem.psc
+externals Scripts\Source\_CampInternal.psc
+externals Scripts\Source\CampTent.psc
+externals Scripts\Source\testcompile.psc

@@ -10,3 +10,10 @@ Event OnInit()
 endEvent
 
 bool property isSKSELoaded auto hidden
+Activator[] property PerkNodeControllers auto hidden
+
+bool function CampfirePerkSystemRegister(Activator akNodeController, string asPluginName = "Unknown")
+endFunction
+
+bool function CampfirePerkSystemUnregister(Activator akNodeController, string asPluginName = "Unknown")
+endFunction
