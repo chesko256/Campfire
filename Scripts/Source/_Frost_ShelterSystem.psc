@@ -4,6 +4,7 @@ import CampUtil
 import _FrostInternal
 
 Actor property PlayerRef auto
+_Frost_Compatibility property Compatibility auto
 GlobalVariable property _Frost_IsTakingShelter auto
 GlobalVariable property _Frost_ShelterDetectLastSeenTime auto
 ObjectReference property _Frost_ShelterDetectOriginRef auto
@@ -15,20 +16,45 @@ function Update()
 	if !(IsRefInInterior(PlayerRef))
 		float time_delta_seconds = (Game.GetRealHoursPassed() - _Frost_ShelterDetectLastSeenTime.GetValue()) * 3600.0
 		int current_val = _Frost_IsTakingShelter.GetValueInt()
-		if time_delta_seconds > 4.0
-			if current_val == 1
-				FrostDebug(1, "|||| Shelter ::: Started taking shelter.")
+		bool in_wac_shelter_faction = false
+		if Compatibility.isWACLoaded && Compatibility._WetIsUnderShelterFaction
+			; Disable detection references and defer to Wet and Cold's system instead.
+			if _Frost_ShelterDetectOriginRef.IsEnabled() || _Frost_ShelterDetectSensorRef.IsEnabled()
+				_Frost_ShelterDetectOriginRef.Disable()
+				_Frost_ShelterDetectSensorRef.Disable()
 			endif
-			_Frost_IsTakingShelter.SetValue(2)
+			in_wac_shelter_faction = PlayerRef.IsInFaction(Compatibility._WetIsUnderShelterFaction)
+			if in_wac_shelter_faction
+				if current_val == 1
+					FrostDebug(1, "|||| Shelter ::: Started taking shelter (Wet and Cold).")
+				endif
+				_Frost_IsTakingShelter.SetValue(2)
+			else
+				if current_val == 2
+					FrostDebug(1, "|||| Shelter ::: Stopped taking shelter (Wet and Cold).")
+				endif
+				_Frost_IsTakingShelter.SetValue(1)
+			endif
 		else
-			if current_val == 2
-				FrostDebug(1, "|||| Shelter ::: Stopped taking shelter.")
+			if time_delta_seconds > 4.0
+				if current_val == 1
+					FrostDebug(1, "|||| Shelter ::: Started taking shelter.")
+				endif
+				_Frost_IsTakingShelter.SetValue(2)
+			else
+				if current_val == 2
+					FrostDebug(1, "|||| Shelter ::: Stopped taking shelter.")
+				endif
+				_Frost_IsTakingShelter.SetValue(1)
 			endif
-			_Frost_IsTakingShelter.SetValue(1)
+			if _Frost_ShelterDetectOriginRef.IsDisabled() || _Frost_ShelterDetectSensorRef.IsDisabled()
+				_Frost_ShelterDetectOriginRef.Enable()
+				_Frost_ShelterDetectSensorRef.Enable()
+			endif
+			_Frost_ShelterDetectOriginRef.MoveTo(PlayerRef, 0.0, 0.0, 130.0)
+			_Frost_ShelterDetectSensorRef.MoveTo(PlayerRef, 0.0, 0.0, 1200.0)
+			_Frost_ShelterDetectBeam.Cast(_Frost_ShelterDetectOriginRef, _Frost_ShelterDetectSensorRef)
 		endif
-		_Frost_ShelterDetectOriginRef.MoveTo(PlayerRef, 0.0, 0.0, 130.0)
-		_Frost_ShelterDetectSensorRef.MoveTo(PlayerRef, 0.0, 0.0, 1200.0)
-		_Frost_ShelterDetectBeam.Cast(_Frost_ShelterDetectOriginRef, _Frost_ShelterDetectSensorRef)
 	endif
 endFunction
 
