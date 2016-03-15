@@ -45,6 +45,9 @@ bool property isWACLoaded auto hidden						;Wet and Cold
 bool property isSSILoaded auto hidden						;Summerset Isle
 bool property isDRKLoaded auto hidden						;DarkenD
 
+;#Factions=====================================================================
+Faction property _WetIsUnderShelterFaction auto hidden
+
 ;#Merchant Containers==========================================================
 ;ObjectReference property MerchantRiverwoodTraderContainer auto
 
@@ -1614,6 +1617,8 @@ function AEALoadUp()
 endFunction
 
 function WACLoadUp()
+	_WetIsUnderShelterFaction = Game.GetFormFromFile(0x07119C, "WetandCold.esp") as Faction
+
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
 	; Check if already loaded
