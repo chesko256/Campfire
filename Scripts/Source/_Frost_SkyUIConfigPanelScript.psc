@@ -371,11 +371,12 @@ endFunction
 
 function PageReset_Equipment()
 	SetCursorFillMode(TOP_TO_BOTTOM)
-	;/if FrostfallRunning.GetValueInt() != 2 || must_exit
+	if FrostfallRunning.GetValueInt() != 2 || must_exit
 		AddTextOption("$FrostfallNotRunningError", "", OPTION_FLAG_DISABLED)
 		return
-	endif/;
-	AddTextOption("Coming in Frostfall 3.1.", "")
+	endif
+
+	GenerateEquipmentPage()
 
 endFunction
 
@@ -1470,6 +1471,182 @@ function RefundEnduranceSkillPoints()
 endFunction
 
 
+
+int[] area_oids
+int[] modify_area_oids
+int[] use_preset_oids
+int[] warmth_slider_oids
+int[] coverage_slider_oids
+int[] restore_default_value_oids
+
+function GenerateEquipmentPage()
+	SetCursorFillMode(LEFT_TO_RIGHT)
+	AddTextOption("Fetching info...", "", OPTION_FLAG_DISABLED)
+
+	SetCursorPosition(0)
+
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+	bool generated_header = false
+	Form[] worn_equipment = GetAllWornEquipment()
+	debug.trace("worn_equipment " + worn_equipment)
+	area_oids = new int[30]
+	modify_area_oids = new int[30]
+	use_preset_oids = new int[30]
+	warmth_slider_oids = new int[30]
+	coverage_slider_oids = new int[30]
+	restore_default_value_oids = new int[30]
+	int equipment_count = ArrayCount(worn_equipment)
+	debug.trace("equipment_count " + equipment_count)
+	int i = 0
+	while i < equipment_count
+		if !generated_header
+			GenerateEquipmentPageHeader()
+			generated_header = true
+		endif
+		AddHeaderOption(worn_equipment[i].GetName())
+		AddHeaderOption("")
+		int[] protection_values = handler.GetArmorProtectionData(worn_equipment[i] as Armor, 0, 0)
+
+		area_oids[i] = AddTextOption(GetAreaList(worn_equipment[i]), "", OPTION_FLAG_DISABLED)
+		modify_area_oids[i] = AddMenuOption("Modify Covered Areas", "")
+		warmth_slider_oids[i] = AddSliderOption("Warmth:", protection_values[0], "{0}")
+		use_preset_oids[i] = AddMenuOption("Use Preset", "")
+		coverage_slider_oids[i] = AddSliderOption("Coverage:", protection_values[1], "{0}")
+		restore_default_value_oids[i] = AddTextOption("Restore Default Values", "Restore")
+		i += 1
+	endWhile
+endFunction
+
+function GenerateEquipmentPageHeader()
+	AddHeaderOption("General")
+	AddHeaderOption("")
+	AddTextOption("Restore Defaults for All Equipment", "Restore")
+	AddTextOption("(Scroll to view all equipment)", "", OPTION_FLAG_DISABLED)
+endFunction
+
+Form[] function GetAllWornEquipment()
+	; Modified from http://www.creationkit.com/Slot_Masks_-_Armor
+
+	Form[] wornForms = new Form[29]
+    int index
+    int slotsChecked
+    slotsChecked += 0x00100000
+    slotsChecked += 0x00200000 ;ignore reserved slots
+    slotsChecked += 0x80000000
+
+    int thisSlot = 0x01
+    while (thisSlot < 0x80000000)
+        if (Math.LogicalAnd(slotsChecked, thisSlot) != thisSlot) 			;only check slots we haven't found anything equipped on already
+            Armor thisArmor = PlayerRef.GetWornForm(thisSlot) as Armor
+            if thisArmor
+                wornForms[index] = thisArmor
+                index += 1
+                slotsChecked += thisArmor.GetSlotMask() 					;add all slots this item covers to our slotsChecked variable
+            else 															;no armor was found on this slot
+                slotsChecked += thisSlot
+            endif
+        endif
+        thisSlot *= 2 														;double the number to move on to the next slot
+    endWhile
+    debug.trace("wornForms: " + wornForms)
+    return wornForms
+endFunction
+
+string function GetAreaList(Form akForm)
+	string[] slot_names = new string[32]
+	slot_names[0] = "Face"
+	slot_names[1] = "Head"
+	slot_names[2] = "Body"
+	slot_names[3] = "Hands"
+	slot_names[4] = "Forearms"
+	slot_names[5] = "Amulet"
+	slot_names[6] = "Ring"
+	slot_names[7] = "Feet"
+	slot_names[8] = "Calves"
+	slot_names[9] = "Shield"
+	slot_names[10] = "Tail"
+	slot_names[11] = "Hair"
+	slot_names[12] = "Brow"
+	slot_names[13] = "Ears"
+	slot_names[14] = "Misc (44)"
+	slot_names[15] = "Misc (45)"
+	slot_names[16] = "Cloak"
+	slot_names[17] = "Backpack"
+	slot_names[18] = "Misc (48)"
+	slot_names[19] = "Misc (49)"
+	slot_names[20] = "Misc (50)"
+	slot_names[21] = "Misc (51)"
+	slot_names[22] = "Misc (52)"
+	slot_names[23] = "Misc (53)"
+	slot_names[24] = "Misc (54)"
+	slot_names[25] = "Misc (55)"
+	slot_names[26] = "Misc (56)"
+	slot_names[27] = "Misc (57)"
+	slot_names[28] = "Misc (58)"
+	slot_names[29] = "Misc (59)"
+	slot_names[30] = "Misc (60)"
+	slot_names[31] = "Misc (61)"
+
+	string area_list = "Covers: "
+	
+	int slotMask = (akForm as Armor).GetSlotMask()
+	int index = 0
+	int slotsChecked
+    slotsChecked += 0x00100000
+    slotsChecked += 0x00200000 ;ignore reserved slots
+    slotsChecked += 0x80000000
+
+    int thisSlot = 0x01
+    while (thisSlot < 0x80000000)
+    	debug.trace("LogicalAnd " + slotMask + " " + thisSlot + " = " + (Math.LogicalAnd(slotMask, thisSlot)))
+        if Math.LogicalAnd(slotMask, thisSlot) == thisSlot
+    		if area_list == "Covers: "
+    			area_list = area_list + slot_names[index]
+    		else
+    			area_list = area_list + ", " + slot_names[index]
+    		endif
+    		slotsChecked += thisSlot
+    	endif
+    	thisSlot *= 2
+    	index += 1
+    endWhile
+
+	return area_list
+endFunction
+
+int function ArrayCount(Form[] myArray)
+;Counts the number of indices in this array that do not have a "none" type.
+	;		int myCount = number of indicies that are not "none"
+ 
+	int i = 0
+	int myCount = 0
+	while i < myArray.Length
+		if !(IsNone(myArray[i]))
+			myCount += 1
+			i += 1
+		else
+			i += 1
+		endif
+	endWhile
+	return myCount
+endFunction
+
+; Array elements that contain forms from unloaded mods
+; will fail '== None' checks because they are
+; 'Activator<None>' objects. Check FormID as well.
+bool function IsNone(Form akForm)
+	int i = 0
+	if akForm
+		i = akForm.GetFormID()
+		if i == 0
+			return true
+		else
+			return false
+		endif
+	else
+		return true
+	endif
+endFunction
 
 ; DEPRECATED
 GlobalVariable property _Frost_Setting_1PAnimationAllowed auto

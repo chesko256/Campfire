@@ -15,6 +15,25 @@ Keyword property ActorTypeCreature auto
 Keyword property ImmuneParalysis auto
 Keyword property WAF_ClothingCloak auto
 
+Armor[] property WornGear auto hidden
+
+int property SLOT_HEAD = 30 autoReadOnly hidden
+int property SLOT_HAIR = 31 autoReadOnly hidden
+int property SLOT_BODY = 32 autoReadOnly hidden
+int property SLOT_HANDS = 33 autoReadOnly hidden
+int property SLOT_FOREARMS = 34 autoReadOnly hidden
+int property SLOT_AMULET = 35 autoReadOnly hidden
+int property SLOT_RING = 36 autoReadOnly hidden
+int property SLOT_FEET = 37 autoReadOnly hidden
+int property SLOT_CALVES = 38 autoReadOnly hidden
+int property SLOT_SHIELD = 39 autoReadOnly hidden
+int property SLOT_TAIL = 40 autoReadOnly hidden
+int property SLOT_LONGHAIR = 41 autoReadOnly hidden
+int property SLOT_CIRCLET = 42 autoReadOnly hidden
+int property SLOT_EARS = 43 autoReadOnly hidden
+int property SLOT_CLOAK = 46 autoReadOnly hidden
+int property SLOT_BACKPACK = 47 autoReadOnly hidden
+
 Armor property equipped_body auto hidden
 Armor property equipped_head auto hidden
 Armor property equipped_hands auto hidden
@@ -61,6 +80,8 @@ function RaceChanged()
         SendEvent_UpdateWarmth()
     endif
 endFunction
+
+
 
 function ObjectEquipped(Form akBaseObject, int iGearType)
     ;===========

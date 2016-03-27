@@ -6,6 +6,9 @@ import FrostUtil
 import _FrostInternal
 import Math
 
+Keyword property _FrostData_ArmorAll auto
+
+; TODO: Remove
 Keyword property _FrostData_ArmorBody auto
 Keyword property _FrostData_ArmorHead auto
 Keyword property _FrostData_ArmorHands auto
@@ -339,7 +342,15 @@ int[] function GetArmorProtectionData(Armor akArmor, int aiGearType, int aiMode 
 		endif
 	endif
 
-	if aiMode == 1
+
+	; TEMPORARY
+	int[] result = new int[2]
+	result[0] = (IntListGet(_FrostData_ArmorAll, ds_key, 0) - 1)
+	result[1] = (IntListGet(_FrostData_ArmorAll, ds_key, 1) - 1)
+	return result
+
+
+	;/if aiMode == 1
 		; Body mode - check body and all other slots, return int[10]
 		int[] result = new int[10]
 		; Body
@@ -438,7 +449,7 @@ int[] function GetArmorProtectionData(Armor akArmor, int aiGearType, int aiMode 
 		endif
 		;FrostDebug(0, "Result: " + result)
 		return result
-	endif
+	endif/;
 endFunction
 
 string function GetDatastoreKeyFromForm(Armor akArmor)
@@ -460,8 +471,8 @@ string function GetDatastoreKeyFromID(int aiFormID)
 endFunction
 
 function AddDatastoreEntryByKey(string asKey, int aiGearType, int aiWarmth, int aiCoverage)
-	Keyword Datastore
-	if aiGearType == 1
+	; TODO: Remove
+	;/if aiGearType == 1
 		Datastore = _FrostData_ArmorBody
 	elseif aiGearType == 2
 		Datastore = _FrostData_ArmorHands
@@ -475,6 +486,14 @@ function AddDatastoreEntryByKey(string asKey, int aiGearType, int aiWarmth, int 
 		Datastore = _FrostData_ArmorShield
 	elseif aiGearType == 99
 		Datastore = _FrostData_ArmorIgnore
+	endif
+	/;
+
+	Keyword Datastore
+	if aiGearType == 99
+		Datastore = _FrostData_ArmorIgnore
+	else
+		Datastore = _FrostData_ArmorAll
 	endif
 
 	; Do we know if the entry exists already? Assume 'we know it doesn't' for now.
