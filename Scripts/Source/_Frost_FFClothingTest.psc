@@ -2,7 +2,7 @@ scriptname _Frost_FFClothingTest extends Whatever
 
 
 ; CRUD
-function SetArmorData(Armor akArmor, int aiBodyWarmth = 0, int aiBodyCoverage = 0, int aiHeadWarmth = 0, int aiHeadCoverage = 0, int aiHandsWarmth = 0, int aiHandsCoverage = 0, int aiFeetWarmth = 0, int aiFeetCoverage = 0, int aiCloakWarmth = 0, int aiCloakCoverage = 0, int aiMiscWarmth = 0, int aiMiscCoverage = 0)
+function SetArmorData(Armor akArmor, int aiWarmth, int aiCoverage, int aiExtraBodyWarmth = 0, int aiExtraBodyCoverage = 0, int aiExtraHeadWarmth = 0, int aiExtraHeadCoverage = 0, int aiExtraHandsWarmth = 0, int aiExtraHandsCoverage = 0, int aiExtraFeetWarmth = 0, int aiExtraFeetCoverage = 0, int aiExtraCloakWarmth = 0, int aiExtraCloakCoverage = 0, int aiExtraMiscWarmth = 0, int aiExtraMiscCoverage = 0)
 	string profile_path = CONFIG_PATH + "profile" + _Frost_Setting_CurrentProfile.GetValueInt()
 	string dskey = GetDatastoreKeyFromForm(akArmor)
 
