@@ -1,5 +1,12 @@
 scriptname _Frost_FFClothingTest extends Whatever
 
+bool function DatastoreHasKey(string asProfilePath, string asKey)
+	if JsonUtil.IntListGet(asProfilePath, asKey, 0) != 0
+		return true
+	else
+		return false
+	endif
+endFunction
 
 ; CRUD
 function SetArmorData(Armor akArmor, int aiWarmth, int aiCoverage, 								\
@@ -9,24 +16,26 @@ function SetArmorData(Armor akArmor, int aiWarmth, int aiCoverage, 								\
 									 int aiExtraFeetWarmth = 0, int aiExtraFeetCoverage = 0, 	\
 									 int aiExtraCloakWarmth = 0, int aiExtraCloakCoverage = 0, 	\
 									 int aiExtraMiscWarmth = 0, int aiExtraMiscCoverage = 0)
+	
 	string profile_path = CONFIG_PATH + "profile" + _Frost_Setting_CurrentProfile.GetValueInt()
 	string dskey = GetDatastoreKeyFromForm(akArmor)
-	JsonUtil.IntListAdd(profile_path, dskey, aiWarmth				+ 1) ; + 1 so that 0 is a meaningful value on Get
-	JsonUtil.IntListAdd(profile_path, dskey, aiCoverage				+ 1)
-	JsonUtil.IntListAdd(profile_path, dskey, aiExtraBodyWarmth		+ 1)
-	JsonUtil.IntListAdd(profile_path, dskey, aiExtraBodyCoverage	+ 1)
-	JsonUtil.IntListAdd(profile_path, dskey, aiExtraHeadWarmth		+ 1)
-	JsonUtil.IntListAdd(profile_path, dskey, aiExtraHeadCoverage	+ 1)
-	JsonUtil.IntListAdd(profile_path, dskey, aiExtraHandsWarmth		+ 1)
-	JsonUtil.IntListAdd(profile_path, dskey, aiExtraHandsCoverage	+ 1)
-	JsonUtil.IntListAdd(profile_path, dskey, aiExtraFeetWarmth		+ 1)
-	JsonUtil.IntListAdd(profile_path, dskey, aiExtraFeetCoverage	+ 1)
-	JsonUtil.IntListAdd(profile_path, dskey, aiExtraCloakWarmth		+ 1)
-	JsonUtil.IntListAdd(profile_path, dskey, aiExtraCloakCoverage	+ 1)
-	JsonUtil.IntListAdd(profile_path, dskey, aiExtraMiscWarmth		+ 1)
-	JsonUtil.IntListAdd(profile_path, dskey, aiExtraMiscCoverage	+ 1)
-
-	JsonUtil.Save(profile_path)
+	if !DatastoreHasKey(profile_path, dskey)
+		JsonUtil.IntListAdd(profile_path, dskey, aiWarmth				+ 1) ; + 1 so that 0 is a meaningful value on Get
+		JsonUtil.IntListAdd(profile_path, dskey, aiCoverage				+ 1)
+		JsonUtil.IntListAdd(profile_path, dskey, aiExtraBodyWarmth		+ 1)
+		JsonUtil.IntListAdd(profile_path, dskey, aiExtraBodyCoverage	+ 1)
+		JsonUtil.IntListAdd(profile_path, dskey, aiExtraHeadWarmth		+ 1)
+		JsonUtil.IntListAdd(profile_path, dskey, aiExtraHeadCoverage	+ 1)
+		JsonUtil.IntListAdd(profile_path, dskey, aiExtraHandsWarmth		+ 1)
+		JsonUtil.IntListAdd(profile_path, dskey, aiExtraHandsCoverage	+ 1)
+		JsonUtil.IntListAdd(profile_path, dskey, aiExtraFeetWarmth		+ 1)
+		JsonUtil.IntListAdd(profile_path, dskey, aiExtraFeetCoverage	+ 1)
+		JsonUtil.IntListAdd(profile_path, dskey, aiExtraCloakWarmth		+ 1)
+		JsonUtil.IntListAdd(profile_path, dskey, aiExtraCloakCoverage	+ 1)
+		JsonUtil.IntListAdd(profile_path, dskey, aiExtraMiscWarmth		+ 1)
+		JsonUtil.IntListAdd(profile_path, dskey, aiExtraMiscCoverage	+ 1)
+		JsonUtil.Save(profile_path)
+	endif
 endFunction
 
 bool function UpdateArmorData(Form akBaseObject, int aiWarmth = -1, int aiCoverage = -1, 					\
@@ -36,9 +45,10 @@ bool function UpdateArmorData(Form akBaseObject, int aiWarmth = -1, int aiCovera
 	                                        int aiExtraFeetWarmth = -1, int aiExtraFeetCoverage = -1, 	\
 	                                        int aiExtraCloakWarmth = -1, int aiExtraCloakCoverage = -1, \
 	                                        int aiExtraMiscWarmth = -1, int aiExtraMiscCoverage = -1)
+	
 	string profile_path = CONFIG_PATH + "profile" + _Frost_Setting_CurrentProfile.GetValueInt()
 	string dskey = GetDatastoreKeyFromForm(akArmor)
-	if ; key exists
+	if DatastoreHasKey(profile_path, dskey)
 		if aiWarmth != -1
 			JsonUtil.IntListSet(profile_path, dskey, 0, aiWarmth				+ 1) ; + 1 so that 0 is a meaningful value on Get
 		endif
