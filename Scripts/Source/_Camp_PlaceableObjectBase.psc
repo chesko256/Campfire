@@ -114,9 +114,10 @@ endFunction
 function Initialize()
 	if Setting_IsConjured && UniqueConjuredObjectIDGlobal
 		conjured_object_id = UpdateConjuredObjectID(UniqueConjuredObjectIDGlobal)
-		if GetCompatibilitySystem().isSKSELoaded
-			RegisterForModEvent("Campfire_OnConjuredObjectIDUpdated", "OnConjuredObjectIDUpdated")
-		endif
+		;@SKYRIMOLD
+		;if GetCompatibilitySystem().isSKSELoaded
+			RegisterForCustomEvent(self, "CampfireOnConjuredObjectIDUpdated")
+		;endif
 	endif
 
 	PlacementSystem = CampUtil.GetPlacementSystem()
@@ -241,7 +242,7 @@ function TakeDown()
 
 	ClearEquipmentFromCrimeAlias(self)
 	; Raise optional SKSE event
-	SendEvent_OnObjectRemoved(self.GetBaseObject(), self.GetPositionX(), self.GetPositionY(), self.GetPositionZ(), self.GetAngleX(), self.GetAngleY(), self.GetAngleZ(), IsTent(self))
+	SendCustomEvent("CampfireOnObjectRemoved", self.GetBaseObject(), self.GetPositionX(), self.GetPositionY(), self.GetPositionZ(), self.GetAngleX(), self.GetAngleY(), self.GetAngleZ(), IsTent(self))
 endFunction
 
 function PlaceObject_FireMarkers()
@@ -285,6 +286,7 @@ function ProcessOnHit(ObjectReference akAggressor, Form akSource, Projectile akP
 	if CampUtil.GetCampfireSettingBool("CampingGearFlammable") == true && Setting_Flammable
 		if block_spell_hits == false
 			block_spell_hits = true
+			;@SKYRIMOLD - Do we still have a "torch" of any kind?
 			if akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11
 				CampDebug(0, "Torch bash!")
 				IncreaseFireLevel()
@@ -474,7 +476,8 @@ Event OnUpdateGameTime()
 	TakeDown()
 endEvent
 
-Event OnConjuredObjectIDUpdated()
+;@SKYRIMOLD
+CustomEvent CampfireOnConjuredObjectIDUpdated(akSender, var[] akArgs)
 	int i = 0
 	while !initialized && i < 120
 		Utility.Wait(1)
