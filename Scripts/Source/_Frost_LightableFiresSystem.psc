@@ -1,1 +1,0 @@
-scriptname _Frost_LightableFiresSystem extends _Frost_BaseSystem
