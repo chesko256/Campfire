@@ -16,6 +16,7 @@ GlobalVariable property _Camp_Setting_MaxThreads auto
 GlobalVariable property _Camp_LastPlacementHeightOffset auto
 
 ;Fire
+;@SKYRIMOLD
 Form property SmallFire auto hidden
 Activator property _Camp_LargeFire auto
 Activator property _Camp_LargeFireSmoke auto
