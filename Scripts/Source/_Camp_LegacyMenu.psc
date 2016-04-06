@@ -67,7 +67,6 @@ GlobalVariable property _Camp_Setting_FollowersUseCampsite auto
 GlobalVariable property _Camp_Setting_FollowersRemoveGearInTents auto
 GlobalVariable property _Camp_Setting_AdvancedPlacement auto
 GlobalVariable property _Camp_Setting_MaxThreads auto
-GlobalVariable property _Camp_Setting_TrackFollowers auto
 GlobalVariable property _Camp_Setting_EnableTutorials auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 GlobalVariable property _Camp_LegacyConfigCampingRestore auto
@@ -92,10 +91,6 @@ GlobalVariable property _Camp_Tutorial_SkillSystem3_Displayed auto
 
 ;References
 Actor property PlayerRef auto
-ReferenceAlias property Follower1 auto
-ReferenceAlias property Follower2 auto
-ReferenceAlias property Follower3 auto
-ReferenceAlias property Animal auto
 
 ;Spells
 Spell property _Camp_FollowerDetectSpell auto
@@ -206,25 +201,14 @@ function menu_advanced()
     elseif i == 1
         MenuHandler_UpDown(_Camp_legacyconfig_placementthreads, _Camp_Setting_MaxThreads, 1.0, 30.0, 1.0)
         menu_advanced()
+    ;elseif i == 2
+    ;    menu_campingskill()
     elseif i == 2
-        MenuHandler_Toggle(_Camp_legacyconfig_detectfollowers_on, _Camp_legacyconfig_detectfollowers_off, _Camp_Setting_TrackFollowers)
-        if _Camp_Setting_TrackFollowers.GetValueInt() == 2
-            PlayerRef.AddSpell(_Camp_FollowerDetectSpell, false)
-        else
-            PlayerRef.RemoveSpell(_Camp_FollowerDetectSpell)
-            Follower1.Clear()
-            Follower2.Clear()
-            Follower3.Clear()
-            Animal.Clear()
-        endif
-        menu_advanced()
-    elseif i == 3
-        menu_campingskill()
-    elseif i == 4
         menu_root()
     endif
 endFunction
 
+;@SKYRIMOLD
 function menu_campingskill()
     int i = _Camp_legacyconfig_campingskill.Show()
     if i == 0     ;Respec
