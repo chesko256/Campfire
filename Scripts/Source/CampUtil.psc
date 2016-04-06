@@ -47,6 +47,7 @@ _Camp_TentSystem function GetTentSystem() global
 	return Campfire.CampfireTentSystem as _Camp_TentSystem
 endFunction
 
+
 ;/********f* CampUtil/GetAPIVersion
 * API VERSION ADDED
 * 1
@@ -595,11 +596,13 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true, bool abPlayerBusy
 			Campfire._Camp_GeneralError_Placement.Show()
 		endif
 		return false
-	elseif GetCompatibilitySystem().isSKSELoaded && Campfire.PlayerRef.IsSwimming()
+	;@SKYRIMOLD
+	;/elseif GetCompatibilitySystem().isSKSELoaded && Campfire.PlayerRef.IsSwimming()
 		if abShowMessage
 			Campfire._Camp_GeneralError_Swimming.Show()
 		endif
 		return false
+	/;
 	elseif Campfire.PlayerRef.IsOnMount()
 		if abShowMessage
 			Campfire._Camp_GeneralError_Mounted.Show()
@@ -1407,6 +1410,9 @@ Event Campfire_OnObjectPlaced(Form akPlacedObject, float afPositionX, float afPo
 	endif
 endEvent
 ;*********/;
+
+;@SKYRIMOLD
+;/
 function SendEvent_OnObjectPlaced(ObjectReference akObjectReference) global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
@@ -1441,6 +1447,7 @@ function SendEvent_OnObjectPlaced(ObjectReference akObjectReference) global
 		endif
 	endif
 endFunction
+/;
 
 ;/********e* CampUtil/Campfire_OnObjectRemoved
 * API VERSION ADDED
@@ -1477,6 +1484,9 @@ Event Campfire_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPos
 	endif
 endEvent
 ;*********/;
+
+;@SKYRIMOLD
+;/
 function SendEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent) global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
@@ -1504,6 +1514,7 @@ function SendEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float a
 		endif
 	endif
 endFunction
+/;
 
 ;/********e* CampUtil/Campfire_OnBedrollSitLay
 * API VERSION ADDED
@@ -1530,6 +1541,9 @@ Event Campfire_OnBedrollSitLay(Form akTent, bool abGettingUp)
 	endif
 endEvent
 ;*********/;
+
+;@SKYRIMOLD
+;/
 function SendEvent_OnBedrollSitLay(ObjectReference akTent, bool abGettingUp = false) global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
@@ -1548,6 +1562,7 @@ function SendEvent_OnBedrollSitLay(ObjectReference akTent, bool abGettingUp = fa
 		endif
 	endif
 endFunction
+/;
 
 function RaiseCampAPIError() global
 	debug.trace("[Campfire][ERROR] Fatal Campfire API error occurred.")
