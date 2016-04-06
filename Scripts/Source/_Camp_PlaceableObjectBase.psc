@@ -2,7 +2,7 @@ scriptname _Camp_PlaceableObjectBase extends ObjectReference
 
 import _CampInternal
 import CampUtil
-import TentSystem
+; import TentSystem
 
 ; OPTIONAL PROPERTIES
 
@@ -79,20 +79,20 @@ int fire_level = 0
 int damage_stage = 0
 
 Event OnInit()
-	CampDebug(0, self + " OnInit()")
+	; CampDebug(0, self + " OnInit()")
 	int i = 0
 	if self.IsEnabled()
     	while !self.Is3DLoaded() && i < 50
         	utility.wait(0.1)
         	i += 1
-        	CampDebug(0, self + " waiting for initial 3D Loaded. (i = " + i + ")")
+        	; CampDebug(0, self + " waiting for initial 3D Loaded. (i = " + i + ")")
     	endWhile
     endif
 	;We need to get out of OnInit() quickly, so member functions on this object can be called.
-	RegisterForSingleUpdate(0.1)
+	StartTimer(0.1)
 endEvent
 
-Event OnUpdate()
+Event OnTimer(int aiTimerID)
 	if !initialized
 		Initialize()
 		return
@@ -116,7 +116,7 @@ function Initialize()
 		conjured_object_id = UpdateConjuredObjectID(UniqueConjuredObjectIDGlobal)
 		;@SKYRIMOLD
 		;if GetCompatibilitySystem().isSKSELoaded
-			RegisterForCustomEvent(self, "CampfireOnConjuredObjectIDUpdated")
+		;	RegisterForCustomEvent(self, "CampfireOnConjuredObjectIDUpdated")
 		;endif
 	endif
 
@@ -138,11 +138,14 @@ function Initialize()
 	PlacementSystem.ReleaseLock(self)
 
 	if Setting_IsConjured
-		RegisterForSingleUpdateGameTime(24.0)
+		StartTimerGameTime(24.0)
 	endif
 
+	RegisterForHitEvent(self)
+	RegisterForMagicEffectApplyEvent(self)
+
 	initialized = true
-	CampDebug(0, "Base initialized")
+	; CampDebug(0, "Base initialized")
 endFunction
 
 function RotateOnStartUp()
@@ -168,7 +171,7 @@ function GetResults()
 endFunction
 
 function GetBaseResults()
-	CampDebug(0, "Base get results")
+	; CampDebug(0, "Base get results")
 	if myFire1Future
 		myFire1 = GetFuture(myFire1Future).get_result()
 		myFire1Future = None
@@ -223,7 +226,7 @@ function DestroyMyself()
 endFunction
 
 function TakeDown()
-	CampDebug(0, "_Camp_PlaceableObjectBase taking down " + self)
+	; CampDebug(0, "_Camp_PlaceableObjectBase taking down " + self)
 	TryToDisableAndDeleteRef(myFire1)
 	TryToDisableAndDeleteRef(myFire2)
 	TryToDisableAndDeleteRef(myFire3)
@@ -242,15 +245,25 @@ function TakeDown()
 
 	ClearEquipmentFromCrimeAlias(self)
 	; Raise optional SKSE event
-	SendCustomEvent("CampfireOnObjectRemoved", self.GetBaseObject(), self.GetPositionX(), self.GetPositionY(), self.GetPositionZ(), self.GetAngleX(), self.GetAngleY(), self.GetAngleZ(), IsTent(self))
+	var[] akargs = new var[0]
+	akargs[0] = self.GetBaseObject()
+	akargs[1] = self.GetPositionX()
+	akargs[2] = self.GetPositionY()
+	akargs[3] = self.GetPositionZ()
+	akargs[4] = self.GetAngleX()
+	akargs[5] = self.GetAngleY()
+	akargs[6] = self.GetAngleZ()
+	akargs[7] = IsTent(self)
+	;@SKYRIMOLD
+	;SendCustomEvent("CampfireOnObjectRemoved", akargs)
 endFunction
 
 function PlaceObject_FireMarkers()
 	float fire_z_offset = (Game.GetFormFromFile(0x0005573D, "Campfire.esm") as GlobalVariable).GetValue() * -1.0
-	CampDebug(0, "Placing fire markers")
+	; CampDebug(0, "Placing fire markers")
 	float xr = (self.GetWidth() / 2) * 0.8
 	float yr = (self.GetLength() / 2) * 0.8
-	CampDebug(0, xr + ", " + yr)
+	; CampDebug(0, xr + ", " + yr)
 
 	if xr == 0.0
 		xr = 100.0
@@ -259,7 +272,7 @@ function PlaceObject_FireMarkers()
 		yr = 100.0
 	endif
 
-	CampDebug(0, " Fire marker: xr " + xr + ", yr " + yr)
+	; CampDebug(0, " Fire marker: xr " + xr + ", yr " + yr)
 
 	myFire1Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_hanging = true, z_hanging_offset = fire_z_offset, is_temp = is_temporary)
 	myFire2Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_hanging = true, z_hanging_offset = fire_z_offset, is_temp = is_temporary)
@@ -274,12 +287,14 @@ _Camp_ObjectFuture function GetFuture(ObjectReference akObjectReference)
 	return akObjectReference as _Camp_ObjectFuture
 endFunction
 
-Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
+Event OnHit(ObjectReference akTarget, ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked, string asMaterialName)
 	ProcessOnHit(akAggressor, akSource, akProjectile, abBashAttack)
+	RegisterForHitEvent(self)
 EndEvent
 
-Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
+Event OnMagicEffectApply(ObjectReference akTarget, ObjectReference akCaster, MagicEffect akEffect)
 	ProcessMagicEffect(akCaster, akEffect)
+	RegisterForMagicEffectApplyEvent(self)
 EndEvent
 
 function ProcessOnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abBashAttack)
@@ -288,7 +303,7 @@ function ProcessOnHit(ObjectReference akAggressor, Form akSource, Projectile akP
 			block_spell_hits = true
 			;@SKYRIMOLD - Do we still have a "torch" of any kind?
 			if akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11
-				CampDebug(0, "Torch bash!")
+				; CampDebug(0, "Torch bash!")
 				IncreaseFireLevel()
 				utility.wait(0.5)
 			endif
@@ -317,7 +332,7 @@ function IncreaseFireLevel()
 	if fire_level < 9
 		fire_level += 1
 	endif
-	CampDebug(1, "Fire level increased to " + fire_level)
+	; CampDebug(1, "Fire level increased to " + fire_level)
 	UpdateFireState()
 endFunction
 
@@ -325,7 +340,7 @@ function DecreaseFireLevel()
 	if fire_level > 0 && fire_level < 9
 		fire_level -= 1
 	endif
-	CampDebug(1, "Fire level decreased to " + fire_level)
+	; CampDebug(1, "Fire level decreased to " + fire_level)
 	UpdateFireState()
 endFunction
 
@@ -405,48 +420,48 @@ function UpdateFireState()
 		TryToDisableRef(myFire5)
 		TryToDisableRef(myFire6)
 		TryToDisableRef(mySmoke)
-		UnregisterForUpdate()
+		CancelTimer()
 		GoToState("")
 	endif
 endFunction
 
 State OnFire
-	Event OnBeginState()
-		RegisterForSingleUpdate(3)
+	Event OnBeginState(string asOldState)
+		StartTimer(3)
 	endEvent
-	Event OnUpdate()
+	Event OnTimer(int aiTimerID)
 		if fire_level > 0
 			IncreaseFireLevel()
 			if fire_level < 8
-				RegisterForSingleUpdate(3)
+				StartTimer(3)
 			elseif fire_level == 8
-				RegisterForSingleUpdate(8)
+				StartTimer(8)
 			endif
 		endif
 	endEvent
 	Event OnActivate(ObjectReference akActionRef)
-		CampDebug(1, "Can't use something while it's on fire!")
+		; CampDebug(1, "Can't use something while it's on fire!")
 	EndEvent
 endState
 
 State BurningDown
-	Event OnUpdate()
+	Event OnTimer(int aiTimerID)
 		;pass
 	endEvent
-	Event OnBeginState()
+	Event OnBeginState(string asOldState)
 		BurnDown()
 	EndEvent
 	Event OnActivate(ObjectReference akActionRef)
-		CampDebug(1, "Can't use something while it's burning down!")
+		; CampDebug(1, "Can't use something while it's burning down!")
 	EndEvent
 	function BurnDown()
-		CampDebug(1, "Burning down!")
+		; CampDebug(1, "Burning down!")
 		;@Override
 	endFunction
 endState
 
 function BurnDown()
-	CampDebug(1, "Not burning down, do nothing.")
+	; CampDebug(1, "Not burning down, do nothing.")
 endFunction
 
 function TryToPlayShader(ObjectReference akObjectReference)
@@ -472,11 +487,14 @@ function ForceStopUsingFurniture(ObjectReference akFurnitureRef)
 	endif
 endFunction
 
-Event OnUpdateGameTime()
+Event OnTimerGameTime(int aiTimerID)
 	TakeDown()
 endEvent
 
 ;@SKYRIMOLD
+;/
+CustomEvent CampfireOnConjuredObjectIDUpdated
+
 CustomEvent CampfireOnConjuredObjectIDUpdated(akSender, var[] akArgs)
 	int i = 0
 	while !initialized && i < 120
@@ -489,4 +507,4 @@ CustomEvent CampfireOnConjuredObjectIDUpdated(akSender, var[] akArgs)
 			TakeDown()
 		endif
 	endif
-endEvent
+endEvent/;

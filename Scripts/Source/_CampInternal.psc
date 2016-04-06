@@ -185,7 +185,8 @@ function SetCurrentTent(ObjectReference akTent) global
 		return
 	endif
 	Campfire.CurrentTent = akTent
-	if CampUtil.GetCompatibilitySystem().isSKSELoaded
+	;@SKYRIMOLD
+	;/if CampUtil.GetCompatibilitySystem().isSKSELoaded
 		if akTent
 			CampDebug(0, "Sending event Campfire_OnTentEnter")
 			; * Event OnTentEnter(Form akTent, bool abHasShelter)
@@ -206,6 +207,7 @@ function SetCurrentTent(ObjectReference akTent) global
     		endif
 		endif
 	endif
+	/;
 endFunction
 
 Quest function GetCrimeTrackingQuest() global
@@ -262,6 +264,8 @@ _Camp_Strings function GetCampfireStrings() global
 	return (Campfire.CampfireStrings as _Camp_Strings)
 endFunction
 
+;@SKYRIMOLD
+;/
 int function UpdateConjuredObjectID(GlobalVariable akGlobal) global
 	if akGlobal
 		int new_value = akGlobal.GetValueInt() + 1
@@ -276,10 +280,13 @@ int function UpdateConjuredObjectID(GlobalVariable akGlobal) global
    		return -1
    	endif
 endFunction
+/;
 
 function ExitMenus() global
-	Game.DisablePlayerControls()
-	Game.EnablePlayerControls()
+	InputEnableLayer myLayer = InputEnableLayer.Create()
+	myLayer.DisablePlayerControls()
+	myLayer.EnablePlayerControls()
+	myLayer = None
 endFunction
 
 function RaiseCampAPIError() global
