@@ -8,12 +8,14 @@ fo4_dir = None
 
 
 def run():
+    global fo4_dir
+
     os.chdir("..\\")
     if len(sys.argv) < 3:
         printhelp()
         sys.exit()
 
-    fo4_dir = sys.argv[1]
+    fo4_dir = sys.argv[1] + "\\"
     flag = sys.argv[2]
 
     if fo4_dir is None or fo4_dir == "":
