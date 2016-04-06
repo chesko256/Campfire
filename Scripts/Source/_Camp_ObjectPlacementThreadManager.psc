@@ -509,9 +509,11 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
 	return future
 endFunction
 
+InputEnableLayer myIL
 function StartPlacement(ObjectReference akIndicator)
     ; Block inventory menu access
-    Game.DisablePlayerControls(false, false, false, false, false, true, false, false)
+    myIL = InputEnableLayer.Create()
+    myIL.DisablePlayerControls(false, false, false, false, false, true, false, false)
     was_hit = false
     akIndicator.SetAngle(0.0, 0.0, 0.0)
     _Camp_CurrentlyPlacingObject.SetValueInt(2)
@@ -521,7 +523,8 @@ function StartPlacement(ObjectReference akIndicator)
 endFunction
 
 function StopPlacement()
-    Game.EnablePlayerControls()
+    myIL.EnablePlayerControls()
+    myIL = None
     _Camp_CurrentlyPlacingObject.SetValueInt(1)
     _Camp_IndicatorTriggerRef.MoveTo(_Camp_Anchor)
     _Camp_ZTestShooterREF_A.MoveTo(_Camp_Anchor)
@@ -624,8 +627,9 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
                 akIndicator.Disable()
                 ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace, abForcePersist = !(IsPlaceableObjectTemporary(akFormToPlace)))
                 
+                ;@SKYRIMOLD
                 ; Raise optional SKSE event
-                SendEvent_OnObjectPlaced(campitem)
+                ;SendEvent_OnObjectPlaced(campitem)
 
                 if akInventoryItem
                     (campitem as _Camp_PlaceableObjectBase).Required_InventoryItem = akInventoryItem
@@ -679,8 +683,10 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
 
                 akIndicator.Disable()
                 ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace, abForcePersist = !(IsPlaceableObjectTemporary(akFormToPlace)))
+                
+                ;@SKYRIMOLD
                 ; Raise optional SKSE event
-                SendEvent_OnObjectPlaced(campitem)
+                ;SendEvent_OnObjectPlaced(campitem)
 
                 if akInventoryItem
                     (campitem as _Camp_PlaceableObjectBase).Required_InventoryItem = akInventoryItem
@@ -862,26 +868,29 @@ bool function MeetsRequirements(Ingredient akIngredient, MiscObject akMiscItem, 
         if akPerk
             if !PlayerRef.HasPerk(akPerk)
                 _Camp_PlaceObjectError_Perk.Show()
-                if Compatibility.isSKSELoaded
-                    debug.notification(akPerk.GetName() + str.IngredientRequired)
-                endif
+                ;@SKYRIMOLD
+                ;if Compatibility.isSKSELoaded
+                ;    debug.notification(akPerk.GetName() + str.IngredientRequired)
+                ;endif
                 return false
             endif
         endif
         if akIngredient && aiCost > 0
             if !(PlayerRef.GetItemCount(akIngredient) >= aiCost)
                 _Camp_PlaceObjectError_Item.Show()
-                if Compatibility.isSKSELoaded
-                    debug.notification(aiCost + " " + akIngredient.GetName() + str.IngredientRequired)
-                endif
+                ;@SKYRIMOLD
+                ;if Compatibility.isSKSELoaded
+                ;    debug.notification(aiCost + " " + akIngredient.GetName() + str.IngredientRequired)
+                ;endif
                 return false
             endif
         elseif akMiscItem && aiCost > 0
             if !(PlayerRef.GetItemCount(akMiscItem) >= aiCost)
                 _Camp_PlaceObjectError_Item.Show()
-                if Compatibility.isSKSELoaded
-                    debug.notification(aiCost + " " + akMiscItem.GetName() + str.IngredientRequired)
-                endif
+                ;@SKYRIMOLD
+                ;if Compatibility.isSKSELoaded
+                ;    debug.notification(aiCost + " " + akMiscItem.GetName() + str.IngredientRequired)
+                ;endif
                 return false
             endif
         endif
@@ -892,7 +901,7 @@ bool function MeetsRequirements(Ingredient akIngredient, MiscObject akMiscItem, 
 endFunction
 
 function SendEvent_OnIndicatorUpdateStart()
-    RegisterForSingleUpdate(0.1)
+    StartTimer(0.1)
 endFunction
 
 function wait_all()
@@ -999,7 +1008,7 @@ endFunction
 
 function SendEvent_OnObjectPlacementStart()
     ; Thread scripts on this object will receive this OnUpdate event and begin placement.
-    RegisterForSingleUpdate(0.1)
+    StartTimer(0.1)
 endFunction
 
 float[] function GetOffsets(Actor akSource, Float afDistance = 100.0, float afOffset = 0.0)
