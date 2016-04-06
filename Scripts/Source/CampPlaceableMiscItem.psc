@@ -12,7 +12,7 @@ import CampUtil
 ;/********p* CampPlacementIndicator/Required_this_item
 * SYNTAX
 */;
-MiscObject property Required_this_item auto
+MiscObject property Required_this_item auto Mandatory
 {
 * DESCRIPTION
 * Required: This inventory item, the object this script is attached to. }
@@ -21,7 +21,7 @@ MiscObject property Required_this_item auto
 ;/********p* CampPlaceableMiscItem/Required_placement_indicator
 * SYNTAX
 */;
-Activator property Required_placement_indicator auto
+Activator property Required_placement_indicator auto Mandatory
 {
 * DESCRIPTION
 * Required: The object that will indicate to the player where to place this item. }
