@@ -27,13 +27,11 @@ bool property IsChoppingWood = false auto conditional hidden
 bool property IsChoppingWoodEnvironment = false auto conditional hidden
 
 ; Compatibility
-bool property IsSKSELoaded = false auto conditional hidden
-bool property IsHearthfireLoaded = false auto conditional hidden
-bool property IsDawnguardLoaded = false auto conditional hidden
-bool property IsDragonbornLoaded = false auto conditional hidden
-bool property IsFrostfallLoaded = false auto conditional hidden
-bool property IsLastSeedLoaded = false auto conditional hidden
-bool property IsArtOfTheCatchLoaded = false auto conditional hidden
+bool property IsF4SELoaded = false auto conditional hidden
+bool property IsAutomatronLoaded = false auto conditional hidden
+bool property IsWastelandWorkshopLoaded = false auto conditional hidden
+bool property IsFarHarborLoaded = false auto conditional hidden
+bool property IsSurvivalModeLoaded = false auto conditional hidden
 
 ; Campfire Lighting
 bool property IsLightingFireFlameSpell = false auto conditional hidden
