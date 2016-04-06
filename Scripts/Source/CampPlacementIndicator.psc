@@ -8,7 +8,7 @@ _Camp_ObjectPlacementThreadManager property PlacementSystem auto hidden
 ;/********p* CampPlacementIndicator/Required_furniture_to_place
 * SYNTAX
 */;
-Furniture property Required_furniture_to_place auto
+Furniture property Required_furniture_to_place auto Mandatory
 {
 * DESCRIPTION
 * Required: The Furniture object to place with this indicator. Fill only the furniture or the activator, not both. }
@@ -17,7 +17,7 @@ Furniture property Required_furniture_to_place auto
 ;/********p* CampPlacementIndicator/Required_activator_to_place
 * SYNTAX
 */;
-Activator property Required_activator_to_place auto
+Activator property Required_activator_to_place auto Mandatory
 {
 * DESCRIPTION
 * Required: The Activator object to place with this indicator. Fill only the furniture or the activator, not both. }
@@ -76,10 +76,10 @@ function Ready()
 	elseif Required_activator_to_place
 		form_to_place = Required_activator_to_place as Form
 	endif
-	RegisterForSingleUpdate(0.1)
+	StartTimer(0.1)
 endFunction
 
-Event OnUpdate()
+Event OnTimer(int aiTimerID)
 	CampDebug(0, "Indicator updating")
 	bool keep_updating = PlacementSystem.UpdateIndicator(self, 							\
 														 form_to_place,					\
@@ -92,7 +92,7 @@ Event OnUpdate()
 														 required_miscitem,				\
 														 cost)
 	if keep_updating
-		RegisterForSingleUpdate(update_speed)
+		StartTimer(update_speed)
 	else
 		self.Disable()
 		self.Delete()
