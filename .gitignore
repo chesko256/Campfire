@@ -10,6 +10,7 @@
 !*/
 
 #Build files
+!Campfire_PushToGameDir.py
 !Campfire_BuildRelease.py
 !Frostfall_BuildRelease.py
 !CampDevKit_BuildRelease.py
