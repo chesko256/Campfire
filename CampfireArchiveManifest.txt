@@ -118,6 +118,7 @@ meshes\campfire\_Camp_Indicator_CampfireBase.nif
 meshes\campfire\_Camp_Indicator_CookingPot.nif
 meshes\campfire\_Camp_Indicator_EnchantingCircle.nif
 meshes\campfire\_Camp_Indicator_HayPileTent1BR.nif
+meshes\campfire\_Camp_Indicator_FoldingChair.nif
 meshes\campfire\_Camp_Indicator_largehidetent_1br.nif
 meshes\campfire\_Camp_Indicator_largehidetent_2br.nif
 meshes\campfire\_Camp_Indicator_largehidetent_3br.nif
