@@ -59,7 +59,7 @@ Float property indicator_distance = 300.0 auto
 * (Default: 300.0) The distance from the player to render the indicator. }
 ;*********/;
 
-Weapon property required_inventory_item auto hidden
+MiscObject property required_inventory_item auto hidden
 ingredient property required_ingredient auto hidden
 miscobject property required_miscitem auto hidden
 int property cost = 0 auto hidden

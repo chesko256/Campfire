@@ -12,7 +12,7 @@ import CampUtil
 ;/********p* CampPlacementIndicator/Required_this_item
 * SYNTAX
 */;
-Weapon property Required_this_item auto Mandatory
+MiscObject property Required_this_item auto Mandatory
 {
 * DESCRIPTION
 * Required: This inventory item, the object this script is attached to. }

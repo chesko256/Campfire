@@ -13,7 +13,7 @@ import math
 import debug
 
 CampfireAPI function GetAPI() global
-	return (Game.GetFormFromFile(0x00024095, "Campfire.esm") as Quest) as CampfireAPI
+	return (Game.GetFormFromFile(0x001733, "CampfireFO4.esp") as Quest) as CampfireAPI
 endFunction
 
 ; Functions ==================================================================================

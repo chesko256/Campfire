@@ -34,7 +34,7 @@ bool property Setting_BypassMenu = False auto
 ;*********/;
 
 ; PRIVATE
-Weapon property Required_InventoryItem auto hidden
+MiscObject property Required_InventoryItem auto hidden
 _Camp_ObjectPlacementThreadManager property PlacementSystem auto hidden
 bool property initialized = false auto hidden
 bool property is_temporary = false auto hidden
