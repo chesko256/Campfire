@@ -11,6 +11,7 @@ Interface\Translations\Campfire_JAPANESE.txt
 Interface\Translations\Campfire_POLISH.txt
 Interface\Translations\Campfire_RUSSIAN.txt
 Interface\Translations\Campfire_SPANISH.txt
+meshes\campfire\_Camp_EmptyProjectile.nif
 meshes\campfire\_Campfire_VisionDetectionMote.nif
 meshes\campfire\_Campfire_VisionDetectionMoteMisc.nif
 meshes\campfire\_Camp_1stPersonStoneWarAxe.nif

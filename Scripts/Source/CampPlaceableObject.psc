@@ -52,9 +52,7 @@ function Initialize()
 	parent.Initialize()
 endFunction
 
-function UseObject(ObjectReference akActionRef)
-	SetSelectedObjectConjured(self)
-	
+function UseObject(ObjectReference akActionRef)	
 	if Setting_BypassMenu
 		ToggleAndUse()
 		return
@@ -327,12 +325,6 @@ endFunction
 function TakeDown()
 	CampDebug(0, self + " TakeDown (CampPlaceableObject)")
 	parent.TakeDown()
-
-	; No way to do parent.parent.FunctionCall(), so return now.
-	if (self as CampConjuredPlaceableObject)
-		CampDebug(0, "CampPlaceableObject is CampConjuredPlaceableObject, returning.")
-		return
-	endif
 
 	ForceStopUsingFurniture(self)
 	ForceStopUsingFurniture(myExtraFurniture1)

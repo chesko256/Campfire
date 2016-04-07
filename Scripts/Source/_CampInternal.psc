@@ -139,32 +139,6 @@ function SetLastUsedCampfire(ObjectReference akCampfire) global
 	Campfire.LastUsedCampfire = akCampfire
 endFunction
 
-function SetSelectedObjectConjured(ObjectReference akObject) global
-	CampfireAPI Campfire = GetPublicAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return
-	endif
-	if akObject && (akObject as _Camp_PlaceableObjectBase).Setting_IsConjured == true
-		(Campfire._Camp_MainQuest as _Camp_ConditionValues).IsSelectedObjectConjured = true
-	else
-		(Campfire._Camp_MainQuest as _Camp_ConditionValues).IsSelectedObjectConjured = false
-	endif
-endFunction
-
-function SetTentConjured(ObjectReference akTent) global
-	CampfireAPI Campfire = GetPublicAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return
-	endif
-	if akTent && (akTent as _Camp_PlaceableObjectBase).Setting_IsConjured == true
-		(Campfire._Camp_MainQuest as _Camp_ConditionValues).IsCurrentTentConjured = true
-	else
-		(Campfire._Camp_MainQuest as _Camp_ConditionValues).IsCurrentTentConjured = false
-	endif
-endFunction
-
 function SetTentPlayerFullBed(ObjectReference akTent) global
 	CampfireAPI Campfire = GetPublicAPI()
 	if Campfire == none
@@ -263,24 +237,6 @@ _Camp_Strings function GetCampfireStrings() global
 	endif
 	return (Campfire.CampfireStrings as _Camp_Strings)
 endFunction
-
-;@SKYRIMOLD
-;/
-int function UpdateConjuredObjectID(GlobalVariable akGlobal) global
-	if akGlobal
-		int new_value = akGlobal.GetValueInt() + 1
-		akGlobal.SetValueInt(new_value)
-		CampDebug(0, "Sending event Campfire_OnConjuredObjectIDUpdated")
-    	int handle = ModEvent.Create("Campfire_OnConjuredObjectIDUpdated")
-    	if handle
-    		ModEvent.Send(handle)
-   		endif
-   		return new_value
-   	else
-   		return -1
-   	endif
-endFunction
-/;
 
 function ExitMenus() global
 	InputEnableLayer myLayer = InputEnableLayer.Create()

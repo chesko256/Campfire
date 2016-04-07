@@ -945,36 +945,6 @@ bool function IsCurrentTentWarm() global
 	endif
 endFunction
 
-;/********f* CampUtil/IsCurrentTentConjured
-* API VERSION ADDED
-* 4
-*
-* DESCRIPTION
-* Is the current tent conjured?
-*
-* SYNTAX
-*/;
-bool function IsCurrentTentConjured() global
-;/*
-* PARAMETERS
-* None
-*
-* RETURN VALUE
-* True if the current tent is flagged as being conjured, or false if not or if there is no tent in use by the player.
-;*********/;
-	CampfireAPI Campfire = GetAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return false
-	endif
-
-	if Campfire.CurrentTent && (Campfire.CurrentTent as CampTent).Setting_IsConjured == true
-		return true
-	else
-		return false
-	endif
-endFunction
-
 ;/********f* CampUtil/CurrentTentHasShelter
 * API VERSION ADDED
 * 3
@@ -1080,113 +1050,85 @@ bool function IsPlaceableObjectTemporary(Form akBaseObject) global
 	endif
 endFunction
 
-;/********f* CampUtil/IsPlaceableObjectConjured
-* API VERSION ADDED
-* 4
-*
-* DESCRIPTION
-* Returns whether or not this placeable object is conjured.
-*
-* SYNTAX
-*/;
-bool function IsPlaceableObjectConjured(Form akBaseObject) global
-;/*
-* PARAMETERS
-* akBaseObject: The base object to check.
-*
-* RETURN VALUE
-* True if the Form is conjured, False if not or not a placeable object.
-;*********/;
-	CampfireAPI Campfire = GetAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return false
-	endif
-	if (akBaseObject as _Camp_PlaceableObjectBase) && ((akBaseObject as _Camp_PlaceableObjectBase).Setting_IsConjured == true)
-		return true
-	else
-		return false
-	endif
-endFunction
-
-;/********f* CampUtil/RegisterPerkTree
-* API VERSION ADDED
-* 4
-*
-* DESCRIPTION
-* Register a new Campfire perk tree.
-*
-* NOTES
-* Unless you have a specific reason to control the availability of the perk tree, you should use
-* the CampPerkSystemRegister script on a Player ReferenceAlias instead of calling this function directly. 
-* See the Campfire Skill System Dev Kit tutorial for more info.
-*
-* SYNTAX
-*/;
-bool function RegisterPerkTree(Activator akPerkNodeController, string asPluginName = "Unknown") global
-;/*
-* PARAMETERS
-* akPerkNodeController: The perk node controller to register.
-* asPluginName: The plug-in name that this node controller is from. Only seen in Papyrus logs.
-*
-* RETURN VALUE
-* True if the perk tree was successfully registered. Returns false if there is no available room for an additional perk tree.
-;*********/;
-	CampfireAPI Campfire = GetAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return false
-	endif
-	
-	_Camp_Compatibility compatibility = GetCompatibilitySystem()
-	
-	int i = 0
-	while !compatibility.PerkNodeControllers && i < 30
-		Utility.Wait(1)
-		i += 1
-	endWhile
-	
-	return compatibility.CampfirePerkSystemRegister(akPerkNodeController, asPluginName)
-endFunction
-
-;/********f* CampUtil/UnregisterPerkTree
-* API VERSION ADDED
-* 4
-*
-* DESCRIPTION
-* Unregister a Campfire perk tree.
-*
-* NOTES
-* In general, you do not need to manually unregister a perk tree. It will be automatically purged when
-* the mod the node controller belongs to is uninstalled.
-*
-* SYNTAX
-*/;
-bool function UnregisterPerkTree(Activator akPerkNodeController, string asPluginName = "Unknown") global
-;/*
-* PARAMETERS
-* akPerkNodeController: The perk node controller to unregister.
-* asPluginName: The mod / plug-in name that this node controller is from. Only seen in Papyrus logs.
-*
-* RETURN VALUE
-* True if the perk tree was successfully unregistered. Returns false if the perk tree was not found.
-;*********/;
-	CampfireAPI Campfire = GetAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return false
-	endif
-	
-	_Camp_Compatibility compatibility = GetCompatibilitySystem()
-	
-	int i = 0
-	while !compatibility.PerkNodeControllers && i < 30
-		Utility.Wait(1)
-		i += 1
-	endWhile
-	
-	return compatibility.CampfirePerkSystemUnregister(akPerkNodeController, asPluginName)
-endFunction
+;@SKYRIMOLD
+;;/********f* CampUtil/RegisterPerkTree
+;* API VERSION ADDED
+;* 4
+;*
+;* DESCRIPTION
+;* Register a new Campfire perk tree.
+;*
+;* NOTES
+;* Unless you have a specific reason to control the availability of the perk tree, you should use
+;* the CampPerkSystemRegister script on a Player ReferenceAlias instead of calling this function directly. 
+;* See the Campfire Skill System Dev Kit tutorial for more info.
+;*
+;* SYNTAX
+;*/;
+;bool function RegisterPerkTree(Activator akPerkNodeController, string asPluginName = "Unknown") global
+;;/*
+;* PARAMETERS
+;* akPerkNodeController: The perk node controller to register.
+;* asPluginName: The plug-in name that this node controller is from. Only seen in Papyrus logs.
+;*
+;* RETURN VALUE
+;* True if the perk tree was successfully registered. Returns false if there is no available room for an additional perk tree.
+;;*********/;
+;	CampfireAPI Campfire = GetAPI()
+;	if Campfire == none
+;		RaiseCampAPIError()
+;		return false
+;	endif
+	;
+;	_Camp_Compatibility compatibility = GetCompatibilitySystem()
+	;
+;	int i = 0
+;	while !compatibility.PerkNodeControllers && i < 30
+;		Utility.Wait(1)
+;		i += 1
+;	endWhile
+	;
+;	return compatibility.CampfirePerkSystemRegister(akPerkNodeController, asPluginName)
+;endFunction
+;
+;;/********f* CampUtil/UnregisterPerkTree
+;* API VERSION ADDED
+;* 4
+;*
+;* DESCRIPTION
+;* Unregister a Campfire perk tree.
+;*
+;* NOTES
+;* In general, you do not need to manually unregister a perk tree. It will be automatically purged when
+;* the mod the node controller belongs to is uninstalled.
+;*
+;* SYNTAX
+;*/;
+;bool function UnregisterPerkTree(Activator akPerkNodeController, string asPluginName = "Unknown") global
+;;/*
+;* PARAMETERS
+;* akPerkNodeController: The perk node controller to unregister.
+;* asPluginName: The mod / plug-in name that this node controller is from. Only seen in Papyrus logs.
+;*
+;* RETURN VALUE
+;* True if the perk tree was successfully unregistered. Returns false if the perk tree was not found.
+;;*********/;
+;	CampfireAPI Campfire = GetAPI()
+;	if Campfire == none
+;		RaiseCampAPIError()
+;		return false
+;	endif
+	;
+;	_Camp_Compatibility compatibility = GetCompatibilitySystem()
+	;
+;	int i = 0
+;	while !compatibility.PerkNodeControllers && i < 30
+;		Utility.Wait(1)
+;		i += 1
+;	endWhile
+	;
+;	return compatibility.CampfirePerkSystemUnregister(akPerkNodeController, asPluginName)
+;endFunction
 
 ;/********f* CampUtil/GetCampfireSettingBool
 * API VERSION ADDED
