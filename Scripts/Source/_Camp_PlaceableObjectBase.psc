@@ -52,7 +52,7 @@ GlobalVariable property UniqueConjuredObjectIDGlobal auto
 ;*********/;
 
 ; PRIVATE
-MiscObject property Required_InventoryItem auto hidden
+Weapon property Required_InventoryItem auto hidden
 _Camp_ObjectPlacementThreadManager property PlacementSystem auto hidden
 bool property initialized = false auto hidden
 bool property is_temporary = false auto hidden

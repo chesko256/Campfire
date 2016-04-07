@@ -4,7 +4,7 @@
 scriptname CampPlaceableMiscItem extends ObjectReference
 ;/*
 * OVERVIEW
-* Attach this script to a Misc Item that represents the inventory item of a Placeable Object.
+* Attach this script to a Grenade that represents the inventory item of a Placeable Object.
 ;*********/;
 
 import CampUtil
@@ -12,7 +12,7 @@ import CampUtil
 ;/********p* CampPlacementIndicator/Required_this_item
 * SYNTAX
 */;
-MiscObject property Required_this_item auto Mandatory
+Weapon property Required_this_item auto Mandatory
 {
 * DESCRIPTION
 * Required: This inventory item, the object this script is attached to. }

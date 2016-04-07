@@ -541,7 +541,7 @@ function PlayerHitEvent(ObjectReference akAggressor, Form akSource, Projectile a
 endFunction
 
 bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  \
-                              MiscObject akInventoryItem,                       \
+                              Weapon akInventoryItem,                       \
                               Float afDistance, Float afHeightOffset,           \
                               Float afRotationOffset, Bool abSnapToTerrain,     \
                               Ingredient akIngredient, MiscObject akMiscItem,   \
@@ -817,7 +817,7 @@ function UpdateIndicatorPosition(ObjectReference akIndicator, float afDistance, 
     endif
 endFunction
 
-function PlaceableObjectUsed(MiscObject akInventoryItem, Activator akPlacementIndicator, Ingredient akIngredient, MiscObject akMiscItem, Int aiCost, Perk akPerk, string asIngredientName, string asMiscItemName, string asPerkName)
+function PlaceableObjectUsed(Weapon akInventoryItem, Activator akPlacementIndicator, Ingredient akIngredient, MiscObject akMiscItem, Int aiCost, Perk akPerk, string asIngredientName, string asMiscItemName, string asPerkName)
     bool can_use = MeetsRequirements(akIngredient, akMiscItem, aiCost, akPerk, asIngredientName, asMiscItemName, asPerkName)
     if !can_use
         return
