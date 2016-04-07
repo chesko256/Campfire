@@ -51,14 +51,14 @@ Event OnActivate(ObjectReference akActionRef)
 			endif
 			utility.wait(0.5)
 			self.BlockActivation()
-			RegisterForSingleUpdate(1)
+			StartTimer(1)
 		endif
 	endif
 endEvent
 
-event OnUpdate()
+event OnTimer(int aiTimerID)
 	if self.IsFurnitureInUse()
-		RegisterForSingleUpdate(1)
+		StartTimer(1)
 	else
 		if _Camp_Setting_FollowersRemoveGearInTents.GetValueInt() == 2
 			UnDisplayGear()
@@ -72,35 +72,25 @@ function DisplayGear(Actor akActor)
 	if (iWeaponType <= 4 || iWeaponType == 8) && iWeaponType > 0
 		;Follower has a one-handed weapon
 		TentSystem.SetFollowerMainWeapon(TentObject, FollowerBedrollIndex, akActor.GetEquippedWeapon())
-		;Does the Follower have an off-hand weapon?
+		;@TODO
+		;/;Does the Follower have an off-hand weapon?
 		int iOffWeaponType = akActor.GetEquippedItemType(0)
 		if (iOffWeaponType <= 4 || iOffWeaponType == 8) && iOffWeaponType > 0
 			;Follower has an off-hand weapon
 			TentSystem.SetFollowerOffHandWeapon(TentObject, FollowerBedrollIndex, akActor.GetEquippedWeapon(true))
 		endif
+		/;
 	elseif iWeaponType == 5 || iWeaponType == 6
 		;Follower has a two-handed weapon
 		TentSystem.SetFollowerBigWeapon(TentObject, FollowerBedrollIndex, akActor.GetEquippedWeapon())
 	elseif iWeaponType == 7
 		TentSystem.SetFollowerBowWeapon(TentObject, FollowerBedrollIndex, akActor.GetEquippedWeapon())
 	endif
-
-	TentObject.myShield = PlayerRef.GetEquippedShield()
-	Armor fshield = akActor.GetEquippedShield()
-	if !(fshield == _Camp_WalkingStickShield)
-		TentSystem.SetFollowerShield(TentObject, FollowerBedrollIndex, akActor.GetEquippedShield())
-	endif
 	
 	TentSystem.SetFollowerDisplayMainWeapon(TentObject, FollowerBedrollIndex)
 	TentSystem.SetFollowerDisplayOffHandWeapon(TentObject, FollowerBedrollIndex)
 	TentSystem.SetFollowerDisplayBigWeapon(TentObject, FollowerBedrollIndex)
 	TentSystem.SetFollowerDisplayBowWeapon(TentObject, FollowerBedrollIndex)
-
-	;Shield should not be visible as part of the animation.
-	;akActor.UnequipItem(fshield, abSilent = true)
-	if !IsRefInInterior(akActor)
-		TentSystem.SetFollowerDisplayShield(TentObject, FollowerBedrollIndex)
-	endif
 	
 endFunction
 
@@ -111,7 +101,6 @@ function UnDisplayGear()
 		TentSystem.UnDisplayFollowerOffHandWeapon(TentObject, FollowerBedrollIndex, my_actor)
 		TentSystem.UnDisplayFollowerBigWeapon(TentObject, FollowerBedrollIndex, my_actor)
 		TentSystem.UnDisplayFollowerBowWeapon(TentObject, FollowerBedrollIndex, my_actor)
-		TentSystem.UnDisplayFollowerShield(TentObject, FollowerBedrollIndex, my_actor)
 		my_actor = none
 	endif
 endFunction

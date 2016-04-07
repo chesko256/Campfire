@@ -220,15 +220,6 @@ ObjectReference property PositionRef_Follower1_Bed auto
 * Optional: The first follower's bed furniture position reference. }
 ;*********/;
 
-;/********p* CampTentEx/PositionRef_Follower1_Shield
-* SYNTAX
-*/;
-ObjectReference property PositionRef_Follower1_Shield auto
-{
-* DESCRIPTION
-* Optional: The first follower's shield position reference. }
-;*********/;
-
 ;/********p* CampTentEx/PositionRef_Follower1_WeaponMainHand
 * SYNTAX
 */;
@@ -274,15 +265,6 @@ ObjectReference property PositionRef_Follower2_Bed auto
 * Optional: The second follower's bed furniture position reference. }
 ;*********/;
 
-;/********p* CampTentEx/PositionRef_Follower2_Shield
-* SYNTAX
-*/;
-ObjectReference property PositionRef_Follower2_Shield auto
-{
-* DESCRIPTION
-* Optional: The second follower's shield position reference. }
-;*********/;
-
 ;/********p* CampTentEx/PositionRef_Follower2_WeaponMainHand
 * SYNTAX
 */;
@@ -326,15 +308,6 @@ ObjectReference property PositionRef_Follower3_Bed auto
 {
 * DESCRIPTION
 * Optional: The third follower's bed furniture position reference. }
-;*********/;
-
-;/********p* CampTentEx/PositionRef_Follower3_Shield
-* SYNTAX
-*/;
-ObjectReference property PositionRef_Follower3_Shield auto
-{
-* DESCRIPTION
-* Optional: The third follower's shield position reference. }
 ;*********/;
 
 ;/********p* CampTentEx/PositionRef_Follower3_WeaponMainHand

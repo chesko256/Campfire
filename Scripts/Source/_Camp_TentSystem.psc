@@ -20,7 +20,6 @@ GlobalVariable property _Camp_Setting_TakeOff_Boots auto
 GlobalVariable property _Camp_Setting_TakeOff_Backpack auto
 GlobalVariable property _Camp_Setting_TakeOff_Weapons auto
 GlobalVariable property _Camp_Setting_TakeOff_Ammo auto
-GlobalVariable property _Camp_Setting_CompatibilityEO auto
 GlobalVariable property _Camp_TentSeeThru auto
 GlobalVariable property _Camp_WasFirstPersonBeforeUse auto
 Message property _Camp_TentMainMenu auto
@@ -150,8 +149,6 @@ function ActivateTent(ObjectReference akActionRef, ObjectReference akTent)
 	if akActionRef == PlayerRef
 		was_hit = false
 		CampTent TentObject = akTent as CampTent
-		SetSelectedObjectConjured(akTent)
-		SetTentConjured(akTent)
 		SetTentPlayerFullBed(akTent)
 		int iSitState = (akActionRef as Actor).GetSitState()
 		if iSitState == 0
@@ -442,8 +439,8 @@ function PlayerSleep(CampTent akTentObject)
 	self.UnregisterForPlayerSleep()
 
 	; Advance camping skill if necessary
-	CampDebug(0, "slept_in_tent " + slept_in_tent + ", IsConjured " + akTentObject.Setting_IsConjured)
-	if slept_in_tent && !akTentObject.Setting_IsConjured
+	CampDebug(0, "slept_in_tent " + slept_in_tent)
+	if slept_in_tent
 		slept_in_tent = false
 		if game_day_of_sleep_start > _Camp_LastSleptDay.GetValueInt()
 			CampDebug(0, "Day is newer than last slept day, advancing Camping.")
@@ -952,17 +949,9 @@ endFunction
 
 function PackTent(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
-	CampConjuredShelter ShelterObject = akTent as CampConjuredShelter
 	
-	bool is_conjured = false
-	if TentObject.Setting_IsConjured
-		is_conjured = true
-	endif
-
-	if !is_conjured
-		PlayerRef.AddItem(TentObject.Required_InventoryItem, abSilent = true)
-		ITMGenericArmorUp.Play(akTent)
-	endif
+	PlayerRef.AddItem(TentObject.Required_InventoryItem, abSilent = true)
+	ITMGenericArmorUp.Play(akTent)
 
 	;Move activation trigger to the anchor
 	_Camp_Tent_InteractTriggerREF.MoveTo(_Camp_Anchor)
@@ -987,11 +976,7 @@ function PackTent(ObjectReference akTent)
 	endif
 	
 	;Delete markers and furniture
-	if is_conjured
-		ShelterObject.TakeDown()
-	else
-		TentObject.TakeDown()
-	endif
+	TentObject.TakeDown()
 endFunction
 
 function CleanUpTent(ObjectReference akTent)
