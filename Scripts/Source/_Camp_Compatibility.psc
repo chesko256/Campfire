@@ -38,10 +38,8 @@ bool property isDLC3Loaded auto hidden						;Far Harbor
 bool property isSurvivalLoaded auto hidden					;Survival Mode
 
 ;#Supported Mods===============================================================
-;@TBD
 
-;@SKYRIMOLD
-; bool property isSKSELoaded auto hidden						;SKSE
+bool property isF4SELoaded auto hidden						;F4SE
 
 ;#Merchant Containers==========================================================
 ;@TBD

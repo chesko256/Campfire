@@ -22,7 +22,7 @@ ObjectReference function get_result()
 		i += 1
 		utility.wait(0.1)
 	endWhile
-	RegisterForSingleUpdate(0.1)
+	StartTimer(0.1)
  
         if i >= 100
             ;Our thread probably encountered an error and is locked up; we need to unlock it.
@@ -31,7 +31,7 @@ ObjectReference function get_result()
 	return r
 endFunction
 
-Event OnUpdate()
+Event OnTimer(int aiTimerID)
 	r = None
 	result = None
 	self.Disable()

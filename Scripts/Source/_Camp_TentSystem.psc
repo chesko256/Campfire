@@ -5,23 +5,20 @@ import utility
 import _CampInternal
 import CampUtil
 
-; TO KEEP IN UTIL
 _Camp_Compatibility property Compatibility auto
-pDBEntranceQuestScript property DBEntranceQuestScript auto
 _Camp_ConditionValues property ConditionVars auto
-Quest property DBEntranceQuest auto
 Actor property PlayerRef auto
-Armor property _Camp_WalkingStickShield auto
+;@TODO
+;Armor property _Camp_WalkingStickShield auto
 GlobalVariable property GameDay auto
 GlobalVariable property _Camp_LastSleptDay auto
 GlobalVariable property _Camp_Setting_CampingArmorTakeOff auto
 GlobalVariable property _Camp_Setting_TakeOff_Helm auto
-GlobalVariable property _Camp_Setting_TakeOff_Cuirass auto
+GlobalVariable property _Camp_Setting_TakeOff_Body auto
 GlobalVariable property _Camp_Setting_TakeOff_Gauntlets auto
 GlobalVariable property _Camp_Setting_TakeOff_Boots auto
 GlobalVariable property _Camp_Setting_TakeOff_Backpack auto
 GlobalVariable property _Camp_Setting_TakeOff_Weapons auto
-GlobalVariable property _Camp_Setting_TakeOff_Shield auto
 GlobalVariable property _Camp_Setting_TakeOff_Ammo auto
 GlobalVariable property _Camp_Setting_CompatibilityEO auto
 GlobalVariable property _Camp_TentSeeThru auto
@@ -74,7 +71,7 @@ Message property _Camp_PerkAdvancement auto
 
 bool slept_in_tent = false
 
-; From OnUpdate on CampTent / CampTentEx
+; From OnTimer on CampTent / CampTentEx
 function UpdateTentUseState(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
 	if was_hit
@@ -83,8 +80,8 @@ function UpdateTentUseState(ObjectReference akTent)
 			; The large tent trigger volume is not provided, so treat as a small tent
 			SetCurrentTent(None)
 		endif
-		EO_TurnOn()
-		SendEvent_OnBedrollSitLay(akTent, true)
+		;@SKYRIMOLD
+		;SendEvent_OnBedrollSitLay(akTent, true)
 
 		_Camp_FadeDown.Apply()
 		wait(0.5)
@@ -121,8 +118,8 @@ function UpdateTentUseState(ObjectReference akTent)
 			; The tent trigger volume is not provided, so treat as a small tent
 			SetCurrentTent(None)
 		endif
-		EO_TurnOn()
-		SendEvent_OnBedrollSitLay(akTent, true)
+		;@SKYRIMOLD
+		;SendEvent_OnBedrollSitLay(akTent, true)
 
 		if TentObject.myExitFront && TentObject.myExitFront.IsEnabled() && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
 			PlayerRef.SplineTranslateToRef(TentObject.myExitFront, 1.0, 65.0)
@@ -144,7 +141,7 @@ function UpdateTentUseState(ObjectReference akTent)
 			Game.ForceThirdPerson()
 		endif
 	else
-		TentObject.RegisterForSingleUpdate(1.0)
+		TentObject.StartTimer(1.0)
 	endif
 endFunction
 
@@ -167,7 +164,7 @@ function ActivateTent(ObjectReference akActionRef, ObjectReference akTent)
 	endif
 endFunction
 
-Event OnSleepStart(float afSleepStartTime, float afDesiredSleepEndTime)
+Event OnPlayerSleepStart(float afSleepStartTime, float afDesiredSleepEndTime, ObjectReference akBed)
 	CampDebug(1, "Player slept in tent.")
 	slept_in_tent = true
 EndEvent
@@ -213,17 +210,21 @@ function ShowMainMenu(ObjectReference akTent)
 	int i = _Camp_TentMainMenu.Show()
 	if i == 0										;Sit
 		SetWasFirstPerson()
-		if Compatibility.isSKSELoaded
+		;@SKYRIMOLD
+		;/if Compatibility.isSKSELoaded
 			Message.ResetHelpMessage("Activate")
 			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
 		endif
+		/;
 		PlayerSit(akTent)
 	elseif i == 1									;Lie Down
 		SetWasFirstPerson()
-		if Compatibility.isSKSELoaded
+		;@SKYRIMOLD
+		;/if Compatibility.isSKSELoaded
 			Message.ResetHelpMessage("Activate")
 			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
 		endif
+		/;
 		PlayerLieDown(akTent)
 	elseif i == 2	 								;Sleep
 		PlayerSleep(TentObject)
@@ -371,18 +372,14 @@ function PlayerSit(ObjectReference akTent)
 		; The large tent trigger volume is not provided, so treat as a small tent
 		SetCurrentTent(akTent)
 	endif
-	EO_TurnOff()
-	SendEvent_OnBedrollSitLay(TentObject)
+	;@SKYRIMOLD
+	;SendEvent_OnBedrollSitLay(TentObject)
 
 	ConditionVars.IsPlayerSittingInTent = true
 	Game.ForceThirdPerson()
 	TentObject.myPlayerSitMarker.Activate(PlayerRef)
 	if _Camp_Setting_CampingArmorTakeOff.GetValueInt() == 2
-		if Compatibility.IsFrostfallLoaded && FrostUtil.IsWarmEnoughToRemoveGearInTent()
-			DisplayPlayerTentEquipment(akTent)
-		else
-			DisplayPlayerTentEquipment(akTent)
-		endif
+		DisplayPlayerTentEquipment(akTent)
 	endif
 	TryToDisableRef(TentObject.myShelterCollider)
 	; Setting must be on and there must be a separate exterior object
@@ -393,55 +390,29 @@ function PlayerSit(ObjectReference akTent)
 	; Start the quest so that the aliases fill and follower packages run.
 	self.Start()
 	
-	; Fall back to persistent trigger without SKSE
-	if !Compatibility.isSKSELoaded
+	; Fall back to persistent trigger without F4SE
+	if !Compatibility.isF4SELoaded
 		_Camp_Tent_InteractTriggerREF.MoveTo(PlayerRef)
 	endif
 	
-	TentObject.RegisterForSingleUpdate(1.0)
+	TentObject.StartTimer(1.0)
 endFunction
 
 function PlayerLieDown(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
-	; Skyrim 1.9 has broken the player's eyes from re-opening if you lie down (sleepstate = 4).
 	
-	;Don't lie down in tent if on the Dark Brotherhood entrance quest
-	if DBEntranceQuest.GetStage() == 20 && DBEntranceQuestScript.pSleepyTime == 1
-		PlayerSleep(TentObject)
-		return
-	endif
-
-	;Don't lie down in tent if DLC2 is loaded, the player is in Solstheim, and DLC2MQ03B isn't complete yet
-	if Compatibility.isDLC2Loaded
-		Quest DLC2MQ03B = Game.GetFormFromFile(0x02035440, "Dragonborn.esm") as Quest
-		Location DLC2SolstheimLocation = Game.GetFormFromFile(0x02016E2A, "Dragonborn.esm") as Location
-		Worldspace DLC2SolstheimWorld = Game.GetFormFromFile(0x02000800, "Dragonborn.esm") as Worldspace
-
-		if DLC2MQ03B.IsCompleted() == false && PlayerRef.IsInLocation(DLC2SolstheimLocation)
-			if PlayerRef.GetWorldspace() == DLC2SolstheimWorld
-				PlayerSleep(TentObject)
-				return
-			endif
-		endif
-	endif
-
 	if !TentObject.TentAsset_LargeTentTriggerVolume
 		; The large tent trigger volume is not provided, so treat as a small tent
 		SetCurrentTent(akTent)
 	endif
-
-	EO_TurnOff()
-	SendEvent_OnBedrollSitLay(TentObject)
+	;@SKYRIMOLD
+	;SendEvent_OnBedrollSitLay(TentObject)
 
 	ConditionVars.IsPlayerLayingInTent = true	
 	ActivateLayDownMarker(TentObject)
 
 	if _Camp_Setting_CampingArmorTakeOff.GetValueInt() == 2
-		if Compatibility.IsFrostfallLoaded && FrostUtil.IsWarmEnoughToRemoveGearInTent()
-			DisplayPlayerTentEquipment(akTent)
-		else
-			DisplayPlayerTentEquipment(akTent)
-		endif
+		DisplayPlayerTentEquipment(akTent)
 	endif
 	TryToDisableRef(TentObject.myShelterCollider)
 	; Setting must be on and there must be a separate exterior object
@@ -453,22 +424,22 @@ function PlayerLieDown(ObjectReference akTent)
 	self.Start()
 	
 	; Fall back to persistent trigger without SKSE
-	if !Compatibility.isSKSELoaded
+	if !Compatibility.isF4SELoaded
 		_Camp_Tent_InteractTriggerREF.MoveTo(PlayerRef)
 	endif
 	
-	TentObject.RegisterForSingleUpdate(1.0)
+	TentObject.StartTimer(1.0)
 endFunction
 
 function PlayerSleep(CampTent akTentObject)
 	CampDebug(0, "Player selected sleeping.")
-	self.RegisterForSleep()
+	self.RegisterForPlayerSleep()
 	int game_day_of_sleep_start = GameDay.GetValueInt()
 	akTentObject.myBedRoll.Activate(PlayerRef);  //Spawns sleep menu
 
 	; Block until we exit menus.
 	Utility.Wait(0.5)
-	self.UnregisterForSleep()
+	self.UnregisterForPlayerSleep()
 
 	; Advance camping skill if necessary
 	CampDebug(0, "slept_in_tent " + slept_in_tent + ", IsConjured " + akTentObject.Setting_IsConjured)
@@ -488,7 +459,7 @@ function DisplayPlayerTentEquipment(ObjectReference akTent, bool bLimited = fals
 		if _Camp_Setting_TakeOff_Helm.GetValueInt() == 2
 			DisplayHelm_Player(TentObject)
 		endif
-		if _Camp_Setting_TakeOff_Cuirass.GetValueInt() == 2
+		if _Camp_Setting_TakeOff_Body.GetValueInt() == 2
 			DisplayCuirass_Player(TentObject)
 		endif
 		if _Camp_Setting_TakeOff_Gauntlets.GetValueInt() == 2
@@ -500,9 +471,6 @@ function DisplayPlayerTentEquipment(ObjectReference akTent, bool bLimited = fals
 	endif
 	if _Camp_Setting_TakeOff_Weapons.GetValueInt() == 2
 		DisplayWeapons_Player(TentObject)
-	endif
-	if _Camp_Setting_TakeOff_Shield.GetValueInt() == 2
-		DisplayShield_Player(TentObject)
 	endif
 	if _Camp_Setting_TakeOff_Ammo.GetValueInt() == 2
 		DisplayQuiver_Player(TentObject)
@@ -527,11 +495,7 @@ function SelectExterior(ObjectReference akTent, bool abInTent)
 	bool ash = false
 
 	if SnowyWeather
-		if Compatibility.isDLC2Loaded && myWeather == Compatibility.DLC2AshStorm
-			ash = true
-		else
-			snow = true
-		endif
+		snow = true
 	endif
 
 	if snow
@@ -565,40 +529,20 @@ function SelectExterior(ObjectReference akTent, bool abInTent)
 	TryToEnableRef(TentObject.myTentExterior, true)
 endFunction
 
-function DisplayShield_Player(CampTent TentObject)
-	TentObject.myShield = PlayerRef.GetEquippedShield()
-	if TentObject.myShield == _Camp_WalkingStickShield
-		TentObject.myShield = None
-	endif
-
-	if TentObject.myShield
-		PlayerRef.UnequipItem(TentObject.myShield, abSilent = true)
-		if IsRefInInterior(PlayerRef)
-			TentObject.myDisplayShield = PlaceAndWaitFor3DLoaded(TentObject.myPlayerMarker_ShieldInterior, TentObject.myShield, bDisableInteraction = true)
-		else
-			TentObject.myDisplayShield = PlaceAndWaitFor3DLoaded(TentObject.myPlayerMarker_Shield, TentObject.myShield, bDisableInteraction = true)
-		endif
-	endif
-endFunction
-
-function UnDisplayShield_Player(CampTent TentObject)
-	if TentObject.myShield
-		PlayerRef.EquipItem(TentObject.myShield, abSilent = true)
-	endif
-	TryToDisableAndDeleteRef(TentObject.myDisplayShield)
-endFunction
-
 function DisplayWeapons_Player(CampTent TentObject)
 	int iWeaponType = PlayerRef.GetEquippedItemType(1)
+	;@TODO
 	if (iWeaponType <= 4 || iWeaponType == 8) && iWeaponType > 0
 		;Player has a one-handed weapon
 		TentObject.myMainWeapon = PlayerRef.GetEquippedWeapon()
-		;Does the player have an off-hand weapon?
+		;@SKYRIMOLD
+		;/;Does the player have an off-hand weapon?
 		int iOffWeaponType = PlayerRef.GetEquippedItemType(0)
 		if (iOffWeaponType <= 4 || iOffWeaponType == 8) && iOffWeaponType > 0
 			;Player has an off-hand weapon
 			TentObject.myOffHandWeapon = PlayerRef.GetEquippedWeapon(true)
 		endif
+		/;
 	elseif iWeaponType == 5 || iWeaponType == 6
 		;Player has a two-handed weapon
 		TentObject.myBigWeapon = PlayerRef.GetEquippedWeapon()
@@ -783,15 +727,6 @@ Weapon function GetFollowerBowWeapon(CampTent akTentObject, int aiFollowerBedrol
 		return akTentObject.myFollowerCBow
 	endif
 endFunction
-Armor function GetFollowerShield(CampTent akTentObject, int aiFollowerBedrollIndex)
-	if aiFollowerBedrollIndex == 1
-		return akTentObject.myFollowerAShield
-	elseif aiFollowerBedrollIndex == 2
-		return akTentObject.myFollowerBShield
-	elseif aiFollowerBedrollIndex == 3
-		return akTentObject.myFollowerCShield
-	endif
-endFunction
 function SetFollowerMainWeapon(CampTent akTentObject, int aiFollowerBedrollIndex, Weapon akWeapon)
 	if aiFollowerBedrollIndex == 1
 		akTentObject.myFollowerAMainWeapon = akWeapon
@@ -826,15 +761,6 @@ function SetFollowerBowWeapon(CampTent akTentObject, int aiFollowerBedrollIndex,
 		akTentObject.myFollowerBBow = akWeapon
 	elseif aiFollowerBedrollIndex == 3
 		akTentObject.myFollowerCBow = akWeapon
-	endif
-endFunction
-function SetFollowerShield(CampTent akTentObject, int aiFollowerBedrollIndex, Armor akShield)
-	if aiFollowerBedrollIndex == 1
-		akTentObject.myFollowerAShield = akShield
-	elseif aiFollowerBedrollIndex == 2
-		akTentObject.myFollowerBShield = akShield
-	elseif aiFollowerBedrollIndex == 3
-		akTentObject.myFollowerCShield = akShield
 	endif
 endFunction
 function SetFollowerDisplayMainWeapon(CampTent akTentObject, int aiFollowerBedrollIndex)
@@ -906,24 +832,6 @@ function SetFollowerDisplayBowWeapon(CampTent akTentObject, int aiFollowerBedrol
 		if akTentObject.myFollowerCBow
 			akTentObject.myDisplayFollowerCBow = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerCMarker_Bow, akTentObject.myFollowerCBow, bDisableInteraction = true)
 			Follower3.GetActorRef().UnequipItem(akTentObject.myFollowerCBow, abSilent = true)
-		endif
-	endif
-endFunction
-function SetFollowerDisplayShield(CampTent akTentObject, int aiFollowerBedrollIndex)
-	if aiFollowerBedrollIndex == 1
-		if akTentObject.myFollowerAShield
-			akTentObject.myDisplayFollowerAShield = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerAMarker_Shield, akTentObject.myFollowerAShield, bDisableInteraction = true)
-			Follower1.GetActorRef().UnequipItem(akTentObject.myFollowerAShield, abSilent = true)
-		endif
-	elseif aiFollowerBedrollIndex == 2
-		if akTentObject.myFollowerBShield
-			akTentObject.myDisplayFollowerBShield = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerBMarker_Shield, akTentObject.myFollowerBShield, bDisableInteraction = true)
-			Follower2.GetActorRef().UnequipItem(akTentObject.myFollowerBShield, abSilent = true)
-		endif
-	elseif aiFollowerBedrollIndex == 3
-		if akTentObject.myFollowerCShield
-			akTentObject.myDisplayFollowerCShield = PlaceAndWaitFor3DLoaded(akTentObject.myFollowerCMarker_Shield, akTentObject.myFollowerCShield, bDisableInteraction = true)
-			Follower3.GetActorRef().UnequipItem(akTentObject.myFollowerCShield, abSilent = true)
 		endif
 	endif
 endFunction
@@ -1011,32 +919,10 @@ function UnDisplayFollowerBowWeapon(CampTent akTentObject, int aiFollowerBedroll
 		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerCBow)
 	endif
 endFunction
-function UnDisplayFollowerShield(CampTent akTentObject, int aiFollowerBedrollIndex, Actor akActor)
-	if aiFollowerBedrollIndex == 1
-		if akTentObject.myFollowerAShield
-			akActor.EquipItem(akTentObject.myFollowerAShield, abSilent = true)
-			akTentObject.myFollowerAShield = None
-		endif
-		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerAShield)	
-	elseif aiFollowerBedrollIndex == 2
-		if akTentObject.myFollowerBShield
-			akActor.EquipItem(akTentObject.myFollowerBShield, abSilent = true)
-			akTentObject.myFollowerBShield = None
-		endif
-		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerBShield)
-	elseif aiFollowerBedrollIndex == 3
-		if akTentObject.myFollowerCShield
-			akActor.EquipItem(akTentObject.myFollowerCShield, abSilent = true)
-			akTentObject.myFollowerCShield = None
-		endif
-		TryToDisableAndDeleteRef(akTentObject.myDisplayFollowerCShield)
-	endif
-endFunction
 
 function DestroyTent(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
 
-	UnDisplayShield_Player(TentObject)
 	UnDisplayWeapons_Player(TentObject)
 	UnDisplayCuirass_Player(TentObject)
 	UnDisplayBoots_Player(TentObject)
@@ -1082,7 +968,6 @@ function PackTent(ObjectReference akTent)
 	_Camp_Tent_InteractTriggerREF.MoveTo(_Camp_Anchor)
 
 	;Delete display models, if any
-	UnDisplayShield_Player(TentObject)
 	UnDisplayWeapons_Player(TentObject)
 	UnDisplayCuirass_Player(TentObject)
 	UnDisplayBoots_Player(TentObject)
@@ -1119,8 +1004,7 @@ function CleanUpTent(ObjectReference akTent)
 	ConditionVars.IsPlayerSittingInTent = false
 	ConditionVars.IsPlayerLayingInTent = false
 	self.Stop()
-	
-	UnDisplayShield_Player(TentObject)
+
 	UnDisplayWeapons_Player(TentObject)
 	UnDisplayCuirass_Player(TentObject)
 	UnDisplayBoots_Player(TentObject)
@@ -1150,28 +1034,6 @@ function UnequipUsingDummyWeapon()
 	PlayerRef.EquipItem(_Camp_DummyWeapon, abSilent = true)
 	PlayerRef.UnEquipItem(_Camp_DummyWeapon, abSilent = true)
 	PlayerRef.RemoveItem(_Camp_DummyWeapon, abSilent = true)
-endFunction
-
-function EO_TurnOff()
-	if Compatibility.isEOLoaded && _Camp_Setting_CompatibilityEO.GetValueInt() == 2
-		ddUnequipMCMScript EO_ConfigScript = Game.GetFormFromFile(0x00001827, "Equipping Overhaul.esp") as ddUnequipMCMScript
-		ddUnequipHandlerScript EO_HandlerScript = (Game.GetFormFromFile(0x00000D62, "Equipping Overhaul.esp") as Quest).GetAlias(0) as ddUnequipHandlerScript
-		int EO_Hotkey = EO_ConfigScript.keyGearedHotkey
-		if EO_Hotkey != 0 && EO_ConfigScript.bTempGearedEnabled
-			EO_HandlerScript.OnKeyDown(EO_Hotkey)
-		endif
-	endif
-endFunction
-
-function EO_TurnOn()
-	if Compatibility.isEOLoaded && _Camp_Setting_CompatibilityEO.GetValueInt() == 2
-		ddUnequipMCMScript EO_ConfigScript = Game.GetFormFromFile(0x00001827, "Equipping Overhaul.esp") as ddUnequipMCMScript
-		ddUnequipHandlerScript EO_HandlerScript = (Game.GetFormFromFile(0x00000D62, "Equipping Overhaul.esp") as Quest).GetAlias(0) as ddUnequipHandlerScript
-		int EO_Hotkey = EO_ConfigScript.keyGearedHotkey
-		if EO_Hotkey != 0 && !EO_ConfigScript.bTempGearedEnabled
-			EO_HandlerScript.OnKeyDown(EO_Hotkey)
-		endif
-	endif
 endFunction
 
 function SetWasFirstPerson()
