@@ -214,7 +214,8 @@ function TakeDown()
 
 	ClearEquipmentFromCrimeAlias(self)
 	; Raise optional SKSE event
-	var[] akargs = new var[0]
+	;/
+	var[] akargs
 	akargs[0] = self.GetBaseObject()
 	akargs[1] = self.GetPositionX()
 	akargs[2] = self.GetPositionY()
@@ -225,6 +226,7 @@ function TakeDown()
 	akargs[7] = IsTent(self)
 	;@SKYRIMOLD
 	;SendCustomEvent("CampfireOnObjectRemoved", akargs)
+	/;
 endFunction
 
 function PlaceObject_FireMarkers()

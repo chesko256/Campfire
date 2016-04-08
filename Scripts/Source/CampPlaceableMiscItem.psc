@@ -99,7 +99,88 @@ string property necessary_perk_name auto
 * Optional: The name of any required perk. Used if user does not have SKSE installed. }
 ;********/;
 
+Event OnUnequipped(Actor akActor)
+	debug.trace("OnUnequipped")
+EndEvent
+
+Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)
+	debug.trace("New container " + akNewContainer + " old container " + akOldContainer)
+	if akOldContainer == Game.GetPlayer() && akNewContainer == None
+		;/debug.trace("Trying player control toggle.")
+		InputEnableLayer myLayer = InputEnableLayer.Create()
+		myLayer.DisablePlayerControls(true, true, true, true, true, true, true, true, true, true, true)
+		Utility.WaitMenuMode(1.0)
+		myLayer.EnablePlayerControls()
+		myLayer = None
+		Utility.WaitMenuMode(4.0)
+		debug.trace("Trying AI mode.")
+		Game.SetPlayerAIDriven()
+		Utility.WaitMenuMode(1.0)
+		Game.SetPlayerAIDriven(false)
+		Utility.WaitMenuMode(4.0)
+		debug.trace("Trying pass time.")
+		Game.PassTime(0)
+		Utility.WaitMenuMode(4.0)
+		debug.trace("Trying force first person.")
+		Game.ForceFirstPerson()
+		Utility.WaitMenuMode(4.0)
+		debug.trace("Trying force third person.")
+		Game.ForceThirdPerson()
+		Utility.WaitMenuMode(4.0)
+		debug.trace("Trying fade out game.")
+		Game.FadeOutGame(True, True, 0.0, 2.0, True)
+		Utility.WaitMenuMode(1.0)
+		Game.FadeOutGame(False, True, 0.0, 2.0)
+		Utility.WaitMenuMode(4.0)
+		debug.trace("Trying serve time.")
+		Game.ServeTime()
+		Utility.WaitMenuMode(4.0)
+		debug.trace("Set inside memory hud mode.")
+		Game.SetInsideMemoryHUDMode(true)
+		Utility.WaitMenuMode(1.0)
+		Game.SetInsideMemoryHUDMode(false)
+		Utility.WaitMenuMode(4.0)
+		debug.trace("Set chargen hud mode.")
+		Game.SetCharGenHudMode(3)
+		Utility.WaitMenuMode(1.0)
+		Game.SetCharGenHudMode(0)
+		Utility.WaitMenuMode(4.0)
+		debug.trace("Set chargen mode.")
+		Game.SetInCharGen(True, True, False)
+		Utility.WaitMenuMode(1.0)
+		Game.SetInCharGen(False, False, False)
+		/;
+		;/debug.trace("Activate myself.")
+		Game.GetPlayer().Activate(Game.GetPlayer())
+		Utility.WaitMenuMode(4.0)
+		debug.trace("Playing pipboy close idle.")
+		Idle pipclose = Game.GetFormFromFile(0x00022CF8, "Fallout4.esm") as Idle
+		Game.GetPlayer().PlayIdle(pipclose)
+		Utility.WaitMenuMode(4.0)
+		debug.trace("Playing furniture interaction exit.")
+		Idle exitfurn = Game.GetFormFromFile(0x00024575, "Fallout4.esm") as Idle
+		Game.GetPlayer().PlayIdle(exitfurn)
+		Utility.WaitMenuMode(4.0)
+		debug.trace("Disable menus.")
+		debug.EnableMenus(false)
+		Utility.WaitMenuMode(1.0)
+		debug.EnableMenus()
+		Utility.WaitMenuMode(4.0)
+		/;
+		Actor PlayerRef = Game.GetPlayer()
+		debug.trace("Starting workshop.")
+		Container wb = Game.GetFormFromFile(0x005C1C, "CampfireFO4.esp") as Container
+		ObjectReference wbr = PlayerRef.PlaceAtMe(wb)
+		Utility.WaitMenuMode(5.0)
+		wbr.StartWorkshop()
+		
+		debug.trace("Done!")
+
+	endif
+EndEvent
+
 Event OnEquipped(Actor akActor)
+	debug.trace("Got onequipped")
 	if PlayerCanPlaceObjects()
 		if akActor == Game.GetPlayer()
 			CampUtil.GetPlacementSystem().PlaceableObjectUsed(Required_this_item,           \

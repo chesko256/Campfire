@@ -750,6 +750,7 @@ endFunction
 function UpdateIndicatorPosition(ObjectReference akIndicator, float afDistance, float afHeightOffset = 1.0, float afRotationOffset = 0.0, bool abSnapToTerrain = true)
     float[] center_point = new float[2]
     center_point = GetOffsets(PlayerRef, afDistance)
+    debug.trace("center_point: " + center_point)
 
     PlacementIndicatorThread1.get_async(center_point[0], center_point[1], 0.0, -43.3)
     PlacementIndicatorThread2.get_async(center_point[0], center_point[1], -50.0, 43.3)
