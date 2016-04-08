@@ -1,6 +1,7 @@
 Scriptname _Camp_Compatibility extends ReferenceAlias
 
 import debug
+import Game
 import CampUtil
 import _CampInternal
 import _Camp_ArrayHelper
@@ -178,7 +179,7 @@ function RunCompatibility()
 	/;
 
 	if isDLC1Loaded
-		isDLC1Loaded = IsPluginLoaded(0x011393, "DLCRobot.esm")
+		isDLC1Loaded = IsPluginInstalled("DLCRobot.esm")
 		if !isDLC1Loaded
 			;DLC1 was removed since the last save.
 			Conditions.IsAutomatronLoaded = false
@@ -186,7 +187,7 @@ function RunCompatibility()
 			Conditions.IsAutomatronLoaded = true
 		endif
 	else
-		isDLC1Loaded = IsPluginLoaded(0x011393, "DLCRobot.esm")
+		isDLC1Loaded = IsPluginInstalled("DLCRobot.esm")
 		if isDLC1Loaded
 			;DLC1 was just added.
 			Conditions.IsAutomatronLoaded = true
@@ -197,7 +198,7 @@ function RunCompatibility()
 
 	;/
 	if isDLC2Loaded
-		isDLC2Loaded = IsPluginLoaded(0x, "Wasteland Workshop")
+		isDLC2Loaded = IsPluginInstalled("Wasteland Workshop")
 		if !isDLC2Loaded
 			;DLC2 was removed since the last save.
 			Conditions.IsWastelandWorkshopLoaded = false
@@ -205,7 +206,7 @@ function RunCompatibility()
 			Conditions.IsWastelandWorkshopLoaded = true
 		endif
 	else
-		isDLC2Loaded = IsPluginLoaded(0x, "Wasteland Workshop")
+		isDLC2Loaded = IsPluginInstalled("Wasteland Workshop")
 		if isDLC2Loaded
 			;DLC2 was just added.
 			Conditions.IsWastelandWorkshopLoaded = true
@@ -215,7 +216,7 @@ function RunCompatibility()
 	endif
 
 	if isDLC3Loaded
-		isDLC3Loaded = IsPluginLoaded(0x, "Far Harbor")
+		isDLC3Loaded = IsPluginInstalled("Far Harbor")
 		if !isDLC3Loaded
 			;DLC3 was removed since the last save.
 			Conditions.IsFarHarborLoaded = false
@@ -223,7 +224,7 @@ function RunCompatibility()
 			Conditions.IsFarHarborLoaded = true
 		endif
 	else
-		isDLC3Loaded = IsPluginLoaded(0x, "Far Harbor")
+		isDLC3Loaded = IsPluginInstalled("Far Harbor")
 		if isDLC3Loaded
 			;DLC3 was just added.
 			Conditions.IsFarHarborLoaded = true
@@ -268,16 +269,6 @@ Event Actor.OnDifficultyChanged(actor aSender, int aOldDifficulty, int aNewDiffi
 	endif
 
 EndEvent
-
-bool function IsPluginLoaded(int iFormID, string sPluginName)
-	bool b = Game.GetFormFromFile(iFormID, sPluginName)
-	if b
-		debug.trace("[Campfire] Loaded: " + sPluginName)
-		return true
-	else
-		return false
-	endif
-endFunction
 
 function VanillaGameLoadUp()
 	; Verify quests are running and aliases are filled
