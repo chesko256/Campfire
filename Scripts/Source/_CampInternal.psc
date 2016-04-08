@@ -239,10 +239,11 @@ _Camp_Strings function GetCampfireStrings() global
 endFunction
 
 function ExitMenus() global
-	InputEnableLayer myLayer = InputEnableLayer.Create()
-	myLayer.DisablePlayerControls()
-	myLayer.EnablePlayerControls()
-	myLayer = None
+	debug.trace("[Campfire] Setting AI driven.")
+	Utility.Wait(1)
+	Game.SetPlayerAIDriven()
+	Utility.Wait(1)
+	Game.SetPlayerAIDriven(false)
 endFunction
 
 function RaiseCampAPIError() global

@@ -10,7 +10,7 @@ Actor property PlayerRef auto
 Formlist property _Camp_WorldspacesInteriors auto
 Keyword property isCampfireCrimeToPlaceInTowns auto
 Keyword property isCampfireTentWaterproof auto
-Keyword property isCampfireTentWarm auto
+Keyword property isCampfireTentRadResistant auto
 Keyword property isCampfireObjectTemporary auto
 Keyword property isCampfireTentNoShelter auto
 Keyword property ActorTypeCreature auto
@@ -51,3 +51,4 @@ Message property _Camp_GeneralError_Mounted auto
 Message property _Camp_GeneralError_Sleeping auto
 Message property _Camp_GeneralError_Busy auto
 Message property _Camp_GeneralError_Transformed auto
+Message property _Camp_GeneralError_PowerArmor auto
