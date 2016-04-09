@@ -49,7 +49,7 @@ def pullplugin():
     repo_plugin_time = os.path.getmtime("./Campfire/CampfireFO4.esp")
     gamedir_plugin_time = os.path.getmtime(fo4_dir + "CampfireFO4.esp")
     if repo_plugin_time < gamedir_plugin_time:
-        print "The game directory plugin is newer than the project directory version, copying..."
+        print "Copying new plugin..."
         shutil.copy(fo4_dir + "CampfireFO4.esp", "./Campfire/CampfireFO4.esp")
     else:
         print "The project directory plugin is up-to-date."
@@ -66,7 +66,7 @@ def clean():
     repo_plugin_time = os.path.getmtime("./Campfire/CampfireFO4.esp")
     gamedir_plugin_time = os.path.getmtime(fo4_dir + "CampfireFO4.esp")
     if repo_plugin_time < gamedir_plugin_time:
-        print "The game directory plugin is newer than the project directory version, copying..."
+        print "Copying new plugin..."
         shutil.copy(fo4_dir + "CampfireFO4.esp", "./Campfire/CampfireFO4.esp")
 
     os.remove(fo4_dir + "CampfireFO4.esp")
