@@ -524,10 +524,6 @@ function AddDatastoreEntryByForm(Armor akArmor, int aiGearType, int aiWarmth, in
 	IntListAdd(Datastore, ds_key, aiCoverage + 1)
 endFunction
 
-function UpdateDatastoreEntry(string asKey, int aiWarmth, int aiCoverage)
-
-endFunction
-
 function RevertDatastore()
 	FrostDebug(1, "Setting default settings for body armor...")
 	SetDefaults_Body()
@@ -551,13 +547,18 @@ function RevertDatastore()
 	_Frost_DatastoreInitialized.SetValueInt(2)
 endFunction
 
-function RevertDatastoreEntry(string asKey)
-
-endFunction
-
-
 ; Frostfall 3.1 Stuff
 
+; Expose in CampUtil with ArmorProtectionDataExists(Armor akArmor)
+bool function DatastoreHasKey(string asProfilePath, string asKey)
+	if JsonUtil.IntListGet(asProfilePath, asKey, 0) != 0
+		return true
+	else
+		return false
+	endif
+endFunction
+
+; CRUD
 function SetArmorData(Armor akArmor, int aiWarmth, int aiCoverage, 								\
 									 int aiExtraBodyWarmth = 0, int aiExtraBodyCoverage = 0, 	\
 									 int aiExtraHeadWarmth = 0, int aiExtraHeadCoverage = 0, 	\
@@ -569,7 +570,8 @@ function SetArmorData(Armor akArmor, int aiWarmth, int aiCoverage, 								\
 	string profile_path = CONFIG_PATH + "profile" + _Frost_Setting_CurrentProfile.GetValueInt()
 	string dskey = GetDatastoreKeyFromForm(akArmor)
 	if !DatastoreHasKey(profile_path, dskey)
-		JsonUtil.IntListAdd(profile_path, dskey, aiWarmth				+ 1) ; + 1 so that 0 is a meaningful value on Get
+		; + 1 so that 0 is a meaningful value on Get
+		JsonUtil.IntListAdd(profile_path, dskey, aiWarmth				+ 1)
 		JsonUtil.IntListAdd(profile_path, dskey, aiCoverage				+ 1)
 		JsonUtil.IntListAdd(profile_path, dskey, aiExtraBodyWarmth		+ 1)
 		JsonUtil.IntListAdd(profile_path, dskey, aiExtraBodyCoverage	+ 1)
@@ -587,7 +589,31 @@ function SetArmorData(Armor akArmor, int aiWarmth, int aiCoverage, 								\
 	endif
 endFunction
 
-bool function UpdateArmorData(Form akBaseObject, int aiWarmth = -1, int aiCoverage = -1, 					\
+function SetArmorDataA(Armor akArmor, int[] aiProtectionValues)
+	
+	string profile_path = CONFIG_PATH + "profile" + _Frost_Setting_CurrentProfile.GetValueInt()
+	string dskey = GetDatastoreKeyFromForm(akArmor)
+	if !DatastoreHasKey(profile_path, dskey)
+		; + 1 so that 0 is a meaningful value on Get
+		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[0]	+ 1) ; aiWarmth
+		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[1]	+ 1) ; aiCoverage
+		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[2]	+ 1) ; aiExtraBodyWarmth
+		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[3]	+ 1) ; aiExtraBodyCoverage
+		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[4]	+ 1) ; aiExtraHeadWarmth
+		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[5]	+ 1) ; aiExtraHeadCoverage
+		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[6]	+ 1) ; aiExtraHandsWarmth
+		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[7]	+ 1) ; aiExtraHandsCoverage
+		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[8]	+ 1) ; aiExtraFeetWarmth
+		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[9]	+ 1) ; aiExtraFeetCoverage
+		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[10]	+ 1) ; aiExtraCloakWarmth
+		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[11]	+ 1) ; aiExtraCloakCoverage
+		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[12]	+ 1) ; aiExtraMiscWarmth
+		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[13]	+ 1) ; aiExtraMiscCoverage
+		JsonUtil.Save(profile_path)
+	endif
+endFunction
+
+bool function UpdateArmorData(Armor akArmor, int aiWarmth = -1, int aiCoverage = -1, 					\
 	                                        int aiExtraBodyWarmth = -1, int aiExtraBodyCoverage = -1, 	\
 	                                        int aiExtraHeadWarmth = -1, int aiExtraHeadCoverage = -1, 	\
 	                                        int aiExtraHandsWarmth = -1, int aiExtraHandsCoverage = -1, \
@@ -598,8 +624,9 @@ bool function UpdateArmorData(Form akBaseObject, int aiWarmth = -1, int aiCovera
 	string profile_path = CONFIG_PATH + "profile" + _Frost_Setting_CurrentProfile.GetValueInt()
 	string dskey = GetDatastoreKeyFromForm(akArmor)
 	if DatastoreHasKey(profile_path, dskey)
+		; + 1 so that 0 is a meaningful value on Get
 		if aiWarmth != -1
-			JsonUtil.IntListSet(profile_path, dskey, 0, aiWarmth				+ 1) ; + 1 so that 0 is a meaningful value on Get
+			JsonUtil.IntListSet(profile_path, dskey, 0, aiWarmth				+ 1)
 		endif
 		if aiCoverage != -1
 			JsonUtil.IntListSet(profile_path, dskey, 1, aiCoverage				+ 1)
@@ -641,5 +668,154 @@ bool function UpdateArmorData(Form akBaseObject, int aiWarmth = -1, int aiCovera
 			JsonUtil.IntListSet(profile_path, dskey, 13, aiExtraMiscCoverage	+ 1)
 		endif
 		JsonUtil.Save(profile_path)
+		return true
+	else
+		return false
+	endif
+endFunction
+
+bool function UpdateArmorDataA(Armor akArmor, int[] aiProtectionValues)
+	
+	string profile_path = CONFIG_PATH + "profile" + _Frost_Setting_CurrentProfile.GetValueInt()
+	string dskey = GetDatastoreKeyFromForm(akArmor)
+	if DatastoreHasKey(profile_path, dskey)
+		; + 1 so that 0 is a meaningful value on Get
+		if aiProtectionValues[0] != -1
+			JsonUtil.IntListSet(profile_path, dskey, 0, aiProtectionValues[0]		+ 1)
+		endif
+		if aiProtectionValues[1] != -1
+			JsonUtil.IntListSet(profile_path, dskey, 1, aiProtectionValues[1]		+ 1)
+		endif
+		if aiProtectionValues[2] != -1
+			JsonUtil.IntListSet(profile_path, dskey, 2, aiProtectionValues[2]		+ 1)
+		endif
+		if aiProtectionValues[3] != -1
+			JsonUtil.IntListSet(profile_path, dskey, 3, aiProtectionValues[3]		+ 1)
+		endif
+		if aiProtectionValues[4] != -1
+			JsonUtil.IntListSet(profile_path, dskey, 4, aiProtectionValues[4]		+ 1)
+		endif
+		if aiProtectionValues[5] != -1
+			JsonUtil.IntListSet(profile_path, dskey, 5, aiProtectionValues[5]		+ 1)
+		endif
+		if aiProtectionValues[6] != -1
+			JsonUtil.IntListSet(profile_path, dskey, 6, aiProtectionValues[6]		+ 1)
+		endif
+		if aiProtectionValues[7] != -1
+			JsonUtil.IntListSet(profile_path, dskey, 7, aiProtectionValues[7]		+ 1)
+		endif
+		if aiProtectionValues[8] != -1
+			JsonUtil.IntListSet(profile_path, dskey, 8, aiProtectionValues[8]		+ 1)
+		endif
+		if aiProtectionValues[9] != -1
+			JsonUtil.IntListSet(profile_path, dskey, 9, aiProtectionValues[9]		+ 1)
+		endif
+		if aiProtectionValues[10] != -1
+			JsonUtil.IntListSet(profile_path, dskey, 10, aiProtectionValues[10]		+ 1)
+		endif
+		if aiProtectionValues[11] != -1
+			JsonUtil.IntListSet(profile_path, dskey, 11, aiProtectionValues[11]		+ 1)
+		endif
+		if aiProtectionValues[12] != -1
+			JsonUtil.IntListSet(profile_path, dskey, 12, aiProtectionValues[12]		+ 1)
+		endif
+		if aiProtectionValues[13] != -1
+			JsonUtil.IntListSet(profile_path, dskey, 13, aiProtectionValues[13]		+ 1)
+		endif
+		JsonUtil.Save(profile_path)
+		return true
+	else
+		return false
+	endif
+endFunction
+
+function DeleteArmorData(Armor akArmor)
+	string profile_path = CONFIG_PATH + "profile" + _Frost_Setting_CurrentProfile.GetValueInt()
+	string dskey = GetDatastoreKeyFromForm(akArmor)
+	IntListClear(profile_path, dskey)
+endFunction
+
+; GET
+int[] function GetArmorData(Armor akArmor)
+	string profile_path = CONFIG_PATH + "profile" + _Frost_Setting_CurrentProfile.GetValueInt()
+	string dskey = GetDatastoreKeyFromForm(akArmor)
+	int[] armor_data = new int[14]
+	if DatastoreHasKey(profile_path, dskey)
+		armor_data[0] = JsonUtil.IntListGet(profile_path, dskey, 0) - 1
+		armor_data[1] = JsonUtil.IntListGet(profile_path, dskey, 1) - 1
+		armor_data[2] = JsonUtil.IntListGet(profile_path, dskey, 2) - 1
+		armor_data[3] = JsonUtil.IntListGet(profile_path, dskey, 3) - 1
+		armor_data[4] = JsonUtil.IntListGet(profile_path, dskey, 4) - 1
+		armor_data[5] = JsonUtil.IntListGet(profile_path, dskey, 5) - 1
+		armor_data[6] = JsonUtil.IntListGet(profile_path, dskey, 6) - 1
+		armor_data[7] = JsonUtil.IntListGet(profile_path, dskey, 7) - 1
+		armor_data[8] = JsonUtil.IntListGet(profile_path, dskey, 8) - 1
+		armor_data[9] = JsonUtil.IntListGet(profile_path, dskey, 9) - 1
+		armor_data[10] = JsonUtil.IntListGet(profile_path, dskey, 10) - 1
+		armor_data[11] = JsonUtil.IntListGet(profile_path, dskey, 11) - 1
+		armor_data[12] = JsonUtil.IntListGet(profile_path, dskey, 12) - 1
+		armor_data[13] = JsonUtil.IntListGet(profile_path, dskey, 13) - 1
+	endif
+	return armor_data
+endFunction
+
+int[] function GetDefaultArmorData(Armor akArmor, bool abRawValues = false)
+	string defaults_path = CONFIG_PATH + "armor_default_values"
+	string dskey = GetDatastoreKeyFromForm(akArmor)
+	int[] armor_data = new int[14]
+	if DatastoreHasKey(defaults_path, dskey)
+		int modifier = 0
+		if abRawValues
+			modifier = 1
+		endif
+
+		armor_data[0] = JsonUtil.IntListGet(profile_path, dskey, 0) - modifier
+		armor_data[1] = JsonUtil.IntListGet(profile_path, dskey, 1) - modifier
+		armor_data[2] = JsonUtil.IntListGet(profile_path, dskey, 2) - modifier
+		armor_data[3] = JsonUtil.IntListGet(profile_path, dskey, 3) - modifier
+		armor_data[4] = JsonUtil.IntListGet(profile_path, dskey, 4) - modifier
+		armor_data[5] = JsonUtil.IntListGet(profile_path, dskey, 5) - modifier
+		armor_data[6] = JsonUtil.IntListGet(profile_path, dskey, 6) - modifier
+		armor_data[7] = JsonUtil.IntListGet(profile_path, dskey, 7) - modifier
+		armor_data[8] = JsonUtil.IntListGet(profile_path, dskey, 8) - modifier
+		armor_data[9] = JsonUtil.IntListGet(profile_path, dskey, 9) - modifier
+		armor_data[10] = JsonUtil.IntListGet(profile_path, dskey, 10) - modifier
+		armor_data[11] = JsonUtil.IntListGet(profile_path, dskey, 11) - modifier
+		armor_data[12] = JsonUtil.IntListGet(profile_path, dskey, 12) - modifier
+		armor_data[13] = JsonUtil.IntListGet(profile_path, dskey, 13) - modifier
+	endif
+	return armor_data
+endFunction
+
+function RestoreDefaultArmorData(Armor akArmor, bool abRemoveIfNoDefaultData = false)
+	string profile_path = CONFIG_PATH + "profile" + _Frost_Setting_CurrentProfile.GetValueInt()
+	string defaults_path = CONFIG_PATH + "armor_default_values"
+	string dskey = GetDatastoreKeyFromForm(akArmor)
+	if DatastoreHasKey(profile_path, dskey)
+		if DatastoreHasKey(defaults_path, dskey)
+			JsonUtil.IntListSet(profile_path, dskey, 0, JsonUtil.IntListGet(defaults_path, dskey, 0))
+			JsonUtil.IntListSet(profile_path, dskey, 1, JsonUtil.IntListGet(defaults_path, dskey, 1))
+			JsonUtil.IntListSet(profile_path, dskey, 2, JsonUtil.IntListGet(defaults_path, dskey, 2))
+			JsonUtil.IntListSet(profile_path, dskey, 3, JsonUtil.IntListGet(defaults_path, dskey, 3))
+			JsonUtil.IntListSet(profile_path, dskey, 4, JsonUtil.IntListGet(defaults_path, dskey, 4))
+			JsonUtil.IntListSet(profile_path, dskey, 5, JsonUtil.IntListGet(defaults_path, dskey, 5))
+			JsonUtil.IntListSet(profile_path, dskey, 6, JsonUtil.IntListGet(defaults_path, dskey, 6))
+			JsonUtil.IntListSet(profile_path, dskey, 7, JsonUtil.IntListGet(defaults_path, dskey, 7))
+			JsonUtil.IntListSet(profile_path, dskey, 8, JsonUtil.IntListGet(defaults_path, dskey, 8))
+			JsonUtil.IntListSet(profile_path, dskey, 9, JsonUtil.IntListGet(defaults_path, dskey, 9))
+			JsonUtil.IntListSet(profile_path, dskey, 10, JsonUtil.IntListGet(defaults_path, dskey, 10))
+			JsonUtil.IntListSet(profile_path, dskey, 11, JsonUtil.IntListGet(defaults_path, dskey, 11))
+			JsonUtil.IntListSet(profile_path, dskey, 12, JsonUtil.IntListGet(defaults_path, dskey, 12))
+			JsonUtil.IntListSet(profile_path, dskey, 13, JsonUtil.IntListGet(defaults_path, dskey, 13))
+			JsonUtil.Save(profile_path)
+		else
+			if abRemoveIfNoDefaultData
+				JsonUtil.IntListClear(profile_path, dskey)
+			endif
+		endif
+	else
+		if DatastoreHasKey(defaults_path, dskey)
+			SetArmorDataA(akArmor, GetDefaultArmorData(akArmor, true))
+		endif
 	endif
 endFunction
