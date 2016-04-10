@@ -17,3 +17,7 @@ event OnInit()
 	PlayerAlias.ForceRefTo(PlayerRef)
 	Compatibility.OnPlayerLoadGame()
 endEvent
+
+Event OnWorkshopObjectDestroyed(ObjectReference akReference)
+	debug.trace("Workshop destroyed object " + akReference)
+endEvent

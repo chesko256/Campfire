@@ -116,6 +116,7 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
 		endif
 		debug.trace("Starting workshop.")
 		ObjectReference wb = Game.GetFormFromFile(0x005C27, "CampfireFO4.esp") as ObjectReference
+		wb.MoveTo(PlayerRef)
 		Utility.Wait(2.0)
 		wb.StartWorkshop()
 		; (wbr as WorkshopScript).SetOwnedByPlayer(true)

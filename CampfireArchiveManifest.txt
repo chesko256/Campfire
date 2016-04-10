@@ -186,9 +186,7 @@ meshes\campfire\_Camp_VisionItemFoundFX.nif
 meshes\campfire\_camp_walkingstickshield3.nif
 meshes\campfire\_camp_walkingstickshieldGO.nif
 meshes\campfire\_Camp_WoodShavings.nif
-Scripts\BladesSparringScript.pex
-Scripts\C00TrainerScript.pex
-Scripts\C00VilkasScript.pex
+Scripts\_TestWorkshopScript.pex
 Scripts\CampCampfire.pex
 Scripts\CampConjuredContainer.pex
 Scripts\CampConjuredPlaceableObject.pex
