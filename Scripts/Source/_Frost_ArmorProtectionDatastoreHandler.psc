@@ -169,6 +169,9 @@ int property GEARTYPE_FEET = 4 autoReadOnly hidden
 int property GEARTYPE_CLOAK = 5 autoReadOnly hidden
 int property GEARTYPE_MISC = 6 autoReadOnly hidden
 
+Keyword[] OverrideKeywords
+int[] OverrideValues
+
 int property WARMTH_BODY_POOR = 30 autoReadOnly hidden
 int property WARMTH_BODY_LOW = 60 autoReadOnly hidden
 int property WARMTH_BODY_AVERAGE = 125 autoReadOnly hidden
@@ -262,6 +265,157 @@ function StopSystem()
 	if self.IsRunning()
 		self.Stop()
 	endif
+endFunction
+
+function CreateProtectionKeywordValueMap()
+	OverrideKeywords = new Keyword[72]
+	OverrideValues = new int[72]
+
+	OverrideKeywords[0] = _Frost_ExtraBodyWarmthPoor
+	OverrideKeywords[1] = _Frost_ExtraBodyWarmthLow
+	OverrideKeywords[2] = _Frost_ExtraBodyWarmthAverage
+	OverrideKeywords[3] = _Frost_ExtraBodyWarmthGood
+	OverrideKeywords[4] = _Frost_ExtraBodyWarmthExcellent
+	OverrideKeywords[5] = _Frost_ExtraBodyWarmthMax
+	OverrideKeywords[6] = _Frost_ExtraHeadWarmthPoor
+	OverrideKeywords[7] = _Frost_ExtraHeadWarmthLow
+	OverrideKeywords[8] = _Frost_ExtraHeadWarmthAverage
+	OverrideKeywords[9] = _Frost_ExtraHeadWarmthGood
+	OverrideKeywords[10] = _Frost_ExtraHeadWarmthExcellent
+	OverrideKeywords[11] = _Frost_ExtraHeadWarmthMax
+	OverrideKeywords[12] = _Frost_ExtraHandsWarmthPoor
+	OverrideKeywords[13] = _Frost_ExtraHandsWarmthLow
+	OverrideKeywords[14] = _Frost_ExtraHandsWarmthAverage
+	OverrideKeywords[15] = _Frost_ExtraHandsWarmthGood
+	OverrideKeywords[16] = _Frost_ExtraHandsWarmthExcellent
+	OverrideKeywords[17] = _Frost_ExtraHandsWarmthMax
+	OverrideKeywords[18] = _Frost_ExtraFeetWarmthPoor
+	OverrideKeywords[19] = _Frost_ExtraFeetWarmthLow
+	OverrideKeywords[20] = _Frost_ExtraFeetWarmthAverage
+	OverrideKeywords[21] = _Frost_ExtraFeetWarmthGood
+	OverrideKeywords[22] = _Frost_ExtraFeetWarmthExcellent
+	OverrideKeywords[23] = _Frost_ExtraFeetWarmthMax
+	OverrideKeywords[24] = _Frost_ExtraCloakWarmthPoor
+	OverrideKeywords[25] = _Frost_ExtraCloakWarmthLow
+	OverrideKeywords[26] = _Frost_ExtraCloakWarmthAverage
+	OverrideKeywords[27] = _Frost_ExtraCloakWarmthGood
+	OverrideKeywords[28] = _Frost_ExtraCloakWarmthExcellent
+	OverrideKeywords[29] = _Frost_ExtraCloakWarmthMax
+	OverrideKeywords[30] = _Frost_ExtraMiscWarmthPoor
+	OverrideKeywords[31] = _Frost_ExtraMiscWarmthLow
+	OverrideKeywords[32] = _Frost_ExtraMiscWarmthAverage
+	OverrideKeywords[33] = _Frost_ExtraMiscWarmthGood
+	OverrideKeywords[34] = _Frost_ExtraMiscWarmthExcellent
+	OverrideKeywords[35] = _Frost_ExtraMiscWarmthMax
+	OverrideKeywords[36] = _Frost_ExtraBodyCoveragePoor
+	OverrideKeywords[37] = _Frost_ExtraBodyCoverageLow
+	OverrideKeywords[38] = _Frost_ExtraBodyCoverageAverage
+	OverrideKeywords[39] = _Frost_ExtraBodyCoverageGood
+	OverrideKeywords[40] = _Frost_ExtraBodyCoverageExcellent
+	OverrideKeywords[41] = _Frost_ExtraBodyCoverageMax
+	OverrideKeywords[42] = _Frost_ExtraHeadCoveragePoor
+	OverrideKeywords[43] = _Frost_ExtraHeadCoverageLow
+	OverrideKeywords[44] = _Frost_ExtraHeadCoverageAverage
+	OverrideKeywords[45] = _Frost_ExtraHeadCoverageGood
+	OverrideKeywords[46] = _Frost_ExtraHeadCoverageExcellent
+	OverrideKeywords[47] = _Frost_ExtraHeadCoverageMax
+	OverrideKeywords[48] = _Frost_ExtraHandsCoveragePoor
+	OverrideKeywords[49] = _Frost_ExtraHandsCoverageLow
+	OverrideKeywords[50] = _Frost_ExtraHandsCoverageAverage
+	OverrideKeywords[51] = _Frost_ExtraHandsCoverageGood
+	OverrideKeywords[52] = _Frost_ExtraHandsCoverageExcellent
+	OverrideKeywords[53] = _Frost_ExtraHandsCoverageMax
+	OverrideKeywords[54] = _Frost_ExtraFeetCoveragePoor
+	OverrideKeywords[55] = _Frost_ExtraFeetCoverageLow
+	OverrideKeywords[56] = _Frost_ExtraFeetCoverageAverage
+	OverrideKeywords[57] = _Frost_ExtraFeetCoverageGood
+	OverrideKeywords[58] = _Frost_ExtraFeetCoverageExcellent
+	OverrideKeywords[59] = _Frost_ExtraFeetCoverageMax
+	OverrideKeywords[60] = _Frost_ExtraCloakCoveragePoor
+	OverrideKeywords[61] = _Frost_ExtraCloakCoverageLow
+	OverrideKeywords[62] = _Frost_ExtraCloakCoverageAverage
+	OverrideKeywords[63] = _Frost_ExtraCloakCoverageGood
+	OverrideKeywords[64] = _Frost_ExtraCloakCoverageExcellent
+	OverrideKeywords[65] = _Frost_ExtraCloakCoverageMax
+	OverrideKeywords[66] = _Frost_ExtraMiscCoveragePoor
+	OverrideKeywords[67] = _Frost_ExtraMiscCoverageLow
+	OverrideKeywords[68] = _Frost_ExtraMiscCoverageAverage
+	OverrideKeywords[69] = _Frost_ExtraMiscCoverageGood
+	OverrideKeywords[70] = _Frost_ExtraMiscCoverageExcellent
+	OverrideKeywords[71] = _Frost_ExtraMiscCoverageMax
+
+	OverrideValues[0] = 30
+	OverrideValues[1] = 60
+	OverrideValues[2] = 125
+	OverrideValues[3] = 140
+	OverrideValues[4] = 175
+	OverrideValues[5] = 190
+	OverrideValues[6] = 10
+	OverrideValues[7] = 15
+	OverrideValues[8] = 30
+	OverrideValues[9] = 40
+	OverrideValues[10] = 50
+	OverrideValues[11] = 55
+	OverrideValues[12] = 3
+	OverrideValues[13] = 9
+	OverrideValues[14] = 12
+	OverrideValues[15] = 15
+	OverrideValues[16] = 21
+	OverrideValues[17] = 24
+	OverrideValues[18] = 3
+	OverrideValues[19] = 7
+	OverrideValues[20] = 12
+	OverrideValues[21] = 15
+	OverrideValues[22] = 21
+	OverrideValues[23] = 24
+	OverrideValues[24] = 1
+	OverrideValues[25] = 6
+	OverrideValues[26] = 12
+	OverrideValues[27] = 20
+	OverrideValues[28] = 30
+	OverrideValues[29] = 40
+	OverrideValues[30] = 1
+	OverrideValues[31] = 6
+	OverrideValues[32] = 12
+	OverrideValues[33] = 20
+	OverrideValues[34] = 30
+	OverrideValues[35] = 40
+	OverrideValues[36] = 16
+	OverrideValues[37] = 35
+	OverrideValues[38] = 54
+	OverrideValues[39] = 72
+	OverrideValues[40] = 91
+	OverrideValues[41] = 109
+	OverrideValues[42] = 3
+	OverrideValues[43] = 14
+	OverrideValues[44] = 29
+	OverrideValues[45] = 43
+	OverrideValues[46] = 58
+	OverrideValues[47] = 72
+	OverrideValues[48] = 3
+	OverrideValues[49] = 6
+	OverrideValues[50] = 14
+	OverrideValues[51] = 21
+	OverrideValues[52] = 29
+	OverrideValues[53] = 35
+	OverrideValues[54] = 3
+	OverrideValues[55] = 6
+	OverrideValues[56] = 14
+	OverrideValues[57] = 21
+	OverrideValues[58] = 29
+	OverrideValues[59] = 35
+	OverrideValues[60] = 1
+	OverrideValues[61] = 6
+	OverrideValues[62] = 12
+	OverrideValues[63] = 20
+	OverrideValues[64] = 30
+	OverrideValues[65] = 40
+	OverrideValues[66] = 1
+	OverrideValues[67] = 6
+	OverrideValues[68] = 12
+	OverrideValues[69] = 20
+	OverrideValues[70] = 30
+	OverrideValues[71] = 40
 endFunction
 
 function InitializeDatastore()
