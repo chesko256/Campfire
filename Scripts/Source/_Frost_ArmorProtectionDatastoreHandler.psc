@@ -29,6 +29,105 @@ Keyword property ArmorBoots auto
 Keyword property ClothingFeet auto
 FormList property _Camp_Backpacks auto
 
+; Override keywords
+Keyword property _Frost_WarmthPoor auto
+Keyword property _Frost_WarmthLow auto
+Keyword property _Frost_WarmthAverage auto
+Keyword property _Frost_WarmthGood auto
+Keyword property _Frost_WarmthExcellent auto
+Keyword property _Frost_WarmthMax auto
+Keyword property _Frost_CoveragePoor auto
+Keyword property _Frost_CoverageLow auto
+Keyword property _Frost_CoverageAverage auto
+Keyword property _Frost_CoverageGood auto
+Keyword property _Frost_CoverageExcellent auto
+Keyword property _Frost_CoverageMax auto
+
+Keyword property _Frost_ExtraBodyWarmthPoor auto
+Keyword property _Frost_ExtraBodyWarmthLow auto
+Keyword property _Frost_ExtraBodyWarmthAverage auto
+Keyword property _Frost_ExtraBodyWarmthGood auto
+Keyword property _Frost_ExtraBodyWarmthExcellent auto
+Keyword property _Frost_ExtraBodyWarmthMax auto
+
+Keyword property _Frost_ExtraHeadWarmthPoor auto
+Keyword property _Frost_ExtraHeadWarmthLow auto
+Keyword property _Frost_ExtraHeadWarmthAverage auto
+Keyword property _Frost_ExtraHeadWarmthGood auto
+Keyword property _Frost_ExtraHeadWarmthExcellent auto
+Keyword property _Frost_ExtraHeadWarmthMax auto
+
+Keyword property _Frost_ExtraHandsWarmthPoor auto
+Keyword property _Frost_ExtraHandsWarmthLow auto
+Keyword property _Frost_ExtraHandsWarmthAverage auto
+Keyword property _Frost_ExtraHandsWarmthGood auto
+Keyword property _Frost_ExtraHandsWarmthExcellent auto
+Keyword property _Frost_ExtraHandsWarmthMax auto
+
+Keyword property _Frost_ExtraFeetWarmthPoor auto
+Keyword property _Frost_ExtraFeetWarmthLow auto
+Keyword property _Frost_ExtraFeetWarmthAverage auto
+Keyword property _Frost_ExtraFeetWarmthGood auto
+Keyword property _Frost_ExtraFeetWarmthExcellent auto
+Keyword property _Frost_ExtraFeetWarmthMax auto
+
+Keyword property _Frost_ExtraCloakWarmthPoor auto
+Keyword property _Frost_ExtraCloakWarmthLow auto
+Keyword property _Frost_ExtraCloakWarmthAverage auto
+Keyword property _Frost_ExtraCloakWarmthGood auto
+Keyword property _Frost_ExtraCloakWarmthExcellent auto
+Keyword property _Frost_ExtraCloakWarmthMax auto
+
+Keyword property _Frost_ExtraMiscWarmthPoor auto
+Keyword property _Frost_ExtraMiscWarmthLow auto
+Keyword property _Frost_ExtraMiscWarmthAverage auto
+Keyword property _Frost_ExtraMiscWarmthGood auto
+Keyword property _Frost_ExtraMiscWarmthExcellent auto
+Keyword property _Frost_ExtraMiscWarmthMax auto
+
+Keyword property _Frost_ExtraBodyCoveragePoor auto
+Keyword property _Frost_ExtraBodyCoverageLow auto
+Keyword property _Frost_ExtraBodyCoverageAverage auto
+Keyword property _Frost_ExtraBodyCoverageGood auto
+Keyword property _Frost_ExtraBodyCoverageExcellent auto
+Keyword property _Frost_ExtraBodyCoverageMax auto
+
+Keyword property _Frost_ExtraHeadCoveragePoor auto
+Keyword property _Frost_ExtraHeadCoverageLow auto
+Keyword property _Frost_ExtraHeadCoverageAverage auto
+Keyword property _Frost_ExtraHeadCoverageGood auto
+Keyword property _Frost_ExtraHeadCoverageExcellent auto
+Keyword property _Frost_ExtraHeadCoverageMax auto
+
+Keyword property _Frost_ExtraHandsCoveragePoor auto
+Keyword property _Frost_ExtraHandsCoverageLow auto
+Keyword property _Frost_ExtraHandsCoverageAverage auto
+Keyword property _Frost_ExtraHandsCoverageGood auto
+Keyword property _Frost_ExtraHandsCoverageExcellent auto
+Keyword property _Frost_ExtraHandsCoverageMax auto
+
+Keyword property _Frost_ExtraFeetCoveragePoor auto
+Keyword property _Frost_ExtraFeetCoverageLow auto
+Keyword property _Frost_ExtraFeetCoverageAverage auto
+Keyword property _Frost_ExtraFeetCoverageGood auto
+Keyword property _Frost_ExtraFeetCoverageExcellent auto
+Keyword property _Frost_ExtraFeetCoverageMax auto
+
+Keyword property _Frost_ExtraCloakCoveragePoor auto
+Keyword property _Frost_ExtraCloakCoverageLow auto
+Keyword property _Frost_ExtraCloakCoverageAverage auto
+Keyword property _Frost_ExtraCloakCoverageGood auto
+Keyword property _Frost_ExtraCloakCoverageExcellent auto
+Keyword property _Frost_ExtraCloakCoverageMax auto
+
+Keyword property _Frost_ExtraMiscCoveragePoor auto
+Keyword property _Frost_ExtraMiscCoverageLow auto
+Keyword property _Frost_ExtraMiscCoverageAverage auto
+Keyword property _Frost_ExtraMiscCoverageGood auto
+Keyword property _Frost_ExtraMiscCoverageExcellent auto
+Keyword property _Frost_ExtraMiscCoverageMax auto
+
+
 GlobalVariable property _Frost_DatastoreInitialized auto
 
 int property DEFAULT_BODY_WARMTH 				= 110 autoReadOnly hidden
@@ -69,6 +168,90 @@ int property GEARTYPE_HANDS = 3 autoReadOnly hidden
 int property GEARTYPE_FEET = 4 autoReadOnly hidden
 int property GEARTYPE_CLOAK = 5 autoReadOnly hidden
 int property GEARTYPE_MISC = 6 autoReadOnly hidden
+
+int property WARMTH_BODY_POOR = 30 autoReadOnly hidden
+int property WARMTH_BODY_LOW = 60 autoReadOnly hidden
+int property WARMTH_BODY_AVERAGE = 125 autoReadOnly hidden
+int property WARMTH_BODY_GOOD = 140 autoReadOnly hidden
+int property WARMTH_BODY_EXCELLENT = 175 autoReadOnly hidden
+int property WARMTH_BODY_MAX = 190 autoReadOnly hidden
+
+int property WARMTH_HEAD_POOR = 10 autoReadOnly hidden
+int property WARMTH_HEAD_LOW = 15 autoReadOnly hidden
+int property WARMTH_HEAD_AVERAGE = 30 autoReadOnly hidden
+int property WARMTH_HEAD_GOOD = 40 autoReadOnly hidden
+int property WARMTH_HEAD_EXCELLENT = 50 autoReadOnly hidden
+int property WARMTH_HEAD_MAX = 55 autoReadOnly hidden
+
+int property WARMTH_HANDS_POOR = 3 autoReadOnly hidden
+int property WARMTH_HANDS_LOW = 9 autoReadOnly hidden
+int property WARMTH_HANDS_AVERAGE = 12 autoReadOnly hidden
+int property WARMTH_HANDS_GOOD = 15 autoReadOnly hidden
+int property WARMTH_HANDS_EXCELLENT = 21 autoReadOnly hidden
+int property WARMTH_HANDS_MAX = 24 autoReadOnly hidden
+
+int property WARMTH_FEET_POOR = 3 autoReadOnly hidden
+int property WARMTH_FEET_LOW = 7 autoReadOnly hidden
+int property WARMTH_FEET_AVERAGE = 12 autoReadOnly hidden
+int property WARMTH_FEET_GOOD = 15 autoReadOnly hidden
+int property WARMTH_FEET_EXCELLENT = 21 autoReadOnly hidden
+int property WARMTH_FEET_MAX = 24 autoReadOnly hidden
+
+int property WARMTH_CLOAK_POOR = 1 autoReadOnly hidden
+int property WARMTH_CLOAK_LOW = 6 autoReadOnly hidden
+int property WARMTH_CLOAK_AVERAGE = 12 autoReadOnly hidden
+int property WARMTH_CLOAK_GOOD = 20 autoReadOnly hidden
+int property WARMTH_CLOAK_EXCELLENT = 30 autoReadOnly hidden
+int property WARMTH_CLOAK_MAX = 40 autoReadOnly hidden
+
+int property WARMTH_MISC_POOR = 1 autoReadOnly hidden
+int property WARMTH_MISC_LOW = 6 autoReadOnly hidden
+int property WARMTH_MISC_AVERAGE = 12 autoReadOnly hidden
+int property WARMTH_MISC_GOOD = 20 autoReadOnly hidden
+int property WARMTH_MISC_EXCELLENT = 30 autoReadOnly hidden
+int property WARMTH_MISC_MAX = 40 autoReadOnly hidden
+
+int property COVERAGE_BODY_POOR = 16 autoReadOnly hidden
+int property COVERAGE_BODY_LOW = 35 autoReadOnly hidden
+int property COVERAGE_BODY_AVERAGE = 54 autoReadOnly hidden
+int property COVERAGE_BODY_GOOD = 72 autoReadOnly hidden
+int property COVERAGE_BODY_EXCELLENT = 91 autoReadOnly hidden
+int property COVERAGE_BODY_MAX = 109 autoReadOnly hidden
+
+int property COVERAGE_HEAD_POOR = 3 autoReadOnly hidden
+int property COVERAGE_HEAD_LOW = 14 autoReadOnly hidden
+int property COVERAGE_HEAD_AVERAGE = 29 autoReadOnly hidden
+int property COVERAGE_HEAD_GOOD = 43 autoReadOnly hidden
+int property COVERAGE_HEAD_EXCELLENT = 58 autoReadOnly hidden
+int property COVERAGE_HEAD_MAX = 72 autoReadOnly hidden
+
+int property COVERAGE_HANDS_POOR = 3 autoReadOnly hidden
+int property COVERAGE_HANDS_LOW = 6 autoReadOnly hidden
+int property COVERAGE_HANDS_AVERAGE = 14 autoReadOnly hidden
+int property COVERAGE_HANDS_GOOD = 21 autoReadOnly hidden
+int property COVERAGE_HANDS_EXCELLENT = 29 autoReadOnly hidden
+int property COVERAGE_HANDS_MAX = 35 autoReadOnly hidden
+
+int property COVERAGE_FEET_POOR = 3 autoReadOnly hidden
+int property COVERAGE_FEET_LOW = 6 autoReadOnly hidden
+int property COVERAGE_FEET_AVERAGE = 14 autoReadOnly hidden
+int property COVERAGE_FEET_GOOD = 21 autoReadOnly hidden
+int property COVERAGE_FEET_EXCELLENT = 29 autoReadOnly hidden
+int property COVERAGE_FEET_MAX = 35 autoReadOnly hidden
+
+int property COVERAGE_CLOAK_POOR = 1 autoReadOnly hidden
+int property COVERAGE_CLOAK_LOW = 6 autoReadOnly hidden
+int property COVERAGE_CLOAK_AVERAGE = 12 autoReadOnly hidden
+int property COVERAGE_CLOAK_GOOD = 20 autoReadOnly hidden
+int property COVERAGE_CLOAK_EXCELLENT = 30 autoReadOnly hidden
+int property COVERAGE_CLOAK_MAX = 40 autoReadOnly hidden
+
+int property COVERAGE_MISC_POOR = 1 autoReadOnly hidden
+int property COVERAGE_MISC_LOW = 6 autoReadOnly hidden
+int property COVERAGE_MISC_AVERAGE = 12 autoReadOnly hidden
+int property COVERAGE_MISC_GOOD = 20 autoReadOnly hidden
+int property COVERAGE_MISC_EXCELLENT = 30 autoReadOnly hidden
+int property COVERAGE_MISC_MAX = 40 autoReadOnly hidden
 
 
 string CONFIG_PATH = "../FrostfallData/"
@@ -164,7 +347,7 @@ int[] function GetTotalProtectionValues(Armor akArmor)
 	int cover_val = 0
 	int[] ap = GetArmorProtectionData(akArmor)
 
-	; -1?
+	; -1? Original contract with ClothingSystem maintained (3.1).
 	if ap[14] == 1
 		armor_data[0] = 0
 		armor_data[1] = 0
