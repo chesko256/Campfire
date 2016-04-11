@@ -267,9 +267,15 @@ function StopSystem()
 	endif
 endFunction
 
-function CreateProtectionKeywordValueMap()
+function CreateProtectionKeywordValueMaps()
+	; "Ignore" keyword?
+	StandardKeywords = new Keyword[12]
+	StandardValues = new int[12]
+	StandardPartIndex = new int[12]
+
 	OverrideKeywords = new Keyword[72]
 	OverrideValues = new int[72]
+	OverrideExtraPartIndex = new int[72]
 
 	OverrideKeywords[0] = _Frost_ExtraBodyWarmthPoor
 	OverrideKeywords[1] = _Frost_ExtraBodyWarmthLow
@@ -344,8 +350,6 @@ function CreateProtectionKeywordValueMap()
 	OverrideKeywords[70] = _Frost_ExtraMiscCoverageExcellent
 	OverrideKeywords[71] = _Frost_ExtraMiscCoverageMax
 
-
-
 	OverrideValues[0] = WARMTH_BODY_POOR
 	OverrideValues[1] = WARMTH_BODY_LOW
 	OverrideValues[2] = WARMTH_BODY_AVERAGE
@@ -418,6 +422,79 @@ function CreateProtectionKeywordValueMap()
 	OverrideValues[69] = COVERAGE_MISC_GOOD
 	OverrideValues[70] = COVERAGE_MISC_EXCELLENT
 	OverrideValues[71] = COVERAGE_MISC_MAX
+
+	OverrideExtraPartIndex[0] = 2
+	OverrideExtraPartIndex[1] = 2
+	OverrideExtraPartIndex[2] = 2
+	OverrideExtraPartIndex[3] = 2
+	OverrideExtraPartIndex[4] = 2
+	OverrideExtraPartIndex[5] = 2
+	OverrideExtraPartIndex[6] = 4
+	OverrideExtraPartIndex[7] = 4
+	OverrideExtraPartIndex[8] = 4
+	OverrideExtraPartIndex[9] = 4
+	OverrideExtraPartIndex[10] = 4
+	OverrideExtraPartIndex[11] = 4
+	OverrideExtraPartIndex[12] = 6
+	OverrideExtraPartIndex[13] = 6
+	OverrideExtraPartIndex[14] = 6
+	OverrideExtraPartIndex[15] = 6
+	OverrideExtraPartIndex[16] = 6
+	OverrideExtraPartIndex[17] = 6
+	OverrideExtraPartIndex[18] = 8
+	OverrideExtraPartIndex[19] = 8
+	OverrideExtraPartIndex[20] = 8
+	OverrideExtraPartIndex[21] = 8
+	OverrideExtraPartIndex[22] = 8
+	OverrideExtraPartIndex[23] = 8
+	OverrideExtraPartIndex[24] = 10
+	OverrideExtraPartIndex[25] = 10
+	OverrideExtraPartIndex[26] = 10
+	OverrideExtraPartIndex[27] = 10
+	OverrideExtraPartIndex[28] = 10
+	OverrideExtraPartIndex[29] = 10
+	OverrideExtraPartIndex[30] = 12
+	OverrideExtraPartIndex[31] = 12
+	OverrideExtraPartIndex[32] = 12
+	OverrideExtraPartIndex[33] = 12
+	OverrideExtraPartIndex[34] = 12
+	OverrideExtraPartIndex[35] = 12
+	OverrideExtraPartIndex[36] = 3
+	OverrideExtraPartIndex[37] = 3
+	OverrideExtraPartIndex[38] = 3
+	OverrideExtraPartIndex[39] = 3
+	OverrideExtraPartIndex[40] = 3
+	OverrideExtraPartIndex[41] = 3
+	OverrideExtraPartIndex[42] = 5
+	OverrideExtraPartIndex[43] = 5
+	OverrideExtraPartIndex[44] = 5
+	OverrideExtraPartIndex[45] = 5
+	OverrideExtraPartIndex[46] = 5
+	OverrideExtraPartIndex[47] = 5
+	OverrideExtraPartIndex[48] = 7
+	OverrideExtraPartIndex[49] = 7
+	OverrideExtraPartIndex[50] = 7
+	OverrideExtraPartIndex[51] = 7
+	OverrideExtraPartIndex[52] = 7
+	OverrideExtraPartIndex[53] = 7
+	OverrideExtraPartIndex[54] = 9
+	OverrideExtraPartIndex[55] = 9
+	OverrideExtraPartIndex[56] = 9
+	OverrideExtraPartIndex[57] = 9
+	OverrideExtraPartIndex[58] = 9
+	OverrideExtraPartIndex[59] = 9
+	OverrideExtraPartIndex[60] = 11
+	OverrideExtraPartIndex[61] = 11
+	OverrideExtraPartIndex[62] = 11
+	OverrideExtraPartIndex[63] = 11
+	OverrideExtraPartIndex[64] = 11
+	OverrideExtraPartIndex[65] = 11
+	OverrideExtraPartIndex[66] = 13
+	OverrideExtraPartIndex[67] = 13
+	OverrideExtraPartIndex[68] = 13
+	OverrideExtraPartIndex[69] = 13
+	OverrideExtraPartIndex[70] = 13
+	OverrideExtraPartIndex[71] = 13
 endFunction
 
 function InitializeDatastore()
@@ -517,8 +594,29 @@ int[] function GetTotalProtectionValues(Armor akArmor)
 endFunction
 
 int[] function GetArmorProtectionDataByKeyword(Armor akArmor)
-	
+	int[] armor_data = new int[15]
+	int keyword_count = akArmor.GetNumKeywords()
+	int i = 0
+	while i < keyword_count
+		Keyword k = akArmor.GetNthKeyword(i)
+		int idx = StandardKeywords.Find(k)
+		if idx != -1
+			; standard keyword
+			int determined_value = Get
+			armor_data[StandardPartIndex[idx]] = determined_value
+		else
+			; extra parts
+			idx = OverrideKeywords.Find(k)
+			if idx != -1
+				armor_data[OverrideExtraPartIndex[idx]] = OverrideValues[idx]
+			endif
+		endif
+		i += 1
+	endWhile
+	return armor_data
 endFunction
+
+GetArmorProtectionDataByType
 
 int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
 	int[] armor_data = new int[15]
