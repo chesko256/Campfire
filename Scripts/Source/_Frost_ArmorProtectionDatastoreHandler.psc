@@ -31,20 +31,47 @@ FormList property _Camp_Backpacks auto
 
 GlobalVariable property _Frost_DatastoreInitialized auto
 
-int property DEFAULT_BODY_WARMTH 				= 110 autoReadOnly
-int property DEFAULT_BODY_COVERAGE 				= 35 autoReadOnly
-int property DEFAULT_HANDS_WARMTH 				= 12 autoReadOnly
-int property DEFAULT_HANDS_COVERAGE 			= 6 autoReadOnly
-int property DEFAULT_HEAD_WARMTH 				= 30 autoReadOnly
-int property DEFAULT_HEAD_COVERAGE 				= 14 autoReadOnly
-int property DEFAULT_HEADHOOD_WARMTH 			= 25 autoReadOnly
-int property DEFAULT_HEADHOOD_COVERAGE 			= 43 autoReadOnly
-int property DEFAULT_FEET_WARMTH 				= 12 autoReadOnly
-int property DEFAULT_FEET_COVERAGE 				= 14 autoReadOnly
-int property DEFAULT_SHIELD_WARMTH				= 0 autoReadOnly
-int property DEFAULT_SHIELD_COVERAGE			= 20 autoReadOnly
+int property DEFAULT_BODY_WARMTH 				= 110 autoReadOnly hidden
+int property DEFAULT_BODY_COVERAGE 				= 35 autoReadOnly hidden
+int property DEFAULT_HANDS_WARMTH 				= 12 autoReadOnly hidden
+int property DEFAULT_HANDS_COVERAGE 			= 6 autoReadOnly hidden
+int property DEFAULT_HEAD_WARMTH 				= 30 autoReadOnly hidden
+int property DEFAULT_HEAD_COVERAGE 				= 14 autoReadOnly hidden
+int property DEFAULT_HEADHOOD_WARMTH 			= 25 autoReadOnly hidden
+int property DEFAULT_HEADHOOD_COVERAGE 			= 43 autoReadOnly hidden
+int property DEFAULT_FEET_WARMTH 				= 12 autoReadOnly hidden
+int property DEFAULT_FEET_COVERAGE 				= 14 autoReadOnly hidden
+int property DEFAULT_CLOAK_WARMTH				= 10 autoReadOnly hidden
+int property DEFAULT_CLOAK_COVERAGE				= 10 autoReadOnly hidden
+int property DEFAULT_SHIELD_WARMTH				= 0 autoReadOnly hidden
+int property DEFAULT_SHIELD_COVERAGE			= 20 autoReadOnly hidden
 
-string CONFIG_PATH = 
+int property SLOTMASK_HEAD 						= Armor.kSlotMask30 autoReadOnly hidden
+int property SLOTMASK_HAIR 						= Armor.kSlotMask31 autoReadOnly hidden
+int property SLOTMASK_BODY 						= Armor.kSlotMask32 autoReadOnly hidden
+int property SLOTMASK_HANDS 					= Armor.kSlotMask33 autoReadOnly hidden
+int property SLOTMASK_FOREARMS 					= Armor.kSlotMask34 autoReadOnly hidden
+int property SLOTMASK_AMULET 					= Armor.kSlotMask35 autoReadOnly hidden
+int property SLOTMASK_RING 						= Armor.kSlotMask36 autoReadOnly hidden
+int property SLOTMASK_FEET 						= Armor.kSlotMask37 autoReadOnly hidden
+int property SLOTMASK_CALVES 					= Armor.kSlotMask38 autoReadOnly hidden
+int property SLOTMASK_SHIELD 					= Armor.kSlotMask39 autoReadOnly hidden
+int property SLOTMASK_TAIL 						= Armor.kSlotMask40 autoReadOnly hidden
+int property SLOTMASK_LONGHAIR 					= Armor.kSlotMask41 autoReadOnly hidden
+int property SLOTMASK_CIRCLET 					= Armor.kSlotMask42 autoReadOnly hidden
+int property SLOTMASK_EARS 						= Armor.kSlotMask43 autoReadOnly hidden
+int property SLOTMASK_CLOAK 					= Armor.kSlotMask46 autoReadOnly hidden
+int property SLOTMASK_BACKPACK 					= Armor.kSlotMask47 autoReadOnly hidden
+
+int property GEARTYPE_BODY = 1 autoReadOnly hidden
+int property GEARTYPE_HEAD = 2 autoReadOnly hidden
+int property GEARTYPE_HANDS = 3 autoReadOnly hidden
+int property GEARTYPE_FEET = 4 autoReadOnly hidden
+int property GEARTYPE_CLOAK = 5 autoReadOnly hidden
+int property GEARTYPE_MISC = 6 autoReadOnly hidden
+
+
+string CONFIG_PATH = "../FrostfallData/"
 string ARMOR_PROFILE_PREFIX = "armor_profile"
 string ARMOR_DEFAULT_PREFIX = "armor_default_values"
 
@@ -130,329 +157,139 @@ bool function DatastoreHasEntry(string ds_key, int aiDatastoreType)
 	endif
 endFunction
 
-int[] function GetTotalProtectionValues(Armor akArmor, int aiGearType)
-	int[] result = new int[2]
-	if aiGearType == -1
-		result[0] = -1
-		result[1] = -1
-		return result
-	endif
+int[] function GetTotalProtectionValues(Armor akArmor)
+	int[] armor_data = new int[2]
 
 	int warmth_val = 0
 	int cover_val = 0
-	string ds_key = GetDatastoreKeyFromForm(akArmor)
+	int[] ap = GetArmorProtectionData(akArmor)
 
-	int in_ignore_list = IntListGet(_FrostData_ArmorIgnore, ds_key, 0) - 1
-	if in_ignore_list == 0
-		result[0] = 0
-		result[1] = 0
-		return result
+	; -1?
+	if ap[14] == 1
+		armor_data[0] = 0
+		armor_data[1] = 0
+		return armor_data
 	endif
 
-	; Gear Type Overrides
-    if akArmor.HasKeyword(WAF_ClothingCloak)
-        aiGearType = 7
-    endif
-    int mySlotMask = akArmor.GetSlotMask()
-    if LogicalAnd(mySlotMask, akArmor.kSlotMask31) && !LogicalAnd(mySlotMask, akArmor.kSlotMask32)
-        aiGearType = 3
-    endif
+	warmth_val = ap[0] + ap[2] + ap[4] + ap[6] + ap[8] + ap[10] + ap[12]
+	cover_val = ap[1] + ap[3] + ap[5] + ap[7] + ap[9] + ap[11] + ap[13]
 
-	;FrostDebug(0, "iGearType=" + aiGearType)
-	if aiGearType == 1
-		; Body mode - check body and all other slots
-		; Body
-		warmth_val = IntListGet(_FrostData_ArmorBody, ds_key, 0) - 1
-		cover_val = IntListGet(_FrostData_ArmorBody, ds_key, 1) - 1
-		;FrostDebug(0, "Returning body " + warmth_val + " " + cover_val)
-		; Try to set sane default values for the body
-		if warmth_val == -1
-			result[0] = result[0] + DEFAULT_BODY_WARMTH
-			result[1] = result[1] + DEFAULT_BODY_COVERAGE
-		else
-			result[0] = result[0] + warmth_val
-			result[1] = result[1] + cover_val
-		endif
-		; Hands
-		warmth_val = IntListGet(_FrostData_ArmorHands, ds_key, 0) - 1
-		cover_val = IntListGet(_FrostData_ArmorHands, ds_key, 1) - 1
-		;FrostDebug(0, "Returning multi hands " + warmth_val + " " + cover_val)
-		if warmth_val != -1
-			result[0] = result[0] + warmth_val
-			result[1] = result[1] + cover_val
-		endif
-		; Head
-		warmth_val = IntListGet(_FrostData_ArmorHead, ds_key, 0) - 1
-		cover_val = IntListGet(_FrostData_ArmorHead, ds_key, 1) - 1
-		;FrostDebug(0, "Returning multi head " + warmth_val + " " + cover_val)
-		if warmth_val != -1
-			result[0] = result[0] + warmth_val
-			result[1] = result[1] + cover_val
-		endif
-		; Feet
-		warmth_val = IntListGet(_FrostData_ArmorFeet, ds_key, 0) - 1
-		cover_val = IntListGet(_FrostData_ArmorFeet, ds_key, 1) - 1
-		;FrostDebug(0, "Returning multi feet " + warmth_val + " " + cover_val)
-		if warmth_val != -1
-			result[0] = result[0] + warmth_val
-			result[1] = result[1] + cover_val
-		endif
-		; Cloak
-		warmth_val = IntListGet(_FrostData_ArmorCloak, ds_key, 0) - 1
-		cover_val = IntListGet(_FrostData_ArmorCloak, ds_key, 1) - 1
-		;FrostDebug(0, "Returning multi feet " + warmth_val + " " + cover_val)
-		if warmth_val != -1
-			result[0] = result[0] + warmth_val
-			result[1] = result[1] + cover_val
-		endif
-		
-		;FrostDebug(0, "Result: " + result)
-		return result
-	elseif aiGearType == 3
-		; Head mode - check head and cloak slots
-		; Head
-		warmth_val = IntListGet(_FrostData_ArmorHead, ds_key, 0) - 1
-		cover_val = IntListGet(_FrostData_ArmorHead, ds_key, 1) - 1
-		;FrostDebug(0, "Returning head " + warmth_val + " " + cover_val)
-		; Try to set sane default values for the head
-		if warmth_val == -1
-			if akArmor.HasKeyword(ClothingCirclet) || StringUtil.Find(akArmor.GetName(), "circlet") != -1
-				result[0] = result[0] + 0
-				result[1] = result[1] + 0
-			elseif StringUtil.Find(akArmor.GetName(), "hood") != -1
-				result[0] = result[0] + DEFAULT_HEADHOOD_WARMTH
-				result[1] = result[1] + DEFAULT_HEADHOOD_COVERAGE
-			else
-				result[0] = result[0] + DEFAULT_HEAD_WARMTH
-				result[1] = result[1] + DEFAULT_HEAD_COVERAGE
-			endif
-		else
-			result[0] = result[0] + warmth_val
-			result[1] = result[1] + cover_val
-		endif
-		; Cloak
-		warmth_val = IntListGet(_FrostData_ArmorCloak, ds_key, 0) - 1
-		cover_val = IntListGet(_FrostData_ArmorCloak, ds_key, 1) - 1
-		;FrostDebug(0, "Returning multi cloak " + warmth_val + " " + cover_val)
-		if warmth_val != -1
-			result[0] = result[0] + warmth_val
-			result[1] = result[1] + cover_val
-		endif
-
-		;FrostDebug(0, "Result: " + result)
-		return result
-	else
-		; Normal mode - check single slot
-		Keyword Datastore
-		if aiGearType == 1
-			Datastore = _FrostData_ArmorBody
-		elseif aiGearType == 2
-			Datastore = _FrostData_ArmorHands
-		elseif aiGearType == 3
-			Datastore = _FrostData_ArmorHead
-		elseif aiGearType == 4
-			Datastore = _FrostData_ArmorFeet
-		elseif aiGearType == 7
-			Datastore = _FrostData_ArmorCloak
-		elseif aiGearType == 8
-			Datastore = _FrostData_ArmorShield
-		endif
-	
-		; Subtract 1 to return a falsey -1 on failure
-		warmth_val = IntListGet(Datastore, ds_key, 0) - 1
-		cover_val = IntListGet(Datastore, ds_key, 1) - 1
-		;FrostDebug(0, "Returning type " + aiGearType + " single " + warmth_val + " " + cover_val)
-	
-		if warmth_val == -1
-			; Try to set sane default values
-			if aiGearType == 1
-				result[0] = result[0] + DEFAULT_BODY_WARMTH
-				result[1] = result[1] + DEFAULT_BODY_COVERAGE
-			elseif aiGearType == 2
-				result[0] = result[0] + DEFAULT_HANDS_WARMTH
-				result[1] = result[1] + DEFAULT_HANDS_COVERAGE
-			elseif aiGearType == 3
-				if akArmor.HasKeyword(ClothingCirclet) || StringUtil.Find(akArmor.GetName(), "circlet") != -1
-					result[0] = result[0] + 0
-					result[1] = result[1] + 0
-				elseif StringUtil.Find(akArmor.GetName(), "hood") != -1
-					result[0] = result[0] + DEFAULT_HEADHOOD_WARMTH
-					result[1] = result[1] + DEFAULT_HEADHOOD_COVERAGE
-				else
-					result[0] = result[0] + DEFAULT_HEAD_WARMTH
-					result[1] = result[1] + DEFAULT_HEAD_COVERAGE
-				endif
-			elseif aiGearType == 4
-				result[0] = result[0] + DEFAULT_FEET_WARMTH
-				result[1] = result[1] + DEFAULT_FEET_COVERAGE
-			elseif aiGearType == 7
-				; This item is not supposed to provide warmth or coverage.
-				result[0] = -99
-				result[1] = -99
-			elseif aiGearType == 8
-				result[0] = result[0] + DEFAULT_SHIELD_WARMTH
-				result[1] = result[1] + DEFAULT_SHIELD_COVERAGE
-			endif
-		else
-			result[0] = warmth_val
-			result[1] = cover_val
-		endif
-		;FrostDebug(0, "Result: " + result)
-		return result
-	endif
+	return armor_data
 endFunction
 
-int[] function GetArmorProtectionData(Armor akArmor, int aiGearType, int aiMode = 0)
+int[] function GetArmorProtectionDataByKeyword(Armor akArmor)
 	
-	; Gear Type Overrides
-    if akArmor.HasKeyword(WAF_ClothingCloak)
-        aiGearType = 7
-    endif
-    int mySlotMask = akArmor.GetSlotMask()
-    if LogicalAnd(mySlotMask, akArmor.kSlotMask31) && !LogicalAnd(mySlotMask, akArmor.kSlotMask32)
-        aiGearType = 3
-    endif
+endFunction
 
-    string ds_key = GetDatastoreKeyFromForm(akArmor)
+int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
+	int[] armor_data = new int[15]
+	int gear_type = 0
 
-    int in_ignore_list = IntListGet(_FrostData_ArmorIgnore, ds_key, 0) - 1
-	if in_ignore_list == 0
-		if aiMode == 1
-			int[] result = new int[10]
-			result[0] = 0
-			result[1] = 0
-			result[2] = 0
-			result[3] = 0
-			result[4] = 0
-			result[5] = 0
-			result[6] = 0
-			result[7] = 0
-			result[8] = 0
-			result[9] = 0
-			return result
-		elseif aiMode == 2
-			int[] result = new int[4]
-			result[0] = 0
-			result[1] = 0
-			result[2] = 0
-			result[3] = 0
-			return result
-		else
-			int[] result = new int[2]	
-			result[0] = 0
-			result[1] = 0
-			return result
-		endif
+	; The slot mask is the single source of truth for what "kind" of armor this is.
+	int armor_mask = akArmor.GetSlotMask()
+
+	; Check exceptions
+	if LogicalAnd(armor_mask, SLOTMASK_CIRCLET)
+		return armor_data
+	endif
+	if LogicalAnd(armor_mask, SLOTMASK_RING) || LogicalAnd(armor_mask, SLOTMASK_AMULET)
+		armor_data[14] = 1
+		return armor_data
 	endif
 
+	; Check base types
+	if LogicalAnd(armor_mask, SLOTMASK_BODY)
+		gear_type = GEARTYPE_BODY
+	elseif LogicalAnd(armor_mask, SLOTMASK_HAIR) || LogicalAnd(armor_mask, SLOTMASK_HEAD)
+		gear_type = GEARTYPE_HEAD
+	elseif LogicalAnd(armor_mask, SLOTMASK_HANDS)
+		gear_type = GEARTYPE_HANDS
+	elseif LogicalAnd(armor_mask, SLOTMASK_FEET)
+		gear_type = GEARTYPE_FEET
+	elseif LogicalAnd(armor_mask, SLOTMASK_CLOAK) || akArmor.HasKeyword(WAF_ClothingCloak)
+		gear_type = GEARTYPE_CLOAK
+	elseif LogicalAnd(armor_mask, SLOTMASK_SHIELD)
+		gear_type = GEARTYPE_MISC
+	endif
 
-	; TEMPORARY
-	int[] result = new int[2]
-	result[0] = (IntListGet(_FrostData_ArmorAll, ds_key, 0) - 1)
-	result[1] = (IntListGet(_FrostData_ArmorAll, ds_key, 1) - 1)
-	return result
+	if gear_type == 0
+		; No gear type found for this item. Ignore it.
+		armor_data[14] = 1
+		return armor_data
+	endif
 
+	if gear_type == GEARTYPE_BODY
+		armor_data[0] = DEFAULT_BODY_WARMTH
+		armor_data[1] = DEFAULT_BODY_COVERAGE
+	elseif gear_type == GEARTYPE_HEAD
+		; Coarsely differentiate between hoods and helms
+		if StringUtil.Find(akArmor.GetName(), "hood") != -1
+			armor_data[0] = DEFAULT_HEADHOOD_WARMTH
+			armor_data[1] = DEFAULT_HEADHOOD_COVERAGE
+		else
+			armor_data[0] = DEFAULT_HEAD_WARMTH
+			armor_data[1] = DEFAULT_HEAD_COVERAGE
+		endif
+	elseif gear_type == GEARTYPE_HANDS
+		armor_data[0] = DEFAULT_HANDS_WARMTH
+		armor_data[1] = DEFAULT_HANDS_COVERAGE
+	elseif gear_type == GEARTYPE_FEET
+		armor_data[0] = DEFAULT_FEET_WARMTH
+		armor_data[1] = DEFAULT_FEET_COVERAGE
+	elseif gear_type == GEARTYPE_CLOAK
+		armor_data[0] = DEFAULT_CLOAK_WARMTH
+		armor_data[1] = DEFAULT_CLOAK_COVERAGE
+	elseif gear_type == GEARTYPE_MISC
+		; Only process shields in this category by default.
+		armor_data[0] = DEFAULT_SHIELD_WARMTH
+		armor_data[1] = DEFAULT_SHIELD_COVERAGE
+	endif
 
-	;/if aiMode == 1
-		; Body mode - check body and all other slots, return int[10]
-		int[] result = new int[10]
-		; Body
-		result[0] = (IntListGet(_FrostData_ArmorBody, ds_key, 0) - 1)
-		result[1] = (IntListGet(_FrostData_ArmorBody, ds_key, 1) - 1)
-		; Try to set sane default values for the body
-		if result[0] == -1
-			result[0] = DEFAULT_BODY_WARMTH
-			result[1] = DEFAULT_BODY_COVERAGE
+	; Now, check extra data
+	if gear_type != GEARTYPE_HEAD && (LogicalAnd(armor_mask, SLOTMASK_HAIR) || LogicalAnd(armor_mask, SLOTMASK_HEAD))
+		; Coarsely differentiate between hoods and helms
+		if StringUtil.Find(akArmor.GetName(), "hood") != -1
+			armor_data[4] = DEFAULT_HEADHOOD_WARMTH
+			armor_data[5] = DEFAULT_HEADHOOD_COVERAGE
+		else
+			armor_data[4] = DEFAULT_HEAD_WARMTH
+			armor_data[5] = DEFAULT_HEAD_COVERAGE
 		endif
-		; Hands
-		result[2] = (IntListGet(_FrostData_ArmorHands, ds_key, 0) - 1)
-		result[3] = (IntListGet(_FrostData_ArmorHands, ds_key, 1) - 1)
-		; Head
-		result[4] = (IntListGet(_FrostData_ArmorHead, ds_key, 0) - 1)
-		result[5] = (IntListGet(_FrostData_ArmorHead, ds_key, 1) - 1)
-		; Feet
-		result[6] = (IntListGet(_FrostData_ArmorFeet, ds_key, 0) - 1)
-		result[7] = (IntListGet(_FrostData_ArmorFeet, ds_key, 1) - 1)
-		; Cloak
-		result[8] = (IntListGet(_FrostData_ArmorCloak, ds_key, 0) - 1)
-		result[9] = (IntListGet(_FrostData_ArmorCloak, ds_key, 1) - 1)
-		return result
-	elseif aiMode == 2 
-		; Head mode - check head and cloak slots, return int[4]
-		int[] result = new int[4]
-		; Head
-		result[0] = (IntListGet(_FrostData_ArmorHead, ds_key, 0) - 1)
-		result[1] = (IntListGet(_FrostData_ArmorHead, ds_key, 1) - 1)
-		; Try to set sane default values for the head
-		if result[0] == -1
-			if akArmor.HasKeyword(ClothingCirclet) || StringUtil.Find(akArmor.GetName(), "circlet") != -1
-				result[0] = 0
-				result[1] = 0
-			elseif StringUtil.Find(akArmor.GetName(), "hood") != -1
-				result[0] = DEFAULT_HEADHOOD_WARMTH
-				result[1] = DEFAULT_HEADHOOD_COVERAGE
-			else
-				result[0] = DEFAULT_HEAD_WARMTH
-				result[1] = DEFAULT_HEAD_COVERAGE
-			endif
-		endif
-		; Cloak
-		result[2] = (IntListGet(_FrostData_ArmorCloak, ds_key, 0) - 1)
-		result[3] = (IntListGet(_FrostData_ArmorCloak, ds_key, 1) - 1)
-		;FrostDebug(0, "Result: " + result)
-		return result
-	else
-		; Normal mode - check single slot, return int[2]
-		int[] result = new int[2]
-		Keyword Datastore
-		if aiGearType == 1
-			Datastore = _FrostData_ArmorBody
-		elseif aiGearType == 2
-			Datastore = _FrostData_ArmorHands
-		elseif aiGearType == 3
-			Datastore = _FrostData_ArmorHead
-		elseif aiGearType == 4
-			Datastore = _FrostData_ArmorFeet
-		elseif aiGearType == 7
-			Datastore = _FrostData_ArmorCloak
-		elseif aiGearType == 8
-			Datastore = _FrostData_ArmorShield
-		endif
-	
-		; Subtract 1 to return a falsey -1 on failure
-		result[0] = (IntListGet(Datastore, ds_key, 0) - 1)
-		result[1] = (IntListGet(Datastore, ds_key, 1) - 1)
-	
-		if result[0] == -1
-			; Try to set sane default values
-			if aiGearType == 1
-				result[0] = DEFAULT_BODY_WARMTH
-				result[1] = DEFAULT_BODY_COVERAGE
-			elseif aiGearType == 2
-				result[0] = DEFAULT_HANDS_WARMTH
-				result[1] = DEFAULT_HANDS_COVERAGE
-			elseif aiGearType == 3
-				if akArmor.HasKeyword(ClothingCirclet) || StringUtil.Find(akArmor.GetName(), "circlet") != -1
-					result[0] = 0
-					result[1] = 0
-				elseif StringUtil.Find(akArmor.GetName(), "hood") != -1
-					result[0] = DEFAULT_HEADHOOD_WARMTH
-					result[1] = DEFAULT_HEADHOOD_COVERAGE
-				else
-					result[0] = DEFAULT_HEAD_WARMTH
-					result[1] = DEFAULT_HEAD_COVERAGE
-				endif
-			elseif aiGearType == 4
-				result[0] = DEFAULT_FEET_WARMTH
-				result[1] = DEFAULT_FEET_COVERAGE
-			elseif aiGearType == 8
-				result[0] = DEFAULT_SHIELD_WARMTH
-				result[1] = DEFAULT_SHIELD_COVERAGE
-			endif
-		endif
-		;FrostDebug(0, "Result: " + result)
-		return result
-	endif/;
+	endif
+	if gear_type != GEARTYPE_HANDS && LogicalAnd(armor_mask, SLOTMASK_HANDS)
+		armor_data[6] = DEFAULT_HANDS_WARMTH
+		armor_data[7] = DEFAULT_HANDS_COVERAGE
+	endif
+	if gear_type != GEARTYPE_FEET && LogicalAnd(armor_mask, SLOTMASK_FEET)
+		armor_data[8] = DEFAULT_FEET_WARMTH
+		armor_data[9] = DEFAULT_FEET_COVERAGE
+	endif
+	if gear_type != GEARTYPE_CLOAK && (LogicalAnd(armor_mask, SLOTMASK_CLOAK) || akArmor.HasKeyword(WAF_ClothingCloak))
+		armor_data[10] = DEFAULT_CLOAK_WARMTH
+		armor_data[11] = DEFAULT_CLOAK_COVERAGE
+	endif
+
+	FrostDebug(0, "GetArmorProtectionDataByAnalysis Result: " + armor_data)
+	return armor_data
+endFunction
+
+int[] function GetArmorProtectionData(Armor akArmor)
+    string dskey = GetDatastoreKeyFromForm(akArmor)
+    int[] armor_data = GetArmorData(akArmor)
+    
+    if armor_data[14] == 1 ; Ignore
+    	return armor_data
+    endif
+
+    if armor_data[0] == -1 ; No entry for this armor.
+    	armor_data = GetArmorProtectionDataByKeyword(akArmor)
+    	if armor_data[0] == -1
+    		armor_data = GetArmorProtectionDataByAnalysis(akArmor)
+    	endif
+    endif
+
+    ; -1?
+    return armor_data
 endFunction
 
 string function GetDatastoreKeyFromForm(Armor akArmor)
@@ -471,60 +308,6 @@ string function GetDatastoreKeyFromID(int aiFormID)
 		mod_index = 0
 	endif
 	return (aiFormID % 16777216) + "___" + Game.GetModName(mod_index)
-endFunction
-
-function AddDatastoreEntryByKey(string asKey, int aiGearType, int aiWarmth, int aiCoverage)
-	; TODO: Remove
-	;/if aiGearType == 1
-		Datastore = _FrostData_ArmorBody
-	elseif aiGearType == 2
-		Datastore = _FrostData_ArmorHands
-	elseif aiGearType == 3
-		Datastore = _FrostData_ArmorHead
-	elseif aiGearType == 4
-		Datastore = _FrostData_ArmorFeet
-	elseif aiGearType == 7
-		Datastore = _FrostData_ArmorCloak
-	elseif aiGearType == 8
-		Datastore = _FrostData_ArmorShield
-	elseif aiGearType == 99
-		Datastore = _FrostData_ArmorIgnore
-	endif
-	/;
-
-	Keyword Datastore
-	if aiGearType == 99
-		Datastore = _FrostData_ArmorIgnore
-	else
-		Datastore = _FrostData_ArmorAll
-	endif
-
-	; Do we know if the entry exists already? Assume 'we know it doesn't' for now.
-	; Add 1 so we can return a falsey -1 on failure later
-	IntListAdd(Datastore, asKey, aiWarmth + 1)
-	IntListAdd(Datastore, asKey, aiCoverage + 1)
-endFunction
-
-function AddDatastoreEntryByForm(Armor akArmor, int aiGearType, int aiWarmth, int aiCoverage)
-	string ds_key = GetDatastoreKeyFromForm(akArmor)
-	Keyword Datastore
-	if aiGearType == 1
-		Datastore = _FrostData_ArmorBody
-	elseif aiGearType == 2
-		Datastore = _FrostData_ArmorHands
-	elseif aiGearType == 3
-		Datastore = _FrostData_ArmorHead
-	elseif aiGearType == 4
-		Datastore = _FrostData_ArmorFeet
-	elseif aiGearType == 7
-		Datastore = _FrostData_ArmorCloak
-	elseif aiGearType == 8
-		Datastore = _FrostData_ArmorShield
-	endif
-
-	; Do we know if the entry exists already? Assume 'yes, we know it doesn't' for now.
-	IntListAdd(Datastore, ds_key, aiWarmth + 1)
-	IntListAdd(Datastore, ds_key, aiCoverage + 1)
 endFunction
 
 function RevertDatastore()
@@ -567,6 +350,43 @@ bool function DatastoreHasKey(string asProfilePath, string asKey)
 endFunction
 
 ; CRUD
+function SetArmorDataByKey(string asKey, int aiWarmth = 0, int aiCoverage = 0,					\
+									 int aiExtraBodyWarmth = 0, int aiExtraBodyCoverage = 0, 	\
+									 int aiExtraHeadWarmth = 0, int aiExtraHeadCoverage = 0, 	\
+									 int aiExtraHandsWarmth = 0, int aiExtraHandsCoverage = 0, 	\
+									 int aiExtraFeetWarmth = 0, int aiExtraFeetCoverage = 0, 	\
+									 int aiExtraCloakWarmth = 0, int aiExtraCloakCoverage = 0, 	\
+									 int aiExtraMiscWarmth = 0, int aiExtraMiscCoverage = 0, 	\
+									 bool abIgnore = false)
+	
+	string profile_path = CONFIG_PATH + PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
+	if !DatastoreHasKey(profile_path, asKey)
+		; + 1 so that 0 is a meaningful value on Get
+		JsonUtil.IntListAdd(profile_path, asKey, aiWarmth				+ 1)
+		JsonUtil.IntListAdd(profile_path, asKey, aiCoverage				+ 1)
+		JsonUtil.IntListAdd(profile_path, asKey, aiExtraBodyWarmth		+ 1)
+		JsonUtil.IntListAdd(profile_path, asKey, aiExtraBodyCoverage	+ 1)
+		JsonUtil.IntListAdd(profile_path, asKey, aiExtraHeadWarmth		+ 1)
+		JsonUtil.IntListAdd(profile_path, asKey, aiExtraHeadCoverage	+ 1)
+		JsonUtil.IntListAdd(profile_path, asKey, aiExtraHandsWarmth		+ 1)
+		JsonUtil.IntListAdd(profile_path, asKey, aiExtraHandsCoverage	+ 1)
+		JsonUtil.IntListAdd(profile_path, asKey, aiExtraFeetWarmth		+ 1)
+		JsonUtil.IntListAdd(profile_path, asKey, aiExtraFeetCoverage	+ 1)
+		JsonUtil.IntListAdd(profile_path, asKey, aiExtraCloakWarmth		+ 1)
+		JsonUtil.IntListAdd(profile_path, asKey, aiExtraCloakCoverage	+ 1)
+		JsonUtil.IntListAdd(profile_path, asKey, aiExtraMiscWarmth		+ 1)
+		JsonUtil.IntListAdd(profile_path, asKey, aiExtraMiscCoverage	+ 1)
+		int ignore_flag
+		if abIgnore
+			ignore_flag = 1
+		else
+			ignore_flag = 0
+		endif
+		JsonUtil.IntListAdd(profile_path, dskey, ignore_flag	+ 1)
+		JsonUtil.Save(profile_path)
+	endif
+endFunction
+
 function SetArmorData(Armor akArmor, int aiWarmth = 0, int aiCoverage = 0,						\
 									 int aiExtraBodyWarmth = 0, int aiExtraBodyCoverage = 0, 	\
 									 int aiExtraHeadWarmth = 0, int aiExtraHeadCoverage = 0, 	\
@@ -769,6 +589,8 @@ int[] function GetArmorData(Armor akArmor)
 	string profile_path = CONFIG_PATH + PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
 	string dskey = GetDatastoreKeyFromForm(akArmor)
 	int[] armor_data = new int[15]
+	armor_data[0] = -1
+
 	if DatastoreHasKey(profile_path, dskey)
 		armor_data[0] = JsonUtil.IntListGet(profile_path, dskey, 0) - 1
 		armor_data[1] = JsonUtil.IntListGet(profile_path, dskey, 1) - 1
