@@ -270,12 +270,121 @@ endFunction
 function CreateProtectionKeywordValueMaps()
 	; "Ignore" keyword?
 	StandardKeywords = new Keyword[12]
-	StandardValues = new int[12]
+	StandardBodyValues = new int[12]
+	StandardHeadValues = new int[12]
+	StandardHandsValues = new int[12]
+	StandardFeetValues = new int[12]
+	StandardCloakValues = new int[12]
+	StandardMiscValues = new int[12]
 	StandardPartIndex = new int[12]
 
 	OverrideKeywords = new Keyword[72]
 	OverrideValues = new int[72]
 	OverrideExtraPartIndex = new int[72]
+
+	StandardKeywords[0] = _Frost_WarmthPoor
+	StandardKeywords[1] = _Frost_WarmthLow
+	StandardKeywords[2] = _Frost_WarmthAverage
+	StandardKeywords[3] = _Frost_WarmthGood
+	StandardKeywords[4] = _Frost_WarmthExcellent
+	StandardKeywords[5] = _Frost_WarmthMax
+	StandardKeywords[6] = _Frost_CoveragePoor
+	StandardKeywords[7] = _Frost_CoverageLow
+	StandardKeywords[8] = _Frost_CoverageAverage
+	StandardKeywords[9] = _Frost_CoverageGood
+	StandardKeywords[10] = _Frost_CoverageExcellent
+	StandardKeywords[11] = _Frost_CoverageMax
+
+	StandardBodyValues[0] = WARMTH_BODY_POOR
+	StandardBodyValues[1] = WARMTH_BODY_LOW
+	StandardBodyValues[2] = WARMTH_BODY_AVERAGE
+	StandardBodyValues[3] = WARMTH_BODY_GOOD
+	StandardBodyValues[4] = WARMTH_BODY_EXCELLENT
+	StandardBodyValues[5] = WARMTH_BODY_MAX
+	StandardBodyValues[6] = COVERAGE_BODY_POOR
+	StandardBodyValues[7] = COVERAGE_BODY_LOW
+	StandardBodyValues[8] = COVERAGE_BODY_AVERAGE
+	StandardBodyValues[9] = COVERAGE_BODY_GOOD
+	StandardBodyValues[10] = COVERAGE_BODY_EXCELLENT
+	StandardBodyValues[11] = COVERAGE_BODY_MAX
+
+	StandardHeadValues[0] = WARMTH_HEAD_POOR
+	StandardHeadValues[1] = WARMTH_HEAD_LOW
+	StandardHeadValues[2] = WARMTH_HEAD_AVERAGE
+	StandardHeadValues[3] = WARMTH_HEAD_GOOD
+	StandardHeadValues[4] = WARMTH_HEAD_EXCELLENT
+	StandardHeadValues[5] = WARMTH_HEAD_MAX
+	StandardHeadValues[6] = COVERAGE_HEAD_POOR
+	StandardHeadValues[7] = COVERAGE_HEAD_LOW
+	StandardHeadValues[8] = COVERAGE_HEAD_AVERAGE
+	StandardHeadValues[9] = COVERAGE_HEAD_GOOD
+	StandardHeadValues[10] = COVERAGE_HEAD_EXCELLENT
+	StandardHeadValues[11] = COVERAGE_HEAD_MAX
+
+	StandardHandsValues[0] = WARMTH_HANDS_POOR
+	StandardHandsValues[1] = WARMTH_HANDS_LOW
+	StandardHandsValues[2] = WARMTH_HANDS_AVERAGE
+	StandardHandsValues[3] = WARMTH_HANDS_GOOD
+	StandardHandsValues[4] = WARMTH_HANDS_EXCELLENT
+	StandardHandsValues[5] = WARMTH_HANDS_MAX
+	StandardHandsValues[6] = COVERAGE_HANDS_POOR
+	StandardHandsValues[7] = COVERAGE_HANDS_LOW
+	StandardHandsValues[8] = COVERAGE_HANDS_AVERAGE
+	StandardHandsValues[9] = COVERAGE_HANDS_GOOD
+	StandardHandsValues[10] = COVERAGE_HANDS_EXCELLENT
+	StandardHandsValues[11] = COVERAGE_HANDS_MAX
+
+	StandardFeetValues[0] = WARMTH_FEET_POOR
+	StandardFeetValues[1] = WARMTH_FEET_LOW
+	StandardFeetValues[2] = WARMTH_FEET_AVERAGE
+	StandardFeetValues[3] = WARMTH_FEET_GOOD
+	StandardFeetValues[4] = WARMTH_FEET_EXCELLENT
+	StandardFeetValues[5] = WARMTH_FEET_MAX
+	StandardFeetValues[6] = COVERAGE_FEET_POOR
+	StandardFeetValues[7] = COVERAGE_FEET_LOW
+	StandardFeetValues[8] = COVERAGE_FEET_AVERAGE
+	StandardFeetValues[9] = COVERAGE_FEET_GOOD
+	StandardFeetValues[10] = COVERAGE_FEET_EXCELLENT
+	StandardFeetValues[11] = COVERAGE_FEET_MAX
+
+	StandardCloakValues[0] = WARMTH_CLOAK_POOR
+	StandardCloakValues[1] = WARMTH_CLOAK_LOW
+	StandardCloakValues[2] = WARMTH_CLOAK_AVERAGE
+	StandardCloakValues[3] = WARMTH_CLOAK_GOOD
+	StandardCloakValues[4] = WARMTH_CLOAK_EXCELLENT
+	StandardCloakValues[5] = WARMTH_CLOAK_MAX
+	StandardCloakValues[6] = COVERAGE_CLOAK_POOR
+	StandardCloakValues[7] = COVERAGE_CLOAK_LOW
+	StandardCloakValues[8] = COVERAGE_CLOAK_AVERAGE
+	StandardCloakValues[9] = COVERAGE_CLOAK_GOOD
+	StandardCloakValues[10] = COVERAGE_CLOAK_EXCELLENT
+	StandardCloakValues[11] = COVERAGE_CLOAK_MAX
+
+	StandardMiscValues[0] = WARMTH_MISC_POOR
+	StandardMiscValues[1] = WARMTH_MISC_LOW
+	StandardMiscValues[2] = WARMTH_MISC_AVERAGE
+	StandardMiscValues[3] = WARMTH_MISC_GOOD
+	StandardMiscValues[4] = WARMTH_MISC_EXCELLENT
+	StandardMiscValues[5] = WARMTH_MISC_MAX
+	StandardMiscValues[6] = COVERAGE_MISC_POOR
+	StandardMiscValues[7] = COVERAGE_MISC_LOW
+	StandardMiscValues[8] = COVERAGE_MISC_AVERAGE
+	StandardMiscValues[9] = COVERAGE_MISC_GOOD
+	StandardMiscValues[10] = COVERAGE_MISC_EXCELLENT
+	StandardMiscValues[11] = COVERAGE_MISC_MAX
+
+	StandardPartIndex[0] = 0
+	StandardPartIndex[1] = 0
+	StandardPartIndex[2] = 0
+	StandardPartIndex[3] = 0
+	StandardPartIndex[4] = 0
+	StandardPartIndex[5] = 0
+	StandardPartIndex[6] = 1
+	StandardPartIndex[7] = 1
+	StandardPartIndex[8] = 1
+	StandardPartIndex[9] = 1
+	StandardPartIndex[10] = 1
+	StandardPartIndex[11] = 1
 
 	OverrideKeywords[0] = _Frost_ExtraBodyWarmthPoor
 	OverrideKeywords[1] = _Frost_ExtraBodyWarmthLow
@@ -602,7 +711,7 @@ int[] function GetArmorProtectionDataByKeyword(Armor akArmor)
 		int idx = StandardKeywords.Find(k)
 		if idx != -1
 			; standard keyword
-			int determined_value = Get
+			int determined_value = GetArmorProtectionDataByType(akArmor, idx)
 			armor_data[StandardPartIndex[idx]] = determined_value
 		else
 			; extra parts
@@ -616,11 +725,52 @@ int[] function GetArmorProtectionDataByKeyword(Armor akArmor)
 	return armor_data
 endFunction
 
-GetArmorProtectionDataByType
+int function GetArmorProtectionDataByType(Armor akArmor, int aiStandardKeywordIndex)
+	; The slot mask is the single source of truth for what "kind" of armor this is.
+	int armor_mask = akArmor.GetSlotMask()
+	int gear_type = GetGearType(akArmor, armor_mask, abStrictMode = false)
+	if gear_type == GEARTYPE_BODY
+		return StandardBodyValues[aiStandardKeywordIndex]
+	elseif gear_type == GEARTYPE_HEAD
+		return StandardHeadValues[aiStandardKeywordIndex]
+	elseif gear_type == GEARTYPE_HANDS
+		return StandardHandsValues[aiStandardKeywordIndex]
+	elseif gear_type == GEARTYPE_FEET
+		return StandardFeetValues[aiStandardKeywordIndex]
+	elseif gear_type == GEARTYPE_CLOAK
+		return StandardCloakValues[aiStandardKeywordIndex]
+	elseif gear_type == GEARTYPE_MISC
+		return StandardMiscValues[aiStandardKeywordIndex]
+	endif
+endFunction
+
+int function GetGearType(Armor akArmor, int aiSlotMask, bool abStrictMode = true)
+	; Check base types
+	if LogicalAnd(aiSlotMask, SLOTMASK_BODY)
+		return GEARTYPE_BODY
+	elseif LogicalAnd(aiSlotMask, SLOTMASK_HAIR) || LogicalAnd(aiSlotMask, SLOTMASK_HEAD)
+		return GEARTYPE_HEAD
+	elseif LogicalAnd(aiSlotMask, SLOTMASK_HANDS)
+		return GEARTYPE_HANDS
+	elseif LogicalAnd(aiSlotMask, SLOTMASK_FEET)
+		return GEARTYPE_FEET
+	elseif LogicalAnd(aiSlotMask, SLOTMASK_CLOAK) || akArmor.HasKeyword(WAF_ClothingCloak)
+		return GEARTYPE_CLOAK
+	else
+		if abStrictMode
+			if LogicalAnd(aiSlotMask, SLOTMASK_SHIELD)
+				return GEARTYPE_MISC
+			else
+				return -1
+			endif
+		else
+			return GEARTYPE_MISC
+		endif
+	endif
+endFunction
 
 int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
 	int[] armor_data = new int[15]
-	int gear_type = 0
 
 	; The slot mask is the single source of truth for what "kind" of armor this is.
 	int armor_mask = akArmor.GetSlotMask()
@@ -634,22 +784,9 @@ int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
 		return armor_data
 	endif
 
-	; Check base types
-	if LogicalAnd(armor_mask, SLOTMASK_BODY)
-		gear_type = GEARTYPE_BODY
-	elseif LogicalAnd(armor_mask, SLOTMASK_HAIR) || LogicalAnd(armor_mask, SLOTMASK_HEAD)
-		gear_type = GEARTYPE_HEAD
-	elseif LogicalAnd(armor_mask, SLOTMASK_HANDS)
-		gear_type = GEARTYPE_HANDS
-	elseif LogicalAnd(armor_mask, SLOTMASK_FEET)
-		gear_type = GEARTYPE_FEET
-	elseif LogicalAnd(armor_mask, SLOTMASK_CLOAK) || akArmor.HasKeyword(WAF_ClothingCloak)
-		gear_type = GEARTYPE_CLOAK
-	elseif LogicalAnd(armor_mask, SLOTMASK_SHIELD)
-		gear_type = GEARTYPE_MISC
-	endif
+	int gear_type = GetGearType(akArmor, armor_mask, abStrictMode = true)
 
-	if gear_type == 0
+	if gear_type == -1
 		; No gear type found for this item. Ignore it.
 		armor_data[14] = 1
 		return armor_data
