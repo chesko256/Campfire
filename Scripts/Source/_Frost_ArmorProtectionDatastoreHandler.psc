@@ -30,6 +30,7 @@ Keyword property ClothingFeet auto
 FormList property _Camp_Backpacks auto
 
 ; Override keywords
+Keyword property _Frost_Ignore auto
 Keyword property _Frost_WarmthPoor auto
 Keyword property _Frost_WarmthLow auto
 Keyword property _Frost_WarmthAverage auto
@@ -656,37 +657,8 @@ int function GetGearType(Form akBaseObject)
 	endif
 endFunction
 
-bool function DatastoreHasEntry(string ds_key, int aiDatastoreType)
-	Keyword Datastore
-	if aiDatastoreType == 1
-		Datastore = _FrostData_ArmorBody
-	elseif aiDatastoreType == 2
-		Datastore = _FrostData_ArmorHands
-	elseif aiDatastoreType == 3
-		Datastore = _FrostData_ArmorHead
-	elseif aiDatastoreType == 4
-		Datastore = _FrostData_ArmorFeet
-	elseif aiDatastoreType == 7
-		Datastore = _FrostData_ArmorCloak
-	elseif aiDatastoreType == 8
-		Datastore = _FrostData_ArmorShield
-	elseif aiDatastoreType == 99
-		Datastore = _FrostData_ArmorIgnore
-	endif
-
-	int result = IntListGet(Datastore, ds_key, 0) - 1
-	if result >= 0
-		return true
-	else
-		return false
-	endif
-endFunction
-
 int[] function GetTotalProtectionValues(Armor akArmor)
 	int[] armor_data = new int[2]
-
-	int warmth_val = 0
-	int cover_val = 0
 	int[] ap = GetArmorProtectionData(akArmor)
 
 	; -1? Original contract with ClothingSystem maintained (3.1).
@@ -696,14 +668,19 @@ int[] function GetTotalProtectionValues(Armor akArmor)
 		return armor_data
 	endif
 
-	warmth_val = ap[0] + ap[2] + ap[4] + ap[6] + ap[8] + ap[10] + ap[12]
-	cover_val = ap[1] + ap[3] + ap[5] + ap[7] + ap[9] + ap[11] + ap[13]
+	armor_data[0] = ap[0] + ap[2] + ap[4] + ap[6] + ap[8] + ap[10] + ap[12]
+	armor_data[1] = ap[1] + ap[3] + ap[5] + ap[7] + ap[9] + ap[11] + ap[13]
 
 	return armor_data
 endFunction
 
 int[] function GetArmorProtectionDataByKeyword(Armor akArmor)
 	int[] armor_data = new int[15]
+	if akArmor.HasKeyword(_Frost_Ignore)
+		armor_data[14] = 1
+		return armor_data
+	endif
+
 	int keyword_count = akArmor.GetNumKeywords()
 	int i = 0
 	while i < keyword_count
@@ -914,7 +891,15 @@ endFunction
 
 ; Frostfall 3.1 Stuff
 
-; Expose in CampUtil with ArmorProtectionDataExists(Armor akArmor)
+bool function CurrentProfileHasKey(string asKey)
+	string profile_path = CONFIG_PATH + PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
+	if JsonUtil.IntListGet(profile_path, asKey, 0) != 0
+		return true
+	else
+		return false
+	endif
+endFunction
+
 bool function DatastoreHasKey(string asProfilePath, string asKey)
 	if JsonUtil.IntListGet(asProfilePath, asKey, 0) != 0
 		return true
@@ -1181,6 +1166,8 @@ int[] function GetArmorData(Armor akArmor)
 		armor_data[12] = JsonUtil.IntListGet(profile_path, dskey, 12) - 1
 		armor_data[13] = JsonUtil.IntListGet(profile_path, dskey, 13) - 1
 		armor_data[14] = JsonUtil.IntListGet(profile_path, dskey, 14) - 1
+	else
+		armor_data = GetDefaultArmorData(akArmor, abRawValues = true)
 	endif
 	return armor_data
 endFunction

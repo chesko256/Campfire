@@ -1709,6 +1709,35 @@ int gear_coverage = FrostUtil.GetPlayerArmorCoverage()
     return clothing_system.GetArmorCoverage()
 endFunction
 
+;/********f* FrostUtil/ArmorProtectionDataExists
+* API VERSION ADDED
+* 3
+*
+* DESCRIPTION
+* Whether or not the player's current profile (or the default values profile) contains data about this armor.
+*
+* SYNTAX
+*/;
+int function ArmorProtectionDataExists(Armor akArmor) global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* True if data exists; False otherwise.
+*
+* EXAMPLES
+;Does the player have warmth and coverage data for my cool armor?
+bool data_exists = FrostUtil.ArmorProtectionDataExists(MyCoolArmor)
+* NOTES
+* This function only looks at profile data, and not other factors that could determine
+* the protection data of this gear (like keywords).
+;*********/;
+    _Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+    string dskey = GetDatastoreKeyFromForm(akArmor)
+    return handler.CurrentProfileHasKey(dskey)
+endFunction
+
 
 ; Events ==========================================================================================
 
