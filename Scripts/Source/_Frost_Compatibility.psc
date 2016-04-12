@@ -656,9 +656,9 @@ bool function CheckJSONReadWrite()
 
 	    ; Success - Clear the values for the next test.
 		JsonUtil.IntListClear(path, test_key)
-	    return true
-	else
 		return true
+	else
+		return false
 	endif
 endFunction
 
