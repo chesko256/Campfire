@@ -870,26 +870,6 @@ function RevertDatastore()
 	; DEPRECATED - Just reinitialize defaults for modded armor instead.
 	RestoreAllDefaultArmorData()
 
-	;/FrostDebug(1, "Setting default settings for body armor...")
-	SetDefaults_Body()
-	FrostDebug(1, "Setting default settings for body armor...done.")
-	FrostDebug(1, "Setting default settings for head armor...")
-	SetDefaults_Head()
-	FrostDebug(1, "Setting default settings for head armor...done.")
-	FrostDebug(1, "Setting default settings for hands armor...")
-	SetDefaults_Hands()
-	FrostDebug(1, "Setting default settings for hands armor...done.")
-	FrostDebug(1, "Setting default settings for feet armor...")
-	SetDefaults_Feet()
-	FrostDebug(1, "Setting default settings for feet armor...done.")
-	FrostDebug(1, "Setting default settings for cloak armor...")
-	SetDefaults_Cloak()
-	FrostDebug(1, "Setting default settings for cloak armor...done.")
-	FrostDebug(1, "Setting default settings for shield armor...")
-	SetDefaults_Shield()
-	FrostDebug(1, "Setting default settings for shield armor...done.")
-	/;
-
 	_Frost_DatastoreInitialized.SetValueInt(2)
 endFunction
 

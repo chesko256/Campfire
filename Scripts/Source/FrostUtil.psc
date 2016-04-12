@@ -1735,7 +1735,7 @@ bool data_exists = FrostUtil.ArmorProtectionDataExists(MyCoolArmor)
 ;*********/;
     _Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
     string dskey = GetDatastoreKeyFromForm(akArmor)
-    return handler.CurrentProfileHasKey(dskey)
+    return handler.DatastoreHasKey(dskey)
 endFunction
 
 
