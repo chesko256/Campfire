@@ -6,15 +6,6 @@ import FrostUtil
 import _FrostInternal
 import Math
 
-; TODO: Remove
-Keyword property _FrostData_ArmorAll auto
-Keyword property _FrostData_ArmorBody auto
-Keyword property _FrostData_ArmorHead auto
-Keyword property _FrostData_ArmorHands auto
-Keyword property _FrostData_ArmorFeet auto
-Keyword property _FrostData_ArmorCloak auto
-Keyword property _FrostData_ArmorShield auto
-Keyword property _FrostData_ArmorIgnore auto
 Keyword property WAF_ClothingCloak auto
 
 Keyword property ClothingCirclet auto
@@ -907,8 +898,15 @@ function SetArmorDataByKey(string asKey, int aiWarmth = 0, int aiCoverage = 0,		
 									 int aiExtraFeetWarmth = 0, int aiExtraFeetCoverage = 0, 	\
 									 int aiExtraCloakWarmth = 0, int aiExtraCloakCoverage = 0, 	\
 									 int aiExtraMiscWarmth = 0, int aiExtraMiscCoverage = 0, 	\
-									 bool abIgnore = false)
-	string profile_path = CONFIG_PATH + PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
+									 bool abIgnore = false, bool abExportToDefaults = false)
+	
+	string profile_path
+	if abExportToDefaults
+		profile_path = CONFIG_PATH + ARMOR_DEFAULT_PREFIX
+	else
+		profile_path = CONFIG_PATH + PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
+	endif
+	
 	if !ProfileHasKey(profile_path, asKey)
 		; + 1 so that 0 is a meaningful value on Get
 		JsonUtil.IntListAdd(profile_path, asKey, aiWarmth				+ 1)
@@ -1231,3 +1229,13 @@ function RestoreAllDefaultArmorData()
 	string profile_path = CONFIG_PATH + PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
 	JsonUtil.ClearAll(CONFIG_PATH + PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt())
 endFunction
+
+
+; DEPRECATED
+Keyword property _FrostData_ArmorBody auto
+Keyword property _FrostData_ArmorHead auto
+Keyword property _FrostData_ArmorHands auto
+Keyword property _FrostData_ArmorFeet auto
+Keyword property _FrostData_ArmorCloak auto
+Keyword property _FrostData_ArmorShield auto
+Keyword property _FrostData_ArmorIgnore auto
