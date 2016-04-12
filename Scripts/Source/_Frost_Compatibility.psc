@@ -212,8 +212,7 @@ function RunCompatibility()
 	VanillaGameLoadUp()
 
 	trace("[Frostfall]======================================================================================================")
-	trace("[Frostfall]     Frostfall is now performing compatibility checks. Papyrus warnings about missing or              ")
-	trace("[Frostfall]             unloaded files may follow. This is NORMAL and can be ignored.   		                    ")
+	trace("[Frostfall]                          Frostfall is now performing compatibility checks.                           ")
 	trace("[Frostfall]======================================================================================================")
 	
 	if _Frost_Upgraded_3_0_1.GetValueInt() != 2
