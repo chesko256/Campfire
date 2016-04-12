@@ -171,6 +171,7 @@ bool added_spell_books = false
 GlobalVariable property _Frost_Setting_1PAnimationAllowed auto
 GlobalVariable property _Frost_Upgraded_3_0_1 auto
 GlobalVariable property _Frost_Upgraded_3_0_2 auto
+GlobalVariable property _Frost_Upgraded_3_1 auto
 
 Event OnPlayerLoadGame()
 	RunCompatibility()
@@ -221,6 +222,10 @@ function RunCompatibility()
 
 	if _Frost_Upgraded_3_0_2.GetValueInt() != 2
 		Upgrade_3_0_2()
+	endif
+
+	if _Frost_Upgraded_3_1.GetValueInt() != 2
+		Upgrade_3_1()
 	endif
 
 	; Update the previous version value with the current version
@@ -500,6 +505,104 @@ function Upgrade_3_0_2()
 
 	trace("[Frostfall] Upgraded to 3.0.2.")
 	_Frost_Upgraded_3_0_2.SetValueInt(2)
+endFunction
+
+function Upgrade_3_1()
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+	handler.CreateProtectionKeywordValueMaps()
+
+	; Get rid of the old data
+	int cleared_count = 0
+	if _Frost_PreviousVersion.GetValue() < 3.1
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "0")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "1")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "2")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "3")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "4")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "5")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "6")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "7")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "8")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "9")
+
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "0")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "1")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "2")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "3")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "4")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "5")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "6")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "7")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "8")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "9")
+
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "0")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "1")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "2")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "3")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "4")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "5")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "6")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "7")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "8")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "9")
+
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "0")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "1")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "2")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "3")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "4")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "5")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "6")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "7")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "8")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "9")
+
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "0")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "1")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "2")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "3")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "4")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "5")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "6")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "7")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "8")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "9")
+
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "0")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "1")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "2")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "3")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "4")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "5")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "6")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "7")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "8")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "9")
+
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "0")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "1")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "2")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "3")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "4")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "5")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "6")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "7")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "8")
+		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "9")
+	endif
+
+	; Create new default data
+	handler.SetDefaults_Body()
+	handler.SetDefaults_Hands()
+	handler.SetDefaults_Head()
+	handler.SetDefaults_Feet()
+	handler.SetDefaults_Cloak()
+	handler.SetDefaults_Shield()
+
+	trace("[Frostfall] Upgrade cleared " + cleared_count + " old records.")
+	trace("[Frostfall] Upgraded to 3.1.")
+	_Frost_Upgraded_3_1.SetValueInt(2)
 endFunction
 
 function RunCompatibilityArmors()
@@ -1105,42 +1208,34 @@ bool function IsPointInPolygon(float[] polyX, float[] polyY, float x, float y)
 endFunction
 
 
-
-
-
-
-
-
 ; Equipment Compatibility
 
 function NFHLoadUp()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
 	; Check if already loaded
-	if handler.DatastoreHasEntry("18655___Northborn Fur Hoods.esp", 3)
+	if handler.DatastoreHasEntry("18655___Northborn Fur Hoods.esp")
 		return
 	endif
 
-	
-
-	handler.SetArmorDataByKey("18655___Northborn Fur Hoods.esp", 45, 14) ; ArmorFurHoodNsLtWhite
-	handler.SetArmorDataByKey("18654___Northborn Fur Hoods.esp", 45, 14) ; ArmorFurHoodNsLtBlack
-	handler.SetArmorDataByKey("18653___Northborn Fur Hoods.esp", 45, 14) ; ArmorFurHoodNsLt
-	handler.SetArmorDataByKey("18652___Northborn Fur Hoods.esp", 45, 14) ; ArmorFurHoodNsHvWhite
-	handler.SetArmorDataByKey("18651___Northborn Fur Hoods.esp", 45, 14) ; ArmorFurHoodNsHvBlack
-	handler.SetArmorDataByKey("18650___Northborn Fur Hoods.esp", 45, 14) ; ArmorFurHoodNsHv
-	handler.SetArmorDataByKey("18649___Northborn Fur Hoods.esp", 45, 14) ; ArmorFurHoodNsBlack
-	handler.SetArmorDataByKey("18648___Northborn Fur Hoods.esp", 45, 14) ; ArmorFurHoodNs
-	handler.SetArmorDataByKey("7567___Northborn Fur Hoods.esp", 45, 14) ; ArmorFurHoodLtWhite
-	handler.SetArmorDataByKey("8949___Northborn Fur Hoods.esp", 45, 14) ; ArmorFurHoodHvBlack
-	handler.SetArmorDataByKey("764315___Northborn Fur Hoods.esp", 45, 14) ; ArmorFurHoodLt
-	handler.SetArmorDataByKey("7566___Northborn Fur Hoods.esp", 45, 14) ; ArmorFurHoodWhite
-	handler.SetArmorDataByKey("764314___Northborn Fur Hoods.esp", 45, 14) ; ArmorFurHood
-	handler.SetArmorDataByKey("8957___Northborn Fur Hoods.esp", 45, 14) ; ArmorFurHoodLtBlack
-	handler.SetArmorDataByKey("8956___Northborn Fur Hoods.esp", 45, 14) ; ArmorFurHoodBlack
-	handler.SetArmorDataByKey("764316___Northborn Fur Hoods.esp", 45, 14) ; ArmorFurHoodHv
-	handler.SetArmorDataByKey("6185___Northborn Fur Hoods.esp", 45, 14) ; ArmorFurHoodHvWhite
-	handler.SetArmorDataByKey("18656___Northborn Fur Hoods.esp", 45, 14) ; ArmorFurHoodNsWhite
+	handler.SetArmorDataByKey("18655___Northborn Fur Hoods.esp", 45, 14, abExportToDefaults = true) ; ArmorFurHoodNsLtWhite
+	handler.SetArmorDataByKey("18654___Northborn Fur Hoods.esp", 45, 14, abExportToDefaults = true) ; ArmorFurHoodNsLtBlack
+	handler.SetArmorDataByKey("18653___Northborn Fur Hoods.esp", 45, 14, abExportToDefaults = true) ; ArmorFurHoodNsLt
+	handler.SetArmorDataByKey("18652___Northborn Fur Hoods.esp", 45, 14, abExportToDefaults = true) ; ArmorFurHoodNsHvWhite
+	handler.SetArmorDataByKey("18651___Northborn Fur Hoods.esp", 45, 14, abExportToDefaults = true) ; ArmorFurHoodNsHvBlack
+	handler.SetArmorDataByKey("18650___Northborn Fur Hoods.esp", 45, 14, abExportToDefaults = true) ; ArmorFurHoodNsHv
+	handler.SetArmorDataByKey("18649___Northborn Fur Hoods.esp", 45, 14, abExportToDefaults = true) ; ArmorFurHoodNsBlack
+	handler.SetArmorDataByKey("18648___Northborn Fur Hoods.esp", 45, 14, abExportToDefaults = true) ; ArmorFurHoodNs
+	handler.SetArmorDataByKey("7567___Northborn Fur Hoods.esp", 45, 14, abExportToDefaults = true) ; ArmorFurHoodLtWhite
+	handler.SetArmorDataByKey("8949___Northborn Fur Hoods.esp", 45, 14, abExportToDefaults = true) ; ArmorFurHoodHvBlack
+	handler.SetArmorDataByKey("764315___Northborn Fur Hoods.esp", 45, 14, abExportToDefaults = true) ; ArmorFurHoodLt
+	handler.SetArmorDataByKey("7566___Northborn Fur Hoods.esp", 45, 14, abExportToDefaults = true) ; ArmorFurHoodWhite
+	handler.SetArmorDataByKey("764314___Northborn Fur Hoods.esp", 45, 14, abExportToDefaults = true) ; ArmorFurHood
+	handler.SetArmorDataByKey("8957___Northborn Fur Hoods.esp", 45, 14, abExportToDefaults = true) ; ArmorFurHoodLtBlack
+	handler.SetArmorDataByKey("8956___Northborn Fur Hoods.esp", 45, 14, abExportToDefaults = true) ; ArmorFurHoodBlack
+	handler.SetArmorDataByKey("764316___Northborn Fur Hoods.esp", 45, 14, abExportToDefaults = true) ; ArmorFurHoodHv
+	handler.SetArmorDataByKey("6185___Northborn Fur Hoods.esp", 45, 14, abExportToDefaults = true) ; ArmorFurHoodHvWhite
+	handler.SetArmorDataByKey("18656___Northborn Fur Hoods.esp", 45, 14, abExportToDefaults = true) ; ArmorFurHoodNsWhite
 endFunction
 
 function COSLoadUp()
@@ -1173,136 +1268,136 @@ function AddCOSDatastoreEntries(string asPluginName)
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
 	; Check if already loaded
-	if handler.DatastoreHasEntry("58747___" + asPluginName, 7)
+	if handler.DatastoreHasEntry("58747___" + asPluginName)
 		return
 	endif
 
 	;==========BURLAP CLOAKS===========
-	handler.SetArmorDataByKey("58747___" + asPluginName, 5, 5) ; CloakForswornAlt
-	handler.SetArmorDataByKey("53213___" + asPluginName, 5, 5) ; CloakBurned
-	handler.SetArmorDataByKey("49074___" + asPluginName, 5, 5) ; CloakAshlander1
-	handler.SetArmorDataByKey("33856___" + asPluginName, 5, 5) ; CloakHjarvoBlanket
-	handler.SetArmorDataByKey("62998___" + asPluginName, 5, 5) ; CloakDwemerCeremonial
-	handler.SetArmorDataByKey("62977___" + asPluginName, 5, 5) ; CloakAshlander2
-	handler.SetArmorDataByKey("61588___" + asPluginName, 5, 5) ; CloakNecroAlt
-	handler.SetArmorDataByKey("28327___" + asPluginName, 5, 5) ; CloakDwemer
-	handler.SetArmorDataByKey("28329___" + asPluginName, 5, 5) ; CloakDwemerAlt
-	handler.SetArmorDataByKey("53221___" + asPluginName, 5, 5) ; CloakWarmSands
-	handler.SetArmorDataByKey("67140___" + asPluginName, 5, 5) ; CloakDragonPriest
-	handler.SetArmorDataByKey("58751___" + asPluginName, 5, 5) ; CloakWildHunt
-	handler.SetArmorDataByKey("61587___" + asPluginName, 5, 5) ; CloakNecro
-	handler.SetArmorDataByKey("75456___" + asPluginName, 5, 5) ; CloakShortLover
-	handler.SetArmorDataByKey("75455___" + asPluginName, 5, 5) ; CloakShortRedEagle
-	handler.SetArmorDataByKey("76856___" + asPluginName, 5, 5) ; CloakShortBlackTalos
-	handler.SetArmorDataByKey("76854___" + asPluginName, 5, 5) ; CloakShortSilverhand
-	handler.SetArmorDataByKey("76852___" + asPluginName, 5, 5) ; CloakShortStormcloak
-	handler.SetArmorDataByKey("76850___" + asPluginName, 5, 5) ; CloakShortMossy
-	handler.SetArmorDataByKey("74045___" + asPluginName, 5, 5) ; CloakDPOtar
-	handler.SetArmorDataByKey("74046___" + asPluginName, 5, 5) ; CloakDPVokun
-	handler.SetArmorDataByKey("74047___" + asPluginName, 5, 5) ; CloakDPVolsung
-	handler.SetArmorDataByKey("74048___" + asPluginName, 5, 5) ; CloakDPRahgot
-	handler.SetArmorDataByKey("74043___" + asPluginName, 5, 5) ; CloakDPKrosis
-	handler.SetArmorDataByKey("74044___" + asPluginName, 5, 5) ; CloakDPMorokei
-	handler.SetArmorDataByKey("68520___" + asPluginName, 5, 5) ; CloakDPHevnoraak
-	handler.SetArmorDataByKey("68522___" + asPluginName, 5, 5) ; CloakDPNahkriin
-	handler.SetArmorDataByKey("62979___" + asPluginName, 5, 5) ; CloakBlackBurlap
-	handler.SetArmorDataByKey("62980___" + asPluginName, 5, 5) ; CloakBlueBurlap
-	handler.SetArmorDataByKey("62981___" + asPluginName, 5, 5) ; CloakBrownBurlap
-	handler.SetArmorDataByKey("62982___" + asPluginName, 5, 5) ; CloakCrimsonBurlap
-	handler.SetArmorDataByKey("62983___" + asPluginName, 5, 5) ; CloakGreenBurlap
-	handler.SetArmorDataByKey("62984___" + asPluginName, 5, 5) ; CloakGreyBurlap
-	handler.SetArmorDataByKey("62985___" + asPluginName, 5, 5) ; CloakWhiteBurlap
-	handler.SetArmorDataByKey("74062___" + asPluginName, 5, 5) ; CloakShortBlueBurlap
-	handler.SetArmorDataByKey("74063___" + asPluginName, 5, 5) ; CloakShortBlackBurlap
-	handler.SetArmorDataByKey("74066___" + asPluginName, 5, 5) ; CloakShortBrownBurlap
-	handler.SetArmorDataByKey("74068___" + asPluginName, 5, 5) ; CloakShortCrimsonBurlap
-	handler.SetArmorDataByKey("74070___" + asPluginName, 5, 5) ; CloakShortGreenBurlap
-	handler.SetArmorDataByKey("74072___" + asPluginName, 5, 5) ; CloakShortGreyBurlap
-	handler.SetArmorDataByKey("74074___" + asPluginName, 5, 5) ; CloakShortWhiteBurlap
+	handler.SetArmorDataByKey("58747___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakForswornAlt
+	handler.SetArmorDataByKey("53213___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakBurned
+	handler.SetArmorDataByKey("49074___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakAshlander1
+	handler.SetArmorDataByKey("33856___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakHjarvoBlanket
+	handler.SetArmorDataByKey("62998___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakDwemerCeremonial
+	handler.SetArmorDataByKey("62977___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakAshlander2
+	handler.SetArmorDataByKey("61588___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakNecroAlt
+	handler.SetArmorDataByKey("28327___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakDwemer
+	handler.SetArmorDataByKey("28329___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakDwemerAlt
+	handler.SetArmorDataByKey("53221___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakWarmSands
+	handler.SetArmorDataByKey("67140___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakDragonPriest
+	handler.SetArmorDataByKey("58751___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakWildHunt
+	handler.SetArmorDataByKey("61587___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakNecro
+	handler.SetArmorDataByKey("75456___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakShortLover
+	handler.SetArmorDataByKey("75455___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakShortRedEagle
+	handler.SetArmorDataByKey("76856___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakShortBlackTalos
+	handler.SetArmorDataByKey("76854___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakShortSilverhand
+	handler.SetArmorDataByKey("76852___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakShortStormcloak
+	handler.SetArmorDataByKey("76850___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakShortMossy
+	handler.SetArmorDataByKey("74045___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakDPOtar
+	handler.SetArmorDataByKey("74046___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakDPVokun
+	handler.SetArmorDataByKey("74047___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakDPVolsung
+	handler.SetArmorDataByKey("74048___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakDPRahgot
+	handler.SetArmorDataByKey("74043___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakDPKrosis
+	handler.SetArmorDataByKey("74044___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakDPMorokei
+	handler.SetArmorDataByKey("68520___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakDPHevnoraak
+	handler.SetArmorDataByKey("68522___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakDPNahkriin
+	handler.SetArmorDataByKey("62979___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakBlackBurlap
+	handler.SetArmorDataByKey("62980___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakBlueBurlap
+	handler.SetArmorDataByKey("62981___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakBrownBurlap
+	handler.SetArmorDataByKey("62982___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakCrimsonBurlap
+	handler.SetArmorDataByKey("62983___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakGreenBurlap
+	handler.SetArmorDataByKey("62984___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakGreyBurlap
+	handler.SetArmorDataByKey("62985___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakWhiteBurlap
+	handler.SetArmorDataByKey("74062___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakShortBlueBurlap
+	handler.SetArmorDataByKey("74063___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakShortBlackBurlap
+	handler.SetArmorDataByKey("74066___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakShortBrownBurlap
+	handler.SetArmorDataByKey("74068___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakShortCrimsonBurlap
+	handler.SetArmorDataByKey("74070___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakShortGreenBurlap
+	handler.SetArmorDataByKey("74072___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakShortGreyBurlap
+	handler.SetArmorDataByKey("74074___" + asPluginName, 5, 5, abExportToDefaults = true) ; CloakShortWhiteBurlap
 	
 	;==========LINEN CLOAKS===========
-	handler.SetArmorDataByKey("58748___" + asPluginName, 10, 10) ; CloakImperialGold
-	handler.SetArmorDataByKey("40785___" + asPluginName, 10, 10) ; CloakKvatch
-	handler.SetArmorDataByKey("46316___" + asPluginName, 10, 10) ; CloakVaermina
-	handler.SetArmorDataByKey("32476___" + asPluginName, 10, 10) ; CloakFallWinterhold
-	handler.SetArmorDataByKey("25551___" + asPluginName, 10, 10) ; CloakThalmorAlt
-	handler.SetArmorDataByKey("24169___" + asPluginName, 10, 10) ; CloakThalmor
-	handler.SetArmorDataByKey("25552___" + asPluginName, 10, 10) ; CloakThalmorAltEnch
-	handler.SetArmorDataByKey("58749___" + asPluginName, 10, 10) ; CloakImperialSilver
-	handler.SetArmorDataByKey("62995___" + asPluginName, 10, 10) ; CloakDwemerPurple
-	handler.SetArmorDataByKey("53223___" + asPluginName, 10, 10) ; CloakSolitudeLinen
-	handler.SetArmorDataByKey("42172___" + asPluginName, 10, 10) ; CloakMarkarthLinen
-	handler.SetArmorDataByKey("42170___" + asPluginName, 10, 10) ; CloakFalkreathLinen
-	handler.SetArmorDataByKey("38022___" + asPluginName, 10, 10) ; CloakRiftenLinen
-	handler.SetArmorDataByKey("22786___" + asPluginName, 10, 10) ; CloakLinenBrownHealth02
-	handler.SetArmorDataByKey("21380___" + asPluginName, 10, 10) ; CloakWhiterunLinen
-	handler.SetArmorDataByKey("21390___" + asPluginName, 10, 10) ; CloakBrownLinen
-	handler.SetArmorDataByKey("21391___" + asPluginName, 10, 10) ; CloakCrimsonLinen
-	handler.SetArmorDataByKey("21392___" + asPluginName, 10, 10) ; CloakDawnstarLinen
-	handler.SetArmorDataByKey("21393___" + asPluginName, 10, 10) ; CloakGreenLinen
-	handler.SetArmorDataByKey("21394___" + asPluginName, 10, 10) ; CloakGreyLinen
-	handler.SetArmorDataByKey("21395___" + asPluginName, 10, 10) ; CloakHjaalmarchLinen
-	handler.SetArmorDataByKey("21396___" + asPluginName, 10, 10) ; CloakStormcloakLinen
-	handler.SetArmorDataByKey("21397___" + asPluginName, 10, 10) ; CloakWhiteLinen
-	handler.SetArmorDataByKey("21379___" + asPluginName, 10, 10) ; CloakBlackLinen
-	handler.SetArmorDataByKey("22785___" + asPluginName, 10, 10) ; CloakLinenBrownHealth01
-	handler.SetArmorDataByKey("22784___" + asPluginName, 10, 10) ; CloakLinenBlackResist02
-	handler.SetArmorDataByKey("22783___" + asPluginName, 10, 10) ; CloakLinenBlackResist01
-	handler.SetArmorDataByKey("25557___" + asPluginName, 10, 10) ; CloakBlueLinen
-	handler.SetArmorDataByKey("25563___" + asPluginName, 10, 10) ; CloakWinterholdLinen
-	handler.SetArmorDataByKey("72658___" + asPluginName, 10, 10) ; CloakShortBlack
-	handler.SetArmorDataByKey("74064___" + asPluginName, 10, 10) ; CloakShortBlue
-	handler.SetArmorDataByKey("74065___" + asPluginName, 10, 10) ; CloakShortBrown
-	handler.SetArmorDataByKey("74067___" + asPluginName, 10, 10) ; CloakShortCrimson
-	handler.SetArmorDataByKey("74069___" + asPluginName, 10, 10) ; CloakShortGreen
-	handler.SetArmorDataByKey("74071___" + asPluginName, 10, 10) ; CloakShortGrey
-	handler.SetArmorDataByKey("74073___" + asPluginName, 10, 10) ; CloakShortWhite
-	handler.SetArmorDataByKey("83903___" + asPluginName, 10, 10) ; CloakShortCollege
-	handler.SetArmorDataByKey("1066944___" + asPluginName, 10, 10) ; CloakShortDawnstar
-	handler.SetArmorDataByKey("1066945___" + asPluginName, 10, 10) ; CloakShortFalkreath
-	handler.SetArmorDataByKey("1066946___" + asPluginName, 10, 10) ; CloakShortHjaalmarch
-	handler.SetArmorDataByKey("1066947___" + asPluginName, 10, 10) ; CloakShortMarkarth
-	handler.SetArmorDataByKey("1066948___" + asPluginName, 10, 10) ; CloakShortRiften
-	handler.SetArmorDataByKey("1066949___" + asPluginName, 10, 10) ; CloakShortSolitude
-	handler.SetArmorDataByKey("1066950___" + asPluginName, 10, 10) ; CloakShortWhiterun
-	handler.SetArmorDataByKey("1066951___" + asPluginName, 10, 10) ; CloakShortWinterhold
+	handler.SetArmorDataByKey("58748___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakImperialGold
+	handler.SetArmorDataByKey("40785___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakKvatch
+	handler.SetArmorDataByKey("46316___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakVaermina
+	handler.SetArmorDataByKey("32476___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakFallWinterhold
+	handler.SetArmorDataByKey("25551___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakThalmorAlt
+	handler.SetArmorDataByKey("24169___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakThalmor
+	handler.SetArmorDataByKey("25552___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakThalmorAltEnch
+	handler.SetArmorDataByKey("58749___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakImperialSilver
+	handler.SetArmorDataByKey("62995___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakDwemerPurple
+	handler.SetArmorDataByKey("53223___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakSolitudeLinen
+	handler.SetArmorDataByKey("42172___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakMarkarthLinen
+	handler.SetArmorDataByKey("42170___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakFalkreathLinen
+	handler.SetArmorDataByKey("38022___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakRiftenLinen
+	handler.SetArmorDataByKey("22786___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakLinenBrownHealth02
+	handler.SetArmorDataByKey("21380___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakWhiterunLinen
+	handler.SetArmorDataByKey("21390___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakBrownLinen
+	handler.SetArmorDataByKey("21391___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakCrimsonLinen
+	handler.SetArmorDataByKey("21392___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakDawnstarLinen
+	handler.SetArmorDataByKey("21393___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakGreenLinen
+	handler.SetArmorDataByKey("21394___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakGreyLinen
+	handler.SetArmorDataByKey("21395___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakHjaalmarchLinen
+	handler.SetArmorDataByKey("21396___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakStormcloakLinen
+	handler.SetArmorDataByKey("21397___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakWhiteLinen
+	handler.SetArmorDataByKey("21379___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakBlackLinen
+	handler.SetArmorDataByKey("22785___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakLinenBrownHealth01
+	handler.SetArmorDataByKey("22784___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakLinenBlackResist02
+	handler.SetArmorDataByKey("22783___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakLinenBlackResist01
+	handler.SetArmorDataByKey("25557___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakBlueLinen
+	handler.SetArmorDataByKey("25563___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakWinterholdLinen
+	handler.SetArmorDataByKey("72658___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortBlack
+	handler.SetArmorDataByKey("74064___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortBlue
+	handler.SetArmorDataByKey("74065___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortBrown
+	handler.SetArmorDataByKey("74067___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortCrimson
+	handler.SetArmorDataByKey("74069___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortGreen
+	handler.SetArmorDataByKey("74071___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortGrey
+	handler.SetArmorDataByKey("74073___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortWhite
+	handler.SetArmorDataByKey("83903___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortCollege
+	handler.SetArmorDataByKey("1066944___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortDawnstar
+	handler.SetArmorDataByKey("1066945___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortFalkreath
+	handler.SetArmorDataByKey("1066946___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortHjaalmarch
+	handler.SetArmorDataByKey("1066947___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortMarkarth
+	handler.SetArmorDataByKey("1066948___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortRiften
+	handler.SetArmorDataByKey("1066949___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortSolitude
+	handler.SetArmorDataByKey("1066950___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortWhiterun
+	handler.SetArmorDataByKey("1066951___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortWinterhold
 		
 	;==========HIDE CLOAKS===========
-	handler.SetArmorDataByKey("50454___" + asPluginName, 12, 40) ; CloakForsworn
-	handler.SetArmorDataByKey("53219___" + asPluginName, 12, 40) ; CloakNorthPaladin
-	handler.SetArmorDataByKey("38016___" + asPluginName, 12, 40) ; CloakHuntersFolly
-	handler.SetArmorDataByKey("29714___" + asPluginName, 12, 40) ; CloakCrow
-	handler.SetArmorDataByKey("31094___" + asPluginName, 12, 40) ; CloakNya
-	handler.SetArmorDataByKey("31096___" + asPluginName, 12, 40) ; CloakGreyFox
-	handler.SetArmorDataByKey("24170___" + asPluginName, 12, 40) ; CloakGreybeard
-	handler.SetArmorDataByKey("4820___" + asPluginName, 12, 40) ; CloakBrownHealth01
-	handler.SetArmorDataByKey("4822___" + asPluginName, 12, 40) ; CloakBlackResist01
-	handler.SetArmorDataByKey("4823___" + asPluginName, 12, 40) ; CloakBlackResist02
-	handler.SetArmorDataByKey("4821___" + asPluginName, 12, 40) ; CloakBrownHealth02
-	handler.SetArmorDataByKey("62997___" + asPluginName, 12, 40) ; CloakDwemerPurpleAlt
-	handler.SetArmorDataByKey("42171___" + asPluginName, 12, 40) ; CloakMarkarth
-	handler.SetArmorDataByKey("42169___" + asPluginName, 12, 40) ; CloakFalkreath
-	handler.SetArmorDataByKey("38021___" + asPluginName, 12, 40) ; CloakRiften
-	handler.SetArmorDataByKey("25554___" + asPluginName, 12, 40) ; CloakBlue
-	handler.SetArmorDataByKey("18617___" + asPluginName, 12, 40) ; CloakHjaalmarch
-	handler.SetArmorDataByKey("18618___" + asPluginName, 12, 40) ; CloakDawnstar
-	handler.SetArmorDataByKey("3435___" + asPluginName, 12, 40) ; CloakCrimson
-	handler.SetArmorDataByKey("3432___" + asPluginName, 12, 40) ; CloakGreen
-	handler.SetArmorDataByKey("10340___" + asPluginName, 12, 40) ; CloakStormcloak
-	handler.SetArmorDataByKey("3431___" + asPluginName, 12, 40) ; CloakBlack
-	handler.SetArmorDataByKey("3430___" + asPluginName, 12, 40) ; CloakBrown
-	handler.SetArmorDataByKey("3433___" + asPluginName, 12, 40) ; CloakGrey
-	handler.SetArmorDataByKey("17235___" + asPluginName, 12, 40) ; CloakWhite
-	handler.SetArmorDataByKey("22787___" + asPluginName, 12, 40) ; CloakWhiterun
-	handler.SetArmorDataByKey("25562___" + asPluginName, 12, 40) ; CloakWinterhold
-	handler.SetArmorDataByKey("25564___" + asPluginName, 12, 40) ; CloakSolitude
-	handler.SetArmorDataByKey("57362___" + asPluginName, 12, 40) ; CloakHimirHide
+	handler.SetArmorDataByKey("50454___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakForsworn
+	handler.SetArmorDataByKey("53219___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakNorthPaladin
+	handler.SetArmorDataByKey("38016___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakHuntersFolly
+	handler.SetArmorDataByKey("29714___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakCrow
+	handler.SetArmorDataByKey("31094___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakNya
+	handler.SetArmorDataByKey("31096___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakGreyFox
+	handler.SetArmorDataByKey("24170___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakGreybeard
+	handler.SetArmorDataByKey("4820___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakBrownHealth01
+	handler.SetArmorDataByKey("4822___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakBlackResist01
+	handler.SetArmorDataByKey("4823___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakBlackResist02
+	handler.SetArmorDataByKey("4821___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakBrownHealth02
+	handler.SetArmorDataByKey("62997___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakDwemerPurpleAlt
+	handler.SetArmorDataByKey("42171___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakMarkarth
+	handler.SetArmorDataByKey("42169___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakFalkreath
+	handler.SetArmorDataByKey("38021___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakRiften
+	handler.SetArmorDataByKey("25554___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakBlue
+	handler.SetArmorDataByKey("18617___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakHjaalmarch
+	handler.SetArmorDataByKey("18618___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakDawnstar
+	handler.SetArmorDataByKey("3435___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakCrimson
+	handler.SetArmorDataByKey("3432___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakGreen
+	handler.SetArmorDataByKey("10340___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakStormcloak
+	handler.SetArmorDataByKey("3431___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakBlack
+	handler.SetArmorDataByKey("3430___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakBrown
+	handler.SetArmorDataByKey("3433___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakGrey
+	handler.SetArmorDataByKey("17235___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakWhite
+	handler.SetArmorDataByKey("22787___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakWhiterun
+	handler.SetArmorDataByKey("25562___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakWinterhold
+	handler.SetArmorDataByKey("25564___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakSolitude
+	handler.SetArmorDataByKey("57362___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakHimirHide
 	
 	;Cloaks of Skyrim 1.2
-	handler.SetArmorDataByKey("94961___" + asPluginName, 10, 10) ; CloakDaedric
-	handler.SetArmorDataByKey("100481___" + asPluginName, 10, 10) ; CloakComp
-	handler.SetArmorDataByKey("89445___" + asPluginName, 10, 10) ; CloakShortImperial
-	handler.SetArmorDataByKey("94961___" + asPluginName, 12, 40) ; CloakScale
+	handler.SetArmorDataByKey("94961___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakDaedric
+	handler.SetArmorDataByKey("100481___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakComp
+	handler.SetArmorDataByKey("89445___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortImperial
+	handler.SetArmorDataByKey("94961___" + asPluginName, 12, 40, abExportToDefaults = true) ; CloakScale
 endFunction
 
 function COSDGLoadUp()
@@ -1336,19 +1431,19 @@ function AddCOSDGDatastoreEntries(string asPluginName)
 
 	if asPluginName == "Complete Crafting Overhaul_Remade.esp"
 		; Check if already loaded
-		if handler.DatastoreHasEntry("22789___" + asPluginName, 7)
+		if handler.DatastoreHasEntry("22789___" + asPluginName)
 			return
 		endif
 
-		handler.SetArmorDataByKey("22789___" + asPluginName, 7, 10, 10) ; CloakDawnguard
-		handler.SetArmorDataByKey("22790___" + asPluginName, 7, 10, 10) ; CloakShortDawnguard
+		handler.SetArmorDataByKey("22789___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakDawnguard
+		handler.SetArmorDataByKey("22790___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortDawnguard
 	else
 		; Check if already loaded
-		if handler.DatastoreHasEntry("3428___" + asPluginName, 7)
+		if handler.DatastoreHasEntry("3428___" + asPluginName)
 			return
 		endif
-		handler.SetArmorDataByKey("3428___" + asPluginName, 7, 10, 10) ; CloakDawnguard
-		handler.SetArmorDataByKey("3429___" + asPluginName, 7, 10, 10) ; CloakShortDawnguard
+		handler.SetArmorDataByKey("3428___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakDawnguard
+		handler.SetArmorDataByKey("3429___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortDawnguard
 	endif
 endFunction
 
@@ -1407,213 +1502,213 @@ function AddWICDatastoreEntries(string asPluginName)
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
 	; Check if already loaded
-	if handler.DatastoreHasEntry("7639___" + asPluginName, 7) ; 1nivCloakBearClawComBrown
+	if handler.DatastoreHasEntry("7639___" + asPluginName) ; 1nivCloakBearClawComBrown
 		return
 	endif
 
-	handler.SetArmorDataByKey("10445___" + asPluginName, 45, 14) ; 1nivHoodBearComBrown
-	handler.SetArmorDataByKey("14581___" + asPluginName, 45, 14) ; 1nivHoodBearComCave
-	handler.SetArmorDataByKey("14582___" + asPluginName, 45, 14) ; 1nivHoodBearComSnow
-	handler.SetArmorDataByKey("110288___" + asPluginName, 45, 14) ; 1nivHoodBearComSteelBrown
-	handler.SetArmorDataByKey("110289___" + asPluginName, 45, 14) ; 1nivHoodBearComSteelCave
-	handler.SetArmorDataByKey("110290___" + asPluginName, 45, 14) ; 1nivHoodBearComSteelSnow
-	handler.SetArmorDataByKey("76952___" + asPluginName, 45, 14) ; 1nivHoodBearComStuddedBrown
-	handler.SetArmorDataByKey("76953___" + asPluginName, 45, 14) ; 1nivHoodBearComStuddedCave
-	handler.SetArmorDataByKey("76954___" + asPluginName, 45, 14) ; 1nivHoodBearComStuddedSnow
-	handler.SetArmorDataByKey("14586___" + asPluginName, 45, 14) ; 1nivHoodBearOrnateBrown
-	handler.SetArmorDataByKey("14587___" + asPluginName, 45, 14) ; 1nivHoodBearOrnateCave
-	handler.SetArmorDataByKey("14588___" + asPluginName, 45, 14) ; 1nivHoodBearOrnateSnow
-	handler.SetArmorDataByKey("110291___" + asPluginName, 45, 14) ; 1nivHoodBearOrnateSteelBrown
-	handler.SetArmorDataByKey("110292___" + asPluginName, 45, 14) ; 1nivHoodBearOrnateSteelCave
-	handler.SetArmorDataByKey("110293___" + asPluginName, 45, 14) ; 1nivHoodBearOrnateSteelSnow
-	handler.SetArmorDataByKey("78336___" + asPluginName, 45, 14) ; 1nivHoodBearOrnateStuddedBrown
-	handler.SetArmorDataByKey("78337___" + asPluginName, 45, 14) ; 1nivHoodBearOrnateStuddedCave
-	handler.SetArmorDataByKey("78338___" + asPluginName, 45, 14) ; 1nivHoodBearOrnateStuddedSnow
-	handler.SetArmorDataByKey("14583___" + asPluginName, 45, 14) ; 1nivHoodBearTrimBrown
-	handler.SetArmorDataByKey("14584___" + asPluginName, 45, 14) ; 1nivHoodBearTrimCave
-	handler.SetArmorDataByKey("14585___" + asPluginName, 45, 14) ; 1nivHoodBearTrimSnow
-	handler.SetArmorDataByKey("110294___" + asPluginName, 45, 14) ; 1nivHoodBearTrimSteelBrown
-	handler.SetArmorDataByKey("110295___" + asPluginName, 45, 14) ; 1nivHoodBearTrimSteelCave
-	handler.SetArmorDataByKey("110296___" + asPluginName, 45, 14) ; 1nivHoodBearTrimSteelSnow
-	handler.SetArmorDataByKey("78339___" + asPluginName, 45, 14) ; 1nivHoodBearTrimStuddedBrown
-	handler.SetArmorDataByKey("78340___" + asPluginName, 45, 14) ; 1nivHoodBearTrimStuddedCave
-	handler.SetArmorDataByKey("78341___" + asPluginName, 45, 14) ; 1nivHoodBearTrimStuddedSnow
-	handler.SetArmorDataByKey("50540___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinComBlack
-	handler.SetArmorDataByKey("111757___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinComSteelBlack
-	handler.SetArmorDataByKey("111756___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinComSteelTimber
-	handler.SetArmorDataByKey("111758___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinComSteelWhite
-	handler.SetArmorDataByKey("81140___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinComStuddedBlack
-	handler.SetArmorDataByKey("81141___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinComStuddedTimber
-	handler.SetArmorDataByKey("81142___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinComStuddedWhite
-	handler.SetArmorDataByKey("50539___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinComTimber
-	handler.SetArmorDataByKey("50541___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinComWhite
-	handler.SetArmorDataByKey("88117___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinRareBlack
-	handler.SetArmorDataByKey("111754___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinRareSteelBlack
-	handler.SetArmorDataByKey("111753___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinRareSteelTimber
-	handler.SetArmorDataByKey("111755___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinRareSteelWhite
-	handler.SetArmorDataByKey("88120___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinRareStuddedBlack
-	handler.SetArmorDataByKey("88119___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinRareStuddedTimber
-	handler.SetArmorDataByKey("88121___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinRareStuddedWhite
-	handler.SetArmorDataByKey("89500___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinRareTimber
-	handler.SetArmorDataByKey("88118___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinRareWhite
-	handler.SetArmorDataByKey("50543___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimBBlack
-	handler.SetArmorDataByKey("111760___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimBSteelBlack
-	handler.SetArmorDataByKey("111759___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimBSteelTimber
-	handler.SetArmorDataByKey("111761___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimBSteelWhite
-	handler.SetArmorDataByKey("81143___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimBStuddedBlack
-	handler.SetArmorDataByKey("81144___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimBStuddedTimber
-	handler.SetArmorDataByKey("81145___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimBStuddedWhite
-	handler.SetArmorDataByKey("50542___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimBTimber
-	handler.SetArmorDataByKey("50544___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimBWhite
-	handler.SetArmorDataByKey("90880___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimRareBlack
-	handler.SetArmorDataByKey("113156___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimRareSteelBlack
-	handler.SetArmorDataByKey("113155___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimRareSteelTimber
-	handler.SetArmorDataByKey("113157___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimRareSteelWhite
-	handler.SetArmorDataByKey("90882___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimRareStuddedBlack
-	handler.SetArmorDataByKey("90883___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimRareStuddedTimber
-	handler.SetArmorDataByKey("90884___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimRareStuddedWhite
-	handler.SetArmorDataByKey("89501___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimRareTimber
-	handler.SetArmorDataByKey("90881___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimRareWhite
-	handler.SetArmorDataByKey("50546___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimWBlack
-	handler.SetArmorDataByKey("111763___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimWSteelBlack
-	handler.SetArmorDataByKey("111762___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimWSteelTimber
-	handler.SetArmorDataByKey("111764___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimWSteelWhite
-	handler.SetArmorDataByKey("81146___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimWStuddedBlack
-	handler.SetArmorDataByKey("81147___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimWStuddedTimber
-	handler.SetArmorDataByKey("81148___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimWStuddedWhite
-	handler.SetArmorDataByKey("50545___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimWTimber
-	handler.SetArmorDataByKey("50547___" + asPluginName, 45, 14) ; 1nivHoodWolfSkinTrimWWhite
+	handler.SetArmorDataByKey("10445___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearComBrown
+	handler.SetArmorDataByKey("14581___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearComCave
+	handler.SetArmorDataByKey("14582___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearComSnow
+	handler.SetArmorDataByKey("110288___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearComSteelBrown
+	handler.SetArmorDataByKey("110289___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearComSteelCave
+	handler.SetArmorDataByKey("110290___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearComSteelSnow
+	handler.SetArmorDataByKey("76952___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearComStuddedBrown
+	handler.SetArmorDataByKey("76953___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearComStuddedCave
+	handler.SetArmorDataByKey("76954___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearComStuddedSnow
+	handler.SetArmorDataByKey("14586___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearOrnateBrown
+	handler.SetArmorDataByKey("14587___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearOrnateCave
+	handler.SetArmorDataByKey("14588___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearOrnateSnow
+	handler.SetArmorDataByKey("110291___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearOrnateSteelBrown
+	handler.SetArmorDataByKey("110292___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearOrnateSteelCave
+	handler.SetArmorDataByKey("110293___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearOrnateSteelSnow
+	handler.SetArmorDataByKey("78336___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearOrnateStuddedBrown
+	handler.SetArmorDataByKey("78337___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearOrnateStuddedCave
+	handler.SetArmorDataByKey("78338___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearOrnateStuddedSnow
+	handler.SetArmorDataByKey("14583___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearTrimBrown
+	handler.SetArmorDataByKey("14584___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearTrimCave
+	handler.SetArmorDataByKey("14585___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearTrimSnow
+	handler.SetArmorDataByKey("110294___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearTrimSteelBrown
+	handler.SetArmorDataByKey("110295___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearTrimSteelCave
+	handler.SetArmorDataByKey("110296___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearTrimSteelSnow
+	handler.SetArmorDataByKey("78339___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearTrimStuddedBrown
+	handler.SetArmorDataByKey("78340___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearTrimStuddedCave
+	handler.SetArmorDataByKey("78341___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodBearTrimStuddedSnow
+	handler.SetArmorDataByKey("50540___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinComBlack
+	handler.SetArmorDataByKey("111757___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinComSteelBlack
+	handler.SetArmorDataByKey("111756___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinComSteelTimber
+	handler.SetArmorDataByKey("111758___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinComSteelWhite
+	handler.SetArmorDataByKey("81140___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinComStuddedBlack
+	handler.SetArmorDataByKey("81141___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinComStuddedTimber
+	handler.SetArmorDataByKey("81142___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinComStuddedWhite
+	handler.SetArmorDataByKey("50539___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinComTimber
+	handler.SetArmorDataByKey("50541___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinComWhite
+	handler.SetArmorDataByKey("88117___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinRareBlack
+	handler.SetArmorDataByKey("111754___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinRareSteelBlack
+	handler.SetArmorDataByKey("111753___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinRareSteelTimber
+	handler.SetArmorDataByKey("111755___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinRareSteelWhite
+	handler.SetArmorDataByKey("88120___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinRareStuddedBlack
+	handler.SetArmorDataByKey("88119___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinRareStuddedTimber
+	handler.SetArmorDataByKey("88121___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinRareStuddedWhite
+	handler.SetArmorDataByKey("89500___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinRareTimber
+	handler.SetArmorDataByKey("88118___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinRareWhite
+	handler.SetArmorDataByKey("50543___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimBBlack
+	handler.SetArmorDataByKey("111760___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimBSteelBlack
+	handler.SetArmorDataByKey("111759___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimBSteelTimber
+	handler.SetArmorDataByKey("111761___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimBSteelWhite
+	handler.SetArmorDataByKey("81143___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimBStuddedBlack
+	handler.SetArmorDataByKey("81144___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimBStuddedTimber
+	handler.SetArmorDataByKey("81145___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimBStuddedWhite
+	handler.SetArmorDataByKey("50542___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimBTimber
+	handler.SetArmorDataByKey("50544___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimBWhite
+	handler.SetArmorDataByKey("90880___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimRareBlack
+	handler.SetArmorDataByKey("113156___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimRareSteelBlack
+	handler.SetArmorDataByKey("113155___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimRareSteelTimber
+	handler.SetArmorDataByKey("113157___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimRareSteelWhite
+	handler.SetArmorDataByKey("90882___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimRareStuddedBlack
+	handler.SetArmorDataByKey("90883___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimRareStuddedTimber
+	handler.SetArmorDataByKey("90884___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimRareStuddedWhite
+	handler.SetArmorDataByKey("89501___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimRareTimber
+	handler.SetArmorDataByKey("90881___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimRareWhite
+	handler.SetArmorDataByKey("50546___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimWBlack
+	handler.SetArmorDataByKey("111763___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimWSteelBlack
+	handler.SetArmorDataByKey("111762___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimWSteelTimber
+	handler.SetArmorDataByKey("111764___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimWSteelWhite
+	handler.SetArmorDataByKey("81146___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimWStuddedBlack
+	handler.SetArmorDataByKey("81147___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimWStuddedTimber
+	handler.SetArmorDataByKey("81148___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimWStuddedWhite
+	handler.SetArmorDataByKey("50545___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimWTimber
+	handler.SetArmorDataByKey("50547___" + asPluginName, 45, 14, abExportToDefaults = true) ; 1nivHoodWolfSkinTrimWWhite
 
-	handler.SetArmorDataByKey("7639___" + asPluginName, 40, 12) ; 1nivCloakBearClawComBrown
-	handler.SetArmorDataByKey("56156___" + asPluginName, 40, 12) ; 1nivCloakBearClawComBrownEnchF
-	handler.SetArmorDataByKey("56175___" + asPluginName, 40, 12) ; 1nivCloakBearClawComBrownEnchM
-	handler.SetArmorDataByKey("9020___" + asPluginName, 40, 12) ; 1nivCloakBearClawComCave
-	handler.SetArmorDataByKey("56158___" + asPluginName, 40, 12) ; 1nivCloakBearClawComCaveEnchF
-	handler.SetArmorDataByKey("56176___" + asPluginName, 40, 12) ; 1nivCloakBearClawComCaveEnchM
-	handler.SetArmorDataByKey("9021___" + asPluginName, 40, 12) ; 1nivCloakBearClawComSnow
-	handler.SetArmorDataByKey("56159___" + asPluginName, 40, 12) ; 1nivCloakBearClawComSnowEnchF
-	handler.SetArmorDataByKey("56177___" + asPluginName, 40, 12) ; 1nivCloakBearClawComSnowEnchM
-	handler.SetArmorDataByKey("9025___" + asPluginName, 40, 12) ; 1nivCloakBearClawOrnateBrown
-	handler.SetArmorDataByKey("56160___" + asPluginName, 40, 12) ; 1nivCloakBearClawOrnateBrownEnchF
-	handler.SetArmorDataByKey("56178___" + asPluginName, 40, 12) ; 1nivCloakBearClawOrnateBrownEnchM
-	handler.SetArmorDataByKey("9026___" + asPluginName, 40, 12) ; 1nivCloakBearClawOrnateCave
-	handler.SetArmorDataByKey("56161___" + asPluginName, 40, 12) ; 1nivCloakBearClawOrnateCaveEnchF
-	handler.SetArmorDataByKey("56179___" + asPluginName, 40, 12) ; 1nivCloakBearClawOrnateCaveEnchM
-	handler.SetArmorDataByKey("9027___" + asPluginName, 40, 12) ; 1nivCloakBearClawOrnateSnow
-	handler.SetArmorDataByKey("56162___" + asPluginName, 40, 12) ; 1nivCloakBearClawOrnateSnowEnchF
-	handler.SetArmorDataByKey("56180___" + asPluginName, 40, 12) ; 1nivCloakBearClawOrnateSnowEnchM
-	handler.SetArmorDataByKey("9022___" + asPluginName, 40, 12) ; 1nivCloakBearClawTrimBrown
-	handler.SetArmorDataByKey("56163___" + asPluginName, 40, 12) ; 1nivCloakBearClawTrimBrownEnchF
-	handler.SetArmorDataByKey("56181___" + asPluginName, 40, 12) ; 1nivCloakBearClawTrimBrownEnchM
-	handler.SetArmorDataByKey("9023___" + asPluginName, 40, 12) ; 1nivCloakBearClawTrimCave
-	handler.SetArmorDataByKey("56164___" + asPluginName, 40, 12) ; 1nivCloakBearClawTrimCaveEnchF
-	handler.SetArmorDataByKey("56182___" + asPluginName, 40, 12) ; 1nivCloakBearClawTrimCaveEnchM
-	handler.SetArmorDataByKey("9024___" + asPluginName, 40, 12) ; 1nivCloakBearClawTrimSnow
-	handler.SetArmorDataByKey("56165___" + asPluginName, 40, 12) ; 1nivCloakBearClawTrimSnowEnchF
-	handler.SetArmorDataByKey("56183___" + asPluginName, 40, 12) ; 1nivCloakBearClawTrimSnowEnchM
-	handler.SetArmorDataByKey("9029___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinComBlack
-	handler.SetArmorDataByKey("56166___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinComBlackEnchF
-	handler.SetArmorDataByKey("56184___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinComBlackEnchM
-	handler.SetArmorDataByKey("9028___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinComTimber
-	handler.SetArmorDataByKey("56167___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinComTimberEnchF
-	handler.SetArmorDataByKey("56185___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinComTimberEnchM
-	handler.SetArmorDataByKey("9030___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinComWhite
-	handler.SetArmorDataByKey("56168___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinComWhiteEnchF
-	handler.SetArmorDataByKey("56186___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinComWhiteEnchM
-	handler.SetArmorDataByKey("70014___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinRareBlack
-	handler.SetArmorDataByKey("70016___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinRareBlackEnchF
-	handler.SetArmorDataByKey("70019___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinRareBlackEnchM
-	handler.SetArmorDataByKey("70013___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinRareTimber
-	handler.SetArmorDataByKey("70017___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinRareTimberEnchF
-	handler.SetArmorDataByKey("70020___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinRareTimberEnchM
-	handler.SetArmorDataByKey("70015___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinRareWhite
-	handler.SetArmorDataByKey("70018___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinRareWhiteEnchF
-	handler.SetArmorDataByKey("70021___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinRareWhiteEnchM
-	handler.SetArmorDataByKey("9034___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinTrimBBlack
-	handler.SetArmorDataByKey("56169___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinTrimBBlackEnchF
-	handler.SetArmorDataByKey("56187___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinTrimBBlackEnchM
-	handler.SetArmorDataByKey("9035___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinTrimBTimber
-	handler.SetArmorDataByKey("56170___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinTrimBTimberEnchF
-	handler.SetArmorDataByKey("56188___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinTrimBTimberEnchM
-	handler.SetArmorDataByKey("9036___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinTrimBWhite
-	handler.SetArmorDataByKey("56171___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinTrimBWhiteEnchF
-	handler.SetArmorDataByKey("56189___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinTrimBWhiteEnchM
-	handler.SetArmorDataByKey("9032___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinTrimWBlack
-	handler.SetArmorDataByKey("56172___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinTrimWBlackEnchF
-	handler.SetArmorDataByKey("56190___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinTrimWBlackEnchM
-	handler.SetArmorDataByKey("9031___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinTrimWTimber
-	handler.SetArmorDataByKey("56173___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinTrimWTimberEnchF
-	handler.SetArmorDataByKey("56191___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinTrimWTimberEnchM
-	handler.SetArmorDataByKey("9033___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinTrimWWhite
-	handler.SetArmorDataByKey("56174___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinTrimWWhiteEnchF
-	handler.SetArmorDataByKey("56192___" + asPluginName, 40, 12) ; 1nivCloakWolfSkinTrimWWhiteEnchM
+	handler.SetArmorDataByKey("7639___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawComBrown
+	handler.SetArmorDataByKey("56156___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawComBrownEnchF
+	handler.SetArmorDataByKey("56175___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawComBrownEnchM
+	handler.SetArmorDataByKey("9020___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawComCave
+	handler.SetArmorDataByKey("56158___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawComCaveEnchF
+	handler.SetArmorDataByKey("56176___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawComCaveEnchM
+	handler.SetArmorDataByKey("9021___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawComSnow
+	handler.SetArmorDataByKey("56159___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawComSnowEnchF
+	handler.SetArmorDataByKey("56177___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawComSnowEnchM
+	handler.SetArmorDataByKey("9025___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawOrnateBrown
+	handler.SetArmorDataByKey("56160___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawOrnateBrownEnchF
+	handler.SetArmorDataByKey("56178___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawOrnateBrownEnchM
+	handler.SetArmorDataByKey("9026___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawOrnateCave
+	handler.SetArmorDataByKey("56161___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawOrnateCaveEnchF
+	handler.SetArmorDataByKey("56179___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawOrnateCaveEnchM
+	handler.SetArmorDataByKey("9027___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawOrnateSnow
+	handler.SetArmorDataByKey("56162___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawOrnateSnowEnchF
+	handler.SetArmorDataByKey("56180___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawOrnateSnowEnchM
+	handler.SetArmorDataByKey("9022___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawTrimBrown
+	handler.SetArmorDataByKey("56163___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawTrimBrownEnchF
+	handler.SetArmorDataByKey("56181___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawTrimBrownEnchM
+	handler.SetArmorDataByKey("9023___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawTrimCave
+	handler.SetArmorDataByKey("56164___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawTrimCaveEnchF
+	handler.SetArmorDataByKey("56182___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawTrimCaveEnchM
+	handler.SetArmorDataByKey("9024___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawTrimSnow
+	handler.SetArmorDataByKey("56165___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawTrimSnowEnchF
+	handler.SetArmorDataByKey("56183___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakBearClawTrimSnowEnchM
+	handler.SetArmorDataByKey("9029___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinComBlack
+	handler.SetArmorDataByKey("56166___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinComBlackEnchF
+	handler.SetArmorDataByKey("56184___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinComBlackEnchM
+	handler.SetArmorDataByKey("9028___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinComTimber
+	handler.SetArmorDataByKey("56167___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinComTimberEnchF
+	handler.SetArmorDataByKey("56185___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinComTimberEnchM
+	handler.SetArmorDataByKey("9030___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinComWhite
+	handler.SetArmorDataByKey("56168___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinComWhiteEnchF
+	handler.SetArmorDataByKey("56186___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinComWhiteEnchM
+	handler.SetArmorDataByKey("70014___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinRareBlack
+	handler.SetArmorDataByKey("70016___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinRareBlackEnchF
+	handler.SetArmorDataByKey("70019___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinRareBlackEnchM
+	handler.SetArmorDataByKey("70013___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinRareTimber
+	handler.SetArmorDataByKey("70017___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinRareTimberEnchF
+	handler.SetArmorDataByKey("70020___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinRareTimberEnchM
+	handler.SetArmorDataByKey("70015___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinRareWhite
+	handler.SetArmorDataByKey("70018___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinRareWhiteEnchF
+	handler.SetArmorDataByKey("70021___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinRareWhiteEnchM
+	handler.SetArmorDataByKey("9034___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinTrimBBlack
+	handler.SetArmorDataByKey("56169___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinTrimBBlackEnchF
+	handler.SetArmorDataByKey("56187___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinTrimBBlackEnchM
+	handler.SetArmorDataByKey("9035___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinTrimBTimber
+	handler.SetArmorDataByKey("56170___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinTrimBTimberEnchF
+	handler.SetArmorDataByKey("56188___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinTrimBTimberEnchM
+	handler.SetArmorDataByKey("9036___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinTrimBWhite
+	handler.SetArmorDataByKey("56171___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinTrimBWhiteEnchF
+	handler.SetArmorDataByKey("56189___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinTrimBWhiteEnchM
+	handler.SetArmorDataByKey("9032___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinTrimWBlack
+	handler.SetArmorDataByKey("56172___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinTrimWBlackEnchF
+	handler.SetArmorDataByKey("56190___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinTrimWBlackEnchM
+	handler.SetArmorDataByKey("9031___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinTrimWTimber
+	handler.SetArmorDataByKey("56173___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinTrimWTimberEnchF
+	handler.SetArmorDataByKey("56191___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinTrimWTimberEnchM
+	handler.SetArmorDataByKey("9033___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinTrimWWhite
+	handler.SetArmorDataByKey("56174___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinTrimWWhiteEnchF
+	handler.SetArmorDataByKey("56192___" + asPluginName, 40, 12, abExportToDefaults = true) ; 1nivCloakWolfSkinTrimWWhiteEnchM
 endFunction
 
 function AEALoadUp()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
 	; Check if already loaded
-	if handler.DatastoreHasEntry("20056___AesirArmor.esp", 7)
+	if handler.DatastoreHasEntry("20056___AesirArmor.esp")
 		return
 	endif
 
-	handler.SetArmorDataByKey("20056___AesirArmor.esp", 40, 12) ; cloak fur
-	handler.SetArmorDataByKey("130085___AesirArmor.esp", 40, 12) ; cloak fur
-	handler.SetArmorDataByKey("98064___AesirArmor.esp", 40, 12) ; cloak fur
-	handler.SetArmorDataByKey("130086___AesirArmor.esp", 40, 12) ; cloak fur
-	handler.SetArmorDataByKey("98065___AesirArmor.esp", 40, 12) ; cloak fur
-	handler.SetArmorDataByKey("130087___AesirArmor.esp", 40, 12) ; cloak fur
-	handler.SetArmorDataByKey("233387___AesirArmor.esp", 40, 12) ; cloak fur
-	handler.SetArmorDataByKey("233392___AesirArmor.esp", 40, 12) ; cloak fur
-	handler.SetArmorDataByKey("233388___AesirArmor.esp", 40, 12) ; cloak fur
-	handler.SetArmorDataByKey("233393___AesirArmor.esp", 40, 12) ; cloak fur
-	handler.SetArmorDataByKey("233389___AesirArmor.esp", 40, 12) ; cloak fur
-	handler.SetArmorDataByKey("233394___AesirArmor.esp", 40, 12) ; cloak fur
-	handler.SetArmorDataByKey("95268___AesirArmor.esp", 175, 54) ; body full
-	handler.SetArmorDataByKey("125934___AesirArmor.esp", 175, 54) ; body full
-	handler.SetArmorDataByKey("49193___AesirArmor.esp", 175, 54) ; body full
-	handler.SetArmorDataByKey("247294___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("247295___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("247296___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("247297___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("10379___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("130178___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("18674___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("131557___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("18675___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("131559___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("18676___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("131558___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("211121___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("211122___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("211123___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("211124___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("211125___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("211126___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("211127___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("211128___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("211129___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("212522___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("211130___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("212523___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("211131___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("212524___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("211136___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("212525___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("211135___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("212526___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("211132___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("212527___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("211133___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("212528___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("211134___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("212529___AesirArmor.esp", 50, 14) ; head full
-	handler.SetArmorDataByKey("49195___AesirArmor.esp", 21, 14) ; hands full
-	handler.SetArmorDataByKey("31538___AesirArmor.esp", 21, 14) ; hands full
-	handler.SetArmorDataByKey("131561___AesirArmor.esp", 21, 14) ; hands full
-	handler.SetArmorDataByKey("31541___AesirArmor.esp", 21, 14) ; feet full
-	handler.SetArmorDataByKey("131560___AesirArmor.esp", 21, 14) ; feet full
-	handler.SetArmorDataByKey("49194___AesirArmor.esp", 21, 14) ; feet full
+	handler.SetArmorDataByKey("20056___AesirArmor.esp", 40, 12, abExportToDefaults = true) ; cloak fur
+	handler.SetArmorDataByKey("130085___AesirArmor.esp", 40, 12, abExportToDefaults = true) ; cloak fur
+	handler.SetArmorDataByKey("98064___AesirArmor.esp", 40, 12, abExportToDefaults = true) ; cloak fur
+	handler.SetArmorDataByKey("130086___AesirArmor.esp", 40, 12, abExportToDefaults = true) ; cloak fur
+	handler.SetArmorDataByKey("98065___AesirArmor.esp", 40, 12, abExportToDefaults = true) ; cloak fur
+	handler.SetArmorDataByKey("130087___AesirArmor.esp", 40, 12, abExportToDefaults = true) ; cloak fur
+	handler.SetArmorDataByKey("233387___AesirArmor.esp", 40, 12, abExportToDefaults = true) ; cloak fur
+	handler.SetArmorDataByKey("233392___AesirArmor.esp", 40, 12, abExportToDefaults = true) ; cloak fur
+	handler.SetArmorDataByKey("233388___AesirArmor.esp", 40, 12, abExportToDefaults = true) ; cloak fur
+	handler.SetArmorDataByKey("233393___AesirArmor.esp", 40, 12, abExportToDefaults = true) ; cloak fur
+	handler.SetArmorDataByKey("233389___AesirArmor.esp", 40, 12, abExportToDefaults = true) ; cloak fur
+	handler.SetArmorDataByKey("233394___AesirArmor.esp", 40, 12, abExportToDefaults = true) ; cloak fur
+	handler.SetArmorDataByKey("95268___AesirArmor.esp", 175, 54, abExportToDefaults = true) ; body full
+	handler.SetArmorDataByKey("125934___AesirArmor.esp", 175, 54, abExportToDefaults = true) ; body full
+	handler.SetArmorDataByKey("49193___AesirArmor.esp", 175, 54, abExportToDefaults = true) ; body full
+	handler.SetArmorDataByKey("247294___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("247295___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("247296___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("247297___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("10379___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("130178___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("18674___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("131557___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("18675___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("131559___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("18676___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("131558___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("211121___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("211122___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("211123___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("211124___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("211125___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("211126___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("211127___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("211128___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("211129___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("212522___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("211130___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("212523___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("211131___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("212524___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("211136___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("212525___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("211135___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("212526___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("211132___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("212527___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("211133___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("212528___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("211134___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("212529___AesirArmor.esp", 50, 14, abExportToDefaults = true) ; head full
+	handler.SetArmorDataByKey("49195___AesirArmor.esp", 21, 14, abExportToDefaults = true) ; hands full
+	handler.SetArmorDataByKey("31538___AesirArmor.esp", 21, 14, abExportToDefaults = true) ; hands full
+	handler.SetArmorDataByKey("131561___AesirArmor.esp", 21, 14, abExportToDefaults = true) ; hands full
+	handler.SetArmorDataByKey("31541___AesirArmor.esp", 21, 14, abExportToDefaults = true) ; feet full
+	handler.SetArmorDataByKey("131560___AesirArmor.esp", 21, 14, abExportToDefaults = true) ; feet full
+	handler.SetArmorDataByKey("49194___AesirArmor.esp", 21, 14, abExportToDefaults = true) ; feet full
 endFunction
 
 function WACLoadUp()
@@ -1622,486 +1717,486 @@ function WACLoadUp()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
 	; Check if already loaded
-	if handler.DatastoreHasEntry("860640___WetandCold.esp", 7)
+	if handler.DatastoreHasEntry("860640___WetandCold.esp")
 		return
 	endif
 
-	handler.SetArmorDataByKey("860640___WetandCold.esp", 10, 10) ; _WetCloak1 linen
-	handler.SetArmorDataByKey("860649___WetandCold.esp", 10, 10) ; _WetCloak1_Black linen
-	handler.SetArmorDataByKey("864795___WetandCold.esp", 10, 10) ; _WetCloak1_Blue linen
-	handler.SetArmorDataByKey("864791___WetandCold.esp", 10, 10) ; _WetCloak1_Gray linen
-	handler.SetArmorDataByKey("864794___WetandCold.esp", 10, 10) ; _WetCloak1_Green linen
-	handler.SetArmorDataByKey("864796___WetandCold.esp", 10, 10) ; _WetCloak1_Purple linen
-	handler.SetArmorDataByKey("864792___WetandCold.esp", 10, 10) ; _WetCloak1_Red linen
-	handler.SetArmorDataByKey("864793___WetandCold.esp", 10, 10) ; _WetCloak1_Yellow linen
-	handler.SetArmorDataByKey("415000___WetandCold.esp", 40, 12) ; _WetCloakFur1 fur
-	handler.SetArmorDataByKey("514265___WetandCold.esp", 40, 12) ; _WetCloakFur1_Black fur
-	handler.SetArmorDataByKey("416384___WetandCold.esp", 40, 12) ; _WetCloakFur1_Brown fur
-	handler.SetArmorDataByKey("416380___WetandCold.esp", 40, 12) ; _WetCloakFur1_Gray fur
-	handler.SetArmorDataByKey("831666___WetandCold.esp", 40, 12) ; _WetCloakFur2 fur
-	handler.SetArmorDataByKey("831673___WetandCold.esp", 40, 12) ; _WetCloakFur2_Black fur
-	handler.SetArmorDataByKey("831674___WetandCold.esp", 40, 12) ; _WetCloakFur2_Brown fur
-	handler.SetArmorDataByKey("831675___WetandCold.esp", 40, 12) ; _WetCloakFur2_Gray fur
-	handler.SetArmorDataByKey("152448___WetandCold.esp", 5, 14) ; _WetGloves1
-	handler.SetArmorDataByKey("698278___WetandCold.esp", 5, 14) ; _WetGloves1_Blue
-	handler.SetArmorDataByKey("152450___WetandCold.esp", 5, 14) ; _WetGloves1_Gray
-	handler.SetArmorDataByKey("698279___WetandCold.esp", 5, 14) ; _WetGloves1_Green
-	handler.SetArmorDataByKey("152451___WetandCold.esp", 5, 14) ; _WetGloves1_Yellow
-	handler.SetArmorDataByKey("95879___WetandCold.esp", 35, 43) ; _WetHood1
-	handler.SetArmorDataByKey("334976___WetandCold.esp", 35, 43) ; _WetHood1_Teal
-	handler.SetArmorDataByKey("95880___WetandCold.esp", 35, 43) ; _WetHood2
-	handler.SetArmorDataByKey("104164___WetandCold.esp", 35, 43) ; _WetHood2_Gray
-	handler.SetArmorDataByKey("97267___WetandCold.esp", 35, 43) ; _WetHood3
-	handler.SetArmorDataByKey("104163___WetandCold.esp", 35, 43) ; _WetHood3_Yellow
-	handler.SetArmorDataByKey("450851___WetandCold.esp", 35, 43) ; _WetHood4
-	handler.SetArmorDataByKey("804073___WetandCold.esp", 35, 28) ; _WetHood5
-	handler.SetArmorDataByKey("804074___WetandCold.esp", 35, 28) ; _WetHood5_Brown
-	handler.SetArmorDataByKey("804075___WetandCold.esp", 35, 28) ; _WetHood5_Gray
-	handler.SetArmorDataByKey("804076___WetandCold.esp", 35, 28) ; _WetHood5_Green
-	handler.SetArmorDataByKey("804077___WetandCold.esp", 35, 28) ; _WetHood5_Red
-	handler.SetArmorDataByKey("146916___WetandCold.esp", 45, 14) ; _WetHoodFur1
-	handler.SetArmorDataByKey("146917___WetandCold.esp", 45, 14) ; _WetHoodFur1_Black
-	handler.SetArmorDataByKey("699670___WetandCold.esp", 45, 14) ; _WetHoodFur1_Brown
-	handler.SetArmorDataByKey("146918___WetandCold.esp", 45, 14) ; _WetHoodFur1_Gray
-	handler.SetArmorDataByKey("873070___WetandCold.esp", 45, 14) ; _WetHoodFur2
-	handler.SetArmorDataByKey("874470___WetandCold.esp", 45, 14) ; _WetHoodFur2_Black
-	handler.SetArmorDataByKey("874471___WetandCold.esp", 45, 14) ; _WetHoodFur2_Brown
-	handler.SetArmorDataByKey("874472___WetandCold.esp", 45, 14) ; _WetHoodFur2_LightBrown
-	handler.SetArmorDataByKey("874473___WetandCold.esp", 45, 14) ; _WetHoodFur2_White
-	handler.SetArmorDataByKey("874476___WetandCold.esp", 45, 14) ; _WetHoodFur3
-	handler.SetArmorDataByKey("874481___WetandCold.esp", 45, 14) ; _WetHoodFur3_Black
-	handler.SetArmorDataByKey("874482___WetandCold.esp", 45, 14) ; _WetHoodFur3_White
-	handler.SetArmorDataByKey("841332___WetandCold.esp", 45, 14) ; _WetHoodFurLined1
-	handler.SetArmorDataByKey("842717___WetandCold.esp", 45, 14) ; _WetHoodFurLined1_Brown
-	handler.SetArmorDataByKey("842718___WetandCold.esp", 45, 14) ; _WetHoodFurLined1_Dark
+	handler.SetArmorDataByKey("860640___WetandCold.esp", 10, 10, abExportToDefaults = true) ; _WetCloak1 linen
+	handler.SetArmorDataByKey("860649___WetandCold.esp", 10, 10, abExportToDefaults = true) ; _WetCloak1_Black linen
+	handler.SetArmorDataByKey("864795___WetandCold.esp", 10, 10, abExportToDefaults = true) ; _WetCloak1_Blue linen
+	handler.SetArmorDataByKey("864791___WetandCold.esp", 10, 10, abExportToDefaults = true) ; _WetCloak1_Gray linen
+	handler.SetArmorDataByKey("864794___WetandCold.esp", 10, 10, abExportToDefaults = true) ; _WetCloak1_Green linen
+	handler.SetArmorDataByKey("864796___WetandCold.esp", 10, 10, abExportToDefaults = true) ; _WetCloak1_Purple linen
+	handler.SetArmorDataByKey("864792___WetandCold.esp", 10, 10, abExportToDefaults = true) ; _WetCloak1_Red linen
+	handler.SetArmorDataByKey("864793___WetandCold.esp", 10, 10, abExportToDefaults = true) ; _WetCloak1_Yellow linen
+	handler.SetArmorDataByKey("415000___WetandCold.esp", 40, 12, abExportToDefaults = true) ; _WetCloakFur1 fur
+	handler.SetArmorDataByKey("514265___WetandCold.esp", 40, 12, abExportToDefaults = true) ; _WetCloakFur1_Black fur
+	handler.SetArmorDataByKey("416384___WetandCold.esp", 40, 12, abExportToDefaults = true) ; _WetCloakFur1_Brown fur
+	handler.SetArmorDataByKey("416380___WetandCold.esp", 40, 12, abExportToDefaults = true) ; _WetCloakFur1_Gray fur
+	handler.SetArmorDataByKey("831666___WetandCold.esp", 40, 12, abExportToDefaults = true) ; _WetCloakFur2 fur
+	handler.SetArmorDataByKey("831673___WetandCold.esp", 40, 12, abExportToDefaults = true) ; _WetCloakFur2_Black fur
+	handler.SetArmorDataByKey("831674___WetandCold.esp", 40, 12, abExportToDefaults = true) ; _WetCloakFur2_Brown fur
+	handler.SetArmorDataByKey("831675___WetandCold.esp", 40, 12, abExportToDefaults = true) ; _WetCloakFur2_Gray fur
+	handler.SetArmorDataByKey("152448___WetandCold.esp", 5, 14, abExportToDefaults = true) ; _WetGloves1
+	handler.SetArmorDataByKey("698278___WetandCold.esp", 5, 14, abExportToDefaults = true) ; _WetGloves1_Blue
+	handler.SetArmorDataByKey("152450___WetandCold.esp", 5, 14, abExportToDefaults = true) ; _WetGloves1_Gray
+	handler.SetArmorDataByKey("698279___WetandCold.esp", 5, 14, abExportToDefaults = true) ; _WetGloves1_Green
+	handler.SetArmorDataByKey("152451___WetandCold.esp", 5, 14, abExportToDefaults = true) ; _WetGloves1_Yellow
+	handler.SetArmorDataByKey("95879___WetandCold.esp", 35, 43, abExportToDefaults = true) ; _WetHood1
+	handler.SetArmorDataByKey("334976___WetandCold.esp", 35, 43, abExportToDefaults = true) ; _WetHood1_Teal
+	handler.SetArmorDataByKey("95880___WetandCold.esp", 35, 43, abExportToDefaults = true) ; _WetHood2
+	handler.SetArmorDataByKey("104164___WetandCold.esp", 35, 43, abExportToDefaults = true) ; _WetHood2_Gray
+	handler.SetArmorDataByKey("97267___WetandCold.esp", 35, 43, abExportToDefaults = true) ; _WetHood3
+	handler.SetArmorDataByKey("104163___WetandCold.esp", 35, 43, abExportToDefaults = true) ; _WetHood3_Yellow
+	handler.SetArmorDataByKey("450851___WetandCold.esp", 35, 43, abExportToDefaults = true) ; _WetHood4
+	handler.SetArmorDataByKey("804073___WetandCold.esp", 35, 28, abExportToDefaults = true) ; _WetHood5
+	handler.SetArmorDataByKey("804074___WetandCold.esp", 35, 28, abExportToDefaults = true) ; _WetHood5_Brown
+	handler.SetArmorDataByKey("804075___WetandCold.esp", 35, 28, abExportToDefaults = true) ; _WetHood5_Gray
+	handler.SetArmorDataByKey("804076___WetandCold.esp", 35, 28, abExportToDefaults = true) ; _WetHood5_Green
+	handler.SetArmorDataByKey("804077___WetandCold.esp", 35, 28, abExportToDefaults = true) ; _WetHood5_Red
+	handler.SetArmorDataByKey("146916___WetandCold.esp", 45, 14, abExportToDefaults = true) ; _WetHoodFur1
+	handler.SetArmorDataByKey("146917___WetandCold.esp", 45, 14, abExportToDefaults = true) ; _WetHoodFur1_Black
+	handler.SetArmorDataByKey("699670___WetandCold.esp", 45, 14, abExportToDefaults = true) ; _WetHoodFur1_Brown
+	handler.SetArmorDataByKey("146918___WetandCold.esp", 45, 14, abExportToDefaults = true) ; _WetHoodFur1_Gray
+	handler.SetArmorDataByKey("873070___WetandCold.esp", 45, 14, abExportToDefaults = true) ; _WetHoodFur2
+	handler.SetArmorDataByKey("874470___WetandCold.esp", 45, 14, abExportToDefaults = true) ; _WetHoodFur2_Black
+	handler.SetArmorDataByKey("874471___WetandCold.esp", 45, 14, abExportToDefaults = true) ; _WetHoodFur2_Brown
+	handler.SetArmorDataByKey("874472___WetandCold.esp", 45, 14, abExportToDefaults = true) ; _WetHoodFur2_LightBrown
+	handler.SetArmorDataByKey("874473___WetandCold.esp", 45, 14, abExportToDefaults = true) ; _WetHoodFur2_White
+	handler.SetArmorDataByKey("874476___WetandCold.esp", 45, 14, abExportToDefaults = true) ; _WetHoodFur3
+	handler.SetArmorDataByKey("874481___WetandCold.esp", 45, 14, abExportToDefaults = true) ; _WetHoodFur3_Black
+	handler.SetArmorDataByKey("874482___WetandCold.esp", 45, 14, abExportToDefaults = true) ; _WetHoodFur3_White
+	handler.SetArmorDataByKey("841332___WetandCold.esp", 45, 14, abExportToDefaults = true) ; _WetHoodFurLined1
+	handler.SetArmorDataByKey("842717___WetandCold.esp", 45, 14, abExportToDefaults = true) ; _WetHoodFurLined1_Brown
+	handler.SetArmorDataByKey("842718___WetandCold.esp", 45, 14, abExportToDefaults = true) ; _WetHoodFurLined1_Dark
 endFunction
 
 function IMALoadUp()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
 	; Check if already loaded
-	if handler.DatastoreHasEntry("20258___Hothtrooper44_ArmorCompilation.esp", 1)
+	if handler.DatastoreHasEntry("20258___Hothtrooper44_ArmorCompilation.esp")
 		return
 	endif
 
-	handler.SetArmorDataByKey("20258___Hothtrooper44_ArmorCompilation.esp", 125, 54) ; IAAkaviriSamuraiCuirass
-	handler.SetArmorDataByKey("144010___Hothtrooper44_ArmorCompilation.esp", 140, 109) ; IAAlduinCuirass
-	handler.SetArmorDataByKey("46671___Hothtrooper44_ArmorCompilation.esp", 125, 91) ; IAApotheusCuirass
-	handler.SetArmorDataByKey("23132___Hothtrooper44_ArmorCompilation.esp", 30, 0) ; IABarbarianCuirass
-	handler.SetArmorDataByKey("144116___Hothtrooper44_ArmorCompilation.esp", 125, 54) ; IABoiledChitinHCuirass
-	handler.SetArmorDataByKey("544585___Hothtrooper44_ArmorCompilation.esp", 125, 54) ; IABoiledChitinLCuirass
-	handler.SetArmorDataByKey("145634___Hothtrooper44_ArmorCompilation.esp", 125, 91) ; IABosmerCuirass
-	handler.SetArmorDataByKey("145637___Hothtrooper44_ArmorCompilation.esp", 125, 91) ; IABosmerEngravedCuirass
-	handler.SetArmorDataByKey("145646___Hothtrooper44_ArmorCompilation.esp", 125, 91) ; IABosmerHeavyCuirass
-	handler.SetArmorDataByKey("145653___Hothtrooper44_ArmorCompilation.esp", 125, 91) ; IABosmerHuntHeavyCuirass
-	handler.SetArmorDataByKey("145656___Hothtrooper44_ArmorCompilation.esp", 125, 91) ; IABosmerHuntLightCuirass
-	handler.SetArmorDataByKey("143594___Hothtrooper44_ArmorCompilation.esp", 0, 0) ; IAConanCuirass
-	handler.SetArmorDataByKey("143608___Hothtrooper44_ArmorCompilation.esp", 125, 91) ; IACrimsonArcherCuirass
-	handler.SetArmorDataByKey("145723___Hothtrooper44_ArmorCompilation.esp", 160, 91) ; IADaedricLordCuirass
-	handler.SetArmorDataByKey("139237___Hothtrooper44_ArmorCompilation.esp", 140, 109) ; IADragonEbonBulkyCuirass
-	handler.SetArmorDataByKey("139238___Hothtrooper44_ArmorCompilation.esp", 140, 109) ; IADragonEbonSleekCuirass
-	handler.SetArmorDataByKey("143558___Hothtrooper44_ArmorCompilation.esp", 140, 109) ; IADragonKnightCuirassFox
-	handler.SetArmorDataByKey("143557___Hothtrooper44_ArmorCompilation.esp", 140, 109) ; IADragonKnightCuirassFull
-	handler.SetArmorDataByKey("15925___Hothtrooper44_ArmorCompilation.esp", 190, 72) ; IAEinherjarBrigandineDarkCuirass
-	handler.SetArmorDataByKey("15926___Hothtrooper44_ArmorCompilation.esp", 190, 72) ; IAEinherjarBrigandineLightCuirass
-	handler.SetArmorDataByKey("32830___Hothtrooper44_ArmorCompilation.esp", 190, 72) ; IAEinherjarPlateDarkCuirass
-	handler.SetArmorDataByKey("4820___Hothtrooper44_ArmorCompilation.esp", 190, 72) ; IAEinherjarPlateLightCuirass
-	handler.SetArmorDataByKey("3428___Hothtrooper44_ArmorCompilation.esp", 125, 72) ; IAFalkreathCuirass
-	handler.SetArmorDataByKey("144118___Hothtrooper44_ArmorCompilation.esp", 190, 91) ; IAGlacialCrystalHCuirass
-	handler.SetArmorDataByKey("544590___Hothtrooper44_ArmorCompilation.esp", 190, 91) ; IAGlacialCrystalLCuirass
-	handler.SetArmorDataByKey("3478___Hothtrooper44_ArmorCompilation.esp", 125, 72) ; IAHedgeKnightCuirass
-	handler.SetArmorDataByKey("23065___Hothtrooper44_ArmorCompilation.esp", 125, 72) ; IAHeroicImperialCuirass
-	handler.SetArmorDataByKey("43878___Hothtrooper44_ArmorCompilation.esp", 140, 35) ; IAHeroicStormcloakCuirass
-	handler.SetArmorDataByKey("14469___Hothtrooper44_ArmorCompilation.esp", 125, 91) ; IAHunterCuirass
-	handler.SetArmorDataByKey("436741___Hothtrooper44_ArmorCompilation.esp", 125, 72) ; IAImperialKnightCuirass
-	handler.SetArmorDataByKey("23050___Hothtrooper44_ArmorCompilation.esp", 110, 35) ; IAMercenaryCuirass
-	handler.SetArmorDataByKey("43874___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 10, aiExtraCloakCoverage = 10) ; IAPaladinCuirass	@MULTI
-	; handler.SetArmorDataByKey("23102___Hothtrooper44_ArmorCompilation.esp", Y, Z) ; IAPrimitiveNordHeavyCuirass
-	; handler.SetArmorDataByKey("23106___Hothtrooper44_ArmorCompilation.esp", Y, Z) ; IAPrimitiveNordLightCuirass
-	handler.SetArmorDataByKey("23151___Hothtrooper44_ArmorCompilation.esp", 110, 35) ; IARangerCuirass
-	handler.SetArmorDataByKey("3440___Hothtrooper44_ArmorCompilation.esp", 125, 91) ; IARedguardKnightHeavyCuirass
-	handler.SetArmorDataByKey("3441___Hothtrooper44_ArmorCompilation.esp", 125, 91) ; IARedguardKnightLightCuirass
-	handler.SetArmorDataByKey("144113___Hothtrooper44_ArmorCompilation.esp", 110, 35) ; IARingmailCuirass
-	handler.SetArmorDataByKey("139149___Hothtrooper44_ArmorCompilation.esp", 140, 109) ; IARitualBoethiahCuirass
-	handler.SetArmorDataByKey("43870___Hothtrooper44_ArmorCompilation.esp", 125, 91) ; IASeadogCuirass
-	handler.SetArmorDataByKey("144117___Hothtrooper44_ArmorCompilation.esp", 140, 35, aiExtraCloakWarmth = 40, aiExtraCloakCoverage = 12) ; IASnowBearCuirass	@MULTI
-	handler.SetArmorDataByKey("53616___Hothtrooper44_ArmorCompilation.esp", 125, 72) ; IASpellbinderCrimsonCuirass
-	handler.SetArmorDataByKey("53617___Hothtrooper44_ArmorCompilation.esp", 125, 72) ; IASpellbinderRunicCuirass
-	handler.SetArmorDataByKey("436720___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 40, aiExtraCloakCoverage = 12) ; IAStormlordCuirass	@MULTI
-	handler.SetArmorDataByKey("143492___Hothtrooper44_ArmorCompilation.esp", 140, 35, aiExtraCloakWarmth = 40, aiExtraCloakCoverage = 12) ; IATrollbaneHeavyCuirass	@MULTI
-	handler.SetArmorDataByKey("143498___Hothtrooper44_ArmorCompilation.esp", 140, 35, aiExtraCloakWarmth = 40, aiExtraCloakCoverage = 12) ; IATrollbaneLightCuirass	@MULTI
-	handler.SetArmorDataByKey("3447___Hothtrooper44_ArmorCompilation.esp", 128, 106, aiExtraCloakWarmth = 20, aiExtraCloakCoverage = 20) ; IAVagabondCrimsonCuirass
-	handler.SetArmorDataByKey("3449___Hothtrooper44_ArmorCompilation.esp", 128, 106, aiExtraCloakWarmth = 20, aiExtraCloakCoverage = 20) ; IAVagabondDuskCuirass
-	handler.SetArmorDataByKey("3448___Hothtrooper44_ArmorCompilation.esp", 128, 106, aiExtraCloakWarmth = 20, aiExtraCloakCoverage = 20) ; IAVagabondLeatherCuirass
-	handler.SetArmorDataByKey("3460___Hothtrooper44_ArmorCompilation.esp", 128, 106) ; IAVanguardPlateCuirass
-	handler.SetArmorDataByKey("144124___Hothtrooper44_ArmorCompilation.esp", 125, 72) ; IAVvardenfellGlassCuirass
-	handler.SetArmorDataByKey("50833___Hothtrooper44_ArmorCompilation.esp", 125, 54) ; IAWitchplateCuirass
-	handler.SetArmorDataByKey("143995___Hothtrooper44_ArmorCompilation.esp", 110, 52) ; IABrigandDwemerScrap
-	handler.SetArmorDataByKey("143996___Hothtrooper44_ArmorCompilation.esp", 90, 35) ; IABrigandHighwayChain
-	handler.SetArmorDataByKey("143997___Hothtrooper44_ArmorCompilation.esp", 90, 35) ; IABrigandIronHide
-	handler.SetArmorDataByKey("20284___Hothtrooper44_ArmorCompilation.esp", 140, 109) ; IADragonhideHeavyRobe
-	handler.SetArmorDataByKey("144024___Hothtrooper44_ArmorCompilation.esp", 140, 109) ; IADragonhideLRobe
-	handler.SetArmorDataByKey("226058___Hothtrooper44_ArmorCompilation.esp", 140, 109) ; IADragonhideURobe
-	handler.SetArmorDataByKey("23079___Hothtrooper44_ArmorCompilation.esp", 140, 72) ; IADwarvenMageHRobe
-	handler.SetArmorDataByKey("144028___Hothtrooper44_ArmorCompilation.esp", 140, 72) ; IADwarvenMageLRobe
-	handler.SetArmorDataByKey("226053___Hothtrooper44_ArmorCompilation.esp", 140, 72) ; IADwarvenMageURobe
-	handler.SetArmorDataByKey("145736___Hothtrooper44_ArmorCompilation.esp", 140, 54) ; IAEbonyMageHeavyRobe
-	handler.SetArmorDataByKey("145740___Hothtrooper44_ArmorCompilation.esp", 140, 54) ; IAEbonyMageLightRobe
-	handler.SetArmorDataByKey("226045___Hothtrooper44_ArmorCompilation.esp", 140, 54) ; IAEbonyMageUnarmoredRobe
-	handler.SetArmorDataByKey("143533___Hothtrooper44_ArmorCompilation.esp", 40, 0) ; IAShamanLRobe
-	handler.SetArmorDataByKey("536248___Hothtrooper44_ArmorCompilation.esp", 40, 0) ; IAShamanURobe
-	handler.SetArmorDataByKey("143706___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalHeavyRobeBlackCloak	@MULTI
-	handler.SetArmorDataByKey("143701___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalHeavyRobeBlackNoCloak	@MULTI
-	handler.SetArmorDataByKey("143707___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalHeavyRobeBlueCloak	@MULTI
-	handler.SetArmorDataByKey("143702___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalHeavyRobeBlueNoCloak	@MULTI
-	handler.SetArmorDataByKey("143708___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalHeavyRobeGreenCloak	@MULTI
-	handler.SetArmorDataByKey("143703___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalHeavyRobeGreenNoCloak	@MULTI
-	handler.SetArmorDataByKey("143709___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalHeavyRobeRedCloak	@MULTI
-	handler.SetArmorDataByKey("143704___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalHeavyRobeRedNoCloak	@MULTI
-	handler.SetArmorDataByKey("143710___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalHeavyRobeWhiteCloak	@MULTI
-	handler.SetArmorDataByKey("143705___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalHeavyRobeWhiteNoCloak	@MULTI
-	handler.SetArmorDataByKey("143731___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalLightRobeBlackCloak	@MULTI
-	handler.SetArmorDataByKey("143726___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalLightRobeBlackNoCloak	@MULTI
-	handler.SetArmorDataByKey("143732___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalLightRobeBlueCloak	@MULTI
-	handler.SetArmorDataByKey("143727___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalLightRobeBlueNoCloak	@MULTI
-	handler.SetArmorDataByKey("143733___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalLightRobeGreenCloak	@MULTI
-	handler.SetArmorDataByKey("143728___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalLightRobeGreenNoCloak	@MULTI
-	handler.SetArmorDataByKey("143734___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalLightRobeRedCloak	@MULTI
-	handler.SetArmorDataByKey("143729___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalLightRobeRedNoCloak	@MULTI
-	handler.SetArmorDataByKey("143735___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalLightRobeWhiteCloak	@MULTI
-	handler.SetArmorDataByKey("143730___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalLightRobeWhiteNoCloak	@MULTI
-	handler.SetArmorDataByKey("143755___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalUnarmoredRobeBlack	@MULTI
-	handler.SetArmorDataByKey("143756___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalUnarmoredRobeBlue	@MULTI
-	handler.SetArmorDataByKey("143757___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalUnarmoredRobeGreen	@MULTI
-	handler.SetArmorDataByKey("143758___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalUnarmoredRobeRed	@MULTI
-	handler.SetArmorDataByKey("143759___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5) ; IATribunalUnarmoredRobeWhite	@MULTI
-	handler.SetArmorDataByKey("16070___Hothtrooper44_ArmorCompilation.esp", 75, 35) ; IANordMailHeavyHauberk
-	handler.SetArmorDataByKey("16068___Hothtrooper44_ArmorCompilation.esp", 75, 35) ; IANordMailLightShirt
-	handler.SetArmorDataByKey("3466___Hothtrooper44_ArmorCompilation.esp", 175, 54) ; IAWarchiefHeavyBulwark
-	handler.SetArmorDataByKey("3467___Hothtrooper44_ArmorCompilation.esp", 175, 54) ; IAWarchiefLightBulwark
+	handler.SetArmorDataByKey("20258___Hothtrooper44_ArmorCompilation.esp", 125, 54, abExportToDefaults = true) ; IAAkaviriSamuraiCuirass
+	handler.SetArmorDataByKey("144010___Hothtrooper44_ArmorCompilation.esp", 140, 109, abExportToDefaults = true) ; IAAlduinCuirass
+	handler.SetArmorDataByKey("46671___Hothtrooper44_ArmorCompilation.esp", 125, 91, abExportToDefaults = true) ; IAApotheusCuirass
+	handler.SetArmorDataByKey("23132___Hothtrooper44_ArmorCompilation.esp", 30, 0, abExportToDefaults = true) ; IABarbarianCuirass
+	handler.SetArmorDataByKey("144116___Hothtrooper44_ArmorCompilation.esp", 125, 54, abExportToDefaults = true) ; IABoiledChitinHCuirass
+	handler.SetArmorDataByKey("544585___Hothtrooper44_ArmorCompilation.esp", 125, 54, abExportToDefaults = true) ; IABoiledChitinLCuirass
+	handler.SetArmorDataByKey("145634___Hothtrooper44_ArmorCompilation.esp", 125, 91, abExportToDefaults = true) ; IABosmerCuirass
+	handler.SetArmorDataByKey("145637___Hothtrooper44_ArmorCompilation.esp", 125, 91, abExportToDefaults = true) ; IABosmerEngravedCuirass
+	handler.SetArmorDataByKey("145646___Hothtrooper44_ArmorCompilation.esp", 125, 91, abExportToDefaults = true) ; IABosmerHeavyCuirass
+	handler.SetArmorDataByKey("145653___Hothtrooper44_ArmorCompilation.esp", 125, 91, abExportToDefaults = true) ; IABosmerHuntHeavyCuirass
+	handler.SetArmorDataByKey("145656___Hothtrooper44_ArmorCompilation.esp", 125, 91, abExportToDefaults = true) ; IABosmerHuntLightCuirass
+	handler.SetArmorDataByKey("143594___Hothtrooper44_ArmorCompilation.esp", 0, 0, abExportToDefaults = true) ; IAConanCuirass
+	handler.SetArmorDataByKey("143608___Hothtrooper44_ArmorCompilation.esp", 125, 91, abExportToDefaults = true) ; IACrimsonArcherCuirass
+	handler.SetArmorDataByKey("145723___Hothtrooper44_ArmorCompilation.esp", 160, 91, abExportToDefaults = true) ; IADaedricLordCuirass
+	handler.SetArmorDataByKey("139237___Hothtrooper44_ArmorCompilation.esp", 140, 109, abExportToDefaults = true) ; IADragonEbonBulkyCuirass
+	handler.SetArmorDataByKey("139238___Hothtrooper44_ArmorCompilation.esp", 140, 109, abExportToDefaults = true) ; IADragonEbonSleekCuirass
+	handler.SetArmorDataByKey("143558___Hothtrooper44_ArmorCompilation.esp", 140, 109, abExportToDefaults = true) ; IADragonKnightCuirassFox
+	handler.SetArmorDataByKey("143557___Hothtrooper44_ArmorCompilation.esp", 140, 109, abExportToDefaults = true) ; IADragonKnightCuirassFull
+	handler.SetArmorDataByKey("15925___Hothtrooper44_ArmorCompilation.esp", 190, 72, abExportToDefaults = true) ; IAEinherjarBrigandineDarkCuirass
+	handler.SetArmorDataByKey("15926___Hothtrooper44_ArmorCompilation.esp", 190, 72, abExportToDefaults = true) ; IAEinherjarBrigandineLightCuirass
+	handler.SetArmorDataByKey("32830___Hothtrooper44_ArmorCompilation.esp", 190, 72, abExportToDefaults = true) ; IAEinherjarPlateDarkCuirass
+	handler.SetArmorDataByKey("4820___Hothtrooper44_ArmorCompilation.esp", 190, 72, abExportToDefaults = true) ; IAEinherjarPlateLightCuirass
+	handler.SetArmorDataByKey("3428___Hothtrooper44_ArmorCompilation.esp", 125, 72, abExportToDefaults = true) ; IAFalkreathCuirass
+	handler.SetArmorDataByKey("144118___Hothtrooper44_ArmorCompilation.esp", 190, 91, abExportToDefaults = true) ; IAGlacialCrystalHCuirass
+	handler.SetArmorDataByKey("544590___Hothtrooper44_ArmorCompilation.esp", 190, 91, abExportToDefaults = true) ; IAGlacialCrystalLCuirass
+	handler.SetArmorDataByKey("3478___Hothtrooper44_ArmorCompilation.esp", 125, 72, abExportToDefaults = true) ; IAHedgeKnightCuirass
+	handler.SetArmorDataByKey("23065___Hothtrooper44_ArmorCompilation.esp", 125, 72, abExportToDefaults = true) ; IAHeroicImperialCuirass
+	handler.SetArmorDataByKey("43878___Hothtrooper44_ArmorCompilation.esp", 140, 35, abExportToDefaults = true) ; IAHeroicStormcloakCuirass
+	handler.SetArmorDataByKey("14469___Hothtrooper44_ArmorCompilation.esp", 125, 91, abExportToDefaults = true) ; IAHunterCuirass
+	handler.SetArmorDataByKey("436741___Hothtrooper44_ArmorCompilation.esp", 125, 72, abExportToDefaults = true) ; IAImperialKnightCuirass
+	handler.SetArmorDataByKey("23050___Hothtrooper44_ArmorCompilation.esp", 110, 35, abExportToDefaults = true) ; IAMercenaryCuirass
+	handler.SetArmorDataByKey("43874___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 10, aiExtraCloakCoverage = 10, abExportToDefaults = true) ; IAPaladinCuirass	@MULTI
+	; handler.SetArmorDataByKey("23102___Hothtrooper44_ArmorCompilation.esp", Y, Z, abExportToDefaults = true) ; IAPrimitiveNordHeavyCuirass
+	; handler.SetArmorDataByKey("23106___Hothtrooper44_ArmorCompilation.esp", Y, Z, abExportToDefaults = true) ; IAPrimitiveNordLightCuirass
+	handler.SetArmorDataByKey("23151___Hothtrooper44_ArmorCompilation.esp", 110, 35, abExportToDefaults = true) ; IARangerCuirass
+	handler.SetArmorDataByKey("3440___Hothtrooper44_ArmorCompilation.esp", 125, 91, abExportToDefaults = true) ; IARedguardKnightHeavyCuirass
+	handler.SetArmorDataByKey("3441___Hothtrooper44_ArmorCompilation.esp", 125, 91, abExportToDefaults = true) ; IARedguardKnightLightCuirass
+	handler.SetArmorDataByKey("144113___Hothtrooper44_ArmorCompilation.esp", 110, 35, abExportToDefaults = true) ; IARingmailCuirass
+	handler.SetArmorDataByKey("139149___Hothtrooper44_ArmorCompilation.esp", 140, 109, abExportToDefaults = true) ; IARitualBoethiahCuirass
+	handler.SetArmorDataByKey("43870___Hothtrooper44_ArmorCompilation.esp", 125, 91, abExportToDefaults = true) ; IASeadogCuirass
+	handler.SetArmorDataByKey("144117___Hothtrooper44_ArmorCompilation.esp", 140, 35, aiExtraCloakWarmth = 40, aiExtraCloakCoverage = 12, abExportToDefaults = true) ; IASnowBearCuirass	@MULTI
+	handler.SetArmorDataByKey("53616___Hothtrooper44_ArmorCompilation.esp", 125, 72, abExportToDefaults = true) ; IASpellbinderCrimsonCuirass
+	handler.SetArmorDataByKey("53617___Hothtrooper44_ArmorCompilation.esp", 125, 72, abExportToDefaults = true) ; IASpellbinderRunicCuirass
+	handler.SetArmorDataByKey("436720___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 40, aiExtraCloakCoverage = 12, abExportToDefaults = true) ; IAStormlordCuirass	@MULTI
+	handler.SetArmorDataByKey("143492___Hothtrooper44_ArmorCompilation.esp", 140, 35, aiExtraCloakWarmth = 40, aiExtraCloakCoverage = 12, abExportToDefaults = true) ; IATrollbaneHeavyCuirass	@MULTI
+	handler.SetArmorDataByKey("143498___Hothtrooper44_ArmorCompilation.esp", 140, 35, aiExtraCloakWarmth = 40, aiExtraCloakCoverage = 12, abExportToDefaults = true) ; IATrollbaneLightCuirass	@MULTI
+	handler.SetArmorDataByKey("3447___Hothtrooper44_ArmorCompilation.esp", 128, 106, aiExtraCloakWarmth = 20, aiExtraCloakCoverage = 20, abExportToDefaults = true) ; IAVagabondCrimsonCuirass
+	handler.SetArmorDataByKey("3449___Hothtrooper44_ArmorCompilation.esp", 128, 106, aiExtraCloakWarmth = 20, aiExtraCloakCoverage = 20, abExportToDefaults = true) ; IAVagabondDuskCuirass
+	handler.SetArmorDataByKey("3448___Hothtrooper44_ArmorCompilation.esp", 128, 106, aiExtraCloakWarmth = 20, aiExtraCloakCoverage = 20, abExportToDefaults = true) ; IAVagabondLeatherCuirass
+	handler.SetArmorDataByKey("3460___Hothtrooper44_ArmorCompilation.esp", 128, 106, abExportToDefaults = true) ; IAVanguardPlateCuirass
+	handler.SetArmorDataByKey("144124___Hothtrooper44_ArmorCompilation.esp", 125, 72, abExportToDefaults = true) ; IAVvardenfellGlassCuirass
+	handler.SetArmorDataByKey("50833___Hothtrooper44_ArmorCompilation.esp", 125, 54, abExportToDefaults = true) ; IAWitchplateCuirass
+	handler.SetArmorDataByKey("143995___Hothtrooper44_ArmorCompilation.esp", 110, 52, abExportToDefaults = true) ; IABrigandDwemerScrap
+	handler.SetArmorDataByKey("143996___Hothtrooper44_ArmorCompilation.esp", 90, 35, abExportToDefaults = true) ; IABrigandHighwayChain
+	handler.SetArmorDataByKey("143997___Hothtrooper44_ArmorCompilation.esp", 90, 35, abExportToDefaults = true) ; IABrigandIronHide
+	handler.SetArmorDataByKey("20284___Hothtrooper44_ArmorCompilation.esp", 140, 109, abExportToDefaults = true) ; IADragonhideHeavyRobe
+	handler.SetArmorDataByKey("144024___Hothtrooper44_ArmorCompilation.esp", 140, 109, abExportToDefaults = true) ; IADragonhideLRobe
+	handler.SetArmorDataByKey("226058___Hothtrooper44_ArmorCompilation.esp", 140, 109, abExportToDefaults = true) ; IADragonhideURobe
+	handler.SetArmorDataByKey("23079___Hothtrooper44_ArmorCompilation.esp", 140, 72, abExportToDefaults = true) ; IADwarvenMageHRobe
+	handler.SetArmorDataByKey("144028___Hothtrooper44_ArmorCompilation.esp", 140, 72, abExportToDefaults = true) ; IADwarvenMageLRobe
+	handler.SetArmorDataByKey("226053___Hothtrooper44_ArmorCompilation.esp", 140, 72, abExportToDefaults = true) ; IADwarvenMageURobe
+	handler.SetArmorDataByKey("145736___Hothtrooper44_ArmorCompilation.esp", 140, 54, abExportToDefaults = true) ; IAEbonyMageHeavyRobe
+	handler.SetArmorDataByKey("145740___Hothtrooper44_ArmorCompilation.esp", 140, 54, abExportToDefaults = true) ; IAEbonyMageLightRobe
+	handler.SetArmorDataByKey("226045___Hothtrooper44_ArmorCompilation.esp", 140, 54, abExportToDefaults = true) ; IAEbonyMageUnarmoredRobe
+	handler.SetArmorDataByKey("143533___Hothtrooper44_ArmorCompilation.esp", 40, 0, abExportToDefaults = true) ; IAShamanLRobe
+	handler.SetArmorDataByKey("536248___Hothtrooper44_ArmorCompilation.esp", 40, 0, abExportToDefaults = true) ; IAShamanURobe
+	handler.SetArmorDataByKey("143706___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalHeavyRobeBlackCloak	@MULTI
+	handler.SetArmorDataByKey("143701___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalHeavyRobeBlackNoCloak	@MULTI
+	handler.SetArmorDataByKey("143707___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalHeavyRobeBlueCloak	@MULTI
+	handler.SetArmorDataByKey("143702___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalHeavyRobeBlueNoCloak	@MULTI
+	handler.SetArmorDataByKey("143708___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalHeavyRobeGreenCloak	@MULTI
+	handler.SetArmorDataByKey("143703___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalHeavyRobeGreenNoCloak	@MULTI
+	handler.SetArmorDataByKey("143709___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalHeavyRobeRedCloak	@MULTI
+	handler.SetArmorDataByKey("143704___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalHeavyRobeRedNoCloak	@MULTI
+	handler.SetArmorDataByKey("143710___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalHeavyRobeWhiteCloak	@MULTI
+	handler.SetArmorDataByKey("143705___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalHeavyRobeWhiteNoCloak	@MULTI
+	handler.SetArmorDataByKey("143731___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalLightRobeBlackCloak	@MULTI
+	handler.SetArmorDataByKey("143726___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalLightRobeBlackNoCloak	@MULTI
+	handler.SetArmorDataByKey("143732___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalLightRobeBlueCloak	@MULTI
+	handler.SetArmorDataByKey("143727___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalLightRobeBlueNoCloak	@MULTI
+	handler.SetArmorDataByKey("143733___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalLightRobeGreenCloak	@MULTI
+	handler.SetArmorDataByKey("143728___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalLightRobeGreenNoCloak	@MULTI
+	handler.SetArmorDataByKey("143734___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalLightRobeRedCloak	@MULTI
+	handler.SetArmorDataByKey("143729___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalLightRobeRedNoCloak	@MULTI
+	handler.SetArmorDataByKey("143735___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalLightRobeWhiteCloak	@MULTI
+	handler.SetArmorDataByKey("143730___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalLightRobeWhiteNoCloak	@MULTI
+	handler.SetArmorDataByKey("143755___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalUnarmoredRobeBlack	@MULTI
+	handler.SetArmorDataByKey("143756___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalUnarmoredRobeBlue	@MULTI
+	handler.SetArmorDataByKey("143757___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalUnarmoredRobeGreen	@MULTI
+	handler.SetArmorDataByKey("143758___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalUnarmoredRobeRed	@MULTI
+	handler.SetArmorDataByKey("143759___Hothtrooper44_ArmorCompilation.esp", 125, 72, aiExtraCloakWarmth = 5, aiExtraCloakCoverage = 5, abExportToDefaults = true) ; IATribunalUnarmoredRobeWhite	@MULTI
+	handler.SetArmorDataByKey("16070___Hothtrooper44_ArmorCompilation.esp", 75, 35, abExportToDefaults = true) ; IANordMailHeavyHauberk
+	handler.SetArmorDataByKey("16068___Hothtrooper44_ArmorCompilation.esp", 75, 35, abExportToDefaults = true) ; IANordMailLightShirt
+	handler.SetArmorDataByKey("3466___Hothtrooper44_ArmorCompilation.esp", 175, 54, abExportToDefaults = true) ; IAWarchiefHeavyBulwark
+	handler.SetArmorDataByKey("3467___Hothtrooper44_ArmorCompilation.esp", 175, 54, abExportToDefaults = true) ; IAWarchiefLightBulwark
 
 
-	handler.SetArmorDataByKey("20259___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IAAkaviriSamuraiGauntlets
-	handler.SetArmorDataByKey("144011___Hothtrooper44_ArmorCompilation.esp", 15, 29) ; IAAlduinGauntlets
-	handler.SetArmorDataByKey("23133___Hothtrooper44_ArmorCompilation.esp", 7, 6) ; IABarbarianGauntlets
-	handler.SetArmorDataByKey("144096___Hothtrooper44_ArmorCompilation.esp", 12, 6) ; IABoiledChitinHGauntlets
-	handler.SetArmorDataByKey("544586___Hothtrooper44_ArmorCompilation.esp", 12, 6) ; IABoiledChitinLGauntlets
-	handler.SetArmorDataByKey("145647___Hothtrooper44_ArmorCompilation.esp", 5, 6) ; IABosmerHeavyGauntlets
-	handler.SetArmorDataByKey("145654___Hothtrooper44_ArmorCompilation.esp", 5, 6) ; IABosmerHuntHeavyGauntlets
-	handler.SetArmorDataByKey("145657___Hothtrooper44_ArmorCompilation.esp", 5, 6) ; IABosmerHuntLightGauntlets
-	handler.SetArmorDataByKey("145724___Hothtrooper44_ArmorCompilation.esp", 18, 21) ; IADaedricLordGauntlets
-	handler.SetArmorDataByKey("139239___Hothtrooper44_ArmorCompilation.esp", 15, 29) ; IADragonEbonBulkyGauntlets
-	handler.SetArmorDataByKey("143560___Hothtrooper44_ArmorCompilation.esp", 15, 29) ; IADragonKnightGauntlets0
-	handler.SetArmorDataByKey("143561___Hothtrooper44_ArmorCompilation.esp", 15, 29) ; IADragonKnightGauntlets1
-	handler.SetArmorDataByKey("143562___Hothtrooper44_ArmorCompilation.esp", 15, 29) ; IADragonKnightGauntlets2
-	handler.SetArmorDataByKey("23080___Hothtrooper44_ArmorCompilation.esp", 15, 21) ; IADwarvenMageHGauntlets
-	handler.SetArmorDataByKey("144026___Hothtrooper44_ArmorCompilation.esp", 15, 21) ; IADwarvenMageLGauntlets
-	handler.SetArmorDataByKey("226051___Hothtrooper44_ArmorCompilation.esp", 15, 21) ; IADwarvenMageUGauntlets
-	handler.SetArmorDataByKey("15917___Hothtrooper44_ArmorCompilation.esp", 24, 21) ; IAEinherjarBrigandineDarkGauntlets
-	handler.SetArmorDataByKey("32832___Hothtrooper44_ArmorCompilation.esp", 24, 21) ; IAEinherjarPlateDarkGauntlets
-	handler.SetArmorDataByKey("4818___Hothtrooper44_ArmorCompilation.esp", 24, 21) ; IAEinherjarPlateLightGauntlets
-	handler.SetArmorDataByKey("3429___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IAFalkreathGauntlets
-	handler.SetArmorDataByKey("144100___Hothtrooper44_ArmorCompilation.esp", 24, 14) ; IAGlacialCrystalHGauntlets
-	handler.SetArmorDataByKey("544591___Hothtrooper44_ArmorCompilation.esp", 24, 14) ; IAGlacialCrystalLGauntlets
-	handler.SetArmorDataByKey("3479___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IAHedgeKnightGauntlets
-	handler.SetArmorDataByKey("43877___Hothtrooper44_ArmorCompilation.esp", 18, 14) ; IAHeroicStormcloakGauntlets
-	handler.SetArmorDataByKey("23051___Hothtrooper44_ArmorCompilation.esp", 12, 6) ; IAMercenaryGauntlets
-	handler.SetArmorDataByKey("43873___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IAPaladinGauntlets
-	;handler.SetArmorDataByKey("23103___Hothtrooper44_ArmorCompilation.esp", Y, Z) ; IAPrimitiveNordHeavyGauntlets
-	;handler.SetArmorDataByKey("23107___Hothtrooper44_ArmorCompilation.esp", Y, Z) ; IAPrimitiveNordLightGauntlets
-	handler.SetArmorDataByKey("3436___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IARedguardKnightHeavyGauntlets
-	handler.SetArmorDataByKey("3437___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IARedguardKnightLightGauntlets
-	handler.SetArmorDataByKey("6189___Hothtrooper44_ArmorCompilation.esp", 5, 6) ; IASeadogGauntlets
-	handler.SetArmorDataByKey("144120___Hothtrooper44_ArmorCompilation.esp", 18, 14) ; IASnowBearGauntlets
-	handler.SetArmorDataByKey("53615___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IASpellbinderCrimsonGauntlets
-	handler.SetArmorDataByKey("53618___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IASpellbinderRunicGauntlets
-	handler.SetArmorDataByKey("436721___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IAStormlordGauntlets
-	handler.SetArmorDataByKey("143493___Hothtrooper44_ArmorCompilation.esp", 18, 14) ; IATrollbaneHeavyGauntlets
-	handler.SetArmorDataByKey("3453___Hothtrooper44_ArmorCompilation.esp", 12, 35) ; IAVagabondCrimsonGauntlets
-	handler.SetArmorDataByKey("3455___Hothtrooper44_ArmorCompilation.esp", 12, 35) ; IAVagabondDuskGauntlets
-	handler.SetArmorDataByKey("3461___Hothtrooper44_ArmorCompilation.esp", 15, 21) ; IAVanguardPlateGauntlets
-	handler.SetArmorDataByKey("144125___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IAVvardenfellGlassGauntlets
-	handler.SetArmorDataByKey("50835___Hothtrooper44_ArmorCompilation.esp", 12, 6) ; IAWitchplateGauntlets
-	handler.SetArmorDataByKey("46670___Hothtrooper44_ArmorCompilation.esp", 10, 6) ; IAApotheusGloves
-	handler.SetArmorDataByKey("143609___Hothtrooper44_ArmorCompilation.esp", 5, 6) ; IACrimsonArcherGloves
-	handler.SetArmorDataByKey("139240___Hothtrooper44_ArmorCompilation.esp", 15, 29) ; IADragonEbonSleekGloves
-	handler.SetArmorDataByKey("20281___Hothtrooper44_ArmorCompilation.esp", 15, 29) ; IADragonhideHeavyGloves
-	handler.SetArmorDataByKey("144022___Hothtrooper44_ArmorCompilation.esp", 15, 29) ; IADragonhideLGloves
-	handler.SetArmorDataByKey("226061___Hothtrooper44_ArmorCompilation.esp", 15, 29) ; IADragonhideUGloves
-	handler.SetArmorDataByKey("145737___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IAEbonyMageHeavyGloves
-	handler.SetArmorDataByKey("145741___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IAEbonyMageLightGloves
-	handler.SetArmorDataByKey("226043___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IAEbonyMageUnarmoredGloves
-	handler.SetArmorDataByKey("139150___Hothtrooper44_ArmorCompilation.esp", 15, 29) ; IARitualBoethiahGloves
-	handler.SetArmorDataByKey("143536___Hothtrooper44_ArmorCompilation.esp", 12, 6) ; IAShamanLGloves
-	handler.SetArmorDataByKey("536246___Hothtrooper44_ArmorCompilation.esp", 12, 6) ; IAShamanUGloves
-	handler.SetArmorDataByKey("143691___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalHeavyGlovesBlack
-	handler.SetArmorDataByKey("143692___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalHeavyGlovesBlue
-	handler.SetArmorDataByKey("143693___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalHeavyGlovesGreen
-	handler.SetArmorDataByKey("143694___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalHeavyGlovesRed
-	handler.SetArmorDataByKey("143695___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalHeavyGlovesWhite
-	handler.SetArmorDataByKey("143716___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalLightGlovesBlack
-	handler.SetArmorDataByKey("143717___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalLightGlovesBlue
-	handler.SetArmorDataByKey("143718___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalLightGlovesGreen
-	handler.SetArmorDataByKey("143719___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalLightGlovesRed
-	handler.SetArmorDataByKey("143720___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalLightGlovesWhite
-	handler.SetArmorDataByKey("143745___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalUnarmoredGlovesBlack
-	handler.SetArmorDataByKey("143746___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalUnarmoredGlovesBlue
-	handler.SetArmorDataByKey("143747___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalUnarmoredGlovesGreen
-	handler.SetArmorDataByKey("143748___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalUnarmoredGlovesRed
-	handler.SetArmorDataByKey("143749___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalUnarmoredGlovesWhite
-	handler.SetArmorDataByKey("145643___Hothtrooper44_ArmorCompilation.esp", 5, 6) ; IABosmerBracers
-	handler.SetArmorDataByKey("145638___Hothtrooper44_ArmorCompilation.esp", 5, 6) ; IABosmerEngravedBracers
-	handler.SetArmorDataByKey("143592___Hothtrooper44_ArmorCompilation.esp", 3, 0) ; IAConanBracers
-	handler.SetArmorDataByKey("15918___Hothtrooper44_ArmorCompilation.esp", 24, 21) ; IAEinherjarBrigandineLightBracers
-	handler.SetArmorDataByKey("23066___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IAHeroicImperialBracers
-	handler.SetArmorDataByKey("14468___Hothtrooper44_ArmorCompilation.esp", 5, 6) ; IAHunterBracers
-	handler.SetArmorDataByKey("16065___Hothtrooper44_ArmorCompilation.esp", 7, 6) ; IANordMailHeavyBracers
-	handler.SetArmorDataByKey("16069___Hothtrooper44_ArmorCompilation.esp", 7, 6) ; IANordMailLightBracers
-	handler.SetArmorDataByKey("23152___Hothtrooper44_ArmorCompilation.esp", 12, 6) ; IARangerBracers
-	handler.SetArmorDataByKey("144114___Hothtrooper44_ArmorCompilation.esp", 5, 6) ; IARingmailBracers
-	handler.SetArmorDataByKey("143499___Hothtrooper44_ArmorCompilation.esp", 18, 14) ; IATrollbaneLightBracers
-	handler.SetArmorDataByKey("3454___Hothtrooper44_ArmorCompilation.esp", 12, 35) ; IAVagabondLeatherBracers
-	handler.SetArmorDataByKey("436744___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IAImperialKnightVambraces
-	handler.SetArmorDataByKey("3470___Hothtrooper44_ArmorCompilation.esp", 21, 14) ; IAWarchiefHeavyGrips
-	handler.SetArmorDataByKey("3471___Hothtrooper44_ArmorCompilation.esp", 21, 14) ; IAWarchiefLightGrips
+	handler.SetArmorDataByKey("20259___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IAAkaviriSamuraiGauntlets
+	handler.SetArmorDataByKey("144011___Hothtrooper44_ArmorCompilation.esp", 15, 29, abExportToDefaults = true) ; IAAlduinGauntlets
+	handler.SetArmorDataByKey("23133___Hothtrooper44_ArmorCompilation.esp", 7, 6, abExportToDefaults = true) ; IABarbarianGauntlets
+	handler.SetArmorDataByKey("144096___Hothtrooper44_ArmorCompilation.esp", 12, 6, abExportToDefaults = true) ; IABoiledChitinHGauntlets
+	handler.SetArmorDataByKey("544586___Hothtrooper44_ArmorCompilation.esp", 12, 6, abExportToDefaults = true) ; IABoiledChitinLGauntlets
+	handler.SetArmorDataByKey("145647___Hothtrooper44_ArmorCompilation.esp", 5, 6, abExportToDefaults = true) ; IABosmerHeavyGauntlets
+	handler.SetArmorDataByKey("145654___Hothtrooper44_ArmorCompilation.esp", 5, 6, abExportToDefaults = true) ; IABosmerHuntHeavyGauntlets
+	handler.SetArmorDataByKey("145657___Hothtrooper44_ArmorCompilation.esp", 5, 6, abExportToDefaults = true) ; IABosmerHuntLightGauntlets
+	handler.SetArmorDataByKey("145724___Hothtrooper44_ArmorCompilation.esp", 18, 21, abExportToDefaults = true) ; IADaedricLordGauntlets
+	handler.SetArmorDataByKey("139239___Hothtrooper44_ArmorCompilation.esp", 15, 29, abExportToDefaults = true) ; IADragonEbonBulkyGauntlets
+	handler.SetArmorDataByKey("143560___Hothtrooper44_ArmorCompilation.esp", 15, 29, abExportToDefaults = true) ; IADragonKnightGauntlets0
+	handler.SetArmorDataByKey("143561___Hothtrooper44_ArmorCompilation.esp", 15, 29, abExportToDefaults = true) ; IADragonKnightGauntlets1
+	handler.SetArmorDataByKey("143562___Hothtrooper44_ArmorCompilation.esp", 15, 29, abExportToDefaults = true) ; IADragonKnightGauntlets2
+	handler.SetArmorDataByKey("23080___Hothtrooper44_ArmorCompilation.esp", 15, 21, abExportToDefaults = true) ; IADwarvenMageHGauntlets
+	handler.SetArmorDataByKey("144026___Hothtrooper44_ArmorCompilation.esp", 15, 21, abExportToDefaults = true) ; IADwarvenMageLGauntlets
+	handler.SetArmorDataByKey("226051___Hothtrooper44_ArmorCompilation.esp", 15, 21, abExportToDefaults = true) ; IADwarvenMageUGauntlets
+	handler.SetArmorDataByKey("15917___Hothtrooper44_ArmorCompilation.esp", 24, 21, abExportToDefaults = true) ; IAEinherjarBrigandineDarkGauntlets
+	handler.SetArmorDataByKey("32832___Hothtrooper44_ArmorCompilation.esp", 24, 21, abExportToDefaults = true) ; IAEinherjarPlateDarkGauntlets
+	handler.SetArmorDataByKey("4818___Hothtrooper44_ArmorCompilation.esp", 24, 21, abExportToDefaults = true) ; IAEinherjarPlateLightGauntlets
+	handler.SetArmorDataByKey("3429___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IAFalkreathGauntlets
+	handler.SetArmorDataByKey("144100___Hothtrooper44_ArmorCompilation.esp", 24, 14, abExportToDefaults = true) ; IAGlacialCrystalHGauntlets
+	handler.SetArmorDataByKey("544591___Hothtrooper44_ArmorCompilation.esp", 24, 14, abExportToDefaults = true) ; IAGlacialCrystalLGauntlets
+	handler.SetArmorDataByKey("3479___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IAHedgeKnightGauntlets
+	handler.SetArmorDataByKey("43877___Hothtrooper44_ArmorCompilation.esp", 18, 14, abExportToDefaults = true) ; IAHeroicStormcloakGauntlets
+	handler.SetArmorDataByKey("23051___Hothtrooper44_ArmorCompilation.esp", 12, 6, abExportToDefaults = true) ; IAMercenaryGauntlets
+	handler.SetArmorDataByKey("43873___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IAPaladinGauntlets
+	;handler.SetArmorDataByKey("23103___Hothtrooper44_ArmorCompilation.esp", Y, Z, abExportToDefaults = true) ; IAPrimitiveNordHeavyGauntlets
+	;handler.SetArmorDataByKey("23107___Hothtrooper44_ArmorCompilation.esp", Y, Z, abExportToDefaults = true) ; IAPrimitiveNordLightGauntlets
+	handler.SetArmorDataByKey("3436___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IARedguardKnightHeavyGauntlets
+	handler.SetArmorDataByKey("3437___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IARedguardKnightLightGauntlets
+	handler.SetArmorDataByKey("6189___Hothtrooper44_ArmorCompilation.esp", 5, 6, abExportToDefaults = true) ; IASeadogGauntlets
+	handler.SetArmorDataByKey("144120___Hothtrooper44_ArmorCompilation.esp", 18, 14, abExportToDefaults = true) ; IASnowBearGauntlets
+	handler.SetArmorDataByKey("53615___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IASpellbinderCrimsonGauntlets
+	handler.SetArmorDataByKey("53618___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IASpellbinderRunicGauntlets
+	handler.SetArmorDataByKey("436721___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IAStormlordGauntlets
+	handler.SetArmorDataByKey("143493___Hothtrooper44_ArmorCompilation.esp", 18, 14, abExportToDefaults = true) ; IATrollbaneHeavyGauntlets
+	handler.SetArmorDataByKey("3453___Hothtrooper44_ArmorCompilation.esp", 12, 35, abExportToDefaults = true) ; IAVagabondCrimsonGauntlets
+	handler.SetArmorDataByKey("3455___Hothtrooper44_ArmorCompilation.esp", 12, 35, abExportToDefaults = true) ; IAVagabondDuskGauntlets
+	handler.SetArmorDataByKey("3461___Hothtrooper44_ArmorCompilation.esp", 15, 21, abExportToDefaults = true) ; IAVanguardPlateGauntlets
+	handler.SetArmorDataByKey("144125___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IAVvardenfellGlassGauntlets
+	handler.SetArmorDataByKey("50835___Hothtrooper44_ArmorCompilation.esp", 12, 6, abExportToDefaults = true) ; IAWitchplateGauntlets
+	handler.SetArmorDataByKey("46670___Hothtrooper44_ArmorCompilation.esp", 10, 6, abExportToDefaults = true) ; IAApotheusGloves
+	handler.SetArmorDataByKey("143609___Hothtrooper44_ArmorCompilation.esp", 5, 6, abExportToDefaults = true) ; IACrimsonArcherGloves
+	handler.SetArmorDataByKey("139240___Hothtrooper44_ArmorCompilation.esp", 15, 29, abExportToDefaults = true) ; IADragonEbonSleekGloves
+	handler.SetArmorDataByKey("20281___Hothtrooper44_ArmorCompilation.esp", 15, 29, abExportToDefaults = true) ; IADragonhideHeavyGloves
+	handler.SetArmorDataByKey("144022___Hothtrooper44_ArmorCompilation.esp", 15, 29, abExportToDefaults = true) ; IADragonhideLGloves
+	handler.SetArmorDataByKey("226061___Hothtrooper44_ArmorCompilation.esp", 15, 29, abExportToDefaults = true) ; IADragonhideUGloves
+	handler.SetArmorDataByKey("145737___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IAEbonyMageHeavyGloves
+	handler.SetArmorDataByKey("145741___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IAEbonyMageLightGloves
+	handler.SetArmorDataByKey("226043___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IAEbonyMageUnarmoredGloves
+	handler.SetArmorDataByKey("139150___Hothtrooper44_ArmorCompilation.esp", 15, 29, abExportToDefaults = true) ; IARitualBoethiahGloves
+	handler.SetArmorDataByKey("143536___Hothtrooper44_ArmorCompilation.esp", 12, 6, abExportToDefaults = true) ; IAShamanLGloves
+	handler.SetArmorDataByKey("536246___Hothtrooper44_ArmorCompilation.esp", 12, 6, abExportToDefaults = true) ; IAShamanUGloves
+	handler.SetArmorDataByKey("143691___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalHeavyGlovesBlack
+	handler.SetArmorDataByKey("143692___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalHeavyGlovesBlue
+	handler.SetArmorDataByKey("143693___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalHeavyGlovesGreen
+	handler.SetArmorDataByKey("143694___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalHeavyGlovesRed
+	handler.SetArmorDataByKey("143695___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalHeavyGlovesWhite
+	handler.SetArmorDataByKey("143716___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalLightGlovesBlack
+	handler.SetArmorDataByKey("143717___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalLightGlovesBlue
+	handler.SetArmorDataByKey("143718___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalLightGlovesGreen
+	handler.SetArmorDataByKey("143719___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalLightGlovesRed
+	handler.SetArmorDataByKey("143720___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalLightGlovesWhite
+	handler.SetArmorDataByKey("143745___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalUnarmoredGlovesBlack
+	handler.SetArmorDataByKey("143746___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalUnarmoredGlovesBlue
+	handler.SetArmorDataByKey("143747___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalUnarmoredGlovesGreen
+	handler.SetArmorDataByKey("143748___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalUnarmoredGlovesRed
+	handler.SetArmorDataByKey("143749___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalUnarmoredGlovesWhite
+	handler.SetArmorDataByKey("145643___Hothtrooper44_ArmorCompilation.esp", 5, 6, abExportToDefaults = true) ; IABosmerBracers
+	handler.SetArmorDataByKey("145638___Hothtrooper44_ArmorCompilation.esp", 5, 6, abExportToDefaults = true) ; IABosmerEngravedBracers
+	handler.SetArmorDataByKey("143592___Hothtrooper44_ArmorCompilation.esp", 3, 0, abExportToDefaults = true) ; IAConanBracers
+	handler.SetArmorDataByKey("15918___Hothtrooper44_ArmorCompilation.esp", 24, 21, abExportToDefaults = true) ; IAEinherjarBrigandineLightBracers
+	handler.SetArmorDataByKey("23066___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IAHeroicImperialBracers
+	handler.SetArmorDataByKey("14468___Hothtrooper44_ArmorCompilation.esp", 5, 6, abExportToDefaults = true) ; IAHunterBracers
+	handler.SetArmorDataByKey("16065___Hothtrooper44_ArmorCompilation.esp", 7, 6, abExportToDefaults = true) ; IANordMailHeavyBracers
+	handler.SetArmorDataByKey("16069___Hothtrooper44_ArmorCompilation.esp", 7, 6, abExportToDefaults = true) ; IANordMailLightBracers
+	handler.SetArmorDataByKey("23152___Hothtrooper44_ArmorCompilation.esp", 12, 6, abExportToDefaults = true) ; IARangerBracers
+	handler.SetArmorDataByKey("144114___Hothtrooper44_ArmorCompilation.esp", 5, 6, abExportToDefaults = true) ; IARingmailBracers
+	handler.SetArmorDataByKey("143499___Hothtrooper44_ArmorCompilation.esp", 18, 14, abExportToDefaults = true) ; IATrollbaneLightBracers
+	handler.SetArmorDataByKey("3454___Hothtrooper44_ArmorCompilation.esp", 12, 35, abExportToDefaults = true) ; IAVagabondLeatherBracers
+	handler.SetArmorDataByKey("436744___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IAImperialKnightVambraces
+	handler.SetArmorDataByKey("3470___Hothtrooper44_ArmorCompilation.esp", 21, 14, abExportToDefaults = true) ; IAWarchiefHeavyGrips
+	handler.SetArmorDataByKey("3471___Hothtrooper44_ArmorCompilation.esp", 21, 14, abExportToDefaults = true) ; IAWarchiefLightGrips
 
 
-	handler.SetArmorDataByKey("20260___Hothtrooper44_ArmorCompilation.esp", 35, 14) ; IAAkaviriSamuraiHelmet
-	handler.SetArmorDataByKey("144012___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IAAlduinHelmet
-	handler.SetArmorDataByKey("46669___Hothtrooper44_ArmorCompilation.esp", 35, 43) ; IAApotheusHelm
-	handler.SetArmorDataByKey("23134___Hothtrooper44_ArmorCompilation.esp", 15, 3) ; IABarbarianHelmet
-	handler.SetArmorDataByKey("144097___Hothtrooper44_ArmorCompilation.esp", 35, 14) ; IABoiledChitinHHelmet
-	handler.SetArmorDataByKey("544587___Hothtrooper44_ArmorCompilation.esp", 35, 14) ; IABoiledChitinLHelmet
-	handler.SetArmorDataByKey("145639___Hothtrooper44_ArmorCompilation.esp", 35, 14) ; IABosmerEngravedHelmet
-	handler.SetArmorDataByKey("145648___Hothtrooper44_ArmorCompilation.esp", 35, 14) ; IABosmerHeavyHelmet
-	handler.SetArmorDataByKey("145649___Hothtrooper44_ArmorCompilation.esp", 35, 14) ; IABosmerHelmet
-	handler.SetArmorDataByKey("145652___Hothtrooper44_ArmorCompilation.esp", 35, 43) ; IABosmerHuntHeavyHelmet
-	handler.SetArmorDataByKey("139247___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonHHelmClassic
-	handler.SetArmorDataByKey("139248___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonHHelmClassicVeil
-	handler.SetArmorDataByKey("139249___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonHHelmClaw
-	handler.SetArmorDataByKey("139250___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonHHelmClawVeil
-	handler.SetArmorDataByKey("139243___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonHHelmGrand
-	handler.SetArmorDataByKey("139244___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonHHelmGrandVeil
-	handler.SetArmorDataByKey("139245___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonHHelmHorn
-	handler.SetArmorDataByKey("139246___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonHHelmHornVeil
-	handler.SetArmorDataByKey("139241___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonHHelmStout
-	handler.SetArmorDataByKey("139242___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonHHelmStoutVeil
-	handler.SetArmorDataByKey("543154___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonLHelmClassic
-	handler.SetArmorDataByKey("543155___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonLHelmClassicVeil
-	handler.SetArmorDataByKey("543156___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonLHelmClaw
-	handler.SetArmorDataByKey("543157___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonLHelmClawVeil
-	handler.SetArmorDataByKey("543158___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonLHelmGrand
-	handler.SetArmorDataByKey("543159___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonLHelmGrandVeil
-	handler.SetArmorDataByKey("543160___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonLHelmHorn
-	handler.SetArmorDataByKey("543161___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonLHelmHornVeil
-	handler.SetArmorDataByKey("543162___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonLHelmStout
-	handler.SetArmorDataByKey("543163___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonLHelmStoutVeil
-	handler.SetArmorDataByKey("143563___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonKnightHHelm
-	handler.SetArmorDataByKey("548818___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonKnightLHelm
-	handler.SetArmorDataByKey("3430___Hothtrooper44_ArmorCompilation.esp", 35, 14) ; IAFalkreathHelmet
-	handler.SetArmorDataByKey("144101___Hothtrooper44_ArmorCompilation.esp", 55, 29) ; IAGlacialCrystalHHelmet
-	handler.SetArmorDataByKey("544592___Hothtrooper44_ArmorCompilation.esp", 55, 29) ; IAGlacialCrystalLHelmet
-	handler.SetArmorDataByKey("3480___Hothtrooper44_ArmorCompilation.esp", 35, 14) ; IAHedgeKnightHelmet
-	handler.SetArmorDataByKey("23067___Hothtrooper44_ArmorCompilation.esp", 35, 43) ; IAHeroicImperialHelmet
-	handler.SetArmorDataByKey("43876___Hothtrooper44_ArmorCompilation.esp", 50, 14) ; IAHeroicStormcloakHelmet
-	handler.SetArmorDataByKey("436743___Hothtrooper44_ArmorCompilation.esp", 35, 14) ; IAImperialKnightHelmet
-	handler.SetArmorDataByKey("16071___Hothtrooper44_ArmorCompilation.esp", 35, 14) ; IANordMailHeavyHelmet
-	handler.SetArmorDataByKey("16072___Hothtrooper44_ArmorCompilation.esp", 35, 14) ; IANordMailHeavySpectacleHelmet
-	handler.SetArmorDataByKey("16074___Hothtrooper44_ArmorCompilation.esp", 35, 14) ; IANordMailLightSpectacleHelmet
-	handler.SetArmorDataByKey("16073___Hothtrooper44_ArmorCompilation.esp", 35, 14) ; IANordMailLightHelmet
-	handler.SetArmorDataByKey("139134___Hothtrooper44_ArmorCompilation.esp", 50, 14) ; IAOrcishMaskHelm
-	handler.SetArmorDataByKey("15853___Hothtrooper44_ArmorCompilation.esp", 35, 14) ; IAPaladinGreatHelm
-	handler.SetArmorDataByKey("43872___Hothtrooper44_ArmorCompilation.esp", 35, 14) ; IAPaladinHelmet
-	;handler.SetArmorDataByKey("23104___Hothtrooper44_ArmorCompilation.esp", Y, Z) ; IAPrimitiveNordHeavyHelmet
-	;handler.SetArmorDataByKey("23108___Hothtrooper44_ArmorCompilation.esp", Y, Z) ; IAPrimitiveNordLightHelmet
-	handler.SetArmorDataByKey("139151___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IARitualBoethiahHelm
-	handler.SetArmorDataByKey("143534___Hothtrooper44_ArmorCompilation.esp", 45, 3) ; IAShamanLHelm
-	handler.SetArmorDataByKey("536247___Hothtrooper44_ArmorCompilation.esp", 45, 3) ; IAShamanUHelm
-	handler.SetArmorDataByKey("144121___Hothtrooper44_ArmorCompilation.esp", 50, 14) ; IASnowBearHelmet
-	handler.SetArmorDataByKey("53613___Hothtrooper44_ArmorCompilation.esp", 35, 14) ; IASpellbinderCrimsonHelmet
-	handler.SetArmorDataByKey("53620___Hothtrooper44_ArmorCompilation.esp", 35, 14) ; IASpellbinderRunicHelmet
-	handler.SetArmorDataByKey("436723___Hothtrooper44_ArmorCompilation.esp", 35, 14) ; IAStormlordHelmet
-	handler.SetArmorDataByKey("143496___Hothtrooper44_ArmorCompilation.esp", 50, 14) ; IATrollbaneHeavyHelmet
-	handler.SetArmorDataByKey("143501___Hothtrooper44_ArmorCompilation.esp", 50, 14) ; IATrollbaneLightHelmet
-	handler.SetArmorDataByKey("143494___Hothtrooper44_ArmorCompilation.esp", 50, 14) ; IATrollbaneHeavyHeaddress
-	handler.SetArmorDataByKey("143500___Hothtrooper44_ArmorCompilation.esp", 50, 14) ; IATrollbaneLightHeaddress
-	handler.SetArmorDataByKey("3472___Hothtrooper44_ArmorCompilation.esp", 50, 14) ; IAWarchiefHeavyHeaddress
-	handler.SetArmorDataByKey("3473___Hothtrooper44_ArmorCompilation.esp", 50, 14) ; IAWarchiefLightHeaddress
-	handler.SetArmorDataByKey("3456___Hothtrooper44_ArmorCompilation.esp", 40, 72) ; IAVagabondHelmet
-	handler.SetArmorDataByKey("3462___Hothtrooper44_ArmorCompilation.esp", 40, 29) ; IAVanguardPlateHelmet
-	handler.SetArmorDataByKey("3463___Hothtrooper44_ArmorCompilation.esp", 40, 29) ; IAVanguardPlateHelmetCLOSED
-	handler.SetArmorDataByKey("144126___Hothtrooper44_ArmorCompilation.esp", 30, 29) ; IAVvardenfellGlassHelmet
-	handler.SetArmorDataByKey("17238___Hothtrooper44_ArmorCompilation.esp", 35, 43) ; IAApotheusHood
-	handler.SetArmorDataByKey("18651___Hothtrooper44_ArmorCompilation.esp", 45, 14) ; IAArmorHeavyFurHoodBlack
-	handler.SetArmorDataByKey("8949___Hothtrooper44_ArmorCompilation.esp", 45, 14, aiExtraCloakWarmth = 20, aiExtraCloakCoverage = 6) ; IAArmorHeavyFurHoodBlackScarf	@MULTI
-	handler.SetArmorDataByKey("18650___Hothtrooper44_ArmorCompilation.esp", 45, 14) ; IAArmorHeavyFurHoodPlain
-	handler.SetArmorDataByKey("764316___Hothtrooper44_ArmorCompilation.esp", 45, 14, aiExtraCloakWarmth = 20, aiExtraCloakCoverage = 6) ; IAArmorHeavyFurHoodPlainScarf	@MULTI
-	handler.SetArmorDataByKey("18652___Hothtrooper44_ArmorCompilation.esp", 45, 14) ; IAArmorHeavyFurHoodWhite
-	handler.SetArmorDataByKey("6185___Hothtrooper44_ArmorCompilation.esp", 45, 14, aiExtraCloakWarmth = 20, aiExtraCloakCoverage = 6) ; IAArmorHeavyFurHoodWhiteScarf	@MULTI
-	handler.SetArmorDataByKey("18654___Hothtrooper44_ArmorCompilation.esp", 45, 14) ; IAArmorLightFurHoodBlack
-	handler.SetArmorDataByKey("8957___Hothtrooper44_ArmorCompilation.esp", 45, 14, aiExtraCloakWarmth = 20, aiExtraCloakCoverage = 6) ; IAArmorLightFurHoodBlackScarf	@MULTI
-	handler.SetArmorDataByKey("18653___Hothtrooper44_ArmorCompilation.esp", 45, 14) ; IAArmorLightFurHoodPlain
-	handler.SetArmorDataByKey("764315___Hothtrooper44_ArmorCompilation.esp", 45, 14, aiExtraCloakWarmth = 20, aiExtraCloakCoverage = 6) ; IAArmorLightFurHoodPlainScarf	@MULTI
-	handler.SetArmorDataByKey("18655___Hothtrooper44_ArmorCompilation.esp", 45, 14) ; IAArmorLightFurHoodWhite
-	handler.SetArmorDataByKey("7567___Hothtrooper44_ArmorCompilation.esp", 45, 14, aiExtraCloakWarmth = 20, aiExtraCloakCoverage = 6) ; IAArmorLightFurHoodWhiteScarf	@MULTI
-	handler.SetArmorDataByKey("145640___Hothtrooper44_ArmorCompilation.esp", 35, 43) ; IABosmerEngravedHood
-	handler.SetArmorDataByKey("145650___Hothtrooper44_ArmorCompilation.esp", 35, 43) ; IABosmerHood
-	handler.SetArmorDataByKey("145658___Hothtrooper44_ArmorCompilation.esp", 35, 43) ; IABosmerHuntLightHood
-	handler.SetArmorDataByKey("139251___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonHHood
-	handler.SetArmorDataByKey("543164___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonEbonLHood
-	handler.SetArmorDataByKey("20283___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonhideHeavyHood
-	handler.SetArmorDataByKey("144023___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonhideLHood
-	handler.SetArmorDataByKey("226060___Hothtrooper44_ArmorCompilation.esp", 40, 58) ; IADragonhideUHood
-	handler.SetArmorDataByKey("23081___Hothtrooper44_ArmorCompilation.esp", 40, 29) ; IADwarvenMageHHood
-	handler.SetArmorDataByKey("144027___Hothtrooper44_ArmorCompilation.esp", 40, 29) ; IADwarvenMageLHood
-	handler.SetArmorDataByKey("226052___Hothtrooper44_ArmorCompilation.esp", 40, 29) ; IADwarvenMageUHood
-	handler.SetArmorDataByKey("145738___Hothtrooper44_ArmorCompilation.esp", 40, 29) ; IAEbonyMageHeavyHood
-	handler.SetArmorDataByKey("145742___Hothtrooper44_ArmorCompilation.esp", 40, 29) ; IAEbonyMageLightHood
-	handler.SetArmorDataByKey("226044___Hothtrooper44_ArmorCompilation.esp", 40, 29) ; IAEbonyMageUnarmoredHood
-	handler.SetArmorDataByKey("15921___Hothtrooper44_ArmorCompilation.esp", 55, 29) ; IAEinherjarBrigandineDarkHood
-	handler.SetArmorDataByKey("15922___Hothtrooper44_ArmorCompilation.esp", 55, 29) ; IAEinherjarBrigandineLightHood
-	handler.SetArmorDataByKey("32831___Hothtrooper44_ArmorCompilation.esp", 55, 29) ; IAEinherjarPlateDarkHood
-	handler.SetArmorDataByKey("4819___Hothtrooper44_ArmorCompilation.esp", 55, 29) ; IAEinherjarPlateLightHood
-	handler.SetArmorDataByKey("18649___Hothtrooper44_ArmorCompilation.esp", 45, 14) ; IAFurHoodBlack
-	handler.SetArmorDataByKey("8956___Hothtrooper44_ArmorCompilation.esp", 45, 14) ; IAFurHoodBlackScarf
-	handler.SetArmorDataByKey("18648___Hothtrooper44_ArmorCompilation.esp", 45, 14) ; IAFurHoodPlain
-	handler.SetArmorDataByKey("764314___Hothtrooper44_ArmorCompilation.esp", 45, 14) ; IAFurHoodPlainScarf
-	handler.SetArmorDataByKey("18656___Hothtrooper44_ArmorCompilation.esp", 45, 14) ; IAFurHoodWhite
-	handler.SetArmorDataByKey("7566___Hothtrooper44_ArmorCompilation.esp", 45, 14) ; IAFurHoodWhiteScarf
-	handler.SetArmorDataByKey("23153___Hothtrooper44_ArmorCompilation.esp", 30, 29, aiExtraCloakWarmth = 8, aiExtraCloakCoverage = 20) ; IARangerHood	@MULTI
-	handler.SetArmorDataByKey("144115___Hothtrooper44_ArmorCompilation.esp", 35, 43) ; IARingmailHood
-	handler.SetArmorDataByKey("143696___Hothtrooper44_ArmorCompilation.esp", 30, 29) ; IATribunalHeavyHoodBlack
-	handler.SetArmorDataByKey("143697___Hothtrooper44_ArmorCompilation.esp", 30, 29) ; IATribunalHeavyHoodBlue
-	handler.SetArmorDataByKey("143698___Hothtrooper44_ArmorCompilation.esp", 30, 29) ; IATribunalHeavyHoodGreen
-	handler.SetArmorDataByKey("143699___Hothtrooper44_ArmorCompilation.esp", 30, 29) ; IATribunalHeavyHoodRed
-	handler.SetArmorDataByKey("143700___Hothtrooper44_ArmorCompilation.esp", 30, 29) ; IATribunalHeavyHoodWhite
-	handler.SetArmorDataByKey("143721___Hothtrooper44_ArmorCompilation.esp", 30, 29) ; IATribunalLightHoodBlack
-	handler.SetArmorDataByKey("143722___Hothtrooper44_ArmorCompilation.esp", 30, 29) ; IATribunalLightHoodBlue
-	handler.SetArmorDataByKey("143723___Hothtrooper44_ArmorCompilation.esp", 30, 29) ; IATribunalLightHoodGreen
-	handler.SetArmorDataByKey("143724___Hothtrooper44_ArmorCompilation.esp", 30, 29) ; IATribunalLightHoodRed
-	handler.SetArmorDataByKey("143725___Hothtrooper44_ArmorCompilation.esp", 30, 29) ; IATribunalLightHoodWhite
-	handler.SetArmorDataByKey("143750___Hothtrooper44_ArmorCompilation.esp", 30, 29) ; IATribunalUnarmoredHoodBlack
-	handler.SetArmorDataByKey("143751___Hothtrooper44_ArmorCompilation.esp", 30, 29) ; IATribunalUnarmoredHoodBlue
-	handler.SetArmorDataByKey("143752___Hothtrooper44_ArmorCompilation.esp", 30, 29) ; IATribunalUnarmoredHoodGreen
-	handler.SetArmorDataByKey("143753___Hothtrooper44_ArmorCompilation.esp", 30, 29) ; IATribunalUnarmoredHoodRed
-	handler.SetArmorDataByKey("143754___Hothtrooper44_ArmorCompilation.esp", 30, 29) ; IATribunalUnarmoredHoodWhite
-	handler.SetArmorDataByKey("50836___Hothtrooper44_ArmorCompilation.esp", 35, 43) ; IAWitchplateHood
-	handler.SetArmorDataByKey("3427___Hothtrooper44_ArmorCompilation.esp", 0, 0) ; IAFalkreathCrown
-	handler.SetArmorDataByKey("3464___Hothtrooper44_ArmorCompilation.esp", 50, 14) ; IAWarchiefHeavyBattlecrown
-	handler.SetArmorDataByKey("3465___Hothtrooper44_ArmorCompilation.esp", 50, 14) ; IAWarchiefLightBattlecrown
-	handler.SetArmorDataByKey("143593___Hothtrooper44_ArmorCompilation.esp", abIgnore = true) ; IAConanCirclet 	@CHECK
-	handler.SetArmorDataByKey("143464___Hothtrooper44_ArmorCompilation.esp", 50, 14, aiExtraCloakWarmth = 40, aiExtraCloakCoverage = 12) ; IAMantleSilverHandHeavy	@MULTI
-	handler.SetArmorDataByKey("143465___Hothtrooper44_ArmorCompilation.esp", 50, 14, aiExtraCloakWarmth = 40, aiExtraCloakCoverage = 12) ; IAMantleSilverHandLight	@MULTI
-	handler.SetArmorDataByKey("4807___Hothtrooper44_ArmorCompilation.esp", 35, 43) ; IASeadogTricorne
-	handler.SetArmorDataByKey("7571___Hothtrooper44_ArmorCompilation.esp", 35, 43) ; IASeadogTricorneFeathered
-	handler.SetArmorDataByKey("145633___Hothtrooper44_ArmorCompilation.esp", 35, 43) ; Bosmer Coif
-	handler.SetArmorDataByKey("145645___Hothtrooper44_ArmorCompilation.esp", 35, 43) ; Bosmer Reinforced Coif
+	handler.SetArmorDataByKey("20260___Hothtrooper44_ArmorCompilation.esp", 35, 14, abExportToDefaults = true) ; IAAkaviriSamuraiHelmet
+	handler.SetArmorDataByKey("144012___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IAAlduinHelmet
+	handler.SetArmorDataByKey("46669___Hothtrooper44_ArmorCompilation.esp", 35, 43, abExportToDefaults = true) ; IAApotheusHelm
+	handler.SetArmorDataByKey("23134___Hothtrooper44_ArmorCompilation.esp", 15, 3, abExportToDefaults = true) ; IABarbarianHelmet
+	handler.SetArmorDataByKey("144097___Hothtrooper44_ArmorCompilation.esp", 35, 14, abExportToDefaults = true) ; IABoiledChitinHHelmet
+	handler.SetArmorDataByKey("544587___Hothtrooper44_ArmorCompilation.esp", 35, 14, abExportToDefaults = true) ; IABoiledChitinLHelmet
+	handler.SetArmorDataByKey("145639___Hothtrooper44_ArmorCompilation.esp", 35, 14, abExportToDefaults = true) ; IABosmerEngravedHelmet
+	handler.SetArmorDataByKey("145648___Hothtrooper44_ArmorCompilation.esp", 35, 14, abExportToDefaults = true) ; IABosmerHeavyHelmet
+	handler.SetArmorDataByKey("145649___Hothtrooper44_ArmorCompilation.esp", 35, 14, abExportToDefaults = true) ; IABosmerHelmet
+	handler.SetArmorDataByKey("145652___Hothtrooper44_ArmorCompilation.esp", 35, 43, abExportToDefaults = true) ; IABosmerHuntHeavyHelmet
+	handler.SetArmorDataByKey("139247___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonHHelmClassic
+	handler.SetArmorDataByKey("139248___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonHHelmClassicVeil
+	handler.SetArmorDataByKey("139249___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonHHelmClaw
+	handler.SetArmorDataByKey("139250___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonHHelmClawVeil
+	handler.SetArmorDataByKey("139243___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonHHelmGrand
+	handler.SetArmorDataByKey("139244___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonHHelmGrandVeil
+	handler.SetArmorDataByKey("139245___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonHHelmHorn
+	handler.SetArmorDataByKey("139246___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonHHelmHornVeil
+	handler.SetArmorDataByKey("139241___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonHHelmStout
+	handler.SetArmorDataByKey("139242___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonHHelmStoutVeil
+	handler.SetArmorDataByKey("543154___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonLHelmClassic
+	handler.SetArmorDataByKey("543155___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonLHelmClassicVeil
+	handler.SetArmorDataByKey("543156___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonLHelmClaw
+	handler.SetArmorDataByKey("543157___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonLHelmClawVeil
+	handler.SetArmorDataByKey("543158___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonLHelmGrand
+	handler.SetArmorDataByKey("543159___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonLHelmGrandVeil
+	handler.SetArmorDataByKey("543160___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonLHelmHorn
+	handler.SetArmorDataByKey("543161___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonLHelmHornVeil
+	handler.SetArmorDataByKey("543162___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonLHelmStout
+	handler.SetArmorDataByKey("543163___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonLHelmStoutVeil
+	handler.SetArmorDataByKey("143563___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonKnightHHelm
+	handler.SetArmorDataByKey("548818___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonKnightLHelm
+	handler.SetArmorDataByKey("3430___Hothtrooper44_ArmorCompilation.esp", 35, 14, abExportToDefaults = true) ; IAFalkreathHelmet
+	handler.SetArmorDataByKey("144101___Hothtrooper44_ArmorCompilation.esp", 55, 29, abExportToDefaults = true) ; IAGlacialCrystalHHelmet
+	handler.SetArmorDataByKey("544592___Hothtrooper44_ArmorCompilation.esp", 55, 29, abExportToDefaults = true) ; IAGlacialCrystalLHelmet
+	handler.SetArmorDataByKey("3480___Hothtrooper44_ArmorCompilation.esp", 35, 14, abExportToDefaults = true) ; IAHedgeKnightHelmet
+	handler.SetArmorDataByKey("23067___Hothtrooper44_ArmorCompilation.esp", 35, 43, abExportToDefaults = true) ; IAHeroicImperialHelmet
+	handler.SetArmorDataByKey("43876___Hothtrooper44_ArmorCompilation.esp", 50, 14, abExportToDefaults = true) ; IAHeroicStormcloakHelmet
+	handler.SetArmorDataByKey("436743___Hothtrooper44_ArmorCompilation.esp", 35, 14, abExportToDefaults = true) ; IAImperialKnightHelmet
+	handler.SetArmorDataByKey("16071___Hothtrooper44_ArmorCompilation.esp", 35, 14, abExportToDefaults = true) ; IANordMailHeavyHelmet
+	handler.SetArmorDataByKey("16072___Hothtrooper44_ArmorCompilation.esp", 35, 14, abExportToDefaults = true) ; IANordMailHeavySpectacleHelmet
+	handler.SetArmorDataByKey("16074___Hothtrooper44_ArmorCompilation.esp", 35, 14, abExportToDefaults = true) ; IANordMailLightSpectacleHelmet
+	handler.SetArmorDataByKey("16073___Hothtrooper44_ArmorCompilation.esp", 35, 14, abExportToDefaults = true) ; IANordMailLightHelmet
+	handler.SetArmorDataByKey("139134___Hothtrooper44_ArmorCompilation.esp", 50, 14, abExportToDefaults = true) ; IAOrcishMaskHelm
+	handler.SetArmorDataByKey("15853___Hothtrooper44_ArmorCompilation.esp", 35, 14, abExportToDefaults = true) ; IAPaladinGreatHelm
+	handler.SetArmorDataByKey("43872___Hothtrooper44_ArmorCompilation.esp", 35, 14, abExportToDefaults = true) ; IAPaladinHelmet
+	;handler.SetArmorDataByKey("23104___Hothtrooper44_ArmorCompilation.esp", Y, Z, abExportToDefaults = true) ; IAPrimitiveNordHeavyHelmet
+	;handler.SetArmorDataByKey("23108___Hothtrooper44_ArmorCompilation.esp", Y, Z, abExportToDefaults = true) ; IAPrimitiveNordLightHelmet
+	handler.SetArmorDataByKey("139151___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IARitualBoethiahHelm
+	handler.SetArmorDataByKey("143534___Hothtrooper44_ArmorCompilation.esp", 45, 3, abExportToDefaults = true) ; IAShamanLHelm
+	handler.SetArmorDataByKey("536247___Hothtrooper44_ArmorCompilation.esp", 45, 3, abExportToDefaults = true) ; IAShamanUHelm
+	handler.SetArmorDataByKey("144121___Hothtrooper44_ArmorCompilation.esp", 50, 14, abExportToDefaults = true) ; IASnowBearHelmet
+	handler.SetArmorDataByKey("53613___Hothtrooper44_ArmorCompilation.esp", 35, 14, abExportToDefaults = true) ; IASpellbinderCrimsonHelmet
+	handler.SetArmorDataByKey("53620___Hothtrooper44_ArmorCompilation.esp", 35, 14, abExportToDefaults = true) ; IASpellbinderRunicHelmet
+	handler.SetArmorDataByKey("436723___Hothtrooper44_ArmorCompilation.esp", 35, 14, abExportToDefaults = true) ; IAStormlordHelmet
+	handler.SetArmorDataByKey("143496___Hothtrooper44_ArmorCompilation.esp", 50, 14, abExportToDefaults = true) ; IATrollbaneHeavyHelmet
+	handler.SetArmorDataByKey("143501___Hothtrooper44_ArmorCompilation.esp", 50, 14, abExportToDefaults = true) ; IATrollbaneLightHelmet
+	handler.SetArmorDataByKey("143494___Hothtrooper44_ArmorCompilation.esp", 50, 14, abExportToDefaults = true) ; IATrollbaneHeavyHeaddress
+	handler.SetArmorDataByKey("143500___Hothtrooper44_ArmorCompilation.esp", 50, 14, abExportToDefaults = true) ; IATrollbaneLightHeaddress
+	handler.SetArmorDataByKey("3472___Hothtrooper44_ArmorCompilation.esp", 50, 14, abExportToDefaults = true) ; IAWarchiefHeavyHeaddress
+	handler.SetArmorDataByKey("3473___Hothtrooper44_ArmorCompilation.esp", 50, 14, abExportToDefaults = true) ; IAWarchiefLightHeaddress
+	handler.SetArmorDataByKey("3456___Hothtrooper44_ArmorCompilation.esp", 40, 72, abExportToDefaults = true) ; IAVagabondHelmet
+	handler.SetArmorDataByKey("3462___Hothtrooper44_ArmorCompilation.esp", 40, 29, abExportToDefaults = true) ; IAVanguardPlateHelmet
+	handler.SetArmorDataByKey("3463___Hothtrooper44_ArmorCompilation.esp", 40, 29, abExportToDefaults = true) ; IAVanguardPlateHelmetCLOSED
+	handler.SetArmorDataByKey("144126___Hothtrooper44_ArmorCompilation.esp", 30, 29, abExportToDefaults = true) ; IAVvardenfellGlassHelmet
+	handler.SetArmorDataByKey("17238___Hothtrooper44_ArmorCompilation.esp", 35, 43, abExportToDefaults = true) ; IAApotheusHood
+	handler.SetArmorDataByKey("18651___Hothtrooper44_ArmorCompilation.esp", 45, 14, abExportToDefaults = true) ; IAArmorHeavyFurHoodBlack
+	handler.SetArmorDataByKey("8949___Hothtrooper44_ArmorCompilation.esp", 45, 14, aiExtraCloakWarmth = 20, aiExtraCloakCoverage = 6, abExportToDefaults = true) ; IAArmorHeavyFurHoodBlackScarf	@MULTI
+	handler.SetArmorDataByKey("18650___Hothtrooper44_ArmorCompilation.esp", 45, 14, abExportToDefaults = true) ; IAArmorHeavyFurHoodPlain
+	handler.SetArmorDataByKey("764316___Hothtrooper44_ArmorCompilation.esp", 45, 14, aiExtraCloakWarmth = 20, aiExtraCloakCoverage = 6, abExportToDefaults = true) ; IAArmorHeavyFurHoodPlainScarf	@MULTI
+	handler.SetArmorDataByKey("18652___Hothtrooper44_ArmorCompilation.esp", 45, 14, abExportToDefaults = true) ; IAArmorHeavyFurHoodWhite
+	handler.SetArmorDataByKey("6185___Hothtrooper44_ArmorCompilation.esp", 45, 14, aiExtraCloakWarmth = 20, aiExtraCloakCoverage = 6, abExportToDefaults = true) ; IAArmorHeavyFurHoodWhiteScarf	@MULTI
+	handler.SetArmorDataByKey("18654___Hothtrooper44_ArmorCompilation.esp", 45, 14, abExportToDefaults = true) ; IAArmorLightFurHoodBlack
+	handler.SetArmorDataByKey("8957___Hothtrooper44_ArmorCompilation.esp", 45, 14, aiExtraCloakWarmth = 20, aiExtraCloakCoverage = 6, abExportToDefaults = true) ; IAArmorLightFurHoodBlackScarf	@MULTI
+	handler.SetArmorDataByKey("18653___Hothtrooper44_ArmorCompilation.esp", 45, 14, abExportToDefaults = true) ; IAArmorLightFurHoodPlain
+	handler.SetArmorDataByKey("764315___Hothtrooper44_ArmorCompilation.esp", 45, 14, aiExtraCloakWarmth = 20, aiExtraCloakCoverage = 6, abExportToDefaults = true) ; IAArmorLightFurHoodPlainScarf	@MULTI
+	handler.SetArmorDataByKey("18655___Hothtrooper44_ArmorCompilation.esp", 45, 14, abExportToDefaults = true) ; IAArmorLightFurHoodWhite
+	handler.SetArmorDataByKey("7567___Hothtrooper44_ArmorCompilation.esp", 45, 14, aiExtraCloakWarmth = 20, aiExtraCloakCoverage = 6, abExportToDefaults = true) ; IAArmorLightFurHoodWhiteScarf	@MULTI
+	handler.SetArmorDataByKey("145640___Hothtrooper44_ArmorCompilation.esp", 35, 43, abExportToDefaults = true) ; IABosmerEngravedHood
+	handler.SetArmorDataByKey("145650___Hothtrooper44_ArmorCompilation.esp", 35, 43, abExportToDefaults = true) ; IABosmerHood
+	handler.SetArmorDataByKey("145658___Hothtrooper44_ArmorCompilation.esp", 35, 43, abExportToDefaults = true) ; IABosmerHuntLightHood
+	handler.SetArmorDataByKey("139251___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonHHood
+	handler.SetArmorDataByKey("543164___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonEbonLHood
+	handler.SetArmorDataByKey("20283___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonhideHeavyHood
+	handler.SetArmorDataByKey("144023___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonhideLHood
+	handler.SetArmorDataByKey("226060___Hothtrooper44_ArmorCompilation.esp", 40, 58, abExportToDefaults = true) ; IADragonhideUHood
+	handler.SetArmorDataByKey("23081___Hothtrooper44_ArmorCompilation.esp", 40, 29, abExportToDefaults = true) ; IADwarvenMageHHood
+	handler.SetArmorDataByKey("144027___Hothtrooper44_ArmorCompilation.esp", 40, 29, abExportToDefaults = true) ; IADwarvenMageLHood
+	handler.SetArmorDataByKey("226052___Hothtrooper44_ArmorCompilation.esp", 40, 29, abExportToDefaults = true) ; IADwarvenMageUHood
+	handler.SetArmorDataByKey("145738___Hothtrooper44_ArmorCompilation.esp", 40, 29, abExportToDefaults = true) ; IAEbonyMageHeavyHood
+	handler.SetArmorDataByKey("145742___Hothtrooper44_ArmorCompilation.esp", 40, 29, abExportToDefaults = true) ; IAEbonyMageLightHood
+	handler.SetArmorDataByKey("226044___Hothtrooper44_ArmorCompilation.esp", 40, 29, abExportToDefaults = true) ; IAEbonyMageUnarmoredHood
+	handler.SetArmorDataByKey("15921___Hothtrooper44_ArmorCompilation.esp", 55, 29, abExportToDefaults = true) ; IAEinherjarBrigandineDarkHood
+	handler.SetArmorDataByKey("15922___Hothtrooper44_ArmorCompilation.esp", 55, 29, abExportToDefaults = true) ; IAEinherjarBrigandineLightHood
+	handler.SetArmorDataByKey("32831___Hothtrooper44_ArmorCompilation.esp", 55, 29, abExportToDefaults = true) ; IAEinherjarPlateDarkHood
+	handler.SetArmorDataByKey("4819___Hothtrooper44_ArmorCompilation.esp", 55, 29, abExportToDefaults = true) ; IAEinherjarPlateLightHood
+	handler.SetArmorDataByKey("18649___Hothtrooper44_ArmorCompilation.esp", 45, 14, abExportToDefaults = true) ; IAFurHoodBlack
+	handler.SetArmorDataByKey("8956___Hothtrooper44_ArmorCompilation.esp", 45, 14, abExportToDefaults = true) ; IAFurHoodBlackScarf
+	handler.SetArmorDataByKey("18648___Hothtrooper44_ArmorCompilation.esp", 45, 14, abExportToDefaults = true) ; IAFurHoodPlain
+	handler.SetArmorDataByKey("764314___Hothtrooper44_ArmorCompilation.esp", 45, 14, abExportToDefaults = true) ; IAFurHoodPlainScarf
+	handler.SetArmorDataByKey("18656___Hothtrooper44_ArmorCompilation.esp", 45, 14, abExportToDefaults = true) ; IAFurHoodWhite
+	handler.SetArmorDataByKey("7566___Hothtrooper44_ArmorCompilation.esp", 45, 14, abExportToDefaults = true) ; IAFurHoodWhiteScarf
+	handler.SetArmorDataByKey("23153___Hothtrooper44_ArmorCompilation.esp", 30, 29, aiExtraCloakWarmth = 8, aiExtraCloakCoverage = 20, abExportToDefaults = true) ; IARangerHood	@MULTI
+	handler.SetArmorDataByKey("144115___Hothtrooper44_ArmorCompilation.esp", 35, 43, abExportToDefaults = true) ; IARingmailHood
+	handler.SetArmorDataByKey("143696___Hothtrooper44_ArmorCompilation.esp", 30, 29, abExportToDefaults = true) ; IATribunalHeavyHoodBlack
+	handler.SetArmorDataByKey("143697___Hothtrooper44_ArmorCompilation.esp", 30, 29, abExportToDefaults = true) ; IATribunalHeavyHoodBlue
+	handler.SetArmorDataByKey("143698___Hothtrooper44_ArmorCompilation.esp", 30, 29, abExportToDefaults = true) ; IATribunalHeavyHoodGreen
+	handler.SetArmorDataByKey("143699___Hothtrooper44_ArmorCompilation.esp", 30, 29, abExportToDefaults = true) ; IATribunalHeavyHoodRed
+	handler.SetArmorDataByKey("143700___Hothtrooper44_ArmorCompilation.esp", 30, 29, abExportToDefaults = true) ; IATribunalHeavyHoodWhite
+	handler.SetArmorDataByKey("143721___Hothtrooper44_ArmorCompilation.esp", 30, 29, abExportToDefaults = true) ; IATribunalLightHoodBlack
+	handler.SetArmorDataByKey("143722___Hothtrooper44_ArmorCompilation.esp", 30, 29, abExportToDefaults = true) ; IATribunalLightHoodBlue
+	handler.SetArmorDataByKey("143723___Hothtrooper44_ArmorCompilation.esp", 30, 29, abExportToDefaults = true) ; IATribunalLightHoodGreen
+	handler.SetArmorDataByKey("143724___Hothtrooper44_ArmorCompilation.esp", 30, 29, abExportToDefaults = true) ; IATribunalLightHoodRed
+	handler.SetArmorDataByKey("143725___Hothtrooper44_ArmorCompilation.esp", 30, 29, abExportToDefaults = true) ; IATribunalLightHoodWhite
+	handler.SetArmorDataByKey("143750___Hothtrooper44_ArmorCompilation.esp", 30, 29, abExportToDefaults = true) ; IATribunalUnarmoredHoodBlack
+	handler.SetArmorDataByKey("143751___Hothtrooper44_ArmorCompilation.esp", 30, 29, abExportToDefaults = true) ; IATribunalUnarmoredHoodBlue
+	handler.SetArmorDataByKey("143752___Hothtrooper44_ArmorCompilation.esp", 30, 29, abExportToDefaults = true) ; IATribunalUnarmoredHoodGreen
+	handler.SetArmorDataByKey("143753___Hothtrooper44_ArmorCompilation.esp", 30, 29, abExportToDefaults = true) ; IATribunalUnarmoredHoodRed
+	handler.SetArmorDataByKey("143754___Hothtrooper44_ArmorCompilation.esp", 30, 29, abExportToDefaults = true) ; IATribunalUnarmoredHoodWhite
+	handler.SetArmorDataByKey("50836___Hothtrooper44_ArmorCompilation.esp", 35, 43, abExportToDefaults = true) ; IAWitchplateHood
+	handler.SetArmorDataByKey("3427___Hothtrooper44_ArmorCompilation.esp", 0, 0, abExportToDefaults = true) ; IAFalkreathCrown
+	handler.SetArmorDataByKey("3464___Hothtrooper44_ArmorCompilation.esp", 50, 14, abExportToDefaults = true) ; IAWarchiefHeavyBattlecrown
+	handler.SetArmorDataByKey("3465___Hothtrooper44_ArmorCompilation.esp", 50, 14, abExportToDefaults = true) ; IAWarchiefLightBattlecrown
+	handler.SetArmorDataByKey("143593___Hothtrooper44_ArmorCompilation.esp", abIgnore = true, abExportToDefaults = true) ; IAConanCirclet 	@CHECK
+	handler.SetArmorDataByKey("143464___Hothtrooper44_ArmorCompilation.esp", 50, 14, aiExtraCloakWarmth = 40, aiExtraCloakCoverage = 12, abExportToDefaults = true) ; IAMantleSilverHandHeavy	@MULTI
+	handler.SetArmorDataByKey("143465___Hothtrooper44_ArmorCompilation.esp", 50, 14, aiExtraCloakWarmth = 40, aiExtraCloakCoverage = 12, abExportToDefaults = true) ; IAMantleSilverHandLight	@MULTI
+	handler.SetArmorDataByKey("4807___Hothtrooper44_ArmorCompilation.esp", 35, 43, abExportToDefaults = true) ; IASeadogTricorne
+	handler.SetArmorDataByKey("7571___Hothtrooper44_ArmorCompilation.esp", 35, 43, abExportToDefaults = true) ; IASeadogTricorneFeathered
+	handler.SetArmorDataByKey("145633___Hothtrooper44_ArmorCompilation.esp", 35, 43, abExportToDefaults = true) ; Bosmer Coif
+	handler.SetArmorDataByKey("145645___Hothtrooper44_ArmorCompilation.esp", 35, 43, abExportToDefaults = true) ; Bosmer Reinforced Coif
 
 
-	handler.SetArmorDataByKey("20257___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IAAkaviriSamuraiBoots
-	handler.SetArmorDataByKey("144009___Hothtrooper44_ArmorCompilation.esp", 15, 29) ; IAAlduinBoots
-	handler.SetArmorDataByKey("46672___Hothtrooper44_ArmorCompilation.esp", 12, 21) ; IAApotheusBoots
-	handler.SetArmorDataByKey("23131___Hothtrooper44_ArmorCompilation.esp", 7, 6) ; IABarbarianBoots
-	handler.SetArmorDataByKey("144095___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IABoiledChitinHBoots
-	handler.SetArmorDataByKey("544584___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IABoiledChitinLBoots
-	handler.SetArmorDataByKey("145632___Hothtrooper44_ArmorCompilation.esp", 12, 21) ; IABosmerBoots
-	handler.SetArmorDataByKey("145635___Hothtrooper44_ArmorCompilation.esp", 12, 21) ; IABosmerEngravedBoots
-	handler.SetArmorDataByKey("145644___Hothtrooper44_ArmorCompilation.esp", 12, 21) ; IABosmerHeavyBoots
-	handler.SetArmorDataByKey("145651___Hothtrooper44_ArmorCompilation.esp", 12, 21) ; IABosmerHuntHeavyBoots
-	handler.SetArmorDataByKey("145655___Hothtrooper44_ArmorCompilation.esp", 12, 21) ; IABosmerHuntLightBoots
-	handler.SetArmorDataByKey("143591___Hothtrooper44_ArmorCompilation.esp", 15, 6) ; IAConanBoots
-	handler.SetArmorDataByKey("143607___Hothtrooper44_ArmorCompilation.esp", 12, 21) ; IACrimsonArcherBoots
-	handler.SetArmorDataByKey("145722___Hothtrooper44_ArmorCompilation.esp", 18, 21) ; IADaedricLordBoots
-	handler.SetArmorDataByKey("139235___Hothtrooper44_ArmorCompilation.esp", 15, 29) ; IADragonEbonBulkyBoots
-	handler.SetArmorDataByKey("139236___Hothtrooper44_ArmorCompilation.esp", 15, 29) ; IADragonEbonSleekBoots
-	handler.SetArmorDataByKey("20280___Hothtrooper44_ArmorCompilation.esp", 15, 29) ; IADragonhideHeavyBoots
-	handler.SetArmorDataByKey("144021___Hothtrooper44_ArmorCompilation.esp", 15, 29) ; IADragonhideLBoots
-	handler.SetArmorDataByKey("226062___Hothtrooper44_ArmorCompilation.esp", 15, 29) ; IADragonhideUBoots
-	handler.SetArmorDataByKey("143556___Hothtrooper44_ArmorCompilation.esp", 15, 29) ; IADragonKnightHBoots
-	handler.SetArmorDataByKey("548819___Hothtrooper44_ArmorCompilation.esp", 15, 29) ; IADragonKnightLBoots
-	handler.SetArmorDataByKey("23078___Hothtrooper44_ArmorCompilation.esp", 15, 21) ; IADwarvenMageHBoots
-	handler.SetArmorDataByKey("144025___Hothtrooper44_ArmorCompilation.esp", 15, 21) ; IADwarvenMageLBoots
-	handler.SetArmorDataByKey("226050___Hothtrooper44_ArmorCompilation.esp", 15, 21) ; IADwarvenMageUBoots
-	handler.SetArmorDataByKey("145735___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IAEbonyMageHeavyBoots
-	handler.SetArmorDataByKey("145739___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IAEbonyMageLightBoots
-	handler.SetArmorDataByKey("226042___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IAEbonyMageUnarmoredBoots
-	handler.SetArmorDataByKey("15913___Hothtrooper44_ArmorCompilation.esp", 24, 21) ; IAEinherjarBrigandineDarkBoots
-	handler.SetArmorDataByKey("15914___Hothtrooper44_ArmorCompilation.esp", 24, 21) ; IAEinherjarBrigandineLightBoots
-	handler.SetArmorDataByKey("3432___Hothtrooper44_ArmorCompilation.esp", 24, 21) ; IAEinherjarPlateDarkBoots
-	handler.SetArmorDataByKey("4817___Hothtrooper44_ArmorCompilation.esp", 24, 21) ; IAEinherjarPlateLightBoots
-	handler.SetArmorDataByKey("3426___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IAFalkreathBoots
-	handler.SetArmorDataByKey("144099___Hothtrooper44_ArmorCompilation.esp", 24, 14) ; IAGlacialCrystalHBoots
-	handler.SetArmorDataByKey("544589___Hothtrooper44_ArmorCompilation.esp", 24, 14) ; IAGlacialCrystalLBoots
-	handler.SetArmorDataByKey("3477___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IAHedgeKnightBoots
-	handler.SetArmorDataByKey("23064___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IAHeroicImperialBoots
-	handler.SetArmorDataByKey("43879___Hothtrooper44_ArmorCompilation.esp", 18, 14) ; IAHeroicStormcloakBoots
-	handler.SetArmorDataByKey("14466___Hothtrooper44_ArmorCompilation.esp", 12, 21) ; IAHunterBoots
-	handler.SetArmorDataByKey("23049___Hothtrooper44_ArmorCompilation.esp", 12, 6) ; IAMercenaryBoots
-	handler.SetArmorDataByKey("16064___Hothtrooper44_ArmorCompilation.esp", 7, 6) ; IANordMailHeavyBoots
-	handler.SetArmorDataByKey("16067___Hothtrooper44_ArmorCompilation.esp", 7, 6) ; IANordMailLightBoots
-	handler.SetArmorDataByKey("43875___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IAPaladinBoots
-	;handler.SetArmorDataByKey("23101___Hothtrooper44_ArmorCompilation.esp", Y, Z) ; IAPrimitiveNordHeavyBoots
-	;handler.SetArmorDataByKey("23105___Hothtrooper44_ArmorCompilation.esp", Y, Z) ; IAPrimitiveNordLightBoots
-	handler.SetArmorDataByKey("23150___Hothtrooper44_ArmorCompilation.esp", 12, 6) ; IARangerBoots
-	handler.SetArmorDataByKey("3434___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IARedguardKnightHeavyBoots
-	handler.SetArmorDataByKey("3435___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IARedguardKnightLightBoots
-	handler.SetArmorDataByKey("144112___Hothtrooper44_ArmorCompilation.esp", 12, 21) ; IARingmailBoots
-	handler.SetArmorDataByKey("139148___Hothtrooper44_ArmorCompilation.esp", 15, 29) ; IARitualBoethiahBoots
-	handler.SetArmorDataByKey("6188___Hothtrooper44_ArmorCompilation.esp", 12, 21) ; IASeadogBoots
-	handler.SetArmorDataByKey("143535___Hothtrooper44_ArmorCompilation.esp", 15, 6) ; IAShamanLBoots
-	handler.SetArmorDataByKey("536245___Hothtrooper44_ArmorCompilation.esp", 15, 6) ; IAShamanUBoots
-	handler.SetArmorDataByKey("144119___Hothtrooper44_ArmorCompilation.esp", 18, 14) ; IASnowBearBoots
-	handler.SetArmorDataByKey("53614___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IASpellbinderCrimsonBoots
-	handler.SetArmorDataByKey("53619___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IASpellbinderRunicBoots
-	handler.SetArmorDataByKey("436722___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IAStormlordBoots
-	handler.SetArmorDataByKey("143686___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalHeavyBootsBlack
-	handler.SetArmorDataByKey("143687___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalHeavyBootsBlue
-	handler.SetArmorDataByKey("143688___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalHeavyBootsGreen
-	handler.SetArmorDataByKey("143689___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalHeavyBootsRed
-	handler.SetArmorDataByKey("143690___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalHeavyBootsWhite
-	handler.SetArmorDataByKey("143711___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalLightBootsBlack
-	handler.SetArmorDataByKey("143712___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalLightBootsBlue
-	handler.SetArmorDataByKey("143713___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalLightBootsGreen
-	handler.SetArmorDataByKey("143714___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalLightBootsRed
-	handler.SetArmorDataByKey("143715___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalLightBootsWhite
-	handler.SetArmorDataByKey("143740___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalUnarmoredBootsBlack
-	handler.SetArmorDataByKey("143741___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalUnarmoredBootsBlue
-	handler.SetArmorDataByKey("143742___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalUnarmoredBootsGreen
-	handler.SetArmorDataByKey("143743___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalUnarmoredBootsRed
-	handler.SetArmorDataByKey("143744___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IATribunalUnarmoredBootsWhite
-	handler.SetArmorDataByKey("143491___Hothtrooper44_ArmorCompilation.esp", 18, 14) ; IATrollbaneHeavyBoots
-	handler.SetArmorDataByKey("143497___Hothtrooper44_ArmorCompilation.esp", 18, 14) ; IATrollbaneLightBoots
-	handler.SetArmorDataByKey("3450___Hothtrooper44_ArmorCompilation.esp", 12, 35) ; IAVagabondCrimsonBoots
-	handler.SetArmorDataByKey("3452___Hothtrooper44_ArmorCompilation.esp", 12, 35) ; IAVagabondDuskBoots
-	handler.SetArmorDataByKey("3451___Hothtrooper44_ArmorCompilation.esp", 12, 35) ; IAVagabondLeatherBoots
-	handler.SetArmorDataByKey("3459___Hothtrooper44_ArmorCompilation.esp", 15, 21) ; IAVanguardPlateBoots
-	handler.SetArmorDataByKey("144123___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IAVvardenfellGlassBoots
-	handler.SetArmorDataByKey("50834___Hothtrooper44_ArmorCompilation.esp", 12, 14) ; IAWitchplateBoots
-	handler.SetArmorDataByKey("436742___Hothtrooper44_ArmorCompilation.esp", 15, 14) ; IAImperialKnightGreaves
-	handler.SetArmorDataByKey("3474___Hothtrooper44_ArmorCompilation.esp", 21, 14) ; IAWarchiefHeavyStompers
-	handler.SetArmorDataByKey("3475___Hothtrooper44_ArmorCompilation.esp", 21, 14) ; IAWarchiefLightStompers
+	handler.SetArmorDataByKey("20257___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IAAkaviriSamuraiBoots
+	handler.SetArmorDataByKey("144009___Hothtrooper44_ArmorCompilation.esp", 15, 29, abExportToDefaults = true) ; IAAlduinBoots
+	handler.SetArmorDataByKey("46672___Hothtrooper44_ArmorCompilation.esp", 12, 21, abExportToDefaults = true) ; IAApotheusBoots
+	handler.SetArmorDataByKey("23131___Hothtrooper44_ArmorCompilation.esp", 7, 6, abExportToDefaults = true) ; IABarbarianBoots
+	handler.SetArmorDataByKey("144095___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IABoiledChitinHBoots
+	handler.SetArmorDataByKey("544584___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IABoiledChitinLBoots
+	handler.SetArmorDataByKey("145632___Hothtrooper44_ArmorCompilation.esp", 12, 21, abExportToDefaults = true) ; IABosmerBoots
+	handler.SetArmorDataByKey("145635___Hothtrooper44_ArmorCompilation.esp", 12, 21, abExportToDefaults = true) ; IABosmerEngravedBoots
+	handler.SetArmorDataByKey("145644___Hothtrooper44_ArmorCompilation.esp", 12, 21, abExportToDefaults = true) ; IABosmerHeavyBoots
+	handler.SetArmorDataByKey("145651___Hothtrooper44_ArmorCompilation.esp", 12, 21, abExportToDefaults = true) ; IABosmerHuntHeavyBoots
+	handler.SetArmorDataByKey("145655___Hothtrooper44_ArmorCompilation.esp", 12, 21, abExportToDefaults = true) ; IABosmerHuntLightBoots
+	handler.SetArmorDataByKey("143591___Hothtrooper44_ArmorCompilation.esp", 15, 6, abExportToDefaults = true) ; IAConanBoots
+	handler.SetArmorDataByKey("143607___Hothtrooper44_ArmorCompilation.esp", 12, 21, abExportToDefaults = true) ; IACrimsonArcherBoots
+	handler.SetArmorDataByKey("145722___Hothtrooper44_ArmorCompilation.esp", 18, 21, abExportToDefaults = true) ; IADaedricLordBoots
+	handler.SetArmorDataByKey("139235___Hothtrooper44_ArmorCompilation.esp", 15, 29, abExportToDefaults = true) ; IADragonEbonBulkyBoots
+	handler.SetArmorDataByKey("139236___Hothtrooper44_ArmorCompilation.esp", 15, 29, abExportToDefaults = true) ; IADragonEbonSleekBoots
+	handler.SetArmorDataByKey("20280___Hothtrooper44_ArmorCompilation.esp", 15, 29, abExportToDefaults = true) ; IADragonhideHeavyBoots
+	handler.SetArmorDataByKey("144021___Hothtrooper44_ArmorCompilation.esp", 15, 29, abExportToDefaults = true) ; IADragonhideLBoots
+	handler.SetArmorDataByKey("226062___Hothtrooper44_ArmorCompilation.esp", 15, 29, abExportToDefaults = true) ; IADragonhideUBoots
+	handler.SetArmorDataByKey("143556___Hothtrooper44_ArmorCompilation.esp", 15, 29, abExportToDefaults = true) ; IADragonKnightHBoots
+	handler.SetArmorDataByKey("548819___Hothtrooper44_ArmorCompilation.esp", 15, 29, abExportToDefaults = true) ; IADragonKnightLBoots
+	handler.SetArmorDataByKey("23078___Hothtrooper44_ArmorCompilation.esp", 15, 21, abExportToDefaults = true) ; IADwarvenMageHBoots
+	handler.SetArmorDataByKey("144025___Hothtrooper44_ArmorCompilation.esp", 15, 21, abExportToDefaults = true) ; IADwarvenMageLBoots
+	handler.SetArmorDataByKey("226050___Hothtrooper44_ArmorCompilation.esp", 15, 21, abExportToDefaults = true) ; IADwarvenMageUBoots
+	handler.SetArmorDataByKey("145735___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IAEbonyMageHeavyBoots
+	handler.SetArmorDataByKey("145739___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IAEbonyMageLightBoots
+	handler.SetArmorDataByKey("226042___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IAEbonyMageUnarmoredBoots
+	handler.SetArmorDataByKey("15913___Hothtrooper44_ArmorCompilation.esp", 24, 21, abExportToDefaults = true) ; IAEinherjarBrigandineDarkBoots
+	handler.SetArmorDataByKey("15914___Hothtrooper44_ArmorCompilation.esp", 24, 21, abExportToDefaults = true) ; IAEinherjarBrigandineLightBoots
+	handler.SetArmorDataByKey("3432___Hothtrooper44_ArmorCompilation.esp", 24, 21, abExportToDefaults = true) ; IAEinherjarPlateDarkBoots
+	handler.SetArmorDataByKey("4817___Hothtrooper44_ArmorCompilation.esp", 24, 21, abExportToDefaults = true) ; IAEinherjarPlateLightBoots
+	handler.SetArmorDataByKey("3426___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IAFalkreathBoots
+	handler.SetArmorDataByKey("144099___Hothtrooper44_ArmorCompilation.esp", 24, 14, abExportToDefaults = true) ; IAGlacialCrystalHBoots
+	handler.SetArmorDataByKey("544589___Hothtrooper44_ArmorCompilation.esp", 24, 14, abExportToDefaults = true) ; IAGlacialCrystalLBoots
+	handler.SetArmorDataByKey("3477___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IAHedgeKnightBoots
+	handler.SetArmorDataByKey("23064___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IAHeroicImperialBoots
+	handler.SetArmorDataByKey("43879___Hothtrooper44_ArmorCompilation.esp", 18, 14, abExportToDefaults = true) ; IAHeroicStormcloakBoots
+	handler.SetArmorDataByKey("14466___Hothtrooper44_ArmorCompilation.esp", 12, 21, abExportToDefaults = true) ; IAHunterBoots
+	handler.SetArmorDataByKey("23049___Hothtrooper44_ArmorCompilation.esp", 12, 6, abExportToDefaults = true) ; IAMercenaryBoots
+	handler.SetArmorDataByKey("16064___Hothtrooper44_ArmorCompilation.esp", 7, 6, abExportToDefaults = true) ; IANordMailHeavyBoots
+	handler.SetArmorDataByKey("16067___Hothtrooper44_ArmorCompilation.esp", 7, 6, abExportToDefaults = true) ; IANordMailLightBoots
+	handler.SetArmorDataByKey("43875___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IAPaladinBoots
+	;handler.SetArmorDataByKey("23101___Hothtrooper44_ArmorCompilation.esp", Y, Z, abExportToDefaults = true) ; IAPrimitiveNordHeavyBoots
+	;handler.SetArmorDataByKey("23105___Hothtrooper44_ArmorCompilation.esp", Y, Z, abExportToDefaults = true) ; IAPrimitiveNordLightBoots
+	handler.SetArmorDataByKey("23150___Hothtrooper44_ArmorCompilation.esp", 12, 6, abExportToDefaults = true) ; IARangerBoots
+	handler.SetArmorDataByKey("3434___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IARedguardKnightHeavyBoots
+	handler.SetArmorDataByKey("3435___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IARedguardKnightLightBoots
+	handler.SetArmorDataByKey("144112___Hothtrooper44_ArmorCompilation.esp", 12, 21, abExportToDefaults = true) ; IARingmailBoots
+	handler.SetArmorDataByKey("139148___Hothtrooper44_ArmorCompilation.esp", 15, 29, abExportToDefaults = true) ; IARitualBoethiahBoots
+	handler.SetArmorDataByKey("6188___Hothtrooper44_ArmorCompilation.esp", 12, 21, abExportToDefaults = true) ; IASeadogBoots
+	handler.SetArmorDataByKey("143535___Hothtrooper44_ArmorCompilation.esp", 15, 6, abExportToDefaults = true) ; IAShamanLBoots
+	handler.SetArmorDataByKey("536245___Hothtrooper44_ArmorCompilation.esp", 15, 6, abExportToDefaults = true) ; IAShamanUBoots
+	handler.SetArmorDataByKey("144119___Hothtrooper44_ArmorCompilation.esp", 18, 14, abExportToDefaults = true) ; IASnowBearBoots
+	handler.SetArmorDataByKey("53614___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IASpellbinderCrimsonBoots
+	handler.SetArmorDataByKey("53619___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IASpellbinderRunicBoots
+	handler.SetArmorDataByKey("436722___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IAStormlordBoots
+	handler.SetArmorDataByKey("143686___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalHeavyBootsBlack
+	handler.SetArmorDataByKey("143687___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalHeavyBootsBlue
+	handler.SetArmorDataByKey("143688___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalHeavyBootsGreen
+	handler.SetArmorDataByKey("143689___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalHeavyBootsRed
+	handler.SetArmorDataByKey("143690___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalHeavyBootsWhite
+	handler.SetArmorDataByKey("143711___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalLightBootsBlack
+	handler.SetArmorDataByKey("143712___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalLightBootsBlue
+	handler.SetArmorDataByKey("143713___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalLightBootsGreen
+	handler.SetArmorDataByKey("143714___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalLightBootsRed
+	handler.SetArmorDataByKey("143715___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalLightBootsWhite
+	handler.SetArmorDataByKey("143740___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalUnarmoredBootsBlack
+	handler.SetArmorDataByKey("143741___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalUnarmoredBootsBlue
+	handler.SetArmorDataByKey("143742___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalUnarmoredBootsGreen
+	handler.SetArmorDataByKey("143743___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalUnarmoredBootsRed
+	handler.SetArmorDataByKey("143744___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IATribunalUnarmoredBootsWhite
+	handler.SetArmorDataByKey("143491___Hothtrooper44_ArmorCompilation.esp", 18, 14, abExportToDefaults = true) ; IATrollbaneHeavyBoots
+	handler.SetArmorDataByKey("143497___Hothtrooper44_ArmorCompilation.esp", 18, 14, abExportToDefaults = true) ; IATrollbaneLightBoots
+	handler.SetArmorDataByKey("3450___Hothtrooper44_ArmorCompilation.esp", 12, 35, abExportToDefaults = true) ; IAVagabondCrimsonBoots
+	handler.SetArmorDataByKey("3452___Hothtrooper44_ArmorCompilation.esp", 12, 35, abExportToDefaults = true) ; IAVagabondDuskBoots
+	handler.SetArmorDataByKey("3451___Hothtrooper44_ArmorCompilation.esp", 12, 35, abExportToDefaults = true) ; IAVagabondLeatherBoots
+	handler.SetArmorDataByKey("3459___Hothtrooper44_ArmorCompilation.esp", 15, 21, abExportToDefaults = true) ; IAVanguardPlateBoots
+	handler.SetArmorDataByKey("144123___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IAVvardenfellGlassBoots
+	handler.SetArmorDataByKey("50834___Hothtrooper44_ArmorCompilation.esp", 12, 14, abExportToDefaults = true) ; IAWitchplateBoots
+	handler.SetArmorDataByKey("436742___Hothtrooper44_ArmorCompilation.esp", 15, 14, abExportToDefaults = true) ; IAImperialKnightGreaves
+	handler.SetArmorDataByKey("3474___Hothtrooper44_ArmorCompilation.esp", 21, 14, abExportToDefaults = true) ; IAWarchiefHeavyStompers
+	handler.SetArmorDataByKey("3475___Hothtrooper44_ArmorCompilation.esp", 21, 14, abExportToDefaults = true) ; IAWarchiefLightStompers
 
 
-	handler.SetArmorDataByKey("145642___Hothtrooper44_ArmorCompilation.esp", 10, 10) ; IABosmerFullCape
-	handler.SetArmorDataByKey("145660___Hothtrooper44_ArmorCompilation.esp", 8, 8) ; IABosmerShoulderCape
-	handler.SetArmorDataByKey("145641___Hothtrooper44_ArmorCompilation.esp", 8, 8) ; IABosmerEngravedShoulderCape
-	handler.SetArmorDataByKey("436740___Hothtrooper44_ArmorCompilation.esp", 10, 10) ; IAImperialKnightCape
-	handler.SetArmorDataByKey("63308___Hothtrooper44_ArmorCompilation.esp", 10, 10) ; IARedguardKnightCape
-	handler.SetArmorDataByKey("11733___Hothtrooper44_ArmorCompilation.esp", 10, 10) ; IASeadogCape
-	handler.SetArmorDataByKey("13097___Hothtrooper44_ArmorCompilation.esp", 10, 10) ; IAApotheusScarf
+	handler.SetArmorDataByKey("145642___Hothtrooper44_ArmorCompilation.esp", 10, 10, abExportToDefaults = true) ; IABosmerFullCape
+	handler.SetArmorDataByKey("145660___Hothtrooper44_ArmorCompilation.esp", 8, 8, abExportToDefaults = true) ; IABosmerShoulderCape
+	handler.SetArmorDataByKey("145641___Hothtrooper44_ArmorCompilation.esp", 8, 8, abExportToDefaults = true) ; IABosmerEngravedShoulderCape
+	handler.SetArmorDataByKey("436740___Hothtrooper44_ArmorCompilation.esp", 10, 10, abExportToDefaults = true) ; IAImperialKnightCape
+	handler.SetArmorDataByKey("63308___Hothtrooper44_ArmorCompilation.esp", 10, 10, abExportToDefaults = true) ; IARedguardKnightCape
+	handler.SetArmorDataByKey("11733___Hothtrooper44_ArmorCompilation.esp", 10, 10, abExportToDefaults = true) ; IASeadogCape
+	handler.SetArmorDataByKey("13097___Hothtrooper44_ArmorCompilation.esp", 10, 10, abExportToDefaults = true) ; IAApotheusScarf
 
 
-	handler.SetArmorDataByKey("143495___Hothtrooper44_ArmorCompilation.esp", abIgnore = true) ; IATrollbaneHeavyMask		@IGNORE
-	handler.SetArmorDataByKey("143502___Hothtrooper44_ArmorCompilation.esp", abIgnore = true) ; IATrollbaneLightMask 		@IGNORE
-	handler.SetArmorDataByKey("143736___Hothtrooper44_ArmorCompilation.esp", abIgnore = true) ; IATribunalMaskBronze		@IGNORE
-	handler.SetArmorDataByKey("143737___Hothtrooper44_ArmorCompilation.esp", abIgnore = true) ; IATribunalMaskEbony			@IGNORE
-	handler.SetArmorDataByKey("143738___Hothtrooper44_ArmorCompilation.esp", abIgnore = true) ; IATribunalMaskGold			@IGNORE
-	handler.SetArmorDataByKey("143739___Hothtrooper44_ArmorCompilation.esp", abIgnore = true) ; IATribunalMaskSilver		@IGNORE
-	handler.SetArmorDataByKey("139152___Hothtrooper44_ArmorCompilation.esp", abIgnore = true) ; IARitualBoethiahMask		@IGNORE
-	handler.SetArmorDataByKey("10329___Hothtrooper44_ArmorCompilation.esp", abIgnore = true) ; IASeadogEarings 				@IGNORE
-	handler.SetArmorDataByKey("10335___Hothtrooper44_ArmorCompilation.esp", abIgnore = true) ; IASeadogEyepatch				@IGNORE
-	handler.SetArmorDataByKey("145659___Hothtrooper44_ArmorCompilation.esp", abIgnore = true) ; IABosmerMask 				@IGNORE
-	handler.SetArmorDataByKey("139153___Hothtrooper44_ArmorCompilation.esp", abIgnore = true) ; IARitualBoethiahShroud		@IGNORE
+	handler.SetArmorDataByKey("143495___Hothtrooper44_ArmorCompilation.esp", abIgnore = true, abExportToDefaults = true) ; IATrollbaneHeavyMask		@IGNORE
+	handler.SetArmorDataByKey("143502___Hothtrooper44_ArmorCompilation.esp", abIgnore = true, abExportToDefaults = true) ; IATrollbaneLightMask 		@IGNORE
+	handler.SetArmorDataByKey("143736___Hothtrooper44_ArmorCompilation.esp", abIgnore = true, abExportToDefaults = true) ; IATribunalMaskBronze		@IGNORE
+	handler.SetArmorDataByKey("143737___Hothtrooper44_ArmorCompilation.esp", abIgnore = true, abExportToDefaults = true) ; IATribunalMaskEbony			@IGNORE
+	handler.SetArmorDataByKey("143738___Hothtrooper44_ArmorCompilation.esp", abIgnore = true, abExportToDefaults = true) ; IATribunalMaskGold			@IGNORE
+	handler.SetArmorDataByKey("143739___Hothtrooper44_ArmorCompilation.esp", abIgnore = true, abExportToDefaults = true) ; IATribunalMaskSilver		@IGNORE
+	handler.SetArmorDataByKey("139152___Hothtrooper44_ArmorCompilation.esp", abIgnore = true, abExportToDefaults = true) ; IARitualBoethiahMask		@IGNORE
+	handler.SetArmorDataByKey("10329___Hothtrooper44_ArmorCompilation.esp", abIgnore = true, abExportToDefaults = true) ; IASeadogEarings 				@IGNORE
+	handler.SetArmorDataByKey("10335___Hothtrooper44_ArmorCompilation.esp", abIgnore = true, abExportToDefaults = true) ; IASeadogEyepatch				@IGNORE
+	handler.SetArmorDataByKey("145659___Hothtrooper44_ArmorCompilation.esp", abIgnore = true, abExportToDefaults = true) ; IABosmerMask 				@IGNORE
+	handler.SetArmorDataByKey("139153___Hothtrooper44_ArmorCompilation.esp", abIgnore = true, abExportToDefaults = true) ; IARitualBoethiahShroud		@IGNORE
 endFunction
 
 function SendEvent_FrostfallLoaded()
