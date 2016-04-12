@@ -161,6 +161,7 @@ scroll property _Frost_ScrollConjureShelterGreater auto
 Activator property _Frost_PerkNodeController_Endurance auto
 
 ;#Misc=============================================================================
+Armor property ArmorHideCuirass auto
 Message property _Frost_CriticalError_SKSE auto
 Message property _Frost_CriticalError_Campfire auto
 Message property _Frost_CriticalError_SkyUIInterfacePackage auto
@@ -215,6 +216,11 @@ function RunCompatibility()
 	trace("[Frostfall]                          Frostfall is now performing compatibility checks.                           ")
 	trace("[Frostfall]======================================================================================================")
 	
+	bool can_read_write = CheckJSONReadWrite()
+	if !can_read_write
+		; ERROR
+	endif
+
 	if _Frost_Upgraded_3_0_1.GetValueInt() != 2
 		Upgrade_3_0_1()
 	endif
@@ -225,6 +231,15 @@ function RunCompatibility()
 
 	if _Frost_Upgraded_3_1.GetValueInt() != 2
 		Upgrade_3_1()
+	endif
+
+	if can_read_write
+		; Verify that the default datastore has been populated.
+		_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+		int[] armor_data = handler.GetDefaultArmorData(ArmorHideCuirass, true)
+		if armor_data[0] == -1
+			PopulateDefaultArmorData()
+		endif
 	endif
 
 	; Update the previous version value with the current version
@@ -592,16 +607,70 @@ function Upgrade_3_1()
 	endif
 
 	; Create new default data
+	PopulateDefaultArmorData()
+
+	trace("[Frostfall] Upgrade cleared " + cleared_count + " old records.")
+	trace("[Frostfall] Upgraded to 3.1.")
+	_Frost_Upgraded_3_1.SetValueInt(2)
+endFunction
+
+bool function CheckJSONReadWrite()
+	; Attempt to open the file and write a value.
+	string path = "../FrostfallData/readwrite_test"
+	string test_key = "test_key"
+	JsonUtil.IntListSet(path, test_key, 0, 0)
+	JsonUtil.IntListSet(path, test_key, 1, 1)
+	JsonUtil.IntListSet(path, test_key, 2, 100)
+	JsonUtil.IntListSet(path, test_key, 3, 1000)
+	JsonUtil.IntListSet(path, test_key, 4, 5555)
+	JsonUtil.IntListSet(path, test_key, 5, -1)
+	JsonUtil.IntListSet(path, test_key, 6, 123456)
+
+	; Test saving the file.
+	bool save_success = JsonUtil.Save(path)
+	if !save_success
+		return false
+	endif
+
+	; Test loading the file.
+	bool load_success = JsonUtil.Load(path)
+	if !load_success
+		return false
+	endif
+	; Test reading back the values.
+	int val0 = JsonUtil.IntListGet(path, test_key, 0)
+	int val1 = JsonUtil.IntListGet(path, test_key, 1)
+	int val2 = JsonUtil.IntListGet(path, test_key, 2)
+	int val3 = JsonUtil.IntListGet(path, test_key, 3)
+	int val4 = JsonUtil.IntListGet(path, test_key, 4)
+	int val5 = JsonUtil.IntListGet(path, test_key, 5)
+	int val6 = JsonUtil.IntListGet(path, test_key, 6)
+
+	if val0 == 0 		&& \
+	   val1 == 1 		&& \
+	   val2 == 100 		&& \
+	   val3 == 1000 	&& \
+	   val4 == 5555 	&& \
+	   val5 == -1   	&& \
+	   val6 == 123456
+
+	    ; Success - Clear the values for the next test.
+		JsonUtil.IntListClear(path, test_key)
+	    return true
+	else
+		return true
+	endif
+endFunction
+
+function PopulateDefaultArmorData()
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+	handler.CreateProtectionKeywordValueMaps()
 	handler.SetDefaults_Body()
 	handler.SetDefaults_Hands()
 	handler.SetDefaults_Head()
 	handler.SetDefaults_Feet()
 	handler.SetDefaults_Cloak()
 	handler.SetDefaults_Shield()
-
-	trace("[Frostfall] Upgrade cleared " + cleared_count + " old records.")
-	trace("[Frostfall] Upgraded to 3.1.")
-	_Frost_Upgraded_3_1.SetValueInt(2)
 endFunction
 
 function RunCompatibilityArmors()
