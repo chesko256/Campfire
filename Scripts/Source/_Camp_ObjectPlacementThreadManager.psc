@@ -15,16 +15,6 @@ ObjectReference property _Camp_ObjectPlacementFutureAnchor auto
 GlobalVariable property _Camp_Setting_MaxThreads auto
 GlobalVariable property _Camp_LastPlacementHeightOffset auto
 
-;Fire
-;@SKYRIMOLD
-Form property SmallFire auto hidden
-Activator property _Camp_LargeFire auto
-Activator property _Camp_LargeFireSmoke auto
-Activator property _Camp_ObjectRubbleFire auto
-Explosion property _Camp_CollapseFireball auto
-Explosion property FallingDustExplosion01 auto
-EffectShader property _Camp_BurnEffect auto
-
 ;Placement Indicator
 _Camp_LegalAreaCheck property Legal auto
 Actor property PlayerRef auto
@@ -50,12 +40,6 @@ Message property _Camp_PlacementIllegal auto
 Message property _Camp_IndicatorSelect auto
 Message property _Camp_PlaceObjectError_Perk auto
 Message property _Camp_PlaceObjectError_Item auto
-
-;Crime
-Quest property _Camp_CampingCrimeTracking auto
-ReferenceAlias property IllegalItem1 auto
-ReferenceAlias property IllegalItem2 auto
-ReferenceAlias property IllegalItem3 auto
 
 ;Misc
 Static property XMarker auto
@@ -607,58 +591,10 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
         if !LegalToCampHere() && IsCrimeToPlaceInTowns(akFormToPlace)
             int ibutton = _Camp_PlacementIllegal.Show()
             if ibutton == 0
-                ;Place it anyway
-                if akIngredient && aiCost > 0
-                    if PlayerRef.GetItemCount(akIngredient) >= aiCost
-                        PlayerRef.RemoveItem(akIngredient, aiCost)
-                    else
-                        StopPlacement()
-                        return false
-                    endif
-                elseif akMiscItem && aiCost > 0
-                    if PlayerRef.GetItemCount(akMiscItem) >= aiCost
-                        PlayerRef.RemoveItem(akMiscItem, aiCost)
-                    else
-                        StopPlacement()
-                        return false
-                    endif
-                endif
-
-                akIndicator.Disable()
-                ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace, abForcePersist = !(IsPlaceableObjectTemporary(akFormToPlace)))
-                
-                ;@SKYRIMOLD
-                ; Raise optional SKSE event
-                ;SendEvent_OnObjectPlaced(campitem)
-
-                if akInventoryItem
-                    (campitem as _Camp_PlaceableObjectBase).Required_InventoryItem = akInventoryItem
-                    PlayerRef.RemoveItem(akInventoryItem, 1, true)
-                endif
-                StopPlacement()
-
-                ;Raise the ire of those around you
-                _Camp_CampingCrimeTracking.Stop()
-                int i = 0
-                while !_Camp_CampingCrimeTracking.IsStopped() && i < 30
-                    utility.wait(0.1)
-                    i += 1
-                endWhile
-                _Camp_CampingCrimeTracking.Start()
-                if !IllegalItem1.GetRef()
-                    IllegalItem1.ForceRefTo(campitem)
-                elseif !IllegalItem2.GetRef()
-                    IllegalItem2.ForceRefTo(campitem)
-                elseif !IllegalItem3.GetRef()
-                    IllegalItem3.ForceRefTo(campitem)
-                endif
-
-                return false
-            elseif ibutton == 1
                 StopPlacement()
                 _Camp_Placement_Cancelled.Show()
                 return false
-            elseif ibutton == 2     ;Back
+            elseif ibutton == 1     ;Back
                 _Camp_CurrentlyPlacingObject.SetValueInt(2)
                 return true
             endif
@@ -683,7 +619,8 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
 
                 akIndicator.Disable()
                 ObjectReference campitem = akIndicator.PlaceAtMe(akFormToPlace, abForcePersist = !(IsPlaceableObjectTemporary(akFormToPlace)))
-                
+                debug.trace("Placing " + campitem + ", force persist " + !(IsPlaceableObjectTemporary(akFormToPlace)))
+
                 ;@SKYRIMOLD
                 ; Raise optional SKSE event
                 ;SendEvent_OnObjectPlaced(campitem)
@@ -750,7 +687,6 @@ endFunction
 function UpdateIndicatorPosition(ObjectReference akIndicator, float afDistance, float afHeightOffset = 1.0, float afRotationOffset = 0.0, bool abSnapToTerrain = true)
     float[] center_point = new float[2]
     center_point = GetOffsets(PlayerRef, afDistance)
-    debug.trace("center_point: " + center_point)
 
     PlacementIndicatorThread1.get_async(center_point[0], center_point[1], 0.0, -43.3)
     PlacementIndicatorThread2.get_async(center_point[0], center_point[1], -50.0, 43.3)
@@ -902,7 +838,10 @@ bool function MeetsRequirements(Ingredient akIngredient, MiscObject akMiscItem, 
 endFunction
 
 function SendEvent_OnIndicatorUpdateStart()
-    StartTimer(0.1)
+    ;@TODO: Replace with CustomEvent
+    PlacementIndicatorThread1.StartTimer(0.1)
+    PlacementIndicatorThread2.StartTimer(0.1)
+    PlacementIndicatorThread3.StartTimer(0.1)
 endFunction
 
 function wait_all()

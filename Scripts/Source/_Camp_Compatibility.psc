@@ -76,7 +76,7 @@ GlobalVariable property _Camp_PerkNodeControllerCount auto
 ;#Misc=============================================================================
 GlobalVariable property _Camp_HarvestWoodEnabled auto
 Spell property _Camp_CreateItemSpell auto
-Spell property _Camp_CampfireSpell auto
+Potion property _Camp_SurvivalSkillBuildCampsiteAid auto
 Spell property _Camp_HarvestWoodSpell auto
 Spell property _Camp_LegacyConfig_Spell auto
 Message property _Camp_BetaMessage auto
@@ -115,7 +115,8 @@ Event OnPlayerLoadGame()
 	endif
 	/;
 
-	AddStartupSpells()
+	AddStartupItems()
+	AddStartupLists()
 	CheckHarvestWoodDisabled()
 	RegisterForRemoteEvent(PlayerRef, "OnDifficultyChanged")
 
@@ -279,21 +280,29 @@ function VanillaGameLoadUp()
 	if !PlayerAlias.GetActorRef()
 		PlayerAlias.ForceRefTo(PlayerRef)
 	endif
-
-	; Grab forms we can't fill as properties
-	; PlacementSystem.SmallFire = Game.GetFormFromFile(0x00056204, "Campfire.esm")
 endFunction
 
 
-function AddStartupSpells()
-	PlayerRef.AddSpell(_Camp_LegacyConfig_Spell, false)
-	PlayerRef.AddSpell(_Camp_CreateItemSpell, false)
-	PlayerRef.AddSpell(_Camp_CampfireSpell, false)
-	PlayerRef.AddSpell(_Camp_HarvestWoodSpell, false)
+function AddStartupItems()
+	;PlayerRef.AddSpell(_Camp_LegacyConfig_Spell, false)
+	;PlayerRef.AddSpell(_Camp_CreateItemSpell, false)
+	if PlayerRef.GetItemCount(_Camp_SurvivalSkillBuildCampsiteAid) < 1
+		PlayerRef.AddItem(_Camp_SurvivalSkillBuildCampsiteAid)
+	endif
+	;PlayerRef.AddSpell(_Camp_HarvestWoodSpell, false)
 	;@SKYRIMOLD
 	;if isSKSELoaded
 	;	PlayerRef.AddSpell(_Camp_SurvivalVisionPower, false)
 	;endif
+endFunction
+
+function AddStartupLists()
+	debug.trace("[Campfire] Injecting custom workshop menus.")
+	FormList mainmenu = Game.GetFormFromFile(0x106DA2, "Fallout4.esm") as FormList
+	FormList custommenu = Game.GetFormFromFile(0x005C20, "CampfireFO4.esp") as FormList
+	if !mainmenu.HasForm(custommenu)
+		mainmenu.AddForm(custommenu)
+	endif
 endFunction
 
 function RegisterForEventsOnLoad()

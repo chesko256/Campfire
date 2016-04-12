@@ -16,6 +16,7 @@ bool function done()
 endFunction
 
 ObjectReference function get_result()
+	debug.trace("Object future " + self + " returning " + r)
 	;Terminate the request after 10 seconds, or as soon as we have a result
 	int i = 0
 	while !done && i < 100

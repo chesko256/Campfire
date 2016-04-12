@@ -27,6 +27,5 @@ float function get_result()
         (CampfireObjectPlacementSystem as _Camp_ObjectPlacementThreadManager).TryToUnlockThread(self as ObjectReference)
     endif
     done = false
-    debug.trace(self + " returning " + r)
 	return r
 endFunction

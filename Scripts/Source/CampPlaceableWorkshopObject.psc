@@ -1,5 +1,5 @@
-scriptname CampPlaceableObject extends _Camp_PlaceableObjectBase
-{For the placement of Campfire FURNITURE objects. For Activators, please use CampPlaceableScriptedActivator.}
+scriptname CampPlaceableWorkshopObject extends _Camp_PlaceableObjectBase
+{For the placement of Campfire FURNITURE Workshop objects. For Activators, please use CampPlaceableScriptedWorkshopActivator.}
 
 import CampUtil
 import _CampInternal
@@ -48,7 +48,6 @@ ObjectReference property myExtraLight3Future auto hidden
 bool in_use = false
 
 function Initialize()
-	self.BlockActivation()
 	parent.Initialize()
 endFunction
 
@@ -73,22 +72,7 @@ function UseObject(ObjectReference akActionRef)
 endFunction
 
 function ToggleAndUse()
-	in_use = true
-	self.BlockActivation(false)
-	self.Activate(Game.GetPlayer())			
-	;Wait until the player is "using" the object, or enough time passes.
-    int j = 0
-    while !self.IsFurnitureInUse() && j < 50
-        utility.wait(0.1)
-        j += 1
-    endWhile
-    ;Wait until they finish.
-    while self.IsFurnitureInUse()
-        utility.wait(0.1)
-    endWhile
-	;Return to the previous state.
-    self.BlockActivation()
-    in_use = false
+	self.Activate(Game.GetPlayer())
 endFunction
 
 function PickUp()
@@ -97,7 +81,7 @@ function PickUp()
 endFunction
 
 function PlaceObjects()
-	CampPlaceableObjectEx Extended = self as CampPlaceableObjectEx
+	CampPlaceableWorkshopObjectEx Extended = self as CampPlaceableWorkshopObjectEx
 
 	if Extended
 		CenterObject = Extended.RequiredPositionRef_CenterObject
@@ -267,63 +251,63 @@ function RotateOnStartUp()
 	self.SetAngle(self.GetAngleX(), self.GetAngleY(), self.GetAngleZ() + Setting_StartUpRotation)
 endFunction
 
-function PlaceObject_ExtraStatic1(CampPlaceableObjectEx Extended)
+function PlaceObject_ExtraStatic1(CampPlaceableWorkshopObjectEx Extended)
 	myExtraStatic1Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraStatic1, Extended.PositionRef_ExtraStatic1, is_temp = is_temporary)
 endFunction
-function PlaceObject_ExtraStatic2(CampPlaceableObjectEx Extended)
+function PlaceObject_ExtraStatic2(CampPlaceableWorkshopObjectEx Extended)
 	myExtraStatic2Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraStatic2, Extended.PositionRef_ExtraStatic2, is_temp = is_temporary)
 endFunction
-function PlaceObject_ExtraStatic3(CampPlaceableObjectEx Extended)
+function PlaceObject_ExtraStatic3(CampPlaceableWorkshopObjectEx Extended)
 	myExtraStatic3Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraStatic3, Extended.PositionRef_ExtraStatic3, is_temp = is_temporary)
 endFunction
-function PlaceObject_ExtraStatic4(CampPlaceableObjectEx Extended)
+function PlaceObject_ExtraStatic4(CampPlaceableWorkshopObjectEx Extended)
 	myExtraStatic4Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraStatic4, Extended.PositionRef_ExtraStatic4, is_temp = is_temporary)
 endFunction
-function PlaceObject_ExtraStatic5(CampPlaceableObjectEx Extended)
+function PlaceObject_ExtraStatic5(CampPlaceableWorkshopObjectEx Extended)
 	myExtraStatic5Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraStatic5, Extended.PositionRef_ExtraStatic5, is_temp = is_temporary)
 endFunction
-function PlaceObject_ExtraActivator1(CampPlaceableObjectEx Extended)
+function PlaceObject_ExtraActivator1(CampPlaceableWorkshopObjectEx Extended)
 	myExtraActivator1Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraActivator1, Extended.PositionRef_ExtraActivator1, is_temp = is_temporary)
 endFunction
-function PlaceObject_ExtraActivator2(CampPlaceableObjectEx Extended)
+function PlaceObject_ExtraActivator2(CampPlaceableWorkshopObjectEx Extended)
 	myExtraActivator2Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraActivator2, Extended.PositionRef_ExtraActivator2, is_temp = is_temporary)
 endFunction
-function PlaceObject_ExtraActivator3(CampPlaceableObjectEx Extended)
+function PlaceObject_ExtraActivator3(CampPlaceableWorkshopObjectEx Extended)
 	myExtraActivator3Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraActivator3, Extended.PositionRef_ExtraActivator3, is_temp = is_temporary)
 endFunction
-function PlaceObject_ExtraActivator4(CampPlaceableObjectEx Extended)
+function PlaceObject_ExtraActivator4(CampPlaceableWorkshopObjectEx Extended)
 	myExtraActivator4Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraActivator4, Extended.PositionRef_ExtraActivator4, is_temp = is_temporary)
 endFunction
-function PlaceObject_ExtraActivator5(CampPlaceableObjectEx Extended)
+function PlaceObject_ExtraActivator5(CampPlaceableWorkshopObjectEx Extended)
 	myExtraActivator5Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraActivator5, Extended.PositionRef_ExtraActivator5, is_temp = is_temporary)
 endFunction
-function PlaceObject_ExtraFurniture1(CampPlaceableObjectEx Extended)
+function PlaceObject_ExtraFurniture1(CampPlaceableWorkshopObjectEx Extended)
 	myExtraFurniture1Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraFurniture1, Extended.PositionRef_ExtraFurniture1, is_temp = is_temporary)
 endFunction
-function PlaceObject_ExtraFurniture2(CampPlaceableObjectEx Extended)
+function PlaceObject_ExtraFurniture2(CampPlaceableWorkshopObjectEx Extended)
 	myExtraFurniture2Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraFurniture2, Extended.PositionRef_ExtraFurniture2, is_temp = is_temporary)
 endFunction
-function PlaceObject_ExtraFurniture3(CampPlaceableObjectEx Extended)
+function PlaceObject_ExtraFurniture3(CampPlaceableWorkshopObjectEx Extended)
 	myExtraFurniture3Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraFurniture3, Extended.PositionRef_ExtraFurniture3, is_temp = is_temporary)
 endFunction
-function PlaceObject_ExtraFurniture4(CampPlaceableObjectEx Extended)
+function PlaceObject_ExtraFurniture4(CampPlaceableWorkshopObjectEx Extended)
 	myExtraFurniture4Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraFurniture4, Extended.PositionRef_ExtraFurniture4, is_temp = is_temporary)
 endFunction
-function PlaceObject_ExtraFurniture5(CampPlaceableObjectEx Extended)
+function PlaceObject_ExtraFurniture5(CampPlaceableWorkshopObjectEx Extended)
 	myExtraFurniture5Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraFurniture5, Extended.PositionRef_ExtraFurniture5, is_temp = is_temporary)
 endFunction
-function PlaceObject_ExtraLight1(CampPlaceableObjectEx Extended)
+function PlaceObject_ExtraLight1(CampPlaceableWorkshopObjectEx Extended)
 	myExtraLight1Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraLight1, Extended.PositionRef_ExtraLight1, is_temp = is_temporary)
 endFunction
-function PlaceObject_ExtraLight2(CampPlaceableObjectEx Extended)
+function PlaceObject_ExtraLight2(CampPlaceableWorkshopObjectEx Extended)
 	myExtraLight2Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraLight2, Extended.PositionRef_ExtraLight2, is_temp = is_temporary)
 endFunction
-function PlaceObject_ExtraLight3(CampPlaceableObjectEx Extended)
+function PlaceObject_ExtraLight3(CampPlaceableWorkshopObjectEx Extended)
 	myExtraLight3Future = PlacementSystem.PlaceObject(self, Extended.Asset_ExtraLight3, Extended.PositionRef_ExtraLight3, is_temp = is_temporary)
 endFunction
 
 function TakeDown()
-	CampDebug(0, self + " TakeDown (CampPlaceableObject)")
+	CampDebug(0, self + " TakeDown (CampPlaceableWorkshopObject)")
 	parent.TakeDown()
 
 	ForceStopUsingFurniture(self)

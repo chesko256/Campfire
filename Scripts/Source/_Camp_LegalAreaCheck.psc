@@ -3,10 +3,7 @@ scriptname _Camp_LegalAreaCheck extends ReferenceAlias
 import CampUtil
 
 GlobalVariable property _Camp_Setting_Legality auto
-
-Keyword property LocTypeInn auto
-Keyword property LocTypeHouse auto
-Keyword property LocTypeBar auto
+Formlist property _Camp_Workshops auto
 
 ;@TBD
 ; Center marker references
@@ -39,27 +36,13 @@ endProperty
 Actor property PlayerRef auto
 
 bool function GetCampingLegal(bool bIgnoreSetting = false)
-	if _Camp_Setting_Legality.GetValueInt() == 1 && !bIgnoreSetting
-		return true
-	endif
 	if InIllegalArea
 		return false
 	else
-		return true
-	endif
-endFunction
-
-Faction function GetAreaCampingFaction(ObjectReference akCenter)
-
-	; Check center marker references
-	;@TBD
-	Location myLoc = akCenter.GetCurrentLocation()
-	if myLoc
-		if myLoc.HasKeyword(LocTypeInn) || myLoc.HasKeyword(LocTypeHouse) || myLoc.HasKeyword(LocTypeBar)
-			return akCenter.GetParentCell().GetFactionOwner()
+		if Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_Workshops, PlayerRef, 7250.0)
+			return false
+		else
+			return true
 		endif
 	endif
-	
-	return None
-	
 endFunction

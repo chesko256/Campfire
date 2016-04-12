@@ -786,51 +786,6 @@ function GetResults()
 		myLargeTentTriggerVolumeFuture = None
 	endif
 
-	if myFire1Future
-		myFire1 = GetFuture(myFire1Future).get_result()
-		myFire1Future = None
-	endif
-	if myFire2Future
-		myFire2 = GetFuture(myFire2Future).get_result()
-		myFire2Future = None
-	endif
-	if myFire3Future
-		myFire3 = GetFuture(myFire3Future).get_result()
-		myFire3Future = None
-	endif
-	if myFire4Future
-		myFire4 = GetFuture(myFire4Future).get_result()
-		myFire4Future = None
-	endif
-	if myFire5Future
-		myFire5 = GetFuture(myFire5Future).get_result()
-		myFire5Future = None
-	endif
-	if myFire6Future
-		myFire6 = GetFuture(myFire6Future).get_result()
-		myFire6Future = None
-	endif
-	if mySmokeFuture
-		mySmoke = GetFuture(mySmokeFuture).get_result()
-		float xs
-		float ys
-		if PositionRef_Shelter
-			xs = PositionRef_Shelter.GetWidth()
-			ys = PositionRef_Shelter.GetLength()
-		else
-			xs = self.GetWidth()
-			ys = self.GetLength()
-		endif
-		float size
-		if xs > ys
-			size = xs
-		else
-			size = ys
-		endif
-		mySmoke.SetScale(size / 900)
-		mySmokeFuture = None
-	endif
-
 	if myPlayerMarker_MainWeaponFuture
 		myPlayerMarker_MainWeapon = GetFuture(myPlayerMarker_MainWeaponFuture).get_result()
 		myPlayerMarker_MainWeaponFuture = None
@@ -1417,27 +1372,6 @@ function PlaceObject_LargeTentTriggerVolume()
 	myLargeTentTriggerVolumeFuture = PlacementSystem.PlaceObject(self, TentAsset_LargeTentTriggerVolume, PositionRef_Shelter, is_temp = is_temporary)
 endFunction
 
-;@Overrides _Camp_PlaceableObjectBase
-function PlaceObject_FireMarkers()
-	float fire_z_offset = (Game.GetFormFromFile(0x0005573D, "Campfire.esm") as GlobalVariable).GetValue() * -1.0
-	float xr
-	float yr
-	if PositionRef_Shelter
-		xr = (PositionRef_Shelter.GetWidth() / 2) * 0.7
-		yr = (PositionRef_Shelter.GetLength() / 2) * 0.7
-	else
-		xr = (self.GetWidth() / 2)
-		yr = (self.GetLength() / 2)
-	endif
-	myFire1Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_hanging = True, z_hanging_offset = fire_z_offset, is_temp = is_temporary)
-	myFire2Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_hanging = True, z_hanging_offset = fire_z_offset, is_temp = is_temporary)
-	myFire3Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_hanging = True, z_hanging_offset = fire_z_offset, is_temp = is_temporary)
-	myFire4Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_hanging = True, z_hanging_offset = fire_z_offset, is_temp = is_temporary)
-	myFire5Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_hanging = True, z_hanging_offset = fire_z_offset, is_temp = is_temporary)
-	myFire6Future = PlacementSystem.PlaceObject(self, PlacementSystem.SmallFire, self, initially_disabled = true, x_pos_offset = Utility.RandomFloat(xr * -1.0, xr), y_pos_offset = Utility.RandomFloat(yr * -1.0, yr), is_hanging = True, z_hanging_offset = fire_z_offset, is_temp = is_temporary)
-	mySmokeFuture = PlacementSystem.PlaceObject(self, PlacementSystem._Camp_LargeFireSmoke, self, initially_disabled = true, is_hanging = True, z_hanging_offset = 10.0 + fire_z_offset, is_temp = is_temporary)
-endFunction
-
 function PlaceObject_ClutterStatic1()
 	myClutterStatic1Future = PlacementSystem.PlaceObject(self, TentAsset_ClutterStatic1, PositionRef_ClutterStatic1, is_temp = is_temporary)
 endFunction
@@ -1657,77 +1591,3 @@ endFunction
 function DestroyMyself()
 	TentSystem.DestroyTent(self)
 endFunction
-
-state BurningDown
-	function BurnDown()
-		ObjectReference myBigFire
-		if myTent
-			myBigFire = myTent.PlaceAtMe(PlacementSystem._Camp_LargeFire, abInitiallyDisabled = true)
-		else
-			myBigFire = self.PlaceAtMe(PlacementSystem._Camp_LargeFire, abInitiallyDisabled = true)
-		endif
-		float xs
-		float ys
-		if PositionRef_Shelter
-			xs = PositionRef_Shelter.GetWidth()
-			ys = PositionRef_Shelter.GetLength()
-		else
-			xs = 200.0
-			ys = 200.0
-		endif
-		float size
-		if xs > ys
-			size = xs
-		else
-			size = ys
-		endif
-		myBigFire.SetScale(size / 750)
-		myBigFire.Enable(true)
-		mySmoke.Disable(true)
-		TryToPlayShader(self)
-		TryToPlayShader(myClutterStatic1)
-		TryToPlayShader(myClutterStatic2)
-		TryToPlayShader(myClutterStatic3)
-		TryToPlayShader(myClutterStatic4)
-		TryToPlayShader(myClutterStatic5)
-		TryToPlayShader(myClutterActivator1)
-		TryToPlayShader(myClutterActivator2)
-		TryToPlayShader(myClutterActivator3)
-		TryToPlayShader(myClutterActivator4)
-		TryToPlayShader(myClutterActivator5)
-		TryToPlayShader(myClutterFurniture1)
-		TryToPlayShader(myClutterFurniture2)
-		TryToPlayShader(myClutterFurniture3)
-		TryToPlayShader(myClutterFurniture4)
-		TryToPlayShader(myClutterFurniture5)
-		TryToPlayShader(myWard)
-		TryToPlayShader(mySpareBedRoll1)
-		TryToPlayShader(mySpareBedRoll2)
-		TryToPlayShader(mySpareBedRoll3)
-		TryToPlayShader(mySnowTent)
-		TryToPlayShader(myAshTent)
-		TryToPlayShader(myNormalTent)
-		TryToPlayShader(myTent)
-		utility.wait(10.5)
-
-		if myTent && myTent.IsEnabled()
-			float fire_z_offset = (Game.GetFormFromFile(0x0005573D, "Campfire.esm") as GlobalVariable).GetValue() * -1.0
-			ObjectReference rubble = myTent.PlaceAtMe(PlacementSystem._Camp_ObjectRubbleFire, abInitiallyDisabled = true)
-			rubble.SetScale(0.8)
-			rubble.SetAngle(rubble.GetAngleX(), rubble.GetAngleY(), Utility.RandomFloat(0.0, 359.0))
-			rubble.MoveTo(rubble, afZOffset = fire_z_offset)
-			rubble.EnableNoWait()
-			myTent.PlaceAtMe(PlacementSystem._Camp_CollapseFireball)
-		endif
-		TakeDown()
-		utility.wait(3.5)
-		self.Disable()
-		if myTent
-			myTent.PlaceAtMe(PlacementSystem.FallingDustExplosion01)
-		else
-			self.PlaceAtMe(PlacementSystem.FallingDustExplosion01)
-		endif
-		utility.wait(7.0)
-		TryToDisableAndDeleteRef(self)
-	endFunction
-endState
