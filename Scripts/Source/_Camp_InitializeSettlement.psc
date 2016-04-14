@@ -11,6 +11,8 @@ ObjectReference property _Camp_NewWorkshop3 auto
 ObjectReference property _Camp_NewWorkshop4 auto
 ObjectReference property _Camp_NewWorkshop5 auto
 
+Quest property WorkshopParent auto
+Quest property _Camp_MainQuest auto
 Keyword property WorkshopEventInitializeLocation auto
 Keyword property WorkshopLinkCenter auto
 
@@ -23,7 +25,18 @@ function InitializeSettlement()
 	ObjectReference new_workshop = GetAvailableWorkshop()
 	ObjectReference new_build_area = new_workshop.GetLinkedRef(WorkshopLinkCenter)
 	debug.trace("new_workshop " + new_workshop + " new_build_area " + new_build_area)
+	(new_workshop as WorkshopScript).myLocation = new_workshop.GetCurrentLocation()
 
+	WorkshopEventInitializeLocation.SendStoryEventAndWait(_Camp_WorkshopLocation1)
+	WorkshopScript[] newWorkshops = new WorkshopScript[1]
+	newWorkshops[0] = (new_workshop as WorkshopScript)
+	bool b = (WorkshopParent as WorkshopParentScript).ReinitializeLocationsPUBLIC(newWorkshops, _Camp_MainQuest)
+
+	if b
+		debug.trace("WORKSHOP INIT SUCCESSFUL")
+	else
+		debug.trace("WORKSHOP INIT FAILED")
+	endif
 	; Move the workshop and build area to us.
 	new_workshop.MoveTo(self)
 	new_build_area.MoveTo(self)
@@ -31,7 +44,7 @@ function InitializeSettlement()
 	_Camp_Workshop1MapMarker.MoveTo(self)
 	_Camp_Workshop1CenterMarker.MoveTo(self)
 
-	WorkshopEventInitializeLocation.SendStoryEvent(_Camp_WorkshopLocation1)
+	
 
 	self.disable()
 	self.delete()
