@@ -186,7 +186,9 @@ meshes\campfire\_Camp_VisionItemFoundFX.nif
 meshes\campfire\_camp_walkingstickshield3.nif
 meshes\campfire\_camp_walkingstickshieldGO.nif
 meshes\campfire\_Camp_WoodShavings.nif
-Scripts\_Camp_InitializeSettlement.pex
+Scripts\_Camp_WorkshopScriptEx.pex
+Scripts\_Camp_SettlementManagerScript.pex
+Scripts\_Camp_WorkshopProxy.pex
 Scripts\CampPlaceableSimpleWorkshopObject.pex
 Scripts\CampPlaceableWorkshopObject.pex
 Scripts\CampPlaceableWorkshopObjectEx.pex

@@ -6,14 +6,19 @@ ObjectReference[] property EdgeMarkerRefs auto
 ObjectReference[] property MapMarkerRefs auto
 ObjectReference[] property CenterMarkerRefs auto
 
+Keyword property WorkshopEventInitializeLocation auto
 Keyword property WorkshopLinkCenter auto
-{Set up in the CK}
+Quest property WorkshopParent auto
+
+Event OnInit()
+	InitializeSettlements()
+EndEvent
 
 function InitializeSettlements()
 	int i = 0
 	;while i < 5
 	while i < 1
-		ObjectReference new_workshop = BuildableWorkshopReferences[i]
+		ObjectReference new_workshop = BuildableWorkshopRefs[i]
 		ObjectReference new_build_area = new_workshop.GetLinkedRef(WorkshopLinkCenter)	
 		Location new_location = new_workshop.GetCurrentLocation()
 		(new_workshop as WorkshopScript).myLocation = new_location
@@ -21,7 +26,7 @@ function InitializeSettlements()
 		i += 1
 	endWhile
 	
-	bool success = (WorkshopParent as WorkshopParentScript).ReinitializeLocationsPUBLIC(BuildableWorkshopReferences, self as _Camp_SettlementManagerScript)
+	bool success = (WorkshopParent as WorkshopParentScript).ReinitializeLocationsPUBLIC((BuildableWorkshopRefs as WorkshopScript[]), self as _Camp_SettlementManagerScript)
 	if success
 		debug.trace("WORKSHOP INIT SUCCESSFUL")
 	else

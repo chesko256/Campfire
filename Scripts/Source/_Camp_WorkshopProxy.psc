@@ -3,7 +3,7 @@ scriptname _Camp_WorkshopProxy extends ObjectReference
 Actor property PlayerRef auto
 Quest property _Camp_SettlementManager auto Mandatory
 Keyword property WorkshopEventInitializeLocation auto Mandatory
-Keyword property WorkshopLinkCenter auto Mandatory
+ObjectReference property _Camp_SettlementMapMarker1 auto
 
 ObjectReference property MyWorkshop auto hidden
 ObjectReference property BuildArea auto hidden
@@ -26,25 +26,22 @@ function BuildSettlement()
 	MapMarker = myWorkshopObjects[3]
 	CenterMarker = myWorkshopObjects[4]
 
-	ObjectReference BuildArea = MyWorkshop.GetLinkedRef(WorkshopLinkCenter)
 	debug.trace("MyWorkshop " + MyWorkshop + " BuildArea " + BuildArea)
 
 	; Move the build area and markers to us.
 	MyWorkshop.MoveTo(self)
 	BuildArea.MoveTo(self)
 	EdgeMarker.MoveTo(self)
-	MapMarker.MoveTo(self)
 	CenterMarker.MoveTo(self)
+	;MapMarker.MoveTo(self)
+
+	; Test map marker
+	_Camp_SettlementMapMarker1REF.MoveTo(self)
+	_Camp_SettlementMapMarker1REF.AddToMap(true)
+
+	self.Disable()
+	self.Delete()
 
 	debug.trace("New settlement initialized.")
 endFunction
 
-Event OnLoad()
-	MyWorkshop.OnLoad()
-EndEvent
-
-Event OnActivate(ObjectReference akActionRef)
-	if MyWorkshop
-		MyWorkshop.Activate(PlayerRef)
-	endif
-EndEvent

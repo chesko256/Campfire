@@ -197,9 +197,8 @@ function RunCompatibility()
 		endif
 	endif
 
-	;/
 	if isDLC2Loaded
-		isDLC2Loaded = IsPluginInstalled("Wasteland Workshop")
+		isDLC2Loaded = IsPluginInstalled("DLCworkshop01.esm")
 		if !isDLC2Loaded
 			;DLC2 was removed since the last save.
 			Conditions.IsWastelandWorkshopLoaded = false
@@ -207,7 +206,7 @@ function RunCompatibility()
 			Conditions.IsWastelandWorkshopLoaded = true
 		endif
 	else
-		isDLC2Loaded = IsPluginInstalled("Wasteland Workshop")
+		isDLC2Loaded = IsPluginInstalled("DLCworkshop01.esm")
 		if isDLC2Loaded
 			;DLC2 was just added.
 			Conditions.IsWastelandWorkshopLoaded = true
@@ -216,6 +215,7 @@ function RunCompatibility()
 		endif
 	endif
 
+	;/
 	if isDLC3Loaded
 		isDLC3Loaded = IsPluginInstalled("Far Harbor")
 		if !isDLC3Loaded
