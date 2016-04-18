@@ -15,24 +15,8 @@ Keyword property ActorTypeCreature auto
 Keyword property ImmuneParalysis auto
 Keyword property WAF_ClothingCloak auto
 
-Armor[] property WornGear auto hidden
-
-int property SLOT_HEAD = 30 autoReadOnly hidden
-int property SLOT_HAIR = 31 autoReadOnly hidden
-int property SLOT_BODY = 32 autoReadOnly hidden
-int property SLOT_HANDS = 33 autoReadOnly hidden
-int property SLOT_FOREARMS = 34 autoReadOnly hidden
-int property SLOT_AMULET = 35 autoReadOnly hidden
-int property SLOT_RING = 36 autoReadOnly hidden
-int property SLOT_FEET = 37 autoReadOnly hidden
-int property SLOT_CALVES = 38 autoReadOnly hidden
-int property SLOT_SHIELD = 39 autoReadOnly hidden
-int property SLOT_TAIL = 40 autoReadOnly hidden
-int property SLOT_LONGHAIR = 41 autoReadOnly hidden
-int property SLOT_CIRCLET = 42 autoReadOnly hidden
-int property SLOT_EARS = 43 autoReadOnly hidden
-int property SLOT_CLOAK = 46 autoReadOnly hidden
-int property SLOT_BACKPACK = 47 autoReadOnly hidden
+string[] property WornGearKeys auto hidden
+Keyword property _Frost_WornGearData auto
 
 Armor property equipped_body auto hidden
 Armor property equipped_head auto hidden
@@ -121,6 +105,9 @@ function ObjectEquipped(Form akBaseObject, int iGearType)
 endFunction
 
 function HandleEquippedObject(Form akBaseObject, int iGearType)
+    ; Assign protection data to the correct internal slots and store the results.
+    int[] protection_data
+
     int i = 20
     while unequip_lock == true && i > 0
         utility.wait(0.2)
@@ -131,21 +118,30 @@ function HandleEquippedObject(Form akBaseObject, int iGearType)
     if !armor_object
         return
     endif
+    int slot_mask = armor_object.GetSlotMask()
 
-    _Frost_ArmorProtectionDatastoreHandler DSHandler = GetClothingDatastoreHandler()
-    int[] protection_data
+    _Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
-    ; Gear Type Overrides
-    if akBaseObject.HasKeyword(WAF_ClothingCloak)
-        iGearType = 7
-    endif
-    int mySlotMask = armor_object.GetSlotMask()
-    if LogicalAnd(mySlotMask, armor_object.kSlotMask31) && !LogicalAnd(mySlotMask, armor_object.kSlotMask32)
-        iGearType = 3
+    int type = handler.GetGearType(armor_object, slot_mask, false)
+    if type == -1
+        return
     endif
 
+    ; The system will store ONE Body, Head, Hands, Feet, and Cloak slot Warmth and Coverage.
+    ; The system will keep any number of warmth/coverage values for Misc.
+    ; Explicit gear types win over extra part data.
+    string dskey = handler.GetDatastoreKeyFromForm(armor_object)
+    int idx = WornGearKeys.Find(dskey)
+    if idx == -1
+        ; plug the data in
+        ArrayAddString(dskey)
+        ArrayAddInt
+        RecalculateWarmthCoverage()
+    endif
+
+    
     if iGearType == 1
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType, aiMode = 1)
+        protection_data = handler.GetArmorProtectionData(armor_object, iGearType, aiMode = 1)
         equipped_body = armor_object
         body_warmth = protection_data[0]
         body_coverage = protection_data[1]
@@ -170,12 +166,12 @@ function HandleEquippedObject(Form akBaseObject, int iGearType)
             cloak_coverage = protection_data[9]
         endif
     elseif iGearType == 2
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
+        protection_data = handler.GetArmorProtectionData(armor_object, iGearType)
         equipped_hands = armor_object
         hands_warmth = protection_data[0]
         hands_coverage = protection_data[1]
     elseif iGearType == 3
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType, aiMode = 2)
+        protection_data = handler.GetArmorProtectionData(armor_object, iGearType, aiMode = 2)
         equipped_head = armor_object
         head_warmth = protection_data[0]
         head_coverage = protection_data[1]
@@ -185,19 +181,19 @@ function HandleEquippedObject(Form akBaseObject, int iGearType)
             cloak_coverage = protection_data[3]
         endif
     elseif iGearType == 4
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
+        protection_data = handler.GetArmorProtectionData(armor_object, iGearType)
         equipped_feet = armor_object
         feet_warmth = protection_data[0]
         feet_coverage = protection_data[1]
     elseif iGearType == 7
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
+        protection_data = handler.GetArmorProtectionData(armor_object, iGearType)
         if protection_data[0] != -1
             equipped_cloak = armor_object
             cloak_warmth = protection_data[0]
             cloak_coverage = protection_data[1]
         endif
     elseif iGearType == 8
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
+        protection_data = handler.GetArmorProtectionData(armor_object, iGearType)
         if protection_data[0] != -1
             equipped_shield = armor_object
             shield_warmth = protection_data[0]
@@ -419,5 +415,93 @@ function SendEvent_UpdateWarmth()
     int handle = ModEvent.Create("Frost_UpdateWarmth")
     if handle
         ModEvent.Send(handle)
+    endif
+endFunction
+
+
+
+; Array functions ==============================================================
+
+bool function ArrayAddString(string[] myArray, string myKey)
+;Adds a form to the first available element in the array.
+    ;       false       =       Error (array full)
+    ;       true        =       Success
+
+    int i = 0
+    while i < myArray.Length
+        if IsNone(myArray[i])
+            myArray[i] = myKey
+            return true
+        else
+            i += 1
+        endif
+    endWhile
+    return false
+endFunction
+
+bool function ArraySortString(String[] myArray, int i = 0)
+;Removes blank elements by shifting all elements down.
+     ;         false        =              No sorting required
+     ;         true         =              Success
+ 
+     bool bFirstNoneFound = false
+     int iFirstNonePos = i
+     while i < myArray.Length
+          if IsNone(myArray[i])
+               myArray[i] = none
+               if bFirstNoneFound == false
+                    bFirstNoneFound = true
+                    iFirstNonePos = i
+                    i += 1
+               else
+                    i += 1
+               endif
+          else
+               if bFirstNoneFound == true
+               ;check to see if it's a couple of blank entries in a row
+                    if !(IsNone(myArray[i]))
+                         myArray[iFirstNonePos] = myArray[i]
+                         myArray[i] = none
+ 
+                         ;Call this function recursively until it returns
+                         ArraySort(myArray, iFirstNonePos + 1)
+                         return true
+                    else
+                         i += 1
+                    endif
+               else
+                    i += 1
+               endif
+          endif
+     endWhile
+     return false
+endFunction
+
+int function ArrayCountString(String[] myArray)
+;Counts the number of indices in this array that do not have a "none" type.
+    ;       int myCount = number of indicies that are not "none"
+ 
+    int i = 0
+    int myCount = 0
+    while i < myArray.Length
+        if !(IsNone(myArray[i]))
+            myCount += 1
+            i += 1
+        else
+            i += 1
+        endif
+    endWhile
+    return myCount
+endFunction
+
+bool function IsNone(string akString)
+    if akString
+        if akString == ""
+            return true
+        else
+            return false
+        endif
+    else
+        return true
     endif
 endFunction
