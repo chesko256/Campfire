@@ -125,6 +125,15 @@ _Frost_ShelterSystem function GetShelterSystem() global
     return Frostfall.Shelter
 endFunction
 
+_Frost_FrostResistSystem function GetFrostResistSystem() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.FrostResist
+endFunction
+
 
 ; Public Functions ================================================================================
 
