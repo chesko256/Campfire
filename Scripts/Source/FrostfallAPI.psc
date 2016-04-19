@@ -11,6 +11,7 @@ _Frost_CoverageSystem property Coverage auto
 _Frost_RescueSystem property Rescue auto
 _Frost_InterfaceHandler property Interface auto
 _Frost_ShelterSystem property Shelter auto
+_Frost_FrostResistSystem property FrostResist auto
 _Frost_ArmorProtectionDatastoreHandler property ClothingDatastoreHandler auto
 Actor property PlayerRef auto
 Formlist property _Frost_WorldspacesExteriorOblivion auto

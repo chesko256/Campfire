@@ -128,6 +128,7 @@ function StartAllSystems()
 	GetCoverageSystem().StartSystem()
 	GetExposureSystem().StartSystem()
 	GetWetnessSystem().StartSystem()
+	GetFrostResistSystem().StartSystem()
 endFunction
 
 function StopAllSystems()
@@ -141,6 +142,7 @@ function StopAllSystems()
 	GetCoverageSystem().StopSystem()
 	GetExposureSystem().StopSystem()
 	GetWetnessSystem().StopSystem()
+	GetFrostResistSystem().StopSystem()
 	Utility.Wait(2)
 endFunction
 

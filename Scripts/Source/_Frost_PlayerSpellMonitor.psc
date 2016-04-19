@@ -8,9 +8,7 @@ Keyword property MagicDamageFire auto
 Keyword property MagicDamageFrost auto
 Keyword property _Frost_WetStateKeyword auto
 Actor property PlayerRef auto
-Spell property _Frost_FrostResistBonusSpell auto
 EffectShader property SteamFXShader auto
-float old_amount
 
 bool fire_damage_lock = false
 bool frost_damage_lock = false
@@ -22,25 +20,8 @@ Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
 		elseif !frost_damage_lock && akEffect.HasKeyword(MagicDamageFrost)
 			IncreaseExposureFrostDamage()
 		endif
-	else
-		float amount = PlayerRef.GetAV("FrostResist") / 2.0
-		if amount != old_amount
-			UpdateFrostResistBonus(amount)
-		endif
 	endif
 EndEvent
-
-function UpdateFrostResistBonus(float new_amount)
-	if new_amount > 50.0
-		new_amount = 50.0
-	endif
-
-	_Frost_FrostResistBonusSpell.SetNthEffectMagnitude(0, new_amount)
-	PlayerRef.RemoveSpell(_Frost_FrostResistBonusSpell)
-	Utility.WaitMenuMode(0.1)
-	PlayerRef.AddSpell(_Frost_FrostResistBonusSpell, false)
-	old_amount = new_amount
-endFunction
 
 function DispelWetness()
 	_Frost_WetnessSystem wet = GetWetnessSystem()

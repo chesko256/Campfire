@@ -609,6 +609,11 @@ function Upgrade_3_1()
 	; Create new default data
 	PopulateDefaultArmorData()
 
+	if _Frost_PreviousVersion.GetValue() > 0.0
+		; Upgraded from previous version, start the new Frost Resist system.
+		GetFrostResistSystem().StartSystem()
+	endif
+
 	trace("[Frostfall] Upgrade cleared " + cleared_count + " old records.")
 	trace("[Frostfall] Upgraded to 3.1.")
 	_Frost_Upgraded_3_1.SetValueInt(2)
