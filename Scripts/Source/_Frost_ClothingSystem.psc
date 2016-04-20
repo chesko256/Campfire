@@ -106,8 +106,7 @@ endFunction
 
 function HandleEquippedObject(Form akBaseObject, int iGearType)
     ; Assign protection data to the correct internal slots and store the results.
-    int[] protection_data
-
+    
     int i = 20
     while unequip_lock == true && i > 0
         utility.wait(0.2)
@@ -127,16 +126,56 @@ function HandleEquippedObject(Form akBaseObject, int iGearType)
         return
     endif
 
+    int[] armor_data = handler.GetArmorProtectionData(armor_object)
+
     ; The system will store ONE Body, Head, Hands, Feet, and Cloak slot Warmth and Coverage.
     ; The system will keep any number of warmth/coverage values for Misc.
     ; Explicit gear types win over extra part data.
     string dskey = handler.GetDatastoreKeyFromForm(armor_object)
     int idx = WornGearKeys.Find(dskey)
+    ;@TODO: Also check the data store
+    ;@TODO: Handle ignore flag
     if idx == -1
         ; plug the data in
         ArrayAddString(dskey)
-        ArrayAddInt
-        RecalculateWarmthCoverage()
+        ;@TODO: Assume we get the type
+        int type = armor_data[0]
+        ;@TODO: no type?
+        ; 0 - type
+        ; 1 - body warmth
+        ; 2 - body coverage
+        ; 3 - head warmth
+        ; 4 - head coverage
+        ; 5 - hands warmth
+        ; 6 - hands coverage
+        ; 7 - feet warmth
+        ; 8 - feet coverage
+        ; 9 - cloak warmth
+        ; 10 - cloak coverage
+        ; 11 - misc warmth
+        ; 12 - misc coverage
+        StorageUtil.IntListResize(_Frost_WornGearData, dskey, 14)
+        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 0, type) ; type
+        int jdx = (type * 2)
+        
+        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 1, armor_data[3])     ; extra body warmth
+        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 2, armor_data[4])     ; extra body coverage
+        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 3, armor_data[5])     ; extra head warmth
+        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 4, armor_data[6])     ; extra head coverage
+        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 5, armor_data[7])     ; extra hands warmth
+        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 6, armor_data[8])     ; extra hands coverage
+        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 7, armor_data[9])     ; extra feet warmth
+        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 8, armor_data[10])    ; extra feet coverage
+        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 9, armor_data[11])    ; extra cloak warmth
+        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 10, armor_data[12])    ; extra cloak coverage
+        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 11, armor_data[13])    ; extra misc warmth
+        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 12, armor_data[14])    ; extra misc coverage
+
+        ; Main values - these overwrite "extra" data in the same category (shouldn't do that anyway)
+        StorageUtil.IntListSet(_Frost_WornGearData, dskey, jdx - 1, armor_data[1])     ; warmth
+        StorageUtil.IntListSet(_Frost_WornGearData, dskey, jdx, armor_data[2])         ; coverage
+
+        RecalculateProtectionData()
     endif
 
     
@@ -316,6 +355,10 @@ Event ShieldEquipped(Form akBaseObject, bool abEquipped)
         ObjectUnequipped(akBaseObject, 8)
     endif
 endEvent
+
+function RecalculateProtectionData()
+
+endFunction
 
 int function GetArmorWarmth()
     int total = body_warmth + hands_warmth + \
