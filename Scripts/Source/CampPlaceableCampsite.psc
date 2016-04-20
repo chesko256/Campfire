@@ -13,6 +13,7 @@ FormList property workshopScrapRecipe_TreeBlasted auto
 FormList property workshopScrapRecipe_TreeLarge auto
 FormList property workshopScrapRecipe_TreeStump auto
 ObjectReference property _Camp_Anchor auto
+Activator property _Camp_PlaceableSettlementWorkshop auto
 
 ; PRIVATE
 ObjectReference property myCampsiteWorkshop auto hidden
@@ -89,7 +90,11 @@ function PickUpCampsiteObjectByIndex(int aiRefIndex)
 		PlayerRef.AddItem((ref as _Camp_PlaceableObjectBase).Required_InventoryItem, 1, true)
 		(ref as _Camp_PlaceableObjectBase).TakeDown()
 	else
-		TryToDisableAndDeleteRef(ref)
+		if ref.GetBaseObject() == _Camp_PlaceableSettlementWorkshop
+			; Don't destroy new settlement objects.
+		else
+			TryToDisableAndDeleteRef(ref)
+		endif
 	endif
 endFunction
 

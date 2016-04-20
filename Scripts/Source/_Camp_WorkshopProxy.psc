@@ -5,6 +5,8 @@ Quest property _Camp_SettlementManager auto Mandatory
 
 Keyword property WorkshopEventInitializeLocation auto Mandatory
 
+Message property _Camp_WorkshopMainMenu auto
+
 ObjectReference property MyWorkshop auto hidden
 ObjectReference property BuildArea auto hidden
 ObjectReference property EdgeMarker auto hidden
@@ -50,8 +52,22 @@ function BuildSettlement()
 	;_Camp_SettlementManagerScript mgr = _Camp_SettlementManager as _Camp_SettlementManagerScript
 	;WorkshopParentScript wp = mgr.WorkshopParent as WorkshopParentScript
 	;MyWorkshop.GetLinkedRef(wp.WorkshopLinkContainer).MoveTo(PlayerRef)
-	self.Disable()
-	self.Delete()
+	;self.Disable()
+	;self.Delete()
 
 	debug.trace("######################New settlement initialized.")
 endFunction
+
+
+Event OnActivate(ObjectReference akActionRef)
+	int i = _Camp_WorkshopMainMenu.Show()
+	if i == 0	; Workshop
+		(MyWorkshop as _Camp_WorkshopScriptEx).EnterWorkshopMode()
+		(MyWorkshop as _Camp_WorkshopScriptEx).activated_by_proxy = true
+		(MyWorkshop as _Camp_WorkshopScriptEx).OnActivate(PlayerRef)
+	elseif i == 1 ; Dissolve Settlement
+
+	else
+
+	endif
+EndEvent
