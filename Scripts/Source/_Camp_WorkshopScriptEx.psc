@@ -45,10 +45,10 @@ function FetchLinkedWorkshopResources()
 	; related to using a location that was never set up to be a settlement.
 	; If you can find a better solution, let me know! chesko.tesmod@gmail.com
 	self.AddInventoryEventFilter(_Camp_ScrapResources)
-	external_resource_items_original = new MiscObject[31]
-	external_resource_counts_original = new int[31]
-	external_resource_items_spent = new MiscObject[31]
-	external_resource_counts_spent = new int[31]
+	external_resource_items_original = new MiscObject[0]
+	external_resource_counts_original = new int[0]
+	external_resource_items_spent = new MiscObject[0]
+	external_resource_counts_spent = new int[0]
 	
 	locs = new Location[0]
 	wkshops = new ObjectReference[0]
@@ -88,7 +88,7 @@ function DisposeAndSyncLinkedWorkshopResources()
 			if delta > 0
 				; We had a net loss of this resource, remove it from linked containers first.
 				debug.trace("Deplete from all containers...")
-				DepleteResourceFromAllContainers(wkshops, external_resource_items_spent[j], delta)
+				DepleteResourceFromAllContainers(wkshops, external_resource_items_spent[j], external_resource_counts_spent[j], delta)
 			elseif delta < 0
 				; We had a net gain of this resource, remove the full amount of the original.
 				self.RemoveItem(external_resource_items_original[i], external_resource_counts_original[i], true)
@@ -118,10 +118,8 @@ function GetResourceFromAllContainers(ObjectReference[] akContainers, MiscObject
 			self.AddItem(akResource, amount, true)
 			int ext_idx = external_resource_items_original.Find(akResource)
 			if ext_idx == -1
-				int m = ArrayAddForm(external_resource_items_original, akResource as MiscObject)
-				if m != -1
-					external_resource_counts_original[m] = amount
-				endif
+				external_resource_items_original.Add(akResource as MiscObject)
+				external_resource_counts_original.Add(amount)
 				debug.trace("############# Adding " + amount + " " + akResource + " to the external resource list.")
 			else
 				external_resource_counts_original[ext_idx] += amount
@@ -133,7 +131,7 @@ function GetResourceFromAllContainers(ObjectReference[] akContainers, MiscObject
 	process_locked = false
 endFunction
 
-function DepleteResourceFromAllContainers(ObjectReference[] akContainers, MiscObject akResource, int aiCount)
+function DepleteResourceFromAllContainers(ObjectReference[] akContainers, MiscObject akResource, int aiAmountUsed, int aiAmountRemaining)
 	int pl = 0
 	while process_locked && pl < 100
 		Utility.Wait(0.1)
@@ -141,36 +139,40 @@ function DepleteResourceFromAllContainers(ObjectReference[] akContainers, MiscOb
 	endWhile
 	process_locked = true
 
-	int amount_remaining = aiCount
+	; Remove the unused portion
+	self.RemoveItem(akResource, aiAmountRemaining, true)
+
+	; Remove the used portion from external workshops
+	int total_amount_to_deplete = aiAmountUsed
 	int i = 0
-	while i < akContainers.Length && amount_remaining > 0
+	while i < akContainers.Length && total_amount_to_deplete > 0
 		int amount = akContainers[i].GetItemCount(akResource)
 		
 		if amount > 0
-			int amount_to_remove
-			if amount_remaining >= amount
-				amount_to_remove = amount
+			int amount_to_remove_from_this_container
+			if total_amount_to_deplete >= amount
+				amount_to_remove_from_this_container = amount
 			else
-				amount_to_remove = amount_remaining
+				amount_to_remove_from_this_container = total_amount_to_deplete
 			endif
 
-			debug.trace("############# Removing " + amount_to_remove + " " + akResource + " from " + akContainers[i] + " (" + amount_remaining + " left to remove)")
-			akContainers[i].RemoveItem(akResource, amount_to_remove, true)
-			amount_remaining -= amount_to_remove
+			debug.trace("############# Removing " + amount_to_remove_from_this_container + " " + akResource + " from " + akContainers[i] + " (" + total_amount_to_deplete + " left to remove)")
+			akContainers[i].RemoveItem(akResource, amount_to_remove_from_this_container, true)
+			total_amount_to_deplete -= amount_to_remove_from_this_container
 		endif
 		i += 1
 	endWhile
 
-	if amount_remaining > 0
+	if total_amount_to_deplete > 0
 		; deplete from myself
 		int self_amount = self.GetItemCount(akResource)
 		if self_amount > 0
-			if amount_remaining > self_amount
+			if total_amount_to_deplete > self_amount
 				debug.trace("[Campfire] Error: We used more than we originally had of " + akResource + "!")
 				self.RemoveItem(akResource, self_amount, true)
 			else
-				self.RemoveItem(akResource, amount_remaining, true)
-				debug.trace("############# Removing " + amount_remaining + " " + akResource + " from self (" + amount_remaining + " left to remove)")
+				self.RemoveItem(akResource, total_amount_to_deplete, true)
+				debug.trace("############# Removing " + total_amount_to_deplete + " " + akResource + " from self (" + total_amount_to_deplete + " left to remove)")
 			endif
 		endif
 	endif
@@ -178,20 +180,18 @@ function DepleteResourceFromAllContainers(ObjectReference[] akContainers, MiscOb
 endFunction
 
 Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akDestContainer)
-	debug.trace("############# Items removed from Workshop: " + akBaseItem)
 	if in_workshop_mode
 		int idx = external_resource_items_spent.Find(akBaseItem as MiscObject)
 		if idx == -1
-			int m = ArrayAddForm(external_resource_items_spent, akBaseItem as MiscObject)
-			if m != -1
-				external_resource_counts_spent[m] = aiItemCount
-			endif
+			external_resource_items_spent.Add(akBaseItem as MiscObject)
+			external_resource_counts_spent.Add(aiItemCount)
 		else
 			external_resource_counts_spent[idx] += aiItemCount
 		endif
 	endif
 EndEvent
 
+;/
 int function ArrayAddForm(MiscObject[] myArray, MiscObject myForm)
 ;Adds a form to the first available element in the array.
 	;		return	= the index the element was stored at.
@@ -224,3 +224,4 @@ bool function IsNone(Form akForm) global
 		return true
 	endif
 endFunction
+/;
