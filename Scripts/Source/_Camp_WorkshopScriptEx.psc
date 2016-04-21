@@ -12,35 +12,45 @@ int[] external_resource_counts_spent
 
 bool in_workshop_mode = false
 bool process_locked = false
+bool force_exit = false
 bool property activated_by_proxy = false auto
 
 ; Called from _Camp_WorkshopProxy
-function EnterWorkshopMode()
+bool function EnterWorkshopMode()
 	in_workshop_mode = true
-	FetchLinkedWorkshopResources()
+	bool supply_lines_exist = FetchLinkedWorkshopResources()
+	return supply_lines_exist
 endFunction
 
 Event OnWorkshopMode(bool aStart)
-	if !aStart
-		Utility.Wait(1)
-		in_workshop_mode = false
-		DisposeAndSyncLinkedWorkshopResources()
-	else
+	if aStart
 		if activated_by_proxy
 			activated_by_proxy = false
-			; continue
-		else
-			; Player started by holding V - bail them out, check everything, and then come back in
-			StartWorkshop(false)
-			EnterWorkshopMode()
-			activated_by_proxy = true
-			OnActivate(Game.GetPlayer())
+			parent.OnWorkshopMode(aStart)
+		elseif !force_exit
+			; Player started by holding V - check everything, bail them out, and then come back in
+			force_exit = true
+			bool supply_lines_exist = EnterWorkshopMode()
+			if supply_lines_exist
+				StartWorkshop(false)
+				debug.notification("Supply lines loaded, restarting Workshop.")
+				Utility.Wait(0.5)
+				activated_by_proxy = true
+				StartWorkshop()
+			endif
+			force_exit = false
+		endif
+	else
+		if !force_exit
+			Utility.Wait(0.5)
+			in_workshop_mode = false
+			DisposeAndSyncLinkedWorkshopResources()
+			parent.OnWorkshopMode(aStart)
 		endif
 	endif
-	parent.OnWorkshopMode(aStart)
 endEvent
 
-function FetchLinkedWorkshopResources()
+bool function FetchLinkedWorkshopResources()
 	; Dirty hack - Linked workshop resources must be fetched (duplicated) manually due to restrictions
 	; related to using a location that was never set up to be a settlement.
 	; If you can find a better solution, let me know! chesko.tesmod@gmail.com
@@ -55,7 +65,9 @@ function FetchLinkedWorkshopResources()
 	locs = _Camp_Settlement1RefAnchor.GetCurrentLocation().GetAllLinkedLocations(WorkshopCaravanKeyword)
 
 	if locs.Length > 0
-		debug.notification("Checking supply lines...")
+		debug.notification("Checking supply lines, please wait...")
+	else
+		return false
 	endif
 
 	debug.trace("############# Getting all linked workshops...")
@@ -75,6 +87,7 @@ function FetchLinkedWorkshopResources()
 		j += 1
 	endWhile
 	debug.trace("############# Done!")
+	return true
 endFunction
 
 function DisposeAndSyncLinkedWorkshopResources()
