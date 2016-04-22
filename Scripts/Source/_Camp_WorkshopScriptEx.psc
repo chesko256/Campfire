@@ -1,6 +1,17 @@
 scriptname _Camp_WorkshopScriptEx extends WorkshopScript
 
-ObjectReference property _Camp_Settlement1RefAnchor auto
+Actor property PlayerRef auto
+
+; Proxy
+Activator property _Camp_PlaceableSettlementWorkshop auto
+GlobalVariable property _Camp_StoredProxyErrorCondition auto Mandatory
+
+int property MyCustomWorkshopID auto
+{Set on the workshop reference.}
+
+Quest property _Camp_SettlementManager auto Mandatory
+
+; Emulated Supply Line system
 Keyword property WorkshopCaravanKeyword auto
 FormList property _Camp_ScrapResources auto
 Location[] locs
@@ -10,10 +21,87 @@ int[] external_resource_counts_original
 MiscObject[] external_resource_items_spent
 int[] external_resource_counts_spent
 
+; Control flow
 bool in_workshop_mode = false
 bool process_locked = false
 bool force_exit = false
 bool property activated_by_proxy = false auto
+
+; Identity
+ObjectReference property MyProxy auto hidden
+ObjectReference property BuildArea auto hidden
+ObjectReference property EdgeMarker auto hidden
+ObjectReference property MapMarker auto hidden
+ObjectReference property CenterMarker auto hidden
+ObjectReference property Anchor auto hidden
+
+
+; ///// SET-UP AND TEARDOWN ////////////////////////////////////////////////////////////
+
+function BuildSettlement(ObjectReference akProxy)
+	MyProxy = akProxy
+
+	_Camp_SettlementManagerScript manager = _Camp_SettlementManager as _Camp_SettlementManagerScript
+	ObjectReference[] myWorkshopObjects = manager.GetCustomWorkshopObjectsByID(MyCustomWorkshopID)
+	BuildArea = myWorkshopObjects[1]
+	EdgeMarker = myWorkshopObjects[2]
+	MapMarker = myWorkshopObjects[3]
+	CenterMarker = myWorkshopObjects[4]
+	Anchor = myWorkshopObjects[5]
+
+	debug.trace("Workshop " + self + " BuildArea " + BuildArea)
+
+	debug.trace("##################### Setting Workshop ownership...")
+	SetOwnedByPlayer(true)
+
+	; Move the build area and markers to us.
+	BuildArea.MoveTo(PlayerRef)
+	EdgeMarker.MoveTo(PlayerRef)
+	CenterMarker.MoveTo(PlayerRef)
+	MapMarker.MoveTo(PlayerRef)
+	MapMarker.GetLinkedRef().MoveTo(PlayerRef)
+	MapMarker.AddToMap(true)
+
+	self.MoveTo(MyProxy)
+
+	(MyProxy as _Camp_WorkshopProxy).SetWorkshop(self)
+
+	self.AddInventoryEventFilter(_Camp_PlaceableSettlementWorkshop)
+	self.AddInventoryEventFilter(_Camp_ScrapResources)
+
+	debug.trace("######################New settlement initialized.")
+endFunction
+
+function DissolveSettlement()
+	; Fade out
+	
+	BuildArea.MoveTo(Anchor)
+	EdgeMarker.MoveTo(Anchor)
+	MapMarker.MoveTo(Anchor)
+	CenterMarker.MoveTo(Anchor)
+	self.MoveTo(Anchor)
+
+	self.RemoveAllItems(PlayerRef)
+	ObjectReference linked_container = GetContainer()
+	if linked_container
+		linked_container.RemoveAllItems(PlayerRef)
+	endif
+
+	; Reassign companions
+
+	; Unregister the workshop
+	SetOwnedByPlayer(false)
+
+	MyProxy = none
+	BuildArea = none
+	EdgeMarker = none
+	MapMarker = none
+	CenterMarker = none
+	Anchor = none
+endFunction
+
+
+; ///// SUPPLY LINES ////////////////////////////////////////////////////////////
 
 ; Called from _Camp_WorkshopProxy
 bool function EnterWorkshopMode()
@@ -54,7 +142,7 @@ bool function FetchLinkedWorkshopResources()
 	; Dirty hack - Linked workshop resources must be fetched (duplicated) manually due to restrictions
 	; related to using a location that was never set up to be a settlement.
 	; If you can find a better solution, let me know! chesko.tesmod@gmail.com
-	self.AddInventoryEventFilter(_Camp_ScrapResources)
+	
 	external_resource_items_original = new MiscObject[0]
 	external_resource_counts_original = new int[0]
 	external_resource_items_spent = new MiscObject[0]
@@ -62,7 +150,7 @@ bool function FetchLinkedWorkshopResources()
 	
 	locs = new Location[0]
 	wkshops = new ObjectReference[0]
-	locs = _Camp_Settlement1RefAnchor.GetCurrentLocation().GetAllLinkedLocations(WorkshopCaravanKeyword)
+	locs = Anchor.GetCurrentLocation().GetAllLinkedLocations(WorkshopCaravanKeyword)
 
 	if locs.Length > 0
 		debug.notification("Checking supply lines, please wait...")
@@ -192,7 +280,28 @@ function DepleteResourceFromAllContainers(ObjectReference[] akContainers, MiscOb
 	process_locked = false
 endFunction
 
+Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
+	if akBaseItem == _Camp_PlaceableSettlementWorkshop
+		_Camp_StoredProxyErrorCondition.SetValueInt(2)
+		debug.notification("You can't store a workshop.")
+		ObjectReference proxy = self.PlaceAtMe(_Camp_PlaceableSettlementWorkshop)
+		
+		; Wait for the proxy to initialize
+		int i = 0
+		while (proxy as _Camp_WorkshopProxy).initialized == false && i < 50
+			Utility.Wait(0.1)
+		endWhile
+		
+		(proxy as _Camp_WorkshopProxy).SetWorkshop(self)
+		_Camp_StoredProxyErrorCondition.SetValueInt(1)
+	endif
+EndEvent
+
 Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akDestContainer)
+	if akBaseItem == _Camp_PlaceableSettlementWorkshop
+		return
+	endif
+
 	if in_workshop_mode
 		int idx = external_resource_items_spent.Find(akBaseItem as MiscObject)
 		if idx == -1
@@ -203,38 +312,3 @@ Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRefe
 		endif
 	endif
 EndEvent
-
-;/
-int function ArrayAddForm(MiscObject[] myArray, MiscObject myForm)
-;Adds a form to the first available element in the array.
-	;		return	= the index the element was stored at.
-
-	int i = 0
-	while i < myArray.Length
-		if IsNone(myArray[i])
-			myArray[i] = myForm
-			return i
-		else
-			i += 1
-		endif
-	endWhile
-	return -1
-endFunction
-
-; Array elements that contain forms from unloaded mods
-; will fail '== None' checks because they are
-; 'Activator<None>' objects. Check FormID as well.
-bool function IsNone(Form akForm) global
-	int i = 0
-	if akForm
-		i = akForm.GetFormID()
-		if i == 0
-			return true
-		else
-			return false
-		endif
-	else
-		return true
-	endif
-endFunction
-/;

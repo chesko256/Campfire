@@ -1,7 +1,6 @@
 scriptname _Camp_SettlementManagerScript extends Quest
 
 ObjectReference[] property BuildableWorkshopRefs auto
-ObjectReference[] property LocationWorkshopRefs auto
 ObjectReference[] property BuildAreaRefs auto
 ObjectReference[] property EdgeMarkerRefs auto
 ObjectReference[] property MapMarkerRefs auto
@@ -11,6 +10,9 @@ ObjectReference[] property AnchorRefs auto
 Keyword property WorkshopEventInitializeLocation auto
 Keyword property WorkshopLinkedPrimitive auto
 Quest property WorkshopParent auto
+
+Message property _Camp_WorkshopSelectName1 auto
+Message property _Camp_WorkshopSelectName2 auto
 
 CustomEvent WorkshopInitializeLocation
 
@@ -39,15 +41,35 @@ function InitializeSettlements()
 	endif
 endFunction
 
-ObjectReference[] function GetAvailableWorkshopObjects()
-	; For now, just return the first one.
-	ObjectReference[] objs = new ObjectReference[7]
-	objs[0] = BuildableWorkshopRefs[0]
-	objs[1] = LocationWorkshopRefs[0]
-	objs[2] = BuildAreaRefs[0]
-	objs[3] = EdgeMarkerRefs[0]
-	objs[4] = MapMarkerRefs[0]
-	objs[5] = CenterMarkerRefs[0]
-	objs[6] = AnchorRefs[0]
+ObjectReference[] function GetCustomWorkshopObjectsByID(int aiID)
+	ObjectReference[] objs = new ObjectReference[6]
+	objs[0] = BuildableWorkshopRefs[aiID]
+	objs[1] = BuildAreaRefs[aiID]
+	objs[2] = EdgeMarkerRefs[aiID]
+	objs[3] = MapMarkerRefs[aiID]
+	objs[4] = CenterMarkerRefs[aiID]
+	objs[5] = AnchorRefs[aiID]
 	return objs
+endFunction
+
+ObjectReference function GetAvailableCustomWorkshop()
+	return BuildableWorkshopRefs[ShowWorkshopSelectMenu1()]
+endFunction
+
+int function ShowWorkshopSelectMenu1()
+	int i = _Camp_WorkshopSelectName1.Show()
+	if i < 6
+		return i
+	elseif i == 6
+		return ShowWorkshopSelectMenu2()
+	endif
+endFunction
+
+int function ShowWorkshopSelectMenu2()
+	int i = _Camp_WorkshopSelectName2.Show()
+	if i < 6
+		return i + 5
+	elseif i == 6
+		return ShowWorkshopSelectMenu1()
+	endif
 endFunction
