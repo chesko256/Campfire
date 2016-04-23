@@ -10,10 +10,15 @@ Activator property _Camp_CampsiteIndicator auto
 Event OnItemEquipped(Form akBaseObject, ObjectReference akReference)
 	if akBaseObject == _Camp_SurvivalSkillBuildCampsiteAid
 		if PlayerCanPlaceObjects()
-			_Camp_CampsiteExitPipboy.Show()
+			if Utility.IsInMenuMode()
+				_Camp_CampsiteExitPipboy.Show()
+			endif
 			; Block until exit menu
 			Utility.Wait(0.5)
-			PlayerRef.AddItem(_Camp_SurvivalSkillBuildCampsiteAid, 1, true)
+			if PlayerRef.GetItemCount(_Camp_SurvivalSkillBuildCampsiteAid) == 0
+				; Shouldn't ever happen because item is a quest object, but, just in case
+				PlayerRef.AddItem(_Camp_SurvivalSkillBuildCampsiteAid, 1, true)
+			endif
 			CampUtil.GetPlacementSystem().PlaceableObjectUsed(none,   						\
                                                               _Camp_CampsiteIndicator, 		\
 										  					  none,							\
@@ -24,7 +29,9 @@ Event OnItemEquipped(Form akBaseObject, ObjectReference akReference)
                                                               "",						 	\
                                                               "")
 		else
-			PlayerRef.AddItem(_Camp_SurvivalSkillBuildCampsiteAid, 1, true)
+			if PlayerRef.GetItemCount(_Camp_SurvivalSkillBuildCampsiteAid) == 0
+				PlayerRef.AddItem(_Camp_SurvivalSkillBuildCampsiteAid, 1, true)
+			endif
 		endif
 	endif
 EndEvent

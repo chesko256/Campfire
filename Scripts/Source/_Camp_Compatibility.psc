@@ -286,9 +286,9 @@ endFunction
 function AddStartupItems()
 	;PlayerRef.AddSpell(_Camp_LegacyConfig_Spell, false)
 	;PlayerRef.AddSpell(_Camp_CreateItemSpell, false)
-	if PlayerRef.GetItemCount(_Camp_SurvivalSkillBuildCampsiteAid) < 1
-		PlayerRef.AddItem(_Camp_SurvivalSkillBuildCampsiteAid)
-	endif
+	;if PlayerRef.GetItemCount(_Camp_SurvivalSkillBuildCampsiteAid) < 1
+	;	PlayerRef.AddItem(_Camp_SurvivalSkillBuildCampsiteAid)
+	;endif
 	;PlayerRef.AddSpell(_Camp_HarvestWoodSpell, false)
 	;@SKYRIMOLD
 	;if isSKSELoaded

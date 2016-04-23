@@ -12,6 +12,7 @@ Message property _Camp_WorkshopDissolveWarning auto
 Message property _Camp_WorkshopDissolveWarning2 auto
 Message property _Camp_WorkshopRegainControl auto
 
+Activator property _Camp_CampsiteEquipmentActivator auto
 ObjectReference property MyWorkshop auto hidden
 bool property is_built = false auto hidden
 bool property initialized = false auto hidden
@@ -23,6 +24,22 @@ EndEvent
 
 function SetUpProxy()
 	if _Camp_StoredProxyErrorCondition.GetValueInt() != 2
+		; Break down campsite this came from
+		ObjectReference camp = Game.FindClosestReferenceOfTypeFromRef(_Camp_CampsiteEquipmentActivator, self, 4000.0)
+		if camp
+			ObjectReference camp_workshop = (camp as CampPlaceableCampsite).myCampsiteWorkshop
+			if camp_workshop
+				(camp_workshop as WorkshopScript).StartWorkshop(false)
+			endif
+			Game.FadeOutGame(True, True, 0.0, 2.0, True)
+			(camp as CampPlaceableCampsite).PickUpAllCampsiteObjects()
+			(camp as CampPlaceableCampsite).CampsiteObjects = new ObjectReference[128]
+			(camp as CampPlaceableCampsite).TakeDown()
+			Utility.Wait(3.0)
+			Game.FadeOutGame(False, True, 0.0, 2.0)
+		endif
+
+		; Set up the settlement
 		MyWorkshop = (_Camp_SettlementManager as _Camp_SettlementManagerScript).GetAvailableCustomWorkshop()
 		if MyWorkshop
 			(MyWorkshop as _Camp_WorkshopScriptEx).BuildSettlement(self)

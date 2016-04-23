@@ -13,6 +13,7 @@ Quest property WorkshopParent auto
 
 Message property _Camp_WorkshopSelectName1 auto
 Message property _Camp_WorkshopSelectName2 auto
+Message property _Camp_WorkshopSelectName3 auto
 
 CustomEvent WorkshopInitializeLocation
 
@@ -58,18 +59,43 @@ endFunction
 
 int function ShowWorkshopSelectMenu1()
 	int i = _Camp_WorkshopSelectName1.Show()
-	if i < 6
-		return i
-	elseif i == 6
+	if i == 0
+		return 0
+	elseif i == 1
+		return 1
+	elseif i == 2
+		return 2
+	elseif i == 3
+		return 3
+	elseif i == 4
 		return ShowWorkshopSelectMenu2()
 	endif
 endFunction
 
 int function ShowWorkshopSelectMenu2()
 	int i = _Camp_WorkshopSelectName2.Show()
-	if i < 6
-		return i + 5
-	elseif i == 6
+	if i == 0
 		return ShowWorkshopSelectMenu1()
+	elseif i == 1
+		return 4
+	elseif i == 2
+		return 5
+	elseif i == 3
+		return 6
+	elseif i == 4
+		return ShowWorkshopSelectMenu3()
+	endif
+endFunction
+
+int function ShowWorkshopSelectMenu3()
+	int i = _Camp_WorkshopSelectName3.Show()
+	if i == 0
+		return ShowWorkshopSelectMenu2()
+	elseif i == 1
+		return 7
+	elseif i == 2
+		return 8
+	elseif i == 3
+		return 9
 	endif
 endFunction

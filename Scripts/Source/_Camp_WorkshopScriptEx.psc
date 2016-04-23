@@ -5,15 +5,18 @@ Actor property PlayerRef auto
 ; Proxy
 Activator property _Camp_PlaceableSettlementWorkshop auto
 GlobalVariable property _Camp_StoredProxyErrorCondition auto Mandatory
+Static property _Camp_WorkshopBoundary auto Mandatory
 
 int property MyCustomWorkshopID auto
 {Set on the workshop reference.}
 
 Quest property _Camp_SettlementManager auto Mandatory
+Message property _Camp_Error_StoreWorkshop auto
 
 ; Emulated Supply Line system
 Keyword property WorkshopCaravanKeyword auto
 FormList property _Camp_ScrapResources auto
+Formlist property _Camp_UnstorableWorkshops auto
 Location[] locs
 ObjectReference[] wkshops
 MiscObject[] external_resource_items_original
@@ -34,6 +37,7 @@ ObjectReference property EdgeMarker auto hidden
 ObjectReference property MapMarker auto hidden
 ObjectReference property CenterMarker auto hidden
 ObjectReference property Anchor auto hidden
+ObjectReference property BuildAreaEdge auto hidden
 
 
 ; ///// SET-UP AND TEARDOWN ////////////////////////////////////////////////////////////
@@ -66,7 +70,10 @@ function BuildSettlement(ObjectReference akProxy)
 
 	(MyProxy as _Camp_WorkshopProxy).SetWorkshop(self)
 
-	self.AddInventoryEventFilter(_Camp_PlaceableSettlementWorkshop)
+	BuildAreaEdge = self.PlaceAtMe(_Camp_WorkshopBoundary, abInitiallyDisabled = true)
+	BuildAreaEdge.MoveTo(self, afZOffset = 350.0)
+	BuildAreaEdge.SetScale(4.0)
+	self.AddInventoryEventFilter(_Camp_UnstorableWorkshops)
 	self.AddInventoryEventFilter(_Camp_ScrapResources)
 
 	debug.trace("######################New settlement initialized.")
@@ -79,6 +86,8 @@ function DissolveSettlement()
 	EdgeMarker.MoveTo(Anchor)
 	MapMarker.MoveTo(Anchor)
 	CenterMarker.MoveTo(Anchor)
+	BuildAreaEdge.Disable()
+	BuildAreaEdge.Delete()
 	self.MoveTo(Anchor)
 
 	self.RemoveAllItems(PlayerRef)
@@ -88,6 +97,12 @@ function DissolveSettlement()
 	endif
 
 	; Reassign companions
+
+	; Disband settlers
+
+	; Reset happiness
+
+	; Reset built objects
 
 	; Unregister the workshop
 	SetOwnedByPlayer(false)
@@ -115,6 +130,7 @@ Event OnWorkshopMode(bool aStart)
 		if activated_by_proxy
 			activated_by_proxy = false
 			parent.OnWorkshopMode(aStart)
+			BuildAreaEdge.Enable()
 		elseif !force_exit
 			; Player started by holding V - check everything, bail them out, and then come back in
 			force_exit = true
@@ -126,15 +142,36 @@ Event OnWorkshopMode(bool aStart)
 				activated_by_proxy = true
 				StartWorkshop()
 			endif
+			BuildAreaEdge.Enable()
 			force_exit = false
 		endif
 	else
 		if !force_exit
 			Utility.Wait(0.5)
 			in_workshop_mode = false
+			BuildAreaEdge.Disable()
 			DisposeAndSyncLinkedWorkshopResources()
 			parent.OnWorkshopMode(aStart)
 		endif
+	endif
+endEvent
+
+Event OnWorkshopObjectDestroyed(ObjectReference akReference)
+	parent.OnWorkshopObjectDestroyed(akReference)
+
+	if _Camp_UnstorableWorkshops.HasForm(akReference.GetBaseObject())
+		_Camp_StoredProxyErrorCondition.SetValueInt(2)
+		_Camp_Error_StoreWorkshop.Show()
+		ObjectReference proxy = self.PlaceAtMe(_Camp_PlaceableSettlementWorkshop)
+		
+		; Wait for the proxy to initialize
+		int i = 0
+		while (proxy as _Camp_WorkshopProxy).initialized == false && i < 50
+			Utility.Wait(0.1)
+		endWhile
+		
+		(proxy as _Camp_WorkshopProxy).SetWorkshop(self)
+		_Camp_StoredProxyErrorCondition.SetValueInt(1)
 	endif
 endEvent
 
@@ -281,24 +318,13 @@ function DepleteResourceFromAllContainers(ObjectReference[] akContainers, MiscOb
 endFunction
 
 Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
-	if akBaseItem == _Camp_PlaceableSettlementWorkshop
-		_Camp_StoredProxyErrorCondition.SetValueInt(2)
-		debug.notification("You can't store a workshop.")
-		ObjectReference proxy = self.PlaceAtMe(_Camp_PlaceableSettlementWorkshop)
+	if _Camp_UnstorableWorkshops.HasForm(akBaseItem)
 		
-		; Wait for the proxy to initialize
-		int i = 0
-		while (proxy as _Camp_WorkshopProxy).initialized == false && i < 50
-			Utility.Wait(0.1)
-		endWhile
-		
-		(proxy as _Camp_WorkshopProxy).SetWorkshop(self)
-		_Camp_StoredProxyErrorCondition.SetValueInt(1)
 	endif
 EndEvent
 
 Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akDestContainer)
-	if akBaseItem == _Camp_PlaceableSettlementWorkshop
+	if _Camp_UnstorableWorkshops.HasForm(akBaseItem)
 		return
 	endif
 

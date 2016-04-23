@@ -17,7 +17,7 @@ Activator property _Camp_PlaceableSettlementWorkshop auto
 
 ; PRIVATE
 ObjectReference property myCampsiteWorkshop auto hidden
-ObjectReference[] CampsiteObjects
+ObjectReference[] property CampsiteObjects auto hidden
 bool property campsite_workshop_in_use = false auto hidden
 
 function Initialize()
