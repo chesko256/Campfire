@@ -36,6 +36,7 @@ function SetUpProxy()
 			(camp as CampPlaceableCampsite).CampsiteObjects = new ObjectReference[128]
 			(camp as CampPlaceableCampsite).TakeDown()
 			Utility.Wait(3.0)
+			Game.PassTime(1)
 			Game.FadeOutGame(False, True, 0.0, 2.0)
 		endif
 

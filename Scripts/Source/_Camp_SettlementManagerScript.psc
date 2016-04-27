@@ -36,10 +36,8 @@ EndEvent
 
 function InitializeSettlements()
 	int i = 0
-	;while i < 5
-	while i < 1
+	while i < 10
 		ObjectReference new_workshop = BuildableWorkshopRefs[i]
-		ObjectReference new_build_area = new_workshop.GetRefsLinkedToMe(WorkshopLinkedPrimitive)[0]
 		Location new_location = new_workshop.GetCurrentLocation()
 		(new_workshop as WorkshopScript).myLocation = new_location
 		(new_workshop as WorkshopScript).myMapMarker = MapMarkerRefs[i]
@@ -49,14 +47,14 @@ function InitializeSettlements()
 	
 	bool success = (WorkshopParent as WorkshopParentScript).ReinitializeLocationsPUBLIC((BuildableWorkshopRefs as WorkshopScript[]), WorkshopParent as WorkshopParentScript)
 	if success
-		debug.trace("WORKSHOP INIT SUCCESSFUL")
+		debug.trace("[Conquest] Custom workshops initialized.")
 	else
-		debug.trace("WORKSHOP INIT FAILED")
+		debug.trace("[Conquest] ERROR - Custom workshops init FAILED.")
 	endif
 endFunction
 
 ObjectReference[] function GetCustomWorkshopObjectsByID(int aiID)
-	ObjectReference[] objs = new ObjectReference[6]
+	ObjectReference[] objs = new ObjectReference[8]
 	objs[0] = BuildableWorkshopRefs[aiID]
 	objs[1] = BuildAreaRefs[aiID]
 	objs[2] = MapMarkerRefs[aiID]

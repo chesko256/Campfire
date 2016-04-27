@@ -1,12 +1,14 @@
 scriptname _Camp_WorkshopScriptEx extends WorkshopScript
 
 Actor property PlayerRef auto
+Quest property Followers auto
 
 ; Proxy
 Activator property _Camp_PlaceableSettlementWorkshop auto
 GlobalVariable property _Camp_StoredProxyErrorCondition auto Mandatory
 Static property _Camp_WorkshopBoundary auto Mandatory
 
+GlobalVariable[] property CustomWorkshopBuiltGlobals auto
 int property MyCustomWorkshopID auto
 {Set on the workshop reference.}
 
@@ -87,6 +89,7 @@ endFunction
 
 function DissolveSettlement()
 	; Fade out
+	Game.FadeOutGame(True, True, 0.0, 2.0, True)
 	
 	BuildArea.MoveTo(Anchor)
 	EdgeMarker1.MoveTo(Anchor)
@@ -104,13 +107,62 @@ function DissolveSettlement()
 		linked_container.RemoveAllItems(PlayerRef)
 	endif
 
-	; Reassign companions
+	WorkshopParentScript p = WorkshopParent
+	FollowersScript f = Followers as FollowersScript
 
-	; Disband settlers
+	; Move companions and disband settlers
+	ObjectReference[] WorkshopActors = p.GetWorkshopActors(self as WorkshopScript)
+	int i = 0
+	while i < WorkshopActors.length
+		p.RemoveActorFromWorkshopPUBLIC(WorkshopActors[i] as WorkshopNPCScript)
+		
+		if f.IsPossibleCompanion(WorkshopActors[i] as Actor)
+			f.DismissCompanion(WorkshopActors[i] as Actor, false, true)
+		endif
+		i += 1
+	endWhile
 
-	; Reset happiness
-
-	; Reset built objects
+	; Reset happiness and other stats
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingHappiness].resourceValue, 50.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingFood].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingPopulation].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingSafety].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingWater].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingPower].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingBeds].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingRadio].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingDamageCurrent].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingDamageMax].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingLastAttackDaysSince].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingDamageFood].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingDamageWater].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingDamageSafety].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingDamagePower].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingDamagePopulation].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingFoodActual].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingArtillery].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingDamageArtillery].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingPopulationRobots].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingVendorIncome].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingBrahmin].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingMissingFood].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingMissingWater].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingMissingBeds].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingScavengeGeneral].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingScavengeBuilding].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingScavengeParts].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingScavengeRare].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingCaravan].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingFoodTypeCarrot].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingFoodTypeCorn].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingFoodTypeGourd].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingFoodTypeMelon].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingFoodTypeMutfruit].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingFoodTypeRazorgrain].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingFoodTypeTarberry].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingFoodTypeTato].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingPopulationSynths].resourceValue, 0.0)
+	(self as WorkshopScript).SetValue(p.WorkshopRatings[p.WorkshopRatingMissingSafety].resourceValue, 0.0)
 
 	; Unregister the workshop
 	SetOwnedByPlayer(false)
@@ -123,6 +175,13 @@ function DissolveSettlement()
 	MapMarker = none
 	CenterMarker = none
 	Anchor = none
+
+	; Free up the workshop global
+	CustomWorkshopBuiltGlobals[MyCustomWorkshopID].SetValueInt(1)
+
+	Utility.Wait(3.0)
+	Game.PassTime(1)
+	Game.FadeOutGame(False, True, 0.0, 2.0)
 endFunction
 
 
