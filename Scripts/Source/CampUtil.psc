@@ -13,7 +13,7 @@ import math
 import debug
 
 CampfireAPI function GetAPI() global
-	return (Game.GetFormFromFile(0x001733, "CampfireFO4.esp") as Quest) as CampfireAPI
+	return (Game.GetFormFromFile(0x001733, "Conquest.esp") as Quest) as CampfireAPI
 endFunction
 
 ; Functions ==================================================================================
@@ -696,38 +696,6 @@ endif
 	return Campfire.Legal.GetCampingLegal(abIgnoreSetting)
 endFunction
 
-;/********f* CampUtil/GetAreaCampingFaction
-* API VERSION ADDED
-* 1
-*
-* DESCRIPTION
-* Returns the faction that dictates camping legality in this area.
-*
-* SYNTAX
-*/;
-Faction function GetAreaCampingFaction(ObjectReference akCenter) global
-;/*
-* PARAMETERS
-* akCenter: The object whose surroundings to check.
-*
-* RETURN VALUE
-* If akCenter is in an illegal camping area, returns the faction responsible for making it illegal, else, returns None.
-*
-* EXAMPLES
-Faction property MyCoolFaction auto
-if GetAreaCampingFaction() == MyCoolFaction
-	debug.trace("MyCoolFaction are a bunch of facists for not letting me camp here!")
-endif
-;*********/;
-	CampfireAPI Campfire = GetAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return None
-	endif
-
-	return Campfire.Legal.GetAreaCampingFaction(akCenter)
-endFunction
-
 ;/********f* CampUtil/GetLastUsedCampfire
 * API VERSION ADDED
 * 1
@@ -815,41 +783,6 @@ bool function IsTentWaterproof(ObjectReference akTent) global
 	endif
 endFunction
 
-;/********f* CampUtil/IsTentWarm
-* API VERSION ADDED
-* 1
-*
-* DESCRIPTION
-* Is this tent warm?
-*
-* SYNTAX
-*/;
-bool function IsTentWarm(ObjectReference akTent) global
-;/*
-* PARAMETERS
-* akTent: The Tent ObjectReference to check. Use the return value of GetCurrentTent(), or use IsCurrentTentWarm() instead.
-*
-* RETURN VALUE
-* True if the tent is flagged as being warm, or false if not.
-;*********/;
-	CampfireAPI Campfire = GetAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return false
-	endif
-
-	if !akTent
-		return false
-	endif
-
-	Form TentForm = akTent.GetBaseObject()
-	if TentForm.HasKeyword(Campfire.isCampfireTentWarm)
-		return true
-	else
-		return false
-	endif
-endFunction
-
 ;/********f* CampUtil/TentHasShelter
 * API VERSION ADDED
 * 3
@@ -909,36 +842,6 @@ bool function IsCurrentTentWaterproof() global
 	endif
 
 	if Campfire.CurrentTent && Campfire.CurrentTent.GetBaseObject().HasKeyword(Campfire.isCampfireTentWaterproof)
-		return true
-	else
-		return false
-	endif
-endFunction
-
-;/********f* CampUtil/IsCurrentTentWarm
-* API VERSION ADDED
-* 2
-*
-* DESCRIPTION
-* Is the current tent warm?
-*
-* SYNTAX
-*/;
-bool function IsCurrentTentWarm() global
-;/*
-* PARAMETERS
-* None
-*
-* RETURN VALUE
-* True if the current tent is flagged as being warm, or false if not or if there is no tent in use by the player.
-;*********/;
-	CampfireAPI Campfire = GetAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return false
-	endif
-
-	if Campfire.CurrentTent && Campfire.CurrentTent.GetBaseObject().HasKeyword(Campfire.isCampfireTentWarm)
 		return true
 	else
 		return false

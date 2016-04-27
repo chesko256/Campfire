@@ -46,11 +46,11 @@ def pullplugin():
     print "Checking Fallout 4 game directory plugin..."
     print " "
 
-    repo_plugin_time = os.path.getmtime("./Campfire/CampfireFO4.esp")
-    gamedir_plugin_time = os.path.getmtime(fo4_dir + "CampfireFO4.esp")
+    repo_plugin_time = os.path.getmtime("./Campfire/Conquest.esp")
+    gamedir_plugin_time = os.path.getmtime(fo4_dir + "Conquest.esp")
     if repo_plugin_time < gamedir_plugin_time:
         print "Copying new plugin..."
-        shutil.copy(fo4_dir + "CampfireFO4.esp", "./Campfire/CampfireFO4.esp")
+        shutil.copy(fo4_dir + "Conquest.esp", "./Campfire/Conquest.esp")
     else:
         print "The project directory plugin is up-to-date."
 
@@ -63,14 +63,14 @@ def clean():
     print " "
 
     # Make sure we don't destroy a new plugin file version.
-    repo_plugin_time = os.path.getmtime("./Campfire/CampfireFO4.esp")
-    gamedir_plugin_time = os.path.getmtime(fo4_dir + "CampfireFO4.esp")
+    repo_plugin_time = os.path.getmtime("./Campfire/Conquest.esp")
+    gamedir_plugin_time = os.path.getmtime(fo4_dir + "Conquest.esp")
     if repo_plugin_time < gamedir_plugin_time:
         print "Copying new plugin..."
-        shutil.copy(fo4_dir + "CampfireFO4.esp", "./Campfire/CampfireFO4.esp")
+        shutil.copy(fo4_dir + "Conquest.esp", "./Campfire/Conquest.esp")
 
-    os.remove(fo4_dir + "CampfireFO4.esp")
-    print "Removed CampfireFO4.esp"
+    os.remove(fo4_dir + "Conquest.esp")
+    print "Removed Conquest.esp"
 
     with open("./Campfire/CampfireArchiveManifest.txt") as manifest:
         lines = manifest.readlines()

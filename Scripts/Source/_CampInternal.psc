@@ -3,11 +3,11 @@ scriptname _CampInternal hidden
 import math
 
 _CampfireInternalAPI function GetAPI() global
-	return (Game.GetFormFromFile(0x001733, "CampfireFO4.esp") as Quest) as _CampfireInternalAPI
+	return (Game.GetFormFromFile(0x001733, "Conquest.esp") as Quest) as _CampfireInternalAPI
 endFunction
 
 CampfireAPI function GetPublicAPI() global
-	return (Game.GetFormFromFile(0x001733, "CampfireFO4.esp") as Quest) as CampfireAPI
+	return (Game.GetFormFromFile(0x001733, "Conquest.esp") as Quest) as CampfireAPI
 endFunction
 
 Message function GetNotInitializedError() global
@@ -250,7 +250,7 @@ function RaiseCampAPIError() global
 endFunction
 
 function CampDebug(int aiSeverity, string asLogMessage) global
-	int LOG_LEVEL = (Game.GetFormFromFile(0x002679, "CampfireFO4.esp") as GlobalVariable).GetValueInt()
+	int LOG_LEVEL = (Game.GetFormFromFile(0x002679, "Conquest.esp") as GlobalVariable).GetValueInt()
 	if LOG_LEVEL <= aiSeverity
 		if aiSeverity == 0
 			debug.trace("[Campfire][Debug] " + asLogMessage)
@@ -265,5 +265,5 @@ function CampDebug(int aiSeverity, string asLogMessage) global
 endFunction
 
 int function GetLogLevel() global
-	return (Game.GetFormFromFile(0x002679, "CampfireFO4.esp") as GlobalVariable).GetValueInt()
+	return (Game.GetFormFromFile(0x002679, "Conquest.esp") as GlobalVariable).GetValueInt()
 endFunction

@@ -135,10 +135,10 @@ function RunCompatibility()
 
 	VanillaGameLoadUp()
 
-	trace("[Campfire]======================================================================================================")
-	trace("[Campfire]     Campfire is now performing compatibility checks. Papyrus warnings about missing or               ")
-	trace("[Campfire]             unloaded files may follow. This is NORMAL and can be ignored.   		                   ")
-	trace("[Campfire]======================================================================================================")
+	trace("[Conquest]======================================================================================================")
+	trace("[Conquest]     Conquest is now performing compatibility checks. Papyrus warnings about missing or               ")
+	trace("[Conquest]             unloaded files may follow. This is NORMAL and can be ignored.   		                   ")
+	trace("[Conquest]======================================================================================================")
 	
 	;/
 	if !Upgraded_x_x
@@ -158,11 +158,11 @@ function RunCompatibility()
 			_Camp_CriticalError_SKSE.Show(((skse_version as float) / 10000), ((SKSE_MIN_VERSION as float) / 10000))
 			isSKSELoaded = false
 			Conditions.IsSKSELoaded = false
-			trace("[Campfire][Warning] Detected SKSE version " + ((skse_version as float) / 10000) + ", out of date! Expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer.")
+			trace("[Conquest][Warning] Detected SKSE version " + ((skse_version as float) / 10000) + ", out of date! Expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer.")
 		else
 			isSKSELoaded = true
 			Conditions.IsSKSELoaded = true
-			trace("[Campfire] Detected SKSE version " + ((skse_version as float) / 10000) + " (expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer, success!)")
+			trace("[Conquest] Detected SKSE version " + ((skse_version as float) / 10000) + " (expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer, success!)")
 		endif
 	endif
 	
@@ -255,9 +255,9 @@ function RunCompatibility()
 		;@TBD
 	endif
 	
-	trace("[Campfire]======================================================================================================")
-	trace("[Campfire]                            Campfire compatibility check complete.   		                           ")
-	trace("[Campfire]======================================================================================================")
+	trace("[Conquest]======================================================================================================")
+	trace("[Conquest]                            Conquest compatibility check complete.   		                           ")
+	trace("[Conquest]======================================================================================================")
 endFunction
 
 Event Actor.OnDifficultyChanged(actor aSender, int aOldDifficulty, int aNewDifficulty)
@@ -297,9 +297,9 @@ function AddStartupItems()
 endFunction
 
 function AddStartupLists()
-	debug.trace("[Campfire] Injecting custom workshop menus.")
+	debug.trace("[Conquest] Injecting custom workshop menus.")
 	FormList mainmenu = Game.GetFormFromFile(0x106DA2, "Fallout4.esm") as FormList
-	FormList custommenu = Game.GetFormFromFile(0x005C20, "CampfireFO4.esp") as FormList
+	FormList custommenu = Game.GetFormFromFile(0x005C20, "Conquest.esp") as FormList
 	if !mainmenu.HasForm(custommenu)
 		mainmenu.AddForm(custommenu)
 	endif

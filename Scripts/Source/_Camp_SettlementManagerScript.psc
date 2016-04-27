@@ -2,10 +2,23 @@ scriptname _Camp_SettlementManagerScript extends Quest
 
 ObjectReference[] property BuildableWorkshopRefs auto
 ObjectReference[] property BuildAreaRefs auto
-ObjectReference[] property EdgeMarkerRefs auto
+ObjectReference[] property EdgeMarker1Refs auto
+ObjectReference[] property EdgeMarker2Refs auto
+ObjectReference[] property EdgeMarker3Refs auto
 ObjectReference[] property MapMarkerRefs auto
 ObjectReference[] property CenterMarkerRefs auto
 ObjectReference[] property AnchorRefs auto
+
+GlobalVariable property _Camp_Workshop1Built auto
+GlobalVariable property _Camp_Workshop2Built auto
+GlobalVariable property _Camp_Workshop3Built auto
+GlobalVariable property _Camp_Workshop4Built auto
+GlobalVariable property _Camp_Workshop5Built auto
+GlobalVariable property _Camp_Workshop6Built auto
+GlobalVariable property _Camp_Workshop7Built auto
+GlobalVariable property _Camp_Workshop8Built auto
+GlobalVariable property _Camp_Workshop9Built auto
+GlobalVariable property _Camp_Workshop10Built auto
 
 Keyword property WorkshopEventInitializeLocation auto
 Keyword property WorkshopLinkedPrimitive auto
@@ -46,10 +59,12 @@ ObjectReference[] function GetCustomWorkshopObjectsByID(int aiID)
 	ObjectReference[] objs = new ObjectReference[6]
 	objs[0] = BuildableWorkshopRefs[aiID]
 	objs[1] = BuildAreaRefs[aiID]
-	objs[2] = EdgeMarkerRefs[aiID]
-	objs[3] = MapMarkerRefs[aiID]
-	objs[4] = CenterMarkerRefs[aiID]
-	objs[5] = AnchorRefs[aiID]
+	objs[2] = MapMarkerRefs[aiID]
+	objs[3] = CenterMarkerRefs[aiID]
+	objs[4] = AnchorRefs[aiID]
+	objs[5] = EdgeMarker1Refs[aiID]
+	objs[6] = EdgeMarker2Refs[aiID]
+	objs[7] = EdgeMarker3Refs[aiID]
 	return objs
 endFunction
 
@@ -60,12 +75,16 @@ endFunction
 int function ShowWorkshopSelectMenu1()
 	int i = _Camp_WorkshopSelectName1.Show()
 	if i == 0
+		_Camp_Workshop1Built.SetValueInt(2)
 		return 0
 	elseif i == 1
+		_Camp_Workshop2Built.SetValueInt(2)
 		return 1
 	elseif i == 2
+		_Camp_Workshop3Built.SetValueInt(2)
 		return 2
 	elseif i == 3
+		_Camp_Workshop4Built.SetValueInt(2)
 		return 3
 	elseif i == 4
 		return ShowWorkshopSelectMenu2()
@@ -77,10 +96,13 @@ int function ShowWorkshopSelectMenu2()
 	if i == 0
 		return ShowWorkshopSelectMenu1()
 	elseif i == 1
+		_Camp_Workshop5Built.SetValueInt(2)
 		return 4
 	elseif i == 2
+		_Camp_Workshop6Built.SetValueInt(2)
 		return 5
 	elseif i == 3
+		_Camp_Workshop7Built.SetValueInt(2)
 		return 6
 	elseif i == 4
 		return ShowWorkshopSelectMenu3()
@@ -92,10 +114,13 @@ int function ShowWorkshopSelectMenu3()
 	if i == 0
 		return ShowWorkshopSelectMenu2()
 	elseif i == 1
+		_Camp_Workshop8Built.SetValueInt(2)
 		return 7
 	elseif i == 2
+		_Camp_Workshop9Built.SetValueInt(2)
 		return 8
 	elseif i == 3
+		_Camp_Workshop10Built.SetValueInt(2)
 		return 9
 	endif
 endFunction

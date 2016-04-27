@@ -33,7 +33,9 @@ bool property activated_by_proxy = false auto
 ; Identity
 ObjectReference property MyProxy auto hidden
 ObjectReference property BuildArea auto hidden
-ObjectReference property EdgeMarker auto hidden
+ObjectReference property EdgeMarker1 auto hidden
+ObjectReference property EdgeMarker2 auto hidden
+ObjectReference property EdgeMarker3 auto hidden
 ObjectReference property MapMarker auto hidden
 ObjectReference property CenterMarker auto hidden
 ObjectReference property Anchor auto hidden
@@ -48,10 +50,12 @@ function BuildSettlement(ObjectReference akProxy)
 	_Camp_SettlementManagerScript manager = _Camp_SettlementManager as _Camp_SettlementManagerScript
 	ObjectReference[] myWorkshopObjects = manager.GetCustomWorkshopObjectsByID(MyCustomWorkshopID)
 	BuildArea = myWorkshopObjects[1]
-	EdgeMarker = myWorkshopObjects[2]
-	MapMarker = myWorkshopObjects[3]
-	CenterMarker = myWorkshopObjects[4]
-	Anchor = myWorkshopObjects[5]
+	MapMarker = myWorkshopObjects[2]
+	CenterMarker = myWorkshopObjects[3]
+	Anchor = myWorkshopObjects[4]
+	EdgeMarker1 = myWorkshopObjects[5]
+	EdgeMarker2 = myWorkshopObjects[6]
+	EdgeMarker3 = myWorkshopObjects[7]
 
 	debug.trace("Workshop " + self + " BuildArea " + BuildArea)
 
@@ -60,7 +64,9 @@ function BuildSettlement(ObjectReference akProxy)
 
 	; Move the build area and markers to us.
 	BuildArea.MoveTo(PlayerRef)
-	EdgeMarker.MoveTo(PlayerRef)
+	EdgeMarker1.MoveTo(PlayerRef)
+	EdgeMarker2.MoveTo(PlayerRef)
+	EdgeMarker3.MoveTo(PlayerRef)
 	CenterMarker.MoveTo(PlayerRef)
 	MapMarker.MoveTo(PlayerRef)
 	MapMarker.GetLinkedRef().MoveTo(PlayerRef)
@@ -83,7 +89,9 @@ function DissolveSettlement()
 	; Fade out
 	
 	BuildArea.MoveTo(Anchor)
-	EdgeMarker.MoveTo(Anchor)
+	EdgeMarker1.MoveTo(Anchor)
+	EdgeMarker2.MoveTo(Anchor)
+	EdgeMarker3.MoveTo(Anchor)
 	MapMarker.MoveTo(Anchor)
 	CenterMarker.MoveTo(Anchor)
 	BuildAreaEdge.Disable()
@@ -109,7 +117,9 @@ function DissolveSettlement()
 
 	MyProxy = none
 	BuildArea = none
-	EdgeMarker = none
+	EdgeMarker1 = none
+	EdgeMarker2 = none
+	EdgeMarker3 = none
 	MapMarker = none
 	CenterMarker = none
 	Anchor = none
