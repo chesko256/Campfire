@@ -15,6 +15,9 @@ FormList property workshopScrapRecipe_TreeStump auto
 ObjectReference property _Camp_Anchor auto
 Activator property _Camp_PlaceableSettlementWorkshop auto
 
+var[] property CampObjectMap_WorldObjects auto
+MiscObject property CampObjectMap_InvObjects auto
+
 ; PRIVATE
 ObjectReference property myCampsiteWorkshop auto hidden
 ObjectReference[] property CampsiteObjects auto hidden
@@ -24,6 +27,7 @@ function Initialize()
 	self.BlockActivation()
 	parent.Initialize()
 	CampsiteObjects = new ObjectReference[128]
+	InitializeCampObjectMaps()
 endFunction
 
 function UseObject(ObjectReference akActionRef)
@@ -83,10 +87,35 @@ function TakeDown()
 	debug.trace(self + " take-down done.")
 endFunction
 
+function InitializeCampObjectMaps()
+	CampObjectMap_WorldObjects = new var[0]
+	CampObjectMap_InvObjects = new MiscObject[0]
+
+	; Folding Chair
+
+	; Cooking Pot
+
+	; Sleeping Bag
+
+	; Tent
+
+	; Tent 2
+
+	; Dog Bed
+
+	; Oil Lamp
+
+	; Portable Light
+
+	; Map Marker Transponder
+
+	; Portable Generator
+
+endFunction
+
 function PickUpCampsiteObjectByIndex(int aiRefIndex)
 	ObjectReference ref = CampsiteObjects[aiRefIndex]
 	if (ref as _Camp_PlaceableObjectBase)
-		debug.trace("FIX THIS BUG FIX THIS BUG FIX THIS BUG FIX THIS BUG FIX THIS BUG")
 		PlayerRef.AddItem((ref as _Camp_PlaceableObjectBase).Required_InventoryItem, 1, true)
 		(ref as _Camp_PlaceableObjectBase).TakeDown()
 	else
