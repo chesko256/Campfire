@@ -1,5 +1,7 @@
 scriptname _Camp_WorkshopProxy extends ObjectReference
 
+import _CampInternal
+
 Actor property PlayerRef auto
 Quest property _Camp_SettlementManager auto Mandatory
 WorkshopParentScript Property WorkshopParent auto Mandatory
@@ -27,7 +29,7 @@ function SetUpProxy()
 		; Break down campsite this came from
 		ObjectReference camp = Game.FindClosestReferenceOfTypeFromRef(_Camp_CampsiteEquipmentActivator, self, 4000.0)
 		if camp
-			ObjectReference camp_workshop = (camp as CampPlaceableCampsite).myCampsiteWorkshop
+			ObjectReference camp_workshop = (camp as CampPlaceableCampsite)._Camp_CampsiteWorkshopREF
 			if camp_workshop
 				(camp_workshop as WorkshopScript).StartWorkshop(false)
 			endif
@@ -90,14 +92,14 @@ EndEvent
 Event OnLoad()
 	if is_built && MyWorkshop
 		MyWorkshop.MoveTo(self)
-		debug.trace("Moved to proxy.")
+		CampDebug(0, MyWorkshop + " moved to proxy.")
 	endif
 EndEvent
 
 Event OnUnload()
 	if is_built && MyWorkshop
 		MyWorkshop.MoveTo((MyWorkshop as _Camp_WorkshopScriptEx).Anchor)
-		debug.trace("Moved to home location.")
+		CampDebug(0, MyWorkshop + " moved to home location.")
 	endif
 EndEvent
 

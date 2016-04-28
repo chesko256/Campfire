@@ -1,5 +1,7 @@
 scriptname _Camp_WorkshopScriptEx extends WorkshopScript
 
+import _CampInternal
+
 Actor property PlayerRef auto
 Quest property Followers auto
 
@@ -59,9 +61,9 @@ function BuildSettlement(ObjectReference akProxy)
 	EdgeMarker2 = myWorkshopObjects[6]
 	EdgeMarker3 = myWorkshopObjects[7]
 
-	debug.trace("Workshop " + self + " BuildArea " + BuildArea)
+	CampDebug(0, "Workshop " + self + " BuildArea " + BuildArea)
 
-	debug.trace("##################### Setting Workshop ownership...")
+	CampDebug(0, "##################### Setting Workshop ownership...")
 	SetOwnedByPlayer(true)
 
 	; Move the build area and markers to us.
@@ -84,7 +86,7 @@ function BuildSettlement(ObjectReference akProxy)
 	self.AddInventoryEventFilter(_Camp_UnstorableWorkshops)
 	self.AddInventoryEventFilter(_Camp_ScrapResources)
 
-	debug.trace("######################New settlement initialized.")
+	CampDebug(0, "######################New settlement initialized.")
 endFunction
 
 function DissolveSettlement()
@@ -264,7 +266,7 @@ bool function FetchLinkedWorkshopResources()
 		return false
 	endif
 
-	debug.trace("############# Getting all linked workshops...")
+	CampDebug(0, "############# Getting all linked workshops...")
 	int i = 0
 	while i < locs.Length
 		int workshop_id = WorkshopParent.WorkshopLocations.Find(locs[i])
@@ -274,37 +276,37 @@ bool function FetchLinkedWorkshopResources()
 		i += 1
 	endWhile
 
-	debug.trace("############# Getting all linked resources...")
+	CampDebug(0, "############# Getting all linked resources...")
 	int j = 0
 	while j < _Camp_ScrapResources.GetSize()
 		GetResourceFromAllContainers(wkshops, _Camp_ScrapResources.GetAt(j) as MiscObject)
 		j += 1
 	endWhile
-	debug.trace("############# Done!")
+	CampDebug(0, "############# Done!")
 	return true
 endFunction
 
 function DisposeAndSyncLinkedWorkshopResources()
 	int i = 0
-	debug.trace("original resource items list length: " + external_resource_items_original.Length)
+	CampDebug(0, "original resource items list length: " + external_resource_items_original.Length)
 	while i < external_resource_items_original.Length
-		debug.trace("Finding " + external_resource_items_original[i] + " in spent list.")
+		CampDebug(0, "Finding " + external_resource_items_original[i] + " in spent list.")
 		int j = external_resource_items_spent.Find(external_resource_items_original[i])
 		if j != -1
 			int delta = external_resource_counts_original[i] - external_resource_counts_spent[j]
 			if delta > 0
 				; We had a net loss of this resource, remove it from linked containers first.
-				debug.trace("Deplete from all containers...")
+				CampDebug(0, "Deplete from all containers...")
 				DepleteResourceFromAllContainers(wkshops, external_resource_items_spent[j], external_resource_counts_spent[j], delta)
 			elseif delta < 0
 				; We had a net gain of this resource, remove the full amount of the original.
 				self.RemoveItem(external_resource_items_original[i], external_resource_counts_original[i], true)
-				debug.trace("############# Net gain of " + external_resource_items_original[i] + ", removing " + external_resource_counts_original[i] + " and keeping " + delta)
+				CampDebug(0, "############# Net gain of " + external_resource_items_original[i] + ", removing " + external_resource_counts_original[i] + " and keeping " + delta)
 			endif
 		else
 			; We didn't spend any of this resource; deplete all of it.
 			self.RemoveItem(external_resource_items_original[i], external_resource_counts_original[i], true)
-			debug.trace("############# Didn't use " + external_resource_items_original[i] + ", removing " + external_resource_counts_original[i])
+			CampDebug(0, "############# Didn't use " + external_resource_items_original[i] + ", removing " + external_resource_counts_original[i])
 		endif
 		i += 1
 	endWhile
@@ -327,10 +329,10 @@ function GetResourceFromAllContainers(ObjectReference[] akContainers, MiscObject
 			if ext_idx == -1
 				external_resource_items_original.Add(akResource as MiscObject)
 				external_resource_counts_original.Add(amount)
-				debug.trace("############# Adding " + amount + " " + akResource + " to the external resource list.")
+				CampDebug(0, "############# Adding " + amount + " " + akResource + " to the external resource list.")
 			else
 				external_resource_counts_original[ext_idx] += amount
-				debug.trace("############# Adding " + amount + " " + akResource + " to the external resource list (append).")
+				CampDebug(0, "############# Adding " + amount + " " + akResource + " to the external resource list (append).")
 			endif
 		endif
 		i += 1
@@ -363,7 +365,7 @@ function DepleteResourceFromAllContainers(ObjectReference[] akContainers, MiscOb
 				amount_to_remove_from_this_container = total_amount_to_deplete
 			endif
 
-			debug.trace("############# Removing " + amount_to_remove_from_this_container + " " + akResource + " from " + akContainers[i] + " (" + total_amount_to_deplete + " left to remove)")
+			CampDebug(0, "############# Removing " + amount_to_remove_from_this_container + " " + akResource + " from " + akContainers[i] + " (" + total_amount_to_deplete + " left to remove)")
 			akContainers[i].RemoveItem(akResource, amount_to_remove_from_this_container, true)
 			total_amount_to_deplete -= amount_to_remove_from_this_container
 		endif
@@ -375,11 +377,11 @@ function DepleteResourceFromAllContainers(ObjectReference[] akContainers, MiscOb
 		int self_amount = self.GetItemCount(akResource)
 		if self_amount > 0
 			if total_amount_to_deplete > self_amount
-				debug.trace("[Campfire] Error: We used more than we originally had of " + akResource + "!")
+				CampDebug(0, "[Conquest] Error: We used more than we originally had of " + akResource + "!")
 				self.RemoveItem(akResource, self_amount, true)
 			else
 				self.RemoveItem(akResource, total_amount_to_deplete, true)
-				debug.trace("############# Removing " + total_amount_to_deplete + " " + akResource + " from self (" + total_amount_to_deplete + " left to remove)")
+				CampDebug(0, "############# Removing " + total_amount_to_deplete + " " + akResource + " from self (" + total_amount_to_deplete + " left to remove)")
 			endif
 		endif
 	endif
