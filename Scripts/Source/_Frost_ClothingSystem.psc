@@ -16,6 +16,7 @@ Keyword property ImmuneParalysis auto
 Keyword property WAF_ClothingCloak auto
 
 string[] property WornGearKeys auto hidden
+int[] property WornGearValues auto hidden
 Keyword property _Frost_WornGearData auto
 
 Armor property equipped_body auto hidden
@@ -47,6 +48,11 @@ Armor property initial_feet auto hidden
 Armor property initial_shield auto hidden
 
 bool unequip_lock = false
+
+function Initialize()
+    WornGearKeys = new string[31]
+    WornGearValues = new int[12]
+endFunction
 
 function RegisterForEvents()
     RegisterForModEvent("Frost_ShieldEquipped", "ShieldEquipped")
@@ -137,7 +143,7 @@ function HandleEquippedObject(Form akBaseObject, int iGearType)
     ;@TODO: Handle ignore flag
     if idx == -1
         ; plug the data in
-        ArrayAddString(dskey)
+        ArrayAddString(WornGearKeys, dskey)
         ;@TODO: Assume we get the type
         int type = armor_data[0]
         ;@TODO: no type?
@@ -176,68 +182,6 @@ function HandleEquippedObject(Form akBaseObject, int iGearType)
         StorageUtil.IntListSet(_Frost_WornGearData, dskey, jdx, armor_data[2])         ; coverage
 
         RecalculateProtectionData()
-    endif
-
-    
-    if iGearType == 1
-        protection_data = handler.GetArmorProtectionData(armor_object, iGearType, aiMode = 1)
-        equipped_body = armor_object
-        body_warmth = protection_data[0]
-        body_coverage = protection_data[1]
-        if protection_data[2] != -1
-            equipped_hands = armor_object
-            hands_warmth = protection_data[2]
-            hands_coverage = protection_data[3]
-        endif
-        if protection_data[4] != -1
-            equipped_head = armor_object
-            head_warmth = protection_data[4]
-            head_coverage = protection_data[5]
-        endif
-        if protection_data[6] != -1
-            equipped_feet = armor_object
-            feet_warmth = protection_data[6]
-            feet_coverage = protection_data[7]
-        endif
-        if protection_data[8] != -1
-            equipped_cloak = armor_object
-            cloak_warmth = protection_data[8]
-            cloak_coverage = protection_data[9]
-        endif
-    elseif iGearType == 2
-        protection_data = handler.GetArmorProtectionData(armor_object, iGearType)
-        equipped_hands = armor_object
-        hands_warmth = protection_data[0]
-        hands_coverage = protection_data[1]
-    elseif iGearType == 3
-        protection_data = handler.GetArmorProtectionData(armor_object, iGearType, aiMode = 2)
-        equipped_head = armor_object
-        head_warmth = protection_data[0]
-        head_coverage = protection_data[1]
-        if protection_data[2] != -1
-            equipped_cloak = armor_object
-            cloak_warmth = protection_data[2]
-            cloak_coverage = protection_data[3]
-        endif
-    elseif iGearType == 4
-        protection_data = handler.GetArmorProtectionData(armor_object, iGearType)
-        equipped_feet = armor_object
-        feet_warmth = protection_data[0]
-        feet_coverage = protection_data[1]
-    elseif iGearType == 7
-        protection_data = handler.GetArmorProtectionData(armor_object, iGearType)
-        if protection_data[0] != -1
-            equipped_cloak = armor_object
-            cloak_warmth = protection_data[0]
-            cloak_coverage = protection_data[1]
-        endif
-    elseif iGearType == 8
-        protection_data = handler.GetArmorProtectionData(armor_object, iGearType)
-        if protection_data[0] != -1
-            equipped_shield = armor_object
-            shield_warmth = protection_data[0]
-            shield_coverage = protection_data[1]
-        endif
     endif
 endFunction
 
@@ -357,21 +301,42 @@ Event ShieldEquipped(Form akBaseObject, bool abEquipped)
 endEvent
 
 function RecalculateProtectionData()
+    int key_count = ArrayCountString(WornGearKeys)
+    int i = 0
+    int j = 0
 
+    int[] temp_armor_values
+
+    while i < 12
+        temp_armor_values = new int[31]
+        int largest = -1
+        while j < key_count
+            int val = StorageUtil.IntListGet(_Frost_WornGearData, WornGearKeys[j], i)
+            temp_armor_values[j] = val
+            
+            ; Also track max value
+            if val > largest
+                largest = val
+            endif
+            j += 1
+        endWhile
+        if i < 12   ; Max
+            WornGearValues[i] = largest
+        else        ; Sum
+            WornGearValues[i] = Sum(temp_armor_values)
+        endif
+        i += 1
+    endWhile
+
+    FrostDebug(0, "Worn Gear Values: " + WornGearValues)
 endFunction
 
 int function GetArmorWarmth()
-    int total = body_warmth + hands_warmth + \
-                head_warmth + feet_warmth + \
-                cloak_warmth
-    return total
+    return WornGearValues[0] + WornGearValues[2] + WornGearValues[4] + WornGearValues[6] + WornGearValues[8] + WornGearValues[10]
 endFunction
 
 int function GetArmorCoverage()
-    int total = body_coverage + hands_coverage + \
-                head_coverage + feet_coverage + \
-                cloak_coverage + shield_coverage
-    return total
+    return WornGearValues[1] + WornGearValues[3] + WornGearValues[5] + WornGearValues[7] + WornGearValues[9] + WornGearValues[11]
 endFunction
 
 Event OnUpdate()
@@ -547,4 +512,23 @@ bool function IsNone(string akString)
     else
         return true
     endif
+endFunction
+
+int function Max(int[] aiValues)
+    ;/
+        Return the largest value greater than 0 in aiValues.
+    /;
+    int largest = -1
+    int i = 0
+    while i < aiValues.Length
+        if aiValues[i] > largest
+            largest = aiValues
+        endif
+        i += 1
+    endWhile
+    return largest
+endFunction
+
+bool function IsEven(int aiValue)
+    return aiValue % 2 == 0
 endFunction
