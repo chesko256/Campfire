@@ -49,7 +49,10 @@ Armor property initial_shield auto hidden
 
 bool unequip_lock = false
 
+_Frost_ArmorProtectionDatastoreHandler handler
+
 function Initialize()
+    handler = GetClothingDatastoreHandler()
     WornGearKeys = new string[31]
     WornGearValues = new int[12]
 endFunction
@@ -101,13 +104,6 @@ function ObjectEquipped(Form akBaseObject, int iGearType)
 
     SendEvent_UpdateWarmthAndCoverage()
     DisplayWarmthCoverageNoSkyUIPkg(akBaseObject as Armor, iGearType)
-
-    FrostDebug(0, "Armor protection report: BODY(" + body_warmth + ", " + body_coverage +       \
-                                            ") HANDS(" + hands_warmth + ", " + hands_coverage + \
-                                            ") HEAD(" + head_warmth + ", " + head_coverage +    \
-                                            ") FEET(" + feet_warmth + ", " + feet_coverage +    \
-                                            ") CLOAK(" + cloak_warmth + ", " + cloak_coverage + \
-                                            ") SHIELD(0, " + shield_coverage + ")")
 endFunction
 
 function HandleEquippedObject(Form akBaseObject, int iGearType)
@@ -124,8 +120,6 @@ function HandleEquippedObject(Form akBaseObject, int iGearType)
         return
     endif
     int slot_mask = armor_object.GetSlotMask()
-
-    _Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
     int type = handler.GetGearType(armor_object, slot_mask, false)
     if type == -1
@@ -301,30 +295,53 @@ Event ShieldEquipped(Form akBaseObject, bool abEquipped)
 endEvent
 
 function RecalculateProtectionData()
+    ;/
+        Iterates over a "table" of values in the form below to determine total Warmth and Coverage.
+    /;
+    ; | _Frost_WornGearData Index |  0   |     1     |    2     |     |    10     |    11    |
+    ; |---------------------------|------|-----------|----------|-----|-----------|----------|
+    ; | WornGearKeys              | Type | Body Warm | Body Cov | ... | Misc Warm | Misc Cov |
+    ; | "80145___Skyrim.esm"      | 1    | 60        | 0        |     | 0         | 0        |
+    
     int key_count = ArrayCountString(WornGearKeys)
     int i = 0
     int j = 0
 
-    int[] temp_armor_values
-
     while i < 12
-        temp_armor_values = new int[31]
-        int largest = -1
-        while j < key_count
+        int column_value = 0
+        
+        int type_to_match
+        if !IsEven(i)
+            type_to_match = (i / 2)
+        else
+            type_to_match = (i / 2) + 1
+        endif
+
+        bool gear_type_found = false
+        while j < key_count && !gear_type_found
+            int gear_type = StorageUtil.IntListGet(_Frost_WornGearData, WornGearKeys[j], 0)
             int val = StorageUtil.IntListGet(_Frost_WornGearData, WornGearKeys[j], i)
-            temp_armor_values[j] = val
-            
-            ; Also track max value
-            if val > largest
-                largest = val
+
+            if type_to_match != handler.GEARTYPE_MISC
+                ; Native type takes priority
+                if gear_type == type_to_match
+                    column_value = val
+                    gear_type_found = true
+                else
+                    ; Otherwise, take the highest Extra value
+                    if val > column_value
+                        column_value = val
+                    endif
+                endif
+            else
+                ; Sum MISC type items (and never type match)
+                column_value += val
             endif
             j += 1
         endWhile
-        if i < 12   ; Max
-            WornGearValues[i] = largest
-        else        ; Sum
-            WornGearValues[i] = Sum(temp_armor_values)
-        endif
+
+        ; Result for this column
+        WornGearValues[i] = column_value
         i += 1
     endWhile
 
@@ -358,7 +375,7 @@ function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor, int aiGearType)
         return
     endif
     if !GetCompatibilitySystem().isUIPackageInstalled && FrostfallRunning.GetValueInt() == 2
-        int[] result = GetClothingDatastoreHandler().GetTotalProtectionValues(akArmor, aiGearType)
+        int[] result = handler.GetTotalProtectionValues(akArmor, aiGearType)
         if result[0] == 0 && result[1] == 0
             return
         endif
@@ -384,7 +401,7 @@ function DisplayWarmthCoverageNoSkyUIPkgRemove(Armor akArmor, int aiGearType)
         return
     endif
     if !GetCompatibilitySystem().isUIPackageInstalled && FrostfallRunning.GetValueInt() == 2
-        int[] result = GetClothingDatastoreHandler().GetTotalProtectionValues(akArmor, aiGearType)
+        int[] result = handler.GetTotalProtectionValues(akArmor, aiGearType)
         if result[0] == 0 && result[1] == 0
             return
         endif
@@ -512,21 +529,6 @@ bool function IsNone(string akString)
     else
         return true
     endif
-endFunction
-
-int function Max(int[] aiValues)
-    ;/
-        Return the largest value greater than 0 in aiValues.
-    /;
-    int largest = -1
-    int i = 0
-    while i < aiValues.Length
-        if aiValues[i] > largest
-            largest = aiValues
-        endif
-        i += 1
-    endWhile
-    return largest
 endFunction
 
 bool function IsEven(int aiValue)
