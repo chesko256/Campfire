@@ -1101,7 +1101,7 @@ function AddStartupSpells()
 		PlayerRef.AddSpell(_Frost_Weathersense_Spell, false)
 	endif
 
-	((self as ReferenceAlias) as _Frost_PlayerSpellMonitor).UpdateFrostResistBonus()
+	GetFrostResistSystem().CheckFrostResist()
 endFunction
 
 function AddSpellBooks()
@@ -1287,7 +1287,7 @@ function NFHLoadUp()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
 	; Check if already loaded
-	if handler.DatastoreHasEntry("18655___Northborn Fur Hoods.esp")
+	if ArmorProtectionDataExistsByKey("18655___Northborn Fur Hoods.esp")
 		return
 	endif
 
@@ -1341,7 +1341,7 @@ function AddCOSDatastoreEntries(string asPluginName)
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
 	; Check if already loaded
-	if handler.DatastoreHasEntry("58747___" + asPluginName)
+	if ArmorProtectionDataExistsByKey("58747___" + asPluginName)
 		return
 	endif
 
@@ -1504,7 +1504,7 @@ function AddCOSDGDatastoreEntries(string asPluginName)
 
 	if asPluginName == "Complete Crafting Overhaul_Remade.esp"
 		; Check if already loaded
-		if handler.DatastoreHasEntry("22789___" + asPluginName)
+		if ArmorProtectionDataExistsByKey("22789___" + asPluginName)
 			return
 		endif
 
@@ -1512,7 +1512,7 @@ function AddCOSDGDatastoreEntries(string asPluginName)
 		handler.SetArmorDataByKey("22790___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakShortDawnguard
 	else
 		; Check if already loaded
-		if handler.DatastoreHasEntry("3428___" + asPluginName)
+		if ArmorProtectionDataExistsByKey("3428___" + asPluginName)
 			return
 		endif
 		handler.SetArmorDataByKey("3428___" + asPluginName, 10, 10, abExportToDefaults = true) ; CloakDawnguard
@@ -1575,7 +1575,7 @@ function AddWICDatastoreEntries(string asPluginName)
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
 	; Check if already loaded
-	if handler.DatastoreHasEntry("7639___" + asPluginName) ; 1nivCloakBearClawComBrown
+	if ArmorProtectionDataExistsByKey("7639___" + asPluginName) ; 1nivCloakBearClawComBrown
 		return
 	endif
 
@@ -1721,7 +1721,7 @@ function AEALoadUp()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
 	; Check if already loaded
-	if handler.DatastoreHasEntry("20056___AesirArmor.esp")
+	if ArmorProtectionDataExistsByKey("20056___AesirArmor.esp")
 		return
 	endif
 
@@ -1790,7 +1790,7 @@ function WACLoadUp()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
 	; Check if already loaded
-	if handler.DatastoreHasEntry("860640___WetandCold.esp")
+	if ArmorProtectionDataExistsByKey("860640___WetandCold.esp")
 		return
 	endif
 
@@ -1848,7 +1848,7 @@ function IMALoadUp()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
 	; Check if already loaded
-	if handler.DatastoreHasEntry("20258___Hothtrooper44_ArmorCompilation.esp")
+	if ArmorProtectionDataExistsByKey("20258___Hothtrooper44_ArmorCompilation.esp")
 		return
 	endif
 

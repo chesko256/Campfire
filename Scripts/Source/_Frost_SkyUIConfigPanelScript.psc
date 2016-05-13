@@ -1505,7 +1505,7 @@ function GenerateEquipmentPage()
 		endif
 		AddHeaderOption(worn_equipment[i].GetName())
 		AddHeaderOption("")
-		int[] protection_values = handler.GetArmorProtectionData(worn_equipment[i] as Armor, 0, 0)
+		int[] protection_values = handler.GetArmorProtectionData(worn_equipment[i] as Armor)
 
 		area_oids[i] = AddTextOption(GetAreaList(worn_equipment[i]), "", OPTION_FLAG_DISABLED)
 		modify_area_oids[i] = AddMenuOption("Modify Covered Areas", "")

@@ -1727,7 +1727,7 @@ endFunction
 *
 * SYNTAX
 */;
-int function ArmorProtectionDataExists(Armor akArmor) global
+bool function ArmorProtectionDataExists(Armor akArmor) global
 ;/*
 * PARAMETERS
 * None
@@ -1743,8 +1743,36 @@ bool data_exists = FrostUtil.ArmorProtectionDataExists(MyCoolArmor)
 * the protection data of this gear (like keywords).
 ;*********/;
     _Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
-    string dskey = GetDatastoreKeyFromForm(akArmor)
+    string dskey = handler.GetDatastoreKeyFromForm(akArmor)
     return handler.DatastoreHasKey(dskey)
+endFunction
+
+;/********f* FrostUtil/ArmorProtectionDataExistsByKey
+* API VERSION ADDED
+* 3
+*
+* DESCRIPTION
+* Whether or not the player's current profile (or the default values profile) contains data about this armor, by datastore key.
+*
+* SYNTAX
+*/;
+bool function ArmorProtectionDataExistsByKey(string asKey) global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* True if data exists; False otherwise.
+*
+* EXAMPLES
+;Does the player have warmth and coverage data for my cool armor?
+bool data_exists = FrostUtil.ArmorProtectionDataExistsByKey("20258___MyCoolMod.esp")
+* NOTES
+* This function only looks at profile data, and not other factors that could determine
+* the protection data of this gear (like keywords).
+;*********/;
+    _Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+    return handler.DatastoreHasKey(asKey)
 endFunction
 
 

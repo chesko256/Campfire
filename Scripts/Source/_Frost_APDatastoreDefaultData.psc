@@ -2,12 +2,6 @@ scriptname _Frost_APDatastoreDefaultData extends Quest
 
 import _FrostInternal
 
-GlobalVariable property _Frost_DS_Body_InitProgress auto
-GlobalVariable property _Frost_DS_Head_InitProgress auto
-GlobalVariable property _Frost_DS_Hands_InitProgress auto
-GlobalVariable property _Frost_DS_Feet_InitProgress auto
-GlobalVariable property _Frost_DS_Cloak_InitProgress auto
-
 function SetDefaults_Body()
 	;####################
 	;
