@@ -76,20 +76,7 @@ endFunction
 
 
 
-function ObjectEquipped(Form akBaseObject, int iGearType)
-    ;===========
-    ;Parameters
-    ;===========
-    ;   akBaseObject: The base object the actor just equipped.
-    ;   iGearType: The type of gear the actor equipped, which is one of the following values:
-    ;       1: Body gear (Armor, clothing)
-    ;       2: Hands gear (Gauntlets, gloves)
-    ;       3: Head gear (Helmet, hat, hoods)
-    ;       4: Foot gear (Boots, shoes)
-    ;       5: Backpack
-    ;       6: Ammo
-    ;       7: Other (could be cloak)
-    ;       8: Shield
+function ObjectEquipped(Form akBaseObject)
         
     if !akBaseObject
         return
@@ -100,13 +87,13 @@ function ObjectEquipped(Form akBaseObject, int iGearType)
         return
     endif
 
-    HandleEquippedObject(akBaseObject, iGearType)
+    HandleEquippedObject(akBaseObject)
 
     SendEvent_UpdateWarmthAndCoverage()
-    DisplayWarmthCoverageNoSkyUIPkg(akBaseObject as Armor, iGearType)
+    DisplayWarmthCoverageNoSkyUIPkg(akBaseObject as Armor)
 endFunction
 
-function HandleEquippedObject(Form akBaseObject, int iGearType)
+function HandleEquippedObject(Form akBaseObject)
     ; Assign protection data to the correct internal slots and store the results.
     
     int i = 20
@@ -121,10 +108,10 @@ function HandleEquippedObject(Form akBaseObject, int iGearType)
     endif
     int slot_mask = armor_object.GetSlotMask()
 
-    int type = handler.GetGearType(armor_object, slot_mask, false)
-    if type == -1
-        return
-    endif
+    ;int type = handler.GetGearType(armor_object, slot_mask, false)
+    ;if type == -1
+    ;    return
+    ;endif
 
     int[] armor_data = handler.GetArmorProtectionData(armor_object)
 
@@ -179,20 +166,7 @@ function HandleEquippedObject(Form akBaseObject, int iGearType)
     endif
 endFunction
 
-function ObjectUnequipped(Form akBaseObject, int iGearType)
-    ;===========
-    ;Parameters
-    ;===========
-    ;   akBaseObject: The base object the actor just unequipped.
-    ;   iGearType: The type of gear the actor unequipped, which is one of the following values:
-    ;       1: Body gear (Armor, clothing)
-    ;       2: Hands gear (Gauntlets, gloves)
-    ;       3: Head gear (Helmet, hat, hoods)
-    ;       4: Foot gear (Boots, shoes)
-    ;       5: Backpack
-    ;       6: Ammo
-    ;       7: Other (could be cloak)
-    ;       8: Shield
+function ObjectUnequipped(Form akBaseObject)
 
     unequip_lock = true
     if !akBaseObject
@@ -202,95 +176,50 @@ function ObjectUnequipped(Form akBaseObject, int iGearType)
         return
     endif
     if _Frost_CheckInitialEquipment.GetValueInt() == 2
-        if iGearType == 1
-            initial_body = akBaseObject as Armor
-        elseif iGearType == 2
-            initial_hands = akBaseObject as Armor
-        elseif iGearType == 3
-            initial_head = akBaseObject as Armor
-        elseif iGearType == 4
-            initial_feet = akBaseObject as Armor
-        elseif iGearType == 8
-            initial_shield = akBaseObject as Armor
+        Armor armor_object = akBaseObject as Armor
+        if armor_object
+            int armor_mask = armor_object.GetSlotMask()
+            int gear_type = handler.GetGearType(armor_object, armor_mask, abStrictMode = false)
+            if gear_type == handler.GEARTYPE_BODY
+                initial_body = armor_object
+            elseif gear_type == handler.GEARTYPE_HEAD
+                initial_head = armor_object
+            elseif gear_type == handler.GEARTYPE_HANDS
+                initial_hands = armor_object
+            elseif gear_type == handler.GEARTYPE_FEET
+                initial_feet = armor_object
+            elseif gear_type == handler.GEARTYPE_MISC && armor_object.IsShield()
+                initial_shield = armor_object
+            endif
         endif
     endif
-    HandleUnequippedObject(akBaseObject, iGearType)
+    HandleUnequippedObject(akBaseObject)
     unequip_lock = false
 
     SendEvent_UpdateWarmthAndCoverage()
-    DisplayWarmthCoverageNoSkyUIPkgRemove(akBaseObject as Armor, iGearType)
-
-    FrostDebug(0, "Armor protection report: BODY(" + body_warmth + ", " + body_coverage +       \
-                                            ") HANDS(" + hands_warmth + ", " + hands_coverage + \
-                                            ") HEAD(" + head_warmth + ", " + head_coverage +    \
-                                            ") FEET(" + feet_warmth + ", " + feet_coverage +    \
-                                            ") CLOAK(" + cloak_warmth + ", " + cloak_coverage + \
-                                            ") SHIELD(0, " + shield_coverage + ")")
+    DisplayWarmthCoverageNoSkyUIPkgRemove(akBaseObject as Armor)
 endFunction
 
-function HandleUnequippedObject(Form akBaseObject, int iGearType)
+function HandleUnequippedObject(Form akBaseObject)
     Armor armor_object = akBaseObject as Armor
     if !armor_object
         return
     endif
-    ; Gear Type Overrides
-    if akBaseObject.HasKeyword(WAF_ClothingCloak)
-        iGearType = 7
-    endif
-    int mySlotMask = armor_object.GetSlotMask()
-    if LogicalAnd(mySlotMask, armor_object.kSlotMask31) && !LogicalAnd(mySlotMask, armor_object.kSlotMask32)
-        iGearType = 3
+
+    string dskey = handler.GetDatastoreKeyFromForm(armor_object)
+    bool worn_gear_found = ArrayRemoveString(WornGearKeys, dskey, true)
+    if worn_gear_found
+        StorageUtil.IntListClear(_Frost_WornGearData, dskey)
     endif
 
-    if iGearType == 1
-        if equipped_body == armor_object
-            equipped_body = None
-            body_warmth = 0
-            body_coverage = 0
-            ; Is this a multi-part gear set?
-            HandleUnequippedObject(akBaseObject, 2)
-            HandleUnequippedObject(akBaseObject, 3)
-            HandleUnequippedObject(akBaseObject, 4)
-            HandleUnequippedObject(akBaseObject, 7)
-        endif
-    elseif iGearType == 2
-        if equipped_hands == armor_object
-            equipped_hands = None
-            hands_warmth = 0
-            hands_coverage = 0
-        endif
-    elseif iGearType == 3
-        if equipped_head == armor_object
-            equipped_head = None
-            head_warmth = 0
-            head_coverage = 0
-        endif
-    elseif iGearType == 4
-        if equipped_feet == armor_object
-            equipped_feet = None
-            feet_warmth = 0
-            feet_coverage = 0
-        endif
-    elseif iGearType == 7
-        if equipped_cloak == armor_object
-            equipped_cloak = None
-            cloak_warmth = 0
-            cloak_coverage = 0
-        endif
-    elseif iGearType == 8
-        if equipped_shield == armor_object
-            equipped_shield = None
-            shield_warmth = 0
-            shield_coverage = 0
-        endif
-    endif
+    RecalculateProtectionData()
 endFunction
 
 Event ShieldEquipped(Form akBaseObject, bool abEquipped)
     if abEquipped
-        ObjectEquipped(akBaseObject, 8)
+        ObjectEquipped(akBaseObject)
     else
-        ObjectUnequipped(akBaseObject, 8)
+        ObjectUnequipped(akBaseObject)
     endif
 endEvent
 
@@ -370,12 +299,12 @@ Event OnUpdate()
     debug.notification(str.TotalWarmth + " " + GetPlayerWarmth() + ", " + str.TotalCoverage + " " + GetPlayerCoverage())
 EndEvent
 
-function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor, int aiGearType)
+function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor)
     if !akArmor
         return
     endif
     if !GetCompatibilitySystem().isUIPackageInstalled && FrostfallRunning.GetValueInt() == 2
-        int[] result = handler.GetTotalProtectionValues(akArmor, aiGearType)
+        int[] result = handler.GetTotalProtectionValues(akArmor)
         if result[0] == 0 && result[1] == 0
             return
         endif
@@ -396,12 +325,12 @@ function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor, int aiGearType)
     endif
 endFunction
 
-function DisplayWarmthCoverageNoSkyUIPkgRemove(Armor akArmor, int aiGearType)
+function DisplayWarmthCoverageNoSkyUIPkgRemove(Armor akArmor)
     if !akArmor
         return
     endif
     if !GetCompatibilitySystem().isUIPackageInstalled && FrostfallRunning.GetValueInt() == 2
-        int[] result = handler.GetTotalProtectionValues(akArmor, aiGearType)
+        int[] result = handler.GetTotalProtectionValues(akArmor)
         if result[0] == 0 && result[1] == 0
             return
         endif
@@ -448,7 +377,7 @@ endFunction
 ; Array functions ==============================================================
 
 bool function ArrayAddString(string[] myArray, string myKey)
-;Adds a form to the first available element in the array.
+    ;Adds a form to the first available element in the array.
     ;       false       =       Error (array full)
     ;       true        =       Success
 
@@ -462,6 +391,28 @@ bool function ArrayAddString(string[] myArray, string myKey)
         endif
     endWhile
     return false
+endFunction
+
+bool function ArrayRemoveString(string[] myArray, String myKey, bool bSort = false)
+    ;Removes a form from the array, if found. Sorts the array using ArraySort() if bSort is true.
+    ;       false       =       Error (string not found)
+    ;       true        =       Success
+
+    int i = 0
+    while i < myArray.Length
+        if myArray[i] == myKey
+            myArray[i] = none
+            if bSort == true
+                ArraySortString(myArray)
+            endif
+            return true
+        else
+            i += 1
+        endif
+    endWhile    
+
+    return false
+    
 endFunction
 
 bool function ArraySortString(String[] myArray, int i = 0)
@@ -489,7 +440,7 @@ bool function ArraySortString(String[] myArray, int i = 0)
                          myArray[i] = none
  
                          ;Call this function recursively until it returns
-                         ArraySort(myArray, iFirstNonePos + 1)
+                         ArraySortString(myArray, iFirstNonePos + 1)
                          return true
                     else
                          i += 1

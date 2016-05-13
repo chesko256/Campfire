@@ -71,7 +71,7 @@ endFunction
 
 function SetItemCardValues()
 	bool set = false
-	_Frost_ArmorProtectionDatastoreHandler datastore = GetClothingDatastoreHandler()
+	_Frost_ArmorProtectionDatastoreHandler armor_handler = GetClothingDatastoreHandler()
 	while !set
 		int menu_id = 0
 		int fid = 0
@@ -91,7 +91,7 @@ function SetItemCardValues()
 		endif
 
 		Armor my_armor = Game.GetForm(fid) as Armor
-		int[] protection_values = datastore.GetTotalProtectionValues(my_armor, datastore.GetGearType(my_armor as Form))
+		int[] protection_values = armor_handler.GetTotalProtectionValues(my_armor)
 		; Previous lookup takes significant real time, are we still on this entry?
 		if settled == true && protection_values[0] != -1
 			UpdateItemCardInfo(protection_values[0], protection_values[1])
