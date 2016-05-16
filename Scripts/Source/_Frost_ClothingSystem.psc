@@ -77,8 +77,7 @@ endFunction
 
 
 function ObjectEquipped(Form akBaseObject)
-        
-    if !akBaseObject
+    if !akBaseObject || !akBaseObject as Armor
         return
     endif
 
@@ -87,14 +86,19 @@ function ObjectEquipped(Form akBaseObject)
         return
     endif
 
-    HandleEquippedObject(akBaseObject)
+    bool update_required = AddWornGearEntryForArmorEquipped(akBaseObject as Armor, WornGearKeys, _Frost_WornGearData)
+
+    if update_required
+        RecalculateProtectionData()
+    endif
 
     SendEvent_UpdateWarmthAndCoverage()
     DisplayWarmthCoverageNoSkyUIPkg(akBaseObject as Armor)
 endFunction
 
-function HandleEquippedObject(Form akBaseObject)
+bool function AddWornGearEntryForArmorEquipped(Armor akArmor, string[] aiWornGearKeysArray, keyword akWornGearData)
     ; Assign protection data to the correct internal slots and store the results.
+    ; Return True if recalculation of warmth and coverage is necessary, false otherwise.
     
     int i = 20
     while unequip_lock == true && i > 0
@@ -102,29 +106,25 @@ function HandleEquippedObject(Form akBaseObject)
         i -= 1
     endWhile
 
-    Armor armor_object = akBaseObject as Armor
-    if !armor_object
-        return
-    endif
-    int slot_mask = armor_object.GetSlotMask()
+    int slot_mask = akArmor.GetSlotMask()
 
-    ;int type = handler.GetGearType(armor_object, slot_mask, false)
+    ;int type = handler.GetGearType(akArmor, slot_mask, false)
     ;if type == -1
     ;    return
     ;endif
 
-    int[] armor_data = handler.GetArmorProtectionData(armor_object)
+    int[] armor_data = handler.GetArmorProtectionData(akArmor)
 
     ; The system will store ONE Body, Head, Hands, Feet, and Cloak slot Warmth and Coverage.
     ; The system will keep any number of warmth/coverage values for Misc.
     ; Explicit gear types win over extra part data.
-    string dskey = handler.GetDatastoreKeyFromForm(armor_object)
-    int idx = WornGearKeys.Find(dskey)
+    string dskey = handler.GetDatastoreKeyFromForm(akArmor)
+    int idx = aiWornGearKeysArray.Find(dskey)
     ;@TODO: Also check the data store
     ;@TODO: Handle ignore flag
     if idx == -1
         ; plug the data in
-        ArrayAddString(WornGearKeys, dskey)
+        ArrayAddString(aiWornGearKeysArray, dskey)
         ;@TODO: Assume we get the type
         int type = armor_data[0]
         ;@TODO: no type?
@@ -141,28 +141,30 @@ function HandleEquippedObject(Form akBaseObject)
         ; 10 - cloak coverage
         ; 11 - misc warmth
         ; 12 - misc coverage
-        StorageUtil.IntListResize(_Frost_WornGearData, dskey, 14)
-        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 0, type) ; type
+        StorageUtil.IntListResize(akWornGearData, dskey, 14)
+        StorageUtil.IntListSet(akWornGearData, dskey, 0, type) ; type
         int jdx = (type * 2)
         
-        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 1, armor_data[3])     ; extra body warmth
-        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 2, armor_data[4])     ; extra body coverage
-        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 3, armor_data[5])     ; extra head warmth
-        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 4, armor_data[6])     ; extra head coverage
-        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 5, armor_data[7])     ; extra hands warmth
-        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 6, armor_data[8])     ; extra hands coverage
-        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 7, armor_data[9])     ; extra feet warmth
-        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 8, armor_data[10])    ; extra feet coverage
-        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 9, armor_data[11])    ; extra cloak warmth
-        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 10, armor_data[12])    ; extra cloak coverage
-        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 11, armor_data[13])    ; extra misc warmth
-        StorageUtil.IntListSet(_Frost_WornGearData, dskey, 12, armor_data[14])    ; extra misc coverage
+        StorageUtil.IntListSet(akWornGearData, dskey, 1, armor_data[3])     ; extra body warmth
+        StorageUtil.IntListSet(akWornGearData, dskey, 2, armor_data[4])     ; extra body coverage
+        StorageUtil.IntListSet(akWornGearData, dskey, 3, armor_data[5])     ; extra head warmth
+        StorageUtil.IntListSet(akWornGearData, dskey, 4, armor_data[6])     ; extra head coverage
+        StorageUtil.IntListSet(akWornGearData, dskey, 5, armor_data[7])     ; extra hands warmth
+        StorageUtil.IntListSet(akWornGearData, dskey, 6, armor_data[8])     ; extra hands coverage
+        StorageUtil.IntListSet(akWornGearData, dskey, 7, armor_data[9])     ; extra feet warmth
+        StorageUtil.IntListSet(akWornGearData, dskey, 8, armor_data[10])    ; extra feet coverage
+        StorageUtil.IntListSet(akWornGearData, dskey, 9, armor_data[11])    ; extra cloak warmth
+        StorageUtil.IntListSet(akWornGearData, dskey, 10, armor_data[12])    ; extra cloak coverage
+        StorageUtil.IntListSet(akWornGearData, dskey, 11, armor_data[13])    ; extra misc warmth
+        StorageUtil.IntListSet(akWornGearData, dskey, 12, armor_data[14])    ; extra misc coverage
 
         ; Main values - these overwrite "extra" data in the same category (shouldn't do that anyway)
-        StorageUtil.IntListSet(_Frost_WornGearData, dskey, jdx - 1, armor_data[1])     ; warmth
-        StorageUtil.IntListSet(_Frost_WornGearData, dskey, jdx, armor_data[2])         ; coverage
+        StorageUtil.IntListSet(akWornGearData, dskey, jdx - 1, armor_data[1])     ; warmth
+        StorageUtil.IntListSet(akWornGearData, dskey, jdx, armor_data[2])         ; coverage
 
-        RecalculateProtectionData()
+        return true
+    else
+        return false
     endif
 endFunction
 
@@ -485,3 +487,31 @@ endFunction
 bool function IsEven(int aiValue)
     return aiValue % 2 == 0
 endFunction
+
+
+; Lilac Mock States ===========================================================
+
+
+
+int property mock_AddWornGearEntryForArmorEquipped_callcount = 0 auto hidden
+
+State mock_testObjectEquipped
+
+    bool function AddWornGearEntryForArmorEquipped(Armor akArmor, string[] aiWornGearKeysArray, keyword akWornGearData)
+        mock_AddWornGearEntryForArmorEquipped_callcount += 1
+        return false
+    endFunction
+
+    function SendEvent_UpdateWarmthAndCoverage()
+        ; pass
+    endFunction
+
+    function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor)
+        ; pass
+    endFunction
+
+EndState
+
+State mock_testAddWornGearEntryForArmorEquipped
+
+endState
