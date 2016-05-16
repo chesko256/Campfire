@@ -1244,6 +1244,18 @@ function RestoreAllDefaultArmorData()
 	JsonUtil.ClearAll(CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt())
 endFunction
 
+; Lilac Mock States ===========================================================
+
+int[] property mock_GetArmorProtectionData_value auto hidden
+int property mock_GetArmorProtectionData_callcount auto hidden
+
+state mock_GetArmorProtectionData
+	int[] function GetArmorProtectionData(Armor akArmor)
+		mock_GetArmorProtectionData_callcount += 1
+		return mock_GetArmorProtectionData_value
+	endFunction
+endState
+
 
 ; DEPRECATED
 Keyword property _FrostData_ArmorBody auto
