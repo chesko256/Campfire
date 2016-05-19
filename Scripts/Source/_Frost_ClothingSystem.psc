@@ -51,7 +51,7 @@ bool unequip_lock = false
 
 _Frost_ArmorProtectionDatastoreHandler handler
 
-function Initialize()
+function StartUp()
     handler = GetClothingDatastoreHandler()
     WornGearKeys = new string[31]
     WornGearValues = new int[12]
@@ -73,8 +73,6 @@ function RaceChanged()
         SendEvent_UpdateWarmth()
     endif
 endFunction
-
-
 
 function ObjectEquipped(Form akBaseObject)
     if !akBaseObject || !akBaseObject as Armor
@@ -141,22 +139,22 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, string[] aiWornGea
         ; 10 - cloak coverage
         ; 11 - misc warmth
         ; 12 - misc coverage
-        StorageUtil.IntListResize(akWornGearData, dskey, 14)
+        StorageUtil.IntListResize(akWornGearData, dskey, 15)
         StorageUtil.IntListSet(akWornGearData, dskey, 0, type) ; type
         int jdx = (type * 2)
         
-        StorageUtil.IntListSet(akWornGearData, dskey, 1, armor_data[3])     ; extra body warmth
-        StorageUtil.IntListSet(akWornGearData, dskey, 2, armor_data[4])     ; extra body coverage
-        StorageUtil.IntListSet(akWornGearData, dskey, 3, armor_data[5])     ; extra head warmth
-        StorageUtil.IntListSet(akWornGearData, dskey, 4, armor_data[6])     ; extra head coverage
-        StorageUtil.IntListSet(akWornGearData, dskey, 5, armor_data[7])     ; extra hands warmth
-        StorageUtil.IntListSet(akWornGearData, dskey, 6, armor_data[8])     ; extra hands coverage
-        StorageUtil.IntListSet(akWornGearData, dskey, 7, armor_data[9])     ; extra feet warmth
-        StorageUtil.IntListSet(akWornGearData, dskey, 8, armor_data[10])    ; extra feet coverage
-        StorageUtil.IntListSet(akWornGearData, dskey, 9, armor_data[11])    ; extra cloak warmth
-        StorageUtil.IntListSet(akWornGearData, dskey, 10, armor_data[12])    ; extra cloak coverage
-        StorageUtil.IntListSet(akWornGearData, dskey, 11, armor_data[13])    ; extra misc warmth
-        StorageUtil.IntListSet(akWornGearData, dskey, 12, armor_data[14])    ; extra misc coverage
+        StorageUtil.IntListSet(akWornGearData, dskey, 1, armor_data[3])     ; body warmth (from extra body warmth)
+        StorageUtil.IntListSet(akWornGearData, dskey, 2, armor_data[4])     ; body coverage (from extra body coverage)
+        StorageUtil.IntListSet(akWornGearData, dskey, 3, armor_data[5])     ; head warmth (from extra head warmth)
+        StorageUtil.IntListSet(akWornGearData, dskey, 4, armor_data[6])     ; head coverage (from extra head coverage)
+        StorageUtil.IntListSet(akWornGearData, dskey, 5, armor_data[7])     ; hands warmth (from extra hands warmth)
+        StorageUtil.IntListSet(akWornGearData, dskey, 6, armor_data[8])     ; hands coverage (from extra hands coverage)
+        StorageUtil.IntListSet(akWornGearData, dskey, 7, armor_data[9])     ; feet warmth (from extra feet warmth)
+        StorageUtil.IntListSet(akWornGearData, dskey, 8, armor_data[10])    ; feet coverage (from extra feet coverage)
+        StorageUtil.IntListSet(akWornGearData, dskey, 9, armor_data[11])    ; cloak warmth (from extra cloak warmth)
+        StorageUtil.IntListSet(akWornGearData, dskey, 10, armor_data[12])    ; cloak coverage (from extra cloak coverage)
+        StorageUtil.IntListSet(akWornGearData, dskey, 11, armor_data[13])    ; misc warmth (from extra misc warmth)
+        StorageUtil.IntListSet(akWornGearData, dskey, 12, armor_data[14])    ; misc coverage (from extra misc coverage)
 
         ; Main values - these overwrite "extra" data in the same category (shouldn't do that anyway)
         StorageUtil.IntListSet(akWornGearData, dskey, jdx - 1, armor_data[1])     ; warmth
@@ -172,9 +170,11 @@ function ObjectUnequipped(Form akBaseObject)
 
     unequip_lock = true
     if !akBaseObject
+        unequip_lock = false
         return
     endif
     if akBaseObject.HasKeyword(_Frost_DummyArmorKW)
+        unequip_lock = false
         return
     endif
     if _Frost_CheckInitialEquipment.GetValueInt() == 2

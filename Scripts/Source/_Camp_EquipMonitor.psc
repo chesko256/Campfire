@@ -28,11 +28,9 @@ Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
 endEvent
 
 Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
-	bool bEventRaised = false
 	processing_unequip = true
 
 	if akBaseObject as Armor
-
 		if !(GetUsesMainBodySlot(akBaseObject))
 			processing_unequip = false
 			return
@@ -40,39 +38,24 @@ Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 
 		if akBaseObject.HasKeyword(ArmorCuirass) || akBaseObject.HasKeyword(ClothingBody)
 			CampDebug(1, "Unequipped body armor!")
-			bEventRaised = SendEvent_OnGearUnequipped(akBaseObject, 1)
 			CampData.CurrentBody = none
-		endif
-		if akBaseObject.HasKeyword(ArmorGauntlets) || akBaseObject.HasKeyword(ClothingHands)
+		elseif akBaseObject.HasKeyword(ArmorGauntlets) || akBaseObject.HasKeyword(ClothingHands)
 			CampDebug(1, "Unequipped gloves!")
-			bEventRaised = SendEvent_OnGearUnequipped(akBaseObject, 2)
 			CampData.CurrentHands = none
-		endif
-		if akBaseObject.HasKeyword(ArmorHelmet) || akBaseObject.HasKeyword(ClothingHead)
+		elseif akBaseObject.HasKeyword(ArmorHelmet) || akBaseObject.HasKeyword(ClothingHead)
 			CampDebug(1, "Unequipped helmet!")
-			bEventRaised = SendEvent_OnGearUnequipped(akBaseObject, 3)
 			CampData.CurrentHead = none
-		endif
-		if akBaseObject.HasKeyword(ArmorBoots) || akBaseObject.HasKeyword(ClothingFeet)
+		elseif akBaseObject.HasKeyword(ArmorBoots) || akBaseObject.HasKeyword(ClothingFeet)
 			CampDebug(1, "Unequipped boots!")
-			bEventRaised = SendEvent_OnGearUnequipped(akBaseObject, 4)
 			CampData.CurrentFeet = none
-		endif
-		if _Camp_Backpacks.HasForm(akBaseObject)
-			bEventRaised = SendEvent_OnGearUnequipped(akBaseObject, 5)
+		elseif _Camp_Backpacks.HasForm(akBaseObject)
 			CampData.CurrentBackpack = none
 		endif
-		
-		;Cloak check
-		if !bEventRaised
-			bool b = SendEvent_OnGearUnequipped(akBaseObject, 7)
-		endif
-		
 	elseif akBaseObject as Ammo
 		CampDebug(1, "Setting ammo to none")
 		CampData.CurrentAmmo = none
-		bool b = SendEvent_OnGearUnequipped(akBaseObject, 6)
 	endif
+	
 	processing_unequip = false
 endEvent
 
@@ -84,130 +67,31 @@ function ProcessEquippedObject(Form akBaseObject)
 	endWhile
 	CampDebug(0, "Processing equipped object")
 	WaitMenuMode(0.1)	;Helps prevent a race condition when switching equipment.
-	bool bEventRaised = false
 
 	if akBaseObject.HasKeyword(ArmorCuirass) || akBaseObject.HasKeyword(ClothingBody)
 		CampDebug(1, "The player equipped a piece of body armor.")
 		CampData.CurrentBody = akBaseObject as Armor
-		bEventRaised = SendEvent_OnGearEquipped(akBaseObject, 1)
-		
-	endif
-	if akBaseObject.HasKeyword(ArmorGauntlets) || akBaseObject.HasKeyword(ClothingHands)
+	elseif akBaseObject.HasKeyword(ArmorGauntlets) || akBaseObject.HasKeyword(ClothingHands)
 		CampDebug(1, "The player equipped a piece of hand armor.")
 		CampData.CurrentHands = akBaseObject as Armor
-		bEventRaised = SendEvent_OnGearEquipped(akBaseObject, 2)
-	endif
-	if akBaseObject.HasKeyword(ArmorHelmet) || akBaseObject.HasKeyword(ClothingHead)
+	elseif akBaseObject.HasKeyword(ArmorHelmet) || akBaseObject.HasKeyword(ClothingHead)
 		CampDebug(1, "The player equipped a piece of head armor.")
 		CampData.CurrentHead = akBaseObject as Armor
-		bEventRaised = SendEvent_OnGearEquipped(akBaseObject, 3)
-	endif
-	if akBaseObject.HasKeyword(ArmorBoots) || akBaseObject.HasKeyword(ClothingFeet)	
+	elseif akBaseObject.HasKeyword(ArmorBoots) || akBaseObject.HasKeyword(ClothingFeet)	
 		CampDebug(1, "The player equipped a piece of feet armor.")
 		CampData.CurrentFeet = akBaseObject as Armor
-		bEventRaised = SendEvent_OnGearEquipped(akBaseObject, 4)
-	endif
-	if !bEventRaised
-		if _Camp_Backpacks.HasForm(akBaseObject)
-			CampDebug(1, "The player equipped a backpack.")
-			CampData.CurrentBackpack = akBaseObject as Armor
-			bool b = SendEvent_OnGearEquipped(akBaseObject, 5)
-		elseif akBaseObject as Ammo
-			CampDebug(1, "The player equipped ammo.")
-			CampData.CurrentAmmo = akBaseObject as Ammo
-			bool b = SendEvent_OnGearEquipped(akBaseObject, 6)
-		else
-			;This object might be what Frostfall considers a cloak.
-			CampDebug(1, "The player equipped a cloak." + akBaseObject)
-			bool b = SendEvent_OnGearEquipped(akBaseObject, 7)
-		endif
+	elseif _Camp_Backpacks.HasForm(akBaseObject)
+		CampDebug(1, "The player equipped a backpack.")
+		CampData.CurrentBackpack = akBaseObject as Armor
+	elseif akBaseObject as Ammo
+		CampDebug(1, "The player equipped ammo.")
+		CampData.CurrentAmmo = akBaseObject as Ammo
+	else
+		CampDebug(1, "The player equipped a miscellaneous object, " + akBaseObject)
 	endif
 endFunction
 
-bool function SendEvent_OnGearEquipped(Form akBaseObject, int iGearType)
-	;===========
-	;Parameters
-	;===========
-	;	akBaseObject: The base object the actor just equipped.
-	;	iGearType: The type of gear the actor equipped, which is one of the following values:
-	;		1: Body gear (Armor, clothing)
-	;		2: Hands gear (Gauntlets, gloves)
-	;		3: Head gear (Helmet, hat, hoods)
-	;		4: Foot gear (Boots, shoes)
-	;		5: Backpack
-	;		6: Ammo
-	;		7: Other (could be shield, cloak, etc)
-	;===========
-	;Notes
-	;===========
-	;	* The intent of this event is to notify when a piece of visual worn gear
-	;	  (armor, clothing, backpacks, ammo, etc) is equipped, instead of every equipped
-	;	  object. Primarily, the emphasis is on gear that has a substantive gameplay purpose
-	;	  (not purely cosmetic or utility equipment).
-	;
-	;	* This event can be raised multiple times for the same Base Object if that object
-	;	  is a set of "compound" gear (i.e. having more than one matching keyword, such 
-	;	  as ArmorBody AND ArmorGauntlets), allowing you to act on each part of an otherwise
-	;	  "one piece" set of gear (example: Vagabond Armor (Immersive Armors), which has both
-	;	  body armor and a cloak).
-	;
-	;	* Unlike OnObjectEquipped, this event filters results based on the equipped item's
-	;	  slot mask. Gear that utilizes slots 61 - 53, 51 - 47, or 45 will not be returned.
-	;	  Slot 52 is not checked for compatibility reasons. These slots are checked in 
-	;	  order of greatest to smallest, so if a piece of gear uses slots 61 and 30, it will 
-	;	  be filtered out and this event will not be raised when the object is equipped.
-	;
-	;	* This event is not raised when weapons are equipped.
-
-	if GetCompatibilitySystem().IsFrostfallLoaded
-		FrostUtil.GetClothingSystem().ObjectEquipped(akBaseObject, iGearType)
-	endif
-
-	return true
-endFunction
-
-bool function SendEvent_OnGearUnequipped(Form akBaseObject, int iGearType)
-	;===========
-	;Parameters
-	;===========
-	;	akBaseObject: The base object the actor just unequipped.
-	;	iGearType: The type of gear the actor unequipped, which is one of the following values:
-	;		1: Body gear (Armor, clothing)
-	;		2: Hands gear (Gauntlets, gloves)
-	;		3: Head gear (Helmet, hat, hoods)
-	;		4: Foot gear (Boots, shoes)
-	;		5: Backpack
-	;		6: Ammo
-	;		7: Other (could be shield, cloak, etc)
-	;===========
-	;Notes
-	;===========
-	;	* The intent of this event is to notify when a piece of visual worn gear
-	;	  (armor, clothing, backpacks, ammo, etc) is unequipped, instead of every unequipped
-	;	  object. Primarily, the emphasis is on gear that has a substantive gameplay purpose
-	;	  (not purely cosmetic or utility equipment).
-	;
-	;	* This event can be raised multiple times for the same Base Object if that object
-	;	  is a set of "compound" gear (i.e. having more than one matching keyword, such 
-	;	  as ArmorBody AND ArmorGauntlets), allowing you to act on each part of an otherwise
-	;	  "one piece" set of gear (example: Vagabond Armor (Immersive Armors), which has both
-	;	  body armor and a cloak).
-	;
-	;	* Unlike OnObjectUnequipped, this event filters results based on the unequipped item's
-	;	  slot mask. Gear that utilizes slots 61 - 53, 51 - 47, or 45 will not be returned.
-	;	  Slot 52 is not checked for compatibility reasons. These slots are checked in 
-	;	  order of greatest to smallest, so if a piece of gear uses slots 61 and 30, it will 
-	;	  be filtered out and this event will not be raised when the object is unequipped.
-	;
-	;	* This event is not raised when weapons are unequipped.
-
-	if GetCompatibilitySystem().IsFrostfallLoaded
-		FrostUtil.GetClothingSystem().ObjectUnequipped(akBaseObject, iGearType)
-	endif
-
-	return true
-endFunction
-
+;@TODO - Do I even need this anymore?
 bool function GetUsesMainBodySlot(Form akBaseObject)
 	; Requires SKSE
 	; Checks if akBaseObject uses one of the main gear slots for the body (30-39,41-43)

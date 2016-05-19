@@ -1568,7 +1568,8 @@ function AEALoadUp()
 endFunction
 
 function WACLoadUp()
-	_WetIsUnderShelterFaction = Game.GetFormFromFile(0x07119C, "WetandCold.esp") as Faction
+	;@TODO
+	; _WetIsUnderShelterFaction = Game.GetFormFromFile(0x07119C, "WetandCold.esp") as Faction
 
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
