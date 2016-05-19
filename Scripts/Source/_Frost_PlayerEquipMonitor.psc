@@ -8,6 +8,8 @@ Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
 	elseif akBaseObject as Armor
 		if (akBaseObject as Armor).IsShield()
 			SendEvent_ShieldEquipped(akBaseObject)
+		else
+			GetClothingSystem().ObjectEquipped(akBaseObject)
 		endif
 	endif
 EndEvent
@@ -18,6 +20,8 @@ Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 	elseif akBaseObject as Armor
 		if (akBaseObject as Armor).IsShield()
 			SendEvent_ShieldEquipped(akBaseObject, false)
+		else
+			GetClothingSystem().ObjectUnequipped(akBaseObject)
 		endif
 	endif
 EndEvent
@@ -30,6 +34,7 @@ function SendEvent_UpdateWarmth()
     endif
 endFunction
 
+;@TODO - Do I need this?
 function SendEvent_ShieldEquipped(Form akBaseObject, bool abEquipped = true)
 	_FrostInternal.FrostDebug(0, "Sending event Frost_ShieldEquipped")
     int handle = ModEvent.Create("Frost_ShieldEquipped")
