@@ -482,8 +482,6 @@ endFunction
 
 ; Lilac Mock States ===========================================================
 
-
-
 int property mock_AddWornGearEntryForArmorEquipped_callcount = 0 auto hidden
 
 State mock_testObjectEquipped
