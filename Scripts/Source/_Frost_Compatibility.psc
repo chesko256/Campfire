@@ -1035,7 +1035,6 @@ endFunction
 
 function RegisterForEventsOnLoad()
 	GetExposureSystem().RegisterForEvents()
-	GetClothingSystem().RegisterForEvents()
 	GetWetnessSystem().RegisterForEvents()
 	GetClimateSystem().RegisterForEvents()
 	GetWarmthSystem().RegisterForEvents()

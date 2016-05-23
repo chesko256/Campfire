@@ -8,6 +8,7 @@ Armor property ArmorIronCuirass auto
 Armor property ArmorIronGauntlets auto
 Armor property ArmorIronBoots auto
 Armor property ArmorIronHelmet auto
+Armor property ArmorIronShield auto
 Armor property _Camp_Cloak_BasicBurlap auto
 Weapon property Axe01 auto
 
@@ -27,6 +28,7 @@ endFunction
 function TestSuites()
 	describe("Clothing System ObjectEquipped", ClothingSystem_ObjectEquippedSuite())
 	describe("Clothing System AddWornGearEntryForArmorEquipped", ClothingSystem_AddWornGearEntryForArmorEquippedSuite())
+	describe("Clothing System RecalculateProtectionData", ClothingSystem_RecalculateProtectionDataSuite())
 endFunction
 
 function ClothingSystem_ObjectEquippedSuite()
@@ -42,9 +44,20 @@ function ClothingSystem_AddWornGearEntryForArmorEquippedSuite()
 	it("should store the correct worn item data for hands equipment", testAddWornGearEntryForArmorEquipped_HandsGear())
 	it("should store the correct worn item data for feet equipment", testAddWornGearEntryForArmorEquipped_FeetGear())
 	it("should store the correct worn item data for cloak equipment", testAddWornGearEntryForArmorEquipped_CloakGear())
-	;it("should store the correct worn item data for misc equipment", testAddWornGearEntryForArmorEquipped_MiscGear())
+	it("should store the correct worn item data for misc equipment", testAddWornGearEntryForArmorEquipped_MiscGear())
 	it("should store the correct worn item data for all equipment types simultaneously", testAddWornGearEntryForArmorEquipped_AllGear())
 endFunction
+
+function ClothingSystem_RecalculateProtectionDataSuite()
+	it("should calc the right warmth and coverage when wearing body gear", testRecalculate_BodyGear())
+	it("should calc the right warmth and coverage when wearing body, head, hands and feet gear", testRecalculate_FullGear())
+	it("should calc the right warmth and coverage when wearing body, head, hands, feet, cloak, and shield", testRecalculate_AllGear())
+	it("should calc the right warmth and coverage when wearing a body gear with extra head data, and real head gear", testRecalculate_ConflictHead())
+	it("should calc the right warmth and coverage when wearing a body gear with extra cloak data and a real cloak", testRecalculate_ConflictCloak())
+	it("should calc the right warmth and coverage when wearing a body gear with extra cloak data", testRecalculate_ExtraCloak())
+	it("should calc the right warmth and coverage when wearing a body gear with extra head and cloak data with a real cloak", testRecalculate_ConflictCloak2())
+	it("should calc the right warmth and coverage when wearing body, head, hands, feet, cloak and sum all Misc gear", testRecalculate_Misc())
+endfunction
 
 function beforeEach_ObjectEquippedSuite()
 	clothing.mock_AddWornGearEntryForArmorEquipped_callcount = 0
@@ -140,7 +153,6 @@ function testAddWornGearEntryForArmorEquipped_BodyGear()
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, armor_key, 12), to, beEqualTo, 0)
 	
 	StorageUtil.IntListClear(_Frost_WornGearData_mock, armor_key)
-
 	afterEach_AddWornGearEntryForArmorEquippedSuite()
 endFunction
 
@@ -171,7 +183,6 @@ function testAddWornGearEntryForArmorEquipped_HeadGear()
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, armor_key, 12), to, beEqualTo, 0)
 	
 	StorageUtil.IntListClear(_Frost_WornGearData_mock, armor_key)
-
 	afterEach_AddWornGearEntryForArmorEquippedSuite()
 endFunction
 
@@ -202,7 +213,6 @@ function testAddWornGearEntryForArmorEquipped_HandsGear()
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, armor_key, 12), to, beEqualTo, 0)
 	
 	StorageUtil.IntListClear(_Frost_WornGearData_mock, armor_key)
-
 	afterEach_AddWornGearEntryForArmorEquippedSuite()
 endFunction
 
@@ -233,7 +243,6 @@ function testAddWornGearEntryForArmorEquipped_FeetGear()
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, armor_key, 12), to, beEqualTo, 0)
 	
 	StorageUtil.IntListClear(_Frost_WornGearData_mock, armor_key)
-
 	afterEach_AddWornGearEntryForArmorEquippedSuite()
 endFunction
 
@@ -264,12 +273,36 @@ function testAddWornGearEntryForArmorEquipped_CloakGear()
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, armor_key, 12), to, beEqualTo, 0)
 	
 	StorageUtil.IntListClear(_Frost_WornGearData_mock, armor_key)
-
 	afterEach_AddWornGearEntryForArmorEquippedSuite()
 endFunction
 
 function testAddWornGearEntryForArmorEquipped_MiscGear()
+	beforeEach_AddWornGearEntryForArmorEquippedSuite()
 
+	ds.mock_GetArmorProtectionData_value = new int[16]
+	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_MISC
+	ds.mock_GetArmorProtectionData_value[1] = 0
+	ds.mock_GetArmorProtectionData_value[2] = 20
+	bool b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronShield, mockWornGearKeys, _Frost_WornGearData_mock)
+
+	string misc_key = "77494___Skyrim.esm"
+	expectString(mockWornGearKeys[0], to, beEqualTo, misc_key)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 0), to, beEqualTo, ds.GEARTYPE_MISC)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 1), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 2), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 3), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 4), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 5), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 6), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 7), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 8), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 9), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 10), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 11), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 12), to, beEqualTo, 20)
+
+	StorageUtil.IntListClear(_Frost_WornGearData_mock, misc_key)
+	afterEach_AddWornGearEntryForArmorEquippedSuite()
 endFunction
 
 function testAddWornGearEntryForArmorEquipped_AllGear()
@@ -305,11 +338,18 @@ function testAddWornGearEntryForArmorEquipped_AllGear()
 	ds.mock_GetArmorProtectionData_value[2] = 5
 	b = clothing.AddWornGearEntryForArmorEquipped(_Camp_Cloak_BasicBurlap, mockWornGearKeys, _Frost_WornGearData_mock)
 
+	ds.mock_GetArmorProtectionData_value = new int[16]
+	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_MISC
+	ds.mock_GetArmorProtectionData_value[1] = 0
+	ds.mock_GetArmorProtectionData_value[2] = 20
+	b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronShield, mockWornGearKeys, _Frost_WornGearData_mock)
+
 	string body_key = "77385___Skyrim.esm"
 	string head_key = "77389___Skyrim.esm"
 	string hands_key = "77382___Skyrim.esm"
 	string feet_key = "77387___Skyrim.esm"
 	string cloak_key = "260764___Campfire.esm"
+	string misc_key = "77494___Skyrim.esm"
 
 	expectString(mockWornGearKeys[0], to, beEqualTo, body_key)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, body_key, 0), to, beEqualTo, ds.GEARTYPE_BODY)
@@ -385,12 +425,28 @@ function testAddWornGearEntryForArmorEquipped_AllGear()
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, cloak_key, 10), to, beEqualTo, 5)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, cloak_key, 11), to, beEqualTo, 0)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, cloak_key, 12), to, beEqualTo, 0)
+
+	expectString(mockWornGearKeys[5], to, beEqualTo, misc_key)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 0), to, beEqualTo, ds.GEARTYPE_MISC)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 1), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 2), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 3), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 4), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 5), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 6), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 7), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 8), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 9), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 10), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 11), to, beEqualTo, 0)
+	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 12), to, beEqualTo, 20)
 	
 	StorageUtil.IntListClear(_Frost_WornGearData_mock, body_key)
 	StorageUtil.IntListClear(_Frost_WornGearData_mock, head_key)
 	StorageUtil.IntListClear(_Frost_WornGearData_mock, hands_key)
 	StorageUtil.IntListClear(_Frost_WornGearData_mock, feet_key)
 	StorageUtil.IntListClear(_Frost_WornGearData_mock, cloak_key)
+	StorageUtil.IntListClear(_Frost_WornGearData_mock, misc_key)
 
 	afterEach_AddWornGearEntryForArmorEquippedSuite()
 endFunction
