@@ -224,7 +224,6 @@ function RecalculateProtectionData(string[] asWornGearKeysArray, int[] aiWornGea
     
     int key_count = ArrayCountString(asWornGearKeysArray)
     int i = 0
-    ;debug.trace("key_count " + key_count)
     int type_counter = -1
     int type_to_match = 1
 
@@ -240,18 +239,13 @@ function RecalculateProtectionData(string[] asWornGearKeysArray, int[] aiWornGea
 
         bool gear_type_found = false
         while j < key_count && !gear_type_found
-            ;debug.trace("j = " + j)
-            ;debug.trace("asWornGearKeysArray[j] = " + asWornGearKeysArray[j])
             int gear_type = StorageUtil.IntListGet(akWornGearData, asWornGearKeysArray[j], 0)
             int val = StorageUtil.IntListGet(akWornGearData, asWornGearKeysArray[j], i + 1)
-            ;debug.trace("gear_type " + gear_type + " val " + val)
+    
             if type_to_match != handler.GEARTYPE_MISC
-                ;debug.trace("NOT Misc type")
                 ; Native type takes priority
                 if gear_type == type_to_match
-                    ;debug.trace("gear_type == type_to_match")
                     column_value = val
-                    ;debug.trace("column_value " + column_value)
                     gear_type_found = true
                 else
                     ; Otherwise, take the highest Extra value
@@ -274,12 +268,12 @@ function RecalculateProtectionData(string[] asWornGearKeysArray, int[] aiWornGea
     FrostDebug(0, "Worn Gear Values: " + aiWornGearValuesArray)
 endFunction
 
-int function GetArmorWarmth()
-    return WornGearValues[0] + WornGearValues[2] + WornGearValues[4] + WornGearValues[6] + WornGearValues[8] + WornGearValues[10]
+int function GetArmorWarmth(int[] aiWornGearValuesArray)
+    return aiWornGearValuesArray[0] + aiWornGearValuesArray[2] + aiWornGearValuesArray[4] + aiWornGearValuesArray[6] + aiWornGearValuesArray[8] + aiWornGearValuesArray[10]
 endFunction
 
-int function GetArmorCoverage()
-    return WornGearValues[1] + WornGearValues[3] + WornGearValues[5] + WornGearValues[7] + WornGearValues[9] + WornGearValues[11]
+int function GetArmorCoverage(int[] aiWornGearValuesArray)
+    return aiWornGearValuesArray[1] + aiWornGearValuesArray[3] + aiWornGearValuesArray[5] + aiWornGearValuesArray[7] + aiWornGearValuesArray[9] + aiWornGearValuesArray[11]
 endFunction
 
 Event OnUpdate()

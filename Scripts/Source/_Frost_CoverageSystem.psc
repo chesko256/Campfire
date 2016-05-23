@@ -15,7 +15,8 @@ endFunction
 
 Event UpdateCoverage()
 	int coverage
-	coverage += GetClothingSystem().GetArmorCoverage()
+	_Frost_ClothingSystem clothing = GetClothingSystem()
+	coverage += clothing.GetArmorCoverage(clothing.WornGearValues)
 	if windbreaker_perk_active
 		coverage += Math.Ceiling(coverage * 0.25)
 	endif

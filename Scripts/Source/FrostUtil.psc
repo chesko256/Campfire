@@ -1687,7 +1687,7 @@ int gear_warmth = FrostUtil.GetPlayerArmorWarmth()
 * the player's total Warmth value. If you want the total Warmth, use GetPlayerWarmth() instead.
 ;*********/;
     _Frost_ClothingSystem clothing_system = GetClothingSystem()
-    return clothing_system.GetArmorWarmth()
+    return clothing_system.GetArmorWarmth(clothing_system.WornGearValues)
 endFunction
 
 ;/********f* FrostUtil/GetPlayerArmorCoverage
@@ -1715,7 +1715,7 @@ int gear_coverage = FrostUtil.GetPlayerArmorCoverage()
 * the player's total Coverage value. If you want the total Coverage, use GetPlayerCoverage() instead.
 ;*********/;
     _Frost_ClothingSystem clothing_system = GetClothingSystem()
-    return clothing_system.GetArmorCoverage()
+    return clothing_system.GetArmorCoverage(clothing_system.WornGearValues)
 endFunction
 
 ;/********f* FrostUtil/ArmorProtectionDataExists
