@@ -276,6 +276,8 @@ int function GetArmorCoverage(int[] aiWornGearValuesArray)
     return aiWornGearValuesArray[1] + aiWornGearValuesArray[3] + aiWornGearValuesArray[5] + aiWornGearValuesArray[7] + aiWornGearValuesArray[9] + aiWornGearValuesArray[11]
 endFunction
 
+; Only runs if the SkyUI Package is not installed. Displays warmth and coverage
+; in a debug notification.
 Event OnUpdate()
     ; Suppress this message when getting into / out of a tent
     if PlayerRef.GetSitState() > 0
