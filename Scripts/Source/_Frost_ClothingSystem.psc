@@ -83,7 +83,7 @@ function ObjectEquipped(Form akBaseObject)
     bool update_required = AddWornGearEntryForArmorEquipped(akBaseObject as Armor, WornGearKeys, _Frost_WornGearData)
 
     if update_required
-        RecalculateProtectionData(WornGearKeys, _Frost_WornGearData)
+        RecalculateProtectionData(WornGearKeys, WornGearValues, _Frost_WornGearData)
     endif
 
     SendEvent_UpdateWarmthAndCoverage()
@@ -135,7 +135,7 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, string[] asWornGea
         ; 10 - cloak coverage
         ; 11 - misc warmth
         ; 12 - misc coverage
-        StorageUtil.IntListResize(akWornGearData, dskey, 15)
+        StorageUtil.IntListResize(akWornGearData, dskey, 13)
         StorageUtil.IntListSet(akWornGearData, dskey, 0, type) ; type
         int jdx = (type * 2)
         
@@ -210,7 +210,7 @@ function HandleUnequippedObject(Form akBaseObject)
         StorageUtil.IntListClear(_Frost_WornGearData, dskey)
     endif
 
-    RecalculateProtectionData()
+    RecalculateProtectionData(WornGearKeys, WornGearValues, _Frost_WornGearData)
 endFunction
 
 function RecalculateProtectionData(string[] asWornGearKeysArray, int[] aiWornGearValuesArray, keyword akWornGearData)
@@ -224,27 +224,34 @@ function RecalculateProtectionData(string[] asWornGearKeysArray, int[] aiWornGea
     
     int key_count = ArrayCountString(asWornGearKeysArray)
     int i = 0
-    int j = 0
+    ;debug.trace("key_count " + key_count)
+    int type_counter = -1
+    int type_to_match = 1
 
     while i < 12
+        int j = 0
         int column_value = 0
-        
-        int type_to_match
-        if !IsEven(i)
-            type_to_match = (i / 2)
-        else
-            type_to_match = (i / 2) + 1
+
+        type_counter += 1
+        if type_counter == 2
+            type_counter = 0
+            type_to_match += 1
         endif
 
         bool gear_type_found = false
         while j < key_count && !gear_type_found
+            ;debug.trace("j = " + j)
+            ;debug.trace("asWornGearKeysArray[j] = " + asWornGearKeysArray[j])
             int gear_type = StorageUtil.IntListGet(akWornGearData, asWornGearKeysArray[j], 0)
-            int val = StorageUtil.IntListGet(akWornGearData, asWornGearKeysArray[j], i)
-
+            int val = StorageUtil.IntListGet(akWornGearData, asWornGearKeysArray[j], i + 1)
+            ;debug.trace("gear_type " + gear_type + " val " + val)
             if type_to_match != handler.GEARTYPE_MISC
+                ;debug.trace("NOT Misc type")
                 ; Native type takes priority
                 if gear_type == type_to_match
+                    ;debug.trace("gear_type == type_to_match")
                     column_value = val
+                    ;debug.trace("column_value " + column_value)
                     gear_type_found = true
                 else
                     ; Otherwise, take the highest Extra value
@@ -260,11 +267,11 @@ function RecalculateProtectionData(string[] asWornGearKeysArray, int[] aiWornGea
         endWhile
 
         ; Result for this column
-        WornGearValues[i] = column_value
+        aiWornGearValuesArray[i] = column_value
         i += 1
     endWhile
 
-    FrostDebug(0, "Worn Gear Values: " + WornGearValues)
+    FrostDebug(0, "Worn Gear Values: " + aiWornGearValuesArray)
 endFunction
 
 int function GetArmorWarmth()
@@ -499,7 +506,3 @@ State mock_testObjectEquipped
     endFunction
 
 EndState
-
-State mock_testAddWornGearEntryForArmorEquipped
-
-endState
