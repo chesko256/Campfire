@@ -57,10 +57,6 @@ function StartUp()
     WornGearValues = new int[12]
 endFunction
 
-function RegisterForEvents()
-    RegisterForModEvent("Frost_ShieldEquipped", "ShieldEquipped")
-endFunction 
-
 function RaceChanged()
     if PlayerRef.GetRace().HasKeyword(ActorTypeCreature) || PlayerRef.GetRace().HasKeyword(ImmuneParalysis)
         FrostDebug(1, "I am now a werewolf or vampire lord.")
@@ -87,14 +83,14 @@ function ObjectEquipped(Form akBaseObject)
     bool update_required = AddWornGearEntryForArmorEquipped(akBaseObject as Armor, WornGearKeys, _Frost_WornGearData)
 
     if update_required
-        RecalculateProtectionData()
+        RecalculateProtectionData(WornGearKeys, _Frost_WornGearData)
     endif
 
     SendEvent_UpdateWarmthAndCoverage()
     DisplayWarmthCoverageNoSkyUIPkg(akBaseObject as Armor)
 endFunction
 
-bool function AddWornGearEntryForArmorEquipped(Armor akArmor, string[] aiWornGearKeysArray, keyword akWornGearData)
+bool function AddWornGearEntryForArmorEquipped(Armor akArmor, string[] asWornGearKeysArray, keyword akWornGearData)
     ; Assign protection data to the correct internal slots and store the results.
     ; Return True if recalculation of warmth and coverage is necessary, false otherwise.
     
@@ -117,12 +113,12 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, string[] aiWornGea
     ; The system will keep any number of warmth/coverage values for Misc.
     ; Explicit gear types win over extra part data.
     string dskey = handler.GetDatastoreKeyFromForm(akArmor)
-    int idx = aiWornGearKeysArray.Find(dskey)
+    int idx = asWornGearKeysArray.Find(dskey)
     ;@TODO: Also check the data store
     ;@TODO: Handle ignore flag
     if idx == -1
         ; plug the data in
-        ArrayAddString(aiWornGearKeysArray, dskey)
+        ArrayAddString(asWornGearKeysArray, dskey)
         ;@TODO: Assume we get the type
         int type = armor_data[0]
         ;@TODO: no type?
@@ -217,15 +213,7 @@ function HandleUnequippedObject(Form akBaseObject)
     RecalculateProtectionData()
 endFunction
 
-Event ShieldEquipped(Form akBaseObject, bool abEquipped)
-    if abEquipped
-        ObjectEquipped(akBaseObject)
-    else
-        ObjectUnequipped(akBaseObject)
-    endif
-endEvent
-
-function RecalculateProtectionData()
+function RecalculateProtectionData(string[] asWornGearKeysArray, int[] aiWornGearValuesArray, keyword akWornGearData)
     ;/
         Iterates over a "table" of values in the form below to determine total Warmth and Coverage.
     /;
@@ -234,7 +222,7 @@ function RecalculateProtectionData()
     ; | WornGearKeys              | Type | Body Warm | Body Cov | ... | Misc Warm | Misc Cov |
     ; | "80145___Skyrim.esm"      | 1    | 60        | 0        |     | 0         | 0        |
     
-    int key_count = ArrayCountString(WornGearKeys)
+    int key_count = ArrayCountString(asWornGearKeysArray)
     int i = 0
     int j = 0
 
@@ -250,8 +238,8 @@ function RecalculateProtectionData()
 
         bool gear_type_found = false
         while j < key_count && !gear_type_found
-            int gear_type = StorageUtil.IntListGet(_Frost_WornGearData, WornGearKeys[j], 0)
-            int val = StorageUtil.IntListGet(_Frost_WornGearData, WornGearKeys[j], i)
+            int gear_type = StorageUtil.IntListGet(akWornGearData, asWornGearKeysArray[j], 0)
+            int val = StorageUtil.IntListGet(akWornGearData, asWornGearKeysArray[j], i)
 
             if type_to_match != handler.GEARTYPE_MISC
                 ; Native type takes priority
@@ -497,7 +485,7 @@ int property mock_AddWornGearEntryForArmorEquipped_callcount = 0 auto hidden
 
 State mock_testObjectEquipped
 
-    bool function AddWornGearEntryForArmorEquipped(Armor akArmor, string[] aiWornGearKeysArray, keyword akWornGearData)
+    bool function AddWornGearEntryForArmorEquipped(Armor akArmor, string[] asWornGearKeysArray, keyword akWornGearData)
         mock_AddWornGearEntryForArmorEquipped_callcount += 1
         return false
     endFunction
