@@ -29,6 +29,7 @@ function TestSuites()
 	describe("Clothing System ObjectEquipped", ClothingSystem_ObjectEquippedSuite())
 	describe("Clothing System AddWornGearEntryForArmorEquipped", ClothingSystem_AddWornGearEntryForArmorEquippedSuite())
 	describe("Clothing System RecalculateProtectionData", ClothingSystem_RecalculateProtectionDataSuite())
+	describe("Clothing System GetArmorData", ClothingSystem_GetArmorDataSuite())
 endFunction
 
 
@@ -63,6 +64,11 @@ function ClothingSystem_RecalculateProtectionDataSuite()
 	it("should calc the right warmth and coverage when wearing a body gear with extra cloak and head data and a real cloak", testRecalculate_ConflictCloak())
 	it("should calc the right warmth and coverage when wearing body, head, hands, feet, cloak and sum all Misc gear", testRecalculate_Misc())
 endfunction
+
+function ClothingSystem_GetArmorDataSuite()
+	it("should return the player's total armor warmth", testGetArmorWarmth())
+	it("should return the player's total armor coverage", testGetArmorCoverage())
+endFunction
 
 
 ; Before / After Each =========================================================
@@ -104,6 +110,14 @@ endFunction
 
 function afterEach_RecalculateProtectionDataSuite()
 	mockWornGearKeys = new string[31]
+	mockWornGearValues = new int[12]
+endFunction
+
+function beforeEach_GetArmorData()
+	mockWornGearValues = new int[12]
+endFunction
+
+function afterEach_GetArmorData()
 	mockWornGearValues = new int[12]
 endFunction
 
@@ -1019,9 +1033,9 @@ function testRecalculate_Misc()
 	mockWornGearKeys[3] = feet_key
 	mockWornGearKeys[4] = cloak_key
 	mockWornGearKeys[5] = misc_key1
-	mockWornGearKeys[5] = misc_key2
-	mockWornGearKeys[5] = misc_key3
-	mockWornGearKeys[5] = misc_key4
+	mockWornGearKeys[6] = misc_key2
+	mockWornGearKeys[7] = misc_key3
+	mockWornGearKeys[8] = misc_key4
 
 	StorageUtil.IntListResize(_Frost_WornGearData_mock, body_key, 13)
 	StorageUtil.IntListSet(_Frost_WornGearData_mock, body_key, 0, ds.GEARTYPE_BODY) ; type
@@ -1184,4 +1198,51 @@ function testRecalculate_Misc()
 	StorageUtil.IntListClear(_Frost_WornGearData_mock, misc_key4)
 	
 	afterEach_RecalculateProtectionDataSuite()
+endFunction
+
+
+function testGetArmorWarmth()
+	beforeEach_GetArmorData()
+
+	mockWornGearValues[0] = 75
+	mockWornGearValues[1] = 35
+	mockWornGearValues[2] = 15
+	mockWornGearValues[3] = 3
+	mockWornGearValues[4] = 7
+	mockWornGearValues[5] = 6
+	mockWornGearValues[6] = 7
+	mockWornGearValues[7] = 6
+	mockWornGearValues[8] = 5
+	mockWornGearValues[9] = 5
+	mockWornGearValues[10] = 31
+	mockWornGearValues[11] = 42
+
+	int warmth = clothing.GetArmorWarmth(mockWornGearValues)
+
+	expectInt(warmth, to, beEqualTo, 140)
+
+	afterEach_GetArmorData()
+endFunction
+
+function testGetArmorCoverage()
+	beforeEach_GetArmorData()
+
+	mockWornGearValues[0] = 75
+	mockWornGearValues[1] = 35
+	mockWornGearValues[2] = 15
+	mockWornGearValues[3] = 3
+	mockWornGearValues[4] = 7
+	mockWornGearValues[5] = 6
+	mockWornGearValues[6] = 7
+	mockWornGearValues[7] = 6
+	mockWornGearValues[8] = 5
+	mockWornGearValues[9] = 5
+	mockWornGearValues[10] = 31
+	mockWornGearValues[11] = 42
+
+	int coverage = clothing.GetArmorCoverage(mockWornGearValues)
+
+	expectInt(coverage, to, beEqualTo, 97)
+
+	afterEach_GetArmorData()
 endFunction

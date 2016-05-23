@@ -29,7 +29,8 @@ endFunction
 
 Event UpdateWarmth()
 	int warmth
-	warmth += GetClothingSystem().GetArmorWarmth()
+	_Frost_ClothingSystem clothing = GetClothingSystem()
+	warmth += clothing.GetArmorWarmth(clothing.WornGearValues)
 	if well_insulated_perk_active
 		warmth += Math.Ceiling(warmth * 0.25)
 	endif
