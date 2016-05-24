@@ -163,9 +163,8 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, string[] asWornGea
 endFunction
 
 function ObjectUnequipped(Form akBaseObject)
-
     unequip_lock = true
-    if !akBaseObject
+    if !akBaseObject || !akBaseObject as Armor
         unequip_lock = false
         return
     endif
@@ -173,44 +172,43 @@ function ObjectUnequipped(Form akBaseObject)
         unequip_lock = false
         return
     endif
+
+    ; During start-up, we need to know what to re-equip. Store these in
+    ; 'initial' equipment properties.
     if _Frost_CheckInitialEquipment.GetValueInt() == 2
         Armor armor_object = akBaseObject as Armor
-        if armor_object
-            int armor_mask = armor_object.GetSlotMask()
-            int gear_type = handler.GetGearType(armor_object, armor_mask, abStrictMode = false)
-            if gear_type == handler.GEARTYPE_BODY
-                initial_body = armor_object
-            elseif gear_type == handler.GEARTYPE_HEAD
-                initial_head = armor_object
-            elseif gear_type == handler.GEARTYPE_HANDS
-                initial_hands = armor_object
-            elseif gear_type == handler.GEARTYPE_FEET
-                initial_feet = armor_object
-            elseif gear_type == handler.GEARTYPE_MISC && armor_object.IsShield()
-                initial_shield = armor_object
-            endif
+        int armor_mask = armor_object.GetSlotMask()
+        int gear_type = handler.GetGearType(armor_object, armor_mask, abStrictMode = false)
+        if gear_type == handler.GEARTYPE_BODY
+            initial_body = armor_object
+        elseif gear_type == handler.GEARTYPE_HEAD
+            initial_head = armor_object
+        elseif gear_type == handler.GEARTYPE_HANDS
+            initial_hands = armor_object
+        elseif gear_type == handler.GEARTYPE_FEET
+            initial_feet = armor_object
+        elseif gear_type == handler.GEARTYPE_MISC && armor_object.IsShield()
+            initial_shield = armor_object
         endif
     endif
-    HandleUnequippedObject(akBaseObject)
+    bool update_required = RemoveWornGearEntryForArmorUnequipped(akBaseObject as Armor, WornGearKeys, _Frost_WornGearData)
+    if update_required
+        RecalculateProtectionData(WornGearKeys, WornGearValues, _Frost_WornGearData)
+    endif
     unequip_lock = false
 
     SendEvent_UpdateWarmthAndCoverage()
     DisplayWarmthCoverageNoSkyUIPkgRemove(akBaseObject as Armor)
 endFunction
 
-function HandleUnequippedObject(Form akBaseObject)
-    Armor armor_object = akBaseObject as Armor
-    if !armor_object
-        return
-    endif
-
-    string dskey = handler.GetDatastoreKeyFromForm(armor_object)
-    bool worn_gear_found = ArrayRemoveString(WornGearKeys, dskey, true)
+bool function RemoveWornGearEntryForArmorUnequipped(Armor akArmor, string[] asWornGearKeysArray, keyword akWornGearData)
+    string dskey = handler.GetDatastoreKeyFromForm(akArmor)
+    bool worn_gear_found = ArrayRemoveString(asWornGearKeysArray, dskey, true)
     if worn_gear_found
-        StorageUtil.IntListClear(_Frost_WornGearData, dskey)
+        StorageUtil.IntListClear(akWornGearData, dskey)
+        return true
     endif
-
-    RecalculateProtectionData(WornGearKeys, WornGearValues, _Frost_WornGearData)
+    return false
 endFunction
 
 function RecalculateProtectionData(string[] asWornGearKeysArray, int[] aiWornGearValuesArray, keyword akWornGearData)
@@ -483,11 +481,17 @@ endFunction
 ; Lilac Mock States ===========================================================
 
 int property mock_AddWornGearEntryForArmorEquipped_callcount = 0 auto hidden
+int property mock_RemoveWornGearEntryForArmorUnequipped_callcount = 0 auto hidden
 
 State mock_testObjectEquipped
 
     bool function AddWornGearEntryForArmorEquipped(Armor akArmor, string[] asWornGearKeysArray, keyword akWornGearData)
         mock_AddWornGearEntryForArmorEquipped_callcount += 1
+        return false
+    endFunction
+
+    bool function RemoveWornGearEntryForArmorUnequipped(Armor akArmor, string[] asWornGearKeysArray, keyword akWornGearData)
+        mock_RemoveWornGearEntryForArmorUnequipped_callcount += 1
         return false
     endFunction
 
