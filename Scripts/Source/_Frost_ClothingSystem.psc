@@ -463,7 +463,7 @@ endFunction
 
 bool function IsNone(string akString)
     if akString
-        if akString == ""
+        if akString == "" || akString == None
             return true
         else
             return false
