@@ -1283,6 +1283,24 @@ state mock_GetArmorProtectionData
 	endFunction
 endState
 
+int property mock_GetArmorProtectionDataByKeyword_callcount auto hidden
+int property mock_GetArmorProtectionDataByType_callcount auto hidden
+int property mock_GetArmorProtectionDataByAnalysis_callcount auto hidden
+
+state mock_getArmorProtectionDataByX
+	int[] function GetArmorProtectionDataByKeyword(Armor akArmor)
+		mock_GetArmorProtectionDataByKeyword_callcount += 1
+	endFunction
+
+	int function GetArmorProtectionDataByType(Armor akArmor, int aiStandardKeywordIndex)
+		mock_GetArmorProtectionDataByType_callcount += 1
+	endFunction
+
+	int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
+		mock_GetArmorProtectionDataByAnalysis_callcount += 1
+	endFunction
+endState
+
 
 ; DEPRECATED
 Keyword property _FrostData_ArmorBody auto
