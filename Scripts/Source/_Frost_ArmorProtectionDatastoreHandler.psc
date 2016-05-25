@@ -830,8 +830,6 @@ int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
 endFunction
 
 int[] function GetArmorProtectionData(Armor akArmor)
-    string dskey = GetDatastoreKeyFromForm(akArmor)
-    
     int[] armor_data = GetArmorData(akArmor)
     
     if armor_data[15] == 1 ; Ignore
@@ -1283,21 +1281,35 @@ state mock_GetArmorProtectionData
 	endFunction
 endState
 
+int[] property mock_GetArmorData_value auto hidden
+int[] property mock_GetArmorProtectionDataByKeyword_value auto hidden
+int property mock_GetArmorProtectionDataByType_value auto hidden
+int[] property mock_GetArmorProtectionDataByAnalysis_value auto hidden
+
+int property mock_GetArmorData_callcount auto hidden
 int property mock_GetArmorProtectionDataByKeyword_callcount auto hidden
 int property mock_GetArmorProtectionDataByType_callcount auto hidden
 int property mock_GetArmorProtectionDataByAnalysis_callcount auto hidden
 
 state mock_getArmorProtectionDataByX
+	int[] function GetArmorData(Armor akArmor)
+		mock_GetArmorData_callcount += 1
+		return mock_GetArmorData_value
+	endFunction
+
 	int[] function GetArmorProtectionDataByKeyword(Armor akArmor)
 		mock_GetArmorProtectionDataByKeyword_callcount += 1
+		return mock_GetArmorProtectionDataByKeyword_value
 	endFunction
 
 	int function GetArmorProtectionDataByType(Armor akArmor, int aiStandardKeywordIndex)
 		mock_GetArmorProtectionDataByType_callcount += 1
+		return mock_GetArmorProtectionDataByType_value
 	endFunction
 
 	int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
 		mock_GetArmorProtectionDataByAnalysis_callcount += 1
+		return mock_GetArmorProtectionDataByAnalysis_value
 	endFunction
 endState
 
