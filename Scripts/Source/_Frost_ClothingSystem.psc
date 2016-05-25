@@ -295,7 +295,7 @@ function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor)
         return
     endif
     if !GetCompatibilitySystem().isUIPackageInstalled && FrostfallRunning.GetValueInt() == 2
-        int[] result = handler.GetTotalProtectionValues(akArmor)
+        int[] result = handler.GetTotalArmorProtectionValues(akArmor)
         if result[0] == 0 && result[1] == 0
             return
         endif
@@ -321,7 +321,7 @@ function DisplayWarmthCoverageNoSkyUIPkgRemove(Armor akArmor)
         return
     endif
     if !GetCompatibilitySystem().isUIPackageInstalled && FrostfallRunning.GetValueInt() == 2
-        int[] result = handler.GetTotalProtectionValues(akArmor)
+        int[] result = handler.GetTotalArmorProtectionValues(akArmor)
         if result[0] == 0 && result[1] == 0
             return
         endif
