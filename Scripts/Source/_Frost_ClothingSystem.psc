@@ -64,7 +64,7 @@ function RaceChanged()
         (_Frost_MainQuest as _Frost_ConditionValues).IsBeast = true
         SendEvent_UpdateWarmth()
     else
-        FrostDebug(1, "I am now a werewolf or vampire lord.")
+        FrostDebug(1, "I am now not a werewolf or vampire lord.")
         (_Frost_MainQuest as _Frost_ConditionValues).IsBeast = false
         SendEvent_UpdateWarmth()
     endif
