@@ -392,7 +392,7 @@ bool function ArrayRemoveString(string[] myArray, String myKey, bool bSort = fal
     int i = 0
     while i < myArray.Length
         if myArray[i] == myKey
-            myArray[i] = none
+            myArray[i] = ""
             if bSort == true
                 ArraySortString(myArray)
             endif
@@ -415,7 +415,7 @@ bool function ArraySortString(String[] myArray, int i = 0)
      int iFirstNonePos = i
      while i < myArray.Length
           if IsNone(myArray[i])
-               myArray[i] = none
+               myArray[i] = ""
                if bFirstNoneFound == false
                     bFirstNoneFound = true
                     iFirstNonePos = i
@@ -428,7 +428,7 @@ bool function ArraySortString(String[] myArray, int i = 0)
                ;check to see if it's a couple of blank entries in a row
                     if !(IsNone(myArray[i]))
                          myArray[iFirstNonePos] = myArray[i]
-                         myArray[i] = none
+                         myArray[i] = ""
  
                          ;Call this function recursively until it returns
                          ArraySortString(myArray, iFirstNonePos + 1)
@@ -463,7 +463,7 @@ endFunction
 
 bool function IsNone(string akString)
     if akString
-        if akString == "" || akString == None
+        if akString == ""
             return true
         else
             return false
