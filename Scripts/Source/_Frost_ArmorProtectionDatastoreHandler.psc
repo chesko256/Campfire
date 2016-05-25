@@ -614,7 +614,7 @@ function InitializeDatastore()
 	endif
 endFunction
 
-int[] function GetTotalProtectionValues(Armor akArmor)
+int[] function GetTotalArmorProtectionValues(Armor akArmor)
 	int[] armor_data = new int[2]
 	int[] ap = GetArmorProtectionData(akArmor)
 
