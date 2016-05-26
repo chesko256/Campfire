@@ -765,9 +765,10 @@ int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
 	int armor_mask = akArmor.GetSlotMask()
 
 	; Check exceptions
-	if LogicalAnd(armor_mask, SLOTMASK_CIRCLET)
+	if armor_mask == SLOTMASK_CIRCLET
 		return armor_data
 	endif
+
 	if LogicalAnd(armor_mask, SLOTMASK_RING) || LogicalAnd(armor_mask, SLOTMASK_AMULET)
 		armor_data[15] = 1
 		return armor_data
@@ -780,6 +781,8 @@ int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
 		armor_data[15] = 1
 		return armor_data
 	endif
+
+	armor_data[0] = gear_type
 
 	if gear_type == GEARTYPE_BODY
 		armor_data[1] = DEFAULT_BODY_WARMTH
@@ -811,7 +814,7 @@ int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
 	; Now, check extra data
 	if gear_type != GEARTYPE_HEAD && (LogicalAnd(armor_mask, SLOTMASK_HAIR) || LogicalAnd(armor_mask, SLOTMASK_HEAD))
 		; Coarsely differentiate between hoods and helms
-		if StringUtil.Find(akArmor.GetName(), "hood") != -1
+		if StringUtil.Find(akArmor.GetName(), "hood") != -1 || StringUtil.Find(akArmor.GetName(), "robes") != -1
 			armor_data[5] = DEFAULT_HEADHOOD_WARMTH
 			armor_data[6] = DEFAULT_HEADHOOD_COVERAGE
 		else
