@@ -6,7 +6,9 @@ Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
 	if akBaseObject as Light
 		SendEvent_UpdateWarmth()
 	elseif akBaseObject as Armor
-		GetClothingSystem().ObjectEquipped(akBaseObject)
+		AddEquipEventToQueue(event_queue, akBaseObject, true)
+		ProcessQueue()
+		;GetClothingSystem().ObjectEquipped(akBaseObject)
 	endif
 EndEvent
 
@@ -14,7 +16,9 @@ Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 	if akBaseObject as Light
 		SendEvent_UpdateWarmth()
 	elseif akBaseObject as Armor
-		GetClothingSystem().ObjectUnequipped(akBaseObject)
+		AddEquipEventToQueue(event_queue, akBaseObject, false)
+		ProcessQueue()
+		;GetClothingSystem().ObjectUnequipped(akBaseObject)
 	endif
 EndEvent
 
@@ -28,6 +32,7 @@ endFunction
 
 ; Event Queue =================================================================
 
+bool processing_queue = false
 int queue_frontidx
 int queue_count
 int[] event_queue
@@ -43,7 +48,10 @@ function AddEquipEventToQueue(int[] aiQueue, Form akEntry, bool abEquipped)
 endFunction
 
 function ProcessQueue()
-
+	if !processing_queue
+		;Zhu Li, do the thing!
+		processing_queue = false
+	endif
 endFunction
 
 bool function qEnter(int[] aiQueue, int aiEntry)
