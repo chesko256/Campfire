@@ -19,6 +19,13 @@ Armor property ArmorHideShield auto
 Armor property BurlapCloak auto
 Armor property LeatherCloak auto
 
+Armor property _Frost_UnitTestNormalBody auto
+Armor property _Frost_UnitTestWarmHead auto
+Armor property _Frost_UnitTestVeryWarmFeet auto
+Armor property _Frost_UnitTestWaterproofHands auto
+Armor property _Frost_UnitTestWarmCloak auto
+Armor property _Frost_UnitTestWaterproofShield auto
+
 Armor property _Frost_UnitTestUnknownBody1 auto
 Armor property _Frost_UnitTestUnknownBody2 auto
 Armor property _Frost_UnitTestUnknownHead1 auto
@@ -53,12 +60,12 @@ function ClothingSystemE2EMultipleSuite()
 endFunction
 
 function ClothingSystemE2EStressTests()
-	it("should swap a full set of iron to a full set of leather with no delays")
-	it("should swap a full set of unknown gear to a full set of unknown gear with no delays")
-	it("should swap between iron and leather gear 7 times rapidly")
-	it("should swap between iron and leather gear 25 times rapidly")
-	it("should swap between iron and keyword unit test gear 25 times rapidly")
-	it("should swap between two sets of unknown unit test gear 25 times rapidly")
+	it("should swap a full set of iron to a full set of leather with no delays", testStress_1())
+	it("should swap a full set of unknown gear to a full set of unknown gear with no delays", testStress_2())
+	it("should swap between iron and leather gear a limited number of times rapidly", testStress_3())
+	it("should swap between iron and leather gear a large number of times rapidly", testStress_4())
+	it("should swap between iron and keyword unit test gear a large number of times rapidly", testStress_5())
+	it("should swap between two sets of unknown unit test gear a large number of times rapidly", testStress_6())
 endFunction
 
 
@@ -421,13 +428,193 @@ function testStress_3()
 endFunction
 
 function testStress_4()
+	int starting_warmth = GetPlayerWarmth()
+	int starting_coverage = GetPlayerCoverage()
 
+	; Default start as a Nord
+	expectForm(PlayerRef.GetRace(), to, beEqualTo, NordRace)
+	expectInt(GetPlayerWarmth(), to, beEqualTo, 25)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, 0)
+
+	PlayerRef.EquipItem(ArmorIronCuirass, abSilent = true)
+	PlayerRef.EquipItem(BurlapCloak, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronHelmet, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronGauntlets, abSilent = true)
+	PlayerRef.EquipItem(ArmorLeatherHelmet, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronBoots, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronShield, abSilent = true)
+	PlayerRef.EquipItem(ArmorLeatherGauntlets, abSilent = true)
+	PlayerRef.EquipItem(ArmorHideShield, abSilent = true)
+	PlayerRef.EquipItem(ArmorLeatherBoots, abSilent = true)
+	PlayerRef.EquipItem(ArmorLeatherCuirass, abSilent = true)
+	PlayerRef.EquipItem(LeatherCloak, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronCuirass, abSilent = true)
+	PlayerRef.EquipItem(BurlapCloak, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronHelmet, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronGauntlets, abSilent = true)
+	PlayerRef.EquipItem(ArmorLeatherHelmet, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronBoots, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronShield, abSilent = true)
+	PlayerRef.EquipItem(ArmorLeatherGauntlets, abSilent = true)
+	PlayerRef.EquipItem(ArmorHideShield, abSilent = true)
+	PlayerRef.EquipItem(ArmorLeatherBoots, abSilent = true)
+	PlayerRef.EquipItem(ArmorLeatherCuirass, abSilent = true)
+	PlayerRef.EquipItem(LeatherCloak, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronCuirass, abSilent = true)
+	PlayerRef.EquipItem(BurlapCloak, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronHelmet, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronGauntlets, abSilent = true)
+	PlayerRef.EquipItem(ArmorLeatherHelmet, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronBoots, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronShield, abSilent = true)
+	PlayerRef.EquipItem(ArmorLeatherGauntlets, abSilent = true)
+	PlayerRef.EquipItem(ArmorHideShield, abSilent = true)
+	PlayerRef.EquipItem(ArmorLeatherBoots, abSilent = true)
+	PlayerRef.EquipItem(ArmorLeatherCuirass, abSilent = true)
+	PlayerRef.EquipItem(LeatherCloak, abSilent = true)
+
+	Utility.Wait(0.8)
+
+	; also check integrity of the keys array
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 999)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 999)
+
+	PlayerRef.UnequipItem(ArmorLeatherCuirass, abSilent = true)
+	PlayerRef.UnequipItem(ArmorLeatherHelmet, abSilent = true)
+	PlayerRef.UnequipItem(ArmorLeatherGauntlets, abSilent = true)
+	PlayerRef.UnequipItem(ArmorLeatherBoots, abSilent = true)
+	PlayerRef.UnequipItem(ArmorHideShield, abSilent = true)
+	PlayerRef.UnequipItem(LeatherCloak, abSilent = true)
+	Utility.Wait(0.4)
+
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage)
 endFunction
 
 function testStress_5()
+	int starting_warmth = GetPlayerWarmth()
+	int starting_coverage = GetPlayerCoverage()
 
+	; Default start as a Nord
+	expectForm(PlayerRef.GetRace(), to, beEqualTo, NordRace)
+	expectInt(GetPlayerWarmth(), to, beEqualTo, 25)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, 0)
+
+	PlayerRef.EquipItem(ArmorIronCuirass, abSilent = true)
+	PlayerRef.EquipItem(BurlapCloak, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronHelmet, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronGauntlets, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestWarmHead, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronBoots, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronShield, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestWaterproofHands, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestWaterproofShield, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestVeryWarmFeet, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestNormalBody, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestWarmCloak, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronCuirass, abSilent = true)
+	PlayerRef.EquipItem(BurlapCloak, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronHelmet, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronGauntlets, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestWarmHead, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronBoots, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronShield, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestWaterproofHands, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestWaterproofShield, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestVeryWarmFeet, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestNormalBody, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestWarmCloak, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronCuirass, abSilent = true)
+	PlayerRef.EquipItem(BurlapCloak, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronHelmet, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronGauntlets, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestWarmHead, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronBoots, abSilent = true)
+	PlayerRef.EquipItem(ArmorIronShield, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestWaterproofHands, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestWaterproofShield, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestVeryWarmFeet, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestNormalBody, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestWarmCloak, abSilent = true)
+
+	Utility.Wait(0.8)
+
+	; also check integrity of the keys array
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 999)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 999)
+
+	PlayerRef.UnequipItem(_Frost_UnitTestNormalBody, abSilent = true)
+	PlayerRef.UnequipItem(_Frost_UnitTestWarmHead, abSilent = true)
+	PlayerRef.UnequipItem(_Frost_UnitTestWaterproofHands, abSilent = true)
+	PlayerRef.UnequipItem(_Frost_UnitTestVeryWarmFeet, abSilent = true)
+	PlayerRef.UnequipItem(_Frost_UnitTestWaterproofShield, abSilent = true)
+	PlayerRef.UnequipItem(_Frost_UnitTestWarmCloak, abSilent = true)
+	Utility.Wait(0.4)
+
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage)
 endFunction
 
 function testStress_6()
+	int starting_warmth = GetPlayerWarmth()
+	int starting_coverage = GetPlayerCoverage()
 
+	; Default start as a Nord
+	expectForm(PlayerRef.GetRace(), to, beEqualTo, NordRace)
+	expectInt(GetPlayerWarmth(), to, beEqualTo, 25)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, 0)
+
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownBody1, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownCloak1, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownHead1, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownHands1, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownHead2, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownFeet1, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownShield1, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownHands2, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownShield2, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownFeet2, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownBody2, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownCloak2, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownBody1, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownCloak1, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownHead1, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownHands1, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownHead2, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownFeet1, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownShield1, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownHands2, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownShield2, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownFeet2, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownBody2, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownCloak2, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownBody1, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownCloak1, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownHead1, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownHands1, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownHead2, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownFeet1, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownShield1, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownHands2, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownShield2, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownFeet2, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownBody2, abSilent = true)
+	PlayerRef.EquipItem(_Frost_UnitTestUnknownCloak2, abSilent = true)
+
+	Utility.Wait(0.8)
+
+	; also check integrity of the keys array
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 999)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 999)
+
+	PlayerRef.UnequipItem(_Frost_UnitTestUnknownBody2, abSilent = true)
+	PlayerRef.UnequipItem(_Frost_UnitTestUnknownHead2, abSilent = true)
+	PlayerRef.UnequipItem(_Frost_UnitTestUnknownHands2, abSilent = true)
+	PlayerRef.UnequipItem(_Frost_UnitTestUnknownFeet2, abSilent = true)
+	PlayerRef.UnequipItem(_Frost_UnitTestUnknownShield2, abSilent = true)
+	PlayerRef.UnequipItem(_Frost_UnitTestUnknownCloak2, abSilent = true)
+	Utility.Wait(0.4)
+
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage)
 endFunction
