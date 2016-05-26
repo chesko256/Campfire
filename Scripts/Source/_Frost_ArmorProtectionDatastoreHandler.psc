@@ -375,18 +375,18 @@ function CreateProtectionKeywordValueMaps()
 	StandardMiscValues[10] = COVERAGE_MISC_EXCELLENT
 	StandardMiscValues[11] = COVERAGE_MISC_MAX
 
-	StandardPartIndex[0] = 0
-	StandardPartIndex[1] = 0
-	StandardPartIndex[2] = 0
-	StandardPartIndex[3] = 0
-	StandardPartIndex[4] = 0
-	StandardPartIndex[5] = 0
-	StandardPartIndex[6] = 1
-	StandardPartIndex[7] = 1
-	StandardPartIndex[8] = 1
-	StandardPartIndex[9] = 1
-	StandardPartIndex[10] = 1
-	StandardPartIndex[11] = 1
+	StandardPartIndex[0] = 1
+	StandardPartIndex[1] = 1
+	StandardPartIndex[2] = 1
+	StandardPartIndex[3] = 1
+	StandardPartIndex[4] = 1
+	StandardPartIndex[5] = 1
+	StandardPartIndex[6] = 2
+	StandardPartIndex[7] = 2
+	StandardPartIndex[8] = 2
+	StandardPartIndex[9] = 2
+	StandardPartIndex[10] = 2
+	StandardPartIndex[11] = 2
 
 	OverrideKeywords[0] = _Frost_ExtraBodyWarmthPoor
 	OverrideKeywords[1] = _Frost_ExtraBodyWarmthLow
@@ -534,78 +534,78 @@ function CreateProtectionKeywordValueMaps()
 	OverrideValues[70] = COVERAGE_MISC_EXCELLENT
 	OverrideValues[71] = COVERAGE_MISC_MAX
 
-	OverrideExtraPartIndex[0] = 2
-	OverrideExtraPartIndex[1] = 2
-	OverrideExtraPartIndex[2] = 2
-	OverrideExtraPartIndex[3] = 2
-	OverrideExtraPartIndex[4] = 2
-	OverrideExtraPartIndex[5] = 2
-	OverrideExtraPartIndex[6] = 4
-	OverrideExtraPartIndex[7] = 4
-	OverrideExtraPartIndex[8] = 4
-	OverrideExtraPartIndex[9] = 4
-	OverrideExtraPartIndex[10] = 4
-	OverrideExtraPartIndex[11] = 4
-	OverrideExtraPartIndex[12] = 6
-	OverrideExtraPartIndex[13] = 6
-	OverrideExtraPartIndex[14] = 6
-	OverrideExtraPartIndex[15] = 6
-	OverrideExtraPartIndex[16] = 6
-	OverrideExtraPartIndex[17] = 6
-	OverrideExtraPartIndex[18] = 8
-	OverrideExtraPartIndex[19] = 8
-	OverrideExtraPartIndex[20] = 8
-	OverrideExtraPartIndex[21] = 8
-	OverrideExtraPartIndex[22] = 8
-	OverrideExtraPartIndex[23] = 8
-	OverrideExtraPartIndex[24] = 10
-	OverrideExtraPartIndex[25] = 10
-	OverrideExtraPartIndex[26] = 10
-	OverrideExtraPartIndex[27] = 10
-	OverrideExtraPartIndex[28] = 10
-	OverrideExtraPartIndex[29] = 10
-	OverrideExtraPartIndex[30] = 12
-	OverrideExtraPartIndex[31] = 12
-	OverrideExtraPartIndex[32] = 12
-	OverrideExtraPartIndex[33] = 12
-	OverrideExtraPartIndex[34] = 12
-	OverrideExtraPartIndex[35] = 12
-	OverrideExtraPartIndex[36] = 3
-	OverrideExtraPartIndex[37] = 3
-	OverrideExtraPartIndex[38] = 3
-	OverrideExtraPartIndex[39] = 3
-	OverrideExtraPartIndex[40] = 3
-	OverrideExtraPartIndex[41] = 3
-	OverrideExtraPartIndex[42] = 5
-	OverrideExtraPartIndex[43] = 5
-	OverrideExtraPartIndex[44] = 5
-	OverrideExtraPartIndex[45] = 5
-	OverrideExtraPartIndex[46] = 5
-	OverrideExtraPartIndex[47] = 5
-	OverrideExtraPartIndex[48] = 7
-	OverrideExtraPartIndex[49] = 7
-	OverrideExtraPartIndex[50] = 7
-	OverrideExtraPartIndex[51] = 7
-	OverrideExtraPartIndex[52] = 7
-	OverrideExtraPartIndex[53] = 7
-	OverrideExtraPartIndex[54] = 9
-	OverrideExtraPartIndex[55] = 9
-	OverrideExtraPartIndex[56] = 9
-	OverrideExtraPartIndex[57] = 9
-	OverrideExtraPartIndex[58] = 9
-	OverrideExtraPartIndex[59] = 9
-	OverrideExtraPartIndex[60] = 11
-	OverrideExtraPartIndex[61] = 11
-	OverrideExtraPartIndex[62] = 11
-	OverrideExtraPartIndex[63] = 11
-	OverrideExtraPartIndex[64] = 11
-	OverrideExtraPartIndex[65] = 11
-	OverrideExtraPartIndex[66] = 13
-	OverrideExtraPartIndex[67] = 13
-	OverrideExtraPartIndex[68] = 13
-	OverrideExtraPartIndex[69] = 13
-	OverrideExtraPartIndex[70] = 13
-	OverrideExtraPartIndex[71] = 13
+	OverrideExtraPartIndex[0] = 3
+	OverrideExtraPartIndex[1] = 3
+	OverrideExtraPartIndex[2] = 3
+	OverrideExtraPartIndex[3] = 3
+	OverrideExtraPartIndex[4] = 3
+	OverrideExtraPartIndex[5] = 3
+	OverrideExtraPartIndex[6] = 5
+	OverrideExtraPartIndex[7] = 5
+	OverrideExtraPartIndex[8] = 5
+	OverrideExtraPartIndex[9] = 5
+	OverrideExtraPartIndex[10] = 5
+	OverrideExtraPartIndex[11] = 5
+	OverrideExtraPartIndex[12] = 7
+	OverrideExtraPartIndex[13] = 7
+	OverrideExtraPartIndex[14] = 7
+	OverrideExtraPartIndex[15] = 7
+	OverrideExtraPartIndex[16] = 7
+	OverrideExtraPartIndex[17] = 7
+	OverrideExtraPartIndex[18] = 9
+	OverrideExtraPartIndex[19] = 9
+	OverrideExtraPartIndex[20] = 9
+	OverrideExtraPartIndex[21] = 9
+	OverrideExtraPartIndex[22] = 9
+	OverrideExtraPartIndex[23] = 9
+	OverrideExtraPartIndex[24] = 11
+	OverrideExtraPartIndex[25] = 11
+	OverrideExtraPartIndex[26] = 11
+	OverrideExtraPartIndex[27] = 11
+	OverrideExtraPartIndex[28] = 11
+	OverrideExtraPartIndex[29] = 11
+	OverrideExtraPartIndex[30] = 13
+	OverrideExtraPartIndex[31] = 13
+	OverrideExtraPartIndex[32] = 13
+	OverrideExtraPartIndex[33] = 13
+	OverrideExtraPartIndex[34] = 13
+	OverrideExtraPartIndex[35] = 13
+	OverrideExtraPartIndex[36] = 4
+	OverrideExtraPartIndex[37] = 4
+	OverrideExtraPartIndex[38] = 4
+	OverrideExtraPartIndex[39] = 4
+	OverrideExtraPartIndex[40] = 4
+	OverrideExtraPartIndex[41] = 4
+	OverrideExtraPartIndex[42] = 6
+	OverrideExtraPartIndex[43] = 6
+	OverrideExtraPartIndex[44] = 6
+	OverrideExtraPartIndex[45] = 6
+	OverrideExtraPartIndex[46] = 6
+	OverrideExtraPartIndex[47] = 6
+	OverrideExtraPartIndex[48] = 8
+	OverrideExtraPartIndex[49] = 8
+	OverrideExtraPartIndex[50] = 8
+	OverrideExtraPartIndex[51] = 8
+	OverrideExtraPartIndex[52] = 8
+	OverrideExtraPartIndex[53] = 8
+	OverrideExtraPartIndex[54] = 10
+	OverrideExtraPartIndex[55] = 10
+	OverrideExtraPartIndex[56] = 10
+	OverrideExtraPartIndex[57] = 10
+	OverrideExtraPartIndex[58] = 10
+	OverrideExtraPartIndex[59] = 10
+	OverrideExtraPartIndex[60] = 12
+	OverrideExtraPartIndex[61] = 12
+	OverrideExtraPartIndex[62] = 12
+	OverrideExtraPartIndex[63] = 12
+	OverrideExtraPartIndex[64] = 12
+	OverrideExtraPartIndex[65] = 12
+	OverrideExtraPartIndex[66] = 14
+	OverrideExtraPartIndex[67] = 14
+	OverrideExtraPartIndex[68] = 14
+	OverrideExtraPartIndex[69] = 14
+	OverrideExtraPartIndex[70] = 14
+	OverrideExtraPartIndex[71] = 14
 endFunction
 
 function InitializeDatastore()
@@ -638,15 +638,25 @@ int[] function GetArmorProtectionDataByKeyword(Armor akArmor)
 		armor_data[15] = 1
 		return armor_data
 	endif
+	
+	int armor_mask = akArmor.GetSlotMask()
+	int gear_type = GetGearType(akArmor, armor_mask, abStrictMode = true)
+	if gear_type == -1
+		; No gear type found for this item. Ignore it.
+		armor_data[15] = 1
+		return armor_data
+	endif
+
+	armor_data[0] = gear_type
 
 	int keyword_count = akArmor.GetNumKeywords()
-	int i = 0
+	int i = 1
 	while i < keyword_count
 		Keyword k = akArmor.GetNthKeyword(i)
 		int idx = StandardKeywords.Find(k)
 		if idx != -1
 			; standard keyword
-			int determined_value = GetArmorProtectionDataByType(akArmor, idx)
+			int determined_value = GetArmorProtectionDataByType(akArmor, gear_type, idx)
 			armor_data[StandardPartIndex[idx]] = determined_value
 		else
 			; extra parts
@@ -660,21 +670,18 @@ int[] function GetArmorProtectionDataByKeyword(Armor akArmor)
 	return armor_data
 endFunction
 
-int function GetArmorProtectionDataByType(Armor akArmor, int aiStandardKeywordIndex)
-	; The slot mask is the single source of truth for what "kind" of armor this is.
-	int armor_mask = akArmor.GetSlotMask()
-	int gear_type = GetGearType(akArmor, armor_mask, abStrictMode = false)
-	if gear_type == GEARTYPE_BODY
+int function GetArmorProtectionDataByType(Armor akArmor, int aiGearType, int aiStandardKeywordIndex)
+	if aiGearType == GEARTYPE_BODY
 		return StandardBodyValues[aiStandardKeywordIndex]
-	elseif gear_type == GEARTYPE_HEAD
+	elseif aiGearType == GEARTYPE_HEAD
 		return StandardHeadValues[aiStandardKeywordIndex]
-	elseif gear_type == GEARTYPE_HANDS
+	elseif aiGearType == GEARTYPE_HANDS
 		return StandardHandsValues[aiStandardKeywordIndex]
-	elseif gear_type == GEARTYPE_FEET
+	elseif aiGearType == GEARTYPE_FEET
 		return StandardFeetValues[aiStandardKeywordIndex]
-	elseif gear_type == GEARTYPE_CLOAK
+	elseif aiGearType == GEARTYPE_CLOAK
 		return StandardCloakValues[aiStandardKeywordIndex]
-	elseif gear_type == GEARTYPE_MISC
+	elseif aiGearType == GEARTYPE_MISC
 		return StandardMiscValues[aiStandardKeywordIndex]
 	endif
 endFunction
@@ -1302,7 +1309,7 @@ state mock_getArmorProtectionDataByX
 		return mock_GetArmorProtectionDataByKeyword_value
 	endFunction
 
-	int function GetArmorProtectionDataByType(Armor akArmor, int aiStandardKeywordIndex)
+	int function GetArmorProtectionDataByType(Armor akArmor, int aiGearType, int aiStandardKeywordIndex)
 		mock_GetArmorProtectionDataByType_callcount += 1
 		return mock_GetArmorProtectionDataByType_value
 	endFunction
