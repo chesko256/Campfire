@@ -79,8 +79,10 @@ function RegisterForModEvents()
 	RegisterForModEvent("Frost_StopFrostfall", "StopFrostfall")
 endFunction
 
-Event StartFrostfall()
-	_Frost_StartingUp.Show()
+Event StartFrostfall(bool abBypassStartupMessage = false)
+	if !abBypassStartupMessage
+		_Frost_StartingUp.Show()
+	endif
 	FrostDebug(1, "Starting Frostfall...")
 	GetClothingDatastoreHandler().InitializeDatastore()
 	FrostUtil.GetCompatibilitySystem().RunCompatibilityArmors()
