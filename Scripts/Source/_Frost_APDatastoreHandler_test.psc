@@ -4,6 +4,12 @@ import FrostUtil
 
 _Frost_ArmorProtectionDatastoreHandler ap
 
+Armor property ArmorIronCuirass auto
+
+function SetUp()
+	EnableWarningOnSlowTests(1.0)
+endFunction
+
 function TestSuites()
 	describe("Armor Datastore GetArmorProtectionData", GetArmorProtectionDataSuite())
 	describe("Armor Datastore GetArmorProtectionDataByKeyword", GetArmorProtectionDataByKeywordSuite())
@@ -67,7 +73,7 @@ function GetDatastoreKeyFromIDSuite()
 endFunction
 
 function beforeAll()
-	ap = GetClothingDatastore()
+	ap = GetClothingDatastoreHandler()
 endFunction
 
 function beforeEach()
@@ -231,7 +237,7 @@ function testGetArmorProtectionData_Keyword()
 	expectInt(result[12], to, beEqualTo, 0)
 	expectInt(result[13], to, beEqualTo, 0)
 	expectInt(result[14], to, beEqualTo, 0)
-	expectInt(result[15], to, beEqualTo, 1)
+	expectInt(result[15], to, beEqualTo, 0)
 endFunction
 
 function testGetArmorProtectionData_KeywordIgnore()
@@ -348,11 +354,57 @@ function testGetArmorProtectionData_Analysis()
 	expectInt(result[12], to, beEqualTo, 0)
 	expectInt(result[13], to, beEqualTo, 0)
 	expectInt(result[14], to, beEqualTo, 0)
-	expectInt(result[15], to, beEqualTo, 1)
+	expectInt(result[15], to, beEqualTo, 0)
 endFunction
 
 function testGetArmorProtectionDataByKeyword_IgnoreKeyword()
+	int i = 0
+	while i < 16
+		; [0] - [15] == -1
+		ap.mock_GetArmorData_value[i] = -1
+		i += 1
+	endWhile
 
+	ap.mock_GetArmorProtectionDataByKeyword_value[0] = 0
+	ap.mock_GetArmorProtectionDataByKeyword_value[1] = -1
+	ap.mock_GetArmorProtectionDataByKeyword_value[2] = 0
+	ap.mock_GetArmorProtectionDataByKeyword_value[3] = 0
+	ap.mock_GetArmorProtectionDataByKeyword_value[4] = 0
+	ap.mock_GetArmorProtectionDataByKeyword_value[5] = 0
+	ap.mock_GetArmorProtectionDataByKeyword_value[6] = 0
+	ap.mock_GetArmorProtectionDataByKeyword_value[7] = 0
+	ap.mock_GetArmorProtectionDataByKeyword_value[8] = 0
+	ap.mock_GetArmorProtectionDataByKeyword_value[9] = 0
+	ap.mock_GetArmorProtectionDataByKeyword_value[10] = 0
+	ap.mock_GetArmorProtectionDataByKeyword_value[11] = 0
+	ap.mock_GetArmorProtectionDataByKeyword_value[12] = 0
+	ap.mock_GetArmorProtectionDataByKeyword_value[13] = 0
+	ap.mock_GetArmorProtectionDataByKeyword_value[14] = 0
+	ap.mock_GetArmorProtectionDataByKeyword_value[15] = 1
+
+	int[] result = ap.GetArmorProtectionData(ArmorIronCuirass)
+
+	expectInt(ap.mock_GetArmorData_callcount, to, beEqualTo, 1)
+	expectInt(ap.mock_GetArmorProtectionDataByKeyword_callcount, to, beEqualTo, 1)
+	expectInt(ap.mock_GetArmorProtectionDataByType_callcount, to, beEqualTo, 0)
+	expectInt(ap.mock_GetArmorProtectionDataByAnalysis_callcount, to, beEqualTo, 0)
+
+	expectInt(result[0], to, beEqualTo, 0)
+	expectInt(result[1], to, beEqualTo, -1)
+	expectInt(result[2], to, beEqualTo, 0)
+	expectInt(result[3], to, beEqualTo, 0)
+	expectInt(result[4], to, beEqualTo, 0)
+	expectInt(result[5], to, beEqualTo, 0)
+	expectInt(result[6], to, beEqualTo, 0)
+	expectInt(result[7], to, beEqualTo, 0)
+	expectInt(result[8], to, beEqualTo, 0)
+	expectInt(result[9], to, beEqualTo, 0)
+	expectInt(result[10], to, beEqualTo, 0)
+	expectInt(result[11], to, beEqualTo, 0)
+	expectInt(result[12], to, beEqualTo, 0)
+	expectInt(result[13], to, beEqualTo, 0)
+	expectInt(result[14], to, beEqualTo, 0)
+	expectInt(result[15], to, beEqualTo, 1)
 endFunction
 
 function testGetArmorProtectionDataByKeyword_NormalBody()
