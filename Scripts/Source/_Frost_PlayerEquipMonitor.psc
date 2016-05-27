@@ -103,7 +103,7 @@ bool function qEnter(Form[] akFormQueue, int[] aiActionQueue, Form akEntry, bool
 	aiActionQueue[newEntryIdx] = action_val
 
 	queue_count += 1
-	debug.trace(" +++++++ queue enter " + aiEntry + " queue_count " + queue_count)
+	debug.trace(" +++++++ queue enter " + akEntry + " queue_count " + queue_count)
 	return true
 endFunction
 
