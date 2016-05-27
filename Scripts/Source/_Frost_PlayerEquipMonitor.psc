@@ -73,10 +73,8 @@ function AddEquipEventToQueue(Form[] akFormQueue, int[] aiActionQueue, Form akEn
 endFunction
 
 bool function qEnter(Form[] akFormQueue, int[] aiActionQueue, Form akEntry, bool abAction)
-	; Add an entry to the event queue to process FIFO. The 0xN00000000 digit
-	; stores the action (2 = equipped, 1 = unequipped), the other digits store
-	; the FormID. The leading digit is stripped by the function processing 
-	; the queue entry.
+	; Add an entry to the event queue to process FIFO. The aiActionQueue
+	; stores the action (2 = equipped, 1 = unequipped), the akFormQueue stores the Form.
 	; Adapted from https://www.cs.bu.edu/teaching/c/queue/array/funcs.html
 
 	int newEntryIdx
