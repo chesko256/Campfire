@@ -120,7 +120,7 @@ int function qDelete(Form[] akFormQueue, int[] aiActionQueue)
 
 	; Save the element so we can return it.
 	oldElements[0] = akFormQueue[queue_frontidx].GetFormID()
-	oldAction = aiActionQueue[queue_frontidx]
+	oldElements[1] = aiActionQueue[queue_frontidx]
 
 	; Advance the index of the front,
 	; making sure it wraps around the
