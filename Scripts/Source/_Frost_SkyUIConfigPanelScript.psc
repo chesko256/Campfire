@@ -1438,6 +1438,7 @@ endEvent
 function SendEvent_StartFrostfall()
     int handle = ModEvent.Create("Frost_StartFrostfall")
     if handle
+    	ModEvent.PushBool(handle, false)
         ModEvent.Send(handle)
     endif
 endFunction

@@ -80,9 +80,7 @@ function RegisterForModEvents()
 endFunction
 
 Event StartFrostfall(bool abBypassStartupMessage = false)
-	if !abBypassStartupMessage
-		_Frost_StartingUp.Show()
-	endif
+	; _Frost_StartingUp.Show()
 	FrostDebug(1, "Starting Frostfall...")
 	GetClothingDatastoreHandler().InitializeDatastore()
 	FrostUtil.GetCompatibilitySystem().RunCompatibilityArmors()
@@ -97,7 +95,7 @@ Event StartFrostfall(bool abBypassStartupMessage = false)
 		GetClothingDatastoreHandler().Start()
 	endif
 	PlayerAlias.ForceRefTo(PlayerRef)
-	StartModFirstTime()
+	StartModFirstTime(abBypassStartupMessage)
 	_Frost_TrackingQuest.SetStage(20)
 	Utility.Wait(2.0)
 	StartAllSystems()
@@ -203,12 +201,14 @@ function AddFriendItems()
 	endif
 endFunction
 
-function StartModFirstTime()
+function StartModFirstTime(bool abBypassStartupMessage = false)
 	if _Frost_TrackingQuest.GetStage() == 20
 		return
 	else
 		;New game / first time user, show startup routine.
-		_Frost_FirstStartup_1.Show()
+		if !abBypassStartupMessage
+			_Frost_FirstStartup_1.Show()
+		endif
 		utility.wait(1)
 		PlayerRef.AddItem(_Frost_SurvivorsGuide)
 		utility.wait(6)
