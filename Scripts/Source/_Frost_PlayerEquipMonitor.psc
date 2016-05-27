@@ -1,14 +1,17 @@
 scriptname _Frost_PlayerEquipMonitor extends ReferenceAlias
 
 import FrostUtil
+import _FrostInternal
+
+int equip_action = 0x20000000
+int unequip_action = 0x10000000
 
 Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
 	if akBaseObject as Light
 		SendEvent_UpdateWarmth()
 	elseif akBaseObject as Armor
 		AddEquipEventToQueue(event_queue, akBaseObject, true)
-		ProcessQueue()
-		;GetClothingSystem().ObjectEquipped(akBaseObject)
+		ProcessQueuedEvents(event_queue)
 	endif
 EndEvent
 
@@ -17,18 +20,19 @@ Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 		SendEvent_UpdateWarmth()
 	elseif akBaseObject as Armor
 		AddEquipEventToQueue(event_queue, akBaseObject, false)
-		ProcessQueue()
-		;GetClothingSystem().ObjectUnequipped(akBaseObject)
+		ProcessQueuedEvents(event_queue)
 	endif
 EndEvent
 
 function SendEvent_UpdateWarmth()
-	_FrostInternal.FrostDebug(0, "Sending event Frost_UpdateWarmth")
+	FrostDebug(0, "Sending event Frost_UpdateWarmth")
     int handle = ModEvent.Create("Frost_UpdateWarmth")
     if handle
         ModEvent.Send(handle)
     endif
 endFunction
+
+
 
 ; Event Queue =================================================================
 
@@ -37,21 +41,49 @@ int queue_frontidx
 int queue_count
 int[] event_queue
 
-function AddEquipEventToQueue(int[] aiQueue, Form akEntry, bool abEquipped)
-	int entry = akEntry.GetFormID()
-	if abEquipped
-		entry += 0x200000000
-	else
-		entry += 0x100000000
-	endif
-	bool b = qEnter(aiQueue, entry)
+function InitializeEventQueue()
+	event_queue = new int[128]
 endFunction
 
-function ProcessQueue()
+function ProcessQueuedEvents(int[] aiQueue)
 	if !processing_queue
-		;Zhu Li, do the thing!
+		debug.trace("Processing queued events.")
+		while !qIsEmpty(aiQueue)
+			int entry = qDelete(aiQueue)
+			Form the_form
+			bool equip = Math.LogicalAnd(entry, equip_action)
+			if equip
+				entry -= equip_action
+				the_form = Game.GetForm(entry)
+				debug.trace("the_form " + the_form)
+				GetClothingSystem().ObjectEquipped(the_form)
+			else
+				entry -= unequip_action
+				the_form = Game.GetForm(entry)
+				GetClothingSystem().ObjectUnequipped(the_form)
+			endif
+		endWhile
 		processing_queue = false
+	else
+		debug.trace(" !!!! Event queue already being processed, aborting.")
 	endif
+endFunction
+
+function AddEquipEventToQueue(int[] aiQueue, Form akEntry, bool abEquipped)
+	debug.trace(" +++++++ adding to queue " + akEntry + " equipped " + abEquipped)
+	
+	if !akEntry
+		return
+	endif
+
+	int entry = akEntry.GetFormID()
+	entry %= 16777216
+	if abEquipped
+		entry += equip_action
+	else
+		entry += unequip_action
+	endif
+	bool b = qEnter(aiQueue, entry)
 endFunction
 
 bool function qEnter(int[] aiQueue, int aiEntry)
@@ -71,11 +103,13 @@ bool function qEnter(int[] aiQueue, int aiEntry)
 	newEntryIdx = (queue_frontidx + queue_count) % aiQueue.Length
 	aiQueue[newEntryIdx] = aiEntry
 	queue_count += 1
+	debug.trace(" +++++++ queue enter " + aiEntry + " queue_count " + queue_count)
 	return true
 endFunction
 
-function qDelete(int[] aiQueue, int aiEntryToDelete)
+int function qDelete(int[] aiQueue)
 	; Remove an entry from the queue and return it.
+	; Adapted from https://www.cs.bu.edu/teaching/c/queue/array/funcs.html
 
 	int oldElement
 
@@ -95,6 +129,7 @@ function qDelete(int[] aiQueue, int aiEntryToDelete)
 	queue_frontidx %= aiQueue.Length
 
 	queue_count -= 1
+	debug.trace(" ------- queue delete " + oldElement + " queue_count " + queue_count)
 
 	return oldElement
 endFunction
@@ -103,6 +138,14 @@ bool function qIsFull(int[] aiQueue)
 	; Return if the queue is full or not.
 
 	if queue_count >= aiQueue.Length
+		return true
+	else
+		return false
+	endif
+endFunction
+
+bool function qIsEmpty(int[] aiQueue)
+	if queue_count <= 0
 		return true
 	else
 		return false

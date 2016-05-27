@@ -212,6 +212,9 @@ endFunction
 function RunCompatibility()
 	VanillaGameLoadUp()
 
+	; Initialize the Equip Monitor event queue
+	(PlayerAlias as _Frost_PlayerEquipMonitor).InitializeEventQueue()
+
 	trace("[Frostfall]======================================================================================================")
 	trace("[Frostfall]                          Frostfall is now performing compatibility checks.                           ")
 	trace("[Frostfall]======================================================================================================")

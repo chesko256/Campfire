@@ -1225,6 +1225,7 @@ int[] function GetDefaultArmorData(Armor akArmor, bool abUsableValues = false)
 		armor_data[14] = JsonUtil.IntListGet(defaults_path, dskey, 14) - modifier
 		armor_data[15] = JsonUtil.IntListGet(defaults_path, dskey, 15) - modifier
 	endif
+	debug.trace("Returning default armor data " + armor_data)
 	return armor_data
 endFunction
 
