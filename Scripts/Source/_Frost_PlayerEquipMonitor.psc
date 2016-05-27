@@ -127,7 +127,7 @@ int function qDelete(Form[] akFormQueue, int[] aiActionQueue)
 	; array properly.
 
 	queue_frontidx += 1
-	queue_frontidx %= aiQueue.Length
+	queue_frontidx %= akFormQueue.Length
 
 	queue_count -= 1
 	debug.trace(" ------- queue delete " + oldElements[0] + " " + oldElements[1] + " queue_count " + queue_count)
