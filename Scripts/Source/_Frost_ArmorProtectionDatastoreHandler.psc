@@ -616,12 +616,19 @@ endFunction
 
 int[] function GetTotalArmorProtectionValues(Armor akArmor)
 	int[] armor_data = new int[2]
+
+	if !akArmor
+		armor_data[0] = -1
+		armor_data[1] = -1
+		return armor_data
+	endif
+
 	int[] ap = GetArmorProtectionData(akArmor)
 
 	; Original contract with ClothingSystem maintained (3.1).
 	if ap[15] == 1
+		armor_data[0] = 0
 		armor_data[1] = 0
-		armor_data[2] = 0
 		return armor_data
 	endif
 
