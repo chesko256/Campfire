@@ -38,6 +38,8 @@ int queue_frontidx
 int queue_count
 Form[] form_queue
 int[] action_queue
+int EQUIP_ACTION = 2
+int UNEQUIP_ACTION = 1
 
 function InitializeEventQueue()
 	form_queue = new Form[128]
@@ -46,11 +48,17 @@ endFunction
 
 function ProcessQueuedEvents(Form[] akFormQueue, int[] aiActionQueue)
 	if !processing_queue
+		processing_queue = true
 		debug.trace("Processing queued events.")
 		while !qIsEmpty()
 			int[] entry = qDelete(akFormQueue, aiActionQueue)
+			
+			if entry[0] == -1
+				return
+			endif
+
 			Form the_form = Game.GetForm(entry[0])
-			if entry[1] == 2
+			if entry[1] == EQUIP_ACTION
 				GetClothingSystem().ObjectEquipped(the_form)
 			else
 				GetClothingSystem().ObjectUnequipped(the_form)
@@ -93,9 +101,9 @@ bool function qEnter(Form[] akFormQueue, int[] aiActionQueue, Form akEntry, bool
 	akFormQueue[newEntryIdx] = akEntry
 
 	if abAction
-		action_val = 2
+		action_val = EQUIP_ACTION
 	else
-		action_val = 1
+		action_val = UNEQUIP_ACTION
 	endif
 
 	aiActionQueue[newEntryIdx] = action_val
@@ -105,7 +113,7 @@ bool function qEnter(Form[] akFormQueue, int[] aiActionQueue, Form akEntry, bool
 	return true
 endFunction
 
-int function qDelete(Form[] akFormQueue, int[] aiActionQueue)
+int[] function qDelete(Form[] akFormQueue, int[] aiActionQueue)
 	; Remove an entry from the queue and return it.
 	; Adapted from https://www.cs.bu.edu/teaching/c/queue/array/funcs.html
 
@@ -113,7 +121,9 @@ int function qDelete(Form[] akFormQueue, int[] aiActionQueue)
 
 	if queue_count <= 0
 		; print error
-		return -1
+		oldElements[0] = -1
+		oldElements[1] = -1
+		return oldElements
 	endif
 
 	; Save the element so we can return it.

@@ -91,6 +91,10 @@ function SetItemCardValues()
 		endif
 
 		Armor my_armor = Game.GetForm(fid) as Armor
+		if !my_armor
+			return
+		endif
+		
 		int[] protection_values = armor_handler.GetTotalArmorProtectionValues(my_armor)
 		; Previous lookup takes significant real time, are we still on this entry?
 		if settled == true && protection_values[0] != -1
