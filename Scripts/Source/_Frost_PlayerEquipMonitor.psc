@@ -33,9 +33,9 @@ endFunction
 
 ; Event Queue =================================================================
 
-bool processing_queue = false
+bool property processing_queue = false auto hidden
+int property queue_count = 0 auto hidden
 int queue_frontidx
-int queue_count
 Form[] form_queue
 int[] action_queue
 int EQUIP_ACTION = 2
@@ -46,10 +46,12 @@ function InitializeEventQueue()
 	action_queue = new int[128]
 endFunction
 
-function ProcessQueuedEvents(Form[] akFormQueue, int[] aiActionQueue)
-	if !processing_queue
+function ProcessQueuedEvents(Form[] akFormQueue, int[] aiActionQueue, bool aiRecursiveCall = false)
+	if !processing_queue || aiRecursiveCall == true
 		processing_queue = true
-		debug.trace("Processing queued events.")
+		bool update_required = false
+		_Frost_ClothingSystem clothing = GetClothingSystem()
+		; debug.trace(">>>>>>> Processing queued events.")
 		while !qIsEmpty()
 			int[] entry = qDelete(akFormQueue, aiActionQueue)
 			
@@ -58,26 +60,29 @@ function ProcessQueuedEvents(Form[] akFormQueue, int[] aiActionQueue)
 			endif
 
 			Form the_form = Game.GetForm(entry[0])
+			bool result = false
 			if entry[1] == EQUIP_ACTION
-				GetClothingSystem().ObjectEquipped(the_form)
+				result = clothing.ObjectEquipped(the_form)
 			else
-				GetClothingSystem().ObjectUnequipped(the_form)
+				result = clothing.ObjectUnequipped(the_form)
+			endif
+			if result == true
+				update_required = true
 			endif
 		endWhile
-		processing_queue = false
-	else
-		debug.trace(" !!!! Event queue already being processed, aborting.")
-	endif
-endFunction
 
-function AddEquipEventToQueue(Form[] akFormQueue, int[] aiActionQueue, Form akEntry, bool abEquipped)
-	debug.trace(" +++++++ adding to queue " + akEntry + " equipped " + abEquipped)
-	
-	if !akEntry
-		return
-	endif
+		if update_required
+        	clothing.RecalculateProtectionData(clothing.WornGearForms, clothing.WornGearValues, clothing._Frost_WornGearData)
+        	clothing.SendEvent_UpdateWarmthAndCoverage()
+    	endif
 
-	
+    	; Did another event sneak in?
+    	if queue_count > 0
+    		ProcessQueuedEvents(akFormQueue, aiActionQueue, true)    		
+    	endif
+    	processing_queue = false
+		; debug.trace("<<<<<<< Finished processing queue.")
+	endif
 endFunction
 
 bool function qEnter(Form[] akFormQueue, int[] aiActionQueue, Form akEntry, bool abAction)
@@ -109,7 +114,7 @@ bool function qEnter(Form[] akFormQueue, int[] aiActionQueue, Form akEntry, bool
 	aiActionQueue[newEntryIdx] = action_val
 
 	queue_count += 1
-	debug.trace(" +++++++ queue enter " + akEntry + " queue_count " + queue_count)
+	; debug.trace(" +++++++ queue enter " + akEntry + " " + action_val + " queue_count " + queue_count)
 	return true
 endFunction
 
@@ -138,7 +143,7 @@ int[] function qDelete(Form[] akFormQueue, int[] aiActionQueue)
 	queue_frontidx %= akFormQueue.Length
 
 	queue_count -= 1
-	debug.trace(" ------- queue delete " + oldElements[0] + " " + oldElements[1] + " queue_count " + queue_count)
+	; debug.trace(" ------- queue delete " + oldElements[0] + " " + oldElements[1] + " queue_count " + queue_count)
 
 	return oldElements
 endFunction

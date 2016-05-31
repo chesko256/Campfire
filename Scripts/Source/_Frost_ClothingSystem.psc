@@ -15,7 +15,7 @@ Keyword property ActorTypeCreature auto
 Keyword property ImmuneParalysis auto
 Keyword property WAF_ClothingCloak auto
 
-string[] property WornGearKeys auto hidden
+Armor[] property WornGearForms auto hidden
 int[] property WornGearValues auto hidden
 Keyword property _Frost_WornGearData auto
 
@@ -47,13 +47,11 @@ Armor property initial_hands auto hidden
 Armor property initial_feet auto hidden
 Armor property initial_shield auto hidden
 
-bool unequip_lock = false
-
 _Frost_ArmorProtectionDatastoreHandler handler
 
 function StartUp()
     handler = GetClothingDatastoreHandler()
-    WornGearKeys = new string[31]
+    WornGearForms = new Armor[31]
     WornGearValues = new int[12]
 endFunction
 
@@ -70,36 +68,24 @@ function RaceChanged()
     endif
 endFunction
 
-function ObjectEquipped(Form akBaseObject)
+bool function ObjectEquipped(Form akBaseObject)
     if !akBaseObject || !akBaseObject as Armor
-        return
+        return false
     endif
 
     ; Initial equipment check
     if akBaseObject.HasKeyword(_Frost_DummyArmorKW)
-        return
+        return false
     endif
 
-    bool update_required = AddWornGearEntryForArmorEquipped(akBaseObject as Armor, WornGearKeys, _Frost_WornGearData)
-
-    if update_required
-        RecalculateProtectionData(WornGearKeys, WornGearValues, _Frost_WornGearData)
-    endif
-
-    SendEvent_UpdateWarmthAndCoverage()
+    bool update_required = AddWornGearEntryForArmorEquipped(akBaseObject as Armor, WornGearForms, _Frost_WornGearData)
     DisplayWarmthCoverageNoSkyUIPkg(akBaseObject as Armor)
+    return update_required
 endFunction
 
-bool function AddWornGearEntryForArmorEquipped(Armor akArmor, string[] asWornGearKeysArray, keyword akWornGearData)
+bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
     ; Assign protection data to the correct internal slots and store the results.
     ; Return True if recalculation of warmth and coverage is necessary, false otherwise.
-    
-    int i = 20
-    while unequip_lock == true && i > 0
-        utility.wait(0.2)
-        i -= 1
-    endWhile
-
     int slot_mask = akArmor.GetSlotMask()
 
     ;int type = handler.GetGearType(akArmor, slot_mask, false)
@@ -108,20 +94,18 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, string[] asWornGea
     ;endif
 
     int[] armor_data = handler.GetArmorProtectionData(akArmor)
-    debug.trace("armor_data" + armor_data)
 
     ; The system will store ONE Body, Head, Hands, Feet, and Cloak slot Warmth and Coverage.
     ; The system will keep any number of warmth/coverage values for Misc.
     ; Explicit gear types win over extra part data.
-    string dskey = handler.GetDatastoreKeyFromForm(akArmor)
-    int idx = asWornGearKeysArray.Find(dskey)
-    debug.trace("dskey " + dskey + " idx " + idx)
+    int idx = akWornGearFormsArray.Find(akArmor)
+    ; debug.trace("dskey " + dskey + " idx " + idx)
     ;@TODO: Also check the data store
     ;@TODO: Handle ignore flag
     if idx == -1
         ; plug the data in
-        ArrayAddString(asWornGearKeysArray, dskey)
-        ;@TODO: Assume we get the type
+        ArrayAddArmor(akWornGearFormsArray, akArmor)
+        string dskey = handler.GetDatastoreKeyFromForm(akArmor)
         int type = armor_data[0]
         ;@TODO: no type?
         ; 0 - type
@@ -164,15 +148,12 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, string[] asWornGea
     endif
 endFunction
 
-function ObjectUnequipped(Form akBaseObject)
-    unequip_lock = true
+bool function ObjectUnequipped(Form akBaseObject)
     if !akBaseObject || !akBaseObject as Armor
-        unequip_lock = false
-        return
+        return false
     endif
     if akBaseObject.HasKeyword(_Frost_DummyArmorKW)
-        unequip_lock = false
-        return
+        return false
     endif
 
     ; During start-up, we need to know what to re-equip. Store these in
@@ -193,36 +174,35 @@ function ObjectUnequipped(Form akBaseObject)
             initial_shield = armor_object
         endif
     endif
-    bool update_required = RemoveWornGearEntryForArmorUnequipped(akBaseObject as Armor, WornGearKeys, _Frost_WornGearData)
-    if update_required
-        RecalculateProtectionData(WornGearKeys, WornGearValues, _Frost_WornGearData)
-    endif
-    unequip_lock = false
-
-    SendEvent_UpdateWarmthAndCoverage()
+    bool update_required = RemoveWornGearEntryForArmorUnequipped(akBaseObject as Armor, WornGearForms, _Frost_WornGearData)
     DisplayWarmthCoverageNoSkyUIPkgRemove(akBaseObject as Armor)
+    return update_required
 endFunction
 
-bool function RemoveWornGearEntryForArmorUnequipped(Armor akArmor, string[] asWornGearKeysArray, keyword akWornGearData)
-    string dskey = handler.GetDatastoreKeyFromForm(akArmor)
-    bool worn_gear_found = ArrayRemoveString(asWornGearKeysArray, dskey, true)
+bool function RemoveWornGearEntryForArmorUnequipped(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
+    bool worn_gear_found = ArrayRemoveArmor(akWornGearFormsArray, akArmor, true)
     if worn_gear_found
+        string dskey = handler.GetDatastoreKeyFromForm(akArmor)
         StorageUtil.IntListClear(akWornGearData, dskey)
         return true
     endif
     return false
 endFunction
 
-function RecalculateProtectionData(string[] asWornGearKeysArray, int[] aiWornGearValuesArray, keyword akWornGearData)
+function RecalculateProtectionData(Armor[] akWornGearFormsArray, int[] aiWornGearValuesArray, keyword akWornGearData)
     ;/
         Iterates over a "table" of values in the form below to determine total Warmth and Coverage.
     /;
     ; | _Frost_WornGearData Index |  0   |     1     |    2     |     |    10     |    11    |
     ; |---------------------------|------|-----------|----------|-----|-----------|----------|
-    ; | WornGearKeys              | Type | Body Warm | Body Cov | ... | Misc Warm | Misc Cov |
+    ; | WornGearForms             | Type | Body Warm | Body Cov | ... | Misc Warm | Misc Cov |
     ; | "80145___Skyrim.esm"      | 1    | 60        | 0        |     | 0         | 0        |
     
-    int key_count = ArrayCountString(asWornGearKeysArray)
+
+    ;WornGearFormsIntegrityCheck(akWornGearFormsArray)
+    int key_count = ArrayCountArmor(akWornGearFormsArray)
+    ; debug.trace("RecalculateProtectionData key_count " + key_count)
+
     int i = 0
     int type_counter = -1
     int type_to_match = 1
@@ -239,23 +219,29 @@ function RecalculateProtectionData(string[] asWornGearKeysArray, int[] aiWornGea
 
         bool gear_type_found = false
         while j < key_count && !gear_type_found
-            int gear_type = StorageUtil.IntListGet(akWornGearData, asWornGearKeysArray[j], 0)
-            int val = StorageUtil.IntListGet(akWornGearData, asWornGearKeysArray[j], i + 1)
-    
-            if type_to_match != handler.GEARTYPE_MISC
-                ; Native type takes priority
-                if gear_type == type_to_match
-                    column_value = val
-                    gear_type_found = true
-                else
-                    ; Otherwise, take the highest Extra value
-                    if val > column_value
+            ; Make sure I'm even still wearing this gear. This calculation can be
+            ; out of sync with reality (queued events exit that are not yet processed).
+            ; Leave the bogus entry alone, the array will eventually be accurate.
+            if PlayerHasArmorEquipped(akWornGearFormsArray[j])
+                string dskey = handler.GetDatastoreKeyFromForm(akWornGearFormsArray[j])
+                int gear_type = StorageUtil.IntListGet(akWornGearData, dskey, 0)
+                int val = StorageUtil.IntListGet(akWornGearData, dskey, i + 1)
+        
+                if type_to_match != handler.GEARTYPE_MISC
+                    ; Native type takes priority
+                    if gear_type == type_to_match
                         column_value = val
+                        gear_type_found = true
+                    else
+                        ; Otherwise, take the highest Extra value
+                        if val > column_value
+                            column_value = val
+                        endif
                     endif
+                else
+                    ; Sum MISC type items (and never type match)
+                    column_value += val
                 endif
-            else
-                ; Sum MISC type items (and never type match)
-                column_value += val
             endif
             j += 1
         endWhile
@@ -266,6 +252,22 @@ function RecalculateProtectionData(string[] asWornGearKeysArray, int[] aiWornGea
     endWhile
 
     FrostDebug(0, "Worn Gear Values: " + aiWornGearValuesArray)
+endFunction
+
+function WornGearFormsIntegrityCheck(Armor[] akWornGearFormsArray)
+    int i = 0
+    int key_count = ArrayCountArmor(akWornGearFormsArray)
+    debug.trace("WornGearFormsIntegrityCheck key_count " + key_count)
+    debug.trace("WornGearFormsIntegrityCheck data " + akWornGearFormsArray)
+    while i < key_count
+        debug.trace("current data " + akWornGearFormsArray)
+        debug.trace("checking index " + i)
+        Armor the_armor = akWornGearFormsArray[i]
+        if !PlayerRef.IsEquipped(the_armor)
+            ArrayRemoveArmor(akWornGearFormsArray, akWornGearFormsArray[i], true)
+        endif
+        i += 1
+    endWhile
 endFunction
 
 int function GetArmorWarmth(int[] aiWornGearValuesArray)
@@ -369,7 +371,7 @@ endFunction
 
 ; Array functions ==============================================================
 
-bool function ArrayAddString(string[] myArray, string myKey)
+bool function ArrayAddArmor(Armor[] myArray, Armor akArmor)
     ;Adds a form to the first available element in the array.
     ;       false       =       Error (array full)
     ;       true        =       Success
@@ -377,7 +379,7 @@ bool function ArrayAddString(string[] myArray, string myKey)
     int i = 0
     while i < myArray.Length
         if IsNone(myArray[i])
-            myArray[i] = myKey
+            myArray[i] = akArmor
             return true
         else
             i += 1
@@ -386,17 +388,17 @@ bool function ArrayAddString(string[] myArray, string myKey)
     return false
 endFunction
 
-bool function ArrayRemoveString(string[] myArray, String myKey, bool bSort = false)
+bool function ArrayRemoveArmor(Armor[] myArray, Armor akArmor, bool bSort = false)
     ;Removes a form from the array, if found. Sorts the array using ArraySort() if bSort is true.
     ;       false       =       Error (string not found)
     ;       true        =       Success
 
     int i = 0
     while i < myArray.Length
-        if myArray[i] == myKey
-            myArray[i] = ""
+        if myArray[i] == akArmor
+            myArray[i] = None
             if bSort == true
-                ArraySortString(myArray)
+                ArraySortArmor(myArray)
             endif
             return true
         else
@@ -408,7 +410,7 @@ bool function ArrayRemoveString(string[] myArray, String myKey, bool bSort = fal
     
 endFunction
 
-bool function ArraySortString(String[] myArray, int i = 0)
+bool function ArraySortArmor(Armor[] myArray, int i = 0)
 ;Removes blank elements by shifting all elements down.
      ;         false        =              No sorting required
      ;         true         =              Success
@@ -417,7 +419,7 @@ bool function ArraySortString(String[] myArray, int i = 0)
      int iFirstNonePos = i
      while i < myArray.Length
           if IsNone(myArray[i])
-               myArray[i] = ""
+               myArray[i] = None
                if bFirstNoneFound == false
                     bFirstNoneFound = true
                     iFirstNonePos = i
@@ -430,10 +432,10 @@ bool function ArraySortString(String[] myArray, int i = 0)
                ;check to see if it's a couple of blank entries in a row
                     if !(IsNone(myArray[i]))
                          myArray[iFirstNonePos] = myArray[i]
-                         myArray[i] = ""
+                         myArray[i] = None
  
                          ;Call this function recursively until it returns
-                         ArraySortString(myArray, iFirstNonePos + 1)
+                         ArraySortArmor(myArray, iFirstNonePos + 1)
                          return true
                     else
                          i += 1
@@ -446,7 +448,7 @@ bool function ArraySortString(String[] myArray, int i = 0)
      return false
 endFunction
 
-int function ArrayCountString(String[] myArray)
+int function ArrayCountArmor(Armor[] myArray)
 ;Counts the number of indices in this array that do not have a "none" type.
     ;       int myCount = number of indicies that are not "none"
  
@@ -460,12 +462,15 @@ int function ArrayCountString(String[] myArray)
             i += 1
         endif
     endWhile
+    ; debug.trace("count returning " + myCount)
     return myCount
 endFunction
 
-bool function IsNone(string akString)
-    if akString
-        if akString == ""
+bool function IsNone(Armor akArmor)
+    int i = 0
+    if akArmor
+        i = akArmor.GetFormID()
+        if i == 0
             return true
         else
             return false
@@ -479,6 +484,10 @@ bool function IsEven(int aiValue)
     return aiValue % 2 == 0
 endFunction
 
+bool function PlayerHasArmorEquipped(Armor akArmor)
+    return PlayerRef.IsEquipped(akArmor)
+endFunction
+
 
 ; Lilac Mock States ===========================================================
 
@@ -487,12 +496,12 @@ int property mock_RemoveWornGearEntryForArmorUnequipped_callcount = 0 auto hidde
 
 State mock_testObjectEquipped
 
-    bool function AddWornGearEntryForArmorEquipped(Armor akArmor, string[] asWornGearKeysArray, keyword akWornGearData)
+    bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
         mock_AddWornGearEntryForArmorEquipped_callcount += 1
         return false
     endFunction
 
-    bool function RemoveWornGearEntryForArmorUnequipped(Armor akArmor, string[] asWornGearKeysArray, keyword akWornGearData)
+    bool function RemoveWornGearEntryForArmorUnequipped(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
         mock_RemoveWornGearEntryForArmorUnequipped_callcount += 1
         return false
     endFunction
@@ -506,3 +515,9 @@ State mock_testObjectEquipped
     endFunction
 
 EndState
+
+State mock_testRecalculateProtectionData
+    bool function PlayerHasArmorEquipped(Armor akArmor)
+        return true
+    endFunction
+endState

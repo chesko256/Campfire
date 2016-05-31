@@ -20,6 +20,8 @@ bool property well_insulated_perk_active = false auto hidden
 int current_food_bonus
 int current_spell_bonus
 
+bool property updating_warmth = false auto hidden
+
 function RegisterForEvents()
 	RegisterForModEvent("Frost_UpdateWarmth", "UpdateWarmth")
 	RegisterForModEvent("Frost_SoupEffectStart", "SoupEffectStart")
@@ -28,6 +30,13 @@ function RegisterForEvents()
 endFunction
 
 Event UpdateWarmth()
+	int i = 20
+    while updating_warmth == true && i > 0
+        utility.wait(0.2)
+        i -= 1
+    endWhile
+
+    updating_warmth = true
 	int warmth
 	_Frost_ClothingSystem clothing = GetClothingSystem()
 	warmth += clothing.GetArmorWarmth(clothing.WornGearValues)
@@ -52,6 +61,7 @@ Event UpdateWarmth()
 	_Frost_AttributeWarmth.SetValueInt(warmth)
 	FrostfallAttributeWarmthReadOnly.SetValueInt(warmth)
 	SendEvent_UpdateBottomBarWarmth(warmth)
+	updating_warmth = false
 endEvent
 
 Event SoupEffectStart()

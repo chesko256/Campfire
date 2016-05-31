@@ -10,9 +10,13 @@ Armor property ArmorIronBoots auto
 Armor property ArmorIronHelmet auto
 Armor property ArmorIronShield auto
 Armor property _Camp_Cloak_BasicBurlap auto
+Armor property _Frost_UnitTestMiscGear1 auto
+Armor property _Frost_UnitTestMiscGear2 auto
+Armor property _Frost_UnitTestMiscGear3 auto
+Armor property _Frost_UnitTestMiscGear4 auto
 Weapon property Axe01 auto
 
-string[] property mockWornGearKeys auto hidden
+Armor[] property mockWornGearForms auto hidden
 int[] property mockWornGearValues auto hidden
 Keyword property _Frost_WornGearData_mock auto
 
@@ -22,10 +26,10 @@ string hands_key = "77382___Skyrim.esm"
 string feet_key = "77387___Skyrim.esm"
 string cloak_key = "260764___Campfire.esm"
 string misc_key = "77494___Skyrim.esm"
-string misc_key1 = "first_misc_key"
-string misc_key2 = "second_misc_key"
-string misc_key3 = "third_misc_key"
-string misc_key4 = "fourth_misc_key"
+string misc_key1 = "496815___Frostfall.esp"
+string misc_key2 = "496816___Frostfall.esp"
+string misc_key3 = "496817___Frostfall.esp"
+string misc_key4 = "496818___Frostfall.esp"
 
 function beforeAll()
 	clothing = FrostUtil.GetClothingSystem()
@@ -123,7 +127,7 @@ endFunction
 function beforeEach_AddWornGearEntryForArmorEquippedSuite()
 	ds.mock_GetArmorProtectionData_callcount = 0
 	ds.mock_GetArmorProtectionData_value = new int[15]
-	mockWornGearKeys = new string[31]
+	mockWornGearForms = new Armor[31]
 	mockWornGearValues = new int[12]
 	ds.GoToState("mock_GetArmorProtectionData")
 	;@TODO: Do this some other way as to not rely on the system running
@@ -133,29 +137,31 @@ endFunction
 function afterEach_AddWornGearEntryForArmorEquippedSuite()
 	ds.mock_GetArmorProtectionData_callcount = 0
 	ds.mock_GetArmorProtectionData_value = new int[15]
-	mockWornGearKeys = new string[31]
+	mockWornGearForms = new Armor[31]
 	mockWornGearValues = new int[12]
 	ds.GoToState("")
 endFunction
 
 function beforeEach_RemoveWornGearEntryForArmorUnequippedSuite()
-	mockWornGearKeys = new string[31]
+	mockWornGearForms = new Armor[31]
 	clothing.StartUp()
 endFunction
 
 function afterEach_RemoveWornGearEntryForArmorUnequippedSuite()
-	mockWornGearKeys = new string[31]
+	mockWornGearForms = new Armor[31]
 endFunction
 
 function beforeEach_RecalculateProtectionDataSuite()
-	mockWornGearKeys = new string[31]
+	mockWornGearForms = new Armor[31]
 	mockWornGearValues = new int[12]
 	clothing.StartUp()
+	clothing.GoToState("mock_testRecalculateProtectionData")
 endFunction
 
 function afterEach_RecalculateProtectionDataSuite()
-	mockWornGearKeys = new string[31]
+	mockWornGearForms = new Armor[31]
 	mockWornGearValues = new int[12]
+	clothing.GoToState("")
 endFunction
 
 function beforeEach_GetArmorData()
@@ -252,9 +258,9 @@ function testAddWornGearEntryForArmorEquipped_BodyGear()
 	ds.mock_GetArmorProtectionData_value[1] = 75
 	ds.mock_GetArmorProtectionData_value[2] = 35
 
-	bool b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronCuirass, mockWornGearKeys, _Frost_WornGearData_mock)
+	bool b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronCuirass, mockWornGearForms, _Frost_WornGearData_mock)
 
-	expectString(mockWornGearKeys[0], to, beEqualTo, body_key)
+	expectForm(mockWornGearForms[0], to, beEqualTo, ArmorIronCuirass)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, body_key, 0), to, beEqualTo, ds.GEARTYPE_BODY)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, body_key, 1), to, beEqualTo, 75)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, body_key, 2), to, beEqualTo, 35)
@@ -281,9 +287,9 @@ function testAddWornGearEntryForArmorEquipped_HeadGear()
 	ds.mock_GetArmorProtectionData_value[1] = 15
 	ds.mock_GetArmorProtectionData_value[2] = 3
 
-	bool b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronHelmet, mockWornGearKeys, _Frost_WornGearData_mock)
+	bool b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronHelmet, mockWornGearForms, _Frost_WornGearData_mock)
 
-	expectString(mockWornGearKeys[0], to, beEqualTo, head_key)
+	expectForm(mockWornGearForms[0], to, beEqualTo, ArmorIronHelmet)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, head_key, 0), to, beEqualTo, ds.GEARTYPE_HEAD)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, head_key, 1), to, beEqualTo, 0)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, head_key, 2), to, beEqualTo, 0)
@@ -310,9 +316,9 @@ function testAddWornGearEntryForArmorEquipped_HandsGear()
 	ds.mock_GetArmorProtectionData_value[1] = 7
 	ds.mock_GetArmorProtectionData_value[2] = 6
 
-	bool b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronGauntlets, mockWornGearKeys, _Frost_WornGearData_mock)
+	bool b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronGauntlets, mockWornGearForms, _Frost_WornGearData_mock)
 
-	expectString(mockWornGearKeys[0], to, beEqualTo, hands_key)
+	expectForm(mockWornGearForms[0], to, beEqualTo, ArmorIronGauntlets)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, hands_key, 0), to, beEqualTo, ds.GEARTYPE_HANDS)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, hands_key, 1), to, beEqualTo, 0)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, hands_key, 2), to, beEqualTo, 0)
@@ -339,9 +345,9 @@ function testAddWornGearEntryForArmorEquipped_FeetGear()
 	ds.mock_GetArmorProtectionData_value[1] = 7
 	ds.mock_GetArmorProtectionData_value[2] = 6
 
-	bool b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronBoots, mockWornGearKeys, _Frost_WornGearData_mock)
+	bool b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronBoots, mockWornGearForms, _Frost_WornGearData_mock)
 
-	expectString(mockWornGearKeys[0], to, beEqualTo, feet_key)
+	expectForm(mockWornGearForms[0], to, beEqualTo, ArmorIronBoots)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, feet_key, 0), to, beEqualTo, ds.GEARTYPE_FEET)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, feet_key, 1), to, beEqualTo, 0)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, feet_key, 2), to, beEqualTo, 0)
@@ -368,9 +374,9 @@ function testAddWornGearEntryForArmorEquipped_CloakGear()
 	ds.mock_GetArmorProtectionData_value[1] = 5
 	ds.mock_GetArmorProtectionData_value[2] = 5
 
-	bool b = clothing.AddWornGearEntryForArmorEquipped(_Camp_Cloak_BasicBurlap, mockWornGearKeys, _Frost_WornGearData_mock)
+	bool b = clothing.AddWornGearEntryForArmorEquipped(_Camp_Cloak_BasicBurlap, mockWornGearForms, _Frost_WornGearData_mock)
 
-	expectString(mockWornGearKeys[0], to, beEqualTo, cloak_key)
+	expectForm(mockWornGearForms[0], to, beEqualTo, _Camp_Cloak_BasicBurlap)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, cloak_key, 0), to, beEqualTo, ds.GEARTYPE_CLOAK)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, cloak_key, 1), to, beEqualTo, 0)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, cloak_key, 2), to, beEqualTo, 0)
@@ -396,9 +402,9 @@ function testAddWornGearEntryForArmorEquipped_MiscGear()
 	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_MISC
 	ds.mock_GetArmorProtectionData_value[1] = 0
 	ds.mock_GetArmorProtectionData_value[2] = 20
-	bool b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronShield, mockWornGearKeys, _Frost_WornGearData_mock)
+	bool b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronShield, mockWornGearForms, _Frost_WornGearData_mock)
 
-	expectString(mockWornGearKeys[0], to, beEqualTo, misc_key)
+	expectForm(mockWornGearForms[0], to, beEqualTo, ArmorIronShield)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 0), to, beEqualTo, ds.GEARTYPE_MISC)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 1), to, beEqualTo, 0)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 2), to, beEqualTo, 0)
@@ -424,40 +430,40 @@ function testAddWornGearEntryForArmorEquipped_AllGear()
 	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_BODY
 	ds.mock_GetArmorProtectionData_value[1] = 75
 	ds.mock_GetArmorProtectionData_value[2] = 35
-	bool b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronCuirass, mockWornGearKeys, _Frost_WornGearData_mock)
+	bool b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronCuirass, mockWornGearForms, _Frost_WornGearData_mock)
 
 	ds.mock_GetArmorProtectionData_value = new int[16]
 	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_HEAD
 	ds.mock_GetArmorProtectionData_value[1] = 15
 	ds.mock_GetArmorProtectionData_value[2] = 3
-	b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronHelmet, mockWornGearKeys, _Frost_WornGearData_mock)
+	b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronHelmet, mockWornGearForms, _Frost_WornGearData_mock)
 
 	ds.mock_GetArmorProtectionData_value = new int[16]
 	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_HANDS
 	ds.mock_GetArmorProtectionData_value[1] = 7
 	ds.mock_GetArmorProtectionData_value[2] = 6
-	b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronGauntlets, mockWornGearKeys, _Frost_WornGearData_mock)
+	b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronGauntlets, mockWornGearForms, _Frost_WornGearData_mock)
 
 	ds.mock_GetArmorProtectionData_value = new int[16]
 	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_FEET
 	ds.mock_GetArmorProtectionData_value[1] = 7
 	ds.mock_GetArmorProtectionData_value[2] = 6
-	b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronBoots, mockWornGearKeys, _Frost_WornGearData_mock)
+	b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronBoots, mockWornGearForms, _Frost_WornGearData_mock)
 
 	ds.mock_GetArmorProtectionData_value = new int[16]
 	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_CLOAK
 	ds.mock_GetArmorProtectionData_value[1] = 5
 	ds.mock_GetArmorProtectionData_value[2] = 5
-	b = clothing.AddWornGearEntryForArmorEquipped(_Camp_Cloak_BasicBurlap, mockWornGearKeys, _Frost_WornGearData_mock)
+	b = clothing.AddWornGearEntryForArmorEquipped(_Camp_Cloak_BasicBurlap, mockWornGearForms, _Frost_WornGearData_mock)
 
 	ds.mock_GetArmorProtectionData_value = new int[16]
 	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_MISC
 	ds.mock_GetArmorProtectionData_value[1] = 1
 	ds.mock_GetArmorProtectionData_value[2] = 20
-	b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronShield, mockWornGearKeys, _Frost_WornGearData_mock)
+	b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronShield, mockWornGearForms, _Frost_WornGearData_mock)
 
 
-	expectString(mockWornGearKeys[0], to, beEqualTo, body_key)
+	expectForm(mockWornGearForms[0], to, beEqualTo, ArmorIronCuirass)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, body_key, 0), to, beEqualTo, ds.GEARTYPE_BODY)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, body_key, 1), to, beEqualTo, 75)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, body_key, 2), to, beEqualTo, 35)
@@ -472,7 +478,7 @@ function testAddWornGearEntryForArmorEquipped_AllGear()
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, body_key, 11), to, beEqualTo, 0)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, body_key, 12), to, beEqualTo, 0)
 
-	expectString(mockWornGearKeys[1], to, beEqualTo, head_key)
+	expectForm(mockWornGearForms[1], to, beEqualTo, ArmorIronHelmet)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, head_key, 0), to, beEqualTo, ds.GEARTYPE_HEAD)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, head_key, 1), to, beEqualTo, 0)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, head_key, 2), to, beEqualTo, 0)
@@ -487,7 +493,7 @@ function testAddWornGearEntryForArmorEquipped_AllGear()
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, head_key, 11), to, beEqualTo, 0)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, head_key, 12), to, beEqualTo, 0)
 
-	expectString(mockWornGearKeys[2], to, beEqualTo, hands_key)
+	expectForm(mockWornGearForms[2], to, beEqualTo, ArmorIronGauntlets)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, hands_key, 0), to, beEqualTo, ds.GEARTYPE_HANDS)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, hands_key, 1), to, beEqualTo, 0)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, hands_key, 2), to, beEqualTo, 0)
@@ -502,7 +508,7 @@ function testAddWornGearEntryForArmorEquipped_AllGear()
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, hands_key, 11), to, beEqualTo, 0)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, hands_key, 12), to, beEqualTo, 0)
 
-	expectString(mockWornGearKeys[3], to, beEqualTo, feet_key)
+	expectForm(mockWornGearForms[3], to, beEqualTo, ArmorIronBoots)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, feet_key, 0), to, beEqualTo, ds.GEARTYPE_FEET)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, feet_key, 1), to, beEqualTo, 0)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, feet_key, 2), to, beEqualTo, 0)
@@ -517,7 +523,7 @@ function testAddWornGearEntryForArmorEquipped_AllGear()
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, feet_key, 11), to, beEqualTo, 0)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, feet_key, 12), to, beEqualTo, 0)
 
-	expectString(mockWornGearKeys[4], to, beEqualTo, cloak_key)
+	expectForm(mockWornGearForms[4], to, beEqualTo, _Camp_Cloak_BasicBurlap)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, cloak_key, 0), to, beEqualTo, ds.GEARTYPE_CLOAK)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, cloak_key, 1), to, beEqualTo, 0)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, cloak_key, 2), to, beEqualTo, 0)
@@ -532,7 +538,7 @@ function testAddWornGearEntryForArmorEquipped_AllGear()
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, cloak_key, 11), to, beEqualTo, 0)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, cloak_key, 12), to, beEqualTo, 0)
 
-	expectString(mockWornGearKeys[5], to, beEqualTo, misc_key)
+	expectForm(mockWornGearForms[5], to, beEqualTo, ArmorIronShield)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 0), to, beEqualTo, ds.GEARTYPE_MISC)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 1), to, beEqualTo, 0)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 2), to, beEqualTo, 0)
@@ -546,6 +552,8 @@ function testAddWornGearEntryForArmorEquipped_AllGear()
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 10), to, beEqualTo, 0)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 11), to, beEqualTo, 1)
 	expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, misc_key, 12), to, beEqualTo, 20)
+
+	expectInt(ds.mock_GetArmorProtectionData_callcount, to, beEqualTo, 6)
 	
 	StorageUtil.IntListClear(_Frost_WornGearData_mock, body_key)
 	StorageUtil.IntListClear(_Frost_WornGearData_mock, head_key)
@@ -560,15 +568,15 @@ endFunction
 function testRemoveWornGearEntryForArmorUnequipped_Fail()
 	beforeEach_RemoveWornGearEntryForArmorUnequippedSuite()
 
-	mockWornGearKeys[0] = body_key
-	mockWornGearKeys[1] = head_key
+	mockWornGearForms[0] = ArmorIronCuirass
+	mockWornGearForms[1] = ArmorIronHelmet
 
-	bool result = clothing.RemoveWornGearEntryForArmorUnequipped(ArmorIronBoots, mockWornGearKeys, _Frost_WornGearData_mock)
+	bool result = clothing.RemoveWornGearEntryForArmorUnequipped(ArmorIronBoots, mockWornGearForms, _Frost_WornGearData_mock)
 
 	expectBool(result, to, beFalsy)
-	expectString(mockWornGearKeys[0], to, beEqualTo, body_key)
-	expectString(mockWornGearKeys[1], to, beEqualTo, head_key)
-	expectString(mockWornGearKeys[2], to, beEqualTo, "")
+	expectForm(mockWornGearForms[0], to, beEqualTo, ArmorIronCuirass)
+	expectForm(mockWornGearForms[1], to, beEqualTo, ArmorIronHelmet)
+	expectForm(mockWornGearForms[2], to, beNone)
 
 	afterEach_RemoveWornGearEntryForArmorUnequippedSuite()
 endFunction
@@ -576,11 +584,11 @@ endFunction
 function testRemoveWornGearEntryForArmorUnequipped_Success()
 	beforeEach_RemoveWornGearEntryForArmorUnequippedSuite()
 
-	mockWornGearKeys[0] = body_key
-	mockWornGearKeys[1] = head_key
-	mockWornGearKeys[2] = hands_key
-	mockWornGearKeys[3] = feet_key
-	mockWornGearKeys[4] = cloak_key
+	mockWornGearForms[0] = ArmorIronCuirass
+	mockWornGearForms[1] = ArmorIronHelmet
+	mockWornGearForms[2] = ArmorIronGauntlets
+	mockWornGearForms[3] = ArmorIronBoots
+	mockWornGearForms[4] = _Camp_Cloak_BasicBurlap
 
 	StorageUtil.IntListResize(_Frost_WornGearData_mock, body_key, 13)
 	StorageUtil.IntListSet(_Frost_WornGearData_mock, body_key, 0, ds.GEARTYPE_BODY) ; type
@@ -657,14 +665,14 @@ function testRemoveWornGearEntryForArmorUnequipped_Success()
     StorageUtil.IntListSet(_Frost_WornGearData_mock, cloak_key, 11, 0)    ; misc warmth
     StorageUtil.IntListSet(_Frost_WornGearData_mock, cloak_key, 12, 0)    ; misc coverage
 
-    bool result = clothing.RemoveWornGearEntryForArmorUnequipped(ArmorIronGauntlets, mockWornGearKeys, _Frost_WornGearData_mock)
+    bool result = clothing.RemoveWornGearEntryForArmorUnequipped(ArmorIronGauntlets, mockWornGearForms, _Frost_WornGearData_mock)
 
     expectBool(result, to, beTruthy)
-    expectString(mockWornGearKeys[0], to, beEqualTo, body_key)
-    expectString(mockWornGearKeys[1], to, beEqualTo, head_key)
-    expectString(mockWornGearKeys[2], to, beEqualTo, feet_key)
-    expectString(mockWornGearKeys[3], to, beEqualTo, cloak_key)
-    expectString(mockWornGearKeys[4], to, beEqualTo, "")
+    expectForm(mockWornGearForms[0], to, beEqualTo, ArmorIronCuirass)
+    expectForm(mockWornGearForms[1], to, beEqualTo, ArmorIronHelmet)
+    expectForm(mockWornGearForms[2], to, beEqualTo, ArmorIronBoots)
+    expectForm(mockWornGearForms[3], to, beEqualTo, _Camp_Cloak_BasicBurlap)
+    expectForm(mockWornGearForms[4], to, beNone)
 
     expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, body_key, 1), to, beEqualTo, 75)
     expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, head_key, 3), to, beEqualTo, 15)
@@ -684,11 +692,11 @@ endFunction
 function testRemoveWornGearEntryForArmorUnequipped_SuccessMany()
 	beforeEach_RemoveWornGearEntryForArmorUnequippedSuite()
 
-	mockWornGearKeys[0] = body_key
-	mockWornGearKeys[1] = head_key
-	mockWornGearKeys[2] = hands_key
-	mockWornGearKeys[3] = feet_key
-	mockWornGearKeys[4] = cloak_key
+	mockWornGearForms[0] = ArmorIronCuirass
+	mockWornGearForms[1] = ArmorIronHelmet
+	mockWornGearForms[2] = ArmorIronGauntlets
+	mockWornGearForms[3] = ArmorIronBoots
+	mockWornGearForms[4] = _Camp_Cloak_BasicBurlap
 
 	StorageUtil.IntListResize(_Frost_WornGearData_mock, body_key, 13)
 	StorageUtil.IntListSet(_Frost_WornGearData_mock, body_key, 0, ds.GEARTYPE_BODY) ; type
@@ -765,18 +773,18 @@ function testRemoveWornGearEntryForArmorUnequipped_SuccessMany()
     StorageUtil.IntListSet(_Frost_WornGearData_mock, cloak_key, 11, 0)    ; misc warmth
     StorageUtil.IntListSet(_Frost_WornGearData_mock, cloak_key, 12, 0)    ; misc coverage
 
-    bool result = clothing.RemoveWornGearEntryForArmorUnequipped(ArmorIronHelmet, mockWornGearKeys, _Frost_WornGearData_mock)
+    bool result = clothing.RemoveWornGearEntryForArmorUnequipped(ArmorIronHelmet, mockWornGearForms, _Frost_WornGearData_mock)
     expectBool(result, to, beTruthy)
-    result = clothing.RemoveWornGearEntryForArmorUnequipped(ArmorIronGauntlets, mockWornGearKeys, _Frost_WornGearData_mock)
+    result = clothing.RemoveWornGearEntryForArmorUnequipped(ArmorIronGauntlets, mockWornGearForms, _Frost_WornGearData_mock)
     expectBool(result, to, beTruthy)
-    result = clothing.RemoveWornGearEntryForArmorUnequipped(ArmorIronBoots, mockWornGearKeys, _Frost_WornGearData_mock)
+    result = clothing.RemoveWornGearEntryForArmorUnequipped(ArmorIronBoots, mockWornGearForms, _Frost_WornGearData_mock)
     expectBool(result, to, beTruthy)
    
-    expectString(mockWornGearKeys[0], to, beEqualTo, body_key)
-    expectString(mockWornGearKeys[1], to, beEqualTo, cloak_key)
-    expectString(mockWornGearKeys[2], to, beEqualTo, "")
-    expectString(mockWornGearKeys[3], to, beEqualTo, "")
-    expectString(mockWornGearKeys[4], to, beEqualTo, "")
+    expectForm(mockWornGearForms[0], to, beEqualTo, ArmorIronCuirass)
+    expectForm(mockWornGearForms[1], to, beEqualTo, _Camp_Cloak_BasicBurlap)
+    expectForm(mockWornGearForms[2], to, beNone)
+    expectForm(mockWornGearForms[3], to, beNone)
+    expectForm(mockWornGearForms[4], to, beNone)
 
     expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, body_key, 1), to, beEqualTo, 75)
     expectInt(StorageUtil.IntListGet(_Frost_WornGearData_mock, head_key, 3), to, beEqualTo, 0)
@@ -797,7 +805,7 @@ endFunction
 function testRecalculate_BodyGear()
 	beforeEach_RecalculateProtectionDataSuite()
 
-	mockWornGearKeys[0] = body_key
+	mockWornGearForms[0] = ArmorIronCuirass
 	StorageUtil.IntListResize(_Frost_WornGearData_mock, body_key, 13)
 	StorageUtil.IntListSet(_Frost_WornGearData_mock, body_key, 0, ds.GEARTYPE_BODY) ; type
 	StorageUtil.IntListSet(_Frost_WornGearData_mock, body_key, 1, 75)    ; body warmth
@@ -813,7 +821,7 @@ function testRecalculate_BodyGear()
     StorageUtil.IntListSet(_Frost_WornGearData_mock, body_key, 11, 0)    ; misc warmth
     StorageUtil.IntListSet(_Frost_WornGearData_mock, body_key, 12, 0)    ; misc coverage
 
-    clothing.RecalculateProtectionData(mockWornGearKeys, mockWornGearValues, _Frost_WornGearData_mock)
+    clothing.RecalculateProtectionData(mockWornGearForms, mockWornGearValues, _Frost_WornGearData_mock)
 
     expectInt(mockWornGearValues[0], to, beEqualTo, 75)
     expectInt(mockWornGearValues[1], to, beEqualTo, 35)
@@ -836,8 +844,8 @@ endFunction
 function testRecalculate_BodyHeadGear()
 	beforeEach_RecalculateProtectionDataSuite()
 
-	mockWornGearKeys[0] = body_key
-	mockWornGearKeys[1] = head_key
+	mockWornGearForms[0] = ArmorIronCuirass
+	mockWornGearForms[1] = ArmorIronHelmet
 
 	StorageUtil.IntListResize(_Frost_WornGearData_mock, body_key, 13)
 	StorageUtil.IntListSet(_Frost_WornGearData_mock, body_key, 0, ds.GEARTYPE_BODY) ; type
@@ -869,7 +877,7 @@ function testRecalculate_BodyHeadGear()
     StorageUtil.IntListSet(_Frost_WornGearData_mock, head_key, 11, 0)    ; misc warmth
     StorageUtil.IntListSet(_Frost_WornGearData_mock, head_key, 12, 0)    ; misc coverage
 
-    clothing.RecalculateProtectionData(mockWornGearKeys, mockWornGearValues, _Frost_WornGearData_mock)
+    clothing.RecalculateProtectionData(mockWornGearForms, mockWornGearValues, _Frost_WornGearData_mock)
 
     expectInt(mockWornGearValues[0], to, beEqualTo, 75)
     expectInt(mockWornGearValues[1], to, beEqualTo, 35)
@@ -893,10 +901,10 @@ endFunction
 function testRecalculate_FullGear()
 	beforeEach_RecalculateProtectionDataSuite()
 	
-	mockWornGearKeys[0] = body_key
-	mockWornGearKeys[1] = head_key
-	mockWornGearKeys[2] = hands_key
-	mockWornGearKeys[3] = feet_key
+	mockWornGearForms[0] = ArmorIronCuirass
+	mockWornGearForms[1] = ArmorIronHelmet
+	mockWornGearForms[2] = ArmorIronGauntlets
+	mockWornGearForms[3] = ArmorIronBoots
 
 	StorageUtil.IntListResize(_Frost_WornGearData_mock, body_key, 13)
 	StorageUtil.IntListSet(_Frost_WornGearData_mock, body_key, 0, ds.GEARTYPE_BODY) ; type
@@ -958,7 +966,7 @@ function testRecalculate_FullGear()
     StorageUtil.IntListSet(_Frost_WornGearData_mock, feet_key, 11, 0)    ; misc warmth
     StorageUtil.IntListSet(_Frost_WornGearData_mock, feet_key, 12, 0)    ; misc coverage
 
-    clothing.RecalculateProtectionData(mockWornGearKeys, mockWornGearValues, _Frost_WornGearData_mock)
+    clothing.RecalculateProtectionData(mockWornGearForms, mockWornGearValues, _Frost_WornGearData_mock)
 
     expectInt(mockWornGearValues[0], to, beEqualTo, 75)
     expectInt(mockWornGearValues[1], to, beEqualTo, 35)
@@ -984,12 +992,12 @@ endFunction
 function testRecalculate_AllGear()
 	beforeEach_RecalculateProtectionDataSuite()
 	
-	mockWornGearKeys[0] = body_key
-	mockWornGearKeys[1] = head_key
-	mockWornGearKeys[2] = hands_key
-	mockWornGearKeys[3] = feet_key
-	mockWornGearKeys[4] = cloak_key
-	mockWornGearKeys[5] = misc_key
+	mockWornGearForms[0] = ArmorIronCuirass
+	mockWornGearForms[1] = ArmorIronHelmet
+	mockWornGearForms[2] = ArmorIronGauntlets
+	mockWornGearForms[3] = ArmorIronBoots
+	mockWornGearForms[4] = _Camp_Cloak_BasicBurlap
+	mockWornGearForms[5] = ArmorIronShield
 
 	StorageUtil.IntListResize(_Frost_WornGearData_mock, body_key, 13)
 	StorageUtil.IntListSet(_Frost_WornGearData_mock, body_key, 0, ds.GEARTYPE_BODY) ; type
@@ -1081,7 +1089,7 @@ function testRecalculate_AllGear()
     StorageUtil.IntListSet(_Frost_WornGearData_mock, misc_key, 11, 1)    ; misc warmth
     StorageUtil.IntListSet(_Frost_WornGearData_mock, misc_key, 12, 20)    ; misc coverage
 
-    clothing.RecalculateProtectionData(mockWornGearKeys, mockWornGearValues, _Frost_WornGearData_mock)
+    clothing.RecalculateProtectionData(mockWornGearForms, mockWornGearValues, _Frost_WornGearData_mock)
 
     expectInt(mockWornGearValues[0], to, beEqualTo, 75)
     expectInt(mockWornGearValues[1], to, beEqualTo, 35)
@@ -1109,7 +1117,7 @@ endFunction
 function testRecalculate_ExtraHead()
 	beforeEach_RecalculateProtectionDataSuite()
 	
-	mockWornGearKeys[0] = body_key
+	mockWornGearForms[0] = ArmorIronCuirass
 
 	StorageUtil.IntListResize(_Frost_WornGearData_mock, body_key, 13)
 	StorageUtil.IntListSet(_Frost_WornGearData_mock, body_key, 0, ds.GEARTYPE_BODY) ; type
@@ -1126,7 +1134,7 @@ function testRecalculate_ExtraHead()
     StorageUtil.IntListSet(_Frost_WornGearData_mock, body_key, 11, 0)    ; misc warmth
     StorageUtil.IntListSet(_Frost_WornGearData_mock, body_key, 12, 0)    ; misc coverage
 
-    clothing.RecalculateProtectionData(mockWornGearKeys, mockWornGearValues, _Frost_WornGearData_mock)
+    clothing.RecalculateProtectionData(mockWornGearForms, mockWornGearValues, _Frost_WornGearData_mock)
 
     expectInt(mockWornGearValues[0], to, beEqualTo, 75)
     expectInt(mockWornGearValues[1], to, beEqualTo, 35)
@@ -1149,8 +1157,8 @@ endFunction
 function testRecalculate_ConflictHead()
 	beforeEach_RecalculateProtectionDataSuite()
 	
-	mockWornGearKeys[0] = body_key
-	mockWornGearKeys[1] = head_key
+	mockWornGearForms[0] = ArmorIronCuirass
+	mockWornGearForms[1] = ArmorIronHelmet
 
 	StorageUtil.IntListResize(_Frost_WornGearData_mock, body_key, 13)
 	StorageUtil.IntListSet(_Frost_WornGearData_mock, body_key, 0, ds.GEARTYPE_BODY) ; type
@@ -1182,7 +1190,7 @@ function testRecalculate_ConflictHead()
     StorageUtil.IntListSet(_Frost_WornGearData_mock, head_key, 11, 0)    ; misc warmth
     StorageUtil.IntListSet(_Frost_WornGearData_mock, head_key, 12, 0)    ; misc coverage
 
-    clothing.RecalculateProtectionData(mockWornGearKeys, mockWornGearValues, _Frost_WornGearData_mock)
+    clothing.RecalculateProtectionData(mockWornGearForms, mockWornGearValues, _Frost_WornGearData_mock)
 
     expectInt(mockWornGearValues[0], to, beEqualTo, 75)
     expectInt(mockWornGearValues[1], to, beEqualTo, 35)
@@ -1206,8 +1214,8 @@ endFunction
 function testRecalculate_ExtraCloak()
 	beforeEach_RecalculateProtectionDataSuite()
 	
-	mockWornGearKeys[0] = body_key
-	mockWornGearKeys[1] = cloak_key
+	mockWornGearForms[0] = ArmorIronCuirass
+	mockWornGearForms[1] = _Camp_Cloak_BasicBurlap
 
 	StorageUtil.IntListResize(_Frost_WornGearData_mock, body_key, 13)
 	StorageUtil.IntListSet(_Frost_WornGearData_mock, body_key, 0, ds.GEARTYPE_BODY) ; type
@@ -1224,7 +1232,7 @@ function testRecalculate_ExtraCloak()
     StorageUtil.IntListSet(_Frost_WornGearData_mock, body_key, 11, 0)    ; misc warmth
     StorageUtil.IntListSet(_Frost_WornGearData_mock, body_key, 12, 0)    ; misc coverage
 
-    clothing.RecalculateProtectionData(mockWornGearKeys, mockWornGearValues, _Frost_WornGearData_mock)
+    clothing.RecalculateProtectionData(mockWornGearForms, mockWornGearValues, _Frost_WornGearData_mock)
 
     expectInt(mockWornGearValues[0], to, beEqualTo, 75)
     expectInt(mockWornGearValues[1], to, beEqualTo, 35)
@@ -1247,8 +1255,8 @@ endFunction
 function testRecalculate_ConflictCloak()
 	beforeEach_RecalculateProtectionDataSuite()
 	
-	mockWornGearKeys[0] = body_key
-	mockWornGearKeys[1] = cloak_key
+	mockWornGearForms[0] = ArmorIronCuirass
+	mockWornGearForms[1] = _Camp_Cloak_BasicBurlap
 
 	StorageUtil.IntListResize(_Frost_WornGearData_mock, body_key, 13)
 	StorageUtil.IntListSet(_Frost_WornGearData_mock, body_key, 0, ds.GEARTYPE_BODY) ; type
@@ -1280,7 +1288,7 @@ function testRecalculate_ConflictCloak()
     StorageUtil.IntListSet(_Frost_WornGearData_mock, cloak_key, 11, 0)    ; misc warmth
     StorageUtil.IntListSet(_Frost_WornGearData_mock, cloak_key, 12, 0)    ; misc coverage
 
-    clothing.RecalculateProtectionData(mockWornGearKeys, mockWornGearValues, _Frost_WornGearData_mock)
+    clothing.RecalculateProtectionData(mockWornGearForms, mockWornGearValues, _Frost_WornGearData_mock)
 
     expectInt(mockWornGearValues[0], to, beEqualTo, 75)
     expectInt(mockWornGearValues[1], to, beEqualTo, 35)
@@ -1304,15 +1312,15 @@ endFunction
 function testRecalculate_Misc()
 	beforeEach_RecalculateProtectionDataSuite()
 	
-	mockWornGearKeys[0] = body_key
-	mockWornGearKeys[1] = head_key
-	mockWornGearKeys[2] = hands_key
-	mockWornGearKeys[3] = feet_key
-	mockWornGearKeys[4] = cloak_key
-	mockWornGearKeys[5] = misc_key1
-	mockWornGearKeys[6] = misc_key2
-	mockWornGearKeys[7] = misc_key3
-	mockWornGearKeys[8] = misc_key4
+	mockWornGearForms[0] = ArmorIronCuirass
+	mockWornGearForms[1] = ArmorIronHelmet
+	mockWornGearForms[2] = ArmorIronGauntlets
+	mockWornGearForms[3] = ArmorIronBoots
+	mockWornGearForms[4] = _Camp_Cloak_BasicBurlap
+	mockWornGearForms[5] = _Frost_UnitTestMiscGear1
+	mockWornGearForms[6] = _Frost_UnitTestMiscGear2
+	mockWornGearForms[7] = _Frost_UnitTestMiscGear3
+	mockWornGearForms[8] = _Frost_UnitTestMiscGear4
 
 	StorageUtil.IntListResize(_Frost_WornGearData_mock, body_key, 13)
 	StorageUtil.IntListSet(_Frost_WornGearData_mock, body_key, 0, ds.GEARTYPE_BODY) ; type
@@ -1449,7 +1457,7 @@ function testRecalculate_Misc()
     StorageUtil.IntListSet(_Frost_WornGearData_mock, misc_key4, 11, 10)    ; misc warmth
     StorageUtil.IntListSet(_Frost_WornGearData_mock, misc_key4, 12, 9)    ; misc coverage
 
-    clothing.RecalculateProtectionData(mockWornGearKeys, mockWornGearValues, _Frost_WornGearData_mock)
+    clothing.RecalculateProtectionData(mockWornGearForms, mockWornGearValues, _Frost_WornGearData_mock)
 
     expectInt(mockWornGearValues[0], to, beEqualTo, 75)
     expectInt(mockWornGearValues[1], to, beEqualTo, 35)
