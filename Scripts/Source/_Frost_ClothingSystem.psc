@@ -88,11 +88,6 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGear
     ; Return True if recalculation of warmth and coverage is necessary, false otherwise.
     int slot_mask = akArmor.GetSlotMask()
 
-    ;int type = handler.GetGearType(akArmor, slot_mask, false)
-    ;if type == -1
-    ;    return
-    ;endif
-
     int[] armor_data = handler.GetArmorProtectionData(akArmor)
 
     ; The system will store ONE Body, Head, Hands, Feet, and Cloak slot Warmth and Coverage.
