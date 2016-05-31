@@ -658,6 +658,7 @@ int[] function GetArmorProtectionDataByKeyword(Armor akArmor)
 
 	int keyword_count = akArmor.GetNumKeywords()
 	int i = 1
+	bool found_keyword = false
 	while i < keyword_count
 		Keyword k = akArmor.GetNthKeyword(i)
 		int idx = StandardKeywords.Find(k)
@@ -665,15 +666,23 @@ int[] function GetArmorProtectionDataByKeyword(Armor akArmor)
 			; standard keyword
 			int determined_value = GetArmorProtectionDataByType(akArmor, gear_type, idx)
 			armor_data[StandardPartIndex[idx]] = determined_value
+			found_keyword = true
 		else
 			; extra parts
 			idx = OverrideKeywords.Find(k)
 			if idx != -1
 				armor_data[OverrideExtraPartIndex[idx]] = OverrideValues[idx]
+				found_keyword = true
 			endif
 		endif
 		i += 1
 	endWhile
+
+	; We found at least one keyword, but it wasn't the main warmth value. Make sure our
+	; data still gets counted.
+	if found_keyword && armor_data[1] == -1
+		armor_data[1] = 0
+	endif
 	return armor_data
 endFunction
 
@@ -1232,7 +1241,7 @@ int[] function GetDefaultArmorData(Armor akArmor, bool abUsableValues = false)
 		armor_data[14] = JsonUtil.IntListGet(defaults_path, dskey, 14) - modifier
 		armor_data[15] = JsonUtil.IntListGet(defaults_path, dskey, 15) - modifier
 	endif
-	debug.trace("Returning default armor data " + armor_data)
+	; debug.trace("Returning default armor data " + armor_data)
 	return armor_data
 endFunction
 
