@@ -362,7 +362,10 @@ function SendEvent_UpdateWarmth()
     endif
 endFunction
 
-
+bool function PlayerHasArmorEquipped(Armor akArmor)
+    ; An alias for PlayerRef.IsEquipped(), to make testing easier.
+    return PlayerRef.IsEquipped(akArmor)
+endFunction
 
 ; Array functions ==============================================================
 
@@ -477,10 +480,6 @@ endFunction
 
 bool function IsEven(int aiValue)
     return aiValue % 2 == 0
-endFunction
-
-bool function PlayerHasArmorEquipped(Armor akArmor)
-    return PlayerRef.IsEquipped(akArmor)
 endFunction
 
 
