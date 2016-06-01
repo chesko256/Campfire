@@ -1472,7 +1472,7 @@ function RefundEnduranceSkillPoints()
 endFunction
 
 
-
+Armor[] armor_entries
 int[] area_oids
 int[] modify_area_oids
 int[] use_preset_oids
@@ -1491,6 +1491,7 @@ function GenerateEquipmentPage()
 	bool generated_header = false
 	Armor[] worn_armor = GetAllWornArmor()
 
+	armor_entries = new Armor[128]
 	area_oids = new int[128]
 	modify_area_oids = new int[128]
 	use_preset_oids = new int[128]
@@ -1508,7 +1509,9 @@ function GenerateEquipmentPage()
 		endif
 		AddHeaderOption(worn_armor[i].GetName())
 		AddHeaderOption("")
+
 		int[] armor_data = handler.GetArmorProtectionData(worn_armor[i] as Armor)
+
 		int disable_if_ignored = 0
 		if armor_data[15] == 1
 			disable_if_ignored = OPTION_FLAG_DISABLED
@@ -1522,30 +1525,33 @@ function GenerateEquipmentPage()
 			armor_data[2] = 0
 		endif
 
+		armor_entries[i] = worn_armor[i]
 		warmth_slider_oids[i] = AddSliderOption("Warmth:", armor_data[1], "{0}", OPTION_FLAG_DISABLED)
 		area_oids[i] = AddMenuOption("Type:", GetTypeString(armor_data[0], handler), disable_if_ignored)
 		coverage_slider_oids[i] = AddSliderOption("Coverage:", armor_data[2], "{0}", OPTION_FLAG_DISABLED)
 		ignore_flag_oids[i] = AddToggleOption("Ignore:", disable_if_ignored as bool)
-		use_preset_oids[i] = AddMenuOption("Set Protection...", "SELECT", disable_if_ignored)
-		modify_area_oids[i] = AddMenuOption("Edit Accessories...", "SELECT", disable_if_ignored)		
+		use_preset_oids[i] = AddMenuOption("Set Protection...", "", disable_if_ignored)
+		modify_area_oids[i] = AddMenuOption("Edit Accessories...", "", disable_if_ignored)		
 
 		; Recursively generate extra parts entries, if data present
 
 		i += 1
 	endWhile
 
-	ShowMessage("Show the Armor and Clothing Page Tutorial?", false)
-	ShowMessage("On this page, you can view and set the warmth and coverage of your currently worn equipment.\n\nSelect 'Set Protection...', and select one of the options that appear. This will set the warmth and coverage to appropriate values based on your selection and the gear's type.", false)
-	ShowMessage("You can also select 'Set Values Manually' from the 'Set Protection...' menu, which will allow you to click Warmth or Coverage and set them to any value you like.\n\nYou can edit the gear's type by clicking the Type option. Frostfall will only count the warmth and coverage of one piece of gear of type Body, Head, Hands, Feet, and Cloak at a time. However, all worn gear of type Misc will be counted.", false)
-	ShowMessage("Checking 'Ignore' will make Frostfall ignore equipment of this type. It will not grant warmth or coverage. In general, circlets, rings, and amulets are ignored.\n\nClick 'Edit Accessories...' to access options where you can tell Frostfall if this gear includes extra parts, like a cuirass with a built-in cloak, and so on. Those extra parts will then have their own entry created on the page where you can edit them separately.", false)
-	ShowMessage("To restore a piece of gear to its default values, select 'Set Protection...', and select 'Restore Default Values'.\n\nTo restore the default values of ALL equipment in the entire game (effectively deleting all of your profile's custom gear settings), select 'Restore Defaults for All Equipment' at the top of the page.", false)
+	bool display_tutorial = ShowMessage("Show the Armor and Clothing Page Tutorial?", true)
+	if display_tutorial
+		ShowMessage("On this page, you can set the warmth and coverage of your currently worn equipment.\n\nSelect 'Set Protection...', and select one of the options that appear. This will set up your equipment with values appropriate to option you selected ('Layered', 'Tight-Stitched', etc) and the type of equipment it is (body, head, hands, etc).", false)
+		ShowMessage("If you want full control, you can select 'Set Protection...', 'Set Values Manually', which will allow you to set warmth or coverage to any value you like.\n\nYou can edit the gear's type by clicking the Type option. (In general, this should be ) Frostfall will only count the warmth and coverage of one piece of gear of type Body, Head, Hands, Feet, and Cloak at a time. However, all worn gear of type Misc will be counted.", false)
+		ShowMessage("Checking 'Ignore' will make Frostfall ignore equipment of this type. It will not grant warmth or coverage. In general, circlets, rings, and amulets are ignored.\n\nClick 'Edit Accessories...' to access options where you can tell Frostfall if this gear includes extra parts, like a cuirass with a built-in cloak, and so on. Those extra parts will then have their own entry created on the page where you can edit them separately.", false)
+		ShowMessage("To restore a piece of gear to its default values, select 'Set Protection...', and select 'Restore Default Values'.\n\nTo restore the default values of ALL equipment in the entire game (effectively deleting all of your profile's custom gear settings), select 'Restore Defaults for All Equipment' at the top of the page.", false)
+	endif
 endFunction
 
 function GenerateEquipmentPageHeader()
 	AddHeaderOption("General")
 	AddHeaderOption("")
-	AddTextOption("Restore Defaults for All Equipment", "Restore")
-	AddTextOption("(Scroll to view all equipment)", "", OPTION_FLAG_DISABLED)
+	AddTextOption("Restore Defaults for All Equipment", "")
+	AddTextOption("Show Tutorial", "")
 endFunction
 
 Armor[] function GetAllWornArmor()
