@@ -81,7 +81,7 @@ function GetGearTypeSuite()
 	it("should return the correct gear type for hands gear", testGetGearType_Hands())
 	it("should return the correct gear type for feet gear", testGetGearType_Feet())
 	it("should return the correct gear type for cloak gear", testGetGearType_Cloak())
-	it("should return the correct gear type for shields in strict mode", testGetGearType_Shield())
+	it("should return the correct gear type for shields", testGetGearType_Shield())
 	it("should return the NONE gear type if type couldn't be found", testGetGearType_Unknown())
 endFunction
 
