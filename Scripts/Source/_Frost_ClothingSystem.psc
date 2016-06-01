@@ -89,14 +89,14 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGear
     int slot_mask = akArmor.GetSlotMask()
 
     int[] armor_data = handler.GetArmorProtectionData(akArmor)
+    if armor_data[15] == 1
+        return false
+    endif
 
     ; The system will store ONE Body, Head, Hands, Feet, and Cloak slot Warmth and Coverage.
     ; The system will keep any number of warmth/coverage values for Misc.
     ; Explicit gear types win over extra part data.
     int idx = akWornGearFormsArray.Find(akArmor)
-    ; debug.trace("dskey " + dskey + " idx " + idx)
-    ;@TODO: Also check the data store
-    ;@TODO: Handle ignore flag
     if idx == -1
         ; plug the data in
         ArrayAddArmor(akWornGearFormsArray, akArmor)
