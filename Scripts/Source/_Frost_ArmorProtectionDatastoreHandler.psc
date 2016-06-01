@@ -154,6 +154,7 @@ int property SLOTMASK_EARS 						= 0x00002000 autoReadOnly hidden
 int property SLOTMASK_CLOAK 					= 0x00010000 autoReadOnly hidden
 int property SLOTMASK_BACKPACK 					= 0x00020000 autoReadOnly hidden
 
+int property GEARTYPE_NONE = 0 autoReadOnly hidden
 int property GEARTYPE_BODY = 1 autoReadOnly hidden
 int property GEARTYPE_HEAD = 2 autoReadOnly hidden
 int property GEARTYPE_HANDS = 3 autoReadOnly hidden
@@ -726,53 +727,6 @@ int function GetGearType(Armor akArmor, int aiSlotMask, bool abStrictMode = true
 		endif
 	endif
 endFunction
-
-;@DEPRECATED
-;/
-int function GetGearType(Form akBaseObject)
-	if !akBaseObject
-		return -1
-	endif
-
-	; Gear Type Overrides
-    if akBaseObject.HasKeyword(WAF_ClothingCloak)
-        return 7
-    endif
-    Armor armor_object = akBaseObject as Armor
-    if !armor_object
-    	return -1
-    endif
-    int mySlotMask = armor_object.GetSlotMask()
-    if LogicalAnd(mySlotMask, armor_object.kSlotMask31) && !LogicalAnd(mySlotMask, armor_object.kSlotMask32)
-        return 3
-    endif
-
-	bool bFound = false
-	if akBaseObject.HasKeyword(ArmorCuirass) || akBaseObject.HasKeyword(ClothingBody)
-		return 1
-	endif
-	if akBaseObject.HasKeyword(ArmorGauntlets) || akBaseObject.HasKeyword(ClothingHands)
-		return 2
-	endif
-	if akBaseObject.HasKeyword(ArmorHelmet) || akBaseObject.HasKeyword(ClothingHead)
-		return 3
-	endif
-	if akBaseObject.HasKeyword(ArmorBoots) || akBaseObject.HasKeyword(ClothingFeet)	
-		return 4
-	endif
-	if !bFound
-		if _Camp_Backpacks.HasForm(akBaseObject)
-			return 5
-		elseif akBaseObject as Ammo
-			return 6
-		elseif (akBaseObject as Armor).IsShield()
-			return 8
-		else
-			return 7
-		endif
-	endif
-endFunction
-/;
 
 int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
 	int[] armor_data = new int[16]
