@@ -253,7 +253,7 @@ endFunction
 function testAddWornGearEntryForArmorEquipped_BodyGear()
 	beforeEach_AddWornGearEntryForArmorEquippedSuite()
 
-	ds.mock_GetArmorProtectionData_value = new int[16]
+	ds.mock_GetArmorProtectionData_value = new int[15]
 	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_BODY
 	ds.mock_GetArmorProtectionData_value[1] = 75
 	ds.mock_GetArmorProtectionData_value[2] = 35
@@ -282,7 +282,7 @@ endFunction
 function testAddWornGearEntryForArmorEquipped_HeadGear()
 	beforeEach_AddWornGearEntryForArmorEquippedSuite()
 
-	ds.mock_GetArmorProtectionData_value = new int[16]
+	ds.mock_GetArmorProtectionData_value = new int[15]
 	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_HEAD
 	ds.mock_GetArmorProtectionData_value[1] = 15
 	ds.mock_GetArmorProtectionData_value[2] = 3
@@ -311,7 +311,7 @@ endFunction
 function testAddWornGearEntryForArmorEquipped_HandsGear()
 	beforeEach_AddWornGearEntryForArmorEquippedSuite()
 
-	ds.mock_GetArmorProtectionData_value = new int[16]
+	ds.mock_GetArmorProtectionData_value = new int[15]
 	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_HANDS
 	ds.mock_GetArmorProtectionData_value[1] = 7
 	ds.mock_GetArmorProtectionData_value[2] = 6
@@ -340,7 +340,7 @@ endFunction
 function testAddWornGearEntryForArmorEquipped_FeetGear()
 	beforeEach_AddWornGearEntryForArmorEquippedSuite()
 
-	ds.mock_GetArmorProtectionData_value = new int[16]
+	ds.mock_GetArmorProtectionData_value = new int[15]
 	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_FEET
 	ds.mock_GetArmorProtectionData_value[1] = 7
 	ds.mock_GetArmorProtectionData_value[2] = 6
@@ -369,7 +369,7 @@ endFunction
 function testAddWornGearEntryForArmorEquipped_CloakGear()
 	beforeEach_AddWornGearEntryForArmorEquippedSuite()
 
-	ds.mock_GetArmorProtectionData_value = new int[16]
+	ds.mock_GetArmorProtectionData_value = new int[15]
 	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_CLOAK
 	ds.mock_GetArmorProtectionData_value[1] = 5
 	ds.mock_GetArmorProtectionData_value[2] = 5
@@ -398,7 +398,7 @@ endFunction
 function testAddWornGearEntryForArmorEquipped_MiscGear()
 	beforeEach_AddWornGearEntryForArmorEquippedSuite()
 
-	ds.mock_GetArmorProtectionData_value = new int[16]
+	ds.mock_GetArmorProtectionData_value = new int[15]
 	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_MISC
 	ds.mock_GetArmorProtectionData_value[1] = 0
 	ds.mock_GetArmorProtectionData_value[2] = 20
@@ -426,37 +426,37 @@ endFunction
 function testAddWornGearEntryForArmorEquipped_AllGear()
 	beforeEach_AddWornGearEntryForArmorEquippedSuite()
 
-	ds.mock_GetArmorProtectionData_value = new int[16]
+	ds.mock_GetArmorProtectionData_value = new int[15]
 	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_BODY
 	ds.mock_GetArmorProtectionData_value[1] = 75
 	ds.mock_GetArmorProtectionData_value[2] = 35
 	bool b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronCuirass, mockWornGearForms, _Frost_WornGearData_mock)
 
-	ds.mock_GetArmorProtectionData_value = new int[16]
+	ds.mock_GetArmorProtectionData_value = new int[15]
 	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_HEAD
 	ds.mock_GetArmorProtectionData_value[1] = 15
 	ds.mock_GetArmorProtectionData_value[2] = 3
 	b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronHelmet, mockWornGearForms, _Frost_WornGearData_mock)
 
-	ds.mock_GetArmorProtectionData_value = new int[16]
+	ds.mock_GetArmorProtectionData_value = new int[15]
 	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_HANDS
 	ds.mock_GetArmorProtectionData_value[1] = 7
 	ds.mock_GetArmorProtectionData_value[2] = 6
 	b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronGauntlets, mockWornGearForms, _Frost_WornGearData_mock)
 
-	ds.mock_GetArmorProtectionData_value = new int[16]
+	ds.mock_GetArmorProtectionData_value = new int[15]
 	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_FEET
 	ds.mock_GetArmorProtectionData_value[1] = 7
 	ds.mock_GetArmorProtectionData_value[2] = 6
 	b = clothing.AddWornGearEntryForArmorEquipped(ArmorIronBoots, mockWornGearForms, _Frost_WornGearData_mock)
 
-	ds.mock_GetArmorProtectionData_value = new int[16]
+	ds.mock_GetArmorProtectionData_value = new int[15]
 	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_CLOAK
 	ds.mock_GetArmorProtectionData_value[1] = 5
 	ds.mock_GetArmorProtectionData_value[2] = 5
 	b = clothing.AddWornGearEntryForArmorEquipped(_Camp_Cloak_BasicBurlap, mockWornGearForms, _Frost_WornGearData_mock)
 
-	ds.mock_GetArmorProtectionData_value = new int[16]
+	ds.mock_GetArmorProtectionData_value = new int[15]
 	ds.mock_GetArmorProtectionData_value[0] = ds.GEARTYPE_MISC
 	ds.mock_GetArmorProtectionData_value[1] = 1
 	ds.mock_GetArmorProtectionData_value[2] = 20

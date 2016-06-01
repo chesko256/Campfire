@@ -1,4 +1,4 @@
-scriptname _Frost_ArmorProtectionDatastoreHandler extends _Frost_APDatastoreDefaultData
+scriptname _Frost_ArmorProtectionDatastoreHandler extends Quest
 
 import StorageUtil
 import StringUtil
@@ -154,13 +154,14 @@ int property SLOTMASK_EARS 						= 0x00002000 autoReadOnly hidden
 int property SLOTMASK_CLOAK 					= 0x00010000 autoReadOnly hidden
 int property SLOTMASK_BACKPACK 					= 0x00020000 autoReadOnly hidden
 
-int property GEARTYPE_NONE = 0 autoReadOnly hidden
+int property GEARTYPE_NOTFOUND = 0 autoReadOnly hidden
 int property GEARTYPE_BODY = 1 autoReadOnly hidden
 int property GEARTYPE_HEAD = 2 autoReadOnly hidden
 int property GEARTYPE_HANDS = 3 autoReadOnly hidden
 int property GEARTYPE_FEET = 4 autoReadOnly hidden
 int property GEARTYPE_CLOAK = 5 autoReadOnly hidden
 int property GEARTYPE_MISC = 6 autoReadOnly hidden
+int property GEARTYPE_IGNORE = 7 autoReadOnly hidden
 
 Keyword[] OverrideKeywords
 int[] OverrideValues
@@ -616,42 +617,44 @@ function InitializeDatastore()
 endFunction
 
 int[] function GetTotalArmorProtectionValues(Armor akArmor)
-	int[] armor_data = new int[2]
+	int[] armor_totals = new int[2]
 
 	if !akArmor
-		armor_data[0] = -1
-		armor_data[1] = -1
-		return armor_data
+		armor_totals[0] = 0
+		armor_totals[1] = 0
+		return armor_totals
 	endif
 
 	int[] ap = GetArmorProtectionData(akArmor)
 
-	; Original contract with ClothingSystem maintained (3.1).
-	if ap[15] == 1
-		armor_data[0] = 0
-		armor_data[1] = 0
-		return armor_data
+	if ap[0] == GEARTYPE_IGNORE
+		armor_totals[0] = 0
+		armor_totals[1] = 0
+		return armor_totals
 	endif
 
-	armor_data[0] = ap[1] + ap[3] + ap[5] + ap[7] + ap[9] + ap[11] + ap[13]
-	armor_data[1] = ap[2] + ap[4] + ap[6] + ap[8] + ap[10] + ap[12] + ap[14]
+	armor_totals[0] = ap[1] + ap[3] + ap[5] + ap[7] + ap[9] + ap[11] + ap[13]
+	armor_totals[1] = ap[2] + ap[4] + ap[6] + ap[8] + ap[10] + ap[12] + ap[14]
 
-	return armor_data
+	return armor_totals
 endFunction
 
 int[] function GetArmorProtectionDataByKeyword(Armor akArmor)
-	int[] armor_data = new int[16]
+	int[] armor_data = new int[15]
+	
+	;@TODO: Do I need this?
 	armor_data[1] = -1
+
 	if akArmor.HasKeyword(_Frost_Ignore)
-		armor_data[15] = 1
+		armor_data[0] = GEARTYPE_IGNORE
 		return armor_data
 	endif
 	
 	int armor_mask = akArmor.GetSlotMask()
-	int gear_type = GetGearType(akArmor, armor_mask, abStrictMode = true)
-	if gear_type == -1
+	int gear_type = GetGearType(akArmor, armor_mask)
+	if gear_type == GEARTYPE_IGNORE
 		; No gear type found for this item. Ignore it.
-		armor_data[15] = 1
+		armor_data[0] = GEARTYPE_IGNORE
 		return armor_data
 	endif
 
@@ -681,6 +684,8 @@ int[] function GetArmorProtectionDataByKeyword(Armor akArmor)
 
 	; We found at least one keyword, but it wasn't the main warmth value. Make sure our
 	; data still gets counted.
+
+	;@TODO: Do I need this?
 	if found_keyword && armor_data[1] == -1
 		armor_data[1] = 0
 	endif
@@ -703,8 +708,7 @@ int function GetArmorProtectionDataByType(Armor akArmor, int aiGearType, int aiS
 	endif
 endFunction
 
-int function GetGearType(Armor akArmor, int aiSlotMask, bool abStrictMode = true)
-	; Check base types
+int function GetGearType(Armor akArmor, int aiSlotMask)
 	if LogicalAnd(aiSlotMask, SLOTMASK_BODY)
 		return GEARTYPE_BODY
 	elseif LogicalAnd(aiSlotMask, SLOTMASK_HAIR) || LogicalAnd(aiSlotMask, SLOTMASK_HEAD)
@@ -715,21 +719,15 @@ int function GetGearType(Armor akArmor, int aiSlotMask, bool abStrictMode = true
 		return GEARTYPE_FEET
 	elseif LogicalAnd(aiSlotMask, SLOTMASK_CLOAK) || akArmor.HasKeyword(WAF_ClothingCloak)
 		return GEARTYPE_CLOAK
+	elseif LogicalAnd(aiSlotMask, SLOTMASK_SHIELD)
+		return GEARTYPE_MISC
 	else
-		if abStrictMode
-			if LogicalAnd(aiSlotMask, SLOTMASK_SHIELD)
-				return GEARTYPE_MISC
-			else
-				return -1
-			endif
-		else
-			return GEARTYPE_MISC
-		endif
+		return GEARTYPE_IGNORE
 	endif
 endFunction
 
 int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
-	int[] armor_data = new int[16]
+	int[] armor_data = new int[15]
 
 	; The slot mask is the single source of truth for what "kind" of armor this is.
 	int armor_mask = akArmor.GetSlotMask()
@@ -740,19 +738,17 @@ int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
 	endif
 
 	if LogicalAnd(armor_mask, SLOTMASK_RING) || LogicalAnd(armor_mask, SLOTMASK_AMULET)
-		armor_data[15] = 1
+		armor_data[0] = GEARTYPE_IGNORE
 		return armor_data
 	endif
 
-	int gear_type = GetGearType(akArmor, armor_mask, abStrictMode = true)
-
-	if gear_type == -1
-		; No gear type found for this item. Ignore it.
-		armor_data[15] = 1
-		return armor_data
-	endif
-
+	int gear_type = GetGearType(akArmor, armor_mask)
 	armor_data[0] = gear_type
+
+	if gear_type == GEARTYPE_IGNORE
+		; No gear type found for this item. Ignore it.
+		return armor_data
+	endif
 
 	if gear_type == GEARTYPE_BODY
 		armor_data[1] = DEFAULT_BODY_WARMTH
@@ -812,16 +808,16 @@ endFunction
 int[] function GetArmorProtectionData(Armor akArmor)
     int[] armor_data = GetArmorData(akArmor)
     
-    if armor_data[15] == 1 ; Ignore
+    if armor_data[0] == GEARTYPE_IGNORE ; Ignore
     	return armor_data
     endif
 
-    if armor_data[1] == -1 ; No entry for this armor.
+    if armor_data[0] == GEARTYPE_NOTFOUND ; No entry for this armor.
     	armor_data = GetArmorProtectionDataByKeyword(akArmor)
-    	if armor_data[15] == 1 ; Ignore
+    	if armor_data[0] == GEARTYPE_IGNORE ; Ignore
     		return armor_data
     	endif
-    	if armor_data[1] == -1
+    	if armor_data[0] == GEARTYPE_NOTFOUND
     		armor_data = GetArmorProtectionDataByAnalysis(akArmor)
     	endif
     endif
@@ -889,8 +885,7 @@ function SetArmorDataByKey(string asKey, int aiType, int aiWarmth = 0, int aiCov
 									 int aiExtraFeetWarmth = 0, int aiExtraFeetCoverage = 0, 	\
 									 int aiExtraCloakWarmth = 0, int aiExtraCloakCoverage = 0, 	\
 									 int aiExtraMiscWarmth = 0, int aiExtraMiscCoverage = 0, 	\
-									 bool abIgnore = false, bool abExportToDefaults = false,    \
-									 bool abSave = true)
+									 bool abExportToDefaults = false, bool abSave = true)
 	
 	string profile_path
 	if abExportToDefaults
@@ -916,13 +911,6 @@ function SetArmorDataByKey(string asKey, int aiType, int aiWarmth = 0, int aiCov
 		JsonUtil.IntListAdd(profile_path, asKey, aiExtraCloakCoverage	+ 1)
 		JsonUtil.IntListAdd(profile_path, asKey, aiExtraMiscWarmth		+ 1)
 		JsonUtil.IntListAdd(profile_path, asKey, aiExtraMiscCoverage	+ 1)
-		int ignore_flag
-		if abIgnore
-			ignore_flag = 1
-		else
-			ignore_flag = 0
-		endif
-		JsonUtil.IntListAdd(profile_path, asKey, ignore_flag	+ 1)
 
 		if abSave
 			JsonUtil.Save(profile_path)
@@ -936,8 +924,7 @@ function SetArmorData(Armor akArmor, int aiType, int aiWarmth = 0, int aiCoverag
 									 int aiExtraHandsWarmth = 0, int aiExtraHandsCoverage = 0, 	\
 									 int aiExtraFeetWarmth = 0, int aiExtraFeetCoverage = 0, 	\
 									 int aiExtraCloakWarmth = 0, int aiExtraCloakCoverage = 0, 	\
-									 int aiExtraMiscWarmth = 0, int aiExtraMiscCoverage = 0, 	\
-									 bool abIgnore = false)
+									 int aiExtraMiscWarmth = 0, int aiExtraMiscCoverage = 0)
 	
 	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
 	string dskey = GetDatastoreKeyFromForm(akArmor)
@@ -958,13 +945,6 @@ function SetArmorData(Armor akArmor, int aiType, int aiWarmth = 0, int aiCoverag
 		JsonUtil.IntListAdd(profile_path, dskey, aiExtraCloakCoverage	+ 1)
 		JsonUtil.IntListAdd(profile_path, dskey, aiExtraMiscWarmth		+ 1)
 		JsonUtil.IntListAdd(profile_path, dskey, aiExtraMiscCoverage	+ 1)
-		int ignore_flag
-		if abIgnore
-			ignore_flag = 1
-		else
-			ignore_flag = 0
-		endif
-		JsonUtil.IntListAdd(profile_path, dskey, ignore_flag	+ 1)
 		JsonUtil.Save(profile_path)
 	endif
 endFunction
@@ -991,7 +971,6 @@ function SetArmorDataA(Armor akArmor, int[] aiProtectionValues)
 		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[12]	+ 1) ; aiExtraCloakCoverage
 		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[13]	+ 1) ; aiExtraMiscWarmth
 		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[14]	+ 1) ; aiExtraMiscCoverage
-		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[15]	+ 1) ; abIgnore
 		JsonUtil.Save(profile_path)
 	endif
 endFunction
@@ -1002,8 +981,7 @@ bool function UpdateArmorData(Armor akArmor, int aiType = -1, int aiWarmth = -1,
 	                                        int aiExtraHandsWarmth = -1, int aiExtraHandsCoverage = -1, \
 	                                        int aiExtraFeetWarmth = -1, int aiExtraFeetCoverage = -1, 	\
 	                                        int aiExtraCloakWarmth = -1, int aiExtraCloakCoverage = -1, \
-	                                        int aiExtraMiscWarmth = -1, int aiExtraMiscCoverage = -1, 	\
-	                                        bool abIgnore = false)
+	                                        int aiExtraMiscWarmth = -1, int aiExtraMiscCoverage = -1)
 	
 	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
 	string dskey = GetDatastoreKeyFromForm(akArmor)
@@ -1053,15 +1031,6 @@ bool function UpdateArmorData(Armor akArmor, int aiType = -1, int aiWarmth = -1,
 		endif
 		if aiExtraMiscCoverage != -1
 			JsonUtil.IntListSet(profile_path, dskey, 14, aiExtraMiscCoverage	+ 1)
-		endif
-		if abIgnore != -1
-			int ignore_flag
-			if abIgnore
-				ignore_flag = 1
-			else
-				ignore_flag = 0
-			endif
-			JsonUtil.IntListSet(profile_path, dskey, 15, ignore_flag			+ 1)
 		endif
 		JsonUtil.Save(profile_path)
 		return true
@@ -1121,9 +1090,6 @@ bool function UpdateArmorDataA(Armor akArmor, int[] aiProtectionValues)
 		if aiProtectionValues[14] != -1
 			JsonUtil.IntListSet(profile_path, dskey, 14, aiProtectionValues[14]		+ 1)
 		endif
-		if aiProtectionValues[15] != -1
-			JsonUtil.IntListSet(profile_path, dskey, 15, aiProtectionValues[15]		+ 1)
-		endif
 		JsonUtil.Save(profile_path)
 		return true
 	else
@@ -1141,7 +1107,7 @@ endFunction
 int[] function GetArmorData(Armor akArmor)
 	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
 	string dskey = GetDatastoreKeyFromForm(akArmor)
-	int[] armor_data = new int[16]
+	int[] armor_data = new int[15]
 	armor_data[1] = -1
 
 	if ProfileHasKey(profile_path, dskey)
@@ -1160,7 +1126,6 @@ int[] function GetArmorData(Armor akArmor)
 		armor_data[12] = JsonUtil.IntListGet(profile_path, dskey, 12) - 1
 		armor_data[13] = JsonUtil.IntListGet(profile_path, dskey, 13) - 1
 		armor_data[14] = JsonUtil.IntListGet(profile_path, dskey, 14) - 1
-		armor_data[15] = JsonUtil.IntListGet(profile_path, dskey, 15) - 1
 	else
 		armor_data = GetDefaultArmorData(akArmor, abUsableValues = true)
 	endif
@@ -1170,7 +1135,7 @@ endFunction
 int[] function GetDefaultArmorData(Armor akArmor, bool abUsableValues = false)
 	string defaults_path = CONFIG_PATH + ARMOR_DEFAULT_PREFIX
 	string dskey = GetDatastoreKeyFromForm(akArmor)
-	int[] armor_data = new int[16]
+	int[] armor_data = new int[15]
 	armor_data[1] = -1
 	if ProfileHasKey(defaults_path, dskey)
 		int modifier = 0
@@ -1193,12 +1158,12 @@ int[] function GetDefaultArmorData(Armor akArmor, bool abUsableValues = false)
 		armor_data[12] = JsonUtil.IntListGet(defaults_path, dskey, 12) - modifier
 		armor_data[13] = JsonUtil.IntListGet(defaults_path, dskey, 13) - modifier
 		armor_data[14] = JsonUtil.IntListGet(defaults_path, dskey, 14) - modifier
-		armor_data[15] = JsonUtil.IntListGet(defaults_path, dskey, 15) - modifier
 	endif
 	; debug.trace("Returning default armor data " + armor_data)
 	return armor_data
 endFunction
 
+;@TODO: Is this expected behavior? Shouldn't we just blow away the profile data?
 function RestoreDefaultArmorData(Armor akArmor, bool abRemoveIfNoDefaultData = false)
 	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
 	string defaults_path = CONFIG_PATH + ARMOR_DEFAULT_PREFIX
@@ -1220,7 +1185,6 @@ function RestoreDefaultArmorData(Armor akArmor, bool abRemoveIfNoDefaultData = f
 			JsonUtil.IntListSet(profile_path, dskey, 12, JsonUtil.IntListGet(defaults_path, dskey, 12))
 			JsonUtil.IntListSet(profile_path, dskey, 13, JsonUtil.IntListGet(defaults_path, dskey, 13))
 			JsonUtil.IntListSet(profile_path, dskey, 14, JsonUtil.IntListGet(defaults_path, dskey, 14))
-			JsonUtil.IntListSet(profile_path, dskey, 15, JsonUtil.IntListGet(defaults_path, dskey, 15))
 			JsonUtil.Save(profile_path)
 		else
 			if abRemoveIfNoDefaultData
