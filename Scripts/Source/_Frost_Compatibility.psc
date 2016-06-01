@@ -165,6 +165,7 @@ Armor property ArmorHideCuirass auto
 Message property _Frost_CriticalError_SKSE auto
 Message property _Frost_CriticalError_Campfire auto
 Message property _Frost_CriticalError_SkyUIInterfacePackage auto
+Message property _Frost_CriticalError_JSONReadWrite auto
 Weather property DLC2AshStorm auto hidden
 bool added_spell_books = false
 
@@ -212,16 +213,19 @@ endFunction
 function RunCompatibility()
 	VanillaGameLoadUp()
 
+	trace("[Frostfall]======================================================================================================")
+	trace("[Frostfall]                    Frostfall is now performing start-up and compatibility checks.                    ")
+	trace("[Frostfall]======================================================================================================")
+	
 	; Initialize the Equip Monitor event queue
 	(PlayerAlias as _Frost_PlayerEquipMonitor).InitializeEventQueue()
 
-	trace("[Frostfall]======================================================================================================")
-	trace("[Frostfall]                          Frostfall is now performing compatibility checks.                           ")
-	trace("[Frostfall]======================================================================================================")
-	
+	_Frost_ClothingSystem clothing = GetClothingSystem()
+	clothing.WornGearFormsIntegrityCheck(clothing.WornGearForms)
+
 	bool can_read_write = CheckJSONReadWrite()
 	if !can_read_write
-		; ERROR
+		_Frost_CriticalError_JSONReadWrite.Show()
 	endif
 
 	if _Frost_Upgraded_3_0_1.GetValueInt() != 2
@@ -236,13 +240,11 @@ function RunCompatibility()
 		Upgrade_3_1()
 	endif
 
-	if can_read_write
-		; Verify that the default datastore has been populated.
-		_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
-		int[] armor_data = handler.GetDefaultArmorData(ArmorHideCuirass, true)
-		if armor_data[0] == -1
-			PopulateDefaultArmorData()
-		endif
+	; Verify that the default datastore has been populated.
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+	int[] armor_data = handler.GetDefaultArmorData(ArmorHideCuirass, true)
+	if armor_data[0] == -1
+		PopulateDefaultArmorData()
 	endif
 
 	; Update the previous version value with the current version
@@ -482,7 +484,7 @@ function RunCompatibility()
 	RunCompatibilityArmors()
 	
 	trace("[Frostfall]======================================================================================================")
-	trace("[Frostfall]                            Frostfall compatibility check complete.   		                        ")
+	trace("[Frostfall]                      Frostfall start-up and compatibility checks complete.   		                ")
 	trace("[Frostfall]======================================================================================================")
 
 	FrostConfig.LoadProfileOnStartup()
@@ -624,8 +626,9 @@ endFunction
 
 bool function CheckJSONReadWrite()
 	; Attempt to open the file and write a value.
-	string path = "../FrostfallData/readwrite_test"
+	string path = "../FrostfallData/startup_test_file"
 	string test_key = "test_key"
+	JsonUtil.IntListResize(path, test_key, 7)
 	JsonUtil.IntListSet(path, test_key, 0, 0)
 	JsonUtil.IntListSet(path, test_key, 1, 1)
 	JsonUtil.IntListSet(path, test_key, 2, 100)
@@ -637,12 +640,14 @@ bool function CheckJSONReadWrite()
 	; Test saving the file.
 	bool save_success = JsonUtil.Save(path)
 	if !save_success
+		debug.trace("[Frostfall][ERROR] Could not save test JSON file. Check that you have folder read/write permissions to Skyrim/Data/SKSE/FrostfallData (or, for Mod Organizer users, Mod Organizer/overwrite/SKSE/FrostfallData).")
 		return false
 	endif
 
 	; Test loading the file.
 	bool load_success = JsonUtil.Load(path)
 	if !load_success
+		debug.trace("[Frostfall][ERROR] Could not load test JSON file. Check that you have folder read/write permissions to Skyrim/Data/SKSE/FrostfallData (or, for Mod Organizer users, Mod Organizer/overwrite/SKSE/FrostfallData).")
 		return false
 	endif
 	; Test reading back the values.
@@ -666,6 +671,7 @@ bool function CheckJSONReadWrite()
 		JsonUtil.IntListClear(path, test_key)
 		return true
 	else
+		debug.trace("[Frostfall][ERROR] Could not read from test JSON file. Check that you have folder read/write permissions to Skyrim/Data/SKSE/FrostfallData (or, for Mod Organizer users, Mod Organizer/overwrite/SKSE/FrostfallData).")
 		return false
 	endif
 endFunction

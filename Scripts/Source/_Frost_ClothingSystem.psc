@@ -193,8 +193,6 @@ function RecalculateProtectionData(Armor[] akWornGearFormsArray, int[] aiWornGea
     ; | WornGearForms             | Type | Body Warm | Body Cov | ... | Misc Warm | Misc Cov |
     ; | "80145___Skyrim.esm"      | 1    | 60        | 0        |     | 0         | 0        |
     
-
-    ;WornGearFormsIntegrityCheck(akWornGearFormsArray)
     int key_count = ArrayCountArmor(akWornGearFormsArray)
     ; debug.trace("RecalculateProtectionData key_count " + key_count)
 
@@ -252,17 +250,17 @@ endFunction
 function WornGearFormsIntegrityCheck(Armor[] akWornGearFormsArray)
     int i = 0
     int key_count = ArrayCountArmor(akWornGearFormsArray)
-    debug.trace("WornGearFormsIntegrityCheck key_count " + key_count)
-    debug.trace("WornGearFormsIntegrityCheck data " + akWornGearFormsArray)
+    debug.trace("[Frostfall] Beginning worn gear integrity check.")
+    int removed = 0
     while i < key_count
-        debug.trace("current data " + akWornGearFormsArray)
-        debug.trace("checking index " + i)
         Armor the_armor = akWornGearFormsArray[i]
         if !PlayerRef.IsEquipped(the_armor)
             ArrayRemoveArmor(akWornGearFormsArray, akWornGearFormsArray[i], true)
+            removed += 1
         endif
         i += 1
     endWhile
+    debug.trace("[Frostfall] Integrity check complete. Removed " + removed + " invalid forms from worn gear list.")
 endFunction
 
 int function GetArmorWarmth(int[] aiWornGearValuesArray)
