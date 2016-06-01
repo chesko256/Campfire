@@ -679,12 +679,13 @@ endFunction
 function PopulateDefaultArmorData()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 	handler.CreateProtectionKeywordValueMaps()
-	handler.SetDefaults_Body()
-	handler.SetDefaults_Hands()
-	handler.SetDefaults_Head()
-	handler.SetDefaults_Feet()
-	handler.SetDefaults_Cloak()
-	handler.SetDefaults_Shield()
+	_Frost_APDatastoreDefaultData defaults = ((handler as Quest) as _Frost_APDatastoreDefaultData)
+	defaults.SetDefaults_Body()
+	defaults.SetDefaults_Hands()
+	defaults.SetDefaults_Head()
+	defaults.SetDefaults_Feet()
+	defaults.SetDefaults_Cloak()
+	defaults.SetDefaults_Shield()
 	handler.SaveDefaultArmorProfile()
 endFunction
 
@@ -1951,7 +1952,7 @@ function IMALoadUp()
 	handler.SetArmorDataByKey("3427___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_HEAD, 0, 0, abExportToDefaults = true, abSave = false) ; IAFalkreathCrown
 	handler.SetArmorDataByKey("3464___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_HEAD, 50, 14, abExportToDefaults = true, abSave = false) ; IAWarchiefHeavyBattlecrown
 	handler.SetArmorDataByKey("3465___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_HEAD, 50, 14, abExportToDefaults = true, abSave = false) ; IAWarchiefLightBattlecrown
-	handler.SetArmorDataByKey("143593___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_HEAD, abIgnore = true, abExportToDefaults = true, abSave = false) ; IAConanCirclet 	@CHECK
+	handler.SetArmorDataByKey("143593___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_IGNORE, abExportToDefaults = true, abSave = false) ; IAConanCirclet 	@CHECK
 	handler.SetArmorDataByKey("143464___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_HEAD, 50, 14, aiExtraCloakWarmth = 40, aiExtraCloakCoverage = 12, abExportToDefaults = true, abSave = false) ; IAMantleSilverHandHeavy	@MULTI
 	handler.SetArmorDataByKey("143465___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_HEAD, 50, 14, aiExtraCloakWarmth = 40, aiExtraCloakCoverage = 12, abExportToDefaults = true, abSave = false) ; IAMantleSilverHandLight	@MULTI
 	handler.SetArmorDataByKey("4807___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_HEAD, 35, 43, abExportToDefaults = true, abSave = false) ; IASeadogTricorne
@@ -2053,17 +2054,17 @@ function IMALoadUp()
 	handler.SetArmorDataByKey("13097___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_CLOAK, 10, 10, abExportToDefaults = true, abSave = false) ; IAApotheusScarf
 
 
-	handler.SetArmorDataByKey("143495___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_HEAD, abIgnore = true, abExportToDefaults = true, abSave = false) ; IATrollbaneHeavyMask		@IGNORE
-	handler.SetArmorDataByKey("143502___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_HEAD, abIgnore = true, abExportToDefaults = true, abSave = false) ; IATrollbaneLightMask 		@IGNORE
-	handler.SetArmorDataByKey("143736___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_HEAD, abIgnore = true, abExportToDefaults = true, abSave = false) ; IATribunalMaskBronze		@IGNORE
-	handler.SetArmorDataByKey("143737___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_HEAD, abIgnore = true, abExportToDefaults = true, abSave = false) ; IATribunalMaskEbony			@IGNORE
-	handler.SetArmorDataByKey("143738___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_HEAD, abIgnore = true, abExportToDefaults = true, abSave = false) ; IATribunalMaskGold			@IGNORE
-	handler.SetArmorDataByKey("143739___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_HEAD, abIgnore = true, abExportToDefaults = true, abSave = false) ; IATribunalMaskSilver		@IGNORE
-	handler.SetArmorDataByKey("139152___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_HEAD, abIgnore = true, abExportToDefaults = true, abSave = false) ; IARitualBoethiahMask		@IGNORE
-	handler.SetArmorDataByKey("10329___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_MISC, abIgnore = true, abExportToDefaults = true, abSave = false) ; IASeadogEarings 				@IGNORE
-	handler.SetArmorDataByKey("10335___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_MISC, abIgnore = true, abExportToDefaults = true, abSave = false) ; IASeadogEyepatch				@IGNORE
-	handler.SetArmorDataByKey("145659___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_HEAD, abIgnore = true, abExportToDefaults = true, abSave = false) ; IABosmerMask 				@IGNORE
-	handler.SetArmorDataByKey("139153___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_HEAD, abIgnore = true, abExportToDefaults = true, abSave = false) ; IARitualBoethiahShroud		@IGNORE
+	handler.SetArmorDataByKey("143495___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_IGNORE, abExportToDefaults = true, abSave = false) ; IATrollbaneHeavyMask		@IGNORE
+	handler.SetArmorDataByKey("143502___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_IGNORE, abExportToDefaults = true, abSave = false) ; IATrollbaneLightMask 		@IGNORE
+	handler.SetArmorDataByKey("143736___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_IGNORE, abExportToDefaults = true, abSave = false) ; IATribunalMaskBronze		@IGNORE
+	handler.SetArmorDataByKey("143737___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_IGNORE, abExportToDefaults = true, abSave = false) ; IATribunalMaskEbony			@IGNORE
+	handler.SetArmorDataByKey("143738___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_IGNORE, abExportToDefaults = true, abSave = false) ; IATribunalMaskGold			@IGNORE
+	handler.SetArmorDataByKey("143739___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_IGNORE, abExportToDefaults = true, abSave = false) ; IATribunalMaskSilver		@IGNORE
+	handler.SetArmorDataByKey("139152___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_IGNORE, abExportToDefaults = true, abSave = false) ; IARitualBoethiahMask		@IGNORE
+	handler.SetArmorDataByKey("10329___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_IGNORE, abExportToDefaults = true, abSave = false) ; IASeadogEarings 				@IGNORE
+	handler.SetArmorDataByKey("10335___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_IGNORE, abExportToDefaults = true, abSave = false) ; IASeadogEyepatch				@IGNORE
+	handler.SetArmorDataByKey("145659___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_IGNORE, abExportToDefaults = true, abSave = false) ; IABosmerMask 				@IGNORE
+	handler.SetArmorDataByKey("139153___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_IGNORE, abExportToDefaults = true, abSave = false) ; IARitualBoethiahShroud		@IGNORE
 endFunction
 
 function SendEvent_FrostfallLoaded()

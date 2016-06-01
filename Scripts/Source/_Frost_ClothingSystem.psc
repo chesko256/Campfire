@@ -89,7 +89,7 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGear
     int slot_mask = akArmor.GetSlotMask()
 
     int[] armor_data = handler.GetArmorProtectionData(akArmor)
-    if armor_data[15] == 1
+    if armor_data[0] == handler.GEARTYPE_IGNORE
         return false
     endif
 
@@ -156,7 +156,7 @@ bool function ObjectUnequipped(Form akBaseObject)
     if _Frost_CheckInitialEquipment.GetValueInt() == 2
         Armor armor_object = akBaseObject as Armor
         int armor_mask = armor_object.GetSlotMask()
-        int gear_type = handler.GetGearType(armor_object, armor_mask, abStrictMode = false)
+        int gear_type = handler.GetGearType(armor_object, armor_mask)
         if gear_type == handler.GEARTYPE_BODY
             initial_body = armor_object
         elseif gear_type == handler.GEARTYPE_HEAD
