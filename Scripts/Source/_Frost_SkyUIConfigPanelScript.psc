@@ -1478,7 +1478,7 @@ int[] modify_area_oids
 int[] use_preset_oids
 int[] warmth_slider_oids
 int[] coverage_slider_oids
-int[] ignore_flag_oids
+int[] default_entry_oids
 
 function GenerateEquipmentPage()
 	SetCursorFillMode(LEFT_TO_RIGHT)
@@ -1497,23 +1497,22 @@ function GenerateEquipmentPage()
 	use_preset_oids = new int[128]
 	warmth_slider_oids = new int[128]
 	coverage_slider_oids = new int[128]
-	ignore_flag_oids = new int[128]
+	default_entry_oids = new int[128]
 
 	int armor_count = clothing.ArrayCountArmor(worn_armor)
 	
 	int i = 0
+	int j = 0
 	while i < armor_count
 		if !generated_header
 			GenerateEquipmentPageHeader()
 			generated_header = true
 		endif
-		AddHeaderOption(worn_armor[i].GetName())
-		AddHeaderOption("")
 
 		int[] armor_data = handler.GetArmorProtectionData(worn_armor[i] as Armor)
 
-		int disable_if_ignored = 0
-		if armor_data[15] == 1
+		int disable_if_ignored
+		if armor_data[0] == handler.GEARTYPE_IGNORE
 			disable_if_ignored = OPTION_FLAG_DISABLED
 		endif
 
@@ -1526,42 +1525,42 @@ function GenerateEquipmentPage()
 		endif
 
 		; Main entry
-		GenerateEquipmentPageEntry(worn_armor[i])
+		GenerateEquipmentPageEntry(j, worn_armor[i], armor_data[0], armor_data[1], armor_data[2], true, disable_if_ignored, handler)
 		j += 1
 
 		; Extra Body
 		if armor_data[3] > 0 || armor_data[4] > 0
-			GenerateEquipmentPageEntry(worn_armor[i])
+			GenerateEquipmentPageEntry(j, worn_armor[i], armor_data[0], armor_data[3], armor_data[4], false, disable_if_ignored, handler)
 			j += 1
 		endIf
 
 		; Extra Head
 		if armor_data[5] > 0 || armor_data[6] > 0
-			GenerateEquipmentPageEntry(worn_armor[i])
+			GenerateEquipmentPageEntry(j, worn_armor[i], armor_data[0], armor_data[5], armor_data[6], false, disable_if_ignored, handler)
 			j += 1
 		endIf
 
 		; Extra Hands
 		if armor_data[7] > 0 || armor_data[8] > 0
-			GenerateEquipmentPageEntry(worn_armor[i])
+			GenerateEquipmentPageEntry(j, worn_armor[i], armor_data[0], armor_data[7], armor_data[8], false, disable_if_ignored, handler)
 			j += 1
 		endif
 
 		; Extra Feet
 		if armor_data[9] > 0 || armor_data[10] > 0
-			GenerateEquipmentPageEntry(worn_armor[i])
+			GenerateEquipmentPageEntry(j, worn_armor[i], armor_data[0], armor_data[9], armor_data[10], false, disable_if_ignored, handler)
 			j += 1
 		endif
 
 		; Extra Cloak
 		if armor_data[11] > 0 || armor_data[12] > 0
-			GenerateEquipmentPageEntry(worn_armor[i])
+			GenerateEquipmentPageEntry(j, worn_armor[i], armor_data[0], armor_data[11], armor_data[12], false, disable_if_ignored, handler)
 			j += 1
 		endif
 
 		; Extra Misc
 		if armor_data[13] > 0 || armor_data[14] > 0
-			GenerateEquipmentPageEntry(worn_armor[i])
+			GenerateEquipmentPageEntry(j, worn_armor[i], armor_data[0], armor_data[13], armor_data[14], false, disable_if_ignored, handler)
 			j += 1
 		endif
 		i += 1
@@ -1569,35 +1568,44 @@ function GenerateEquipmentPage()
 
 	bool display_tutorial = ShowMessage("Show the Armor and Clothing Page Tutorial?", true)
 	if display_tutorial
-		ShowMessage("On this page, you can set the warmth and coverage of your currently worn equipment.\n\nSelect 'Set Protection...', and select one of the options that appear. This will set up your equipment with values appropriate to option you selected ('Layered', 'Tight-Stitched', etc) and the type of equipment it is (body, head, hands, etc).", false)
-		ShowMessage("If you want full control, you can select 'Set Protection...', 'Set Values Manually', which will allow you to set warmth or coverage to any value you like.\n\nYou can edit the gear's type by clicking the Type option. (In general, this should be ) Frostfall will only count the warmth and coverage of one piece of gear of type Body, Head, Hands, Feet, and Cloak at a time. However, all worn gear of type Misc will be counted.", false)
-		ShowMessage("Checking 'Ignore' will make Frostfall ignore equipment of this type. It will not grant warmth or coverage. In general, circlets, rings, and amulets are ignored.\n\nClick 'Edit Accessories...' to access options where you can tell Frostfall if this gear includes extra parts, like a cuirass with a built-in cloak, and so on. Those extra parts will then have their own entry created on the page where you can edit them separately.", false)
-		ShowMessage("To restore a piece of gear to its default values, select 'Set Protection...', and select 'Restore Default Values'.\n\nTo restore the default values of ALL equipment in the entire game (effectively deleting all of your profile's custom gear settings), select 'Restore Defaults for All Equipment' at the top of the page.", false)
+		ShowMessage("On this page, you can set the warmth and coverage of your currently worn equipment.\n\nSelect 'Set Protection...', and select one of the options that appear. This will set up your equipment with appropriate values for option you selected ('Layered', 'Tight-Stitched', etc) and the type of equipment it is (body, head, hands, etc).", false)
+		ShowMessage("If you want full control, you can select 'Set Protection...', 'Set Values Manually', which will allow you to set warmth or coverage to any value you like.\n\nFrostfall will count the protection of one piece of worn Body, Head, Hands, Feet, and Cloak gear at a time. However, all worn Accessories will be counted. If necessary, you can edit the gear's type by clicking the Type option.", false)
+		ShowMessage("If equipment has the 'No Protection' type, Frostfall will not allow this item to grant warmth or coverage. Things like circlets, rings, and amulets have No Protection.\n\nClick 'Add/Remove Additional Parts...' to tell Frostfall that this gear includes extra parts. For instance, your cuirass might have a built-in cloak. Or, your mage's robe might have its own hood. Those extra parts will then have their own entry created on the page where you can edit them separately.", false)
+		ShowMessage("To restore a piece of gear to its default values, select 'Restore Item Defaults'.\n\nTo restore the default values of ALL equipment in the entire game (effectively deleting all of your profile's custom gear settings), select 'Restore Defaults for All Equipment' at the top of the page.", false)
 	endif
 endFunction
 
 
-function GenerateEquipmentPageEntry(Armor akArmor, int akWarmth, int akCoverage, _Frost_ArmorProtectionDatastoreHandler akHandler)
-	; Main entry
-	armor_entries[i] = worn_armor[i]
-	warmth_slider_oids[i] = AddSliderOption("Warmth:", akWarmth, "{0}", OPTION_FLAG_DISABLED)
-	area_oids[i] = AddMenuOption("Type:", GetTypeString(armor_data[0], akHandler), disable_if_ignored)
-	coverage_slider_oids[i] = AddSliderOption("Coverage:", akCoverage, "{0}", OPTION_FLAG_DISABLED)
-	ignore_flag_oids[i] = AddToggleOption("Ignore:", disable_if_ignored as bool)
-	use_preset_oids[i] = AddMenuOption("Set Protection...", "", disable_if_ignored)
-	modify_area_oids[i] = AddMenuOption("Edit Accessories...", "", disable_if_ignored)
+function GenerateEquipmentPageEntry(int aiArrayIndex, Armor akArmor, int aiType, int akWarmth, int akCoverage, 	\
+	                                bool abIsMainPart, int aiDisableIfIgnored, _Frost_ArmorProtectionDatastoreHandler akHandler)
 
-	; Extra Body
+	armor_entries[aiArrayIndex] = akArmor
 
-	; Extra Head
+	if abIsMainPart
+		AddHeaderOption(akArmor.GetName())
+	else
+		AddHeaderOption(akArmor.GetName() + GetDescriptiveTypeString(aiType, akHandler))
+	endif
+	AddHeaderOption("")
 
-	; Extra Hands
+	warmth_slider_oids[aiArrayIndex] = AddSliderOption("Warmth:", akWarmth, "{0}", OPTION_FLAG_DISABLED)
 
-	; Extra Feet
+	if abIsMainPart
+		area_oids[aiArrayIndex] = AddMenuOption("Type:", GetTypeString(aiType, akHandler), aiDisableIfIgnored)
+	else
+		area_oids[aiArrayIndex] = AddMenuOption("Type:", GetTypeString(aiType, akHandler), OPTION_FLAG_DISABLED)
+	endif
 
-	; Extra Cloak
+	coverage_slider_oids[aiArrayIndex] = AddSliderOption("Coverage:", akCoverage, "{0}", OPTION_FLAG_DISABLED)
 
-	; Extra Misc
+	if abIsMainPart
+		modify_area_oids[aiArrayIndex] = AddMenuOption("Add/Remove Additional Parts...", "", aiDisableIfIgnored)
+	else
+		AddEmptyOption()
+	endif
+
+	use_preset_oids[aiArrayIndex] = AddMenuOption("Set Protection...", "", aiDisableIfIgnored)
+	default_entry_oids[aiArrayIndex] = AddTextOption("Restore Item Defaults", "", aiDisableIfIgnored)
 endFunction
 
 function GenerateEquipmentPageHeader()
@@ -1647,9 +1655,27 @@ string function GetTypeString(int aiType, _Frost_ArmorProtectionDatastoreHandler
 	elseif aiType == akHandler.GEARTYPE_CLOAK
 		return "Cloak"
 	elseif aiType == akHandler.GEARTYPE_MISC
-		return "Misc"
+		return "Accessory"
+	elseif aiType == akHandler.GEARTYPE_IGNORE
+		return "No Protection"
 	else
 		return "N/A"
+	endif
+endFunction
+
+string function GetDescriptiveTypeString(int aiType, _Frost_ArmorProtectionDatastoreHandler akHandler)
+	if aiType == akHandler.GEARTYPE_BODY
+		return "'s Body Gear"
+	elseif aiType == akHandler.GEARTYPE_HEAD
+		return "'s Head Gear"
+	elseif aiType == akHandler.GEARTYPE_HANDS
+		return "'s Hand Gear"
+	elseif aiType == akHandler.GEARTYPE_FEET
+		return "'s Foot Gear"
+	elseif aiType == akHandler.GEARTYPE_CLOAK
+		return "'s Cloak"
+	elseif aiType == akHandler.GEARTYPE_MISC
+		return "'s Accessory"
 	endif
 endFunction
 
