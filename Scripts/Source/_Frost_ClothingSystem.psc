@@ -101,7 +101,6 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGear
         ArrayAddArmor(akWornGearFormsArray, akArmor)
         string dskey = handler.GetDatastoreKeyFromForm(akArmor)
         int type = armor_data[0]
-        ;@TODO: no type?
         ; 0 - type
         ; 1 - body warmth
         ; 2 - body coverage
@@ -213,7 +212,8 @@ function RecalculateProtectionData(Armor[] akWornGearFormsArray, int[] aiWornGea
         while j < key_count && !gear_type_found
             ; Make sure I'm even still wearing this gear. This calculation can be
             ; out of sync with reality (queued events exit that are not yet processed).
-            ; Leave the bogus entry alone, the array will eventually be accurate.
+            ; Leave the bogus entry alone, the array will eventually be accurate after
+            ; the next integrity check.
             if PlayerHasArmorEquipped(akWornGearFormsArray[j])
                 string dskey = handler.GetDatastoreKeyFromForm(akWornGearFormsArray[j])
                 int gear_type = StorageUtil.IntListGet(akWornGearData, dskey, 0)
