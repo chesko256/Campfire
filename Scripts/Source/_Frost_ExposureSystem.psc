@@ -889,10 +889,10 @@ function GetFrostbite(bool force_frostbite = false)
 		return
 	endif
 	_Frost_ClothingSystem clothing = GetClothingSystem()
-	bool wearing_body = clothing.body_warmth
-	bool wearing_head = clothing.head_warmth
-	bool wearing_hands = clothing.hands_warmth
-	bool wearing_feet = clothing.feet_warmth
+	bool wearing_body = clothing.WornGearValues[0] > 0
+	bool wearing_head = clothing.WornGearValues[2] > 0
+	bool wearing_hands = clothing.WornGearValues[4] > 0
+	bool wearing_feet = clothing.WornGearValues[6] > 0
 	float frostbite_chance 
 	if force_frostbite
 		frostbite_chance = 0.5
