@@ -2,9 +2,9 @@ Scriptname _Frost_WeathersenseScript extends ActiveMagicEffect
 
 import CampUtil
 import FrostUtil
+import _FrostInternal
 
 Actor property PlayerRef auto
-Quest property FrostfallStrings auto
 GlobalVariable property _Frost_Setting_DisplayAttributesInWeathersense auto
 GlobalVariable property _Frost_Setting_WeathersenseDisplayMode auto
 
@@ -13,7 +13,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 EndEvent
 
 function DisplayPowerMessage()
-	_Frost_Strings str = (FrostfallStrings as _Frost_Strings)
+	_Frost_Strings str = GetFrostfallStrings()
 
 	if _Frost_Setting_WeathersenseDisplayMode.GetValue() > 3
 		return
