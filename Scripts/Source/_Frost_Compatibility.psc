@@ -174,6 +174,7 @@ GlobalVariable property _Frost_Setting_1PAnimationAllowed auto
 GlobalVariable property _Frost_Upgraded_3_0_1 auto
 GlobalVariable property _Frost_Upgraded_3_0_2 auto
 GlobalVariable property _Frost_Upgraded_3_1 auto
+GlobalVariable property _Frost_Setting_DisplayTutorials auto
 
 Event OnPlayerLoadGame()
 	RunCompatibility()
@@ -609,6 +610,9 @@ function Upgrade_3_1()
 		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "7")
 		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "8")
 		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "9")
+
+		; Re-enable tutorials on upgrade.
+		_Frost_Setting_DisplayTutorials.SetValueInt(2)
 	endif
 
 	; Create new default data

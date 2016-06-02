@@ -299,7 +299,7 @@ int property COVERAGE_MISC_MAX 					= 40 autoReadOnly hidden
 	int[15] armor_data: This gets passed around anywhere "full" 
 	data about a piece of armor is required and is used throughout the system,
 	usually after retrieving it from the datastore. The schema is essentially
-	the	same.
+	the same.
 	{
 		0: Type (See GetGearType() and GEARTYPE_* constants)
 		1: Warmth (main value)
@@ -986,7 +986,7 @@ bool function ProfileHasKey(string asProfilePath, string asKey)
 		return false
 	endif
 endFunction
-IntListSet(string FileName, string KeyName, int index, int value)
+
 ; CRUD
 function SetArmorDataByKey(string asKey, int aiType, int aiWarmth = 0, int aiCoverage = 0,		\
 									 int aiExtraBodyWarmth = 0, int aiExtraBodyCoverage = 0, 	\
@@ -1143,10 +1143,55 @@ function UpdateArmorData(Armor akArmor, int aiType = -1, int aiWarmth = -1, int 
 		endif
 		JsonUtil.Save(profile_path)
 	else
-		SetArmorData(akArmor, aiType, aiWarmth, aiCoverage, aiExtraBodyWarmth, aiExtraBodyCoverage, 	\
-					 aiExtraHeadWarmth, aiExtraHeadCoverage, aiExtraHandsWarmth, aiExtraHandsCoverage,	\
-					 aiExtraFeetWarmth, aiExtraFeetCoverage, aiExtraCloakWarmth, aiExtraCloakCoverage, 	\
-					 aiExtraMiscWarmth, aiExtraMiscCoverage)
+		; Get the default values for this gear, overwrite it with the updates, and save it.
+		int[] armor_data = GetArmorProtectionData(akArmor)
+		if aiType != -1
+			armor_data[0] = aiType
+		endif
+		if aiWarmth != -1
+			armor_data[1] = aiWarmth
+		endif
+		if aiCoverage != -1
+			armor_data[2] = aiCoverage
+		endif
+		if aiExtraBodyWarmth != -1
+			armor_data[3] = aiExtraBodyWarmth
+		endif
+		if aiExtraBodyCoverage != -1
+			armor_data[4] = aiExtraBodyCoverage
+		endif
+		if aiExtraHeadWarmth != -1
+			armor_data[5] = aiExtraHeadWarmth
+		endif
+		if aiExtraHeadCoverage != -1
+			armor_data[6] = aiExtraHeadCoverage
+		endif
+		if aiExtraHandsWarmth != -1
+			armor_data[7] = aiExtraHandsWarmth
+		endif
+		if aiExtraHandsCoverage != -1
+			armor_data[8] = aiExtraHandsCoverage
+		endif
+		if aiExtraFeetWarmth != -1
+			armor_data[9] = aiExtraFeetWarmth
+		endif
+		if aiExtraFeetCoverage != -1
+			armor_data[10] = aiExtraFeetCoverage
+		endif
+		if aiExtraCloakWarmth != -1
+			armor_data[11] = aiExtraCloakWarmth
+		endif
+		if aiExtraCloakCoverage != -1
+			armor_data[12] = aiExtraCloakCoverage
+		endif
+		if aiExtraMiscWarmth != -1
+			armor_data[13] = aiExtraMiscWarmth
+		endif
+		if aiExtraMiscCoverage != -1
+			armor_data[14] = aiExtraMiscCoverage
+		endif
+
+		SetArmorDataA(akArmor, armor_data)
 	endif
 endFunction
 
@@ -1203,7 +1248,54 @@ function UpdateArmorDataA(Armor akArmor, int[] aiProtectionValues)
 		endif
 		JsonUtil.Save(profile_path)
 	else
-		SetArmorDataA(akArmor, aiProtectionValues)
+		; Get the default values for this gear, overwrite it with the updates, and save it.
+		int[] armor_data = GetArmorProtectionData(akArmor)
+		if aiProtectionValues[0] != -1
+			armor_data[0] = aiProtectionValues[0]
+		endif
+		if aiProtectionValues[1] != -1
+			armor_data[1] = aiProtectionValues[1]
+		endif
+		if aiProtectionValues[2] != -1
+			armor_data[2] = aiProtectionValues[2]
+		endif
+		if aiProtectionValues[3] != -1
+			armor_data[3] = aiProtectionValues[3]
+		endif
+		if aiProtectionValues[4] != -1
+			armor_data[4] = aiProtectionValues[4]
+		endif
+		if aiProtectionValues[5] != -1
+			armor_data[5] = aiProtectionValues[5]
+		endif
+		if aiProtectionValues[6] != -1
+			armor_data[6] = aiProtectionValues[6]
+		endif
+		if aiProtectionValues[7] != -1
+			armor_data[7] = aiProtectionValues[7]
+		endif
+		if aiProtectionValues[8] != -1
+			armor_data[8] = aiProtectionValues[8]
+		endif
+		if aiProtectionValues[9] != -1
+			armor_data[9] = aiProtectionValues[9]
+		endif
+		if aiProtectionValues[10] != -1
+			armor_data[10] = aiProtectionValues[10]
+		endif
+		if aiProtectionValues[11] != -1
+			armor_data[11] = aiProtectionValues[11]
+		endif
+		if aiProtectionValues[12] != -1
+			armor_data[12] = aiProtectionValues[12]
+		endif
+		if aiProtectionValues[13] != -1
+			armor_data[13] = aiProtectionValues[13]
+		endif
+		if aiProtectionValues[14] != -1
+			armor_data[14] = aiProtectionValues[14]
+		endif
+		SetArmorDataA(akArmor, armor_data)
 	endif
 endFunction
 

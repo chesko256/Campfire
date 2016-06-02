@@ -18,27 +18,6 @@ Armor[] property WornGearForms auto hidden
 int[] property WornGearValues auto hidden
 Keyword property _Frost_WornGearData auto
 
-Armor property equipped_body auto hidden
-Armor property equipped_head auto hidden
-Armor property equipped_hands auto hidden
-Armor property equipped_feet auto hidden
-Armor property equipped_cloak auto hidden
-Armor property equipped_shield auto hidden
-
-int property body_warmth auto hidden
-int property head_warmth auto hidden
-int property hands_warmth auto hidden
-int property feet_warmth auto hidden
-int property cloak_warmth auto hidden
-int property shield_warmth auto hidden
-
-int property body_coverage auto hidden
-int property head_coverage auto hidden
-int property hands_coverage auto hidden
-int property feet_coverage auto hidden
-int property cloak_coverage auto hidden
-int property shield_coverage auto hidden
-
 Keyword property _Frost_DummyArmorKW auto
 Armor property initial_body auto hidden
 Armor property initial_head auto hidden
