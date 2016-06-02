@@ -156,14 +156,14 @@ int property SLOTMASK_EARS 						= 0x00002000 autoReadOnly hidden
 int property SLOTMASK_CLOAK 					= 0x00010000 autoReadOnly hidden
 int property SLOTMASK_BACKPACK 					= 0x00020000 autoReadOnly hidden
 
-int property GEARTYPE_NOTFOUND = 0 autoReadOnly hidden
-int property GEARTYPE_BODY = 1 autoReadOnly hidden
-int property GEARTYPE_HEAD = 2 autoReadOnly hidden
-int property GEARTYPE_HANDS = 3 autoReadOnly hidden
-int property GEARTYPE_FEET = 4 autoReadOnly hidden
-int property GEARTYPE_CLOAK = 5 autoReadOnly hidden
-int property GEARTYPE_MISC = 6 autoReadOnly hidden
-int property GEARTYPE_IGNORE = 7 autoReadOnly hidden
+int property GEARTYPE_NOTFOUND 					= 0 autoReadOnly hidden
+int property GEARTYPE_BODY 						= 1 autoReadOnly hidden
+int property GEARTYPE_HEAD 						= 2 autoReadOnly hidden
+int property GEARTYPE_HANDS 					= 3 autoReadOnly hidden
+int property GEARTYPE_FEET 						= 4 autoReadOnly hidden
+int property GEARTYPE_CLOAK 					= 5 autoReadOnly hidden
+int property GEARTYPE_MISC 						= 6 autoReadOnly hidden
+int property GEARTYPE_IGNORE 					= 7 autoReadOnly hidden
 
 Keyword[] OverrideKeywords
 int[] OverrideValues
@@ -178,90 +178,193 @@ int[] StandardCloakValues
 int[] StandardMiscValues
 int[] StandardPartIndex
 
-int property WARMTH_BODY_POOR = 30 autoReadOnly hidden
-int property WARMTH_BODY_LOW = 60 autoReadOnly hidden
-int property WARMTH_BODY_AVERAGE = 125 autoReadOnly hidden
-int property WARMTH_BODY_GOOD = 140 autoReadOnly hidden
-int property WARMTH_BODY_EXCELLENT = 175 autoReadOnly hidden
-int property WARMTH_BODY_MAX = 190 autoReadOnly hidden
+int property WARMTH_BODY_POOR 					= 30 autoReadOnly hidden
+int property WARMTH_BODY_LOW 					= 60 autoReadOnly hidden
+int property WARMTH_BODY_AVERAGE 				= 125 autoReadOnly hidden
+int property WARMTH_BODY_GOOD 					= 140 autoReadOnly hidden
+int property WARMTH_BODY_EXCELLENT 				= 175 autoReadOnly hidden
+int property WARMTH_BODY_MAX 					= 190 autoReadOnly hidden
 
-int property WARMTH_HEAD_POOR = 10 autoReadOnly hidden
-int property WARMTH_HEAD_LOW = 15 autoReadOnly hidden
-int property WARMTH_HEAD_AVERAGE = 30 autoReadOnly hidden
-int property WARMTH_HEAD_GOOD = 40 autoReadOnly hidden
-int property WARMTH_HEAD_EXCELLENT = 50 autoReadOnly hidden
-int property WARMTH_HEAD_MAX = 55 autoReadOnly hidden
+int property WARMTH_HEAD_POOR 					= 10 autoReadOnly hidden
+int property WARMTH_HEAD_LOW 					= 15 autoReadOnly hidden
+int property WARMTH_HEAD_AVERAGE 				= 30 autoReadOnly hidden
+int property WARMTH_HEAD_GOOD 					= 40 autoReadOnly hidden
+int property WARMTH_HEAD_EXCELLENT 				= 50 autoReadOnly hidden
+int property WARMTH_HEAD_MAX 					= 55 autoReadOnly hidden
 
-int property WARMTH_HANDS_POOR = 3 autoReadOnly hidden
-int property WARMTH_HANDS_LOW = 9 autoReadOnly hidden
-int property WARMTH_HANDS_AVERAGE = 12 autoReadOnly hidden
-int property WARMTH_HANDS_GOOD = 15 autoReadOnly hidden
-int property WARMTH_HANDS_EXCELLENT = 21 autoReadOnly hidden
-int property WARMTH_HANDS_MAX = 24 autoReadOnly hidden
+int property WARMTH_HANDS_POOR 					= 3 autoReadOnly hidden
+int property WARMTH_HANDS_LOW 					= 9 autoReadOnly hidden
+int property WARMTH_HANDS_AVERAGE 				= 12 autoReadOnly hidden
+int property WARMTH_HANDS_GOOD 					= 15 autoReadOnly hidden
+int property WARMTH_HANDS_EXCELLENT 			= 21 autoReadOnly hidden
+int property WARMTH_HANDS_MAX 					= 24 autoReadOnly hidden
 
-int property WARMTH_FEET_POOR = 3 autoReadOnly hidden
-int property WARMTH_FEET_LOW = 7 autoReadOnly hidden
-int property WARMTH_FEET_AVERAGE = 12 autoReadOnly hidden
-int property WARMTH_FEET_GOOD = 15 autoReadOnly hidden
-int property WARMTH_FEET_EXCELLENT = 21 autoReadOnly hidden
-int property WARMTH_FEET_MAX = 24 autoReadOnly hidden
+int property WARMTH_FEET_POOR 					= 3 autoReadOnly hidden
+int property WARMTH_FEET_LOW 					= 7 autoReadOnly hidden
+int property WARMTH_FEET_AVERAGE 				= 12 autoReadOnly hidden
+int property WARMTH_FEET_GOOD 					= 15 autoReadOnly hidden
+int property WARMTH_FEET_EXCELLENT 				= 21 autoReadOnly hidden
+int property WARMTH_FEET_MAX 					= 24 autoReadOnly hidden
 
-int property WARMTH_CLOAK_POOR = 1 autoReadOnly hidden
-int property WARMTH_CLOAK_LOW = 6 autoReadOnly hidden
-int property WARMTH_CLOAK_AVERAGE = 12 autoReadOnly hidden
-int property WARMTH_CLOAK_GOOD = 20 autoReadOnly hidden
-int property WARMTH_CLOAK_EXCELLENT = 30 autoReadOnly hidden
-int property WARMTH_CLOAK_MAX = 40 autoReadOnly hidden
+int property WARMTH_CLOAK_POOR 					= 1 autoReadOnly hidden
+int property WARMTH_CLOAK_LOW 					= 6 autoReadOnly hidden
+int property WARMTH_CLOAK_AVERAGE 				= 12 autoReadOnly hidden
+int property WARMTH_CLOAK_GOOD 					= 20 autoReadOnly hidden
+int property WARMTH_CLOAK_EXCELLENT 			= 30 autoReadOnly hidden
+int property WARMTH_CLOAK_MAX 					= 40 autoReadOnly hidden
 
-int property WARMTH_MISC_POOR = 1 autoReadOnly hidden
-int property WARMTH_MISC_LOW = 6 autoReadOnly hidden
-int property WARMTH_MISC_AVERAGE = 12 autoReadOnly hidden
-int property WARMTH_MISC_GOOD = 20 autoReadOnly hidden
-int property WARMTH_MISC_EXCELLENT = 30 autoReadOnly hidden
-int property WARMTH_MISC_MAX = 40 autoReadOnly hidden
+int property WARMTH_MISC_POOR 					= 1 autoReadOnly hidden
+int property WARMTH_MISC_LOW 					= 6 autoReadOnly hidden
+int property WARMTH_MISC_AVERAGE 				= 12 autoReadOnly hidden
+int property WARMTH_MISC_GOOD 					= 20 autoReadOnly hidden
+int property WARMTH_MISC_EXCELLENT 				= 30 autoReadOnly hidden
+int property WARMTH_MISC_MAX 					= 40 autoReadOnly hidden
 
-int property COVERAGE_BODY_POOR = 16 autoReadOnly hidden
-int property COVERAGE_BODY_LOW = 35 autoReadOnly hidden
-int property COVERAGE_BODY_AVERAGE = 54 autoReadOnly hidden
-int property COVERAGE_BODY_GOOD = 72 autoReadOnly hidden
-int property COVERAGE_BODY_EXCELLENT = 91 autoReadOnly hidden
-int property COVERAGE_BODY_MAX = 109 autoReadOnly hidden
+int property COVERAGE_BODY_POOR 				= 16 autoReadOnly hidden
+int property COVERAGE_BODY_LOW 					= 35 autoReadOnly hidden
+int property COVERAGE_BODY_AVERAGE 				= 54 autoReadOnly hidden
+int property COVERAGE_BODY_GOOD 				= 72 autoReadOnly hidden
+int property COVERAGE_BODY_EXCELLENT 			= 91 autoReadOnly hidden
+int property COVERAGE_BODY_MAX 					= 109 autoReadOnly hidden
 
-int property COVERAGE_HEAD_POOR = 3 autoReadOnly hidden
-int property COVERAGE_HEAD_LOW = 14 autoReadOnly hidden
-int property COVERAGE_HEAD_AVERAGE = 29 autoReadOnly hidden
-int property COVERAGE_HEAD_GOOD = 43 autoReadOnly hidden
-int property COVERAGE_HEAD_EXCELLENT = 58 autoReadOnly hidden
-int property COVERAGE_HEAD_MAX = 72 autoReadOnly hidden
+int property COVERAGE_HEAD_POOR 				= 3 autoReadOnly hidden
+int property COVERAGE_HEAD_LOW 					= 14 autoReadOnly hidden
+int property COVERAGE_HEAD_AVERAGE 				= 29 autoReadOnly hidden
+int property COVERAGE_HEAD_GOOD 				= 43 autoReadOnly hidden
+int property COVERAGE_HEAD_EXCELLENT 			= 58 autoReadOnly hidden
+int property COVERAGE_HEAD_MAX 					= 72 autoReadOnly hidden
 
-int property COVERAGE_HANDS_POOR = 3 autoReadOnly hidden
-int property COVERAGE_HANDS_LOW = 6 autoReadOnly hidden
-int property COVERAGE_HANDS_AVERAGE = 14 autoReadOnly hidden
-int property COVERAGE_HANDS_GOOD = 21 autoReadOnly hidden
-int property COVERAGE_HANDS_EXCELLENT = 29 autoReadOnly hidden
-int property COVERAGE_HANDS_MAX = 35 autoReadOnly hidden
+int property COVERAGE_HANDS_POOR 				= 3 autoReadOnly hidden
+int property COVERAGE_HANDS_LOW 				= 6 autoReadOnly hidden
+int property COVERAGE_HANDS_AVERAGE 			= 14 autoReadOnly hidden
+int property COVERAGE_HANDS_GOOD 				= 21 autoReadOnly hidden
+int property COVERAGE_HANDS_EXCELLENT 			= 29 autoReadOnly hidden
+int property COVERAGE_HANDS_MAX 				= 35 autoReadOnly hidden
 
-int property COVERAGE_FEET_POOR = 3 autoReadOnly hidden
-int property COVERAGE_FEET_LOW = 6 autoReadOnly hidden
-int property COVERAGE_FEET_AVERAGE = 14 autoReadOnly hidden
-int property COVERAGE_FEET_GOOD = 21 autoReadOnly hidden
-int property COVERAGE_FEET_EXCELLENT = 29 autoReadOnly hidden
-int property COVERAGE_FEET_MAX = 35 autoReadOnly hidden
+int property COVERAGE_FEET_POOR 				= 3 autoReadOnly hidden
+int property COVERAGE_FEET_LOW 					= 6 autoReadOnly hidden
+int property COVERAGE_FEET_AVERAGE 				= 14 autoReadOnly hidden
+int property COVERAGE_FEET_GOOD 				= 21 autoReadOnly hidden
+int property COVERAGE_FEET_EXCELLENT 			= 29 autoReadOnly hidden
+int property COVERAGE_FEET_MAX 					= 35 autoReadOnly hidden
 
-int property COVERAGE_CLOAK_POOR = 1 autoReadOnly hidden
-int property COVERAGE_CLOAK_LOW = 6 autoReadOnly hidden
-int property COVERAGE_CLOAK_AVERAGE = 12 autoReadOnly hidden
-int property COVERAGE_CLOAK_GOOD = 20 autoReadOnly hidden
-int property COVERAGE_CLOAK_EXCELLENT = 30 autoReadOnly hidden
-int property COVERAGE_CLOAK_MAX = 40 autoReadOnly hidden
+int property COVERAGE_CLOAK_POOR 				= 1 autoReadOnly hidden
+int property COVERAGE_CLOAK_LOW 				= 6 autoReadOnly hidden
+int property COVERAGE_CLOAK_AVERAGE 			= 12 autoReadOnly hidden
+int property COVERAGE_CLOAK_GOOD 				= 20 autoReadOnly hidden
+int property COVERAGE_CLOAK_EXCELLENT 			= 30 autoReadOnly hidden
+int property COVERAGE_CLOAK_MAX 				= 40 autoReadOnly hidden
 
-int property COVERAGE_MISC_POOR = 1 autoReadOnly hidden
-int property COVERAGE_MISC_LOW = 6 autoReadOnly hidden
-int property COVERAGE_MISC_AVERAGE = 12 autoReadOnly hidden
-int property COVERAGE_MISC_GOOD = 20 autoReadOnly hidden
-int property COVERAGE_MISC_EXCELLENT = 30 autoReadOnly hidden
-int property COVERAGE_MISC_MAX = 40 autoReadOnly hidden
+int property COVERAGE_MISC_POOR 				= 1 autoReadOnly hidden
+int property COVERAGE_MISC_LOW 					= 6 autoReadOnly hidden
+int property COVERAGE_MISC_AVERAGE 				= 12 autoReadOnly hidden
+int property COVERAGE_MISC_GOOD 				= 20 autoReadOnly hidden
+int property COVERAGE_MISC_EXCELLENT 			= 30 autoReadOnly hidden
+int property COVERAGE_MISC_MAX 					= 40 autoReadOnly hidden
 
+;/ Array / Datastore Schemas ==================================================
+	
+	The Armor Protection Datastore and the Clothing System use various arrays
+	and lists in order to pass around data about equipment, depending on the
+	needs of the system and for performance reasons.
+
+	The following are the most commonly used conventions used throughout
+	Frostfall.
+	
+	JsonUtil IntList[15] ArmorData: The format that the Armor Protection
+	Datastore stores a record about a single piece of gear. This data is saved
+	to a Default Settings Profile, or to the player's custom Armor Profile.
+	{
+		FileName: '../FrostfallData/<profile name>'
+		KeyName: Datastore key as returned by GetDatastoreKeyFrom*()
+		Values: {
+			0: Type (See GetGearType() and GEARTYPE_* constants)
+			1: Warmth (main value)
+			2: Coverage (main value)
+			3: Extra Body Warmth
+			4: Extra Body Coverage
+			5: Extra Head Warmth
+			6: Extra Head Coverage
+			7: Extra Hands Warmth
+			8: Extra Hands Coverage
+			9: Extra Feet Warmth
+			10: Extra Feet Coverage
+			11: Extra Cloak Warmth
+			12: Extra Cloak Coverage
+			13: Extra Misc Warmth
+			14: Extra Misc Coverage
+		}
+	}
+
+	int[15] armor_data: This gets passed around anywhere "full" 
+	data about a piece of armor is required and is used throughout the system,
+	usually after retrieving it from the datastore. The schema is essentially
+	the	same.
+	{
+		0: Type (See GetGearType() and GEARTYPE_* constants)
+		1: Warmth (main value)
+		2: Coverage (main value)
+		3: Extra Body Warmth
+		4: Extra Body Coverage
+		5: Extra Head Warmth
+		6: Extra Head Coverage
+		7: Extra Hands Warmth
+		8: Extra Hands Coverage
+		9: Extra Feet Warmth
+		10: Extra Feet Coverage
+		11: Extra Cloak Warmth
+		12: Extra Cloak Coverage
+		13: Extra Misc Warmth
+		14: Extra Misc Coverage
+	}
+	
+	StorageUtil IntList[13] _Frost_WornGearData: Used by the Clothing System
+	to store a record of a single, currently-worn piece of gear.
+	{
+		ObjKey: _Frost_WornGearData
+		KeyName: Datastore key as returned by GetDatastoreKeyFrom*()
+		Values: {
+			0: Type
+			1: Body Warmth
+			2: Body Coverage
+			3: Head Warmth
+			4: Head Coverage
+			5: Hands Warmth
+			6: Hands Coverage
+			7: Feet Warmth
+			8: Feet Coverage
+			9: Cloak Warmth
+			10: Cloak Coverage
+			11: Misc Warmth
+			12: Misc Coverage
+		}
+	}
+
+	int[12] WornGearValues: Used by the Clothing System to store the sums
+	of the protection data of all currently worn armor.
+	{
+		0: Total Worn Body Warmth
+		1: Total Worn Body Coverage
+		2: Total Worn Head Warmth
+		3: Total Worn Head Coverage
+		4: Total Worn Hands Warmth
+		5: Total Worn Hands Coverage
+		6: Total Worn Feet Warmth
+		7: Total Worn Feet Coverage
+		8: Total Worn Cloak Warmth
+		9: Total Worn Cloak Coverage
+		10: Total Worn Misc Warmth
+		11: Total Worn Misc Coverage
+	}
+
+	int[2] armor_totals: Returned from GetTotalArmorProtectionValues(). Returns
+	the total warmth and coverage for a piece of gear, including all of its 
+	extra parts.
+	{
+		0: Warmth
+		1: Coverage
+	}
+/;
 
 string CONFIG_PATH = "../FrostfallData/"
 string ARMOR_PROFILE_PREFIX = "armor_profile"
@@ -883,7 +986,7 @@ bool function ProfileHasKey(string asProfilePath, string asKey)
 		return false
 	endif
 endFunction
-
+IntListSet(string FileName, string KeyName, int index, int value)
 ; CRUD
 function SetArmorDataByKey(string asKey, int aiType, int aiWarmth = 0, int aiCoverage = 0,		\
 									 int aiExtraBodyWarmth = 0, int aiExtraBodyCoverage = 0, 	\
@@ -962,7 +1065,6 @@ function SetArmorDataA(Armor akArmor, int[] aiProtectionValues)
 	string dskey = GetDatastoreKeyFromForm(akArmor)
 	if !ProfileHasKey(profile_path, dskey)
 		; + 1 so that 0 is a meaningful value on Get
-
 		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[0]	+ 1) ; aiType
 		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[1]	+ 1) ; aiWarmth
 		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[2]	+ 1) ; aiCoverage
