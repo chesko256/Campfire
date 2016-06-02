@@ -884,15 +884,6 @@ bool function ProfileHasKey(string asProfilePath, string asKey)
 	endif
 endFunction
 
-bool function CurrentProfileHasKey(string asKey)
-	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
-	if JsonUtil.IntListGet(profile_path, asKey, 0) != 0
-		return true
-	else
-		return false
-	endif
-endFunction
-
 ; CRUD
 function SetArmorDataByKey(string asKey, int aiType, int aiWarmth = 0, int aiCoverage = 0,		\
 									 int aiExtraBodyWarmth = 0, int aiExtraBodyCoverage = 0, 	\
