@@ -1819,9 +1819,9 @@ string function GetDescriptiveTypeString(int aiType, _Frost_ArmorProtectionDatas
 	endif
 endFunction
 
-Event OnUpdate()
-	ShowTutorial_ArmorPage()
-EndEvent
+;Event OnUpdate()
+;	ShowTutorial_ArmorPage()
+;EndEvent
 
 function ShowTutorial_ArmorPage()
 	bool display_tutorial = ShowMessage("Show the Armor and Clothing Page Tutorial?", true)
