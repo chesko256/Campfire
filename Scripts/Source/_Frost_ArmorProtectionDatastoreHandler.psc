@@ -991,7 +991,7 @@ function SetArmorDataA(Armor akArmor, int[] aiProtectionValues)
 	endif
 endFunction
 
-bool function UpdateArmorData(Armor akArmor, int aiType = -1, int aiWarmth = -1, int aiCoverage = -1, 	\
+function UpdateArmorData(Armor akArmor, int aiType = -1, int aiWarmth = -1, int aiCoverage = -1, 	\
 	                                        int aiExtraBodyWarmth = -1, int aiExtraBodyCoverage = -1, 	\
 	                                        int aiExtraHeadWarmth = -1, int aiExtraHeadCoverage = -1, 	\
 	                                        int aiExtraHandsWarmth = -1, int aiExtraHandsCoverage = -1, \
@@ -1049,13 +1049,15 @@ bool function UpdateArmorData(Armor akArmor, int aiType = -1, int aiWarmth = -1,
 			JsonUtil.IntListSet(profile_path, dskey, 14, aiExtraMiscCoverage	+ 1)
 		endif
 		JsonUtil.Save(profile_path)
-		return true
 	else
-		return false
+		SetArmorData(akArmor, aiType, aiWarmth, aiCoverage, aiExtraBodyWarmth, aiExtraBodyCoverage, 	\
+					 aiExtraHeadWarmth, aiExtraHeadCoverage, aiExtraHandsWarmth, aiExtraHandsCoverage,	\
+					 aiExtraFeetWarmth, aiExtraFeetCoverage, aiExtraCloakWarmth, aiExtraCloakCoverage, 	\
+					 aiExtraMiscWarmth, aiExtraMiscCoverage)
 	endif
 endFunction
 
-bool function UpdateArmorDataA(Armor akArmor, int[] aiProtectionValues)
+function UpdateArmorDataA(Armor akArmor, int[] aiProtectionValues)
 	
 	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
 	string dskey = GetDatastoreKeyFromForm(akArmor)
@@ -1107,13 +1109,12 @@ bool function UpdateArmorDataA(Armor akArmor, int[] aiProtectionValues)
 			JsonUtil.IntListSet(profile_path, dskey, 14, aiProtectionValues[14]		+ 1)
 		endif
 		JsonUtil.Save(profile_path)
-		return true
 	else
-		return false
+		SetArmorDataA(akArmor, aiProtectionValues)
 	endif
 endFunction
 
-function DeleteArmorData(Armor akArmor)
+function RestoreDefaultArmorData(Armor akArmor)
 	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
 	string dskey = GetDatastoreKeyFromForm(akArmor)
 	JsonUtil.IntListClear(profile_path, dskey)
@@ -1175,41 +1176,6 @@ int[] function GetDefaultArmorData(Armor akArmor, bool abUsableValues = false)
 	endif
 	; debug.trace("Returning default armor data " + armor_data)
 	return armor_data
-endFunction
-
-;@TODO: Is this expected behavior? Shouldn't we just blow away the profile data?
-function RestoreDefaultArmorData(Armor akArmor, bool abRemoveIfNoDefaultData = false)
-	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
-	string defaults_path = CONFIG_PATH + ARMOR_DEFAULT_PREFIX
-	string dskey = GetDatastoreKeyFromForm(akArmor)
-	if ProfileHasKey(profile_path, dskey)
-		if ProfileHasKey(defaults_path, dskey)
-			JsonUtil.IntListSet(profile_path, dskey, 0, JsonUtil.IntListGet(defaults_path, dskey, 0))
-			JsonUtil.IntListSet(profile_path, dskey, 1, JsonUtil.IntListGet(defaults_path, dskey, 1))
-			JsonUtil.IntListSet(profile_path, dskey, 2, JsonUtil.IntListGet(defaults_path, dskey, 2))
-			JsonUtil.IntListSet(profile_path, dskey, 3, JsonUtil.IntListGet(defaults_path, dskey, 3))
-			JsonUtil.IntListSet(profile_path, dskey, 4, JsonUtil.IntListGet(defaults_path, dskey, 4))
-			JsonUtil.IntListSet(profile_path, dskey, 5, JsonUtil.IntListGet(defaults_path, dskey, 5))
-			JsonUtil.IntListSet(profile_path, dskey, 6, JsonUtil.IntListGet(defaults_path, dskey, 6))
-			JsonUtil.IntListSet(profile_path, dskey, 7, JsonUtil.IntListGet(defaults_path, dskey, 7))
-			JsonUtil.IntListSet(profile_path, dskey, 8, JsonUtil.IntListGet(defaults_path, dskey, 8))
-			JsonUtil.IntListSet(profile_path, dskey, 9, JsonUtil.IntListGet(defaults_path, dskey, 9))
-			JsonUtil.IntListSet(profile_path, dskey, 10, JsonUtil.IntListGet(defaults_path, dskey, 10))
-			JsonUtil.IntListSet(profile_path, dskey, 11, JsonUtil.IntListGet(defaults_path, dskey, 11))
-			JsonUtil.IntListSet(profile_path, dskey, 12, JsonUtil.IntListGet(defaults_path, dskey, 12))
-			JsonUtil.IntListSet(profile_path, dskey, 13, JsonUtil.IntListGet(defaults_path, dskey, 13))
-			JsonUtil.IntListSet(profile_path, dskey, 14, JsonUtil.IntListGet(defaults_path, dskey, 14))
-			JsonUtil.Save(profile_path)
-		else
-			if abRemoveIfNoDefaultData
-				JsonUtil.IntListClear(profile_path, dskey)
-			endif
-		endif
-	else
-		if ProfileHasKey(defaults_path, dskey)
-			SetArmorDataA(akArmor, GetDefaultArmorData(akArmor, true))
-		endif
-	endif
 endFunction
 
 function RestoreAllDefaultArmorData()
