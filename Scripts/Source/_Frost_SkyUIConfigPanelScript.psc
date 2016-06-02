@@ -1530,37 +1530,37 @@ function GenerateEquipmentPage()
 
 		; Extra Body
 		if armor_data[3] > 0 || armor_data[4] > 0
-			GenerateEquipmentPageEntry(j, worn_armor[i], armor_data[0], armor_data[3], armor_data[4], false, disable_if_ignored, handler)
+			GenerateEquipmentPageEntry(j, worn_armor[i], handler.GEARTYPE_BODY, armor_data[3], armor_data[4], false, disable_if_ignored, handler)
 			j += 1
 		endIf
 
 		; Extra Head
 		if armor_data[5] > 0 || armor_data[6] > 0
-			GenerateEquipmentPageEntry(j, worn_armor[i], armor_data[0], armor_data[5], armor_data[6], false, disable_if_ignored, handler)
+			GenerateEquipmentPageEntry(j, worn_armor[i], handler.GEARTYPE_HEAD, armor_data[5], armor_data[6], false, disable_if_ignored, handler)
 			j += 1
 		endIf
 
 		; Extra Hands
 		if armor_data[7] > 0 || armor_data[8] > 0
-			GenerateEquipmentPageEntry(j, worn_armor[i], armor_data[0], armor_data[7], armor_data[8], false, disable_if_ignored, handler)
+			GenerateEquipmentPageEntry(j, worn_armor[i], handler.GEARTYPE_HANDS, armor_data[7], armor_data[8], false, disable_if_ignored, handler)
 			j += 1
 		endif
 
 		; Extra Feet
 		if armor_data[9] > 0 || armor_data[10] > 0
-			GenerateEquipmentPageEntry(j, worn_armor[i], armor_data[0], armor_data[9], armor_data[10], false, disable_if_ignored, handler)
+			GenerateEquipmentPageEntry(j, worn_armor[i], handler.GEARTYPE_FEET, armor_data[9], armor_data[10], false, disable_if_ignored, handler)
 			j += 1
 		endif
 
 		; Extra Cloak
 		if armor_data[11] > 0 || armor_data[12] > 0
-			GenerateEquipmentPageEntry(j, worn_armor[i], armor_data[0], armor_data[11], armor_data[12], false, disable_if_ignored, handler)
+			GenerateEquipmentPageEntry(j, worn_armor[i], handler.GEARTYPE_CLOAK, armor_data[11], armor_data[12], false, disable_if_ignored, handler)
 			j += 1
 		endif
 
 		; Extra Misc
 		if armor_data[13] > 0 || armor_data[14] > 0
-			GenerateEquipmentPageEntry(j, worn_armor[i], armor_data[0], armor_data[13], armor_data[14], false, disable_if_ignored, handler)
+			GenerateEquipmentPageEntry(j, worn_armor[i], handler.GEARTYPE_MISC, armor_data[13], armor_data[14], false, disable_if_ignored, handler)
 			j += 1
 		endif
 		i += 1

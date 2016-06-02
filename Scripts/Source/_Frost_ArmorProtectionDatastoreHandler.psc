@@ -756,7 +756,8 @@ int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
 		armor_data[2] = DEFAULT_BODY_COVERAGE
 	elseif gear_type == GEARTYPE_HEAD
 		; Coarsely differentiate between hoods and helms
-		if StringUtil.Find(akArmor.GetName(), "hood") != -1
+		_Frost_Strings str = GetFrostfallStrings()
+		if StringUtil.Find(akArmor.GetName(), str.Hood) != -1
 			armor_data[1] = DEFAULT_HEADHOOD_WARMTH
 			armor_data[2] = DEFAULT_HEADHOOD_COVERAGE
 		else
@@ -785,7 +786,8 @@ int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
 	; Now, check extra data
 	if gear_type != GEARTYPE_HEAD && (LogicalAnd(armor_mask, SLOTMASK_HAIR) || LogicalAnd(armor_mask, SLOTMASK_HEAD))
 		; Coarsely differentiate between hoods and helms
-		if StringUtil.Find(akArmor.GetName(), "hood") != -1 || StringUtil.Find(akArmor.GetName(), "robes") != -1
+		_Frost_Strings str = GetFrostfallStrings()
+		if StringUtil.Find(akArmor.GetName(), str.Hood) != -1 || StringUtil.Find(akArmor.GetName(), str.Robes) != -1
 			armor_data[5] = DEFAULT_HEADHOOD_WARMTH
 			armor_data[6] = DEFAULT_HEADHOOD_COVERAGE
 		else
@@ -876,6 +878,15 @@ endFunction
 
 bool function ProfileHasKey(string asProfilePath, string asKey)
 	if JsonUtil.IntListGet(asProfilePath, asKey, 0) != 0
+		return true
+	else
+		return false
+	endif
+endFunction
+
+bool function CurrentProfileHasKey(string asKey)
+	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
+	if JsonUtil.IntListGet(profile_path, asKey, 0) != 0
 		return true
 	else
 		return false
@@ -1113,7 +1124,6 @@ int[] function GetArmorData(Armor akArmor)
 	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
 	string dskey = GetDatastoreKeyFromForm(akArmor)
 	int[] armor_data = new int[15]
-	armor_data[1] = -1
 
 	if ProfileHasKey(profile_path, dskey)
 		armor_data[0] = JsonUtil.IntListGet(profile_path, dskey, 0) - 1
@@ -1141,7 +1151,6 @@ int[] function GetDefaultArmorData(Armor akArmor, bool abUsableValues = false)
 	string defaults_path = CONFIG_PATH + ARMOR_DEFAULT_PREFIX
 	string dskey = GetDatastoreKeyFromForm(akArmor)
 	int[] armor_data = new int[15]
-	armor_data[1] = -1
 	if ProfileHasKey(defaults_path, dskey)
 		int modifier = 0
 		if abUsableValues

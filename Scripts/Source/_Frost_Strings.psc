@@ -21,3 +21,9 @@ string property Warmth auto				; Warmth:
 string property Coverage auto			; Coverage:
 string property TotalWarmth auto		; Total Warmth:
 string property TotalCoverage auto		; Total Coverage:
+
+; Armor Calculation Strings
+string property Hood auto				; hood
+{Required for correct armor protection calculation. This string MUST match the exact spelling of the word 'hood' in equipment, such as 'Adept Hood' or 'Hooded Brown Robes'.}
+string property Robes auto				; robes
+{Required for correct armor protection calculation. This string MUST match the exact spelling of the word 'robes' in equipment, such as 'Archmage's Robes' or 'Shrouded Robes'.}

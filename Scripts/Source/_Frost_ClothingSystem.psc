@@ -10,7 +10,6 @@ GlobalVariable property FrostfallRunning auto
 GlobalVariable property _Frost_Setting_Notifications_EquipmentValues auto
 GlobalVariable property _Frost_Setting_Notifications_EquipmentSummary auto
 GlobalVariable property _Frost_CheckInitialEquipment auto
-Quest property FrostfallStrings auto
 Keyword property ActorTypeCreature auto
 Keyword property ImmuneParalysis auto
 Keyword property WAF_ClothingCloak auto
@@ -283,7 +282,7 @@ Event OnUpdate()
         return
     endif
 
-    _Frost_Strings str = FrostfallStrings as _Frost_Strings
+    _Frost_Strings str = GetFrostfallStrings()
     debug.notification(str.TotalWarmth + " " + GetPlayerWarmth() + ", " + str.TotalCoverage + " " + GetPlayerCoverage())
 EndEvent
 
@@ -298,7 +297,7 @@ function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor)
         endif
         if UI.IsMenuOpen("InventoryMenu")
             if _Frost_Setting_Notifications_EquipmentValues.GetValueInt() == 2
-                _Frost_Strings str = FrostfallStrings as _Frost_Strings
+                _Frost_Strings str = GetFrostfallStrings()
                 string name = akArmor.GetName()
                 if result[0] == -99
                     debug.notification(name + " - " + str.Warmth + " N/A, " + str.Coverage + " N/A")
@@ -336,7 +335,7 @@ Event OnMenuClose(string menuName)
             UnregisterForMenu("InventoryMenu")
             return
         endif
-        _Frost_Strings str = FrostfallStrings as _Frost_Strings
+        _Frost_Strings str = GetFrostfallStrings()
         debug.notification(str.TotalWarmth + " " + GetPlayerWarmth() + ", " + str.TotalCoverage + " " + GetPlayerCoverage())
         UnregisterForMenu("InventoryMenu")
     endif

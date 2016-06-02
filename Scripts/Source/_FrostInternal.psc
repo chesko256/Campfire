@@ -1,5 +1,9 @@
 scriptname _FrostInternal hidden
 
+_Frost_Strings function GetFrostfallStrings() global
+	return (Game.GetFormFromFile(0x068BED, "Frostfall.esp") as _Frost_Strings)
+endFunction
+
 bool function IsBetweenInclusive(float Value, float Beginning, float End) global
 	if Value >= Beginning && Value <= End
 		return true
