@@ -136,6 +136,8 @@ int property DEFAULT_CLOAK_WARMTH				= 10 autoReadOnly hidden
 int property DEFAULT_CLOAK_COVERAGE				= 10 autoReadOnly hidden
 int property DEFAULT_SHIELD_WARMTH				= 0 autoReadOnly hidden
 int property DEFAULT_SHIELD_COVERAGE			= 20 autoReadOnly hidden
+int property DEFAULT_MISC_WARMTH				= 10 autoReadOnly hidden
+int property DEFAULT_MISC_COVERAGE				= 10 autoReadOnly hidden
 
 int property SLOTMASK_HEAD 						= 0x00000001 autoReadOnly hidden
 int property SLOTMASK_HAIR 						= 0x00000002 autoReadOnly hidden
@@ -641,9 +643,6 @@ endFunction
 
 int[] function GetArmorProtectionDataByKeyword(Armor akArmor)
 	int[] armor_data = new int[15]
-	
-	;@TODO: Do I need this?
-	armor_data[1] = -1
 
 	if akArmor.HasKeyword(_Frost_Ignore)
 		armor_data[0] = GEARTYPE_IGNORE
@@ -651,8 +650,9 @@ int[] function GetArmorProtectionDataByKeyword(Armor akArmor)
 	endif
 	
 	int armor_mask = akArmor.GetSlotMask()
+	;@TODO: Do I need this?
 	int gear_type = GetGearType(akArmor, armor_mask)
-	if gear_type == GEARTYPE_IGNORE
+	if gear_type == GEARTYPE_NOTFOUND
 		; No gear type found for this item. Ignore it.
 		armor_data[0] = GEARTYPE_IGNORE
 		return armor_data
@@ -682,13 +682,12 @@ int[] function GetArmorProtectionDataByKeyword(Armor akArmor)
 		i += 1
 	endWhile
 
-	; We found at least one keyword, but it wasn't the main warmth value. Make sure our
-	; data still gets counted.
-
-	;@TODO: Do I need this?
-	if found_keyword && armor_data[1] == -1
-		armor_data[1] = 0
+	; If we didn't find anything, say that the gear type was NOT FOUND so that
+	; the system will try an analysis check.
+	if !found_keyword
+		armor_data[0] = GEARTYPE_NOTFOUND
 	endif
+
 	return armor_data
 endFunction
 
@@ -722,7 +721,7 @@ int function GetGearType(Armor akArmor, int aiSlotMask)
 	elseif LogicalAnd(aiSlotMask, SLOTMASK_SHIELD)
 		return GEARTYPE_MISC
 	else
-		return GEARTYPE_IGNORE
+		return GEARTYPE_NOTFOUND
 	endif
 endFunction
 
@@ -734,6 +733,7 @@ int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
 
 	; Check exceptions
 	if armor_mask == SLOTMASK_CIRCLET
+		armor_data[0] = GEARTYPE_IGNORE
 		return armor_data
 	endif
 
@@ -745,8 +745,9 @@ int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
 	int gear_type = GetGearType(akArmor, armor_mask)
 	armor_data[0] = gear_type
 
-	if gear_type == GEARTYPE_IGNORE
+	if gear_type == GEARTYPE_NOTFOUND
 		; No gear type found for this item. Ignore it.
+		armor_data[0] = GEARTYPE_IGNORE
 		return armor_data
 	endif
 
@@ -772,9 +773,13 @@ int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
 		armor_data[1] = DEFAULT_CLOAK_WARMTH
 		armor_data[2] = DEFAULT_CLOAK_COVERAGE
 	elseif gear_type == GEARTYPE_MISC
-		; Only process shields in this category by default.
-		armor_data[1] = DEFAULT_SHIELD_WARMTH
-		armor_data[2] = DEFAULT_SHIELD_COVERAGE
+		if LogicalAnd(armor_mask, SLOTMASK_SHIELD)
+			armor_data[1] = DEFAULT_SHIELD_WARMTH
+			armor_data[2] = DEFAULT_SHIELD_COVERAGE
+		else
+			armor_data[1] = DEFAULT_MISC_WARMTH
+			armor_data[2] = DEFAULT_MISC_COVERAGE
+		endif
 	endif
 
 	; Now, check extra data
