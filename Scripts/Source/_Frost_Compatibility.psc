@@ -613,6 +613,7 @@ function Upgrade_3_1()
 
 		; Re-enable tutorials on upgrade.
 		_Frost_Setting_DisplayTutorials.SetValueInt(2)
+		FrostConfig.SaveSettingToCurrentProfile("display_tutorials", _Frost_Setting_DisplayTutorials.GetValueInt())
 	endif
 
 	; Create new default data
