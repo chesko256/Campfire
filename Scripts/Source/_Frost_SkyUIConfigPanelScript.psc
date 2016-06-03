@@ -82,6 +82,7 @@ string[] VampirismModeList
 string[] AspectRatioList
 string[] MeterDisplayModeList
 string[] GearTypeList
+string[] ProtectionList
 
 int Overview_RunStatusText_OID
 int Overview_RunSubStatusText_OID
@@ -139,12 +140,13 @@ int Advanced_TutorialsToggle_OID
 int Advanced_TutorialsResetText_OID
 
 Armor[] ArmorMenuEntries
-int[] WarmthSliderOIDs
-int[] CoverageSliderOIDs
-int[] GearTypeOIDs
-int[] ModifyPartsOIDs
-int[] SetProtectionOIDs
-int[] DefaultArmorEntryOIDs
+int[] Armor_WarmthSliderOIDs
+int[] Armor_CoverageSliderOIDs
+int[] Armor_GearTypeOIDs
+int[] Armor_ModifyPartsOIDs
+int[] Armor_SetProtectionOIDs
+int[] Armor_DefaultArmorEntryOIDs
+int Armor_ShowTutorialOID
 
 
 Event OnConfigInit()
@@ -183,6 +185,11 @@ Event OnConfigInit()
 	GearTypeList[4] = "Cloak"
 	GearTypeList[5] = "Accessory"
 	GearTypeList[6] = "No Protection"
+
+	ProtectionList = new string[3]
+	ProtectionList[0] = "< Clothing >"
+	ProtectionList[1] = "Thin Clothing (XXX Warmth, XXX Coverage)"
+	ProtectionList[2] = "Tight-Stitched (XXX Warmth, XXX Coverage)"
 endEvent
 
 int function GetVersion()
@@ -801,6 +808,8 @@ event OnOptionSelect(int option)
 			_Frost_HelpDone_Cold.SetValueInt(1)
 			_Frost_HelpDone_ArmorPage.SetValueInt(1)
 		endif
+	elseif option == Armor_ShowTutorialOID
+		ShowTutorial_ArmorPage(true)
 	endif	
 endEvent
 
@@ -1073,7 +1082,7 @@ Event OnOptionMenuOpen(int option)
 		int idx = -1
 
 		if !found_armor_entry_oid
-			idx = GearTypeOIDs.Find(option)
+			idx = Armor_GearTypeOIDs.Find(option)
 			if idx != -1
 				SetMenuDialogOptions(GearTypeList)
 				SetMenuDialogStartIndex(0) ;@TODO: Can I know this?
@@ -1083,14 +1092,17 @@ Event OnOptionMenuOpen(int option)
 		endif
 
 		if !found_armor_entry_oid
-			idx = SetProtectionOIDs.Find(option)
+			idx = Armor_SetProtectionOIDs.Find(option)
 			if idx != -1
+				SetMenuDialogOptions(ProtectionList)
+				SetMenuDialogStartIndex(0)
+				SetMenuDialogDefaultIndex(0)
 				found_armor_entry_oid = true
 			endif
 		endif
 
 		if !found_armor_entry_oid
-			idx = ModifyPartsOIDs.Find(option)
+			idx = Armor_ModifyPartsOIDs.Find(option)
 			if idx != -1
 				found_armor_entry_oid = true
 			endif
@@ -1133,7 +1145,7 @@ Event OnOptionMenuAccept(int option, int index)
 		int idx = -1
 
 		if !found_armor_entry_oid
-			idx = GearTypeOIDs.Find(option)
+			idx = Armor_GearTypeOIDs.Find(option)
 			if idx != -1
 				ModifyGearType(idx, index)
 				found_armor_entry_oid = true
@@ -1141,14 +1153,14 @@ Event OnOptionMenuAccept(int option, int index)
 		endif
 
 		if !found_armor_entry_oid
-			idx = SetProtectionOIDs.Find(option)
+			idx = Armor_SetProtectionOIDs.Find(option)
 			if idx != -1
 				found_armor_entry_oid = true
 			endif
 		endif
 
 		if !found_armor_entry_oid
-			idx = ModifyPartsOIDs.Find(option)
+			idx = Armor_ModifyPartsOIDs.Find(option)
 			if idx != -1
 				found_armor_entry_oid = true
 			endif
@@ -1553,27 +1565,21 @@ function GenerateEquipmentPage()
 
 	_Frost_ClothingSystem clothing = GetClothingSystem()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
-	bool generated_header = false
 	Armor[] worn_armor = GetAllWornArmor()
 
 	ArmorMenuEntries = new Armor[128]
-	WarmthSliderOIDs = new int[128]
-	CoverageSliderOIDs = new int[128]
-	GearTypeOIDs = new int[128]
-	ModifyPartsOIDs = new int[128]
-	SetProtectionOIDs = new int[128]
-	DefaultArmorEntryOIDs = new int[128]
+	Armor_WarmthSliderOIDs = new int[128]
+	Armor_CoverageSliderOIDs = new int[128]
+	Armor_GearTypeOIDs = new int[128]
+	Armor_ModifyPartsOIDs = new int[128]
+	Armor_SetProtectionOIDs = new int[128]
+	Armor_DefaultArmorEntryOIDs = new int[128]
 
 	int armor_count = clothing.ArrayCountArmor(worn_armor)
 	
 	int i = 0
 	int j = 0
 	while i < armor_count
-		if !generated_header
-			GenerateEquipmentPageFooter()
-			generated_header = true
-		endif
-
 		int[] armor_data = handler.GetArmorProtectionData(worn_armor[i] as Armor)
 
 		int disable_if_ignored
@@ -1631,8 +1637,10 @@ function GenerateEquipmentPage()
 		i += 1
 	endWhile
 
+	GenerateEquipmentPageFooter()
+
 	if _Frost_Setting_DisplayTutorials.GetValueInt() == 2 && _Frost_HelpDone_ArmorPage.GetValueInt() == 1
-		RegisterForSingleUpdate(1)
+		ShowTutorial_ArmorPage()
 	endif
 endFunction
 
@@ -1653,40 +1661,38 @@ function GenerateEquipmentPageEntry(int aiArrayIndex, Armor akArmor, int aiType,
 	endif
 	AddHeaderOption("")
 
-	WarmthSliderOIDs[aiArrayIndex] = AddSliderOption("Warmth:", akWarmth, "{0}", OPTION_FLAG_DISABLED)
+	Armor_WarmthSliderOIDs[aiArrayIndex] = AddSliderOption("Warmth:", akWarmth, "{0}", OPTION_FLAG_DISABLED)
 
 	if abIsMainPart
-		GearTypeOIDs[aiArrayIndex] = AddMenuOption("Type:", GetTypeString(aiType, akHandler))
+		Armor_GearTypeOIDs[aiArrayIndex] = AddMenuOption("Type:", GetTypeString(aiType, akHandler))
 	else
-		GearTypeOIDs[aiArrayIndex] = AddMenuOption("Type:", GetTypeString(aiType, akHandler), OPTION_FLAG_DISABLED)
+		Armor_GearTypeOIDs[aiArrayIndex] = AddMenuOption("Type:", GetTypeString(aiType, akHandler), OPTION_FLAG_DISABLED)
 	endif
 
-	CoverageSliderOIDs[aiArrayIndex] = AddSliderOption("Coverage:", akCoverage, "{0}", OPTION_FLAG_DISABLED)
+	Armor_CoverageSliderOIDs[aiArrayIndex] = AddSliderOption("Coverage:", akCoverage, "{0}", OPTION_FLAG_DISABLED)
 
 	if abIsMainPart
-		ModifyPartsOIDs[aiArrayIndex] = AddMenuOption("Add/Remove Additional Parts...", "", aiDisableIfIgnored)
+		Armor_ModifyPartsOIDs[aiArrayIndex] = AddMenuOption("Add/Remove Additional Parts...", "", aiDisableIfIgnored)
 	else
 		AddEmptyOption()
 	endif
 
-	SetProtectionOIDs[aiArrayIndex] = AddMenuOption("Set Protection...", "", aiDisableIfIgnored)
-	DefaultArmorEntryOIDs[aiArrayIndex] = AddTextOption("Restore Item Defaults", "", aiDisableIfIgnored)
+	Armor_SetProtectionOIDs[aiArrayIndex] = AddMenuOption("Set Protection...", "", aiDisableIfIgnored)
+	Armor_DefaultArmorEntryOIDs[aiArrayIndex] = AddTextOption("Restore Item Defaults", "", aiDisableIfIgnored)
 endFunction
 
 function GenerateEquipmentPageFooter()
-	AddEmptyOption()
-	AddEmptyOption()
 	AddHeaderOption("Options")
 	AddHeaderOption("Info")
-	AddTextOption("Rebuild Equipment Data", "")
-	AddTextOption("Show Tutorial", "")
-	AddTextOption("Restore Defaults for All Worn Items", "")
+	AddTextOption("Repair Default Item Data", "")
+	Armor_ShowTutorialOID = AddTextOption("Show Tutorial", "")
+	AddTextOption("Restore Defaults for Worn Items", "")
 	AddEmptyOption()
-	AddTextOption("Restore Defaults for Every Item In Game", "Caution!")
+	AddTextOption("Restore Defaults for ALL Items", "")
 
 endFunction
 
-function ModifyGearProtection()
+function ModifyGearProtection(int aiOidIndex, int aiChoice)
 
 endFunction
 
@@ -1698,13 +1704,11 @@ function ModifyGearCoverage(int aiOIDIndex)
 
 endFunction
 
-
-
 function ModifyGearType(int aiOIDIndex, int aiChoice)
 	bool confirmed = ShowMessage("Are you sure you want to change this kind of equipment's type?\n\n(Note: This choice is for Frostfall only and has no effect on armor rating, equipment slot, or any other aspect of how it is handled by the rest of the game.)")
 	
 	if confirmed
-		SetMenuOptionValue(GearTypeOIDs[aiOIDIndex], GearTypeList[aiChoice])
+		SetMenuOptionValue(Armor_GearTypeOIDs[aiOIDIndex], GearTypeList[aiChoice])
 		armor the_armor = ArmorMenuEntries[aiOIDIndex]
 		int chosen_type = aiChoice + 1
 
@@ -1819,17 +1823,20 @@ string function GetDescriptiveTypeString(int aiType, _Frost_ArmorProtectionDatas
 	endif
 endFunction
 
-;Event OnUpdate()
-;	ShowTutorial_ArmorPage()
-;EndEvent
+Event OnUpdate()
+	ShowTutorial_ArmorPage()
+EndEvent
 
-function ShowTutorial_ArmorPage()
-	bool display_tutorial = ShowMessage("Show the Armor and Clothing Page Tutorial?", true)
-	if display_tutorial
-		ShowMessage("On this page, you can set the warmth and coverage of your currently worn equipment.\n\nSelect 'Set Protection...', and select one of the options that appear. This will set up your equipment with appropriate values for option you selected ('Layered', 'Tight-Stitched', etc) and the type of equipment it is (body, head, hands, etc).", false)
+function ShowTutorial_ArmorPage(bool abForceDisplay = false)
+	bool display_prompt = false
+	if !abForceDisplay
+		display_prompt = ShowMessage("Show the Armor and Clothing Page Tutorial?", true)
+	endif
+	if display_prompt || abForceDisplay
+		ShowMessage("On this page, you can set the warmth and coverage of your currently worn equipment.\n\nClick 'Set Protection...', and select one of the options that appear. This will set up your equipment with appropriate values for option you selected ('Layered', 'Tight-Stitched', etc) and the type of equipment it is (body, head, hands, etc).", false)
 		ShowMessage("If you want full control, you can select 'Set Protection...', 'Set Values Manually', which will allow you to set warmth or coverage to any value you like.\n\nFrostfall will count the protection of one piece of worn Body, Head, Hands, Feet, and Cloak gear at a time. However, all worn Accessories will be counted. If necessary, you can edit the gear's type by clicking the Type option.", false)
 		ShowMessage("If equipment has the 'No Protection' type, Frostfall will not allow this item to grant warmth or coverage. Things like circlets, rings, and amulets have No Protection.\n\nClick 'Add/Remove Additional Parts...' to tell Frostfall that this gear includes extra parts. For instance, your cuirass might have a built-in cloak. Or, your mage's robe might have its own hood. Those extra parts will then have their own entry created on the page where you can edit them separately.", false)
-		ShowMessage("To restore a piece of gear to its default values, select 'Restore Item Defaults'.\n\nTo restore the default values of ALL equipment in the entire game (effectively deleting all of your profile's custom gear settings), select 'Restore Defaults for All Equipment' at the top of the page.", false)
+		ShowMessage("To restore a piece of gear to its default values, select 'Restore Item Defaults'.\n\nTo restore the default values of ALL equipment in the entire game (effectively deleting all of your profile's custom gear settings), select 'Restore Defaults for ALL Items' at the bottom of the page.", false)
 	endif
 	_Frost_HelpDone_ArmorPage.SetValue(2)
 endFunction
