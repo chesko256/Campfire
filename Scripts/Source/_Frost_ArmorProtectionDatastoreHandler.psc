@@ -23,98 +23,84 @@ FormList property _Camp_Backpacks auto
 ; Override keywords
 Keyword property _Frost_Ignore auto
 Keyword property _Frost_WarmthPoor auto
-Keyword property _Frost_WarmthLow auto
-Keyword property _Frost_WarmthAverage auto
+Keyword property _Frost_WarmthFair auto
 Keyword property _Frost_WarmthGood auto
 Keyword property _Frost_WarmthExcellent auto
 Keyword property _Frost_WarmthMax auto
 Keyword property _Frost_CoveragePoor auto
-Keyword property _Frost_CoverageLow auto
-Keyword property _Frost_CoverageAverage auto
+Keyword property _Frost_CoverageFair auto
 Keyword property _Frost_CoverageGood auto
 Keyword property _Frost_CoverageExcellent auto
 Keyword property _Frost_CoverageMax auto
 
 Keyword property _Frost_ExtraBodyWarmthPoor auto
-Keyword property _Frost_ExtraBodyWarmthLow auto
-Keyword property _Frost_ExtraBodyWarmthAverage auto
+Keyword property _Frost_ExtraBodyWarmthFair auto
 Keyword property _Frost_ExtraBodyWarmthGood auto
 Keyword property _Frost_ExtraBodyWarmthExcellent auto
 Keyword property _Frost_ExtraBodyWarmthMax auto
 
 Keyword property _Frost_ExtraHeadWarmthPoor auto
-Keyword property _Frost_ExtraHeadWarmthLow auto
-Keyword property _Frost_ExtraHeadWarmthAverage auto
+Keyword property _Frost_ExtraHeadWarmthFair auto
 Keyword property _Frost_ExtraHeadWarmthGood auto
 Keyword property _Frost_ExtraHeadWarmthExcellent auto
 Keyword property _Frost_ExtraHeadWarmthMax auto
 
 Keyword property _Frost_ExtraHandsWarmthPoor auto
-Keyword property _Frost_ExtraHandsWarmthLow auto
-Keyword property _Frost_ExtraHandsWarmthAverage auto
+Keyword property _Frost_ExtraHandsWarmthFair auto
 Keyword property _Frost_ExtraHandsWarmthGood auto
 Keyword property _Frost_ExtraHandsWarmthExcellent auto
 Keyword property _Frost_ExtraHandsWarmthMax auto
 
 Keyword property _Frost_ExtraFeetWarmthPoor auto
-Keyword property _Frost_ExtraFeetWarmthLow auto
-Keyword property _Frost_ExtraFeetWarmthAverage auto
+Keyword property _Frost_ExtraFeetWarmthFair auto
 Keyword property _Frost_ExtraFeetWarmthGood auto
 Keyword property _Frost_ExtraFeetWarmthExcellent auto
 Keyword property _Frost_ExtraFeetWarmthMax auto
 
 Keyword property _Frost_ExtraCloakWarmthPoor auto
-Keyword property _Frost_ExtraCloakWarmthLow auto
-Keyword property _Frost_ExtraCloakWarmthAverage auto
+Keyword property _Frost_ExtraCloakWarmthFair auto
 Keyword property _Frost_ExtraCloakWarmthGood auto
 Keyword property _Frost_ExtraCloakWarmthExcellent auto
 Keyword property _Frost_ExtraCloakWarmthMax auto
 
 Keyword property _Frost_ExtraMiscWarmthPoor auto
-Keyword property _Frost_ExtraMiscWarmthLow auto
-Keyword property _Frost_ExtraMiscWarmthAverage auto
+Keyword property _Frost_ExtraMiscWarmthFair auto
 Keyword property _Frost_ExtraMiscWarmthGood auto
 Keyword property _Frost_ExtraMiscWarmthExcellent auto
 Keyword property _Frost_ExtraMiscWarmthMax auto
 
 Keyword property _Frost_ExtraBodyCoveragePoor auto
-Keyword property _Frost_ExtraBodyCoverageLow auto
-Keyword property _Frost_ExtraBodyCoverageAverage auto
+Keyword property _Frost_ExtraBodyCoverageFair auto
 Keyword property _Frost_ExtraBodyCoverageGood auto
 Keyword property _Frost_ExtraBodyCoverageExcellent auto
 Keyword property _Frost_ExtraBodyCoverageMax auto
 
 Keyword property _Frost_ExtraHeadCoveragePoor auto
-Keyword property _Frost_ExtraHeadCoverageLow auto
-Keyword property _Frost_ExtraHeadCoverageAverage auto
+Keyword property _Frost_ExtraHeadCoverageFair auto
 Keyword property _Frost_ExtraHeadCoverageGood auto
 Keyword property _Frost_ExtraHeadCoverageExcellent auto
 Keyword property _Frost_ExtraHeadCoverageMax auto
 
 Keyword property _Frost_ExtraHandsCoveragePoor auto
-Keyword property _Frost_ExtraHandsCoverageLow auto
-Keyword property _Frost_ExtraHandsCoverageAverage auto
+Keyword property _Frost_ExtraHandsCoverageFair auto
 Keyword property _Frost_ExtraHandsCoverageGood auto
 Keyword property _Frost_ExtraHandsCoverageExcellent auto
 Keyword property _Frost_ExtraHandsCoverageMax auto
 
 Keyword property _Frost_ExtraFeetCoveragePoor auto
-Keyword property _Frost_ExtraFeetCoverageLow auto
-Keyword property _Frost_ExtraFeetCoverageAverage auto
+Keyword property _Frost_ExtraFeetCoverageFair auto
 Keyword property _Frost_ExtraFeetCoverageGood auto
 Keyword property _Frost_ExtraFeetCoverageExcellent auto
 Keyword property _Frost_ExtraFeetCoverageMax auto
 
 Keyword property _Frost_ExtraCloakCoveragePoor auto
-Keyword property _Frost_ExtraCloakCoverageLow auto
-Keyword property _Frost_ExtraCloakCoverageAverage auto
+Keyword property _Frost_ExtraCloakCoverageFair auto
 Keyword property _Frost_ExtraCloakCoverageGood auto
 Keyword property _Frost_ExtraCloakCoverageExcellent auto
 Keyword property _Frost_ExtraCloakCoverageMax auto
 
 Keyword property _Frost_ExtraMiscCoveragePoor auto
-Keyword property _Frost_ExtraMiscCoverageLow auto
-Keyword property _Frost_ExtraMiscCoverageAverage auto
+Keyword property _Frost_ExtraMiscCoverageFair auto
 Keyword property _Frost_ExtraMiscCoverageGood auto
 Keyword property _Frost_ExtraMiscCoverageExcellent auto
 Keyword property _Frost_ExtraMiscCoverageMax auto
@@ -170,94 +156,82 @@ int[] OverrideValues
 int[] OverrideExtraPartIndex
 
 Keyword[] StandardKeywords
-int[] StandardBodyValues
-int[] StandardHeadValues
-int[] StandardHandsValues
-int[] StandardFeetValues
-int[] StandardCloakValues
-int[] StandardMiscValues
-int[] StandardPartIndex
+int[] property StandardBodyValues auto hidden
+int[] property StandardHeadValues auto hidden
+int[] property StandardHandsValues auto hidden
+int[] property StandardFeetValues auto hidden
+int[] property StandardCloakValues auto hidden
+int[] property StandardMiscValues auto hidden
+int[] property StandardPartIndex auto hidden
 
-int property WARMTH_BODY_POOR 					= 30 autoReadOnly hidden
-int property WARMTH_BODY_LOW 					= 60 autoReadOnly hidden
-int property WARMTH_BODY_AVERAGE 				= 125 autoReadOnly hidden
+int property WARMTH_BODY_POOR 					= 60 autoReadOnly hidden
+int property WARMTH_BODY_FAIR 					= 125 autoReadOnly hidden
 int property WARMTH_BODY_GOOD 					= 140 autoReadOnly hidden
 int property WARMTH_BODY_EXCELLENT 				= 175 autoReadOnly hidden
 int property WARMTH_BODY_MAX 					= 190 autoReadOnly hidden
 
-int property WARMTH_HEAD_POOR 					= 10 autoReadOnly hidden
-int property WARMTH_HEAD_LOW 					= 15 autoReadOnly hidden
-int property WARMTH_HEAD_AVERAGE 				= 30 autoReadOnly hidden
+int property WARMTH_HEAD_POOR 					= 15 autoReadOnly hidden
+int property WARMTH_HEAD_FAIR 					= 30 autoReadOnly hidden
 int property WARMTH_HEAD_GOOD 					= 40 autoReadOnly hidden
 int property WARMTH_HEAD_EXCELLENT 				= 50 autoReadOnly hidden
 int property WARMTH_HEAD_MAX 					= 55 autoReadOnly hidden
 
-int property WARMTH_HANDS_POOR 					= 3 autoReadOnly hidden
-int property WARMTH_HANDS_LOW 					= 9 autoReadOnly hidden
-int property WARMTH_HANDS_AVERAGE 				= 12 autoReadOnly hidden
+int property WARMTH_HANDS_POOR 					= 9 autoReadOnly hidden
+int property WARMTH_HANDS_FAIR 					= 12 autoReadOnly hidden
 int property WARMTH_HANDS_GOOD 					= 15 autoReadOnly hidden
 int property WARMTH_HANDS_EXCELLENT 			= 21 autoReadOnly hidden
 int property WARMTH_HANDS_MAX 					= 24 autoReadOnly hidden
 
-int property WARMTH_FEET_POOR 					= 3 autoReadOnly hidden
-int property WARMTH_FEET_LOW 					= 7 autoReadOnly hidden
-int property WARMTH_FEET_AVERAGE 				= 12 autoReadOnly hidden
+int property WARMTH_FEET_POOR 					= 7 autoReadOnly hidden
+int property WARMTH_FEET_FAIR 					= 12 autoReadOnly hidden
 int property WARMTH_FEET_GOOD 					= 15 autoReadOnly hidden
 int property WARMTH_FEET_EXCELLENT 				= 21 autoReadOnly hidden
 int property WARMTH_FEET_MAX 					= 24 autoReadOnly hidden
 
-int property WARMTH_CLOAK_POOR 					= 1 autoReadOnly hidden
-int property WARMTH_CLOAK_LOW 					= 6 autoReadOnly hidden
-int property WARMTH_CLOAK_AVERAGE 				= 12 autoReadOnly hidden
+int property WARMTH_CLOAK_POOR 					= 6 autoReadOnly hidden
+int property WARMTH_CLOAK_FAIR 					= 12 autoReadOnly hidden
 int property WARMTH_CLOAK_GOOD 					= 20 autoReadOnly hidden
 int property WARMTH_CLOAK_EXCELLENT 			= 30 autoReadOnly hidden
 int property WARMTH_CLOAK_MAX 					= 40 autoReadOnly hidden
 
-int property WARMTH_MISC_POOR 					= 1 autoReadOnly hidden
-int property WARMTH_MISC_LOW 					= 6 autoReadOnly hidden
-int property WARMTH_MISC_AVERAGE 				= 12 autoReadOnly hidden
+int property WARMTH_MISC_POOR 					= 6 autoReadOnly hidden
+int property WARMTH_MISC_FAIR 					= 12 autoReadOnly hidden
 int property WARMTH_MISC_GOOD 					= 20 autoReadOnly hidden
 int property WARMTH_MISC_EXCELLENT 				= 30 autoReadOnly hidden
 int property WARMTH_MISC_MAX 					= 40 autoReadOnly hidden
 
-int property COVERAGE_BODY_POOR 				= 16 autoReadOnly hidden
-int property COVERAGE_BODY_LOW 					= 35 autoReadOnly hidden
-int property COVERAGE_BODY_AVERAGE 				= 54 autoReadOnly hidden
+int property COVERAGE_BODY_POOR 				= 35 autoReadOnly hidden
+int property COVERAGE_BODY_FAIR 				= 54 autoReadOnly hidden
 int property COVERAGE_BODY_GOOD 				= 72 autoReadOnly hidden
 int property COVERAGE_BODY_EXCELLENT 			= 91 autoReadOnly hidden
 int property COVERAGE_BODY_MAX 					= 109 autoReadOnly hidden
 
-int property COVERAGE_HEAD_POOR 				= 3 autoReadOnly hidden
-int property COVERAGE_HEAD_LOW 					= 14 autoReadOnly hidden
-int property COVERAGE_HEAD_AVERAGE 				= 29 autoReadOnly hidden
+int property COVERAGE_HEAD_POOR 				= 14 autoReadOnly hidden
+int property COVERAGE_HEAD_FAIR 				= 29 autoReadOnly hidden
 int property COVERAGE_HEAD_GOOD 				= 43 autoReadOnly hidden
 int property COVERAGE_HEAD_EXCELLENT 			= 58 autoReadOnly hidden
 int property COVERAGE_HEAD_MAX 					= 72 autoReadOnly hidden
 
-int property COVERAGE_HANDS_POOR 				= 3 autoReadOnly hidden
-int property COVERAGE_HANDS_LOW 				= 6 autoReadOnly hidden
-int property COVERAGE_HANDS_AVERAGE 			= 14 autoReadOnly hidden
+int property COVERAGE_HANDS_POOR 				= 6 autoReadOnly hidden
+int property COVERAGE_HANDS_FAIR 				= 14 autoReadOnly hidden
 int property COVERAGE_HANDS_GOOD 				= 21 autoReadOnly hidden
 int property COVERAGE_HANDS_EXCELLENT 			= 29 autoReadOnly hidden
 int property COVERAGE_HANDS_MAX 				= 35 autoReadOnly hidden
 
-int property COVERAGE_FEET_POOR 				= 3 autoReadOnly hidden
-int property COVERAGE_FEET_LOW 					= 6 autoReadOnly hidden
-int property COVERAGE_FEET_AVERAGE 				= 14 autoReadOnly hidden
+int property COVERAGE_FEET_POOR 				= 6 autoReadOnly hidden
+int property COVERAGE_FEET_FAIR 				= 14 autoReadOnly hidden
 int property COVERAGE_FEET_GOOD 				= 21 autoReadOnly hidden
 int property COVERAGE_FEET_EXCELLENT 			= 29 autoReadOnly hidden
 int property COVERAGE_FEET_MAX 					= 35 autoReadOnly hidden
 
-int property COVERAGE_CLOAK_POOR 				= 1 autoReadOnly hidden
-int property COVERAGE_CLOAK_LOW 				= 6 autoReadOnly hidden
-int property COVERAGE_CLOAK_AVERAGE 			= 12 autoReadOnly hidden
+int property COVERAGE_CLOAK_POOR 				= 6 autoReadOnly hidden
+int property COVERAGE_CLOAK_FAIR 				= 12 autoReadOnly hidden
 int property COVERAGE_CLOAK_GOOD 				= 20 autoReadOnly hidden
 int property COVERAGE_CLOAK_EXCELLENT 			= 30 autoReadOnly hidden
 int property COVERAGE_CLOAK_MAX 				= 40 autoReadOnly hidden
 
-int property COVERAGE_MISC_POOR 				= 1 autoReadOnly hidden
-int property COVERAGE_MISC_LOW 					= 6 autoReadOnly hidden
-int property COVERAGE_MISC_AVERAGE 				= 12 autoReadOnly hidden
+int property COVERAGE_MISC_POOR 				= 6 autoReadOnly hidden
+int property COVERAGE_MISC_FAIR 				= 12 autoReadOnly hidden
 int property COVERAGE_MISC_GOOD 				= 20 autoReadOnly hidden
 int property COVERAGE_MISC_EXCELLENT 			= 30 autoReadOnly hidden
 int property COVERAGE_MISC_MAX 					= 40 autoReadOnly hidden
@@ -378,341 +352,289 @@ endFunction
 
 function CreateProtectionKeywordValueMaps()
 	; "Ignore" keyword?
-	StandardKeywords = new Keyword[12]
-	StandardBodyValues = new int[12]
-	StandardHeadValues = new int[12]
-	StandardHandsValues = new int[12]
-	StandardFeetValues = new int[12]
-	StandardCloakValues = new int[12]
-	StandardMiscValues = new int[12]
-	StandardPartIndex = new int[12]
+	StandardKeywords = new Keyword[10]
+	StandardBodyValues = new int[10]
+	StandardHeadValues = new int[10]
+	StandardHandsValues = new int[10]
+	StandardFeetValues = new int[10]
+	StandardCloakValues = new int[10]
+	StandardMiscValues = new int[10]
+	StandardPartIndex = new int[10]
 
-	OverrideKeywords = new Keyword[72]
-	OverrideValues = new int[72]
-	OverrideExtraPartIndex = new int[72]
+	OverrideKeywords = new Keyword[60]
+	OverrideValues = new int[60]
+	OverrideExtraPartIndex = new int[60]
 
 	StandardKeywords[0] = _Frost_WarmthPoor
-	StandardKeywords[1] = _Frost_WarmthLow
-	StandardKeywords[2] = _Frost_WarmthAverage
-	StandardKeywords[3] = _Frost_WarmthGood
-	StandardKeywords[4] = _Frost_WarmthExcellent
-	StandardKeywords[5] = _Frost_WarmthMax
-	StandardKeywords[6] = _Frost_CoveragePoor
-	StandardKeywords[7] = _Frost_CoverageLow
-	StandardKeywords[8] = _Frost_CoverageAverage
-	StandardKeywords[9] = _Frost_CoverageGood
-	StandardKeywords[10] = _Frost_CoverageExcellent
-	StandardKeywords[11] = _Frost_CoverageMax
+	StandardKeywords[1] = _Frost_WarmthFair
+	StandardKeywords[2] = _Frost_WarmthGood
+	StandardKeywords[3] = _Frost_WarmthExcellent
+	StandardKeywords[4] = _Frost_WarmthMax
+	StandardKeywords[5] = _Frost_CoveragePoor
+	StandardKeywords[6] = _Frost_CoverageFair
+	StandardKeywords[7] = _Frost_CoverageGood
+	StandardKeywords[8] = _Frost_CoverageExcellent
+	StandardKeywords[9] = _Frost_CoverageMax
 
 	StandardBodyValues[0] = WARMTH_BODY_POOR
-	StandardBodyValues[1] = WARMTH_BODY_LOW
-	StandardBodyValues[2] = WARMTH_BODY_AVERAGE
-	StandardBodyValues[3] = WARMTH_BODY_GOOD
-	StandardBodyValues[4] = WARMTH_BODY_EXCELLENT
-	StandardBodyValues[5] = WARMTH_BODY_MAX
-	StandardBodyValues[6] = COVERAGE_BODY_POOR
-	StandardBodyValues[7] = COVERAGE_BODY_LOW
-	StandardBodyValues[8] = COVERAGE_BODY_AVERAGE
-	StandardBodyValues[9] = COVERAGE_BODY_GOOD
-	StandardBodyValues[10] = COVERAGE_BODY_EXCELLENT
-	StandardBodyValues[11] = COVERAGE_BODY_MAX
+	StandardBodyValues[1] = WARMTH_BODY_FAIR
+	StandardBodyValues[2] = WARMTH_BODY_GOOD
+	StandardBodyValues[3] = WARMTH_BODY_EXCELLENT
+	StandardBodyValues[4] = WARMTH_BODY_MAX
+	StandardBodyValues[5] = COVERAGE_BODY_POOR
+	StandardBodyValues[6] = COVERAGE_BODY_FAIR
+	StandardBodyValues[7] = COVERAGE_BODY_GOOD
+	StandardBodyValues[8] = COVERAGE_BODY_EXCELLENT
+	StandardBodyValues[9] = COVERAGE_BODY_MAX
 
 	StandardHeadValues[0] = WARMTH_HEAD_POOR
-	StandardHeadValues[1] = WARMTH_HEAD_LOW
-	StandardHeadValues[2] = WARMTH_HEAD_AVERAGE
-	StandardHeadValues[3] = WARMTH_HEAD_GOOD
-	StandardHeadValues[4] = WARMTH_HEAD_EXCELLENT
-	StandardHeadValues[5] = WARMTH_HEAD_MAX
-	StandardHeadValues[6] = COVERAGE_HEAD_POOR
-	StandardHeadValues[7] = COVERAGE_HEAD_LOW
-	StandardHeadValues[8] = COVERAGE_HEAD_AVERAGE
-	StandardHeadValues[9] = COVERAGE_HEAD_GOOD
-	StandardHeadValues[10] = COVERAGE_HEAD_EXCELLENT
-	StandardHeadValues[11] = COVERAGE_HEAD_MAX
+	StandardHeadValues[1] = WARMTH_HEAD_FAIR
+	StandardHeadValues[2] = WARMTH_HEAD_GOOD
+	StandardHeadValues[3] = WARMTH_HEAD_EXCELLENT
+	StandardHeadValues[4] = WARMTH_HEAD_MAX
+	StandardHeadValues[5] = COVERAGE_HEAD_POOR
+	StandardHeadValues[6] = COVERAGE_HEAD_FAIR
+	StandardHeadValues[7] = COVERAGE_HEAD_GOOD
+	StandardHeadValues[8] = COVERAGE_HEAD_EXCELLENT
+	StandardHeadValues[9] = COVERAGE_HEAD_MAX
 
 	StandardHandsValues[0] = WARMTH_HANDS_POOR
-	StandardHandsValues[1] = WARMTH_HANDS_LOW
-	StandardHandsValues[2] = WARMTH_HANDS_AVERAGE
-	StandardHandsValues[3] = WARMTH_HANDS_GOOD
-	StandardHandsValues[4] = WARMTH_HANDS_EXCELLENT
-	StandardHandsValues[5] = WARMTH_HANDS_MAX
-	StandardHandsValues[6] = COVERAGE_HANDS_POOR
-	StandardHandsValues[7] = COVERAGE_HANDS_LOW
-	StandardHandsValues[8] = COVERAGE_HANDS_AVERAGE
-	StandardHandsValues[9] = COVERAGE_HANDS_GOOD
-	StandardHandsValues[10] = COVERAGE_HANDS_EXCELLENT
-	StandardHandsValues[11] = COVERAGE_HANDS_MAX
+	StandardHandsValues[1] = WARMTH_HANDS_FAIR
+	StandardHandsValues[2] = WARMTH_HANDS_GOOD
+	StandardHandsValues[3] = WARMTH_HANDS_EXCELLENT
+	StandardHandsValues[4] = WARMTH_HANDS_MAX
+	StandardHandsValues[5] = COVERAGE_HANDS_POOR
+	StandardHandsValues[6] = COVERAGE_HANDS_FAIR
+	StandardHandsValues[7] = COVERAGE_HANDS_GOOD
+	StandardHandsValues[8] = COVERAGE_HANDS_EXCELLENT
+	StandardHandsValues[9] = COVERAGE_HANDS_MAX
 
 	StandardFeetValues[0] = WARMTH_FEET_POOR
-	StandardFeetValues[1] = WARMTH_FEET_LOW
-	StandardFeetValues[2] = WARMTH_FEET_AVERAGE
-	StandardFeetValues[3] = WARMTH_FEET_GOOD
-	StandardFeetValues[4] = WARMTH_FEET_EXCELLENT
-	StandardFeetValues[5] = WARMTH_FEET_MAX
-	StandardFeetValues[6] = COVERAGE_FEET_POOR
-	StandardFeetValues[7] = COVERAGE_FEET_LOW
-	StandardFeetValues[8] = COVERAGE_FEET_AVERAGE
-	StandardFeetValues[9] = COVERAGE_FEET_GOOD
-	StandardFeetValues[10] = COVERAGE_FEET_EXCELLENT
-	StandardFeetValues[11] = COVERAGE_FEET_MAX
+	StandardFeetValues[1] = WARMTH_FEET_FAIR
+	StandardFeetValues[2] = WARMTH_FEET_GOOD
+	StandardFeetValues[3] = WARMTH_FEET_EXCELLENT
+	StandardFeetValues[4] = WARMTH_FEET_MAX
+	StandardFeetValues[5] = COVERAGE_FEET_POOR
+	StandardFeetValues[6] = COVERAGE_FEET_FAIR
+	StandardFeetValues[7] = COVERAGE_FEET_GOOD
+	StandardFeetValues[8] = COVERAGE_FEET_EXCELLENT
+	StandardFeetValues[9] = COVERAGE_FEET_MAX
 
 	StandardCloakValues[0] = WARMTH_CLOAK_POOR
-	StandardCloakValues[1] = WARMTH_CLOAK_LOW
-	StandardCloakValues[2] = WARMTH_CLOAK_AVERAGE
-	StandardCloakValues[3] = WARMTH_CLOAK_GOOD
-	StandardCloakValues[4] = WARMTH_CLOAK_EXCELLENT
-	StandardCloakValues[5] = WARMTH_CLOAK_MAX
-	StandardCloakValues[6] = COVERAGE_CLOAK_POOR
-	StandardCloakValues[7] = COVERAGE_CLOAK_LOW
-	StandardCloakValues[8] = COVERAGE_CLOAK_AVERAGE
-	StandardCloakValues[9] = COVERAGE_CLOAK_GOOD
-	StandardCloakValues[10] = COVERAGE_CLOAK_EXCELLENT
-	StandardCloakValues[11] = COVERAGE_CLOAK_MAX
+	StandardCloakValues[1] = WARMTH_CLOAK_FAIR
+	StandardCloakValues[2] = WARMTH_CLOAK_GOOD
+	StandardCloakValues[3] = WARMTH_CLOAK_EXCELLENT
+	StandardCloakValues[4] = WARMTH_CLOAK_MAX
+	StandardCloakValues[5] = COVERAGE_CLOAK_POOR
+	StandardCloakValues[6] = COVERAGE_CLOAK_FAIR
+	StandardCloakValues[7] = COVERAGE_CLOAK_GOOD
+	StandardCloakValues[8] = COVERAGE_CLOAK_EXCELLENT
+	StandardCloakValues[9] = COVERAGE_CLOAK_MAX
 
 	StandardMiscValues[0] = WARMTH_MISC_POOR
-	StandardMiscValues[1] = WARMTH_MISC_LOW
-	StandardMiscValues[2] = WARMTH_MISC_AVERAGE
-	StandardMiscValues[3] = WARMTH_MISC_GOOD
-	StandardMiscValues[4] = WARMTH_MISC_EXCELLENT
-	StandardMiscValues[5] = WARMTH_MISC_MAX
-	StandardMiscValues[6] = COVERAGE_MISC_POOR
-	StandardMiscValues[7] = COVERAGE_MISC_LOW
-	StandardMiscValues[8] = COVERAGE_MISC_AVERAGE
-	StandardMiscValues[9] = COVERAGE_MISC_GOOD
-	StandardMiscValues[10] = COVERAGE_MISC_EXCELLENT
-	StandardMiscValues[11] = COVERAGE_MISC_MAX
+	StandardMiscValues[1] = WARMTH_MISC_FAIR
+	StandardMiscValues[2] = WARMTH_MISC_GOOD
+	StandardMiscValues[3] = WARMTH_MISC_EXCELLENT
+	StandardMiscValues[4] = WARMTH_MISC_MAX
+	StandardMiscValues[5] = COVERAGE_MISC_POOR
+	StandardMiscValues[6] = COVERAGE_MISC_FAIR
+	StandardMiscValues[7] = COVERAGE_MISC_GOOD
+	StandardMiscValues[8] = COVERAGE_MISC_EXCELLENT
+	StandardMiscValues[9] = COVERAGE_MISC_MAX
 
 	StandardPartIndex[0] = 1
 	StandardPartIndex[1] = 1
 	StandardPartIndex[2] = 1
 	StandardPartIndex[3] = 1
 	StandardPartIndex[4] = 1
-	StandardPartIndex[5] = 1
+	StandardPartIndex[5] = 2
 	StandardPartIndex[6] = 2
 	StandardPartIndex[7] = 2
 	StandardPartIndex[8] = 2
 	StandardPartIndex[9] = 2
-	StandardPartIndex[10] = 2
-	StandardPartIndex[11] = 2
 
 	OverrideKeywords[0] = _Frost_ExtraBodyWarmthPoor
-	OverrideKeywords[1] = _Frost_ExtraBodyWarmthLow
-	OverrideKeywords[2] = _Frost_ExtraBodyWarmthAverage
-	OverrideKeywords[3] = _Frost_ExtraBodyWarmthGood
-	OverrideKeywords[4] = _Frost_ExtraBodyWarmthExcellent
-	OverrideKeywords[5] = _Frost_ExtraBodyWarmthMax
-	OverrideKeywords[6] = _Frost_ExtraHeadWarmthPoor
-	OverrideKeywords[7] = _Frost_ExtraHeadWarmthLow
-	OverrideKeywords[8] = _Frost_ExtraHeadWarmthAverage
-	OverrideKeywords[9] = _Frost_ExtraHeadWarmthGood
-	OverrideKeywords[10] = _Frost_ExtraHeadWarmthExcellent
-	OverrideKeywords[11] = _Frost_ExtraHeadWarmthMax
-	OverrideKeywords[12] = _Frost_ExtraHandsWarmthPoor
-	OverrideKeywords[13] = _Frost_ExtraHandsWarmthLow
-	OverrideKeywords[14] = _Frost_ExtraHandsWarmthAverage
-	OverrideKeywords[15] = _Frost_ExtraHandsWarmthGood
-	OverrideKeywords[16] = _Frost_ExtraHandsWarmthExcellent
-	OverrideKeywords[17] = _Frost_ExtraHandsWarmthMax
-	OverrideKeywords[18] = _Frost_ExtraFeetWarmthPoor
-	OverrideKeywords[19] = _Frost_ExtraFeetWarmthLow
-	OverrideKeywords[20] = _Frost_ExtraFeetWarmthAverage
-	OverrideKeywords[21] = _Frost_ExtraFeetWarmthGood
-	OverrideKeywords[22] = _Frost_ExtraFeetWarmthExcellent
-	OverrideKeywords[23] = _Frost_ExtraFeetWarmthMax
-	OverrideKeywords[24] = _Frost_ExtraCloakWarmthPoor
-	OverrideKeywords[25] = _Frost_ExtraCloakWarmthLow
-	OverrideKeywords[26] = _Frost_ExtraCloakWarmthAverage
-	OverrideKeywords[27] = _Frost_ExtraCloakWarmthGood
-	OverrideKeywords[28] = _Frost_ExtraCloakWarmthExcellent
-	OverrideKeywords[29] = _Frost_ExtraCloakWarmthMax
-	OverrideKeywords[30] = _Frost_ExtraMiscWarmthPoor
-	OverrideKeywords[31] = _Frost_ExtraMiscWarmthLow
-	OverrideKeywords[32] = _Frost_ExtraMiscWarmthAverage
-	OverrideKeywords[33] = _Frost_ExtraMiscWarmthGood
-	OverrideKeywords[34] = _Frost_ExtraMiscWarmthExcellent
-	OverrideKeywords[35] = _Frost_ExtraMiscWarmthMax
-	OverrideKeywords[36] = _Frost_ExtraBodyCoveragePoor
-	OverrideKeywords[37] = _Frost_ExtraBodyCoverageLow
-	OverrideKeywords[38] = _Frost_ExtraBodyCoverageAverage
-	OverrideKeywords[39] = _Frost_ExtraBodyCoverageGood
-	OverrideKeywords[40] = _Frost_ExtraBodyCoverageExcellent
-	OverrideKeywords[41] = _Frost_ExtraBodyCoverageMax
-	OverrideKeywords[42] = _Frost_ExtraHeadCoveragePoor
-	OverrideKeywords[43] = _Frost_ExtraHeadCoverageLow
-	OverrideKeywords[44] = _Frost_ExtraHeadCoverageAverage
-	OverrideKeywords[45] = _Frost_ExtraHeadCoverageGood
-	OverrideKeywords[46] = _Frost_ExtraHeadCoverageExcellent
-	OverrideKeywords[47] = _Frost_ExtraHeadCoverageMax
-	OverrideKeywords[48] = _Frost_ExtraHandsCoveragePoor
-	OverrideKeywords[49] = _Frost_ExtraHandsCoverageLow
-	OverrideKeywords[50] = _Frost_ExtraHandsCoverageAverage
-	OverrideKeywords[51] = _Frost_ExtraHandsCoverageGood
-	OverrideKeywords[52] = _Frost_ExtraHandsCoverageExcellent
-	OverrideKeywords[53] = _Frost_ExtraHandsCoverageMax
-	OverrideKeywords[54] = _Frost_ExtraFeetCoveragePoor
-	OverrideKeywords[55] = _Frost_ExtraFeetCoverageLow
-	OverrideKeywords[56] = _Frost_ExtraFeetCoverageAverage
-	OverrideKeywords[57] = _Frost_ExtraFeetCoverageGood
-	OverrideKeywords[58] = _Frost_ExtraFeetCoverageExcellent
-	OverrideKeywords[59] = _Frost_ExtraFeetCoverageMax
-	OverrideKeywords[60] = _Frost_ExtraCloakCoveragePoor
-	OverrideKeywords[61] = _Frost_ExtraCloakCoverageLow
-	OverrideKeywords[62] = _Frost_ExtraCloakCoverageAverage
-	OverrideKeywords[63] = _Frost_ExtraCloakCoverageGood
-	OverrideKeywords[64] = _Frost_ExtraCloakCoverageExcellent
-	OverrideKeywords[65] = _Frost_ExtraCloakCoverageMax
-	OverrideKeywords[66] = _Frost_ExtraMiscCoveragePoor
-	OverrideKeywords[67] = _Frost_ExtraMiscCoverageLow
-	OverrideKeywords[68] = _Frost_ExtraMiscCoverageAverage
-	OverrideKeywords[69] = _Frost_ExtraMiscCoverageGood
-	OverrideKeywords[70] = _Frost_ExtraMiscCoverageExcellent
-	OverrideKeywords[71] = _Frost_ExtraMiscCoverageMax
+	OverrideKeywords[1] = _Frost_ExtraBodyWarmthFair
+	OverrideKeywords[2] = _Frost_ExtraBodyWarmthGood
+	OverrideKeywords[3] = _Frost_ExtraBodyWarmthExcellent
+	OverrideKeywords[4] = _Frost_ExtraBodyWarmthMax
+	OverrideKeywords[5] = _Frost_ExtraHeadWarmthPoor
+	OverrideKeywords[6] = _Frost_ExtraHeadWarmthFair
+	OverrideKeywords[7] = _Frost_ExtraHeadWarmthGood
+	OverrideKeywords[8] = _Frost_ExtraHeadWarmthExcellent
+	OverrideKeywords[9] = _Frost_ExtraHeadWarmthMax
+	OverrideKeywords[10] = _Frost_ExtraHandsWarmthPoor
+	OverrideKeywords[11] = _Frost_ExtraHandsWarmthFair
+	OverrideKeywords[12] = _Frost_ExtraHandsWarmthGood
+	OverrideKeywords[13] = _Frost_ExtraHandsWarmthExcellent
+	OverrideKeywords[14] = _Frost_ExtraHandsWarmthMax
+	OverrideKeywords[15] = _Frost_ExtraFeetWarmthPoor
+	OverrideKeywords[16] = _Frost_ExtraFeetWarmthFair
+	OverrideKeywords[17] = _Frost_ExtraFeetWarmthGood
+	OverrideKeywords[18] = _Frost_ExtraFeetWarmthExcellent
+	OverrideKeywords[19] = _Frost_ExtraFeetWarmthMax
+	OverrideKeywords[20] = _Frost_ExtraCloakWarmthPoor
+	OverrideKeywords[21] = _Frost_ExtraCloakWarmthFair
+	OverrideKeywords[22] = _Frost_ExtraCloakWarmthGood
+	OverrideKeywords[23] = _Frost_ExtraCloakWarmthExcellent
+	OverrideKeywords[24] = _Frost_ExtraCloakWarmthMax
+	OverrideKeywords[25] = _Frost_ExtraMiscWarmthPoor
+	OverrideKeywords[26] = _Frost_ExtraMiscWarmthFair
+	OverrideKeywords[27] = _Frost_ExtraMiscWarmthGood
+	OverrideKeywords[28] = _Frost_ExtraMiscWarmthExcellent
+	OverrideKeywords[29] = _Frost_ExtraMiscWarmthMax
+	OverrideKeywords[30] = _Frost_ExtraBodyCoveragePoor
+	OverrideKeywords[31] = _Frost_ExtraBodyCoverageFair
+	OverrideKeywords[32] = _Frost_ExtraBodyCoverageGood
+	OverrideKeywords[33] = _Frost_ExtraBodyCoverageExcellent
+	OverrideKeywords[34] = _Frost_ExtraBodyCoverageMax
+	OverrideKeywords[35] = _Frost_ExtraHeadCoveragePoor
+	OverrideKeywords[36] = _Frost_ExtraHeadCoverageFair
+	OverrideKeywords[37] = _Frost_ExtraHeadCoverageGood
+	OverrideKeywords[38] = _Frost_ExtraHeadCoverageExcellent
+	OverrideKeywords[39] = _Frost_ExtraHeadCoverageMax
+	OverrideKeywords[40] = _Frost_ExtraHandsCoveragePoor
+	OverrideKeywords[41] = _Frost_ExtraHandsCoverageFair
+	OverrideKeywords[42] = _Frost_ExtraHandsCoverageGood
+	OverrideKeywords[43] = _Frost_ExtraHandsCoverageExcellent
+	OverrideKeywords[44] = _Frost_ExtraHandsCoverageMax
+	OverrideKeywords[45] = _Frost_ExtraFeetCoveragePoor
+	OverrideKeywords[46] = _Frost_ExtraFeetCoverageFair
+	OverrideKeywords[47] = _Frost_ExtraFeetCoverageGood
+	OverrideKeywords[48] = _Frost_ExtraFeetCoverageExcellent
+	OverrideKeywords[49] = _Frost_ExtraFeetCoverageMax
+	OverrideKeywords[50] = _Frost_ExtraCloakCoveragePoor
+	OverrideKeywords[51] = _Frost_ExtraCloakCoverageFair
+	OverrideKeywords[52] = _Frost_ExtraCloakCoverageGood
+	OverrideKeywords[53] = _Frost_ExtraCloakCoverageExcellent
+	OverrideKeywords[54] = _Frost_ExtraCloakCoverageMax
+	OverrideKeywords[55] = _Frost_ExtraMiscCoveragePoor
+	OverrideKeywords[56] = _Frost_ExtraMiscCoverageFair
+	OverrideKeywords[57] = _Frost_ExtraMiscCoverageGood
+	OverrideKeywords[58] = _Frost_ExtraMiscCoverageExcellent
+	OverrideKeywords[59] = _Frost_ExtraMiscCoverageMax
 
 	OverrideValues[0] = WARMTH_BODY_POOR
-	OverrideValues[1] = WARMTH_BODY_LOW
-	OverrideValues[2] = WARMTH_BODY_AVERAGE
-	OverrideValues[3] = WARMTH_BODY_GOOD
-	OverrideValues[4] = WARMTH_BODY_EXCELLENT
-	OverrideValues[5] = WARMTH_BODY_MAX
-	OverrideValues[6] = WARMTH_HEAD_POOR
-	OverrideValues[7] = WARMTH_HEAD_LOW
-	OverrideValues[8] = WARMTH_HEAD_AVERAGE
-	OverrideValues[9] = WARMTH_HEAD_GOOD
-	OverrideValues[10] = WARMTH_HEAD_EXCELLENT
-	OverrideValues[11] = WARMTH_HEAD_MAX
-	OverrideValues[12] = WARMTH_HANDS_POOR
-	OverrideValues[13] = WARMTH_HANDS_LOW
-	OverrideValues[14] = WARMTH_HANDS_AVERAGE
-	OverrideValues[15] = WARMTH_HANDS_GOOD
-	OverrideValues[16] = WARMTH_HANDS_EXCELLENT
-	OverrideValues[17] = WARMTH_HANDS_MAX
-	OverrideValues[18] = WARMTH_FEET_POOR
-	OverrideValues[19] = WARMTH_FEET_LOW
-	OverrideValues[20] = WARMTH_FEET_AVERAGE
-	OverrideValues[21] = WARMTH_FEET_GOOD
-	OverrideValues[22] = WARMTH_FEET_EXCELLENT
-	OverrideValues[23] = WARMTH_FEET_MAX
-	OverrideValues[24] = WARMTH_CLOAK_POOR
-	OverrideValues[25] = WARMTH_CLOAK_LOW
-	OverrideValues[26] = WARMTH_CLOAK_AVERAGE
-	OverrideValues[27] = WARMTH_CLOAK_GOOD
-	OverrideValues[28] = WARMTH_CLOAK_EXCELLENT
-	OverrideValues[29] = WARMTH_CLOAK_MAX
-	OverrideValues[30] = WARMTH_MISC_POOR
-	OverrideValues[31] = WARMTH_MISC_LOW
-	OverrideValues[32] = WARMTH_MISC_AVERAGE
-	OverrideValues[33] = WARMTH_MISC_GOOD
-	OverrideValues[34] = WARMTH_MISC_EXCELLENT
-	OverrideValues[35] = WARMTH_MISC_MAX
-	OverrideValues[36] = COVERAGE_BODY_POOR
-	OverrideValues[37] = COVERAGE_BODY_LOW
-	OverrideValues[38] = COVERAGE_BODY_AVERAGE
-	OverrideValues[39] = COVERAGE_BODY_GOOD
-	OverrideValues[40] = COVERAGE_BODY_EXCELLENT
-	OverrideValues[41] = COVERAGE_BODY_MAX
-	OverrideValues[42] = COVERAGE_HEAD_POOR
-	OverrideValues[43] = COVERAGE_HEAD_LOW
-	OverrideValues[44] = COVERAGE_HEAD_AVERAGE
-	OverrideValues[45] = COVERAGE_HEAD_GOOD
-	OverrideValues[46] = COVERAGE_HEAD_EXCELLENT
-	OverrideValues[47] = COVERAGE_HEAD_MAX
-	OverrideValues[48] = COVERAGE_HANDS_POOR
-	OverrideValues[49] = COVERAGE_HANDS_LOW
-	OverrideValues[50] = COVERAGE_HANDS_AVERAGE
-	OverrideValues[51] = COVERAGE_HANDS_GOOD
-	OverrideValues[52] = COVERAGE_HANDS_EXCELLENT
-	OverrideValues[53] = COVERAGE_HANDS_MAX
-	OverrideValues[54] = COVERAGE_FEET_POOR
-	OverrideValues[55] = COVERAGE_FEET_LOW
-	OverrideValues[56] = COVERAGE_FEET_AVERAGE
-	OverrideValues[57] = COVERAGE_FEET_GOOD
-	OverrideValues[58] = COVERAGE_FEET_EXCELLENT
-	OverrideValues[59] = COVERAGE_FEET_MAX
-	OverrideValues[60] = COVERAGE_CLOAK_POOR
-	OverrideValues[61] = COVERAGE_CLOAK_LOW
-	OverrideValues[62] = COVERAGE_CLOAK_AVERAGE
-	OverrideValues[63] = COVERAGE_CLOAK_GOOD
-	OverrideValues[64] = COVERAGE_CLOAK_EXCELLENT
-	OverrideValues[65] = COVERAGE_CLOAK_MAX
-	OverrideValues[66] = COVERAGE_MISC_POOR
-	OverrideValues[67] = COVERAGE_MISC_LOW
-	OverrideValues[68] = COVERAGE_MISC_AVERAGE
-	OverrideValues[69] = COVERAGE_MISC_GOOD
-	OverrideValues[70] = COVERAGE_MISC_EXCELLENT
-	OverrideValues[71] = COVERAGE_MISC_MAX
+	OverrideValues[1] = WARMTH_BODY_FAIR
+	OverrideValues[2] = WARMTH_BODY_GOOD
+	OverrideValues[3] = WARMTH_BODY_EXCELLENT
+	OverrideValues[4] = WARMTH_BODY_MAX
+	OverrideValues[5] = WARMTH_HEAD_POOR
+	OverrideValues[6] = WARMTH_HEAD_FAIR
+	OverrideValues[7] = WARMTH_HEAD_GOOD
+	OverrideValues[8] = WARMTH_HEAD_EXCELLENT
+	OverrideValues[9] = WARMTH_HEAD_MAX
+	OverrideValues[10] = WARMTH_HANDS_POOR
+	OverrideValues[11] = WARMTH_HANDS_FAIR
+	OverrideValues[12] = WARMTH_HANDS_GOOD
+	OverrideValues[13] = WARMTH_HANDS_EXCELLENT
+	OverrideValues[14] = WARMTH_HANDS_MAX
+	OverrideValues[15] = WARMTH_FEET_POOR
+	OverrideValues[16] = WARMTH_FEET_FAIR
+	OverrideValues[17] = WARMTH_FEET_GOOD
+	OverrideValues[18] = WARMTH_FEET_EXCELLENT
+	OverrideValues[19] = WARMTH_FEET_MAX
+	OverrideValues[20] = WARMTH_CLOAK_POOR
+	OverrideValues[21] = WARMTH_CLOAK_FAIR
+	OverrideValues[22] = WARMTH_CLOAK_GOOD
+	OverrideValues[23] = WARMTH_CLOAK_EXCELLENT
+	OverrideValues[24] = WARMTH_CLOAK_MAX
+	OverrideValues[25] = WARMTH_MISC_POOR
+	OverrideValues[26] = WARMTH_MISC_FAIR
+	OverrideValues[27] = WARMTH_MISC_GOOD
+	OverrideValues[28] = WARMTH_MISC_EXCELLENT
+	OverrideValues[29] = WARMTH_MISC_MAX
+	OverrideValues[30] = COVERAGE_BODY_POOR
+	OverrideValues[31] = COVERAGE_BODY_FAIR
+	OverrideValues[32] = COVERAGE_BODY_GOOD
+	OverrideValues[33] = COVERAGE_BODY_EXCELLENT
+	OverrideValues[34] = COVERAGE_BODY_MAX
+	OverrideValues[35] = COVERAGE_HEAD_POOR
+	OverrideValues[36] = COVERAGE_HEAD_FAIR
+	OverrideValues[37] = COVERAGE_HEAD_GOOD
+	OverrideValues[38] = COVERAGE_HEAD_EXCELLENT
+	OverrideValues[39] = COVERAGE_HEAD_MAX
+	OverrideValues[40] = COVERAGE_HANDS_POOR
+	OverrideValues[41] = COVERAGE_HANDS_FAIR
+	OverrideValues[42] = COVERAGE_HANDS_GOOD
+	OverrideValues[43] = COVERAGE_HANDS_EXCELLENT
+	OverrideValues[44] = COVERAGE_HANDS_MAX
+	OverrideValues[45] = COVERAGE_FEET_POOR
+	OverrideValues[46] = COVERAGE_FEET_FAIR
+	OverrideValues[47] = COVERAGE_FEET_GOOD
+	OverrideValues[48] = COVERAGE_FEET_EXCELLENT
+	OverrideValues[49] = COVERAGE_FEET_MAX
+	OverrideValues[50] = COVERAGE_CLOAK_POOR
+	OverrideValues[51] = COVERAGE_CLOAK_FAIR
+	OverrideValues[52] = COVERAGE_CLOAK_GOOD
+	OverrideValues[53] = COVERAGE_CLOAK_EXCELLENT
+	OverrideValues[54] = COVERAGE_CLOAK_MAX
+	OverrideValues[55] = COVERAGE_MISC_POOR
+	OverrideValues[56] = COVERAGE_MISC_FAIR
+	OverrideValues[57] = COVERAGE_MISC_GOOD
+	OverrideValues[58] = COVERAGE_MISC_EXCELLENT
+	OverrideValues[59] = COVERAGE_MISC_MAX
 
 	OverrideExtraPartIndex[0] = 3
 	OverrideExtraPartIndex[1] = 3
 	OverrideExtraPartIndex[2] = 3
 	OverrideExtraPartIndex[3] = 3
 	OverrideExtraPartIndex[4] = 3
-	OverrideExtraPartIndex[5] = 3
+	OverrideExtraPartIndex[5] = 5
 	OverrideExtraPartIndex[6] = 5
 	OverrideExtraPartIndex[7] = 5
 	OverrideExtraPartIndex[8] = 5
 	OverrideExtraPartIndex[9] = 5
-	OverrideExtraPartIndex[10] = 5
-	OverrideExtraPartIndex[11] = 5
+	OverrideExtraPartIndex[10] = 7
+	OverrideExtraPartIndex[11] = 7
 	OverrideExtraPartIndex[12] = 7
 	OverrideExtraPartIndex[13] = 7
 	OverrideExtraPartIndex[14] = 7
-	OverrideExtraPartIndex[15] = 7
-	OverrideExtraPartIndex[16] = 7
-	OverrideExtraPartIndex[17] = 7
+	OverrideExtraPartIndex[15] = 9
+	OverrideExtraPartIndex[16] = 9
+	OverrideExtraPartIndex[17] = 9
 	OverrideExtraPartIndex[18] = 9
 	OverrideExtraPartIndex[19] = 9
-	OverrideExtraPartIndex[20] = 9
-	OverrideExtraPartIndex[21] = 9
-	OverrideExtraPartIndex[22] = 9
-	OverrideExtraPartIndex[23] = 9
+	OverrideExtraPartIndex[20] = 11
+	OverrideExtraPartIndex[21] = 11
+	OverrideExtraPartIndex[22] = 11
+	OverrideExtraPartIndex[23] = 11
 	OverrideExtraPartIndex[24] = 11
-	OverrideExtraPartIndex[25] = 11
-	OverrideExtraPartIndex[26] = 11
-	OverrideExtraPartIndex[27] = 11
-	OverrideExtraPartIndex[28] = 11
-	OverrideExtraPartIndex[29] = 11
-	OverrideExtraPartIndex[30] = 13
-	OverrideExtraPartIndex[31] = 13
-	OverrideExtraPartIndex[32] = 13
-	OverrideExtraPartIndex[33] = 13
-	OverrideExtraPartIndex[34] = 13
-	OverrideExtraPartIndex[35] = 13
-	OverrideExtraPartIndex[36] = 4
-	OverrideExtraPartIndex[37] = 4
-	OverrideExtraPartIndex[38] = 4
-	OverrideExtraPartIndex[39] = 4
-	OverrideExtraPartIndex[40] = 4
-	OverrideExtraPartIndex[41] = 4
-	OverrideExtraPartIndex[42] = 6
-	OverrideExtraPartIndex[43] = 6
-	OverrideExtraPartIndex[44] = 6
-	OverrideExtraPartIndex[45] = 6
-	OverrideExtraPartIndex[46] = 6
-	OverrideExtraPartIndex[47] = 6
-	OverrideExtraPartIndex[48] = 8
-	OverrideExtraPartIndex[49] = 8
-	OverrideExtraPartIndex[50] = 8
-	OverrideExtraPartIndex[51] = 8
-	OverrideExtraPartIndex[52] = 8
-	OverrideExtraPartIndex[53] = 8
-	OverrideExtraPartIndex[54] = 10
-	OverrideExtraPartIndex[55] = 10
-	OverrideExtraPartIndex[56] = 10
-	OverrideExtraPartIndex[57] = 10
-	OverrideExtraPartIndex[58] = 10
-	OverrideExtraPartIndex[59] = 10
-	OverrideExtraPartIndex[60] = 12
-	OverrideExtraPartIndex[61] = 12
-	OverrideExtraPartIndex[62] = 12
-	OverrideExtraPartIndex[63] = 12
-	OverrideExtraPartIndex[64] = 12
-	OverrideExtraPartIndex[65] = 12
-	OverrideExtraPartIndex[66] = 14
-	OverrideExtraPartIndex[67] = 14
-	OverrideExtraPartIndex[68] = 14
-	OverrideExtraPartIndex[69] = 14
-	OverrideExtraPartIndex[70] = 14
-	OverrideExtraPartIndex[71] = 14
+	OverrideExtraPartIndex[25] = 13
+	OverrideExtraPartIndex[26] = 13
+	OverrideExtraPartIndex[27] = 13
+	OverrideExtraPartIndex[28] = 13
+	OverrideExtraPartIndex[29] = 13
+	OverrideExtraPartIndex[30] = 4
+	OverrideExtraPartIndex[31] = 4
+	OverrideExtraPartIndex[32] = 4
+	OverrideExtraPartIndex[33] = 4
+	OverrideExtraPartIndex[34] = 4
+	OverrideExtraPartIndex[35] = 6
+	OverrideExtraPartIndex[36] = 6
+	OverrideExtraPartIndex[37] = 6
+	OverrideExtraPartIndex[38] = 6
+	OverrideExtraPartIndex[39] = 6
+	OverrideExtraPartIndex[40] = 8
+	OverrideExtraPartIndex[41] = 8
+	OverrideExtraPartIndex[42] = 8
+	OverrideExtraPartIndex[43] = 8
+	OverrideExtraPartIndex[44] = 8
+	OverrideExtraPartIndex[45] = 10
+	OverrideExtraPartIndex[46] = 10
+	OverrideExtraPartIndex[47] = 10
+	OverrideExtraPartIndex[48] = 10
+	OverrideExtraPartIndex[49] = 10
+	OverrideExtraPartIndex[50] = 12
+	OverrideExtraPartIndex[51] = 12
+	OverrideExtraPartIndex[52] = 12
+	OverrideExtraPartIndex[53] = 12
+	OverrideExtraPartIndex[54] = 12
+	OverrideExtraPartIndex[55] = 14
+	OverrideExtraPartIndex[56] = 14
+	OverrideExtraPartIndex[57] = 14
+	OverrideExtraPartIndex[58] = 14
+	OverrideExtraPartIndex[59] = 14
 endFunction
 
 function InitializeDatastore()
