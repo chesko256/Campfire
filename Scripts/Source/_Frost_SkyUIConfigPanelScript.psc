@@ -1743,6 +1743,10 @@ function ModifyGearCoverage(int aiOIDIndex)
 endFunction
 
 function ModifyGearType(int aiOIDIndex, int aiChoice)
+	if aiChoice == 7
+		return
+	endif
+	
 	bool confirmed = ShowMessage("Are you sure you want to change this kind of equipment's type?\n\n(Note: This choice is for Frostfall only and has no effect on armor rating, equipment slot, or any other aspect of how it is handled by the rest of the game.)")
 	
 	if confirmed
