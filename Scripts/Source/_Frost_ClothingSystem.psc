@@ -79,20 +79,8 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGear
         ; plug the data in
         ArrayAddArmor(akWornGearFormsArray, akArmor)
         string dskey = handler.GetDatastoreKeyFromForm(akArmor)
+
         int type = armor_data[0]
-        ; 0 - type
-        ; 1 - body warmth
-        ; 2 - body coverage
-        ; 3 - head warmth
-        ; 4 - head coverage
-        ; 5 - hands warmth
-        ; 6 - hands coverage
-        ; 7 - feet warmth
-        ; 8 - feet coverage
-        ; 9 - cloak warmth
-        ; 10 - cloak coverage
-        ; 11 - misc warmth
-        ; 12 - misc coverage
         StorageUtil.IntListResize(akWornGearData, dskey, 13)
         StorageUtil.IntListSet(akWornGearData, dskey, 0, type) ; type
         int jdx = (type * 2)
@@ -159,6 +147,39 @@ bool function RemoveWornGearEntryForArmorUnequipped(Armor akArmor, Armor[] akWor
         return true
     endif
     return false
+endFunction
+
+function RefreshWornGearData(Armor[] akWornGearFormsArray, keyword akWornGearData)
+    ; Pull the latest values for all currently worn gear. (Player switched profiles, changed the JSON file
+    ; by hand since they last loaded the game, etc)
+    int i = 0
+    int gear_count = ArrayCountArmor(akWornGearFormsArray)
+    while i < gear_count
+        Armor the_armor = akWornGearFormsArray[i]
+        int[] armor_data = handler.GetArmorProtectionData(the_armor)
+        string dskey = handler.GetDatastoreKeyFromForm(the_armor)
+
+        int type = armor_data[0]
+        StorageUtil.IntListSet(akWornGearData, dskey, 0, type) ; type
+        int jdx = (type * 2)
+        
+        StorageUtil.IntListSet(akWornGearData, dskey, 1, armor_data[3])
+        StorageUtil.IntListSet(akWornGearData, dskey, 2, armor_data[4])
+        StorageUtil.IntListSet(akWornGearData, dskey, 3, armor_data[5])
+        StorageUtil.IntListSet(akWornGearData, dskey, 4, armor_data[6])
+        StorageUtil.IntListSet(akWornGearData, dskey, 5, armor_data[7])
+        StorageUtil.IntListSet(akWornGearData, dskey, 6, armor_data[8])
+        StorageUtil.IntListSet(akWornGearData, dskey, 7, armor_data[9])
+        StorageUtil.IntListSet(akWornGearData, dskey, 8, armor_data[10])
+        StorageUtil.IntListSet(akWornGearData, dskey, 9, armor_data[11])
+        StorageUtil.IntListSet(akWornGearData, dskey, 10, armor_data[12])
+        StorageUtil.IntListSet(akWornGearData, dskey, 11, armor_data[13])
+        StorageUtil.IntListSet(akWornGearData, dskey, 12, armor_data[14])
+
+        ; Main values - these overwrite "extra" data in the same category (shouldn't do that anyway)
+        StorageUtil.IntListSet(akWornGearData, dskey, jdx - 1, armor_data[1])     ; warmth
+        StorageUtil.IntListSet(akWornGearData, dskey, jdx, armor_data[2])         ; coverage
+    endWhile
 endFunction
 
 function RecalculateProtectionData(Armor[] akWornGearFormsArray, int[] aiWornGearValuesArray, keyword akWornGearData)
