@@ -179,6 +179,7 @@ function RefreshWornGearData(Armor[] akWornGearFormsArray, keyword akWornGearDat
         ; Main values - these overwrite "extra" data in the same category (shouldn't do that anyway)
         StorageUtil.IntListSet(akWornGearData, dskey, jdx - 1, armor_data[1])     ; warmth
         StorageUtil.IntListSet(akWornGearData, dskey, jdx, armor_data[2])         ; coverage
+        i += 1
     endWhile
 endFunction
 

@@ -139,6 +139,7 @@ int Advanced_TutorialsToggle_OID
 int Advanced_TutorialsResetText_OID
 
 Armor[] ArmorMenuEntries
+int[] ArmorTypeIDs
 int[] Armor_WarmthSliderOIDs
 int[] Armor_CoverageSliderOIDs
 int[] Armor_GearTypeOIDs
@@ -149,6 +150,9 @@ int Armor_ShowTutorialOID
 
 int ArmorPage_cursor_position = 0
 bool ArmorPage_updated_msg = false
+
+int[] ProtectionListWarmthIndex
+int[] ProtectionListCoverageIndex
 
 
 Event OnConfigInit()
@@ -192,8 +196,8 @@ Event OnConfigInit()
 	ProtectionList = new string[28]
 	ProtectionList[0] = "== CLOTHING =="
 	ProtectionList[1] = "Thin Clothing (W: Poor, C: None)"
-	ProtectionList[2] = "Typical Clothing (W: Fair, C: Low)"
-	ProtectionList[3] = "Warm Clothing (W: Good, C: Low)"
+	ProtectionList[2] = "Typical Clothing (W: Fair, C: Poor)"
+	ProtectionList[3] = "Warm Clothing (W: Good, C: Poor)"
 	ProtectionList[4] = "== EQUIPMENT - WARM =="
 	ProtectionList[5] = "Layered (W: Good, C: Fair)"
 	ProtectionList[6] = "Insulated (W: Excellent, C: Fair)"
@@ -203,22 +207,73 @@ Event OnConfigInit()
 	ProtectionList[10] = "Fitted (W: Fair, C: Excellent)"
 	ProtectionList[11] = "Sealed (W: Good, C: Max)"
 	ProtectionList[12] = "== EQUIPMENT - BALANCED =="
-	ProtectionList[13] = "Low-Grade (W: Low, C: Low)"
+	ProtectionList[13] = "Low-Grade (W: Poor, C: Poor)"
 	ProtectionList[14] = "Standard Issue (W: Fair, C: Fair)"
 	ProtectionList[15] = "Rugged (W: Good, C: Good)"
 	ProtectionList[16] = "Exceptional (W: Excellent, C: Excellent)"
 	ProtectionList[17] = "Legendary (W: Max, C: Max)"
 	ProtectionList[18] = "== ACCESSORIES =="
-	ProtectionList[19] = "Warm Accessory (W: Good, C: Low)"
-	ProtectionList[20] = "Weatherproof Accessory (W: Low, C: Good)"
-	ProtectionList[21] = "Cloth Cloak (W: Fair, C: Fair)"
-	ProtectionList[22] = "Leather Cloak (W: Fair, C: Good)"
-	ProtectionList[23] = "Fur Cloak (W: Good, C: Fair)"
+	ProtectionList[19] = "Warm Accessory (W: 12, C: 6)"
+	ProtectionList[20] = "Weatherproof Accessory (W: 6, C: 12)"
+	ProtectionList[21] = "Cloth Cloak (W: 12, C: 12)"
+	ProtectionList[22] = "Leather Cloak (W: 12, C: 40)"
+	ProtectionList[23] = "Fur Cloak (W: 40, C: 12)"
 	ProtectionList[24] = "== OPTIONS =="
 	ProtectionList[25] = "Set Values Manually"
 	ProtectionList[26] = "Restore Item Defaults"
 	ProtectionList[27] = "Cancel"
-	
+
+	ProtectionListWarmthIndex = new int[24]
+	ProtectionListWarmthIndex[0] = -1
+	ProtectionListWarmthIndex[1] = 0
+	ProtectionListWarmthIndex[2] = 1
+	ProtectionListWarmthIndex[3] = 2
+	ProtectionListWarmthIndex[4] = -1
+	ProtectionListWarmthIndex[5] = 2
+	ProtectionListWarmthIndex[6] = 3
+	ProtectionListWarmthIndex[7] = 4
+	ProtectionListWarmthIndex[8] = -1
+	ProtectionListWarmthIndex[9] = 1
+	ProtectionListWarmthIndex[10] = 1
+	ProtectionListWarmthIndex[11] = 2
+	ProtectionListWarmthIndex[12] = -1
+	ProtectionListWarmthIndex[13] = 0
+	ProtectionListWarmthIndex[14] = 1
+	ProtectionListWarmthIndex[15] = 2
+	ProtectionListWarmthIndex[16] = 3
+	ProtectionListWarmthIndex[17] = 4
+	ProtectionListWarmthIndex[18] = -1
+	ProtectionListWarmthIndex[19] = 1
+	ProtectionListWarmthIndex[20] = 0
+	ProtectionListWarmthIndex[21] = 1
+	ProtectionListWarmthIndex[22] = 1
+	ProtectionListWarmthIndex[23] = 4
+
+	ProtectionListCoverageIndex = new int[24]
+	ProtectionListCoverageIndex[0] = -1
+	ProtectionListCoverageIndex[1] = -2
+	ProtectionListCoverageIndex[2] = 5
+	ProtectionListCoverageIndex[3] = 5
+	ProtectionListCoverageIndex[4] = -1
+	ProtectionListCoverageIndex[5] = 6
+	ProtectionListCoverageIndex[6] = 6
+	ProtectionListCoverageIndex[7] = 7
+	ProtectionListCoverageIndex[8] = -1
+	ProtectionListCoverageIndex[9] = 7
+	ProtectionListCoverageIndex[10] = 8
+	ProtectionListCoverageIndex[11] = 9
+	ProtectionListCoverageIndex[12] = -1
+	ProtectionListCoverageIndex[13] = 5
+	ProtectionListCoverageIndex[14] = 6
+	ProtectionListCoverageIndex[15] = 7
+	ProtectionListCoverageIndex[16] = 8
+	ProtectionListCoverageIndex[17] = 9
+	ProtectionListCoverageIndex[18] = -1
+	ProtectionListCoverageIndex[19] = 5
+	ProtectionListCoverageIndex[20] = 6
+	ProtectionListCoverageIndex[21] = 6
+	ProtectionListCoverageIndex[22] = 9
+	ProtectionListCoverageIndex[23] = 6
 endEvent
 
 int function GetVersion()
@@ -1187,6 +1242,7 @@ Event OnOptionMenuAccept(int option, int index)
 		if !found_armor_entry_oid
 			idx = Armor_SetProtectionOIDs.Find(option)
 			if idx != -1
+				ModifyGearProtection(idx, index)
 				found_armor_entry_oid = true
 			endif
 		endif
@@ -1606,6 +1662,7 @@ function GenerateEquipmentPage()
 	Armor[] worn_armor = GetAllWornArmor()
 
 	ArmorMenuEntries = new Armor[128]
+	ArmorTypeIDs = new int[128]
 	Armor_WarmthSliderOIDs = new int[128]
 	Armor_CoverageSliderOIDs = new int[128]
 	Armor_GearTypeOIDs = new int[128]
@@ -1684,8 +1741,10 @@ function GenerateEquipmentPageEntry(int aiArrayIndex, Armor akArmor, int aiType,
 
 	if abIsMainPart
 		AddHeaderOption(akArmor.GetName())
+		ArmorTypeIDs[aiArrayIndex] = 0
 	else
 		AddHeaderOption(akArmor.GetName() + GetDescriptiveTypeString(aiType, akHandler))
+		ArmorTypeIDs[aiArrayIndex] = aiType
 	endif
 
 	if abIsMainPart
@@ -1715,6 +1774,10 @@ function GenerateEquipmentPageEntry(int aiArrayIndex, Armor akArmor, int aiType,
 endFunction
 
 function GenerateEquipmentPageFooter()
+	if !IsEven(ArmorPage_cursor_position)
+		ArmorPage_cursor_position += 11
+	endif
+
 	SetCursorPosition(ArmorPage_cursor_position)
 	SetCursorFillMode(LEFT_TO_RIGHT)
 	AddHeaderOption("Options")
@@ -1728,7 +1791,118 @@ function GenerateEquipmentPageFooter()
 endFunction
 
 function ModifyGearProtection(int aiOidIndex, int aiChoice)
+	if aiChoice == 27
+		return
+	endif
 
+	; Option select
+	if aiChoice == 27
+		return
+	elseif aiChoice == 26
+		; restore default values
+	elseif aiChoice == 25
+		; Set manually
+	else
+		int new_warmth = 0
+		int new_coverage = 0
+
+		int wdx = ProtectionListWarmthIndex[aiChoice]
+		int cdx = ProtectionListCoverageIndex[aiChoice]
+
+		if wdx == -1
+			ShowMessage("Please select a valid option.")
+			return
+		endif
+
+		armor the_armor = ArmorMenuEntries[aiOIDIndex]
+		_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+		int[] armor_data = handler.GetArmorProtectionData(the_armor)
+		int type = armor_data[0]
+
+		if type == handler.GEARTYPE_BODY
+			new_warmth = handler.StandardBodyValues[wdx]
+			if cdx == -2
+				new_coverage = 0
+			else
+				new_coverage = handler.StandardBodyValues[cdx]
+			endif
+		elseif type == handler.GEARTYPE_HEAD
+			new_warmth = handler.StandardHeadValues[wdx]
+			if cdx == -2
+				new_coverage = 0
+			else
+				new_coverage = handler.StandardHeadValues[cdx]
+			endif
+		elseif type == handler.GEARTYPE_HANDS
+			new_warmth = handler.StandardHandsValues[wdx]
+			if cdx == -2
+				new_coverage = 0
+			else
+				new_coverage = handler.StandardHandsValues[cdx]
+			endif
+		elseif type == handler.GEARTYPE_FEET
+			new_warmth = handler.StandardFeetValues[wdx]
+			if cdx == -2
+				new_coverage = 0
+			else
+				new_coverage = handler.StandardFeetValues[cdx]
+			endif
+		elseif type == handler.GEARTYPE_CLOAK
+			new_warmth = handler.StandardCloakValues[wdx]
+			if cdx == -2
+				new_coverage = 0
+			else
+				new_coverage = handler.StandardCloakValues[cdx]
+			endif
+		elseif type == handler.GEARTYPE_MISC
+			new_warmth = handler.StandardMiscValues[wdx]
+			if cdx == -2
+				new_coverage = 0
+			else
+				new_coverage = handler.StandardMiscValues[cdx]
+			endif
+		else
+			; How did we get here?
+			return
+		endif
+
+		; Set the new value
+		if ArmorTypeIDs[aiOidIndex] == 0
+			armor_data[1] = new_warmth
+			armor_data[2] = new_coverage
+		elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_BODY
+			armor_data[3] = new_warmth
+			armor_data[4] = new_coverage
+		elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_HEAD
+			armor_data[5] = new_warmth
+			armor_data[6] = new_coverage
+		elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_HANDS
+			armor_data[7] = new_warmth
+			armor_data[8] = new_coverage
+		elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_FEET
+			armor_data[9] = new_warmth
+			armor_data[10] = new_coverage
+		elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_CLOAK
+			armor_data[11] = new_warmth
+			armor_data[12] = new_coverage
+		elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_MISC
+			armor_data[13] = new_warmth
+			armor_data[14] = new_coverage
+		endif
+
+		handler.UpdateArmorDataA(the_armor, armor_data)
+
+		; Update the UI
+		SetSliderOptionValue(Armor_WarmthSliderOIDs[aiOIDIndex], new_warmth, "{0}", true)
+		SetSliderOptionValue(Armor_CoverageSliderOIDs[aiOIDIndex], new_coverage, "{0}")
+
+		; Update currently worn armor data in-place and force recalculate
+		_Frost_ClothingSystem clothing = GetClothingSystem()
+		bool b = clothing.RemoveWornGearEntryForArmorUnequipped(the_armor, clothing.WornGearForms, clothing._Frost_WornGearData)
+		b = clothing.AddWornGearEntryForArmorEquipped(the_armor, clothing.WornGearForms, clothing._Frost_WornGearData)
+		clothing.RecalculateProtectionData(clothing.WornGearForms, clothing.WornGearValues, clothing._Frost_WornGearData)
+		clothing.SendEvent_UpdateWarmthAndCoverage()
+	endif
 endFunction
 
 function ModifyGearWarmth(int aiOIDIndex)
@@ -1745,7 +1919,6 @@ function ModifyGearType(int aiOIDIndex, int aiChoice)
 	endif
 
 	bool confirmed = ShowMessage("Are you sure you want to change this kind of equipment's type?\n\n(Note: This choice is for Frostfall only and has no effect on armor rating, equipment slot, or any other aspect of how it is handled by the rest of the game.)")
-	
 	if confirmed
 		SetMenuOptionValue(Armor_GearTypeOIDs[aiOIDIndex], GearTypeList[aiChoice])
 		armor the_armor = ArmorMenuEntries[aiOIDIndex]
