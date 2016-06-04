@@ -148,6 +148,7 @@ int[] Armor_DefaultArmorEntryOIDs
 int Armor_ShowTutorialOID
 
 int ArmorPage_cursor_position = 0
+bool ArmorPage_updated_msg = false
 
 
 Event OnConfigInit()
@@ -433,6 +434,10 @@ function PageReset_Equipment()
 
 	GenerateEquipmentPage()
 
+	if ArmorPage_updated_msg
+		ShowMessage("Changes applied. Page was updated to reflect changes.")
+		ArmorPage_updated_msg = false
+	endif
 endFunction
 
 function PageReset_Interface()
@@ -1615,17 +1620,9 @@ function GenerateEquipmentPage()
 	while i < armor_count
 		int[] armor_data = handler.GetArmorProtectionData(worn_armor[i] as Armor)
 
-		int disable_if_ignored
+		int disable_if_ignored = 0
 		if armor_data[0] == handler.GEARTYPE_IGNORE
 			disable_if_ignored = OPTION_FLAG_DISABLED
-		endif
-
-		; Don't display negative values.
-		if armor_data[1] < 0
-			armor_data[1] = 0
-		endif
-		if armor_data[2] < 0
-			armor_data[2] = 0
 		endif
 
 		; Main entry
@@ -1746,7 +1743,7 @@ function ModifyGearType(int aiOIDIndex, int aiChoice)
 	if aiChoice == 7
 		return
 	endif
-	
+
 	bool confirmed = ShowMessage("Are you sure you want to change this kind of equipment's type?\n\n(Note: This choice is for Frostfall only and has no effect on armor rating, equipment slot, or any other aspect of how it is handled by the rest of the game.)")
 	
 	if confirmed
@@ -1782,6 +1779,7 @@ function ModifyGearType(int aiOIDIndex, int aiChoice)
 
 		handler.UpdateArmorDataA(the_armor, armor_data)
 
+		ArmorPage_updated_msg = true
 		ForcePageReset()
 
 		; Update currently worn armor data in-place and force recalculate
@@ -1866,9 +1864,9 @@ string function GetDescriptiveTypeString(int aiType, _Frost_ArmorProtectionDatas
 endFunction
 
 function ShowTutorial_ArmorPage(bool abForceDisplay = false)
-	ShowMessage("On this page, you can set the warmth and coverage of your currently worn equipment.\n\nSetting Protection\n\nClick 'Set Protection...', and select one of the options that appear. This will set up your equipment with appropriate values for option you selected and the gear's type.", false)
+	ShowMessage("Setting Protection\n\nClick 'Set Protection...', and select one of the options that appear. This will set up your equipment with appropriate values for option you selected and the gear's type.", false)
 	ShowMessage("Types\n\nFrostfall will count the protection of one piece of worn Body, Head, Hands, Feet, and Cloak gear at a time. However, all worn Accessories will be counted. If necessary, you can edit the gear's type by clicking the Type option.", false)
-	ShowMessage("Undoing Changes\n\nTo restore a piece of gear to its default values, select 'Restore Item Defaults'.\n\nTo restore the default values of ALL equipment in the entire game (effectively deleting all of your profile's custom gear settings), select 'Restore Defaults for ALL Items' at the bottom of the page.", false)
+	ShowMessage("Undoing Changes\n\nTo restore a piece of gear to its default values, select 'Set Protection...', scroll to the bottom, and select 'Restore Item Defaults'.\n\nTo restore the default values of ALL equipment in the entire game (effectively deleting all of your profile's custom gear settings), select 'Restore Defaults for ALL Items' at the bottom of the page.", false)
 endFunction
 
 bool function IsEven(int aiValue)
