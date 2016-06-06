@@ -1185,6 +1185,139 @@ bool function UnregisterPerkTree(Activator akPerkNodeController, string asPlugin
 	return compatibility.CampfirePerkSystemUnregister(akPerkNodeController, asPluginName)
 endFunction
 
+;/********f* CampUtil/RegisterExamineReplacement
+* API VERSION ADDED
+* 5
+*
+* DESCRIPTION
+* Register a new association between akFormToReplace and the Form to replace it with (akTargetForm) when using 
+* Survival Skill: Examine.
+*
+* SYNTAX
+*/;
+bool function RegisterExamineReplacement(Form akFormToReplace, Form akTargetForm, bool abForceRegistration = false,	\
+										 Form akExtraDisableObject1 = None, Form akExtraDisableObject2 = None, 		\
+										 Form akExtraDisableObject3 = None,	Form akExtraDisableObject4 = None, 		\
+										 Form akExtraDisableObject5 = None,	Form akExtraDisableObject6 = None) global
+;/*
+* PARAMETERS
+* akFormToReplace: The form to look for and replace when using Examine.
+* akTargetForm: The form to replace akFormToReplace with when using Examine.
+* abForceRegistration (Optional): If True, will register the examine replacement even if akFormToReplace is already registered to something else, overwriting the previous registration.
+* akExtraDisableObject1 (Optional): A form to disable, if found within 512.0 units of akFormToReplace.
+* akExtraDisableObject2 (Optional): A form to disable, if found within 512.0 units of akFormToReplace.
+* akExtraDisableObject3 (Optional): A form to disable, if found within 512.0 units of akFormToReplace.
+* akExtraDisableObject4 (Optional): A form to disable, if found within 512.0 units of akFormToReplace.
+* akExtraDisableObject5 (Optional): A form to disable, if found within 512.0 units of akFormToReplace.
+* akExtraDisableObject6 (Optional): A form to disable, if found within 512.0 units of akFormToReplace.
+*
+* RETURN VALUE
+* True if the replacement mapping was successfully registered. False if this mapping could not be registered
+* (akFormToReplace has already been mapped to something else without the Force flag turned on, or one of the 
+* required parameters is None).
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+	
+	; Debug
+	return true
+endFunction
+
+;/********f* CampUtil/UnregisterExamineReplacement
+* API VERSION ADDED
+* 5
+*
+* DESCRIPTION
+* Unregisters a Survival Skill: Examine association between two Forms.
+*
+* NOTES
+* If the Examine registration replaces a Form with a Form in your mod, you do not need to unregister
+* it before your user uninstalls the mod. The system will remove the registration automatically if it finds an
+* association where the replacement Form is None (which would happen if your mod is uninstalled). However, if 
+* the replacement is between two different forms not from your mod, you must unregister it if you want the 
+* replacement to no longer function.
+*
+* SYNTAX
+*/;
+bool function UnregisterExamineReplacement(Form akFormToReplace) global
+;/*
+* PARAMETERS
+* akFormToReplace: The previously registered Form to unregister.
+*
+* RETURN VALUE
+* True if the replacement mapping was successfully unregistered. False if akFormToReplace was not found.
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+	
+	; Debug
+	return true
+endFunction
+
+;/********f* CampUtil/HasExamineReplacement
+* API VERSION ADDED
+* 5
+*
+* DESCRIPTION
+* Checks if akBaseObject has a Survival Skill: Examine replacement already registered.
+*
+* NOTES
+* In general, you don't need to call this before calling `RegisterExamineReplacement()`; it will simply
+* return False if the Form is already registered.
+*
+* SYNTAX
+*/;
+bool function HasExamineReplacement(Form akBaseObject) global
+;/*
+* PARAMETERS
+* akBaseObject: The Form to check for an Examine registration.
+*
+* RETURN VALUE
+* True if the Form is already registered, False if not.
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+	
+	; Debug
+	return false
+endFunction
+
+;/********f* CampUtil/GetExamineReplacementTarget
+* API VERSION ADDED
+* 5
+*
+* DESCRIPTION
+* Returns the Form that will replace akBaseObject when using Survival Skill: Examine.
+*
+* SYNTAX
+*/;
+Form function GetExamineReplacementTarget(Form akBaseObject) global
+;/*
+* PARAMETERS
+* akBaseObject: The Form to look up.
+*
+* RETURN VALUE
+* The Form registered to replace akBaseObject, or None if a registration wasn't found.
+;*********/;
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+	
+	; Debug
+	return None
+endFunction
+
 ;/********f* CampUtil/GetCampfireSettingBool
 * API VERSION ADDED
 * 2
