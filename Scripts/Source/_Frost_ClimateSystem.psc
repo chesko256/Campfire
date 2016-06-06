@@ -90,6 +90,7 @@ float pos_y
 float pos_z
 Worldspace ws
 int current_max_temperature
+int last_max_temperature
 int last_region
 int last_current_temperature
 bool was_nighttime
@@ -162,6 +163,7 @@ function UpdateClimateState()
 	last_current_weather = current_weather
 	last_incoming_weather = incoming_weather
 	last_current_temperature = current_temperature
+	last_max_temperature = current_max_temperature
 	last_region = region
 	first_update = false
 endFunction
@@ -213,7 +215,9 @@ int function GetCurrentTemperature(Weather this_weather, int region)
 	endif
 
 	; Don't recalculate if the weather, region or time hasn't changed.
-	if this_weather == last_current_weather && region == last_region && !time_changed
+	if last_max_temperature == current_max_temperature && 	\
+	   this_weather == last_current_weather && 				\
+	   region == last_region && !time_changed
 		return last_current_temperature
 	endif
 
