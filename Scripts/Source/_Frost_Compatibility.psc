@@ -243,8 +243,8 @@ function RunCompatibility()
 
 	; Verify that the default datastore has been populated.
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
-	int[] armor_data = handler.GetDefaultArmorData(ArmorHideCuirass, true)
-	if armor_data[0] == -1
+	int[] armor_data = handler.GetDefaultArmorData(ArmorHideCuirass)
+	if armor_data[0] == handler.GEARTYPE_NOTFOUND
 		PopulateDefaultArmorData()
 	endif
 
