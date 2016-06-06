@@ -1851,11 +1851,16 @@ function GenerateEquipmentPageEntry(int aiArrayIndex, Armor akArmor, int aiType,
 		akCoverage = 0
 	endif
 
+	string display_name = akArmor.GetName()
+	if display_name == ""
+		display_name = GetUnnamedTypeString(akArmor, aiType, akHandler)
+	endif
+
 	if abIsMainPart
-		AddHeaderOption(akArmor.GetName())
+		AddHeaderOption(display_name)
 		ArmorTypeIDs[aiArrayIndex] = 0
 	else
-		AddHeaderOption(akArmor.GetName() + GetExtraPartTypeString(aiType, akHandler))
+		AddHeaderOption(display_name + GetExtraPartTypeString(aiType, akHandler))
 		ArmorTypeIDs[aiArrayIndex] = aiType
 	endif
 
@@ -2472,6 +2477,29 @@ string function GetExtraPartTypeString(int aiType, _Frost_ArmorProtectionDatasto
 		return str.FrostfallCloakExtraPartDesc
 	elseif aiType == akHandler.GEARTYPE_MISC
 		return str.FrostfallAccessoryExtraPartDesc
+	endif
+endFunction
+
+string function GetUnnamedTypeString(Armor akArmor, int aiType, _Frost_ArmorProtectionDatastoreHandler akHandler)
+	_Frost_Strings str = GetFrostfallStrings()
+	if aiType == akHandler.GEARTYPE_BODY
+		return str.FrostfallBodyUnnamed
+	elseif aiType == akHandler.GEARTYPE_HEAD
+		return str.FrostfallHeadUnnamed
+	elseif aiType == akHandler.GEARTYPE_HANDS
+		return str.FrostfallHandsUnnamed
+	elseif aiType == akHandler.GEARTYPE_FEET
+		return str.FrostfallFeetUnnamed
+	elseif aiType == akHandler.GEARTYPE_CLOAK
+		return str.FrostfallCloakUnnamed
+	elseif aiType == akHandler.GEARTYPE_MISC
+		if akArmor.IsShield()
+			return str.FrostfallShieldUnnamed
+		else
+			return str.FrostfallAccessoryUnnamed
+		endif
+	elseif aiType == akHandler.GEARTYPE_IGNORE
+		return str.FrostfallNoProtectionUnnamed
 	endif
 endFunction
 
