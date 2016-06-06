@@ -426,6 +426,26 @@ function RunCompatibility()
 		endif
 	endif
 
+	if isWACLoaded
+		isWACLoaded = IsPluginLoaded(0x07119C, "WetandCold.esp")
+		if !isWACLoaded
+			;Wet and Cold was removed since the last save.
+			isWACLoaded = false
+		else
+			isWACLoaded = true
+			_WetIsUnderShelterFaction = Game.GetFormFromFile(0x07119C, "WetandCold.esp") as Faction
+		endif
+	else
+		isWACLoaded = IsPluginLoaded(0x07119C, "WetandCold.esp")
+		if isWACLoaded
+			;Wet and Cold was just added.
+			isWACLoaded = true
+			_WetIsUnderShelterFaction = Game.GetFormFromFile(0x07119C, "WetandCold.esp") as Faction
+		else
+			isWACLoaded = false
+		endif
+	endif
+
 	if isSCLoaded
 		isSCLoaded = IsPluginLoaded(0x010215C5, "ScenicCarriages.esp")
 		if !isSCLoaded
@@ -1582,9 +1602,6 @@ function AEALoadUp()
 endFunction
 
 function WACLoadUp()
-	;@TODO
-	; _WetIsUnderShelterFaction = Game.GetFormFromFile(0x07119C, "WetandCold.esp") as Faction
-
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
 	; Check if already loaded
