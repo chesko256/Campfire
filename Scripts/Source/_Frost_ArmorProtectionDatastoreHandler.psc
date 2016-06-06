@@ -926,31 +926,29 @@ function SetArmorDataByKey(string asKey, int aiType, int aiWarmth = 0, int aiCov
 		profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
 	endif
 	
-	if !ProfileHasKey(profile_path, asKey)
-		; + 1 so that 0 is a meaningful value on Get
-		JsonUtil.IntListAdd(profile_path, asKey, aiType 				+ 1)
-		JsonUtil.IntListAdd(profile_path, asKey, aiWarmth				+ 1)
-		JsonUtil.IntListAdd(profile_path, asKey, aiCoverage				+ 1)
-		JsonUtil.IntListAdd(profile_path, asKey, aiExtraBodyWarmth		+ 1)
-		JsonUtil.IntListAdd(profile_path, asKey, aiExtraBodyCoverage	+ 1)
-		JsonUtil.IntListAdd(profile_path, asKey, aiExtraHeadWarmth		+ 1)
-		JsonUtil.IntListAdd(profile_path, asKey, aiExtraHeadCoverage	+ 1)
-		JsonUtil.IntListAdd(profile_path, asKey, aiExtraHandsWarmth		+ 1)
-		JsonUtil.IntListAdd(profile_path, asKey, aiExtraHandsCoverage	+ 1)
-		JsonUtil.IntListAdd(profile_path, asKey, aiExtraFeetWarmth		+ 1)
-		JsonUtil.IntListAdd(profile_path, asKey, aiExtraFeetCoverage	+ 1)
-		JsonUtil.IntListAdd(profile_path, asKey, aiExtraCloakWarmth		+ 1)
-		JsonUtil.IntListAdd(profile_path, asKey, aiExtraCloakCoverage	+ 1)
-		JsonUtil.IntListAdd(profile_path, asKey, aiExtraMiscWarmth		+ 1)
-		JsonUtil.IntListAdd(profile_path, asKey, aiExtraMiscCoverage	+ 1)
-
-		if abSave
-			JsonUtil.Save(profile_path)
-		endif
+	JsonUtil.IntListResize(profile_path, asKey, 15, 0)
+	JsonUtil.IntListSet(profile_path, asKey, 0, aiType)
+	JsonUtil.IntListSet(profile_path, asKey, 1, aiWarmth)
+	JsonUtil.IntListSet(profile_path, asKey, 2, aiCoverage)
+	JsonUtil.IntListSet(profile_path, asKey, 3, aiExtraBodyWarmth)
+	JsonUtil.IntListSet(profile_path, asKey, 4, aiExtraBodyCoverage)
+	JsonUtil.IntListSet(profile_path, asKey, 5, aiExtraHeadWarmth)
+	JsonUtil.IntListSet(profile_path, asKey, 6, aiExtraHeadCoverage)
+	JsonUtil.IntListSet(profile_path, asKey, 7, aiExtraHandsWarmth)
+	JsonUtil.IntListSet(profile_path, asKey, 8, aiExtraHandsCoverage)
+	JsonUtil.IntListSet(profile_path, asKey, 9, aiExtraFeetWarmth)
+	JsonUtil.IntListSet(profile_path, asKey, 10, aiExtraFeetCoverage)
+	JsonUtil.IntListSet(profile_path, asKey, 11, aiExtraCloakWarmth)
+	JsonUtil.IntListSet(profile_path, asKey, 12, aiExtraCloakCoverage)
+	JsonUtil.IntListSet(profile_path, asKey, 13, aiExtraMiscWarmth)
+	JsonUtil.IntListSet(profile_path, asKey, 14, aiExtraMiscCoverage)
+	
+	if abSave
+		JsonUtil.Save(profile_path)
 	endif
 endFunction
 
-function SetArmorData(Armor akArmor, int aiType, int aiWarmth = 0, int aiCoverage = 0,						\
+function SetArmorData(Armor akArmor, int aiType, int aiWarmth = 0, int aiCoverage = 0,			\
 									 int aiExtraBodyWarmth = 0, int aiExtraBodyCoverage = 0, 	\
 									 int aiExtraHeadWarmth = 0, int aiExtraHeadCoverage = 0, 	\
 									 int aiExtraHandsWarmth = 0, int aiExtraHandsCoverage = 0, 	\
@@ -960,50 +958,47 @@ function SetArmorData(Armor akArmor, int aiType, int aiWarmth = 0, int aiCoverag
 	
 	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
 	string dskey = GetDatastoreKeyFromForm(akArmor)
-	if !ProfileHasKey(profile_path, dskey)
-		; + 1 so that 0 is a meaningful value on Get
-		JsonUtil.IntListAdd(profile_path, dskey, aiType					+ 1)
-		JsonUtil.IntListAdd(profile_path, dskey, aiWarmth				+ 1)
-		JsonUtil.IntListAdd(profile_path, dskey, aiCoverage				+ 1)
-		JsonUtil.IntListAdd(profile_path, dskey, aiExtraBodyWarmth		+ 1)
-		JsonUtil.IntListAdd(profile_path, dskey, aiExtraBodyCoverage	+ 1)
-		JsonUtil.IntListAdd(profile_path, dskey, aiExtraHeadWarmth		+ 1)
-		JsonUtil.IntListAdd(profile_path, dskey, aiExtraHeadCoverage	+ 1)
-		JsonUtil.IntListAdd(profile_path, dskey, aiExtraHandsWarmth		+ 1)
-		JsonUtil.IntListAdd(profile_path, dskey, aiExtraHandsCoverage	+ 1)
-		JsonUtil.IntListAdd(profile_path, dskey, aiExtraFeetWarmth		+ 1)
-		JsonUtil.IntListAdd(profile_path, dskey, aiExtraFeetCoverage	+ 1)
-		JsonUtil.IntListAdd(profile_path, dskey, aiExtraCloakWarmth		+ 1)
-		JsonUtil.IntListAdd(profile_path, dskey, aiExtraCloakCoverage	+ 1)
-		JsonUtil.IntListAdd(profile_path, dskey, aiExtraMiscWarmth		+ 1)
-		JsonUtil.IntListAdd(profile_path, dskey, aiExtraMiscCoverage	+ 1)
-		JsonUtil.Save(profile_path)
-	endif
+	JsonUtil.IntListResize(profile_path, dskey, 15, 0)
+	JsonUtil.IntListSet(profile_path, dskey, 0, aiType)
+	JsonUtil.IntListSet(profile_path, dskey, 1, aiWarmth)
+	JsonUtil.IntListSet(profile_path, dskey, 2, aiCoverage)
+	JsonUtil.IntListSet(profile_path, dskey, 3, aiExtraBodyWarmth)
+	JsonUtil.IntListSet(profile_path, dskey, 4, aiExtraBodyCoverage)
+	JsonUtil.IntListSet(profile_path, dskey, 5, aiExtraHeadWarmth)
+	JsonUtil.IntListSet(profile_path, dskey, 6, aiExtraHeadCoverage)
+	JsonUtil.IntListSet(profile_path, dskey, 7, aiExtraHandsWarmth)
+	JsonUtil.IntListSet(profile_path, dskey, 8, aiExtraHandsCoverage)
+	JsonUtil.IntListSet(profile_path, dskey, 9, aiExtraFeetWarmth)
+	JsonUtil.IntListSet(profile_path, dskey, 10, aiExtraFeetCoverage)
+	JsonUtil.IntListSet(profile_path, dskey, 11, aiExtraCloakWarmth)
+	JsonUtil.IntListSet(profile_path, dskey, 12, aiExtraCloakCoverage)
+	JsonUtil.IntListSet(profile_path, dskey, 13, aiExtraMiscWarmth)
+	JsonUtil.IntListSet(profile_path, dskey, 14, aiExtraMiscCoverage)
+	JsonUtil.Save(profile_path)
 endFunction
 
 function SetArmorDataA(Armor akArmor, int[] aiProtectionValues)
 	
 	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
 	string dskey = GetDatastoreKeyFromForm(akArmor)
-	if !ProfileHasKey(profile_path, dskey)
-		; + 1 so that 0 is a meaningful value on Get
-		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[0]	+ 1) ; aiType
-		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[1]	+ 1) ; aiWarmth
-		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[2]	+ 1) ; aiCoverage
-		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[3]	+ 1) ; aiExtraBodyWarmth
-		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[4]	+ 1) ; aiExtraBodyCoverage
-		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[5]	+ 1) ; aiExtraHeadWarmth
-		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[6]	+ 1) ; aiExtraHeadCoverage
-		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[7]	+ 1) ; aiExtraHandsWarmth
-		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[8]	+ 1) ; aiExtraHandsCoverage
-		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[9]	+ 1) ; aiExtraFeetWarmth
-		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[10]	+ 1) ; aiExtraFeetCoverage
-		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[11]	+ 1) ; aiExtraCloakWarmth
-		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[12]	+ 1) ; aiExtraCloakCoverage
-		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[13]	+ 1) ; aiExtraMiscWarmth
-		JsonUtil.IntListAdd(profile_path, dskey, aiProtectionValues[14]	+ 1) ; aiExtraMiscCoverage
-		JsonUtil.Save(profile_path)
-	endif
+	
+	JsonUtil.IntListResize(profile_path, dskey, 15, 0)
+	JsonUtil.IntListSet(profile_path, dskey, 0, aiProtectionValues[0]) ; aiType
+	JsonUtil.IntListSet(profile_path, dskey, 1, aiProtectionValues[1]) ; aiWarmth
+	JsonUtil.IntListSet(profile_path, dskey, 2, aiProtectionValues[2]) ; aiCoverage
+	JsonUtil.IntListSet(profile_path, dskey, 3, aiProtectionValues[3]) ; aiExtraBodyWarmth
+	JsonUtil.IntListSet(profile_path, dskey, 4, aiProtectionValues[4]) ; aiExtraBodyCoverage
+	JsonUtil.IntListSet(profile_path, dskey, 5, aiProtectionValues[5]) ; aiExtraHeadWarmth
+	JsonUtil.IntListSet(profile_path, dskey, 6, aiProtectionValues[6]) ; aiExtraHeadCoverage
+	JsonUtil.IntListSet(profile_path, dskey, 7, aiProtectionValues[7]) ; aiExtraHandsWarmth
+	JsonUtil.IntListSet(profile_path, dskey, 8, aiProtectionValues[8]) ; aiExtraHandsCoverage
+	JsonUtil.IntListSet(profile_path, dskey, 9, aiProtectionValues[9]) ; aiExtraFeetWarmth
+	JsonUtil.IntListSet(profile_path, dskey, 10, aiProtectionValues[10]) ; aiExtraFeetCoverage
+	JsonUtil.IntListSet(profile_path, dskey, 11, aiProtectionValues[11]) ; aiExtraCloakWarmth
+	JsonUtil.IntListSet(profile_path, dskey, 12, aiProtectionValues[12]) ; aiExtraCloakCoverage
+	JsonUtil.IntListSet(profile_path, dskey, 13, aiProtectionValues[13]) ; aiExtraMiscWarmth
+	JsonUtil.IntListSet(profile_path, dskey, 14, aiProtectionValues[14]) ; aiExtraMiscCoverage
+	JsonUtil.Save(profile_path)
 endFunction
 
 function UpdateArmorData(Armor akArmor, int aiType = -1, int aiWarmth = -1, int aiCoverage = -1, 	\
@@ -1017,51 +1012,50 @@ function UpdateArmorData(Armor akArmor, int aiType = -1, int aiWarmth = -1, int 
 	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
 	string dskey = GetDatastoreKeyFromForm(akArmor)
 	if ProfileHasKey(profile_path, dskey)
-		; + 1 so that 0 is a meaningful value on Get
 		if aiType != -1
-			JsonUtil.IntListSet(profile_path, dskey, 0, aiType					+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 0, aiType)
 		endif
 		if aiWarmth != -1
-			JsonUtil.IntListSet(profile_path, dskey, 1, aiWarmth				+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 1, aiWarmth)
 		endif
 		if aiCoverage != -1
-			JsonUtil.IntListSet(profile_path, dskey, 2, aiCoverage				+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 2, aiCoverage)
 		endif
 		if aiExtraBodyWarmth != -1
-			JsonUtil.IntListSet(profile_path, dskey, 3, aiExtraBodyWarmth		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 3, aiExtraBodyWarmth)
 		endif
 		if aiExtraBodyCoverage != -1
-			JsonUtil.IntListSet(profile_path, dskey, 4, aiExtraBodyCoverage		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 4, aiExtraBodyCoverage)
 		endif
 		if aiExtraHeadWarmth != -1
-			JsonUtil.IntListSet(profile_path, dskey, 5, aiExtraHeadWarmth		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 5, aiExtraHeadWarmth)
 		endif
 		if aiExtraHeadCoverage != -1
-			JsonUtil.IntListSet(profile_path, dskey, 6, aiExtraHeadCoverage		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 6, aiExtraHeadCoverage)
 		endif
 		if aiExtraHandsWarmth != -1
-			JsonUtil.IntListSet(profile_path, dskey, 7, aiExtraHandsWarmth		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 7, aiExtraHandsWarmth)
 		endif
 		if aiExtraHandsCoverage != -1
-			JsonUtil.IntListSet(profile_path, dskey, 8, aiExtraHandsCoverage	+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 8, aiExtraHandsCoverage)
 		endif
 		if aiExtraFeetWarmth != -1
-			JsonUtil.IntListSet(profile_path, dskey, 9, aiExtraFeetWarmth		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 9, aiExtraFeetWarmth)
 		endif
 		if aiExtraFeetCoverage != -1
-			JsonUtil.IntListSet(profile_path, dskey, 10, aiExtraFeetCoverage	+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 10, aiExtraFeetCoverage)
 		endif
 		if aiExtraCloakWarmth != -1
-			JsonUtil.IntListSet(profile_path, dskey, 11, aiExtraCloakWarmth		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 11, aiExtraCloakWarmth)
 		endif
 		if aiExtraCloakCoverage != -1
-			JsonUtil.IntListSet(profile_path, dskey, 12, aiExtraCloakCoverage	+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 12, aiExtraCloakCoverage)
 		endif
 		if aiExtraMiscWarmth != -1
-			JsonUtil.IntListSet(profile_path, dskey, 13, aiExtraMiscWarmth		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 13, aiExtraMiscWarmth)
 		endif
 		if aiExtraMiscCoverage != -1
-			JsonUtil.IntListSet(profile_path, dskey, 14, aiExtraMiscCoverage	+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 14, aiExtraMiscCoverage)
 		endif
 		JsonUtil.Save(profile_path)
 	else
@@ -1122,51 +1116,50 @@ function UpdateArmorDataA(Armor akArmor, int[] aiProtectionValues)
 	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
 	string dskey = GetDatastoreKeyFromForm(akArmor)
 	if ProfileHasKey(profile_path, dskey)
-		; + 1 so that 0 is a meaningful value on Get
 		if aiProtectionValues[0] != -1
-			JsonUtil.IntListSet(profile_path, dskey, 0, aiProtectionValues[0]		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 0, aiProtectionValues[0])
 		endif
 		if aiProtectionValues[1] != -1
-			JsonUtil.IntListSet(profile_path, dskey, 1, aiProtectionValues[1]		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 1, aiProtectionValues[1])
 		endif
 		if aiProtectionValues[2] != -1
-			JsonUtil.IntListSet(profile_path, dskey, 2, aiProtectionValues[2]		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 2, aiProtectionValues[2])
 		endif
 		if aiProtectionValues[3] != -1
-			JsonUtil.IntListSet(profile_path, dskey, 3, aiProtectionValues[3]		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 3, aiProtectionValues[3])
 		endif
 		if aiProtectionValues[4] != -1
-			JsonUtil.IntListSet(profile_path, dskey, 4, aiProtectionValues[4]		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 4, aiProtectionValues[4])
 		endif
 		if aiProtectionValues[5] != -1
-			JsonUtil.IntListSet(profile_path, dskey, 5, aiProtectionValues[5]		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 5, aiProtectionValues[5])
 		endif
 		if aiProtectionValues[6] != -1
-			JsonUtil.IntListSet(profile_path, dskey, 6, aiProtectionValues[6]		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 6, aiProtectionValues[6])
 		endif
 		if aiProtectionValues[7] != -1
-			JsonUtil.IntListSet(profile_path, dskey, 7, aiProtectionValues[7]		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 7, aiProtectionValues[7])
 		endif
 		if aiProtectionValues[8] != -1
-			JsonUtil.IntListSet(profile_path, dskey, 8, aiProtectionValues[8]		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 8, aiProtectionValues[8])
 		endif
 		if aiProtectionValues[9] != -1
-			JsonUtil.IntListSet(profile_path, dskey, 9, aiProtectionValues[9]		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 9, aiProtectionValues[9])
 		endif
 		if aiProtectionValues[10] != -1
-			JsonUtil.IntListSet(profile_path, dskey, 10, aiProtectionValues[10]		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 10, aiProtectionValues[10])
 		endif
 		if aiProtectionValues[11] != -1
-			JsonUtil.IntListSet(profile_path, dskey, 11, aiProtectionValues[11]		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 11, aiProtectionValues[11])
 		endif
 		if aiProtectionValues[12] != -1
-			JsonUtil.IntListSet(profile_path, dskey, 12, aiProtectionValues[12]		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 12, aiProtectionValues[12])
 		endif
 		if aiProtectionValues[13] != -1
-			JsonUtil.IntListSet(profile_path, dskey, 13, aiProtectionValues[13]		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 13, aiProtectionValues[13])
 		endif
 		if aiProtectionValues[14] != -1
-			JsonUtil.IntListSet(profile_path, dskey, 14, aiProtectionValues[14]		+ 1)
+			JsonUtil.IntListSet(profile_path, dskey, 14, aiProtectionValues[14])
 		endif
 		JsonUtil.Save(profile_path)
 	else
@@ -1225,6 +1218,7 @@ function RestoreDefaultArmorData(Armor akArmor)
 	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
 	string dskey = GetDatastoreKeyFromForm(akArmor)
 	JsonUtil.IntListClear(profile_path, dskey)
+	JsonUtil.Save(profile_path)
 endFunction
 
 ; GET
@@ -1234,52 +1228,47 @@ int[] function GetArmorData(Armor akArmor)
 	int[] armor_data = new int[15]
 
 	if ProfileHasKey(profile_path, dskey)
-		armor_data[0] = JsonUtil.IntListGet(profile_path, dskey, 0) - 1
-		armor_data[1] = JsonUtil.IntListGet(profile_path, dskey, 1) - 1
-		armor_data[2] = JsonUtil.IntListGet(profile_path, dskey, 2) - 1
-		armor_data[3] = JsonUtil.IntListGet(profile_path, dskey, 3) - 1
-		armor_data[4] = JsonUtil.IntListGet(profile_path, dskey, 4) - 1
-		armor_data[5] = JsonUtil.IntListGet(profile_path, dskey, 5) - 1
-		armor_data[6] = JsonUtil.IntListGet(profile_path, dskey, 6) - 1
-		armor_data[7] = JsonUtil.IntListGet(profile_path, dskey, 7) - 1
-		armor_data[8] = JsonUtil.IntListGet(profile_path, dskey, 8) - 1
-		armor_data[9] = JsonUtil.IntListGet(profile_path, dskey, 9) - 1
-		armor_data[10] = JsonUtil.IntListGet(profile_path, dskey, 10) - 1
-		armor_data[11] = JsonUtil.IntListGet(profile_path, dskey, 11) - 1
-		armor_data[12] = JsonUtil.IntListGet(profile_path, dskey, 12) - 1
-		armor_data[13] = JsonUtil.IntListGet(profile_path, dskey, 13) - 1
-		armor_data[14] = JsonUtil.IntListGet(profile_path, dskey, 14) - 1
+		armor_data[0] = JsonUtil.IntListGet(profile_path, dskey, 0)
+		armor_data[1] = JsonUtil.IntListGet(profile_path, dskey, 1)
+		armor_data[2] = JsonUtil.IntListGet(profile_path, dskey, 2)
+		armor_data[3] = JsonUtil.IntListGet(profile_path, dskey, 3)
+		armor_data[4] = JsonUtil.IntListGet(profile_path, dskey, 4)
+		armor_data[5] = JsonUtil.IntListGet(profile_path, dskey, 5)
+		armor_data[6] = JsonUtil.IntListGet(profile_path, dskey, 6)
+		armor_data[7] = JsonUtil.IntListGet(profile_path, dskey, 7)
+		armor_data[8] = JsonUtil.IntListGet(profile_path, dskey, 8)
+		armor_data[9] = JsonUtil.IntListGet(profile_path, dskey, 9)
+		armor_data[10] = JsonUtil.IntListGet(profile_path, dskey, 10)
+		armor_data[11] = JsonUtil.IntListGet(profile_path, dskey, 11)
+		armor_data[12] = JsonUtil.IntListGet(profile_path, dskey, 12)
+		armor_data[13] = JsonUtil.IntListGet(profile_path, dskey, 13)
+		armor_data[14] = JsonUtil.IntListGet(profile_path, dskey, 14)
 	else
-		armor_data = GetDefaultArmorData(akArmor, abUsableValues = true)
+		armor_data = GetDefaultArmorData(akArmor)
 	endif
 	return armor_data
 endFunction
 
-int[] function GetDefaultArmorData(Armor akArmor, bool abUsableValues = false)
+int[] function GetDefaultArmorData(Armor akArmor)
 	string defaults_path = CONFIG_PATH + ARMOR_DEFAULT_PREFIX
 	string dskey = GetDatastoreKeyFromForm(akArmor)
 	int[] armor_data = new int[15]
 	if ProfileHasKey(defaults_path, dskey)
-		int modifier = 0
-		if abUsableValues
-			modifier = 1
-		endif
-
-		armor_data[0] = JsonUtil.IntListGet(defaults_path, dskey, 0) - modifier
-		armor_data[1] = JsonUtil.IntListGet(defaults_path, dskey, 1) - modifier
-		armor_data[2] = JsonUtil.IntListGet(defaults_path, dskey, 2) - modifier
-		armor_data[3] = JsonUtil.IntListGet(defaults_path, dskey, 3) - modifier
-		armor_data[4] = JsonUtil.IntListGet(defaults_path, dskey, 4) - modifier
-		armor_data[5] = JsonUtil.IntListGet(defaults_path, dskey, 5) - modifier
-		armor_data[6] = JsonUtil.IntListGet(defaults_path, dskey, 6) - modifier
-		armor_data[7] = JsonUtil.IntListGet(defaults_path, dskey, 7) - modifier
-		armor_data[8] = JsonUtil.IntListGet(defaults_path, dskey, 8) - modifier
-		armor_data[9] = JsonUtil.IntListGet(defaults_path, dskey, 9) - modifier
-		armor_data[10] = JsonUtil.IntListGet(defaults_path, dskey, 10) - modifier
-		armor_data[11] = JsonUtil.IntListGet(defaults_path, dskey, 11) - modifier
-		armor_data[12] = JsonUtil.IntListGet(defaults_path, dskey, 12) - modifier
-		armor_data[13] = JsonUtil.IntListGet(defaults_path, dskey, 13) - modifier
-		armor_data[14] = JsonUtil.IntListGet(defaults_path, dskey, 14) - modifier
+		armor_data[0] = JsonUtil.IntListGet(defaults_path, dskey, 0)
+		armor_data[1] = JsonUtil.IntListGet(defaults_path, dskey, 1)
+		armor_data[2] = JsonUtil.IntListGet(defaults_path, dskey, 2)
+		armor_data[3] = JsonUtil.IntListGet(defaults_path, dskey, 3)
+		armor_data[4] = JsonUtil.IntListGet(defaults_path, dskey, 4)
+		armor_data[5] = JsonUtil.IntListGet(defaults_path, dskey, 5)
+		armor_data[6] = JsonUtil.IntListGet(defaults_path, dskey, 6)
+		armor_data[7] = JsonUtil.IntListGet(defaults_path, dskey, 7)
+		armor_data[8] = JsonUtil.IntListGet(defaults_path, dskey, 8)
+		armor_data[9] = JsonUtil.IntListGet(defaults_path, dskey, 9)
+		armor_data[10] = JsonUtil.IntListGet(defaults_path, dskey, 10)
+		armor_data[11] = JsonUtil.IntListGet(defaults_path, dskey, 11)
+		armor_data[12] = JsonUtil.IntListGet(defaults_path, dskey, 12)
+		armor_data[13] = JsonUtil.IntListGet(defaults_path, dskey, 13)
+		armor_data[14] = JsonUtil.IntListGet(defaults_path, dskey, 14)
 	endif
 	; debug.trace("Returning default armor data " + armor_data)
 	return armor_data
@@ -1288,7 +1277,8 @@ endFunction
 function RestoreAllDefaultArmorData()
 	; The nuclear option - destroys all custom armor data on a profile
 	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
-	JsonUtil.ClearAll(CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt())
+	JsonUtil.ClearAll(profile_path)
+	JsonUtil.Save(profile_path)
 endFunction
 
 function SaveCurrentUserArmorProfile()

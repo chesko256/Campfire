@@ -1,6 +1,7 @@
 scriptname _Frost_SkyUIConfigPanelScript extends SKI_ConfigBase
 
 import FrostUtil
+import _FrostInternal
 
 string CONFIG_PATH = "../FrostfallData/"
 
@@ -14,6 +15,8 @@ GlobalVariable property _Frost_AttributeExposure auto
 GlobalVariable property _Frost_AttributeWetness auto
 GlobalVariable property _Frost_AttributeWarmth auto
 GlobalVariable property _Frost_AttributeCoverage auto
+GlobalVariable property _Frost_Calc_MaxWarmth auto
+GlobalVariable property _Frost_Calc_MaxCoverage auto
 
 GlobalVariable property StartFrostfall auto
 GlobalVariable property FrostfallRunning auto
@@ -147,9 +150,13 @@ int[] Armor_ModifyPartsOIDs
 int[] Armor_SetProtectionOIDs
 int[] Armor_DefaultArmorEntryOIDs
 int Armor_ShowTutorialOID
+int Armor_DefaultWornArmorOID
+int Armor_DefaultAllArmorOID
+int Armor_RepairDefaultsOID
 
 int ArmorPage_cursor_position = 0
 bool ArmorPage_updated_msg = false
+bool ArmorPage_loading = true
 
 int[] ProtectionListWarmthIndex
 int[] ProtectionListCoverageIndex
@@ -184,44 +191,44 @@ Event OnConfigInit()
 	MeterDisplayModeList[2] = "$FrostfallContextual"
 
 	GearTypeList = new string[8]
-	GearTypeList[0] = "Body"
-	GearTypeList[1] = "Head"
-	GearTypeList[2] = "Hands"
-	GearTypeList[3] = "Feet"
-	GearTypeList[4] = "Cloak"
-	GearTypeList[5] = "Accessory"
-	GearTypeList[6] = "No Protection"
-	GearTypeList[7] = "Cancel"
+	GearTypeList[0] = "$FrostfallArmorGearTypeList0"
+	GearTypeList[1] = "$FrostfallArmorGearTypeList1"
+	GearTypeList[2] = "$FrostfallArmorGearTypeList2"
+	GearTypeList[3] = "$FrostfallArmorGearTypeList3"
+	GearTypeList[4] = "$FrostfallArmorGearTypeList4"
+	GearTypeList[5] = "$FrostfallArmorGearTypeList5"
+	GearTypeList[6] = "$FrostfallArmorGearTypeList6"
+	GearTypeList[7] = "$FrostfallCancel"
 
 	ProtectionList = new string[28]
-	ProtectionList[0] = "== CLOTHING =="
-	ProtectionList[1] = "Thin Clothing (W: Poor, C: None)"
-	ProtectionList[2] = "Typical Clothing (W: Fair, C: Poor)"
-	ProtectionList[3] = "Warm Clothing (W: Good, C: Poor)"
-	ProtectionList[4] = "== EQUIPMENT - WARM =="
-	ProtectionList[5] = "Layered (W: Good, C: Fair)"
-	ProtectionList[6] = "Insulated (W: Excellent, C: Fair)"
-	ProtectionList[7] = "Frostforged (W: Max, C: Good)"
-	ProtectionList[8] = "== EQUIPMENT - COVERING =="
-	ProtectionList[9] = "Tight-Stitched (W: Fair, C: Good)"
-	ProtectionList[10] = "Fitted (W: Fair, C: Excellent)"
-	ProtectionList[11] = "Sealed (W: Good, C: Max)"
-	ProtectionList[12] = "== EQUIPMENT - BALANCED =="
-	ProtectionList[13] = "Low-Grade (W: Poor, C: Poor)"
-	ProtectionList[14] = "Standard Issue (W: Fair, C: Fair)"
-	ProtectionList[15] = "Rugged (W: Good, C: Good)"
-	ProtectionList[16] = "Exceptional (W: Excellent, C: Excellent)"
-	ProtectionList[17] = "Legendary (W: Max, C: Max)"
-	ProtectionList[18] = "== ACCESSORIES =="
-	ProtectionList[19] = "Warm Accessory (W: 12, C: 6)"
-	ProtectionList[20] = "Weatherproof Accessory (W: 6, C: 12)"
-	ProtectionList[21] = "Cloth Cloak (W: 12, C: 12)"
-	ProtectionList[22] = "Leather Cloak (W: 12, C: 40)"
-	ProtectionList[23] = "Fur Cloak (W: 40, C: 12)"
-	ProtectionList[24] = "== OPTIONS =="
-	ProtectionList[25] = "Set Values Manually"
-	ProtectionList[26] = "Restore Item Defaults"
-	ProtectionList[27] = "Cancel"
+	ProtectionList[0] = "$FrostfallArmorProtectionList0"
+	ProtectionList[1] = "$FrostfallArmorProtectionList1"
+	ProtectionList[2] = "$FrostfallArmorProtectionList2"
+	ProtectionList[3] = "$FrostfallArmorProtectionList3"
+	ProtectionList[4] = "$FrostfallArmorProtectionList4"
+	ProtectionList[5] = "$FrostfallArmorProtectionList5"
+	ProtectionList[6] = "$FrostfallArmorProtectionList6"
+	ProtectionList[7] = "$FrostfallArmorProtectionList7"
+	ProtectionList[8] = "$FrostfallArmorProtectionList8"
+	ProtectionList[9] = "$FrostfallArmorProtectionList9"
+	ProtectionList[10] = "$FrostfallArmorProtectionList10"
+	ProtectionList[11] = "$FrostfallArmorProtectionList11"
+	ProtectionList[12] = "$FrostfallArmorProtectionList12"
+	ProtectionList[13] = "$FrostfallArmorProtectionList13"
+	ProtectionList[14] = "$FrostfallArmorProtectionList14"
+	ProtectionList[15] = "$FrostfallArmorProtectionList15"
+	ProtectionList[16] = "$FrostfallArmorProtectionList16"
+	ProtectionList[17] = "$FrostfallArmorProtectionList17"
+	ProtectionList[18] = "$FrostfallArmorProtectionList18"
+	ProtectionList[19] = "$FrostfallArmorProtectionList19"
+	ProtectionList[20] = "$FrostfallArmorProtectionList20"
+	ProtectionList[21] = "$FrostfallArmorProtectionList21"
+	ProtectionList[22] = "$FrostfallArmorProtectionList22"
+	ProtectionList[23] = "$FrostfallArmorProtectionList23"
+	ProtectionList[24] = "$FrostfallArmorProtectionList24"
+	ProtectionList[25] = "$FrostfallArmorProtectionList25"
+	ProtectionList[26] = "$FrostfallArmorProtectionList26"
+	ProtectionList[27] = "$FrostfallCancel"
 
 	ProtectionListWarmthIndex = new int[24]
 	ProtectionListWarmthIndex[0] = -1
@@ -487,10 +494,17 @@ function PageReset_Equipment()
 		return
 	endif
 
-	GenerateEquipmentPage()
+	if ArmorPage_loading == true
+		AddTextOption("$FrostfallArmorLoadingPage", "", OPTION_FLAG_DISABLED)
+		ArmorPage_loading = false
+		ForcePageReset()
+	else
+		GenerateEquipmentPage()
+		ArmorPage_loading = true
+	endif
 
 	if ArmorPage_updated_msg
-		ShowMessage("Changes applied. Page was updated to reflect changes.")
+		ShowMessage("$FrostfallArmorUpdatingPage")
 		ArmorPage_updated_msg = false
 	endif
 endFunction
@@ -897,6 +911,12 @@ event OnOptionSelect(int option)
 		endif
 	elseif option == Armor_ShowTutorialOID
 		ShowTutorial_ArmorPage(true)
+	elseif option == Armor_RepairDefaultsOID
+		RepairArmorDefaults()
+	elseif option == Armor_DefaultWornArmorOID
+		DefaultWornArmor()
+	elseif option == Armor_DefaultAllArmorOID
+		DefaultAllArmor()
 	endif	
 endEvent
 
@@ -1085,6 +1105,57 @@ Event OnOptionHighlight(int option)
 		SetInfoText("$FrostfallOptionHighlightSettingRespec")
 	elseif option == Advanced_EnduranceSkillRestore_OID
 		SetInfoText("$FrostfallOptionHighlightSettingRestore")
+	elseif option == Armor_RepairDefaultsOID
+		SetInfoText("$FrostfallOptionHighlightArmorRepairDefaults")
+	elseif option == Armor_DefaultWornArmorOID
+		SetInfoText("$FrostfallOptionHighlightArmorDefaultWornArmor")
+	elseif option == Armor_DefaultAllArmorOID
+		SetInfoText("$FrostfallOptionHighlightArmorDefaultAllArmor")
+	elseif option == Armor_ShowTutorialOID
+		SetInfoText("$FrostfallOptionHighlightArmorShowTutorial")
+	else
+		bool found_armor_entry_oid = false
+		int idx = -1
+
+		if !found_armor_entry_oid
+			idx = Armor_WarmthSliderOIDs.Find(option)
+			if idx != -1
+				SetInfoText("$FrostfallOptionHighlightArmorWarmthSlider")
+				found_armor_entry_oid = true
+			endif
+		endif
+
+		if !found_armor_entry_oid
+			idx = Armor_CoverageSliderOIDs.Find(option)
+			if idx != -1
+				SetInfoText("$FrostfallOptionHighlightArmorCoverageSlider")
+				found_armor_entry_oid = true
+			endif
+		endif
+
+		if !found_armor_entry_oid
+			idx = Armor_GearTypeOIDs.Find(option)
+			if idx != -1
+				SetInfoText("$FrostfallOptionHighlightArmorTypeMenu")
+				found_armor_entry_oid = true
+			endif
+		endif
+
+		if !found_armor_entry_oid
+			idx = Armor_SetProtectionOIDs.Find(option)
+			if idx != -1
+				SetInfoText("$FrostfallOptionHighlightArmorEditProtectionMenu")
+				found_armor_entry_oid = true
+			endif
+		endif
+
+		if !found_armor_entry_oid
+			idx = Armor_ModifyPartsOIDs.Find(option)
+			if idx != -1
+				SetInfoText("$FrostfallOptionHighlightArmorExtraPartsMenu")
+				found_armor_entry_oid = true
+			endif
+		endif
 	endif
 EndEvent
 
@@ -1109,6 +1180,26 @@ Event OnOptionSliderOpen(int option)
 		SetSliderDialogDefaultValue(0.0)
 		SetSliderDialogRange(0, EndurancePerkPointsTotal.GetValue())
 		SetSliderDialogInterval(1.0)
+	else
+		bool found_armor_entry_oid = false
+		int idx = -1
+
+		if !found_armor_entry_oid
+			idx = Armor_WarmthSliderOIDs.Find(option)
+			if idx != -1
+				SetWarmthSlider(idx)
+				found_armor_entry_oid = true
+			endif
+		endif
+
+		if !found_armor_entry_oid
+			idx = Armor_CoverageSliderOIDs.Find(option)
+			if idx != -1
+				SetCoverageSlider(idx)
+				found_armor_entry_oid = true
+			endif
+		endif
+
 	endif
 EndEvent
 
@@ -1133,6 +1224,25 @@ Event OnOptionSliderAccept(int option, float value)
 		ShowMessage("$FrostfallAdvancedEnduranceSkillRestoreDone", false)
 		SetOptionFlags(Advanced_EnduranceSkillRestoreSlider_OID, OPTION_FLAG_DISABLED, true)
 		SetToggleOptionValue(Advanced_EnduranceSkillRestore_OID, false)
+	else
+		bool found_armor_entry_oid = false
+		int idx = -1
+
+		if !found_armor_entry_oid
+			idx = Armor_WarmthSliderOIDs.Find(option)
+			if idx != -1
+				ModifyGearWarmth(idx, value as int)
+				found_armor_entry_oid = true
+			endif
+		endif
+
+		if !found_armor_entry_oid
+			idx = Armor_CoverageSliderOIDs.Find(option)
+			if idx != -1
+				ModifyGearCoverage(idx, value as int)
+				found_armor_entry_oid = true
+			endif
+		endif
 	endif
 EndEvent
 
@@ -1172,8 +1282,6 @@ Event OnOptionMenuOpen(int option)
 			idx = Armor_GearTypeOIDs.Find(option)
 			if idx != -1
 				SetMenuDialogOptions(GearTypeList)
-				SetMenuDialogStartIndex(0) ;@TODO: Can I know this?
-				SetMenuDialogDefaultIndex(0)
 				found_armor_entry_oid = true
 			endif
 		endif
@@ -1182,8 +1290,6 @@ Event OnOptionMenuOpen(int option)
 			idx = Armor_SetProtectionOIDs.Find(option)
 			if idx != -1
 				SetMenuDialogOptions(ProtectionList)
-				SetMenuDialogStartIndex(0)
-				SetMenuDialogDefaultIndex(0)
 				found_armor_entry_oid = true
 			endif
 		endif
@@ -1191,6 +1297,7 @@ Event OnOptionMenuOpen(int option)
 		if !found_armor_entry_oid
 			idx = Armor_ModifyPartsOIDs.Find(option)
 			if idx != -1
+				SetMenuDialogOptions(GetExtraPartChoiceList(idx))
 				found_armor_entry_oid = true
 			endif
 		endif
@@ -1250,6 +1357,7 @@ Event OnOptionMenuAccept(int option, int index)
 		if !found_armor_entry_oid
 			idx = Armor_ModifyPartsOIDs.Find(option)
 			if idx != -1
+				ModifyGearExtraParts(idx, index)
 				found_armor_entry_oid = true
 			endif
 		endif
@@ -1383,7 +1491,6 @@ string function GetCustomControl(int keyCode)
 endFunction
 
 string function GetProfileName(int aiProfileIndex)
-	;bool b = JsonUtil.Load(CONFIG_PATH + "profile" + aiProfileIndex)
 	return JsonUtil.GetStringValue(CONFIG_PATH + "profile" + aiProfileIndex, "profile_name", missing = "Profile " + aiProfileIndex)
 endFunction
 
@@ -1652,7 +1759,6 @@ endFunction
 
 function GenerateEquipmentPage()
 	SetCursorFillMode(TOP_TO_BOTTOM)
-	;AddTextOption("Fetching info...", "", OPTION_FLAG_DISABLED)
 
 	SetCursorPosition(0)
 	ArmorPage_cursor_position = 0
@@ -1674,6 +1780,12 @@ function GenerateEquipmentPage()
 	
 	int i = 0
 	int j = 0
+
+	if armor_count == 0
+		AddTextOption("$FrostfallArmorNoGear", "", OPTION_FLAG_DISABLED)
+		ArmorPage_cursor_position += 2
+	endif
+
 	while i < armor_count
 		int[] armor_data = handler.GetArmorProtectionData(worn_armor[i] as Armor)
 
@@ -1743,22 +1855,22 @@ function GenerateEquipmentPageEntry(int aiArrayIndex, Armor akArmor, int aiType,
 		AddHeaderOption(akArmor.GetName())
 		ArmorTypeIDs[aiArrayIndex] = 0
 	else
-		AddHeaderOption(akArmor.GetName() + GetDescriptiveTypeString(aiType, akHandler))
+		AddHeaderOption(akArmor.GetName() + GetExtraPartTypeString(aiType, akHandler))
 		ArmorTypeIDs[aiArrayIndex] = aiType
 	endif
 
 	if abIsMainPart
-		Armor_GearTypeOIDs[aiArrayIndex] = AddMenuOption("Type:", GetTypeString(aiType, akHandler))
+		Armor_GearTypeOIDs[aiArrayIndex] = AddMenuOption("$FrostfallArmorType", GetTypeString(aiType, akHandler))
 	else
-		Armor_GearTypeOIDs[aiArrayIndex] = AddMenuOption("Type:", GetTypeString(aiType, akHandler), OPTION_FLAG_DISABLED)
+		Armor_GearTypeOIDs[aiArrayIndex] = AddMenuOption("$FrostfallArmorType", GetTypeString(aiType, akHandler), OPTION_FLAG_DISABLED)
 	endif
 
-	Armor_WarmthSliderOIDs[aiArrayIndex] = AddSliderOption("Warmth:", akWarmth, "{0}", OPTION_FLAG_DISABLED)
-	Armor_CoverageSliderOIDs[aiArrayIndex] = AddSliderOption("Coverage:", akCoverage, "{0}", OPTION_FLAG_DISABLED)
-	Armor_SetProtectionOIDs[aiArrayIndex] = AddMenuOption("Set Protection...", "", aiDisableIfIgnored)
+	Armor_WarmthSliderOIDs[aiArrayIndex] = AddSliderOption("$FrostfallOverviewWarmthValue", akWarmth, "{0}", OPTION_FLAG_DISABLED)
+	Armor_CoverageSliderOIDs[aiArrayIndex] = AddSliderOption("$FrostfallOverviewCoverageValue", akCoverage, "{0}", OPTION_FLAG_DISABLED)
+	Armor_SetProtectionOIDs[aiArrayIndex] = AddMenuOption("$FrostfallArmorSetProtection", "", aiDisableIfIgnored)
 
 	if abIsMainPart
-		Armor_ModifyPartsOIDs[aiArrayIndex] = AddMenuOption("Extra Parts...", "", aiDisableIfIgnored)
+		Armor_ModifyPartsOIDs[aiArrayIndex] = AddMenuOption("$FrostfallArmorExtraParts", "", aiDisableIfIgnored)
 	else
 		AddEmptyOption()
 	endif
@@ -1769,8 +1881,6 @@ function GenerateEquipmentPageEntry(int aiArrayIndex, Armor akArmor, int aiType,
 	else
 		ArmorPage_cursor_position += 11
 	endif
-
-	;Armor_DefaultArmorEntryOIDs[aiArrayIndex] = AddTextOption("Restore Item Defaults", "", aiDisableIfIgnored)
 endFunction
 
 function GenerateEquipmentPageFooter()
@@ -1780,90 +1890,119 @@ function GenerateEquipmentPageFooter()
 
 	SetCursorPosition(ArmorPage_cursor_position)
 	SetCursorFillMode(LEFT_TO_RIGHT)
-	AddHeaderOption("Options")
-	AddHeaderOption("Info")
-	AddTextOption("Repair Default Item Data", "")
-	Armor_ShowTutorialOID = AddTextOption("About This Page", "")
-	AddTextOption("Restore Defaults for Worn Items", "")
+	AddHeaderOption("$FrostfallArmorHeaderOptions")
+	AddHeaderOption("$FrostfallArmorHeaderInfo")
+	Armor_RepairDefaultsOID = AddTextOption("$FrostfallArmorRepairDefaultData", "")
+	Armor_ShowTutorialOID = AddTextOption("$FrostfallArmorTutorial", "")
+	Armor_DefaultWornArmorOID = AddTextOption("$FrostfallArmorDefaultWorn", "")
 	AddEmptyOption()
-	AddTextOption("Restore Defaults for ALL Items", "")
+	Armor_DefaultAllArmorOID = AddTextOption("$FrostfallArmorDefaultAll", "")
 
 endFunction
 
 function ModifyGearProtection(int aiOidIndex, int aiChoice)
-	if aiChoice == 27
+	if aiChoice == 27 || aiChoice == -1
 		return
 	endif
 
+	armor the_armor = ArmorMenuEntries[aiOIDIndex]
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+
 	; Option select
 	if aiChoice == 27
+		; Cancel
 		return
 	elseif aiChoice == 26
-		; restore default values
+		; Restore Defaults
+		bool confirmed = ShowMessage("$FrostfallArmorDefaultConfirm")
+		if confirmed
+			handler.RestoreDefaultArmorData(the_armor)
+			ArmorPageReset(true)
+			RefreshSingleItemValues(the_armor)
+			return
+		endif
 	elseif aiChoice == 25
-		; Set manually
+		; Set values manually
+		SetOptionFlags(Armor_WarmthSliderOIDs[aiOIDIndex], 0, false)
+		SetOptionFlags(Armor_CoverageSliderOIDs[aiOIDIndex], 0)
+		return
 	else
 		int new_warmth = 0
 		int new_coverage = 0
 
-		int wdx = ProtectionListWarmthIndex[aiChoice]
-		int cdx = ProtectionListCoverageIndex[aiChoice]
-
-		if wdx == -1
-			ShowMessage("Please select a valid option.")
-			return
-		endif
-
-		armor the_armor = ArmorMenuEntries[aiOIDIndex]
-		_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 		int[] armor_data = handler.GetArmorProtectionData(the_armor)
 		int type = armor_data[0]
 
-		if type == handler.GEARTYPE_BODY
-			new_warmth = handler.StandardBodyValues[wdx]
-			if cdx == -2
-				new_coverage = 0
-			else
-				new_coverage = handler.StandardBodyValues[cdx]
-			endif
-		elseif type == handler.GEARTYPE_HEAD
-			new_warmth = handler.StandardHeadValues[wdx]
-			if cdx == -2
-				new_coverage = 0
-			else
-				new_coverage = handler.StandardHeadValues[cdx]
-			endif
-		elseif type == handler.GEARTYPE_HANDS
-			new_warmth = handler.StandardHandsValues[wdx]
-			if cdx == -2
-				new_coverage = 0
-			else
-				new_coverage = handler.StandardHandsValues[cdx]
-			endif
-		elseif type == handler.GEARTYPE_FEET
-			new_warmth = handler.StandardFeetValues[wdx]
-			if cdx == -2
-				new_coverage = 0
-			else
-				new_coverage = handler.StandardFeetValues[cdx]
-			endif
-		elseif type == handler.GEARTYPE_CLOAK
-			new_warmth = handler.StandardCloakValues[wdx]
-			if cdx == -2
-				new_coverage = 0
-			else
-				new_coverage = handler.StandardCloakValues[cdx]
-			endif
-		elseif type == handler.GEARTYPE_MISC
-			new_warmth = handler.StandardMiscValues[wdx]
-			if cdx == -2
-				new_coverage = 0
-			else
-				new_coverage = handler.StandardMiscValues[cdx]
-			endif
+		if aiChoice == 23
+			new_warmth = 40
+			new_coverage = 12
+		elseif aiChoice == 22
+			new_warmth = 12
+			new_coverage = 40
+		elseif aiChoice == 21
+			new_warmth = 12
+			new_coverage = 12
+		elseif aiChoice == 20
+			new_warmth = 6
+			new_coverage = 12 
+		elseif aiChoice == 19
+			new_warmth = 12
+			new_coverage = 6
 		else
-			; How did we get here?
-			return
+			int wdx = ProtectionListWarmthIndex[aiChoice]
+			int cdx = ProtectionListCoverageIndex[aiChoice]
+	
+			if wdx == -1
+				ShowMessage("$FrostfallArmorInvalidOption")
+				return
+			endif
+	
+			if type == handler.GEARTYPE_BODY
+				new_warmth = handler.StandardBodyValues[wdx]
+				if cdx == -2
+					new_coverage = 0
+				else
+					new_coverage = handler.StandardBodyValues[cdx]
+				endif
+			elseif type == handler.GEARTYPE_HEAD
+				new_warmth = handler.StandardHeadValues[wdx]
+				if cdx == -2
+					new_coverage = 0
+				else
+					new_coverage = handler.StandardHeadValues[cdx]
+				endif
+			elseif type == handler.GEARTYPE_HANDS
+				new_warmth = handler.StandardHandsValues[wdx]
+				if cdx == -2
+					new_coverage = 0
+				else
+					new_coverage = handler.StandardHandsValues[cdx]
+				endif
+			elseif type == handler.GEARTYPE_FEET
+				new_warmth = handler.StandardFeetValues[wdx]
+				if cdx == -2
+					new_coverage = 0
+				else
+					new_coverage = handler.StandardFeetValues[cdx]
+				endif
+			elseif type == handler.GEARTYPE_CLOAK
+				new_warmth = handler.StandardCloakValues[wdx]
+				if cdx == -2
+					new_coverage = 0
+				else
+					new_coverage = handler.StandardCloakValues[cdx]
+				endif
+			elseif type == handler.GEARTYPE_MISC
+				new_warmth = handler.StandardMiscValues[wdx]
+				if cdx == -2
+					new_coverage = 0
+				else
+					new_coverage = handler.StandardMiscValues[cdx]
+				endif
+			else
+				; How did we get here?
+				return
+			endif
 		endif
 
 		; Set the new value
@@ -1895,86 +2034,386 @@ function ModifyGearProtection(int aiOidIndex, int aiChoice)
 		; Update the UI
 		SetSliderOptionValue(Armor_WarmthSliderOIDs[aiOIDIndex], new_warmth, "{0}", true)
 		SetSliderOptionValue(Armor_CoverageSliderOIDs[aiOIDIndex], new_coverage, "{0}")
-
-		; Update currently worn armor data in-place and force recalculate
-		_Frost_ClothingSystem clothing = GetClothingSystem()
-		bool b = clothing.RemoveWornGearEntryForArmorUnequipped(the_armor, clothing.WornGearForms, clothing._Frost_WornGearData)
-		b = clothing.AddWornGearEntryForArmorEquipped(the_armor, clothing.WornGearForms, clothing._Frost_WornGearData)
-		clothing.RecalculateProtectionData(clothing.WornGearForms, clothing.WornGearValues, clothing._Frost_WornGearData)
-		clothing.SendEvent_UpdateWarmthAndCoverage()
+		
+		; Update the game
+		RefreshSingleItemValues(the_armor)
 	endif
 endFunction
 
-function ModifyGearWarmth(int aiOIDIndex)
+function SetWarmthSlider(int aiOidIndex)
+	armor the_armor = ArmorMenuEntries[aiOIDIndex]
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+	int[] armor_data = handler.GetArmorProtectionData(the_armor)
 
+	float start_value = 0.0
+	if ArmorTypeIDs[aiOidIndex] == 0
+		start_value = armor_data[1]
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_BODY
+		start_value = armor_data[3]
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_HEAD
+		start_value = armor_data[5]
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_HANDS
+		start_value = armor_data[7]
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_FEET
+		start_value = armor_data[9]
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_CLOAK
+		start_value = armor_data[11]
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_MISC
+		start_value = armor_data[13]
+	endif
+
+	SetSliderDialogStartValue(start_value)
+	SetSliderDialogDefaultValue(start_value)
+	SetSliderDialogRange(1.0, _Frost_Calc_MaxWarmth.GetValue())
+	SetSliderDialogInterval(1.0)
 endFunction
 
-function ModifyGearCoverage(int aiOIDIndex)
+function SetCoverageSlider(int aiOidIndex)
+	armor the_armor = ArmorMenuEntries[aiOIDIndex]
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+	int[] armor_data = handler.GetArmorProtectionData(the_armor)
 
+	float start_value = 0.0
+	if ArmorTypeIDs[aiOidIndex] == 0
+		start_value = armor_data[2]
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_BODY
+		start_value = armor_data[4]
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_HEAD
+		start_value = armor_data[6]
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_HANDS
+		start_value = armor_data[8]
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_FEET
+		start_value = armor_data[10]
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_CLOAK
+		start_value = armor_data[12]
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_MISC
+		start_value = armor_data[14]
+	endif
+
+	SetSliderDialogStartValue(start_value)
+	SetSliderDialogDefaultValue(start_value)
+	SetSliderDialogRange(1.0, _Frost_Calc_MaxCoverage.GetValue())
+	SetSliderDialogInterval(1.0)
+endFunction
+
+function ModifyGearWarmth(int aiOidIndex, int aiValue)
+	armor the_armor = ArmorMenuEntries[aiOIDIndex]
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+	int[] armor_data = handler.GetArmorProtectionData(the_armor)
+
+	; Set the new value
+	if ArmorTypeIDs[aiOidIndex] == 0
+		armor_data[1] = aiValue
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_BODY
+		armor_data[3] = aiValue
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_HEAD
+		armor_data[5] = aiValue
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_HANDS
+		armor_data[7] = aiValue
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_FEET
+		armor_data[9] = aiValue
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_CLOAK
+		armor_data[11] = aiValue
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_MISC
+		armor_data[13] = aiValue
+	endif
+
+	handler.UpdateArmorDataA(the_armor, armor_data)
+
+	; Update the UI
+	SetSliderOptionValue(Armor_WarmthSliderOIDs[aiOIDIndex], aiValue, "{0}")
+
+	; Update the game
+	RefreshSingleItemValues(the_armor)
+endFunction
+
+function ModifyGearCoverage(int aiOIDIndex, int aiValue)
+	armor the_armor = ArmorMenuEntries[aiOIDIndex]
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+	int[] armor_data = handler.GetArmorProtectionData(the_armor)
+
+	; Set the new value
+	if ArmorTypeIDs[aiOidIndex] == 0
+		armor_data[2] = aiValue
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_BODY
+		armor_data[4] = aiValue
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_HEAD
+		armor_data[6] = aiValue
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_HANDS
+		armor_data[8] = aiValue
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_FEET
+		armor_data[10] = aiValue
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_CLOAK
+		armor_data[12] = aiValue
+	elseif ArmorTypeIDs[aiOidIndex] == handler.GEARTYPE_MISC
+		armor_data[14] = aiValue
+	endif
+
+	handler.UpdateArmorDataA(the_armor, armor_data)
+
+	; Update the UI
+	SetSliderOptionValue(Armor_CoverageSliderOIDs[aiOIDIndex], aiValue, "{0}")
+
+	; Update the game
+	RefreshSingleItemValues(the_armor)
 endFunction
 
 function ModifyGearType(int aiOIDIndex, int aiChoice)
-	if aiChoice == 7
+	if aiChoice == 7 || aiChoice == -1
 		return
 	endif
 
-	bool confirmed = ShowMessage("Are you sure you want to change this kind of equipment's type?\n\n(Note: This choice is for Frostfall only and has no effect on armor rating, equipment slot, or any other aspect of how it is handled by the rest of the game.)")
-	if confirmed
-		SetMenuOptionValue(Armor_GearTypeOIDs[aiOIDIndex], GearTypeList[aiChoice])
-		armor the_armor = ArmorMenuEntries[aiOIDIndex]
-		int chosen_type = aiChoice + 1
+	bool confirmed = ShowMessage("$FrostfallArmorTypeConfirm")
+	if !confirmed
+		return
+	endif
+	
+	SetMenuOptionValue(Armor_GearTypeOIDs[aiOIDIndex], GearTypeList[aiChoice])
+	armor the_armor = ArmorMenuEntries[aiOIDIndex]
+	int chosen_type = aiChoice + 1
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+	int[] armor_data = handler.GetArmorProtectionData(the_armor)
+	
+	armor_data[0] = chosen_type
 
-		_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
-		int[] armor_data = handler.GetArmorProtectionData(the_armor)
+	; Does this type change override any existing Extra Part Data?		
+	if chosen_type == handler.GEARTYPE_BODY
+		armor_data[3] = 0
+		armor_data[4] = 0
+	elseif chosen_type == handler.GEARTYPE_HEAD
+		armor_data[5] = 0
+		armor_data[6] = 0
+	elseif chosen_type == handler.GEARTYPE_HANDS
+		armor_data[7] = 0
+		armor_data[8] = 0
+	elseif chosen_type == handler.GEARTYPE_FEET
+		armor_data[9] = 0
+		armor_data[10] = 0
+	elseif chosen_type == handler.GEARTYPE_CLOAK
+		armor_data[11] = 0
+		armor_data[12] = 0
+	elseif chosen_type == handler.GEARTYPE_MISC
+		armor_data[13] = 0
+		armor_data[14] = 0
+	endif
 
-		armor_data[0] = chosen_type
-		
-		; Does this type change override any existing Extra Part Data?		
-		if chosen_type == handler.GEARTYPE_BODY
+	handler.UpdateArmorDataA(the_armor, armor_data)
+	ArmorPageReset(true)
+	RefreshSingleItemValues(the_armor)	
+endFunction
+
+string[] function GetExtraPartChoiceList(int aiOIDIndex)
+	armor the_armor = ArmorMenuEntries[aiOIDIndex]
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+	int[] armor_data = handler.GetArmorProtectionData(the_armor)
+	int type = armor_data[0]
+
+	string[] choice_list = new string[7]
+
+	if type == handler.GEARTYPE_BODY
+		choice_list[0] = "..."
+	else
+		if armor_data[3] > 0 || armor_data[4] > 0
+			choice_list[0] = "$FrostfallArmorExtraPartsRemoveBody"
+		else
+			choice_list[0] = "$FrostfallArmorExtraPartsAddBody"
+		endif
+	endif
+
+	if type == handler.GEARTYPE_HEAD
+		choice_list[1] = "..."
+	else
+		if armor_data[5] > 0 || armor_data[6] > 0
+			choice_list[1] = "$FrostfallArmorExtraPartsRemoveHead"
+		else
+			choice_list[1] = "$FrostfallArmorExtraPartsAddHead"
+		endif
+	endif
+
+	if type == handler.GEARTYPE_HANDS
+		choice_list[2] = "..."
+	else
+		if armor_data[7] > 0 || armor_data[8] > 0
+			choice_list[2] = "$FrostfallArmorExtraPartsRemoveHands"
+		else
+			choice_list[2] = "$FrostfallArmorExtraPartsAddHands"
+		endif
+	endif
+
+	if type == handler.GEARTYPE_FEET
+		choice_list[3] = "..."
+	else
+		if armor_data[9] > 0 || armor_data[10] > 0
+			choice_list[3] = "$FrostfallArmorExtraPartsRemoveFeet"
+		else
+			choice_list[3] = "$FrostfallArmorExtraPartsAddFeet"
+		endif
+	endif
+
+	if type == handler.GEARTYPE_CLOAK
+		choice_list[4] = "..."
+	else
+		if armor_data[11] > 0 || armor_data[12] > 0
+			choice_list[4] = "$FrostfallArmorExtraPartsRemoveCloak"
+		else
+			choice_list[4] = "$FrostfallArmorExtraPartsAddCloak"
+		endif
+	endif
+
+	if type == handler.GEARTYPE_MISC
+		choice_list[5] = "..."
+	else
+		if armor_data[13] > 0 || armor_data[14] > 0
+			choice_list[5] = "$FrostfallArmorExtraPartsRemoveMisc"
+		else
+			choice_list[5] = "$FrostfallArmorExtraPartsAddMisc"
+		endif
+	endif
+
+	choice_list[6] = "$FrostfallCancel"
+	return choice_list
+endFunction
+
+function ModifyGearExtraParts(int aiOIDIndex, int aiChoice)
+	if aiChoice == 6 || aiChoice == -1
+		return
+	endif
+
+	bool confirmed = ShowMessage("$FrostfallArmorExtraPartsConfirm")
+	if !confirmed
+		return
+	endif
+
+	armor the_armor = ArmorMenuEntries[aiOIDIndex]
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+	int[] armor_data = handler.GetArmorProtectionData(the_armor)
+	int type = armor_data[0]
+
+	if (aiChoice + 1) == type
+		ShowMessage("$FrostfallArmorInvalidOption")
+		return
+	endif
+
+	if aiChoice == 0
+		if armor_data[3] > 0 || armor_data[4] > 0
 			armor_data[3] = 0
 			armor_data[4] = 0
-		elseif chosen_type == handler.GEARTYPE_HEAD
+		else
+			armor_data[3] = 1
+		endif
+	elseif aiChoice == 1
+		if armor_data[5] > 0 || armor_data[6] > 0
 			armor_data[5] = 0
 			armor_data[6] = 0
-		elseif chosen_type == handler.GEARTYPE_HANDS
+		else
+			armor_data[5] = 1
+		endif
+	elseif aiChoice == 2
+		if armor_data[7] > 0 || armor_data[8] > 0
 			armor_data[7] = 0
 			armor_data[8] = 0
-		elseif chosen_type == handler.GEARTYPE_FEET
+		else
+			armor_data[7] = 1
+		endif
+	elseif aiChoice == 3
+		if armor_data[9] > 0 || armor_data[10] > 0
 			armor_data[9] = 0
 			armor_data[10] = 0
-		elseif chosen_type == handler.GEARTYPE_CLOAK
+		else
+			armor_data[9] = 1
+		endif
+	elseif aiChoice == 4
+		if armor_data[11] > 0 || armor_data[12] > 0
 			armor_data[11] = 0
 			armor_data[12] = 0
-		elseif chosen_type == handler.GEARTYPE_MISC
+		else
+			armor_data[11] = 1
+		endif
+	elseif aiChoice == 5
+		if armor_data[13] > 0 || armor_data[14] > 0
 			armor_data[13] = 0
 			armor_data[14] = 0
+		else
+			armor_data[13] = 1
 		endif
-
-		handler.UpdateArmorDataA(the_armor, armor_data)
-
-		ArmorPage_updated_msg = true
-		ForcePageReset()
-
-		; Update currently worn armor data in-place and force recalculate
-		_Frost_ClothingSystem clothing = GetClothingSystem()
-		bool b = clothing.RemoveWornGearEntryForArmorUnequipped(the_armor, clothing.WornGearForms, clothing._Frost_WornGearData)
-		b = clothing.AddWornGearEntryForArmorEquipped(the_armor, clothing.WornGearForms, clothing._Frost_WornGearData)
-		clothing.RecalculateProtectionData(clothing.WornGearForms, clothing.WornGearValues, clothing._Frost_WornGearData)
-		clothing.SendEvent_UpdateWarmthAndCoverage()
 	endif
+
+	handler.UpdateArmorDataA(the_armor, armor_data)
+	ArmorPageReset(true)
+	RefreshSingleItemValues(the_armor)
 endFunction
 
-function ModifyGearAdditionalParts()
+function RepairArmorDefaults()
+	bool confirmed = ShowMessage("$FrostfallArmorRepairDefaultDataConfirm")
+	if !confirmed
+		return
+	endIf
 
+	Compatibility.PopulateDefaultArmorData()
+	Compatibility.RunCompatibilityArmors()
+	ArmorPageReset(true)
+	_Frost_ClothingSystem clothing = GetClothingSystem()
+	clothing.RefreshWornGearData(clothing.WornGearForms, clothing._Frost_WornGearData)
+	clothing.SendEvent_UpdateWarmthAndCoverage()
 endFunction
 
-function RestoreItemDefaultValues()
+function DefaultWornArmor()
+	bool confirmed = ShowMessage("$FrostfallArmorDefaultWornConfirm")
+	if !confirmed
+		return
+	endIf
 
+	_Frost_ClothingSystem clothing = GetClothingSystem()
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+
+	Armor[] worn_armor = GetAllWornArmor()
+	int armor_count = clothing.ArrayCountArmor(worn_armor)
+
+	int i = 0
+	while i < armor_count
+		handler.RestoreDefaultArmorData(worn_armor[i])
+		i += 1
+	endWhile
+
+	ArmorPageReset(true)
+	
+	clothing.RefreshWornGearData(clothing.WornGearForms, clothing._Frost_WornGearData)
+	clothing.SendEvent_UpdateWarmthAndCoverage()
+endFunction
+
+function DefaultAllArmor()
+	bool confirmed = ShowMessage("$FrostfallArmorDefaultAllConfirm")
+	if !confirmed
+		return
+	endIf
+
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+	handler.RestoreAllDefaultArmorData()
+
+	ArmorPageReset(true)
+	_Frost_ClothingSystem clothing = GetClothingSystem()
+	clothing.RefreshWornGearData(clothing.WornGearForms, clothing._Frost_WornGearData)
+	clothing.SendEvent_UpdateWarmthAndCoverage()
+endFunction
+
+function RefreshSingleItemValues(Armor akArmor)
+	; Update currently worn armor data in-place and force recalculate
+	_Frost_ClothingSystem clothing = GetClothingSystem()
+	bool b = clothing.RemoveWornGearEntryForArmorUnequipped(akArmor, clothing.WornGearForms, clothing._Frost_WornGearData)
+	b = clothing.AddWornGearEntryForArmorEquipped(akArmor, clothing.WornGearForms, clothing._Frost_WornGearData)
+	clothing.RecalculateProtectionData(clothing.WornGearForms, clothing.WornGearValues, clothing._Frost_WornGearData)
+	clothing.SendEvent_UpdateWarmthAndCoverage()
+endFunction
+
+function ArmorPageReset(bool abShowUpdatedMessage)
+	if abShowUpdatedMessage
+		ArmorPage_updated_msg = true
+	endif
+	ForcePageReset()
 endFunction
 
 Armor[] function GetAllWornArmor()
 	; Modified from http://www.creationkit.com/Slot_Masks_-_Armor
-
 	Armor[] wornArmor = new Armor[29]
     int index
     int slotsChecked
@@ -1996,50 +2435,51 @@ Armor[] function GetAllWornArmor()
         endif
         thisSlot *= 2 														;double the number to move on to the next slot
     endWhile
-    debug.trace("wornArmor: " + wornArmor)
     return wornArmor
 endFunction
 
 string function GetTypeString(int aiType, _Frost_ArmorProtectionDatastoreHandler akHandler)
 	if aiType == akHandler.GEARTYPE_BODY
-		return "Body"
+		return "$FrostfallBody"
 	elseif aiType == akHandler.GEARTYPE_HEAD
-		return "Head"
+		return "$FrostfallHead"
 	elseif aiType == akHandler.GEARTYPE_HANDS
-		return "Hands"
+		return "$FrostfallHands"
 	elseif aiType == akHandler.GEARTYPE_FEET
-		return "Feet"
+		return "$FrostfallFeet"
 	elseif aiType == akHandler.GEARTYPE_CLOAK
-		return "Cloak"
+		return "$FrostfallCloak"
 	elseif aiType == akHandler.GEARTYPE_MISC
-		return "Accessory"
+		return "$FrostfallAccessory"
 	elseif aiType == akHandler.GEARTYPE_IGNORE
-		return "No Protection"
+		return "$FrostfallNoProtection"
 	else
-		return "N/A"
+		return "$FrostfallNA"
 	endif
 endFunction
 
-string function GetDescriptiveTypeString(int aiType, _Frost_ArmorProtectionDatastoreHandler akHandler)
+string function GetExtraPartTypeString(int aiType, _Frost_ArmorProtectionDatastoreHandler akHandler)
+	_Frost_Strings str = GetFrostfallStrings()
 	if aiType == akHandler.GEARTYPE_BODY
-		return "'s Body Gear"
+		return str.FrostfallBodyExtraPartDesc
 	elseif aiType == akHandler.GEARTYPE_HEAD
-		return "'s Head Gear"
+		return str.FrostfallHeadExtraPartDesc
 	elseif aiType == akHandler.GEARTYPE_HANDS
-		return "'s Hand Gear"
+		return str.FrostfallHandsExtraPartDesc
 	elseif aiType == akHandler.GEARTYPE_FEET
-		return "'s Foot Gear"
+		return str.FrostfallFeetExtraPartDesc
 	elseif aiType == akHandler.GEARTYPE_CLOAK
-		return "'s Cloak"
+		return str.FrostfallCloakExtraPartDesc
 	elseif aiType == akHandler.GEARTYPE_MISC
-		return "'s Accessory"
+		return str.FrostfallAccessoryExtraPartDesc
 	endif
 endFunction
 
 function ShowTutorial_ArmorPage(bool abForceDisplay = false)
-	ShowMessage("Setting Protection\n\nClick 'Set Protection...', and select one of the options that appear. This will set up your equipment with appropriate values for option you selected and the gear's type.", false)
-	ShowMessage("Types\n\nFrostfall will count the protection of one piece of worn Body, Head, Hands, Feet, and Cloak gear at a time. However, all worn Accessories will be counted. If necessary, you can edit the gear's type by clicking the Type option.", false)
-	ShowMessage("Undoing Changes\n\nTo restore a piece of gear to its default values, select 'Set Protection...', scroll to the bottom, and select 'Restore Item Defaults'.\n\nTo restore the default values of ALL equipment in the entire game (effectively deleting all of your profile's custom gear settings), select 'Restore Defaults for ALL Items' at the bottom of the page.", false)
+	ShowMessage("$FrostfallArmorTutorial1", false)
+	ShowMessage("$FrostfallArmorTutorial2", false)
+	ShowMessage("$FrostfallArmorTutorial3", false)
+	ShowMessage("$FrostfallArmorTutorial4", false)
 endFunction
 
 bool function IsEven(int aiValue)
