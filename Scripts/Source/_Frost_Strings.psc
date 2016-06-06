@@ -29,9 +29,17 @@ string property Robes auto				; robes
 {Required for correct armor protection calculation. This string MUST match the exact spelling of the word 'robes' in equipment, such as 'Archmage's Robes' or 'Shrouded Robes'.}
 
 ; Armor Page strings
-string property FrostfallBodyExtraPartDesc auto			;	's Body Gear
-string property FrostfallHeadExtraPartDesc auto			;	's Head Gear
-string property FrostfallHandsExtraPartDesc auto		;	's Hand Gear
-string property FrostfallFeetExtraPartDesc auto			;	's Foot Gear
-string property FrostfallCloakExtraPartDesc auto		;	's Cloak
-string property FrostfallAccessoryExtraPartDesc auto	;	's Accessory
+string property FrostfallBodyExtraPartDesc auto			; 's Body Gear
+string property FrostfallHeadExtraPartDesc auto			; 's Head Gear
+string property FrostfallHandsExtraPartDesc auto		; 's Hand Gear
+string property FrostfallFeetExtraPartDesc auto			; 's Foot Gear
+string property FrostfallCloakExtraPartDesc auto		; 's Cloak
+string property FrostfallAccessoryExtraPartDesc auto	; 's Accessory
+string property FrostfallBodyUnnamed auto				; Body Gear
+string property FrostfallHeadUnnamed auto				; Head Gear
+string property FrostfallHandsUnnamed auto				; Hand Gear
+string property FrostfallFeetUnnamed auto				; Foot Gear
+string property FrostfallCloakUnnamed auto				; Cloak
+string property FrostfallShieldUnnamed auto				; Shield
+string property FrostfallAccessoryUnnamed auto			; Accessory
+string property FrostfallNoProtectionUnnamed auto		; Unknown 
