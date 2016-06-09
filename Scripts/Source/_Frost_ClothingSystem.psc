@@ -3,6 +3,7 @@ scriptname _Frost_ClothingSystem extends _Frost_BaseSystem
 import FrostUtil
 import _FrostInternal
 import math
+import CommonArrayHelper
 
 Actor property PlayerRef auto
 Quest property _Frost_MainQuest auto
@@ -442,24 +443,6 @@ bool function ArraySortArmor(Armor[] myArray, int i = 0)
           endif
      endWhile
      return false
-endFunction
-
-int function ArrayCountArmor(Armor[] myArray)
-;Counts the number of indices in this array that do not have a "none" type.
-    ;       int myCount = number of indicies that are not "none"
- 
-    int i = 0
-    int myCount = 0
-    while i < myArray.Length
-        if !(IsNone(myArray[i]))
-            myCount += 1
-            i += 1
-        else
-            i += 1
-        endif
-    endWhile
-    ; debug.trace("count returning " + myCount)
-    return myCount
 endFunction
 
 bool function IsNone(Armor akArmor)

@@ -2,6 +2,7 @@ scriptname _Frost_SkyUIConfigPanelScript extends SKI_ConfigBase
 
 import FrostUtil
 import _FrostInternal
+import CommonArrayHelper
 
 string CONFIG_PATH = "../FrostfallData/"
 
@@ -1776,7 +1777,7 @@ function GenerateEquipmentPage()
 	Armor_SetProtectionOIDs = new int[128]
 	Armor_DefaultArmorEntryOIDs = new int[128]
 
-	int armor_count = clothing.ArrayCountArmor(worn_armor)
+	int armor_count = ArrayCountArmor(worn_armor)
 	
 	int i = 0
 	int j = 0
@@ -2372,7 +2373,7 @@ function DefaultWornArmor()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 
 	Armor[] worn_armor = GetAllWornArmor()
-	int armor_count = clothing.ArrayCountArmor(worn_armor)
+	int armor_count = ArrayCountArmor(worn_armor)
 
 	int i = 0
 	while i < armor_count
