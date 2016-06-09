@@ -3,7 +3,7 @@ Scriptname _Camp_Compatibility extends ReferenceAlias
 import debug
 import CampUtil
 import _CampInternal
-import _Camp_ArrayHelper
+import CommonArrayHelper
 
 int property SKSE_MIN_VERSION = 10703 autoReadOnly
 GlobalVariable property _Camp_PreviousVersion auto
@@ -659,7 +659,7 @@ bool function CampfirePerkSystemRegister(Activator akNodeController, string asPl
 	endWhile
 	reg_locked = true
 
-	int index = ArrayCount(PerkNodeControllers)
+	int index = ArrayCountActivator(PerkNodeControllers)
 	if index >= PerkNodeControllers.Length
 		; We're full!
 		return false
@@ -686,7 +686,7 @@ endFunction
 bool function CampfirePerkSystemUnregister(Activator akNodeController, string asPluginName = "Unknown")
 	bool found_controller = false
 
-	int num_controllers = ArrayCount(PerkNodeControllers)
+	int num_controllers = ArrayCountActivator(PerkNodeControllers)
 	int i = 0
 	while i < num_controllers
 		if PerkNodeControllers[i] == akNodeController
@@ -700,8 +700,8 @@ bool function CampfirePerkSystemUnregister(Activator akNodeController, string as
 	endWhile
 
 	if found_controller
-		bool b = ArraySort(PerkNodeControllers)
-		_Camp_PerkNodeControllerCount.SetValueInt(ArrayCount(PerkNodeControllers))
+		bool b = ArraySortActivator(PerkNodeControllers)
+		_Camp_PerkNodeControllerCount.SetValueInt(ArrayCountActivator(PerkNodeControllers))
 		_Camp_LastSelectedSkill.SetValueInt(0)
 		return true
 	else
@@ -710,8 +710,8 @@ bool function CampfirePerkSystemUnregister(Activator akNodeController, string as
 endFunction
 
 function CampfirePerkSystemSortOnStartup()
-	bool b = ArraySort(PerkNodeControllers)
-	_Camp_PerkNodeControllerCount.SetValueInt(ArrayCount(PerkNodeControllers))
+	bool b = ArraySortActivator(PerkNodeControllers)
+	_Camp_PerkNodeControllerCount.SetValueInt(ArrayCountActivator(PerkNodeControllers))
 	_Camp_LastSelectedSkill.SetValueInt(0)
 endFunction
 
