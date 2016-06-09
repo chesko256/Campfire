@@ -12,28 +12,38 @@ ObjectReference property _Frost_ShelterDetectSensorRef auto
 ObjectReference property _Frost_AnchorRef auto
 Spell property _Frost_ShelterDetectBeam auto
 
+; de-bounce variables
+int wac_in_faction_counter = 0
+int WAC_DEBOUNCE_THRESHOLD = 3
+
 function Update()
 	if !(IsRefInInterior(PlayerRef))
 		float time_delta_seconds = (Game.GetRealHoursPassed() - _Frost_ShelterDetectLastSeenTime.GetValue()) * 3600.0
 		int current_val = _Frost_IsTakingShelter.GetValueInt()
 		bool in_wac_shelter_faction = false
-		if Compatibility.isWACLoaded && Compatibility._WetIsUnderShelterFaction
+		if Compatibility.isWACLoaded && Compatibility._WetIsUnderShelterFaction && \
+			( Weather.GetCurrentWeather().GetClassification() == 2 || Compatibility._WetIsBlizzarding.GetValueInt() == 1)
 			; Disable detection references and defer to Wet and Cold's system instead.
 			if _Frost_ShelterDetectOriginRef.IsEnabled() || _Frost_ShelterDetectSensorRef.IsEnabled()
 				_Frost_ShelterDetectOriginRef.Disable()
 				_Frost_ShelterDetectSensorRef.Disable()
 			endif
 			in_wac_shelter_faction = PlayerRef.IsInFaction(Compatibility._WetIsUnderShelterFaction)
+			
 			if in_wac_shelter_faction
-				if current_val == 1
+				wac_in_faction_counter += 1
+				if wac_in_faction_counter >= WAC_DEBOUNCE_THRESHOLD
+					_Frost_IsTakingShelter.SetValue(2)
+				endif
+				if wac_in_faction_counter >= WAC_DEBOUNCE_THRESHOLD && current_val == 1
 					FrostDebug(1, "|||| Shelter ::: Started taking shelter (Wet and Cold).")
 				endif
-				_Frost_IsTakingShelter.SetValue(2)
 			else
 				if current_val == 2
 					FrostDebug(1, "|||| Shelter ::: Stopped taking shelter (Wet and Cold).")
 				endif
 				_Frost_IsTakingShelter.SetValue(1)
+				wac_in_faction_counter = 0
 			endif
 		else
 			if time_delta_seconds > 4.0

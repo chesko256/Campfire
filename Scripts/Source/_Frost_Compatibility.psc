@@ -45,8 +45,9 @@ bool property isWACLoaded auto hidden						;Wet and Cold
 bool property isSSILoaded auto hidden						;Summerset Isle
 bool property isDRKLoaded auto hidden						;DarkenD
 
-;#Factions=====================================================================
+;#Wet and Cold=================================================================
 Faction property _WetIsUnderShelterFaction auto hidden
+GlobalVariable property _WetIsBlizzarding auto hidden
 
 ;#Merchant Containers==========================================================
 ;ObjectReference property MerchantRiverwoodTraderContainer auto
@@ -434,6 +435,7 @@ function RunCompatibility()
 		else
 			isWACLoaded = true
 			_WetIsUnderShelterFaction = Game.GetFormFromFile(0x07119C, "WetandCold.esp") as Faction
+			_WetIsBlizzarding = Game.GetFormFromFile(0x08197B, "WetandCold.esp") as GlobalVariable
 		endif
 	else
 		isWACLoaded = IsPluginLoaded(0x07119C, "WetandCold.esp")
@@ -441,6 +443,7 @@ function RunCompatibility()
 			;Wet and Cold was just added.
 			isWACLoaded = true
 			_WetIsUnderShelterFaction = Game.GetFormFromFile(0x07119C, "WetandCold.esp") as Faction
+			_WetIsBlizzarding = Game.GetFormFromFile(0x08197B, "WetandCold.esp") as GlobalVariable
 		else
 			isWACLoaded = false
 		endif

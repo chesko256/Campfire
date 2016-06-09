@@ -1311,7 +1311,7 @@ Form function GetExamineReplacementTarget(Form akBaseObject) global
 	CampfireAPI Campfire = GetAPI()
 	if Campfire == none
 		RaiseCampAPIError()
-		return false
+		return None
 	endif
 	
 	; Debug
