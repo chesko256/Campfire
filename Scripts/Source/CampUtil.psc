@@ -1196,20 +1196,13 @@ endFunction
 * SYNTAX
 */;
 bool function RegisterExamineReplacement(Form akFormToReplace, Form akTargetForm, bool abForceRegistration = false,	\
-										 Form akExtraDisableObject1 = None, Form akExtraDisableObject2 = None, 		\
-										 Form akExtraDisableObject3 = None,	Form akExtraDisableObject4 = None, 		\
-										 Form akExtraDisableObject5 = None,	Form akExtraDisableObject6 = None) global
+										 FormList akExtraObjectsToDisableList = None) global
 ;/*
 * PARAMETERS
 * akFormToReplace: The form to look for and replace when using Examine.
 * akTargetForm: The form to replace akFormToReplace with when using Examine.
 * abForceRegistration (Optional): If True, will register the examine replacement even if akFormToReplace is already registered to something else, overwriting the previous registration.
-* akExtraDisableObject1 (Optional): A form to disable, if found within 512.0 units of akFormToReplace.
-* akExtraDisableObject2 (Optional): A form to disable, if found within 512.0 units of akFormToReplace.
-* akExtraDisableObject3 (Optional): A form to disable, if found within 512.0 units of akFormToReplace.
-* akExtraDisableObject4 (Optional): A form to disable, if found within 512.0 units of akFormToReplace.
-* akExtraDisableObject5 (Optional): A form to disable, if found within 512.0 units of akFormToReplace.
-* akExtraDisableObject6 (Optional): A form to disable, if found within 512.0 units of akFormToReplace.
+* akExtraObjectsToDisableList (Optional): A formlist of objects to disable, if found within 512.0 units of akFormToReplace.
 *
 * RETURN VALUE
 * True if the replacement mapping was successfully registered. False if this mapping could not be registered
