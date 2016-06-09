@@ -3,6 +3,7 @@ scriptname _Camp_SurvivalVisionSearchMemObjects extends ActiveMagicEffect
 
 import _CampInternal
 import math
+import CommonArrayHelper
 
 Actor property PlayerRef auto
 EffectShader property _Camp_VisionStaticShader auto
@@ -88,11 +89,4 @@ function StopEffects()
         i += 1
     endWhile
     CampDebug(0, "Instincts: Stopping all membrane shaders. ...done.")
-endFunction
-
-function ArrayAddRef(ObjectReference[] myArray, ObjectReference akValue)
-    int index = myArray.Find(None)
-    if index >= 0
-        myArray[index] = akValue
-    endif
 endFunction

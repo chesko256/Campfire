@@ -3,6 +3,7 @@ scriptname _Frost_SkyUIConfigPanelScript extends SKI_ConfigBase
 import FrostUtil
 import _FrostInternal
 import CommonArrayHelper
+import CommonHelperFunctions
 
 string CONFIG_PATH = "../FrostfallData/"
 
@@ -2509,10 +2510,6 @@ function ShowTutorial_ArmorPage(bool abForceDisplay = false)
 	ShowMessage("$FrostfallArmorTutorial2", false)
 	ShowMessage("$FrostfallArmorTutorial3", false)
 	ShowMessage("$FrostfallArmorTutorial4", false)
-endFunction
-
-bool function IsEven(int aiValue)
-    return aiValue % 2 == 0
 endFunction
 
 ; DEPRECATED

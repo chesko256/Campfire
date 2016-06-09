@@ -4,6 +4,7 @@ scriptname _Camp_SurvivalVisionSearchGlowObjects extends ActiveMagicEffect
 import _CampInternal
 import CampUtil
 import math
+import CommonArrayHelper
 
 Actor property PlayerRef auto
 Activator property _Camp_VisionDetectItemFX auto
@@ -168,12 +169,5 @@ function SendEvent_VisionPowerFinished()
     int handle = ModEvent.Create("Campfire_VisionPowerFinished")
     if handle
         ModEvent.Send(handle)
-    endif
-endFunction
-
-function ArrayAddRef(ObjectReference[] myArray, ObjectReference akValue)
-    int index = myArray.Find(None)
-    if index >= 0
-        myArray[index] = akValue
     endif
 endFunction
