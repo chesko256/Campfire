@@ -11,6 +11,7 @@ ObjectReference[] ExtraDisabledRefs
 
 
 Event OnInit()
+	CampDebug(1, "Examine Controller " + self + " initialized.")
 	_Camp_Compatibility c = GetCompatibilitySystem()
 	int i = 0
 	int len = ArrayCountForm(c.ExamineFormsToReplace)
@@ -36,16 +37,33 @@ EndEvent
 bool function SearchAndReplaceForm(_Camp_Compatibility akCompatibility, int iIndex)
 	ObjectReference ref = Game.FindClosestReferenceOfTypeFromRef(akCompatibility.ExamineFormsToReplace[iIndex], self, 512.0)
 	if ref
+		; Replace Object
 		akCompatibility.ExamineSuccessMessages[iIndex].Show()
 		ReplacedRef = ref
-		NewRef = PlaceAndWaitFor3DLoaded(ReplacedRef, akCompatibility.ExamineReplacementForms[iIndex])
+		NewRef = ReplacedRef.PlaceAtMe(akCompatibility.ExamineReplacementForms[iIndex], abInitiallyDisabled = true)
 		NewRef.SetScale(ReplacedRef.GetScale())
+		
+		; Set Ownership
+		Cell current_cell = ReplacedRef.GetParentCell()
+		Faction fowner = current_cell.GetFactionOwner()
+		if fowner
+			NewRef.SetFactionOwner(fowner)
+		else
+			ActorBase aowner = current_cell.GetActorOwner()
+			if aowner
+				NewRef.SetActorOwner(aowner)
+			endif
+		endif
+
 		ReplacedRef.DisableNoWait()
+		NewRef.Enable()
 		; shader effect on new thing
 		if akCompatibility.ExamineExtraFormsToDisable[iIndex]
 			DisableExtraObjects(akCompatibility.ExamineExtraFormsToDisable[iIndex])
 		endif
-		RegisterForSingleUpdateGameTime(72.0)
+
+		CampDebug(1, "Examine Controller " + self + " replaced " + ReplacedRef + " with " + NewRef + ", registering for update in 72 hours.")
+		RegisterForSingleUpdateGameTime(1.0)
 		return true
 	else
 		return false
@@ -80,13 +98,27 @@ function EnableExtraObjects()
 endFunction
 
 Event OnUpdateGameTime()
+	if NewRef
+		if NewRef as _Camp_PlaceableObjectBase
+			(NewRef as _Camp_PlaceableObjectBase).TakeDown()
+		else
+			NewRef.DisableNoWait()
+			NewRef.Delete()
+		endif
+	endif
 	if ReplacedRef
 		ReplacedRef.Enable()
 	endif
 	EnableExtraObjects()
+
 	ReplacedRef = None
 	NewRef = None
-	ExtraDisabledRefs = None
+	ExtraDisabledRefs = new ObjectReference[32]
+	CampDebug(1, "Examine Controller " + self + " expired. Goodbye!")
 	self.Disable()
 	self.Delete()
 EndEvent
+
+Event Campfire_GameReloaded()
+
+endFunction

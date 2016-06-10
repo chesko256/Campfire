@@ -20,6 +20,10 @@ Form[] property ExamineReplacementForms auto hidden
 Message[] property ExamineSuccessMessages auto hidden
 FormList[] property ExamineExtraFormsToDisable auto hidden
 
+;#Examine======================================================================
+MiscObject property _Camp_CookingPot_MISC auto
+Message property _Camp_Examine_CookPotMsg auto
+
 ;#Scripts======================================================================
 _Camp_SkyUIConfigPanelScript property CampConfig Auto 				;SkyUI Configuration script
 _Camp_Main property Campfire auto 									;Main script
@@ -666,6 +670,10 @@ function Upgrade_1_8()
 	ExamineExtraFormsToDisable = new FormList[128]
 
 	; Register lightable campfire objects
+	Form SplitPotOpenLoose01 = Game.GetFormFromFile(0x054181, "Skyrim.esm")
+
+	RegisterExamineReplacement(SplitPotOpenLoose01, _Camp_CookingPot_MISC as Form, _Camp_Examine_CookPotMsg)
+
 	Upgraded_1_8 = true
 endFunction
 
