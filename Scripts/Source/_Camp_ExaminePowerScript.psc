@@ -1,2 +1,0 @@
-scriptname _Camp_ExaminePowerScript extends ActiveMagicEffect
-

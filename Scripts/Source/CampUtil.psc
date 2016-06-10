@@ -1195,12 +1195,13 @@ endFunction
 *
 * SYNTAX
 */;
-bool function RegisterExamineReplacement(Form akFormToReplace, Form akTargetForm, bool abForceRegistration = false,	\
-										 FormList akExtraObjectsToDisableList = None) global
+bool function RegisterExamineReplacement(Form akFormToReplace, Form akTargetForm, Message akSuccessMessage, \
+										 bool abForceRegistration = false, FormList akExtraObjectsToDisableList = None) global
 ;/*
 * PARAMETERS
 * akFormToReplace: The form to look for and replace when using Examine.
 * akTargetForm: The form to replace akFormToReplace with when using Examine.
+* akSuccessMessage: The message to display when the object is successfully replaced.
 * abForceRegistration (Optional): If True, will register the examine replacement even if akFormToReplace is already registered to something else, overwriting the previous registration.
 * akExtraObjectsToDisableList (Optional): A formlist of objects to disable, if found within 512.0 units of akFormToReplace.
 *
@@ -1214,9 +1215,33 @@ bool function RegisterExamineReplacement(Form akFormToReplace, Form akTargetForm
 		RaiseCampAPIError()
 		return false
 	endif
+
+	_Camp_Compatibility c = GetCompatibilitySystem()
+	if !c.ExamineFormsToReplace
+		return false
+	endif
 	
-	; Debug
-	return true
+	if akFormToReplace && akTargetForm && akSuccessMessage
+		int i = CommonArrayHelper.ArrayCountForm(c.ExamineFormsToReplace)
+		if i < 128
+			int idx = c.ExamineFormsToReplace.Find(akFormToReplace)
+			if idx == -1 || abForceRegistration
+				c.ExamineFormsToReplace[i] = akFormToReplace
+				c.ExamineReplacementForms[i] = akTargetForm
+				c.ExamineSuccessMessages[i] = akSuccessMessage
+				if akExtraObjectsToDisableList
+					c.ExamineExtraFormsToDisable[i] = akExtraObjectsToDisableList
+				endif
+				return true
+			else
+				return false
+			endif
+		else
+			return false
+		endif
+	else
+		return false
+	endif
 endFunction
 
 ;/********f* CampUtil/UnregisterExamineReplacement
@@ -1248,9 +1273,26 @@ bool function UnregisterExamineReplacement(Form akFormToReplace) global
 		RaiseCampAPIError()
 		return false
 	endif
+
+	_Camp_Compatibility c = GetCompatibilitySystem()
+	if !c.ExamineFormsToReplace || !akFormToReplace
+		return false
+	endif
+
+	int idx = c.ExamineFormsToReplace.Find(akFormToReplace)
+	if idx != -1
+		CommonArrayHelper.ArrayRemoveForm(c.ExamineFormsToReplace, akFormToReplace, true)
+		CommonArrayHelper.ArrayRemoveForm(c.ExamineReplacementForms, c.ExamineReplacementForms[idx], true)
+		CommonArrayHelper.ArrayRemoveMessage(c.ExamineSuccessMessages, c.ExamineSuccessMessages[idx], true)
+		if c.ExamineExtraFormsToDisable[idx]
+			CommonArrayHelper.ArrayRemoveFormList(c.ExamineExtraFormsToDisable, c.ExamineExtraFormsToDisable[idx], true)
+		endif
+		return true
+	else
+		return false
+	endif
 	
-	; Debug
-	return true
+	
 endFunction
 
 ;/********f* CampUtil/HasExamineReplacement
@@ -1280,8 +1322,16 @@ bool function HasExamineReplacement(Form akBaseObject) global
 		return false
 	endif
 	
-	; Debug
-	return false
+	_Camp_Compatibility c = GetCompatibilitySystem()
+	if !c.ExamineFormsToReplace || !akBaseObject
+		return false
+	endif
+
+	if c.ExamineFormsToReplace.Find(akBaseObject) != -1
+		return true
+	else
+		return false
+	endif
 endFunction
 
 ;/********f* CampUtil/GetExamineReplacementTarget
@@ -1307,8 +1357,17 @@ Form function GetExamineReplacementTarget(Form akBaseObject) global
 		return None
 	endif
 	
-	; Debug
-	return None
+	_Camp_Compatibility c = GetCompatibilitySystem()
+	if !c.ExamineFormsToReplace || !akBaseObject
+		return None
+	endif
+
+	int i = c.ExamineFormsToReplace.Find(akBaseObject)
+	if i != -1
+		return c.ExamineReplacementForms[i]
+	else
+		return None
+	endif
 endFunction
 
 ;/********f* CampUtil/GetCampfireSettingBool
