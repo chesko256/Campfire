@@ -602,3 +602,9 @@ endFunction
 ObjectReference function PlaceObject_ArtPlane(Static akArtPlane, ObjectReference akArtPlanePositionRef)
     return PlacementSystem.PlaceObject(self, akArtPlane, akArtPlanePositionRef, initially_disabled = true, is_temp = is_temporary)
 endFunction
+
+Event OnCellDetach()
+    if !myCampfire
+        TakeDown()
+    endif
+EndEvent
