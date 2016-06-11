@@ -1225,7 +1225,16 @@ function UpdateArmorDataA(Armor akArmor, int[] aiProtectionValues)
 endFunction
 
 function RestoreDefaultArmorData(Armor akArmor)
+	; Removes user settings for armor.
 	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
+	string dskey = GetDatastoreKeyFromForm(akArmor)
+	JsonUtil.IntListClear(profile_path, dskey)
+	JsonUtil.Save(profile_path)
+endFunction
+
+function RemoveDefaultArmorData(Armor akArmor)
+	; Removes default settings for armor.
+	string profile_path = CONFIG_PATH + ARMOR_DEFAULT_PREFIX
 	string dskey = GetDatastoreKeyFromForm(akArmor)
 	JsonUtil.IntListClear(profile_path, dskey)
 	JsonUtil.Save(profile_path)
