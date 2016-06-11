@@ -35,8 +35,8 @@ Event OnInit()
 EndEvent
 
 bool function SearchAndReplaceForm(_Camp_Compatibility akCompatibility, int iIndex)
-	ObjectReference ref = Game.FindClosestReferenceOfTypeFromRef(akCompatibility.ExamineFormsToReplace[iIndex], self, 512.0)
-	if ref
+	ObjectReference ref = Game.FindClosestReferenceOfTypeFromRef(akCompatibility.ExamineFormsToReplace[iIndex], self, 256.0)
+	if ref && ref.IsEnabled()
 		; Replace Object
 		akCompatibility.ExamineSuccessMessages[iIndex].Show()
 		ReplacedRef = ref
@@ -75,7 +75,7 @@ function DisableExtraObjects(FormList akExtraFormsToDisable)
 	int list_size = akExtraFormsToDisable.GetSize()
 	int i = 0
 	while i < list_size
-		ObjectReference ref = Game.FindClosestReferenceOfTypeFromRef(akExtraFormsToDisable.GetAt(i), self, 768.0)
+		ObjectReference ref = Game.FindClosestReferenceOfTypeFromRef(akExtraFormsToDisable.GetAt(i), self, 512.0)
 		if ref
 			ArrayAddRef(ExtraDisabledRefs, ref)
 			ref.Disable()
@@ -121,4 +121,4 @@ EndEvent
 
 Event Campfire_GameReloaded()
 
-endFunction
+endEvent

@@ -954,9 +954,15 @@ function SetArmorData(Armor akArmor, int aiType, int aiWarmth = 0, int aiCoverag
 									 int aiExtraHandsWarmth = 0, int aiExtraHandsCoverage = 0, 	\
 									 int aiExtraFeetWarmth = 0, int aiExtraFeetCoverage = 0, 	\
 									 int aiExtraCloakWarmth = 0, int aiExtraCloakCoverage = 0, 	\
-									 int aiExtraMiscWarmth = 0, int aiExtraMiscCoverage = 0)
+									 int aiExtraMiscWarmth = 0, int aiExtraMiscCoverage = 0, 	\
+									 bool abExportToDefaults = false)
 	
-	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
+	string profile_path
+	if abExportToDefaults
+		profile_path = CONFIG_PATH + ARMOR_DEFAULT_PREFIX
+	else
+		profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
+	endif
 	string dskey = GetDatastoreKeyFromForm(akArmor)
 	JsonUtil.IntListResize(profile_path, dskey, 15, 0)
 	JsonUtil.IntListSet(profile_path, dskey, 0, aiType)
@@ -977,9 +983,13 @@ function SetArmorData(Armor akArmor, int aiType, int aiWarmth = 0, int aiCoverag
 	JsonUtil.Save(profile_path)
 endFunction
 
-function SetArmorDataA(Armor akArmor, int[] aiProtectionValues)
-	
-	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
+function SetArmorDataA(Armor akArmor, int[] aiProtectionValues, bool abExportToDefaults = false)
+	string profile_path
+	if abExportToDefaults
+		profile_path = CONFIG_PATH + ARMOR_DEFAULT_PREFIX
+	else
+		profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
+	endif
 	string dskey = GetDatastoreKeyFromForm(akArmor)
 	
 	JsonUtil.IntListResize(profile_path, dskey, 15, 0)
