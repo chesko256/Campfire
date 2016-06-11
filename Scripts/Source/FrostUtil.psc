@@ -1775,7 +1775,7 @@ bool data_exists = FrostUtil.ArmorProtectionDataExistsByKey("20258___MyCoolMod.e
     return handler.DatastoreHasKey(asKey)
 endFunction
 
-;/********f* FrostUtil/SetArmorProtection
+;/********f* FrostUtil/SetArmorProtectionData
 * API VERSION ADDED
 * 3
 *
@@ -1784,7 +1784,7 @@ endFunction
 *
 * SYNTAX
 */;
-bool function SetArmorProtection(Armor akArmor, int aiType, int aiWarmth, int aiCoverage,   \
+bool function SetArmorProtectionData(Armor akArmor, int aiType, int aiWarmth, int aiCoverage,   \
                                  int aiExtraBodyWarmth = 0, int aiExtraBodyCoverage = 0,    \
                                  int aiExtraHeadWarmth = 0, int aiExtraHeadCoverage = 0,    \
                                  int aiExtraHandsWarmth = 0, int aiExtraHandsCoverage = 0,  \
@@ -1824,7 +1824,9 @@ FrostUtil.SetArmorProtection(MyFurCollar, 6, 20, 5)
 ;Set the protection for my new mages robes, which also includes a hood.
 FrostUtil.SetArmorProtection(MyMageRobes, 1, 125, 50, aiExtraHeadWarmth = 25, aiExtraHeadCoverage = 43)
 * NOTES
-* This sets the default data for the armor. The player can then customize it. If the player "defaults" the protection, it will return to the values you set using this function.
+* * This sets the default data for the armor. The player can then customize it. If the player "defaults" the protection, it will return to the values you set using this function.
+* * If the player selects "Repair Default Armor Data", changes set using this function will be deleted. You MUST register for the SKSE event Frostfall_OnArmorDefaultDataRepair and re-set your intended values when when you receive that event.
+* * An alternative to using this function that is immune to the player repairing default armor data is using injected keywords instead. See the Compatibility - Modders page for more info.
 ;*********/;
     if !akArmor || aiType > 7 || aiType < 1
         return false
@@ -1837,7 +1839,7 @@ FrostUtil.SetArmorProtection(MyMageRobes, 1, 125, 50, aiExtraHeadWarmth = 25, ai
     return true
 endFunction
 
-;/********f* FrostUtil/SetArmorProtection
+;/********f* FrostUtil/SetArmorProtectionDataA
 * API VERSION ADDED
 * 3
 *
@@ -1846,7 +1848,7 @@ endFunction
 *
 * SYNTAX
 */;
-bool function SetArmorProtectionA(Armor akArmor, int[] aiProtectionValues)
+bool function SetArmorProtectionDataA(Armor akArmor, int[] aiProtectionValues)
 ;/*
 * PARAMETERS
 * * akArmor: The armor to set data for.
@@ -1894,6 +1896,8 @@ magerobe_data[6] = 43
 FrostUtil.SetArmorProtectionA(MyMageRobes, magerobe_data)
 * NOTES
 * This sets the default data for the armor. The player can then customize it. If the player "defaults" the protection, it will return to the values you set using this function.
+* * If the player selects "Repair Default Armor Data", changes set using this function will be deleted. You MUST register for the SKSE event Frostfall_OnArmorDefaultDataRepair and re-set your intended values when when you receive that event.
+* * An alternative to using this function that is immune to the player repairing default armor data is using injected keywords instead. See the Compatibility - Modders page for more info.
 ;*********/;
     if !akArmor || aiProtectionValues.Length != 15 || aiProtectionValues[0] > 7 || aiProtectionValues[0] < 1
         return false
@@ -1903,6 +1907,36 @@ FrostUtil.SetArmorProtectionA(MyMageRobes, magerobe_data)
     return true
 endFunction
 
+;/********f* FrostUtil/RemoveArmorProtectionData
+* API VERSION ADDED
+* 3
+*
+* DESCRIPTION
+* Remove the default protection data of a piece of armor.
+*
+* SYNTAX
+*/;
+function RemoveArmorProtectionData(Armor akArmor)
+;/*
+* PARAMETERS
+* * akArmor: The armor to remove data for.
+*
+* RETURN VALUE
+* None
+*
+* EXAMPLES
+;Remove the protection for my cool armor.
+FrostUtil.RemoveArmorProtectionData(MyCoolArmor)
+* 
+* NOTES
+* If the default data for a piece of armor is removed, Frostfall will try to figure out values that make sense and use those instead.
+;*********/;
+    if !akArmor
+        return
+    endif
+    _Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+    handler.RemoveDefaultArmorData(akArmor)
+endFunction
 
 ; Events ==========================================================================================
 
