@@ -1,34 +1,128 @@
-scriptname _Camp_InstinctsController extends Quest
+scriptname _Camp_InstinctsController extends ActiveMagicEffect
 {Maintains Instincts state-related things.}
 
+; Find New Usable Objects (Campfires, Deadwood, etc) (static + movable static)
+; Find Branches Near Trees (trees with no name)
+; Find Arrows (ammoprojectile)
+; Find Tinder Items (stuff to make tinder with)
+; Find Harvestable Plants (trees with names, flora)
+; Smell Dead Bodies (dead actors, uses MagicEffect)
+; Hear Movement (actors, uses MagicEffect)
+; Sense Path to Next Quest Target (uses MagicEffect)
+
 Actor property PlayerRef auto
+Static property XMarker auto
+GlobalVariable property _Camp_PerkRank_KeenSenses auto
+
+ObjectReference probe_ref
+Cell[] lastCellsToSearch
+
+function StartSearching()
+	probe_ref = PlayerRef.PlaceAtMe(XMarker)
+	Cell[] cellsToSearch = GetCellsToSearch()
+	SendEvent_InstinctsStartSearch(cellsToSearch)
+	lastCellsToSearch = new Cell[4]
+	lastCellsToSearch[0] = cellsToSearch[0]
+	lastCellsToSearch[1] = cellsToSearch[1]
+	lastCellsToSearch[2] = cellsToSearch[2]
+	lastCellsToSearch[3] = cellsToSearch[3]
+endFunction
+
+function SearchCellUpdate()
+	Cell[] cellsToSearch = GetCellsToSearch()
+
+	; Only notify the search controllers if the cell radius changes.
+	if cellsToSearch != lastCellsToSearch
+		SendEvent_InstinctsSearchCellUpdate(cellsToSearch)
+		lastCellsToSearch = new Cell[4]
+	    lastCellsToSearch[0] = cellsToSearch[0]
+    	lastCellsToSearch[1] = cellsToSearch[1]
+    	lastCellsToSearch[2] = cellsToSearch[2]
+    	lastCellsToSearch[3] = cellsToSearch[3]
+    endif
+endFunction
 
 Cell[] function GetCellsToSearch()
 	; Send out markers in a cross pattern to see which cells they end up in
 	; based on the search radius.
+
+	float detection_distance = 2048.0 + (_Camp_PerkRank_KeenSenses.GetValueInt() * 1024.0)
+
 	Cell[] cellsToSearch = new Cell[4]
-	ObjectReference probe1 = SendFirstMarker
-	ObjectReference probe2 = SendSecondMarker
-	ObjectReference probe3 = SendThirdMarker
-	ObjectReference probe4 = SendForthMarker
 
-	SendEvent_InstinctsFindObjects(cellsToSearch)
-	SendEvent_InstinctsFindBranches(cellsToSearch)
-	SendEvent_InstinctsFindArrows(cellsToSearch)
-	SendEvent_InstinctsFindTinder(cellsToSearch)
-	SendEvent_InstinctsFindPlants(cellsToSearch)
+	float center_x = PlayerRef.GetPositionX()
+	float center_y = PlayerRef.GetPositionY()
+	float center_z = PlayerRef.GetPositionZ()
 
-	; Find New Usable Objects (Campfires, Deadwood, etc) (static + movable static)
-	; Find Branches Near Trees (trees with no name)
-	; Find Arrows (ammoprojectile)
-	; Find Tinder Items (stuff to make tinder with)
-	; Find Harvestable Plants (trees with names, flora)
-	; Smell Dead Bodies (dead actors, uses MagicEffect)
-	; Hear Movement (actors, uses MagicEffect)
-	; Sense Path to Next Quest Target (uses MagicEffect)
+	; Optimize by calling GetOffsetsFromPos once and reusing values
+	float[] probe_dist = GetOffsetsFromPos(PlayerRef, detection_distance, 45.0)
 
+	cellsToSearch[0] = GetCellFromProbe(probe_ref, center_x + -probe_dist[0], center_y + probe_dist[1], center_z) 	; upper left
+	cellsToSearch[1] = GetCellFromProbe(probe_ref, center_x + probe_dist[0], center_y + probe_dist[1], center_z) 	; upper right
+	cellsToSearch[2] = GetCellFromProbe(probe_ref, center_x + -probe_dist[0], center_y + -probe_dist[1], center_z) 	; lower left
+	cellsToSearch[3] = GetCellFromProbe(probe_ref, center_x + probe_dist[0], center_y + -probe_dist[1], center_z) 	; lower right
 
+	return cellsToSearch
 endFunction
+
+function StopSearching()
+	SendEvent_InstinctsStopSearch()
+	probe_ref.Disable()
+	probe_ref.Delete()
+endFunction
+
+Cell function GetCellFromProbe(ObjectReference akProbe, float afPosX, float afPosY, float afPosZ)
+	akProbe.SetPosition(afPosX, afPosY, afPosZ)
+	return akProbe.GetParentCell()
+endFunction
+
+float[] function GetOffsetsFromPos(Actor akSource, Float afDistance = 100.0, float afOffset = 0.0)
+	Float A = akSource.GetAngleZ() + afOffset
+	Float YDist = Sin(A)
+	Float XDist = Cos(A)
+
+	XDist *= afDistance
+	YDist *= afDistance
+
+	Float[] Offsets = New Float[2]
+	Offsets[0] = YDist
+	Offsets[1] = XDist
+	Return Offsets
+EndFunction
+
+function SendEvent_InstinctsStartSearch(Cell[] akCells)
+	int handle = ModEvent.Create("Campfire_InstinctsStartSearch")
+	if handle
+		ModEvent.PushForm(handle, akCells[0])
+		ModEvent.PushForm(handle, akCells[1])
+		ModEvent.PushForm(handle, akCells[2])
+		ModEvent.PushForm(handle, akCells[3])
+		ModEvent.Send(handle)
+	endif
+endFunction
+
+function SendEvent_InstinctsSearchCellUpdate(Cell[] akCells)
+	int handle = ModEvent.Create("Campfire_InstinctsStartSearch")
+	if handle
+		ModEvent.PushForm(handle, akCells[0])
+		ModEvent.PushForm(handle, akCells[1])
+		ModEvent.PushForm(handle, akCells[2])
+		ModEvent.PushForm(handle, akCells[3])
+		ModEvent.Send(handle)
+	endif
+endFunction
+
+function SendEvent_InstinctsStopSearch()
+	int handle = ModEvent.Create("Campfire_InstinctsStopSearch")
+	if handle
+		ModEvent.Send(handle)
+	endif
+endFunction
+
+; instinct spell
+; instinct effect - has existing stuff
+; effect does cell probing. All it does is REPORT the data to a quest (Instincts controller) who maintains state
+; instincts controller sends events for search objects
 
 
 ;/ Generic expected behavior:
