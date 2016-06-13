@@ -1,6 +1,8 @@
 scriptname _Camp_InstinctsController extends ActiveMagicEffect
 {Maintains Instincts state-related things.}
 
+import math
+
 ; Find New Usable Objects (Campfires, Deadwood, etc) (static + movable static)
 ; Find Branches Near Trees (trees with no name)
 ; Find Arrows (ammoprojectile)
@@ -17,7 +19,20 @@ GlobalVariable property _Camp_PerkRank_KeenSenses auto
 ObjectReference probe_ref
 Cell[] lastCellsToSearch
 
+bool searching = false
+
+Event OnEffectStart(Actor akTarget, Actor akCaster)
+	StartSearching()
+	searching = true
+EndEvent
+
+Event OnEffectFinish(Actor akTarget, Actor akCaster)
+	StopSearching()
+	searching = false
+EndEvent
+
 function StartSearching()
+	debug.trace("Starting search.")
 	probe_ref = PlayerRef.PlaceAtMe(XMarker)
 	Cell[] cellsToSearch = GetCellsToSearch()
 	SendEvent_InstinctsStartSearch(cellsToSearch)
@@ -26,7 +41,16 @@ function StartSearching()
 	lastCellsToSearch[1] = cellsToSearch[1]
 	lastCellsToSearch[2] = cellsToSearch[2]
 	lastCellsToSearch[3] = cellsToSearch[3]
+	RegisterForSingleUpdate(5)
 endFunction
+
+Event OnUpdate()
+	debug.trace("Updating cells.")
+	SearchCellUpdate()
+	if searching
+		RegisterForSingleUpdate(5)
+	endif
+EndEvent
 
 function SearchCellUpdate()
 	Cell[] cellsToSearch = GetCellsToSearch()
@@ -61,11 +85,11 @@ Cell[] function GetCellsToSearch()
 	cellsToSearch[1] = GetCellFromProbe(probe_ref, center_x + probe_dist[0], center_y + probe_dist[1], center_z) 	; upper right
 	cellsToSearch[2] = GetCellFromProbe(probe_ref, center_x + -probe_dist[0], center_y + -probe_dist[1], center_z) 	; lower left
 	cellsToSearch[3] = GetCellFromProbe(probe_ref, center_x + probe_dist[0], center_y + -probe_dist[1], center_z) 	; lower right
-
 	return cellsToSearch
 endFunction
 
 function StopSearching()
+	debug.trace("Stopping search.")
 	SendEvent_InstinctsStopSearch()
 	probe_ref.Disable()
 	probe_ref.Delete()
@@ -102,7 +126,7 @@ function SendEvent_InstinctsStartSearch(Cell[] akCells)
 endFunction
 
 function SendEvent_InstinctsSearchCellUpdate(Cell[] akCells)
-	int handle = ModEvent.Create("Campfire_InstinctsStartSearch")
+	int handle = ModEvent.Create("Campfire_InstinctsSearchCellUpdate")
 	if handle
 		ModEvent.PushForm(handle, akCells[0])
 		ModEvent.PushForm(handle, akCells[1])
@@ -141,4 +165,4 @@ endFunction
 6. For every found "valid" object that is replaced or glowing, spawn 
 a state controller for that item. The state controller manages the lifecycle of
 that object's glowing / ownership / how long it lasts / swapping back if
-we receive an SKSE event.
+we receive an SKSE event./;

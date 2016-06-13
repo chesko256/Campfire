@@ -11,6 +11,7 @@ Activator property _Camp_VisionDetectItemFX auto
 FormList property _Camp_VisionObjects_Glow auto
 Spell property _Camp_SurvivalVisionPower auto
 Spell property _Camp_SurvivalVisionPowerDetectSpell auto
+Spell property _Camp_SurvivalVisionPowerGuideSpell auto
 Message property _Camp_VisionPowerErrorIndoors auto
 Message property _Camp_VisionPowerErrorMounted auto
 GlobalVariable property _Camp_PerkRank_KeenSenses auto
@@ -38,6 +39,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
     RegisterForMenu("Dialogue Menu")
     found_targets = new ObjectReference[24]
     _Camp_SurvivalVisionPowerDetectSpell.Cast(PlayerRef)
+    _Camp_SurvivalVisionPowerGuideSpell.Cast(PlayerRef)
     RegisterForSingleUpdate(4)
     SendEvent_VisionPowerStart()
     SeekTargets()
@@ -72,6 +74,7 @@ Event OnUpdate()
         endif
         ; Keep the detection effects alive
         _Camp_SurvivalVisionPowerDetectSpell.Cast(PlayerRef)
+        _Camp_SurvivalVisionPowerGuideSpell.Cast(PlayerRef)
 
         ; Refresh objects if necessary
         RefreshObjects()
