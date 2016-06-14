@@ -92,7 +92,7 @@ EndEvent
 Event OnUpdate()
 	if searching
 		if should_rescan
-			ScanTrackedCells()
+			ScanAllTrackedCells()
 		endif
 		RefreshRefs()
 		RegisterForSingleUpdate(5)
@@ -100,11 +100,26 @@ Event OnUpdate()
 EndEvent
 
 function Search(Cell akCell)
+	if !akCell
+		return
+	endif
+
+	ScanCell(akCell)
+	RefreshRefs()
+endFunction
+
+function ScanCell(Cell akCell)
 	; Implements search start logic. Extend.
 endFunction
 
-function ScanTrackedCells()
-	; Implements maintenance logic. Extend.
+function ScanAllTrackedCells()
+	int i = 0
+	while i < 4
+		if cellsToSearch[i]
+			ScanCell(cellsToSearch[i])
+		endif
+		i += 1
+	endWhile
 endFunction
 
 function RefreshRefs()

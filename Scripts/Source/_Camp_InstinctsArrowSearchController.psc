@@ -7,15 +7,6 @@ Keyword property _Camp_InstinctsArrowSearchData auto
 {StorageUtil data form.}
 EffectShader property _Camp_VisionStaticShader auto
 
-function Search(Cell akCell)
-	if !akCell
-		return
-	endif
-
-	ScanCell(akCell)
-	RefreshRefs()
-endFunction
-
 function ScanCell(Cell akCell)
 	int ref_count = akCell.GetNumRefs(64)	; kArrowProjectile
 	int i = 0
@@ -27,16 +18,6 @@ function ScanCell(Cell akCell)
 			debug.trace("adding " + o + " to list.")
 			FormListAdd(_Camp_InstinctsArrowSearchData, cell_id, o as Form)
 			FloatListAdd(_Camp_InstinctsArrowSearchData, dist_id, o.GetDistance(PlayerRef))
-		endif
-		i += 1
-	endWhile
-endFunction
-
-function ScanTrackedCells()
-	int i = 0
-	while i < 4
-		if cellsToSearch[i]
-			ScanCell(cellsToSearch[i])
 		endif
 		i += 1
 	endWhile
