@@ -97,6 +97,11 @@ GlobalVariable property _Frost_SettingMeterWetnessHAnchor auto
 GlobalVariable property _Frost_SettingMeterWetnessVAnchor auto
 GlobalVariable property _Frost_SettingMeterWetnessXPos auto
 GlobalVariable property _Frost_SettingMeterWetnessYPos auto
+GlobalVariable property _Frost_SettingMeterWeathersenseFillDirection auto
+GlobalVariable property _Frost_SettingMeterWeathersenseHAnchor auto
+GlobalVariable property _Frost_SettingMeterWeathersenseVAnchor auto
+GlobalVariable property _Frost_SettingMeterWeathersenseXPos auto
+GlobalVariable property _Frost_SettingMeterWeathersenseYPos auto
 
 _Frost_Meter property ExposureMeter auto
 _Frost_ExposureMeterInterfaceHandler property ExposureMeterHandler auto
@@ -3210,6 +3215,11 @@ function ApplyMeterPreset(int aiPresetIdx)
 		_Frost_SettingMeterWetnessVAnchor.SetValueInt(1)
 		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_9_X)
 		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_9_Y)
+		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(1)
+		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(0)
+		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(1)
+		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_9_X)
+		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_9_Y)
 	elseif aiPresetIdx == 1
 		; 16:9 Bottom Right
 		_Frost_SettingMeterExposureFillDirection.SetValueInt(0)
@@ -3222,6 +3232,11 @@ function ApplyMeterPreset(int aiPresetIdx)
 		_Frost_SettingMeterWetnessVAnchor.SetValueInt(1)
 		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_X)
 		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_Y)
+		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(0)
+		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(1)
+		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(1)
+		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_X)
+		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_Y)
 	elseif aiPresetIdx == 2
 		; 16:9 Top Left
 		_Frost_SettingMeterExposureFillDirection.SetValueInt(1)
@@ -3234,6 +3249,11 @@ function ApplyMeterPreset(int aiPresetIdx)
 		_Frost_SettingMeterWetnessVAnchor.SetValueInt(0)
 		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_TOPLEFT_16_9_X)
 		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_TOPLEFT_16_9_Y)
+		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(1)
+		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(0)
+		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(0)
+		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_TOPLEFT_16_9_X)
+		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_TOPLEFT_16_9_Y)
 	elseif aiPresetIdx == 3
 		; 16:9 Top Right
 		_Frost_SettingMeterExposureFillDirection.SetValueInt(0)
@@ -3246,6 +3266,11 @@ function ApplyMeterPreset(int aiPresetIdx)
 		_Frost_SettingMeterWetnessVAnchor.SetValueInt(0)
 		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_TOPRIGHT_16_9_X)
 		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_TOPRIGHT_16_9_Y)
+		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(0)
+		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(1)
+		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(0)
+		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_TOPRIGHT_16_9_X)
+		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_TOPRIGHT_16_9_Y)
 	elseif aiPresetIdx == 4
 		; 16:10 Bottom Left
 		_Frost_SettingMeterExposureFillDirection.SetValueInt(1)
@@ -3258,6 +3283,11 @@ function ApplyMeterPreset(int aiPresetIdx)
 		_Frost_SettingMeterWetnessVAnchor.SetValueInt(1)
 		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_10_X)
 		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_10_Y)
+		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(1)
+		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(0)
+		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(1)
+		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_10_X)
+		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_10_Y)
 	elseif aiPresetIdx == 5
 		; 16:10 Bottom Right
 		_Frost_SettingMeterExposureFillDirection.SetValueInt(0)
@@ -3270,6 +3300,11 @@ function ApplyMeterPreset(int aiPresetIdx)
 		_Frost_SettingMeterWetnessVAnchor.SetValueInt(1)
 		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_10_X)
 		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_10_Y)
+		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(0)
+		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(1)
+		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(1)
+		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_10_X)
+		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_10_Y)
 	elseif aiPresetIdx == 6
 		; 16:10 Top Left
 		_Frost_SettingMeterExposureFillDirection.SetValueInt(1)
@@ -3282,6 +3317,11 @@ function ApplyMeterPreset(int aiPresetIdx)
 		_Frost_SettingMeterWetnessVAnchor.SetValueInt(0)
 		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_TOPLEFT_16_10_X)
 		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_TOPLEFT_16_10_Y)
+		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(1)
+		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(0)
+		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(0)
+		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_TOPLEFT_16_10_X)
+		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_TOPLEFT_16_10_Y)
 	elseif aiPresetIdx == 7
 		; 16:10 Top Right
 		_Frost_SettingMeterExposureFillDirection.SetValueInt(0)
@@ -3294,6 +3334,11 @@ function ApplyMeterPreset(int aiPresetIdx)
 		_Frost_SettingMeterWetnessVAnchor.SetValueInt(0)
 		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_TOPRIGHT_16_10_X)
 		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_TOPRIGHT_16_10_Y)
+		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(0)
+		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(1)
+		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(0)
+		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_TOPRIGHT_16_10_X)
+		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_TOPRIGHT_16_10_Y)
 	elseif aiPresetIdx == 8
 		; 4:3 Bottom Left
 		_Frost_SettingMeterExposureFillDirection.SetValueInt(1)
@@ -3306,6 +3351,11 @@ function ApplyMeterPreset(int aiPresetIdx)
 		_Frost_SettingMeterWetnessVAnchor.SetValueInt(1)
 		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMLEFT_4_3_X)
 		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMLEFT_4_3_Y)
+		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(1)
+		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(0)
+		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(1)
+		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMLEFT_4_3_X)
+		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMLEFT_4_3_Y)
 	elseif aiPresetIdx == 9
 		; 4:3 Bottom Right
 		_Frost_SettingMeterExposureFillDirection.SetValueInt(0)
@@ -3318,6 +3368,11 @@ function ApplyMeterPreset(int aiPresetIdx)
 		_Frost_SettingMeterWetnessVAnchor.SetValueInt(1)
 		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_4_3_X)
 		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_4_3_Y)
+		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(0)
+		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(1)
+		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(1)
+		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_4_3_X)
+		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_4_3_Y)
 	elseif aiPresetIdx == 10
 		; 4:3 Top Left
 		_Frost_SettingMeterExposureFillDirection.SetValueInt(1)
@@ -3330,6 +3385,11 @@ function ApplyMeterPreset(int aiPresetIdx)
 		_Frost_SettingMeterWetnessVAnchor.SetValueInt(0)
 		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_TOPLEFT_4_3_X)
 		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_TOPLEFT_4_3_Y)
+		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(1)
+		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(0)
+		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(0)
+		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_TOPLEFT_4_3_X)
+		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_TOPLEFT_4_3_Y)
 	elseif aiPresetIdx == 11
 		; 4:3 Top Right
 		_Frost_SettingMeterExposureFillDirection.SetValueInt(0)
@@ -3342,10 +3402,16 @@ function ApplyMeterPreset(int aiPresetIdx)
 		_Frost_SettingMeterWetnessVAnchor.SetValueInt(0)
 		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_TOPRIGHT_4_3_X)
 		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_TOPRIGHT_4_3_Y)
+		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(0)
+		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(1)
+		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(0)
+		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_TOPRIGHT_4_3_X)
+		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_TOPRIGHT_4_3_Y)
 	endif
 	
 	UpdateMeterConfiguration(0)
 	UpdateMeterConfiguration(1)
+	UpdateMeterConfiguration(2)
 endFunction
 
 function ConfigureMeter(int aiMeterIdx, int aiFillDirectionIdx, int aiHAnchorIdx, int aiVAnchorIdx, float afPositionX, float afPositionY, float afHeight, float afWidth)
