@@ -1,10 +1,10 @@
-Scriptname _Camp_VisionDetectItemScript extends ObjectReference  
+Scriptname _Camp_InstinctsGlowScript extends ObjectReference  
 
 MagicEffect property _Camp_SurvivalVisionEffect auto
 Actor property PlayerRef auto
 
 Event OnInit()
-    RegisterForModEvent("Campfire_VisionPowerFinished", "VisionPowerFinished")
+    RegisterForModEvent("Campfire_InstinctsStopSearch", "InstinctsStopSearch")
     RegisterForSingleUpdate(Utility.RandomInt(4, 8))
 EndEvent
 
@@ -17,12 +17,13 @@ Event OnUpdate()
     endif
 EndEvent
 
-Event VisionPowerFinished()
+Event InstinctsStopSearch()
     Destroy()
 endEvent
 
 function Destroy()
     UnregisterForUpdate()
+    UnregisterForAllModEvents()
     self.Disable(true)
     self.Delete()
 endFunction
