@@ -7,7 +7,7 @@ import _FrostInternal
 Actor property PlayerRef auto
 
 Event OnInit()
-	SetMeterPositions()
+	;SetMeterPositions()
 EndEvent
 
 function RegisterForEvents()
@@ -169,6 +169,8 @@ function SendEvent_UpdateWarmthAndCoverage()
         ModEvent.Send(handle_2)
     endif
 endFunction
+
+;/
 
 ; **************
 ; *   Meters   *
@@ -586,3 +588,5 @@ function SetAspectRatio(int ratio)
 		WeathersenseMeter.Y = 13.0
 	endif
 endFunction
+
+/;
