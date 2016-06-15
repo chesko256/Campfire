@@ -1,2 +1,0 @@
-scriptname _Camp_InstinctsBranchSearchController extends _Camp_InstinctsSearchController
-

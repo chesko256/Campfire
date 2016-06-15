@@ -1,6 +1,13 @@
 scriptname _Camp_InstinctsSearchController extends Quest
 
+import StorageUtil
+
+Actor property PlayerRef auto
 GlobalVariable property _Camp_PerkRank_KeenSenses auto
+Keyword property SearchDataForm auto
+{The form used by StorageUtil to store search data.}
+int property SearchFormType auto
+{The Form Type to search for.}
 bool property should_rescan = false auto
 {Whether or not this controller should rescan the cell on each iteration for new objects.}
 
@@ -65,8 +72,10 @@ Event InstinctsSearchCellUpdate(Form akCell1, Form akCell2, Form akCell3, Form a
 	; Clear old cells
 	int j = 0
 	while j < 4
-		debug.trace(oldCellsNotFound[j] + " is now outside the search radius, cleaning up.")
-		CleanUpCell(oldCellsNotFound[j])
+		if oldCellsNotFound[j]
+			debug.trace(oldCellsNotFound[j] + " is now outside the search radius, cleaning up.")
+			CleanUpCell(oldCellsNotFound[j])
+		endif
 		j += 1
 	endWhile
 
@@ -109,7 +118,19 @@ function Search(Cell akCell)
 endFunction
 
 function ScanCell(Cell akCell)
-	; Implements search start logic. Extend.
+	int ref_count = akCell.GetNumRefs(SearchFormType)
+	int i = 0
+	while i < ref_count
+		ObjectReference o = akCell.GetNthRef(i, SearchFormType)
+		string cell_id = (akCell.GetFormID() as String)
+		string dist_id = cell_id + "_dist"
+		if FormListFind(SearchDataForm, cell_id, o as Form) == -1
+			debug.trace("adding " + o + " to list.")
+			FormListAdd(SearchDataForm, cell_id, o as Form)
+			FloatListAdd(SearchDataForm, dist_id, o.GetDistance(PlayerRef))
+		endif
+		i += 1
+	endWhile
 endFunction
 
 function ScanAllTrackedCells()
@@ -123,11 +144,81 @@ function ScanAllTrackedCells()
 endFunction
 
 function RefreshRefs()
-	; Implements maintenance logic. Extend.
+	; Refresh the distances and glow state of all objects
+	refreshing = true
+	float detection_distance = 2048.0 + (_Camp_PerkRank_KeenSenses.GetValueInt() * 1024.0)
+
+	int i = 0
+	while i < 4
+		if cellsToSearch[i]
+			string cell_id = (cellsToSearch[i].GetFormID() as String)
+			string dist_id = cell_id + "_dist"
+
+			int ref_count = FormListCount(SearchDataForm, cell_id)
+			int j = 0
+			while j < ref_count
+				ObjectReference o = FormListGet(SearchDataForm, cell_id, j) as ObjectReference
+				if o
+					;debug.trace("o = " + o)
+					float dist = o.GetDistance(PlayerRef)
+					FloatListSet(SearchDataForm, dist_id, j, dist)
+					if dist <= detection_distance
+						DetectionGainedAction(o)
+					else
+						DetectionLostAction(o)
+					endif
+				endif
+				j += 1
+			endWhile
+		endif
+		i += 1
+	endWhile
+	refreshing = false
+endFunction
+
+function DetectionGainedAction(ObjectReference akReference)
+	; Extend.
+endFunction
+
+function DetectionLostAction(ObjectReference akReference)
+	; Extend.
+endFunction
+
+function CleanUpAction(ObjectReference akReference)
+	; Extend.
 endFunction
 
 function CleanUpCell(Cell akCell)
-	; Stop glowing / etc on all objects in this cell and dispose of the object data. Extend.
+	; clear out everything on the cell list and then clear it
+
+	if !akCell
+		return
+	endif
+
+	int timeout = 20
+	int t = 0
+	while refreshing && t < timeout
+		Utility.Wait(0.2)
+		t += 1
+	endWhile
+
+	string cell_id = (akCell.GetFormID() as String)
+	string dist_id = cell_id + "_dist"
+
+	int ref_count = FormListCount(SearchDataForm, cell_id)
+	int i = 0
+	while i < ref_count
+		ObjectReference o = FormListGet(SearchDataForm, cell_id, i) as ObjectReference
+		if o
+			CleanUpAction(o)
+		endif
+		i += 1
+	endWhile
+
+	FormListClear(SearchDataForm, cell_id)
+	FloatListClear(SearchDataForm, dist_id)
+
+	debug.trace("Key count after clean up: " + debug_GetFormListKeysCount(SearchDataForm))
 endFunction
 
 function CreateUniqueArray(Cell akCell1, Cell akCell2, Cell akCell3, Cell akCell4, Cell[] akTargetArray)

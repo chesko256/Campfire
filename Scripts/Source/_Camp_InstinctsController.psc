@@ -14,6 +14,8 @@ import math
 
 Actor property PlayerRef auto
 Static property XMarker auto
+Message property _Camp_VisionPowerErrorMounted auto
+Spell property _Camp_SurvivalVisionPower auto
 GlobalVariable property _Camp_PerkRank_KeenSenses auto
 
 ObjectReference probe_ref
@@ -33,6 +35,15 @@ EndEvent
 
 function StartSearching()
 	debug.trace("Starting search.")
+	if PlayerRef.IsOnMount()
+        _Camp_VisionPowerErrorMounted.Show()
+        StopSearching()
+        PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
+        return
+    endif
+	RegisterForAnimationEvent(PlayerRef, "FootLeft")
+    RegisterForModEvent("Campfire_PlayerHit", "PlayerHit")
+    RegisterForMenu("Dialogue Menu")
 	probe_ref = PlayerRef.PlaceAtMe(XMarker)
 	Cell[] cellsToSearch = GetCellsToSearch()
 	SendEvent_InstinctsStartSearch(cellsToSearch)
@@ -48,9 +59,54 @@ Event OnUpdate()
 	debug.trace("Updating cells.")
 	SearchCellUpdate()
 	if searching
+		if PlayerRef.IsOnMount()
+            _Camp_VisionPowerErrorMounted.Show()
+            StopSearching()
+            PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
+            return
+        endif
 		RegisterForSingleUpdate(5)
 	endif
 EndEvent
+
+Event PlayerHit(Form akAggressor, Form akSource, Form akProjectile)
+	StopSearching()
+    Dispel()
+endEvent
+
+Event OnMenuOpen(string menuName)
+    if menuName == "Dialogue Menu"
+    	StopSearching()
+        Dispel()
+    endif
+EndEvent
+
+Event OnAnimationEvent(ObjectReference akSource, string asEventName)
+    if akSource == PlayerRef && asEventName == "FootLeft"
+        if _Camp_PerkRank_KeenSenses.GetValueInt() == 0
+            CancelEffect_Movement()
+        elseif !PlayerRef.IsSneaking()
+            CancelEffect_Movement()
+        endif
+    endif
+EndEvent
+
+function CancelEffect_Movement()
+    ; The effect is being cancelled because the player moved.
+
+    ;@TODO
+    ; Wait until an update cycle isn't running, or else we could remove the effect
+    ; from the actor and then try to register for an update with no native object bound.
+    ;int i = 0
+    ;while updating && i < 50
+    ;    utility.wait(0.1)
+    ;    i += 1
+    ;endWhile
+
+    UnregisterForUpdate()
+    StopSearching()
+    PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
+endFunction
 
 function SearchCellUpdate()
 	Cell[] cellsToSearch = GetCellsToSearch()
@@ -79,7 +135,7 @@ Cell[] function GetCellsToSearch()
 	float center_z = PlayerRef.GetPositionZ()
 
 	; Optimize by calling GetOffsetsFromPos once and reusing values
-	float[] probe_dist = GetOffsetsFromPos(PlayerRef, detection_distance, 45.0)
+	float[] probe_dist = GetOffsetsFromPos(detection_distance, 45.0)
 
 	cellsToSearch[0] = GetCellFromProbe(probe_ref, center_x + -probe_dist[0], center_y + probe_dist[1], center_z) 	; upper left
 	cellsToSearch[1] = GetCellFromProbe(probe_ref, center_x + probe_dist[0], center_y + probe_dist[1], center_z) 	; upper right
@@ -100,10 +156,9 @@ Cell function GetCellFromProbe(ObjectReference akProbe, float afPosX, float afPo
 	return akProbe.GetParentCell()
 endFunction
 
-float[] function GetOffsetsFromPos(Actor akSource, Float afDistance = 100.0, float afOffset = 0.0)
-	Float A = akSource.GetAngleZ() + afOffset
-	Float YDist = Sin(A)
-	Float XDist = Cos(A)
+float[] function GetOffsetsFromPos(Float afDistance = 100.0, float afOffset = 0.0)
+	Float YDist = Sin(afOffset)
+	Float XDist = Cos(afOffset)
 
 	XDist *= afDistance
 	YDist *= afDistance
