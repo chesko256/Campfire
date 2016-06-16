@@ -25,7 +25,6 @@ GlobalVariable property FrostfallRunning auto
 GlobalVariable property _Frost_Setting_Animation auto
 GlobalVariable property _Frost_Setting_ConditionMessages auto
 GlobalVariable property _Frost_Setting_DisplayAttributesInWeathersense auto
-; GlobalVariable property _Frost_Setting_ExposureMeterHeight auto
 GlobalVariable property _Frost_Setting_ExposurePauseCombat auto
 GlobalVariable property _Frost_Setting_ExposurePauseDialogue auto
 GlobalVariable property _Frost_Setting_ExposureRate auto
@@ -35,7 +34,6 @@ GlobalVariable property _Frost_Setting_FullScreenEffects auto
 GlobalVariable property _Frost_Setting_MaxExposureMode auto
 GlobalVariable property _Frost_Setting_MeterDisplayMode auto
 GlobalVariable property _Frost_Setting_MeterDisplayTime auto
-GlobalVariable property _Frost_Setting_MeterOpacity auto
 GlobalVariable property _Frost_Setting_MovementPenalty auto
 GlobalVariable property _Frost_Setting_NoFastTravel auto
 GlobalVariable property _Frost_Setting_SoundEffects auto
@@ -50,7 +48,6 @@ GlobalVariable property _Frost_Setting_NoWaiting auto
 GlobalVariable property _Frost_Setting_Notifications_EquipmentValues auto
 GlobalVariable property _Frost_HotkeyWeathersense auto
 GlobalVariable property _Frost_Setting_FollowerAnimation auto
-GlobalVariable property _Frost_Setting_MeterAspectRatio auto
 GlobalVariable property _Frost_Setting_DisplayTutorials auto
 GlobalVariable property _Frost_Setting_Notifications_EquipmentSummary auto
 GlobalVariable property _Frost_SettingsProfileVersion auto
@@ -77,35 +74,33 @@ GlobalVariable property _Frost_PerkRank_InnerFire auto
 GlobalVariable property _Frost_PerkRank_WellInsulated auto
 
 ; WIP
-GlobalVariable property _Frost_SettingMeterDisplayTime auto
-GlobalVariable property _Frost_SettingMeterDisplay_Contextual auto
-GlobalVariable property _Frost_SettingMeterExposureOpacity auto
-GlobalVariable property _Frost_SettingMeterExposureColor auto
-GlobalVariable property _Frost_SettingMeterExposureFillDirection auto
-GlobalVariable property _Frost_SettingMeterExposureHeight auto
-GlobalVariable property _Frost_SettingMeterExposureWidth auto
-GlobalVariable property _Frost_SettingMeterExposureHAnchor auto
-GlobalVariable property _Frost_SettingMeterExposureVAnchor auto
-GlobalVariable property _Frost_SettingMeterExposureXPos auto
-GlobalVariable property _Frost_SettingMeterExposureYPos auto
-GlobalVariable property _Frost_SettingMeterWetnessOpacity auto
-GlobalVariable property _Frost_SettingMeterWetnessColor auto
-GlobalVariable property _Frost_SettingMeterWetnessFillDirection auto
-GlobalVariable property _Frost_SettingMeterWetnessHeight auto
-GlobalVariable property _Frost_SettingMeterWetnessWidth auto
-GlobalVariable property _Frost_SettingMeterWetnessHAnchor auto
-GlobalVariable property _Frost_SettingMeterWetnessVAnchor auto
-GlobalVariable property _Frost_SettingMeterWetnessXPos auto
-GlobalVariable property _Frost_SettingMeterWetnessYPos auto
-GlobalVariable property _Frost_SettingMeterWeathersenseOpacity auto
-GlobalVariable property _Frost_SettingMeterWeathersenseColor auto
-GlobalVariable property _Frost_SettingMeterWeathersenseFillDirection auto
-GlobalVariable property _Frost_SettingMeterWeathersenseHeight auto
-GlobalVariable property _Frost_SettingMeterWeathersenseWidth auto
-GlobalVariable property _Frost_SettingMeterWeathersenseHAnchor auto
-GlobalVariable property _Frost_SettingMeterWeathersenseVAnchor auto
-GlobalVariable property _Frost_SettingMeterWeathersenseXPos auto
-GlobalVariable property _Frost_SettingMeterWeathersenseYPos auto
+GlobalVariable property _Frost_Setting_MeterExposureOpacity auto
+GlobalVariable property _Frost_Setting_MeterExposureColor auto
+GlobalVariable property _Frost_Setting_MeterExposureFillDirection auto
+GlobalVariable property _Frost_Setting_MeterExposureHeight auto
+GlobalVariable property _Frost_Setting_MeterExposureWidth auto
+GlobalVariable property _Frost_Setting_MeterExposureHAnchor auto
+GlobalVariable property _Frost_Setting_MeterExposureVAnchor auto
+GlobalVariable property _Frost_Setting_MeterExposureXPos auto
+GlobalVariable property _Frost_Setting_MeterExposureYPos auto
+GlobalVariable property _Frost_Setting_MeterWetnessOpacity auto
+GlobalVariable property _Frost_Setting_MeterWetnessColor auto
+GlobalVariable property _Frost_Setting_MeterWetnessFillDirection auto
+GlobalVariable property _Frost_Setting_MeterWetnessHeight auto
+GlobalVariable property _Frost_Setting_MeterWetnessWidth auto
+GlobalVariable property _Frost_Setting_MeterWetnessHAnchor auto
+GlobalVariable property _Frost_Setting_MeterWetnessVAnchor auto
+GlobalVariable property _Frost_Setting_MeterWetnessXPos auto
+GlobalVariable property _Frost_Setting_MeterWetnessYPos auto
+GlobalVariable property _Frost_Setting_MeterWeathersenseOpacity auto
+GlobalVariable property _Frost_Setting_MeterWeathersenseColor auto
+GlobalVariable property _Frost_Setting_MeterWeathersenseFillDirection auto
+GlobalVariable property _Frost_Setting_MeterWeathersenseHeight auto
+GlobalVariable property _Frost_Setting_MeterWeathersenseWidth auto
+GlobalVariable property _Frost_Setting_MeterWeathersenseHAnchor auto
+GlobalVariable property _Frost_Setting_MeterWeathersenseVAnchor auto
+GlobalVariable property _Frost_Setting_MeterWeathersenseXPos auto
+GlobalVariable property _Frost_Setting_MeterWeathersenseYPos auto
 
 _Frost_Meter property ExposureMeter auto
 _Frost_ExposureMeterInterfaceHandler property ExposureMeterHandler auto
@@ -641,12 +636,13 @@ function PageReset_Interface()
 	endif
 
 	SetCursorPosition(1)
-	AddHeaderOption("$FrostfallInterfaceHeaderUserInterface")
+	;/AddHeaderOption("$FrostfallInterfaceHeaderUserInterface")
 	Interface_MeterAspectRatio_OID = AddMenuOption("$FrostfallInterfaceSettingAspectRatio", AspectRatioList[_Frost_Setting_MeterAspectRatio.GetValueInt()])
 	Interface_MeterDisplayMode_OID = AddMenuOption("$FrostfallInterfaceSettingMeterDisplayMode", MeterDisplayModeList[_Frost_Setting_MeterDisplayMode.GetValueInt()])
 	Interface_MeterDisplayTime_OID = AddSliderOption("$FrostfallInterfaceSettingMeterDisplaytime", _Frost_Setting_MeterDisplayTime.GetValueInt(), "{0}")
 	Interface_MeterOpacity_OID = AddSliderOption("$FrostfallInterfaceSettingMeterOpacity", _Frost_Setting_MeterOpacity.GetValue(), "{0}%")
 	AddEmptyOption()
+	/;
 	AddHeaderOption("$FrostfallInterfaceHeaderNotifications")
 	if _Frost_Setting_ConditionMessages.GetValueInt() == 2
 		Interface_ConditionMessages_OID = AddToggleOption("$FrostfallInterfaceSettingCondition", true)
@@ -684,8 +680,8 @@ endFunction
 function PageReset_Meters()
 	SetCursorFillMode(TOP_TO_BOTTOM)
 	AddHeaderOption("FrostfallInterfaceHeaderMetersGeneral")
-	Meters_UIMeterDisplay_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterDisplay", MeterDisplayList[_Frost_SettingMeterDisplay_Contextual.GetValueInt()])
-	Meters_UIMeterDisplayTime_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterDisplayTime", _Frost_SettingMeterDisplayTime.GetValue() * 2, "{0}")
+	Meters_UIMeterDisplay_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterDisplay", MeterDisplayList[_Frost_Setting_MeterDisplayMode.GetValueInt()])
+	Meters_UIMeterDisplayTime_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterDisplayTime", _Frost_Setting_MeterDisplayTime.GetValue() * 2, "{0}")
 	Meters_UIMeterLayout_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterLayout", "FrostfallSelect")
 	AddEmptyOption()
 	AddHeaderOption("FrostfallInterfaceHeaderMetersExposureName")
@@ -701,39 +697,39 @@ function PageReset_Meters()
 	if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
 		AddHeaderOption("FrostfallInterfaceHeaderMetersAdvanced")
 		AddTextOption("FrostfallInterfaceSettingUIMeterConfiguring", "FrostfallInterfaceHeaderMetersExposureName", OPTION_FLAG_DISABLED)
-		Meters_UIMeterColor_OID = AddColorOption("FrostfallInterfaceSettingUIColor", _Frost_SettingMeterExposureColor.GetValueInt())
-		Meters_UIMeterOpacity_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterOpacity", _Frost_SettingMeterExposureOpacity.GetValue(), "{0}%")
-		Meters_UIMeterFillDirection_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterFillDirection", FillDirectionList[_Frost_SettingMeterExposureFillDirection.GetValueInt()])
-		Meters_UIMeterHeight_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterHeight", _Frost_SettingMeterExposureHeight.GetValue(), "{1}")
-		Meters_UIMeterWidth_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterLength", _Frost_SettingMeterExposureWidth.GetValue(), "{1}")
-		Meters_UIMeterXPos_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterXPos", _Frost_SettingMeterExposureXPos.GetValue(), "{1}")
-		Meters_UIMeterYPos_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterYPos", _Frost_SettingMeterExposureYPos.GetValue(), "{1}")
-		Meters_UIMeterHAnchor_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterHAnchor", HorizontalAnchorList[_Frost_SettingMeterExposureHAnchor.GetValueInt()])
-		Meters_UIMeterVAnchor_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterVAnchor", VerticalAnchorList[_Frost_SettingMeterExposureVAnchor.GetValueInt()])
+		Meters_UIMeterColor_OID = AddColorOption("FrostfallInterfaceSettingUIColor", _Frost_Setting_MeterExposureColor.GetValueInt())
+		Meters_UIMeterOpacity_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterOpacity", _Frost_Setting_MeterExposureOpacity.GetValue(), "{0}%")
+		Meters_UIMeterFillDirection_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterFillDirection", FillDirectionList[_Frost_Setting_MeterExposureFillDirection.GetValueInt()])
+		Meters_UIMeterHeight_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterHeight", _Frost_Setting_MeterExposureHeight.GetValue(), "{1}")
+		Meters_UIMeterWidth_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterLength", _Frost_Setting_MeterExposureWidth.GetValue(), "{1}")
+		Meters_UIMeterXPos_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterXPos", _Frost_Setting_MeterExposureXPos.GetValue(), "{1}")
+		Meters_UIMeterYPos_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterYPos", _Frost_Setting_MeterExposureYPos.GetValue(), "{1}")
+		Meters_UIMeterHAnchor_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterHAnchor", HorizontalAnchorList[_Frost_Setting_MeterExposureHAnchor.GetValueInt()])
+		Meters_UIMeterVAnchor_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterVAnchor", VerticalAnchorList[_Frost_Setting_MeterExposureVAnchor.GetValueInt()])
 	elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
 		AddHeaderOption("FrostfallInterfaceHeaderMetersAdvanced")
 		AddTextOption("FrostfallInterfaceSettingUIMeterConfiguring", "FrostfallInterfaceHeaderMetersWetnessName", OPTION_FLAG_DISABLED)
-		Meters_UIMeterColor_OID = AddColorOption("FrostfallInterfaceSettingUIColor", _Frost_SettingMeterWetnessColor.GetValueInt())
-		Meters_UIMeterOpacity_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterOpacity", _Frost_SettingMeterWetnessOpacity.GetValue(), "{0}%")
-		Meters_UIMeterFillDirection_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterFillDirection", FillDirectionList[_Frost_SettingMeterWetnessFillDirection.GetValueInt()])
-		Meters_UIMeterHeight_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterHeight", _Frost_SettingMeterWetnessHeight.GetValue(), "{1}")
-		Meters_UIMeterWidth_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterLength", _Frost_SettingMeterWetnessWidth.GetValue(), "{1}")
-		Meters_UIMeterXPos_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterXPos", _Frost_SettingMeterWetnessXPos.GetValue(), "{1}")
-		Meters_UIMeterYPos_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterYPos", _Frost_SettingMeterWetnessYPos.GetValue(), "{1}")
-		Meters_UIMeterHAnchor_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterHAnchor", HorizontalAnchorList[_Frost_SettingMeterWetnessHAnchor.GetValueInt()])
-		Meters_UIMeterVAnchor_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterVAnchor", VerticalAnchorList[_Frost_SettingMeterWetnessVAnchor.GetValueInt()])
+		Meters_UIMeterColor_OID = AddColorOption("FrostfallInterfaceSettingUIColor", _Frost_Setting_MeterWetnessColor.GetValueInt())
+		Meters_UIMeterOpacity_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterOpacity", _Frost_Setting_MeterWetnessOpacity.GetValue(), "{0}%")
+		Meters_UIMeterFillDirection_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterFillDirection", FillDirectionList[_Frost_Setting_MeterWetnessFillDirection.GetValueInt()])
+		Meters_UIMeterHeight_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterHeight", _Frost_Setting_MeterWetnessHeight.GetValue(), "{1}")
+		Meters_UIMeterWidth_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterLength", _Frost_Setting_MeterWetnessWidth.GetValue(), "{1}")
+		Meters_UIMeterXPos_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterXPos", _Frost_Setting_MeterWetnessXPos.GetValue(), "{1}")
+		Meters_UIMeterYPos_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterYPos", _Frost_Setting_MeterWetnessYPos.GetValue(), "{1}")
+		Meters_UIMeterHAnchor_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterHAnchor", HorizontalAnchorList[_Frost_Setting_MeterWetnessHAnchor.GetValueInt()])
+		Meters_UIMeterVAnchor_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterVAnchor", VerticalAnchorList[_Frost_Setting_MeterWetnessVAnchor.GetValueInt()])
 	elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
 		AddHeaderOption("FrostfallInterfaceHeaderMetersAdvanced")
 		AddTextOption("FrostfallInterfaceSettingUIMeterConfiguring", "FrostfallInterfaceHeaderMetersWeathersenseName", OPTION_FLAG_DISABLED)
-		Meters_UIMeterColor_OID = AddColorOption("FrostfallInterfaceSettingUIColor", _Frost_SettingMeterWeathersenseColor.GetValueInt())
-		Meters_UIMeterOpacity_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterOpacity", _Frost_SettingMeterWeathersenseOpacity.GetValue(), "{0}%")
-		Meters_UIMeterFillDirection_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterFillDirection", FillDirectionList[_Frost_SettingMeterWeathersenseFillDirection.GetValueInt()])
-		Meters_UIMeterHeight_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterHeight", _Frost_SettingMeterWeathersenseHeight.GetValue(), "{1}")
-		Meters_UIMeterWidth_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterLength", _Frost_SettingMeterWeathersenseWidth.GetValue(), "{1}")
-		Meters_UIMeterXPos_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterXPos", _Frost_SettingMeterWeathersenseXPos.GetValue(), "{1}")
-		Meters_UIMeterYPos_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterYPos", _Frost_SettingMeterWeathersenseYPos.GetValue(), "{1}")
-		Meters_UIMeterHAnchor_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterHAnchor", HorizontalAnchorList[_Frost_SettingMeterWeathersenseHAnchor.GetValueInt()])
-		Meters_UIMeterVAnchor_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterVAnchor", VerticalAnchorList[_Frost_SettingMeterWeathersenseVAnchor.GetValueInt()])
+		Meters_UIMeterColor_OID = AddColorOption("FrostfallInterfaceSettingUIColor", _Frost_Setting_MeterWeathersenseColor.GetValueInt())
+		Meters_UIMeterOpacity_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterOpacity", _Frost_Setting_MeterWeathersenseOpacity.GetValue(), "{0}%")
+		Meters_UIMeterFillDirection_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterFillDirection", FillDirectionList[_Frost_Setting_MeterWeathersenseFillDirection.GetValueInt()])
+		Meters_UIMeterHeight_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterHeight", _Frost_Setting_MeterWeathersenseHeight.GetValue(), "{1}")
+		Meters_UIMeterWidth_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterLength", _Frost_Setting_MeterWeathersenseWidth.GetValue(), "{1}")
+		Meters_UIMeterXPos_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterXPos", _Frost_Setting_MeterWeathersenseXPos.GetValue(), "{1}")
+		Meters_UIMeterYPos_OID = AddSliderOption("FrostfallInterfaceSettingUIMeterYPos", _Frost_Setting_MeterWeathersenseYPos.GetValue(), "{1}")
+		Meters_UIMeterHAnchor_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterHAnchor", HorizontalAnchorList[_Frost_Setting_MeterWeathersenseHAnchor.GetValueInt()])
+		Meters_UIMeterVAnchor_OID = AddMenuOption("FrostfallInterfaceSettingUIMeterVAnchor", VerticalAnchorList[_Frost_Setting_MeterWeathersenseVAnchor.GetValueInt()])
 	endif
 endFunction
 
@@ -1179,7 +1175,7 @@ event OnOptionDefault(int option)
 		_Frost_Setting_MeterDisplayMode.SetValueInt(2)
 		SetMenuOptionValue(Interface_MeterDisplayMode_OID, MeterDisplayModeList[2])
 		SaveSettingToCurrentProfile("meter_display_mode", _Frost_Setting_MeterDisplayMode.GetValueInt())
-		GetInterfaceHandler().RemoveAllMeters()
+		RemoveAllMeters()
 	elseif option == Gameplay_VampirismMode_OID
 		_Frost_Setting_VampireMode.SetValueInt(1)
 		SetMenuOptionValue(Gameplay_VampirismMode_OID, VampirismModeList[1])
@@ -1194,113 +1190,113 @@ event OnOptionDefault(int option)
 
 	elseif option == Meters_UIMeterDisplay_OID
 		SetMenuOptionValue(Meters_UIMeterDisplay_OID, MeterDisplayList[2])
-		_Frost_SettingMeterDisplay_Contextual.SetValueInt(2)
+		_Frost_Setting_MeterDisplayMode.SetValueInt(2)
 		SaveSettingToCurrentProfile("meter_display_mode", 2)
 	elseif option == Meters_UIMeterDisplayTime_OID
-		_Frost_SettingMeterDisplayTime.SetValueInt(4)
-		SetSliderOptionValue(Meters_UIMeterDisplayTime_OID, _Frost_SettingMeterDisplayTime.GetValueInt(), "{0}")
+		_Frost_Setting_MeterDisplayTime.SetValueInt(4)
+		SetSliderOptionValue(Meters_UIMeterDisplayTime_OID, _Frost_Setting_MeterDisplayTime.GetValueInt(), "{0}")
 		SaveSettingToCurrentProfile("meter_display_time", 4)
 	elseif option == Meters_UIMeterColor_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
 			;@TODO
-			_Frost_SettingMeterExposureColor.SetValueInt(0xffff4d)
-			SetColorOptionValue(option, _Frost_SettingMeterExposureColor.GetValueInt())
-			ExposureMeterHandler.SetMeterColors(_Frost_SettingMeterExposureColor.GetValueInt(), -1)
-			SaveSettingToCurrentProfile("exposure_meter_color", _Frost_SettingMeterExposureColor.GetValueInt())
+			_Frost_Setting_MeterExposureColor.SetValueInt(0xffff4d)
+			SetColorOptionValue(option, _Frost_Setting_MeterExposureColor.GetValueInt())
+			ExposureMeterHandler.SetMeterColors(_Frost_Setting_MeterExposureColor.GetValueInt(), -1)
+			SaveSettingToCurrentProfile("exposure_meter_color", _Frost_Setting_MeterExposureColor.GetValueInt())
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
 			;@TODO
-			_Frost_SettingMeterWetnessColor.SetValueInt(0xff4dff)
-			SetColorOptionValue(option, _Frost_SettingMeterWetnessColor.GetValueInt())
-			WetnessMeterHandler.SetMeterColors(_Frost_SettingMeterWetnessColor.GetValueInt(), -1)
-			SaveSettingToCurrentProfile("wetness_meter_color", _Frost_SettingMeterWetnessColor.GetValueInt())
+			_Frost_Setting_MeterWetnessColor.SetValueInt(0xff4dff)
+			SetColorOptionValue(option, _Frost_Setting_MeterWetnessColor.GetValueInt())
+			WetnessMeterHandler.SetMeterColors(_Frost_Setting_MeterWetnessColor.GetValueInt(), -1)
+			SaveSettingToCurrentProfile("wetness_meter_color", _Frost_Setting_MeterWetnessColor.GetValueInt())
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
 			;@TODO
-			_Frost_SettingMeterWeathersenseColor.SetValueInt(0xff4dff)
-			SetColorOptionValue(option, _Frost_SettingMeterWeathersenseColor.GetValueInt())
-			WeathersenseMeterHandler.SetMeterColors(_Frost_SettingMeterWeathersenseColor.GetValueInt(), -1)
-			SaveSettingToCurrentProfile("weathersense_meter_color", _Frost_SettingMeterWeathersenseColor.GetValueInt())
+			_Frost_Setting_MeterWeathersenseColor.SetValueInt(0xff4dff)
+			SetColorOptionValue(option, _Frost_Setting_MeterWeathersenseColor.GetValueInt())
+			WeathersenseMeterHandler.SetMeterColors(_Frost_Setting_MeterWeathersenseColor.GetValueInt(), -1)
+			SaveSettingToCurrentProfile("weathersense_meter_color", _Frost_Setting_MeterWeathersenseColor.GetValueInt())
 		endif
 	elseif option == Meters_UIMeterOpacity_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			_Frost_SettingMeterExposureOpacity.SetValue(100.0)
+			_Frost_Setting_MeterExposureOpacity.SetValue(100.0)
 			SetSliderOptionValue(Meters_UIMeterOpacity_OID, 100.0, "{0}%")
 			UpdateMeterConfiguration(0)
 			SaveSettingToCurrentProfileFloat("exposure_meter_opacity", 100.0)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			_Frost_SettingMeterWetnessOpacity.SetValue(100.0)
+			_Frost_Setting_MeterWetnessOpacity.SetValue(100.0)
 			SetSliderOptionValue(Meters_UIMeterOpacity_OID, 100.0, "{0}%")
 			UpdateMeterConfiguration(1)
 			SaveSettingToCurrentProfileFloat("wetness_meter_opacity", 100.0)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			_Frost_SettingMeterWeathersenseOpacity.SetValue(100.0)
+			_Frost_Setting_MeterWeathersenseOpacity.SetValue(100.0)
 			SetSliderOptionValue(Meters_UIMeterOpacity_OID, 100.0, "{0}%")
 			UpdateMeterConfiguration(2)
 			SaveSettingToCurrentProfileFloat("weathersense_meter_opacity", 100.0)
 		endif
 	elseif option == Meters_UIMeterHeight_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			_Frost_SettingMeterExposureHeight.SetValue(NORMAL_METER_DEFAULT_HEIGHT)
+			_Frost_Setting_MeterExposureHeight.SetValue(NORMAL_METER_DEFAULT_HEIGHT)
 			SetSliderOptionValue(Meters_UIMeterHeight_OID, NORMAL_METER_DEFAULT_HEIGHT, "{1}")
 			UpdateMeterConfiguration(0)
 			SaveSettingToCurrentProfileFloat("exposure_meter_height", NORMAL_METER_DEFAULT_HEIGHT)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			_Frost_SettingMeterWetnessHeight.SetValue(NORMAL_METER_DEFAULT_HEIGHT)
+			_Frost_Setting_MeterWetnessHeight.SetValue(NORMAL_METER_DEFAULT_HEIGHT)
 			SetSliderOptionValue(Meters_UIMeterHeight_OID, NORMAL_METER_DEFAULT_HEIGHT, "{1}")
 			UpdateMeterConfiguration(1)
 			SaveSettingToCurrentProfileFloat("wetness_meter_height", NORMAL_METER_DEFAULT_HEIGHT)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			_Frost_SettingMeterWeathersenseHeight.SetValue(NORMAL_METER_DEFAULT_HEIGHT)
+			_Frost_Setting_MeterWeathersenseHeight.SetValue(NORMAL_METER_DEFAULT_HEIGHT)
 			SetSliderOptionValue(Meters_UIMeterHeight_OID, NORMAL_METER_DEFAULT_HEIGHT, "{1}")
 			UpdateMeterConfiguration(2)
 			SaveSettingToCurrentProfileFloat("weathersense_meter_height", NORMAL_METER_DEFAULT_HEIGHT)
 		endif
 	elseif option == Meters_UIMeterWidth_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			_Frost_SettingMeterExposureWidth.SetValue(NORMAL_METER_DEFAULT_WIDTH)
+			_Frost_Setting_MeterExposureWidth.SetValue(NORMAL_METER_DEFAULT_WIDTH)
 			SetSliderOptionValue(Meters_UIMeterWidth_OID, NORMAL_METER_DEFAULT_WIDTH, "{1}")
 			UpdateMeterConfiguration(0)
 			SaveSettingToCurrentProfileFloat("exposure_meter_width", NORMAL_METER_DEFAULT_WIDTH)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			_Frost_SettingMeterWetnessWidth.SetValue(NORMAL_METER_DEFAULT_WIDTH)
+			_Frost_Setting_MeterWetnessWidth.SetValue(NORMAL_METER_DEFAULT_WIDTH)
 			SetSliderOptionValue(Meters_UIMeterWidth_OID, NORMAL_METER_DEFAULT_WIDTH, "{1}")
 			UpdateMeterConfiguration(1)
 			SaveSettingToCurrentProfileFloat("wetness_meter_width", NORMAL_METER_DEFAULT_WIDTH)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			_Frost_SettingMeterWeathersenseWidth.SetValue(NORMAL_METER_DEFAULT_WIDTH)
+			_Frost_Setting_MeterWeathersenseWidth.SetValue(NORMAL_METER_DEFAULT_WIDTH)
 			SetSliderOptionValue(Meters_UIMeterWidth_OID, NORMAL_METER_DEFAULT_WIDTH, "{1}")
 			UpdateMeterConfiguration(2)
 			SaveSettingToCurrentProfileFloat("weathersense_meter_width", NORMAL_METER_DEFAULT_WIDTH)
 		endif
 	elseif option == Meters_UIMeterXPos_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			_Frost_SettingMeterExposureXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_X)
+			_Frost_Setting_MeterExposureXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_X)
 			SetSliderOptionValue(Meters_UIMeterXPos_OID, NORMAL_METER_BOTTOMRIGHT_16_9_X, "{1}")
 			UpdateMeterConfiguration(0)
 			SaveSettingToCurrentProfileFloat("exposure_meter_xpos", NORMAL_METER_BOTTOMRIGHT_16_9_X)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_X)
+			_Frost_Setting_MeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_X)
 			SetSliderOptionValue(Meters_UIMeterXPos_OID, NORMAL_METER_BOTTOMRIGHT_16_9_X, "{1}")
 			UpdateMeterConfiguration(1)
 			SaveSettingToCurrentProfileFloat("wetness_meter_xpos", NORMAL_METER_BOTTOMRIGHT_16_9_X)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_X)
+			_Frost_Setting_MeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_X)
 			SetSliderOptionValue(Meters_UIMeterXPos_OID, NORMAL_METER_BOTTOMRIGHT_16_9_X, "{1}")
 			UpdateMeterConfiguration(2)
 			SaveSettingToCurrentProfileFloat("weathersense_meter_xpos", NORMAL_METER_BOTTOMRIGHT_16_9_X)
 		endif
 	elseif option == Meters_UIMeterYPos_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			_Frost_SettingMeterExposureYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_X)
+			_Frost_Setting_MeterExposureYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_X)
 			SetSliderOptionValue(Meters_UIMeterYPos_OID, NORMAL_METER_BOTTOMRIGHT_16_9_Y, "{1}")
 			UpdateMeterConfiguration(0)
 			SaveSettingToCurrentProfileFloat("exposure_meter_ypos", NORMAL_METER_BOTTOMRIGHT_16_9_Y)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_Y)
+			_Frost_Setting_MeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_Y)
 			SetSliderOptionValue(Meters_UIMeterYPos_OID, NORMAL_METER_BOTTOMRIGHT_16_9_Y, "{1}")
 			UpdateMeterConfiguration(1)
 			SaveSettingToCurrentProfileFloat("wetness_meter_ypos", NORMAL_METER_BOTTOMRIGHT_16_9_Y)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_Y)
+			_Frost_Setting_MeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_Y)
 			SetSliderOptionValue(Meters_UIMeterYPos_OID, NORMAL_METER_BOTTOMRIGHT_16_9_Y, "{1}")
 			UpdateMeterConfiguration(2)
 			SaveSettingToCurrentProfileFloat("weathersense_meter_ypos", NORMAL_METER_BOTTOMRIGHT_16_9_Y)
@@ -1483,91 +1479,91 @@ Event OnOptionSliderOpen(int option)
 		SetSliderDialogRange(0, EndurancePerkPointsTotal.GetValue())
 		SetSliderDialogInterval(1.0)
 	elseif option == Meters_UIMeterDisplayTime_OID
-		SetSliderDialogStartValue(_Frost_SettingMeterDisplayTime.GetValueInt() * 2)
+		SetSliderDialogStartValue(_Frost_Setting_MeterDisplayTime.GetValueInt() * 2)
 		SetSliderDialogDefaultValue(8.0)
 		SetSliderDialogRange(4.0, 20.0)
 		SetSliderDialogInterval(2.0)
 	elseif option == Meters_UIMeterOpacity_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			SetSliderDialogStartValue(_Frost_SettingMeterExposureOpacity.GetValue())
+			SetSliderDialogStartValue(_Frost_Setting_MeterExposureOpacity.GetValue())
 			SetSliderDialogDefaultValue(100.0)
 			SetSliderDialogRange(0.0, 100.0)
 			SetSliderDialogInterval(1.0)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			SetSliderDialogStartValue(_Frost_SettingMeterWetnessOpacity.GetValue())
+			SetSliderDialogStartValue(_Frost_Setting_MeterWetnessOpacity.GetValue())
 			SetSliderDialogDefaultValue(100.0)
 			SetSliderDialogRange(0.0, 100.0)
 			SetSliderDialogInterval(1.0)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			SetSliderDialogStartValue(_Frost_SettingMeterWeathersenseOpacity.GetValue())
+			SetSliderDialogStartValue(_Frost_Setting_MeterWeathersenseOpacity.GetValue())
 			SetSliderDialogDefaultValue(100.0)
 			SetSliderDialogRange(0.0, 100.0)
 			SetSliderDialogInterval(1.0)
 		endif
 	elseif option == Meters_UIMeterHeight_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			SetSliderDialogStartValue(_Frost_SettingMeterExposureHeight.GetValue())
+			SetSliderDialogStartValue(_Frost_Setting_MeterExposureHeight.GetValue())
 			SetSliderDialogDefaultValue(NORMAL_METER_DEFAULT_HEIGHT)
 			SetSliderDialogRange(NORMAL_METER_MIN_HEIGHT, NORMAL_METER_MAX_HEIGHT)
 			SetSliderDialogInterval(0.1)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			SetSliderDialogStartValue(_Frost_SettingMeterWetnessHeight.GetValue())
+			SetSliderDialogStartValue(_Frost_Setting_MeterWetnessHeight.GetValue())
 			SetSliderDialogDefaultValue(NORMAL_METER_DEFAULT_HEIGHT)
 			SetSliderDialogRange(NORMAL_METER_MIN_HEIGHT, NORMAL_METER_MAX_HEIGHT)
 			SetSliderDialogInterval(0.1)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			SetSliderDialogStartValue(_Frost_SettingMeterWeathersenseHeight.GetValue())
+			SetSliderDialogStartValue(_Frost_Setting_MeterWeathersenseHeight.GetValue())
 			SetSliderDialogDefaultValue(NORMAL_METER_DEFAULT_HEIGHT)
 			SetSliderDialogRange(NORMAL_METER_MIN_HEIGHT, NORMAL_METER_MAX_HEIGHT)
 			SetSliderDialogInterval(0.1)
 		endif
 	elseif option == Meters_UIMeterWidth_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			SetSliderDialogStartValue(_Frost_SettingMeterExposureWidth.GetValue())
+			SetSliderDialogStartValue(_Frost_Setting_MeterExposureWidth.GetValue())
 			SetSliderDialogDefaultValue(NORMAL_METER_DEFAULT_WIDTH)
 			SetSliderDialogRange(NORMAL_METER_MIN_WIDTH, NORMAL_METER_MAX_WIDTH)
 			SetSliderDialogInterval(0.1)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			SetSliderDialogStartValue(_Frost_SettingMeterWetnessWidth.GetValue())
+			SetSliderDialogStartValue(_Frost_Setting_MeterWetnessWidth.GetValue())
 			SetSliderDialogDefaultValue(NORMAL_METER_DEFAULT_WIDTH)
 			SetSliderDialogRange(NORMAL_METER_MIN_WIDTH, NORMAL_METER_MAX_WIDTH)
 			SetSliderDialogInterval(0.1)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			SetSliderDialogStartValue(_Frost_SettingMeterWeathersenseWidth.GetValue())
+			SetSliderDialogStartValue(_Frost_Setting_MeterWeathersenseWidth.GetValue())
 			SetSliderDialogDefaultValue(NORMAL_METER_DEFAULT_WIDTH)
 			SetSliderDialogRange(NORMAL_METER_MIN_WIDTH, NORMAL_METER_MAX_WIDTH)
 			SetSliderDialogInterval(0.1)
 		endif
 	elseif option == Meters_UIMeterXPos_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			SetSliderDialogStartValue(_Frost_SettingMeterExposureXPos.GetValue())
+			SetSliderDialogStartValue(_Frost_Setting_MeterExposureXPos.GetValue())
 			SetSliderDialogDefaultValue(NORMAL_METER_BOTTOMRIGHT_16_9_X)
 			SetSliderDialogRange(0.0, 1280.0)
 			SetSliderDialogInterval(0.1)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			SetSliderDialogStartValue(_Frost_SettingMeterWetnessXPos.GetValue())
+			SetSliderDialogStartValue(_Frost_Setting_MeterWetnessXPos.GetValue())
 			SetSliderDialogDefaultValue(NORMAL_METER_BOTTOMRIGHT_16_9_X)
 			SetSliderDialogRange(0.0, 1280.0)
 			SetSliderDialogInterval(0.1)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			SetSliderDialogStartValue(_Frost_SettingMeterWeathersenseXPos.GetValue())
+			SetSliderDialogStartValue(_Frost_Setting_MeterWeathersenseXPos.GetValue())
 			SetSliderDialogDefaultValue(NORMAL_METER_BOTTOMRIGHT_16_9_X)
 			SetSliderDialogRange(0.0, 1280.0)
 			SetSliderDialogInterval(0.1)
 		endif
 	elseif option == Meters_UIMeterYPos_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			SetSliderDialogStartValue(_Frost_SettingMeterExposureYPos.GetValue())
+			SetSliderDialogStartValue(_Frost_Setting_MeterExposureYPos.GetValue())
 			SetSliderDialogDefaultValue(NORMAL_METER_BOTTOMRIGHT_16_9_Y)
 			SetSliderDialogRange(0.0, 720.0)
 			SetSliderDialogInterval(0.1)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			SetSliderDialogStartValue(_Frost_SettingMeterWetnessYPos.GetValue())
+			SetSliderDialogStartValue(_Frost_Setting_MeterWetnessYPos.GetValue())
 			SetSliderDialogDefaultValue(NORMAL_METER_BOTTOMRIGHT_16_9_Y)
 			SetSliderDialogRange(0.0, 720.0)
 			SetSliderDialogInterval(0.1)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			SetSliderDialogStartValue(_Frost_SettingMeterWeathersenseYPos.GetValue())
+			SetSliderDialogStartValue(_Frost_Setting_MeterWeathersenseYPos.GetValue())
 			SetSliderDialogDefaultValue(NORMAL_METER_BOTTOMRIGHT_16_9_Y)
 			SetSliderDialogRange(0.0, 720.0)
 			SetSliderDialogInterval(0.1)
@@ -1617,90 +1613,90 @@ Event OnOptionSliderAccept(int option, float value)
 		SetOptionFlags(Advanced_EnduranceSkillRestoreSlider_OID, OPTION_FLAG_DISABLED, true)
 		SetToggleOptionValue(Advanced_EnduranceSkillRestore_OID, false)
 	elseif option == Meters_UIMeterDisplayTime_OID
-		_Frost_SettingMeterDisplayTime.SetValue(value/2)
+		_Frost_Setting_MeterDisplayTime.SetValue(value/2)
 		SetSliderOptionValue(Meters_UIMeterDisplayTime_OID, value, "{0}")
-		SaveSettingToCurrentProfile("meter_display_time", _Frost_SettingMeterDisplayTime.GetValueInt())
+		SaveSettingToCurrentProfile("meter_display_time", _Frost_Setting_MeterDisplayTime.GetValueInt())
 	elseif option == Meters_UIMeterOpacity_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			_Frost_SettingMeterExposureOpacity.SetValue(value)
+			_Frost_Setting_MeterExposureOpacity.SetValue(value)
 			SetSliderOptionValue(Meters_UIMeterOpacity_OID, value, "{0}%")
 			UpdateMeterConfiguration(0)
 			SaveSettingToCurrentProfileFloat("exposure_meter_opacity", value)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			_Frost_SettingMeterWetnessOpacity.SetValue(value)
+			_Frost_Setting_MeterWetnessOpacity.SetValue(value)
 			SetSliderOptionValue(Meters_UIMeterOpacity_OID, value, "{0}%")
 			UpdateMeterConfiguration(1)
 			SaveSettingToCurrentProfileFloat("wetness_meter_opacity", value)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			_Frost_SettingMeterWeathersenseOpacity.SetValue(value)
+			_Frost_Setting_MeterWeathersenseOpacity.SetValue(value)
 			SetSliderOptionValue(Meters_UIMeterOpacity_OID, value, "{0}%")
 			UpdateMeterConfiguration(2)
 			SaveSettingToCurrentProfileFloat("weathersense_meter_opacity", value)
 		endif
 	elseif option == Meters_UIMeterHeight_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			_Frost_SettingMeterExposureHeight.SetValue(value)
+			_Frost_Setting_MeterExposureHeight.SetValue(value)
 			SetSliderOptionValue(Meters_UIMeterHeight_OID, value, "{1}")
 			UpdateMeterConfiguration(0)
 			SaveSettingToCurrentProfileFloat("exposure_meter_height", value)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			_Frost_SettingMeterWetnessHeight.SetValue(value)
+			_Frost_Setting_MeterWetnessHeight.SetValue(value)
 			SetSliderOptionValue(Meters_UIMeterHeight_OID, value, "{1}")
 			UpdateMeterConfiguration(1)
 			SaveSettingToCurrentProfileFloat("wetness_meter_height", value)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			_Frost_SettingMeterWeathersenseHeight.SetValue(value)
+			_Frost_Setting_MeterWeathersenseHeight.SetValue(value)
 			SetSliderOptionValue(Meters_UIMeterHeight_OID, value, "{1}")
 			UpdateMeterConfiguration(2)
 			SaveSettingToCurrentProfileFloat("weathersense_meter_height", value)
 		endif
 	elseif option == Meters_UIMeterWidth_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			_Frost_SettingMeterExposureWidth.SetValue(value)
+			_Frost_Setting_MeterExposureWidth.SetValue(value)
 			SetSliderOptionValue(Meters_UIMeterWidth_OID, value, "{1}")
 			UpdateMeterConfiguration(0)
 			SaveSettingToCurrentProfileFloat("exposure_meter_width", value)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			_Frost_SettingMeterWetnessWidth.SetValue(value)
+			_Frost_Setting_MeterWetnessWidth.SetValue(value)
 			SetSliderOptionValue(Meters_UIMeterWidth_OID, value, "{1}")
 			UpdateMeterConfiguration(1)
 			SaveSettingToCurrentProfileFloat("wetness_meter_width", value)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			_Frost_SettingMeterWeathersenseWidth.SetValue(value)
+			_Frost_Setting_MeterWeathersenseWidth.SetValue(value)
 			SetSliderOptionValue(Meters_UIMeterWidth_OID, value, "{1}")
 			UpdateMeterConfiguration(2)
 			SaveSettingToCurrentProfileFloat("weathersense_meter_width", value)
 		endif
 	elseif option == Meters_UIMeterXPos_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			_Frost_SettingMeterExposureXPos.SetValue(value)
+			_Frost_Setting_MeterExposureXPos.SetValue(value)
 			SetSliderOptionValue(Meters_UIMeterXPos_OID, value, "{1}")
 			UpdateMeterConfiguration(0)
 			SaveSettingToCurrentProfileFloat("exposure_meter_xpos", value)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			_Frost_SettingMeterWetnessXPos.SetValue(value)
+			_Frost_Setting_MeterWetnessXPos.SetValue(value)
 			SetSliderOptionValue(Meters_UIMeterXPos_OID, value, "{1}")
 			UpdateMeterConfiguration(1)
 			SaveSettingToCurrentProfileFloat("wetness_meter_xpos", value)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			_Frost_SettingMeterWeathersenseXPos.SetValue(value)
+			_Frost_Setting_MeterWeathersenseXPos.SetValue(value)
 			SetSliderOptionValue(Meters_UIMeterXPos_OID, value, "{1}")
 			UpdateMeterConfiguration(2)
 			SaveSettingToCurrentProfileFloat("weathersense_meter_xpos", value)
 		endif
 	elseif option == Meters_UIMeterYPos_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			_Frost_SettingMeterExposureYPos.SetValue(value)
+			_Frost_Setting_MeterExposureYPos.SetValue(value)
 			SetSliderOptionValue(Meters_UIMeterYPos_OID, value, "{1}")
 			UpdateMeterConfiguration(0)
 			SaveSettingToCurrentProfileFloat("exposure_meter_ypos", value)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			_Frost_SettingMeterWetnessYPos.SetValue(value)
+			_Frost_Setting_MeterWetnessYPos.SetValue(value)
 			SetSliderOptionValue(Meters_UIMeterYPos_OID, value, "{1}")
 			UpdateMeterConfiguration(1)
 			SaveSettingToCurrentProfileFloat("wetness_meter_ypos", value)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			_Frost_SettingMeterWeathersenseYPos.SetValue(value)
+			_Frost_Setting_MeterWeathersenseYPos.SetValue(value)
 			SetSliderOptionValue(Meters_UIMeterYPos_OID, value, "{1}")
 			UpdateMeterConfiguration(2)
 			SaveSettingToCurrentProfileFloat("weathersense_meter_ypos", value)
@@ -1747,17 +1743,9 @@ Event OnOptionMenuOpen(int option)
 		SetMenuDialogOptions(profile_list)
 		SetMenuDialogStartIndex(_Frost_Setting_CurrentProfile.GetValueInt() - 1)
 		SetMenuDialogDefaultIndex(0)
-	elseif option == Interface_MeterAspectRatio_OID
-		SetMenuDialogOptions(AspectRatioList)
-		SetMenuDialogStartIndex(_Frost_Setting_MeterAspectRatio.GetValueInt())
-		SetMenuDialogDefaultIndex(0)
-	elseif option == Interface_MeterDisplayMode_OID
-		SetMenuDialogOptions(MeterDisplayModeList)
-		SetMenuDialogStartIndex(_Frost_Setting_MeterDisplayMode.GetValueInt())
-		SetMenuDialogDefaultIndex(2)
 	elseif option == Meters_UIMeterDisplay_OID
 		SetMenuDialogOptions(MeterDisplayList)
-		SetMenuDialogStartIndex(_Frost_SettingMeterDisplay_Contextual.GetValueInt())
+		SetMenuDialogStartIndex(_Frost_Setting_MeterDisplayMode.GetValueInt())
 		SetMenuDialogDefaultIndex(0)
 	elseif option == Meters_UIMeterLayout_OID
 		SetMenuDialogOptions(MeterLayoutList)
@@ -1766,43 +1754,43 @@ Event OnOptionMenuOpen(int option)
 	elseif option == Meters_UIMeterFillDirection_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
 			SetMenuDialogOptions(FillDirectionList)
-			SetMenuDialogStartIndex(_Frost_SettingMeterExposureFillDirection.GetValueInt())
+			SetMenuDialogStartIndex(_Frost_Setting_MeterExposureFillDirection.GetValueInt())
 			SetMenuDialogDefaultIndex(1)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
 			SetMenuDialogOptions(FillDirectionList)
-			SetMenuDialogStartIndex(_Frost_SettingMeterWetnessFillDirection.GetValueInt())
+			SetMenuDialogStartIndex(_Frost_Setting_MeterWetnessFillDirection.GetValueInt())
 			SetMenuDialogDefaultIndex(1)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
 			SetMenuDialogOptions(FillDirectionList)
-			SetMenuDialogStartIndex(_Frost_SettingMeterWeathersenseFillDirection.GetValueInt())
+			SetMenuDialogStartIndex(_Frost_Setting_MeterWeathersenseFillDirection.GetValueInt())
 			SetMenuDialogDefaultIndex(1)
 		endif
 	elseif option == Meters_UIMeterHAnchor_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
 			SetMenuDialogOptions(HorizontalAnchorList)
-			SetMenuDialogStartIndex(_Frost_SettingMeterExposureHAnchor.GetValueInt())
+			SetMenuDialogStartIndex(_Frost_Setting_MeterExposureHAnchor.GetValueInt())
 			SetMenuDialogDefaultIndex(1)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
 			SetMenuDialogOptions(HorizontalAnchorList)
-			SetMenuDialogStartIndex(_Frost_SettingMeterWetnessHAnchor.GetValueInt())
+			SetMenuDialogStartIndex(_Frost_Setting_MeterWetnessHAnchor.GetValueInt())
 			SetMenuDialogDefaultIndex(1)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
 			SetMenuDialogOptions(HorizontalAnchorList)
-			SetMenuDialogStartIndex(_Frost_SettingMeterWeathersenseHAnchor.GetValueInt())
+			SetMenuDialogStartIndex(_Frost_Setting_MeterWeathersenseHAnchor.GetValueInt())
 			SetMenuDialogDefaultIndex(1)
 		endif
 	elseif option == Meters_UIMeterVAnchor_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
 			SetMenuDialogOptions(VerticalAnchorList)
-			SetMenuDialogStartIndex(_Frost_SettingMeterExposureVAnchor.GetValueInt())
+			SetMenuDialogStartIndex(_Frost_Setting_MeterExposureVAnchor.GetValueInt())
 			SetMenuDialogDefaultIndex(1)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
 			SetMenuDialogOptions(VerticalAnchorList)
-			SetMenuDialogStartIndex(_Frost_SettingMeterWetnessVAnchor.GetValueInt())
+			SetMenuDialogStartIndex(_Frost_Setting_MeterWetnessVAnchor.GetValueInt())
 			SetMenuDialogDefaultIndex(1)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
 			SetMenuDialogOptions(VerticalAnchorList)
-			SetMenuDialogStartIndex(_Frost_SettingMeterWeathersenseVAnchor.GetValueInt())
+			SetMenuDialogStartIndex(_Frost_Setting_MeterWeathersenseVAnchor.GetValueInt())
 			SetMenuDialogDefaultIndex(1)
 		endif
 	else
@@ -1850,33 +1838,15 @@ Event OnOptionMenuAccept(int option, int index)
 			SwitchToProfile(index + 1)
 			ForcePageReset()
 		endif
-	elseif option == Interface_MeterAspectRatio_OID
-		SetMenuOptionValue(Interface_MeterAspectRatio_OID, AspectRatioList[index])
-		_Frost_Setting_MeterAspectRatio.SetValueInt(index)
-		GetInterfaceHandler().SetAspectRatio(index)
-		SaveSettingToCurrentProfile("meter_aspect_ratio", _Frost_Setting_MeterAspectRatio.GetValueInt())
 	elseif option == Interface_MeterDisplayMode_OID
 		SetMenuOptionValue(Interface_MeterDisplayMode_OID, MeterDisplayModeList[index])
 		_Frost_Setting_MeterDisplayMode.SetValueInt(index)
 		if index == 1
-			GetInterfaceHandler().ForceAllMeters()
+			ForceAllMeters()
 		else
-			GetInterfaceHandler().RemoveAllMeters()
+			RemoveAllMeters()
 		endif
 		SaveSettingToCurrentProfile("meter_display_mode", _Frost_Setting_MeterDisplayMode.GetValueInt())
-	elseif option == Meters_UIMeterDisplay_OID
-		SetMenuOptionValue(Meters_UIMeterDisplay_OID, MeterDisplayList[index])
-		_Frost_SettingMeterDisplay_Contextual.SetValueInt(index)
-		if index == 0
-			;@TODO
-			SendEvent_FrostfallRemoveExposureMeter()
-			SendEvent_FrostfallRemoveWetnessMeter()
-		else
-			;@TODO
-			SendEvent_ForceExposureMeterDisplay()
-			SendEvent_ForceWetnessMeterDisplay()
-		endif
-		SaveSettingToCurrentProfile("meter_display_mode", index)
 	elseif option == Meters_UIMeterLayout_OID
 		bool result = ShowMessage("$FrostfallInterfaceSettingUIMeterLayoutConfirm")
 		if result == true
@@ -1887,51 +1857,51 @@ Event OnOptionMenuAccept(int option, int index)
 		endif
 	elseif option == Meters_UIMeterFillDirection_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			_Frost_SettingMeterExposureFillDirection.SetValueInt(index)
+			_Frost_Setting_MeterExposureFillDirection.SetValueInt(index)
 			SetMenuOptionValue(Meters_UIMeterFillDirection_OID, FillDirectionList[index])
 			UpdateMeterConfiguration(0)
 			SaveSettingToCurrentProfile("exposure_meter_fill_direction", index)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			_Frost_SettingMeterWetnessFillDirection.SetValueInt(index)
+			_Frost_Setting_MeterWetnessFillDirection.SetValueInt(index)
 			SetMenuOptionValue(Meters_UIMeterFillDirection_OID, FillDirectionList[index])
 			UpdateMeterConfiguration(1)
 			SaveSettingToCurrentProfile("wetness_meter_fill_direction", index)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(index)
+			_Frost_Setting_MeterWeathersenseFillDirection.SetValueInt(index)
 			SetMenuOptionValue(Meters_UIMeterFillDirection_OID, FillDirectionList[index])
 			UpdateMeterConfiguration(2)
 			SaveSettingToCurrentProfile("weathersense_meter_fill_direction", index)
 		endif
 	elseif option == Meters_UIMeterHAnchor_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			_Frost_SettingMeterExposureHAnchor.SetValueInt(index)
+			_Frost_Setting_MeterExposureHAnchor.SetValueInt(index)
 			SetMenuOptionValue(Meters_UIMeterHAnchor_OID, HorizontalAnchorList[index])
 			UpdateMeterConfiguration(0)
 			SaveSettingToCurrentProfile("exposure_meter_hanchor", index)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			_Frost_SettingMeterWetnessHAnchor.SetValueInt(index)
+			_Frost_Setting_MeterWetnessHAnchor.SetValueInt(index)
 			SetMenuOptionValue(Meters_UIMeterHAnchor_OID, HorizontalAnchorList[index])
 			UpdateMeterConfiguration(1)
 			SaveSettingToCurrentProfile("wetness_meter_hanchor", index)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(index)
+			_Frost_Setting_MeterWeathersenseHAnchor.SetValueInt(index)
 			SetMenuOptionValue(Meters_UIMeterHAnchor_OID, HorizontalAnchorList[index])
 			UpdateMeterConfiguration(2)
 			SaveSettingToCurrentProfile("weathersense_meter_hanchor", index)
 		endif
 	elseif option == Meters_UIMeterVAnchor_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			_Frost_SettingMeterExposureVAnchor.SetValueInt(index)
+			_Frost_Setting_MeterExposureVAnchor.SetValueInt(index)
 			SetMenuOptionValue(Meters_UIMeterVAnchor_OID, VerticalAnchorList[index])
 			UpdateMeterConfiguration(0)
 			SaveSettingToCurrentProfile("exposure_meter_vanchor", index)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			_Frost_SettingMeterWetnessVAnchor.SetValueInt(index)
+			_Frost_Setting_MeterWetnessVAnchor.SetValueInt(index)
 			SetMenuOptionValue(Meters_UIMeterVAnchor_OID, VerticalAnchorList[index])
 			UpdateMeterConfiguration(1)
 			SaveSettingToCurrentProfile("wetness_meter_vanchor", index)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(index)
+			_Frost_Setting_MeterWeathersenseVAnchor.SetValueInt(index)
 			SetMenuOptionValue(Meters_UIMeterVAnchor_OID, VerticalAnchorList[index])
 			UpdateMeterConfiguration(2)
 			SaveSettingToCurrentProfile("weathersense_meter_vanchor", index)
@@ -1969,17 +1939,17 @@ EndEvent
 event OnOptionColorAccept(int option, int color)
 	if option == Meters_UIMeterColor_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			_Frost_SettingMeterExposureColor.SetValueInt(color)
+			_Frost_Setting_MeterExposureColor.SetValueInt(color)
 			SetColorOptionValue(option, color)
 			ExposureMeterHandler.SetMeterColors(color, -1)
 			SaveSettingToCurrentProfile("exposure_meter_color", color)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			_Frost_SettingMeterWetnessColor.SetValueInt(color)
+			_Frost_Setting_MeterWetnessColor.SetValueInt(color)
 			SetColorOptionValue(option, color)
 			WetnessMeterHandler.SetMeterColors(color, -1)
 			SaveSettingToCurrentProfile("wetness_meter_color", color)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			_Frost_SettingMeterWeathersenseColor.SetValueInt(color)
+			_Frost_Setting_MeterWeathersenseColor.SetValueInt(color)
 			SetColorOptionValue(option, color)
 			WeathersenseMeterHandler.SetMeterColors(color, -1)
 			SaveSettingToCurrentProfile("weathersense_meter_color", color)
@@ -2184,9 +2154,9 @@ function SwitchToProfile(int aiProfileIndex)
 	if val != -1
 		_Frost_Setting_MeterDisplayMode.SetValueInt(val)
 		if val == 1
-			GetInterfaceHandler().ForceAllMeters()
+			ForceAllMeters()
 		else
-			GetInterfaceHandler().RemoveAllMeters()
+			RemoveAllMeters()
 		endif
 	endif
 	val = LoadSettingFromProfile(aiProfileIndex, "meter_display_time")
@@ -3179,10 +3149,10 @@ int METER_BEING_CONFIGURED_WETNESS = 2
 int METER_BEING_CONFIGURED_WEATHERSENSE = 3
 
 function ApplyMeterPreset(int aiPresetIdx)
-	_Frost_SettingMeterExposureHeight.SetValue(NORMAL_METER_DEFAULT_HEIGHT)
-	_Frost_SettingMeterExposureWidth.SetValue(NORMAL_METER_DEFAULT_WIDTH)
-	_Frost_SettingMeterWetnessHeight.SetValue(NORMAL_METER_DEFAULT_HEIGHT)
-	_Frost_SettingMeterWetnessWidth.SetValue(NORMAL_METER_DEFAULT_WIDTH)
+	_Frost_Setting_MeterExposureHeight.SetValue(NORMAL_METER_DEFAULT_HEIGHT)
+	_Frost_Setting_MeterExposureWidth.SetValue(NORMAL_METER_DEFAULT_WIDTH)
+	_Frost_Setting_MeterWetnessHeight.SetValue(NORMAL_METER_DEFAULT_HEIGHT)
+	_Frost_Setting_MeterWetnessWidth.SetValue(NORMAL_METER_DEFAULT_WIDTH)
 
 	int w = Utility.GetINIInt("iSize W:Display")
 	int h = Utility.GetINIInt("iSize H:Display")
@@ -3209,208 +3179,208 @@ function ApplyMeterPreset(int aiPresetIdx)
 
 	if aiPresetIdx == 0
 		; 16:9 Bottom Left
-		_Frost_SettingMeterExposureFillDirection.SetValueInt(1)
-		_Frost_SettingMeterExposureHAnchor.SetValueInt(0)
-		_Frost_SettingMeterExposureVAnchor.SetValueInt(1)
-		_Frost_SettingMeterExposureXPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_9_X)
-		_Frost_SettingMeterExposureYPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_9_Y)
-		_Frost_SettingMeterWetnessFillDirection.SetValueInt(1)
-		_Frost_SettingMeterWetnessHAnchor.SetValueInt(0)
-		_Frost_SettingMeterWetnessVAnchor.SetValueInt(1)
-		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_9_X)
-		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_9_Y)
-		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(1)
-		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(0)
-		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(1)
-		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_9_X)
-		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_9_Y)
+		_Frost_Setting_MeterExposureFillDirection.SetValueInt(1)
+		_Frost_Setting_MeterExposureHAnchor.SetValueInt(0)
+		_Frost_Setting_MeterExposureVAnchor.SetValueInt(1)
+		_Frost_Setting_MeterExposureXPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_9_X)
+		_Frost_Setting_MeterExposureYPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_9_Y)
+		_Frost_Setting_MeterWetnessFillDirection.SetValueInt(1)
+		_Frost_Setting_MeterWetnessHAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWetnessVAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_9_X)
+		_Frost_Setting_MeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_9_Y)
+		_Frost_Setting_MeterWeathersenseFillDirection.SetValueInt(1)
+		_Frost_Setting_MeterWeathersenseHAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWeathersenseVAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_9_X)
+		_Frost_Setting_MeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_9_Y)
 	elseif aiPresetIdx == 1
 		; 16:9 Bottom Right
-		_Frost_SettingMeterExposureFillDirection.SetValueInt(0)
-		_Frost_SettingMeterExposureHAnchor.SetValueInt(1)
-		_Frost_SettingMeterExposureVAnchor.SetValueInt(1)
-		_Frost_SettingMeterExposureXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_X)
-		_Frost_SettingMeterExposureYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_Y)
-		_Frost_SettingMeterWetnessFillDirection.SetValueInt(0)
-		_Frost_SettingMeterWetnessHAnchor.SetValueInt(1)
-		_Frost_SettingMeterWetnessVAnchor.SetValueInt(1)
-		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_X)
-		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_Y)
-		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(0)
-		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(1)
-		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(1)
-		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_X)
-		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_Y)
+		_Frost_Setting_MeterExposureFillDirection.SetValueInt(0)
+		_Frost_Setting_MeterExposureHAnchor.SetValueInt(1)
+		_Frost_Setting_MeterExposureVAnchor.SetValueInt(1)
+		_Frost_Setting_MeterExposureXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_X)
+		_Frost_Setting_MeterExposureYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_Y)
+		_Frost_Setting_MeterWetnessFillDirection.SetValueInt(0)
+		_Frost_Setting_MeterWetnessHAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWetnessVAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_X)
+		_Frost_Setting_MeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_Y)
+		_Frost_Setting_MeterWeathersenseFillDirection.SetValueInt(0)
+		_Frost_Setting_MeterWeathersenseHAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWeathersenseVAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_X)
+		_Frost_Setting_MeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_9_Y)
 	elseif aiPresetIdx == 2
 		; 16:9 Top Left
-		_Frost_SettingMeterExposureFillDirection.SetValueInt(1)
-		_Frost_SettingMeterExposureHAnchor.SetValueInt(0)
-		_Frost_SettingMeterExposureVAnchor.SetValueInt(0)
-		_Frost_SettingMeterExposureXPos.SetValue(NORMAL_METER_TOPLEFT_16_9_X)
-		_Frost_SettingMeterExposureYPos.SetValue(NORMAL_METER_TOPLEFT_16_9_Y)
-		_Frost_SettingMeterWetnessFillDirection.SetValueInt(1)
-		_Frost_SettingMeterWetnessHAnchor.SetValueInt(0)
-		_Frost_SettingMeterWetnessVAnchor.SetValueInt(0)
-		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_TOPLEFT_16_9_X)
-		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_TOPLEFT_16_9_Y)
-		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(1)
-		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(0)
-		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(0)
-		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_TOPLEFT_16_9_X)
-		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_TOPLEFT_16_9_Y)
+		_Frost_Setting_MeterExposureFillDirection.SetValueInt(1)
+		_Frost_Setting_MeterExposureHAnchor.SetValueInt(0)
+		_Frost_Setting_MeterExposureVAnchor.SetValueInt(0)
+		_Frost_Setting_MeterExposureXPos.SetValue(NORMAL_METER_TOPLEFT_16_9_X)
+		_Frost_Setting_MeterExposureYPos.SetValue(NORMAL_METER_TOPLEFT_16_9_Y)
+		_Frost_Setting_MeterWetnessFillDirection.SetValueInt(1)
+		_Frost_Setting_MeterWetnessHAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWetnessVAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWetnessXPos.SetValue(NORMAL_METER_TOPLEFT_16_9_X)
+		_Frost_Setting_MeterWetnessYPos.SetValue(NORMAL_METER_TOPLEFT_16_9_Y)
+		_Frost_Setting_MeterWeathersenseFillDirection.SetValueInt(1)
+		_Frost_Setting_MeterWeathersenseHAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWeathersenseVAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWeathersenseXPos.SetValue(NORMAL_METER_TOPLEFT_16_9_X)
+		_Frost_Setting_MeterWeathersenseYPos.SetValue(NORMAL_METER_TOPLEFT_16_9_Y)
 	elseif aiPresetIdx == 3
 		; 16:9 Top Right
-		_Frost_SettingMeterExposureFillDirection.SetValueInt(0)
-		_Frost_SettingMeterExposureHAnchor.SetValueInt(1)
-		_Frost_SettingMeterExposureVAnchor.SetValueInt(0)
-		_Frost_SettingMeterExposureXPos.SetValue(NORMAL_METER_TOPRIGHT_16_9_X)
-		_Frost_SettingMeterExposureYPos.SetValue(NORMAL_METER_TOPRIGHT_16_9_Y)
-		_Frost_SettingMeterWetnessFillDirection.SetValueInt(0)
-		_Frost_SettingMeterWetnessHAnchor.SetValueInt(1)
-		_Frost_SettingMeterWetnessVAnchor.SetValueInt(0)
-		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_TOPRIGHT_16_9_X)
-		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_TOPRIGHT_16_9_Y)
-		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(0)
-		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(1)
-		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(0)
-		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_TOPRIGHT_16_9_X)
-		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_TOPRIGHT_16_9_Y)
+		_Frost_Setting_MeterExposureFillDirection.SetValueInt(0)
+		_Frost_Setting_MeterExposureHAnchor.SetValueInt(1)
+		_Frost_Setting_MeterExposureVAnchor.SetValueInt(0)
+		_Frost_Setting_MeterExposureXPos.SetValue(NORMAL_METER_TOPRIGHT_16_9_X)
+		_Frost_Setting_MeterExposureYPos.SetValue(NORMAL_METER_TOPRIGHT_16_9_Y)
+		_Frost_Setting_MeterWetnessFillDirection.SetValueInt(0)
+		_Frost_Setting_MeterWetnessHAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWetnessVAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWetnessXPos.SetValue(NORMAL_METER_TOPRIGHT_16_9_X)
+		_Frost_Setting_MeterWetnessYPos.SetValue(NORMAL_METER_TOPRIGHT_16_9_Y)
+		_Frost_Setting_MeterWeathersenseFillDirection.SetValueInt(0)
+		_Frost_Setting_MeterWeathersenseHAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWeathersenseVAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWeathersenseXPos.SetValue(NORMAL_METER_TOPRIGHT_16_9_X)
+		_Frost_Setting_MeterWeathersenseYPos.SetValue(NORMAL_METER_TOPRIGHT_16_9_Y)
 	elseif aiPresetIdx == 4
 		; 16:10 Bottom Left
-		_Frost_SettingMeterExposureFillDirection.SetValueInt(1)
-		_Frost_SettingMeterExposureHAnchor.SetValueInt(0)
-		_Frost_SettingMeterExposureVAnchor.SetValueInt(1)
-		_Frost_SettingMeterExposureXPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_10_X)
-		_Frost_SettingMeterExposureYPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_10_Y)
-		_Frost_SettingMeterWetnessFillDirection.SetValueInt(1)
-		_Frost_SettingMeterWetnessHAnchor.SetValueInt(0)
-		_Frost_SettingMeterWetnessVAnchor.SetValueInt(1)
-		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_10_X)
-		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_10_Y)
-		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(1)
-		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(0)
-		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(1)
-		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_10_X)
-		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_10_Y)
+		_Frost_Setting_MeterExposureFillDirection.SetValueInt(1)
+		_Frost_Setting_MeterExposureHAnchor.SetValueInt(0)
+		_Frost_Setting_MeterExposureVAnchor.SetValueInt(1)
+		_Frost_Setting_MeterExposureXPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_10_X)
+		_Frost_Setting_MeterExposureYPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_10_Y)
+		_Frost_Setting_MeterWetnessFillDirection.SetValueInt(1)
+		_Frost_Setting_MeterWetnessHAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWetnessVAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_10_X)
+		_Frost_Setting_MeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_10_Y)
+		_Frost_Setting_MeterWeathersenseFillDirection.SetValueInt(1)
+		_Frost_Setting_MeterWeathersenseHAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWeathersenseVAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_10_X)
+		_Frost_Setting_MeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMLEFT_16_10_Y)
 	elseif aiPresetIdx == 5
 		; 16:10 Bottom Right
-		_Frost_SettingMeterExposureFillDirection.SetValueInt(0)
-		_Frost_SettingMeterExposureHAnchor.SetValueInt(1)
-		_Frost_SettingMeterExposureVAnchor.SetValueInt(1)
-		_Frost_SettingMeterExposureXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_10_X)
-		_Frost_SettingMeterExposureYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_10_Y)
-		_Frost_SettingMeterWetnessFillDirection.SetValueInt(0)
-		_Frost_SettingMeterWetnessHAnchor.SetValueInt(1)
-		_Frost_SettingMeterWetnessVAnchor.SetValueInt(1)
-		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_10_X)
-		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_10_Y)
-		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(0)
-		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(1)
-		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(1)
-		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_10_X)
-		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_10_Y)
+		_Frost_Setting_MeterExposureFillDirection.SetValueInt(0)
+		_Frost_Setting_MeterExposureHAnchor.SetValueInt(1)
+		_Frost_Setting_MeterExposureVAnchor.SetValueInt(1)
+		_Frost_Setting_MeterExposureXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_10_X)
+		_Frost_Setting_MeterExposureYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_10_Y)
+		_Frost_Setting_MeterWetnessFillDirection.SetValueInt(0)
+		_Frost_Setting_MeterWetnessHAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWetnessVAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_10_X)
+		_Frost_Setting_MeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_10_Y)
+		_Frost_Setting_MeterWeathersenseFillDirection.SetValueInt(0)
+		_Frost_Setting_MeterWeathersenseHAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWeathersenseVAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_10_X)
+		_Frost_Setting_MeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_16_10_Y)
 	elseif aiPresetIdx == 6
 		; 16:10 Top Left
-		_Frost_SettingMeterExposureFillDirection.SetValueInt(1)
-		_Frost_SettingMeterExposureHAnchor.SetValueInt(0)
-		_Frost_SettingMeterExposureVAnchor.SetValueInt(0)
-		_Frost_SettingMeterExposureXPos.SetValue(NORMAL_METER_TOPLEFT_16_10_X)
-		_Frost_SettingMeterExposureYPos.SetValue(NORMAL_METER_TOPLEFT_16_10_Y)
-		_Frost_SettingMeterWetnessFillDirection.SetValueInt(1)
-		_Frost_SettingMeterWetnessHAnchor.SetValueInt(0)
-		_Frost_SettingMeterWetnessVAnchor.SetValueInt(0)
-		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_TOPLEFT_16_10_X)
-		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_TOPLEFT_16_10_Y)
-		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(1)
-		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(0)
-		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(0)
-		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_TOPLEFT_16_10_X)
-		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_TOPLEFT_16_10_Y)
+		_Frost_Setting_MeterExposureFillDirection.SetValueInt(1)
+		_Frost_Setting_MeterExposureHAnchor.SetValueInt(0)
+		_Frost_Setting_MeterExposureVAnchor.SetValueInt(0)
+		_Frost_Setting_MeterExposureXPos.SetValue(NORMAL_METER_TOPLEFT_16_10_X)
+		_Frost_Setting_MeterExposureYPos.SetValue(NORMAL_METER_TOPLEFT_16_10_Y)
+		_Frost_Setting_MeterWetnessFillDirection.SetValueInt(1)
+		_Frost_Setting_MeterWetnessHAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWetnessVAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWetnessXPos.SetValue(NORMAL_METER_TOPLEFT_16_10_X)
+		_Frost_Setting_MeterWetnessYPos.SetValue(NORMAL_METER_TOPLEFT_16_10_Y)
+		_Frost_Setting_MeterWeathersenseFillDirection.SetValueInt(1)
+		_Frost_Setting_MeterWeathersenseHAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWeathersenseVAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWeathersenseXPos.SetValue(NORMAL_METER_TOPLEFT_16_10_X)
+		_Frost_Setting_MeterWeathersenseYPos.SetValue(NORMAL_METER_TOPLEFT_16_10_Y)
 	elseif aiPresetIdx == 7
 		; 16:10 Top Right
-		_Frost_SettingMeterExposureFillDirection.SetValueInt(0)
-		_Frost_SettingMeterExposureHAnchor.SetValueInt(1)
-		_Frost_SettingMeterExposureVAnchor.SetValueInt(0)
-		_Frost_SettingMeterExposureXPos.SetValue(NORMAL_METER_TOPRIGHT_16_10_X)
-		_Frost_SettingMeterExposureYPos.SetValue(NORMAL_METER_TOPRIGHT_16_10_Y)
-		_Frost_SettingMeterWetnessFillDirection.SetValueInt(0)
-		_Frost_SettingMeterWetnessHAnchor.SetValueInt(1)
-		_Frost_SettingMeterWetnessVAnchor.SetValueInt(0)
-		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_TOPRIGHT_16_10_X)
-		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_TOPRIGHT_16_10_Y)
-		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(0)
-		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(1)
-		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(0)
-		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_TOPRIGHT_16_10_X)
-		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_TOPRIGHT_16_10_Y)
+		_Frost_Setting_MeterExposureFillDirection.SetValueInt(0)
+		_Frost_Setting_MeterExposureHAnchor.SetValueInt(1)
+		_Frost_Setting_MeterExposureVAnchor.SetValueInt(0)
+		_Frost_Setting_MeterExposureXPos.SetValue(NORMAL_METER_TOPRIGHT_16_10_X)
+		_Frost_Setting_MeterExposureYPos.SetValue(NORMAL_METER_TOPRIGHT_16_10_Y)
+		_Frost_Setting_MeterWetnessFillDirection.SetValueInt(0)
+		_Frost_Setting_MeterWetnessHAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWetnessVAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWetnessXPos.SetValue(NORMAL_METER_TOPRIGHT_16_10_X)
+		_Frost_Setting_MeterWetnessYPos.SetValue(NORMAL_METER_TOPRIGHT_16_10_Y)
+		_Frost_Setting_MeterWeathersenseFillDirection.SetValueInt(0)
+		_Frost_Setting_MeterWeathersenseHAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWeathersenseVAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWeathersenseXPos.SetValue(NORMAL_METER_TOPRIGHT_16_10_X)
+		_Frost_Setting_MeterWeathersenseYPos.SetValue(NORMAL_METER_TOPRIGHT_16_10_Y)
 	elseif aiPresetIdx == 8
 		; 4:3 Bottom Left
-		_Frost_SettingMeterExposureFillDirection.SetValueInt(1)
-		_Frost_SettingMeterExposureHAnchor.SetValueInt(0)
-		_Frost_SettingMeterExposureVAnchor.SetValueInt(1)
-		_Frost_SettingMeterExposureXPos.SetValue(NORMAL_METER_BOTTOMLEFT_4_3_X)
-		_Frost_SettingMeterExposureYPos.SetValue(NORMAL_METER_BOTTOMLEFT_4_3_Y)
-		_Frost_SettingMeterWetnessFillDirection.SetValueInt(1)
-		_Frost_SettingMeterWetnessHAnchor.SetValueInt(0)
-		_Frost_SettingMeterWetnessVAnchor.SetValueInt(1)
-		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMLEFT_4_3_X)
-		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMLEFT_4_3_Y)
-		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(1)
-		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(0)
-		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(1)
-		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMLEFT_4_3_X)
-		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMLEFT_4_3_Y)
+		_Frost_Setting_MeterExposureFillDirection.SetValueInt(1)
+		_Frost_Setting_MeterExposureHAnchor.SetValueInt(0)
+		_Frost_Setting_MeterExposureVAnchor.SetValueInt(1)
+		_Frost_Setting_MeterExposureXPos.SetValue(NORMAL_METER_BOTTOMLEFT_4_3_X)
+		_Frost_Setting_MeterExposureYPos.SetValue(NORMAL_METER_BOTTOMLEFT_4_3_Y)
+		_Frost_Setting_MeterWetnessFillDirection.SetValueInt(1)
+		_Frost_Setting_MeterWetnessHAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWetnessVAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMLEFT_4_3_X)
+		_Frost_Setting_MeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMLEFT_4_3_Y)
+		_Frost_Setting_MeterWeathersenseFillDirection.SetValueInt(1)
+		_Frost_Setting_MeterWeathersenseHAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWeathersenseVAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMLEFT_4_3_X)
+		_Frost_Setting_MeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMLEFT_4_3_Y)
 	elseif aiPresetIdx == 9
 		; 4:3 Bottom Right
-		_Frost_SettingMeterExposureFillDirection.SetValueInt(0)
-		_Frost_SettingMeterExposureHAnchor.SetValueInt(1)
-		_Frost_SettingMeterExposureVAnchor.SetValueInt(1)
-		_Frost_SettingMeterExposureXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_4_3_X)
-		_Frost_SettingMeterExposureYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_4_3_Y)
-		_Frost_SettingMeterWetnessFillDirection.SetValueInt(0)
-		_Frost_SettingMeterWetnessHAnchor.SetValueInt(1)
-		_Frost_SettingMeterWetnessVAnchor.SetValueInt(1)
-		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_4_3_X)
-		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_4_3_Y)
-		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(0)
-		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(1)
-		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(1)
-		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_4_3_X)
-		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_4_3_Y)
+		_Frost_Setting_MeterExposureFillDirection.SetValueInt(0)
+		_Frost_Setting_MeterExposureHAnchor.SetValueInt(1)
+		_Frost_Setting_MeterExposureVAnchor.SetValueInt(1)
+		_Frost_Setting_MeterExposureXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_4_3_X)
+		_Frost_Setting_MeterExposureYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_4_3_Y)
+		_Frost_Setting_MeterWetnessFillDirection.SetValueInt(0)
+		_Frost_Setting_MeterWetnessHAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWetnessVAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWetnessXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_4_3_X)
+		_Frost_Setting_MeterWetnessYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_4_3_Y)
+		_Frost_Setting_MeterWeathersenseFillDirection.SetValueInt(0)
+		_Frost_Setting_MeterWeathersenseHAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWeathersenseVAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWeathersenseXPos.SetValue(NORMAL_METER_BOTTOMRIGHT_4_3_X)
+		_Frost_Setting_MeterWeathersenseYPos.SetValue(NORMAL_METER_BOTTOMRIGHT_4_3_Y)
 	elseif aiPresetIdx == 10
 		; 4:3 Top Left
-		_Frost_SettingMeterExposureFillDirection.SetValueInt(1)
-		_Frost_SettingMeterExposureHAnchor.SetValueInt(0)
-		_Frost_SettingMeterExposureVAnchor.SetValueInt(0)
-		_Frost_SettingMeterExposureXPos.SetValue(NORMAL_METER_TOPLEFT_4_3_X)
-		_Frost_SettingMeterExposureYPos.SetValue(NORMAL_METER_TOPLEFT_4_3_Y)
-		_Frost_SettingMeterWetnessFillDirection.SetValueInt(1)
-		_Frost_SettingMeterWetnessHAnchor.SetValueInt(0)
-		_Frost_SettingMeterWetnessVAnchor.SetValueInt(0)
-		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_TOPLEFT_4_3_X)
-		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_TOPLEFT_4_3_Y)
-		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(1)
-		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(0)
-		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(0)
-		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_TOPLEFT_4_3_X)
-		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_TOPLEFT_4_3_Y)
+		_Frost_Setting_MeterExposureFillDirection.SetValueInt(1)
+		_Frost_Setting_MeterExposureHAnchor.SetValueInt(0)
+		_Frost_Setting_MeterExposureVAnchor.SetValueInt(0)
+		_Frost_Setting_MeterExposureXPos.SetValue(NORMAL_METER_TOPLEFT_4_3_X)
+		_Frost_Setting_MeterExposureYPos.SetValue(NORMAL_METER_TOPLEFT_4_3_Y)
+		_Frost_Setting_MeterWetnessFillDirection.SetValueInt(1)
+		_Frost_Setting_MeterWetnessHAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWetnessVAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWetnessXPos.SetValue(NORMAL_METER_TOPLEFT_4_3_X)
+		_Frost_Setting_MeterWetnessYPos.SetValue(NORMAL_METER_TOPLEFT_4_3_Y)
+		_Frost_Setting_MeterWeathersenseFillDirection.SetValueInt(1)
+		_Frost_Setting_MeterWeathersenseHAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWeathersenseVAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWeathersenseXPos.SetValue(NORMAL_METER_TOPLEFT_4_3_X)
+		_Frost_Setting_MeterWeathersenseYPos.SetValue(NORMAL_METER_TOPLEFT_4_3_Y)
 	elseif aiPresetIdx == 11
 		; 4:3 Top Right
-		_Frost_SettingMeterExposureFillDirection.SetValueInt(0)
-		_Frost_SettingMeterExposureHAnchor.SetValueInt(1)
-		_Frost_SettingMeterExposureVAnchor.SetValueInt(0)
-		_Frost_SettingMeterExposureXPos.SetValue(NORMAL_METER_TOPRIGHT_4_3_X)
-		_Frost_SettingMeterExposureYPos.SetValue(NORMAL_METER_TOPRIGHT_4_3_Y)
-		_Frost_SettingMeterWetnessFillDirection.SetValueInt(0)
-		_Frost_SettingMeterWetnessHAnchor.SetValueInt(1)
-		_Frost_SettingMeterWetnessVAnchor.SetValueInt(0)
-		_Frost_SettingMeterWetnessXPos.SetValue(NORMAL_METER_TOPRIGHT_4_3_X)
-		_Frost_SettingMeterWetnessYPos.SetValue(NORMAL_METER_TOPRIGHT_4_3_Y)
-		_Frost_SettingMeterWeathersenseFillDirection.SetValueInt(0)
-		_Frost_SettingMeterWeathersenseHAnchor.SetValueInt(1)
-		_Frost_SettingMeterWeathersenseVAnchor.SetValueInt(0)
-		_Frost_SettingMeterWeathersenseXPos.SetValue(NORMAL_METER_TOPRIGHT_4_3_X)
-		_Frost_SettingMeterWeathersenseYPos.SetValue(NORMAL_METER_TOPRIGHT_4_3_Y)
+		_Frost_Setting_MeterExposureFillDirection.SetValueInt(0)
+		_Frost_Setting_MeterExposureHAnchor.SetValueInt(1)
+		_Frost_Setting_MeterExposureVAnchor.SetValueInt(0)
+		_Frost_Setting_MeterExposureXPos.SetValue(NORMAL_METER_TOPRIGHT_4_3_X)
+		_Frost_Setting_MeterExposureYPos.SetValue(NORMAL_METER_TOPRIGHT_4_3_Y)
+		_Frost_Setting_MeterWetnessFillDirection.SetValueInt(0)
+		_Frost_Setting_MeterWetnessHAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWetnessVAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWetnessXPos.SetValue(NORMAL_METER_TOPRIGHT_4_3_X)
+		_Frost_Setting_MeterWetnessYPos.SetValue(NORMAL_METER_TOPRIGHT_4_3_Y)
+		_Frost_Setting_MeterWeathersenseFillDirection.SetValueInt(0)
+		_Frost_Setting_MeterWeathersenseHAnchor.SetValueInt(1)
+		_Frost_Setting_MeterWeathersenseVAnchor.SetValueInt(0)
+		_Frost_Setting_MeterWeathersenseXPos.SetValue(NORMAL_METER_TOPRIGHT_4_3_X)
+		_Frost_Setting_MeterWeathersenseYPos.SetValue(NORMAL_METER_TOPRIGHT_4_3_Y)
 	endif
 	
 	UpdateMeterConfiguration(0)
@@ -3450,32 +3420,44 @@ endFunction
 function UpdateMeterConfiguration(int aiMeterIdx)
 	if aiMeterIdx == 0
 		; Exposure
-		ConfigureMeter(0, _Frost_SettingMeterExposureFillDirection.GetValueInt(), 	\
-						  _Frost_SettingMeterExposureHAnchor.GetValueInt(),			\
-						  _Frost_SettingMeterExposureVAnchor.GetValueInt(),			\
-						  _Frost_SettingMeterExposureXPos.GetValue(),				\
-						  _Frost_SettingMeterExposureYPos.GetValue(),				\
-						  _Frost_SettingMeterExposureHeight.GetValue(),				\
-						  _Frost_SettingMeterExposureWidth.GetValue())
+		ConfigureMeter(0, _Frost_Setting_MeterExposureFillDirection.GetValueInt(), 	\
+						  _Frost_Setting_MeterExposureHAnchor.GetValueInt(),			\
+						  _Frost_Setting_MeterExposureVAnchor.GetValueInt(),			\
+						  _Frost_Setting_MeterExposureXPos.GetValue(),				\
+						  _Frost_Setting_MeterExposureYPos.GetValue(),				\
+						  _Frost_Setting_MeterExposureHeight.GetValue(),				\
+						  _Frost_Setting_MeterExposureWidth.GetValue())
 	elseif aiMeterIdx == 1
 		; Wetness
-		ConfigureMeter(1, _Frost_SettingMeterWetnessFillDirection.GetValueInt(), 	\
-						  _Frost_SettingMeterWetnessHAnchor.GetValueInt(),			\
-						  _Frost_SettingMeterWetnessVAnchor.GetValueInt(),			\
-						  _Frost_SettingMeterWetnessXPos.GetValue(),				\
-						  _Frost_SettingMeterWetnessYPos.GetValue(),				\
-						  _Frost_SettingMeterWetnessHeight.GetValue(),				\
-						  _Frost_SettingMeterWetnessWidth.GetValue())
+		ConfigureMeter(1, _Frost_Setting_MeterWetnessFillDirection.GetValueInt(), 	\
+						  _Frost_Setting_MeterWetnessHAnchor.GetValueInt(),			\
+						  _Frost_Setting_MeterWetnessVAnchor.GetValueInt(),			\
+						  _Frost_Setting_MeterWetnessXPos.GetValue(),				\
+						  _Frost_Setting_MeterWetnessYPos.GetValue(),				\
+						  _Frost_Setting_MeterWetnessHeight.GetValue(),				\
+						  _Frost_Setting_MeterWetnessWidth.GetValue())
 	elseif aiMeterIdx == 2
 		; Weathersense
-		ConfigureMeter(2, _Frost_SettingMeterWeathersenseFillDirection.GetValueInt(), 	\
-						  _Frost_SettingMeterWeathersenseHAnchor.GetValueInt(),			\
-						  _Frost_SettingMeterWeathersenseVAnchor.GetValueInt(),			\
-						  _Frost_SettingMeterWeathersenseXPos.GetValue(),				\
-						  _Frost_SettingMeterWeathersenseYPos.GetValue(),				\
-						  _Frost_SettingMeterWeathersenseHeight.GetValue(),				\
-						  _Frost_SettingMeterWeathersenseWidth.GetValue())
+		ConfigureMeter(2, _Frost_Setting_MeterWeathersenseFillDirection.GetValueInt(), 	\
+						  _Frost_Setting_MeterWeathersenseHAnchor.GetValueInt(),			\
+						  _Frost_Setting_MeterWeathersenseVAnchor.GetValueInt(),			\
+						  _Frost_Setting_MeterWeathersenseXPos.GetValue(),				\
+						  _Frost_Setting_MeterWeathersenseYPos.GetValue(),				\
+						  _Frost_Setting_MeterWeathersenseHeight.GetValue(),				\
+						  _Frost_Setting_MeterWeathersenseWidth.GetValue())
 	endif
+endFunction
+
+function RemoveAllMeters()
+	SendEvent_FrostfallRemoveExposureMeter()
+	SendEvent_FrostfallRemoveWetnessMeter()
+	SendEvent_FrostfallRemoveWeathersenseMeter()
+endFunction
+
+function ForceAllMeters()
+	SendEvent_ForceExposureMeterDisplay()
+	SendEvent_ForceWetnessMeterDisplay()
+	SendEvent_ForceWeathersenseMeterDisplay()
 endFunction
 
 function SendEvent_FrostfallRemoveExposureMeter()
@@ -3487,6 +3469,13 @@ endFunction
 
 function SendEvent_FrostfallRemoveWetnessMeter()
 	int handle = ModEvent.Create("Frostfall_RemoveWetnessMeter")
+    if handle
+        ModEvent.Send(handle)
+    endif
+endFunction
+
+function SendEvent_FrostfallRemoveWeathersenseMeter()
+	int handle = ModEvent.Create("Frostfall_RemoveWeathersenseMeter")
     if handle
         ModEvent.Send(handle)
     endif
@@ -3508,6 +3497,18 @@ function SendEvent_ForceWetnessMeterDisplay(bool abFlash = false)
 	endif
 endFunction
 
+function SendEvent_ForceWeathersenseMeterDisplay(bool abFlash = false)
+	int handle = ModEvent.Create("Frostfall_ForceWeathersenseMeterDisplay")
+	if handle
+		ModEvent.PushBool(handle, abFlash)
+		ModEvent.Send(handle)
+	endif
+endFunction
+
 ; DEPRECATED
+GlobalVariable property _Frost_Setting_MeterOpacity auto
+{This setting is deprecated as of Frostfall 3.1.}
+GlobalVariable property _Frost_Setting_MeterAspectRatio auto
+{This setting is deprecated as of Frostfall 3.1.}
 GlobalVariable property _Frost_Setting_1PAnimationAllowed auto
 {This setting is deprecated as of Frostfall 3.0.1.}

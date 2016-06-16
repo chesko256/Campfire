@@ -542,10 +542,6 @@ function Upgrade_3_0_2()
 	MGRitualConjurationBooks.AddForm(_Frost_SpellTomeConjureShelterGreater, 1, 1)
 	LItemScroll100Skill.AddForm(_Frost_ScrollConjureShelterGreater, 1, 1)
 
-	; Set the Weathersense meter color.
-	_Frost_InterfaceHandler inf = FrostUtil.GetInterfaceHandler()
-	inf.WeathersenseMeter.SetColors(inf._Frost_ExposureMeterColorWarm_Light.GetValueInt(), inf._Frost_ExposureMeterColorWarm_Light.GetValueInt())
-
 	trace("[Frostfall] Upgraded to 3.0.2.")
 	_Frost_Upgraded_3_0_2.SetValueInt(2)
 endFunction
