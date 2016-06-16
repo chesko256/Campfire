@@ -114,7 +114,7 @@ Event StopFrostfall()
 		Game.EnableFastTravel()
 	endif
 	PlayerRef.RemoveSpell(_Frost_NoWait_Spell)
-	GetInterfaceHandler().RemoveAllMeters()
+	RemoveAllMeters()
 	UnregisterCampfireSkill()
 endEvent
 
@@ -232,4 +232,31 @@ function UnregisterCampfireSkill()
 	else
 		debug.trace("[Campfire] ERROR: Unable to register Campfire Skill System for Frostfall.esp. Campfire was not found or the version loaded is not compatible. Expected CampUtil API 4 or higher, got " + CampfireAPIVersion.GetValueInt())
 	endif
+endFunction
+
+function RemoveAllMeters()
+	SendEvent_FrostfallRemoveExposureMeter()
+	SendEvent_FrostfallRemoveWetnessMeter()
+	SendEvent_FrostfallRemoveWeathersenseMeter()
+endFunction
+
+function SendEvent_FrostfallRemoveExposureMeter()
+	int handle = ModEvent.Create("Frostfall_RemoveExposureMeter")
+    if handle
+        ModEvent.Send(handle)
+    endif
+endFunction
+
+function SendEvent_FrostfallRemoveWetnessMeter()
+	int handle = ModEvent.Create("Frostfall_RemoveWetnessMeter")
+    if handle
+        ModEvent.Send(handle)
+    endif
+endFunction
+
+function SendEvent_FrostfallRemoveWeathersenseMeter()
+	int handle = ModEvent.Create("Frostfall_RemoveWeathersenseMeter")
+    if handle
+        ModEvent.Send(handle)
+    endif
 endFunction
