@@ -1041,7 +1041,7 @@ Event CampfirePerkPurchased()
 endEvent
 
 function SendEvent_ForceExposureMeterDisplay(bool flash = false)
-	int handle = ModEvent.Create("Frost_ForceExposureMeterDisplay")
+	int handle = ModEvent.Create("Frostfall_ForceExposureMeterDisplay")
 	if handle
 		ModEvent.PushBool(handle, flash)
 		ModEvent.Send(handle)
@@ -1049,7 +1049,7 @@ function SendEvent_ForceExposureMeterDisplay(bool flash = false)
 endFunction
 
 function SendEvent_UpdateExposureMeter()
-	int handle = ModEvent.Create("Frost_UpdateExposureMeter")
+	int handle = ModEvent.Create("Frostfall_UpdateExposureMeter")
 	if handle
 		ModEvent.Send(handle)
 	endif

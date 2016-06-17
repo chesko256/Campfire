@@ -44,6 +44,33 @@ _Frost_InterfaceHandler function GetInterfaceHandler() global
     return Frostfall.Interface
 endFunction
 
+_Frost_ExposureMeterInterfaceHandler function GetExposureMeterHandler() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.ExposureMeterHandler
+endFunction
+
+_Frost_WetnessMeterInterfaceHandler function GetWetnessMeterHandler() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.WetnessMeterHandler
+endFunction
+
+_Frost_WeatherMeterInterfaceHandler function GetWeathersenseMeterHandler() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.WeathersenseMeterHandler
+endFunction
+
 _Frost_ArmorProtectionDatastoreHandler function GetClothingDatastoreHandler() global
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none

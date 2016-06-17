@@ -17,6 +17,7 @@ GlobalVariable property _Frost_RegionDetect_ForceUpdate auto
 GlobalVariable property _Frost_Setting_DisplayTutorials auto
 GlobalVariable property _Frost_HelpDone_Cold auto
 GlobalVariable property FrostfallCurrentTemperatureReadOnly auto
+GlobalVariable property _Frost_AttributeMeterTempLevel auto
 
 FormList property _Frost_WorldspacesExteriorPineForest auto
 FormList property _Frost_WorldspacesExteriorVolcanicTundra auto
@@ -526,29 +527,28 @@ endFunction
 function SendEvent_UpdateWeathersenseMeter(int temp)
 	int temp_level
 	if temp >= 18
-		temp_level = 10
+		_Frost_AttributeMeterTempLevel.SetValueInt(10)
 	elseif temp < 18 && temp >= 15
-		temp_level = 9
+		_Frost_AttributeMeterTempLevel.SetValueInt(9)
 	elseif temp < 15 && temp > 10
-		temp_level = 8
+		_Frost_AttributeMeterTempLevel.SetValueInt(8)
 	elseif temp == 10
-		temp_level = 7
+		_Frost_AttributeMeterTempLevel.SetValueInt(7)
 	elseif temp < 10 && temp >= 6
-		temp_level = 6
+		_Frost_AttributeMeterTempLevel.SetValueInt(6)
 	elseif temp < 6 && temp >= 1
-		temp_level = 5
+		_Frost_AttributeMeterTempLevel.SetValueInt(5)
 	elseif temp < 1 && temp >= -4
-		temp_level = 4
+		_Frost_AttributeMeterTempLevel.SetValueInt(4)
 	elseif temp < -4 && temp >= -9
-		temp_level = 3
+		_Frost_AttributeMeterTempLevel.SetValueInt(3)
 	elseif temp < -9 && temp >= -14
-		temp_level = 2
+		_Frost_AttributeMeterTempLevel.SetValueInt(2)
 	elseif temp < -14
-		temp_level = 1
+		_Frost_AttributeMeterTempLevel.SetValueInt(1)
 	endif
-	int handle = ModEvent.Create("Frost_UpdateWeathersenseMeter")
+	int handle = ModEvent.Create("Frostfall_UpdateWeathersenseMeter")
 	if handle
-		ModEvent.PushInt(handle, temp_level)
 		ModEvent.Send(handle)
 	endif
 endFunction

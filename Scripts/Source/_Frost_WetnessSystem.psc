@@ -270,7 +270,7 @@ function SetWetness(float value, bool force_meter_display = false)
 endFunction
 
 function SendEvent_ForceWetnessMeterDisplay(bool flash = false)
-	int handle = ModEvent.Create("Frost_ForceWetnessMeterDisplay")
+	int handle = ModEvent.Create("Frostfall_ForceWetnessMeterDisplay")
 	if handle
 		ModEvent.PushBool(handle, flash)
 		ModEvent.Send(handle)
@@ -278,7 +278,7 @@ function SendEvent_ForceWetnessMeterDisplay(bool flash = false)
 endFunction
 
 function SendEvent_UpdateWetnessMeter()
-	int handle = ModEvent.Create("Frost_UpdateWetnessMeter")
+	int handle = ModEvent.Create("Frostfall_UpdateWetnessMeter")
 	if handle
 		ModEvent.Send(handle)
 	endif
