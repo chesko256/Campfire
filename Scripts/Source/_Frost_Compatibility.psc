@@ -1075,6 +1075,9 @@ function RegisterForEventsOnLoad()
 	GetCoverageSystem().RegisterForEvents()
 	GetRescueSystem().RegisterForEvents()
 	GetInterfaceHandler().RegisterForEvents()
+	GetExposureMeterHandler().RegisterForEvents()
+	GetWetnessMeterHandler().RegisterForEvents()
+	GetWeathersenseMeterHandler().RegisterForEvents()
 endFunction
 
 function RegisterForMenusOnLoad()

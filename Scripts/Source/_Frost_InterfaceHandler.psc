@@ -14,12 +14,6 @@ function RegisterForEvents()
 	RegisterForModEvent("Frost_OnSkyUIInvListSelectChangeArmor", "OnSkyUIInvListSelectChangeArmor")
 	RegisterForModEvent("Frost_UpdateBottomBarWarmth", "UpdateBottomBarWarmth")
 	RegisterForModEvent("Frost_UpdateBottomBarCoverage", "UpdateBottomBarCoverage")
-	RegisterForModEvent("Frost_UpdateExposureMeter", "UpdateExposureMeter")
-	RegisterForModEvent("Frost_UpdateWetnessMeter", "UpdateWetnessMeter")
-	RegisterForModEvent("Frost_UpdateWeathersenseMeter", "UpdateWeathersenseMeter")
-	RegisterForModEvent("Frost_ForceExposureMeterDisplay", "ForceExposureMeterDisplay")
-	RegisterForModEvent("Frost_ForceWetnessMeterDisplay", "ForceWetnessMeterDisplay")
-	RegisterForModEvent("Frost_ForceWeathersenseMeterDisplay", "ForceWeathersenseMeterDisplay")
 endFunction
 
 function RegisterForMenus()

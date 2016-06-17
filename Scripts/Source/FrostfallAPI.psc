@@ -10,6 +10,9 @@ _Frost_WarmthSystem property Warmth auto
 _Frost_CoverageSystem property Coverage auto
 _Frost_RescueSystem property Rescue auto
 _Frost_InterfaceHandler property Interface auto
+_Frost_ExposureMeterInterfaceHandler property ExposureMeterHandler auto
+_Frost_WetnessMeterInterfaceHandler property WetnessMeterHandler auto
+_Frost_WeatherMeterInterfaceHandler property WeathersenseMeterHandler auto
 _Frost_ShelterSystem property Shelter auto
 _Frost_FrostResistSystem property FrostResist auto
 _Frost_ArmorProtectionDatastoreHandler property ClothingDatastoreHandler auto
