@@ -122,6 +122,7 @@ string[] ProtectionList
 
 string[] MeterLayoutList
 string[] FillDirectionList
+string[] FillDirectionListLimited
 string[] HorizontalAnchorList
 string[] VerticalAnchorList
 
@@ -249,6 +250,10 @@ Event OnConfigInit()
 	FillDirectionList[0] = "$FrostfallLeft"
 	FillDirectionList[1] = "$FrostfallRight"
 	FillDirectionList[2] = "$FrostfallBoth"
+
+	FillDirectionListLimited = new string[2]
+	FillDirectionListLimited[0] = "$FrostfallLeft"
+	FillDirectionListLimited[1] = "$FrostfallRight"
 
 	HorizontalAnchorList = new string[3]
 	HorizontalAnchorList[0] = "$FrostfallLeft"
@@ -707,7 +712,7 @@ function PageReset_Meters()
 		AddTextOption("$FrostfallInterfaceSettingUIMeterConfiguring", "$FrostfallInterfaceHeaderMetersExposureName", OPTION_FLAG_DISABLED)
 		Meters_UIMeterColor_OID = AddColorOption("$FrostfallInterfaceSettingUIColor", _Frost_Setting_MeterExposureColor.GetValueInt())
 		Meters_UIMeterOpacity_OID = AddSliderOption("$FrostfallInterfaceSettingUIMeterOpacity", _Frost_Setting_MeterExposureOpacity.GetValue(), "{0}%")
-		Meters_UIMeterFillDirection_OID = AddMenuOption("$FrostfallInterfaceSettingUIMeterFillDirection", FillDirectionList[_Frost_Setting_MeterExposureFillDirection.GetValueInt()])
+		Meters_UIMeterFillDirection_OID = AddMenuOption("$FrostfallInterfaceSettingUIMeterFillDirection", FillDirectionListLimited[_Frost_Setting_MeterExposureFillDirection.GetValueInt()])
 		Meters_UIMeterHeight_OID = AddSliderOption("$FrostfallInterfaceSettingUIMeterHeight", _Frost_Setting_MeterExposureHeight.GetValue(), "{1}")
 		Meters_UIMeterWidth_OID = AddSliderOption("$FrostfallInterfaceSettingUIMeterLength", _Frost_Setting_MeterExposureWidth.GetValue(), "{1}")
 		Meters_UIMeterXPos_OID = AddSliderOption("$FrostfallInterfaceSettingUIMeterXPos", _Frost_Setting_MeterExposureXPos.GetValue(), "{1}")
@@ -719,7 +724,7 @@ function PageReset_Meters()
 		AddTextOption("$FrostfallInterfaceSettingUIMeterConfiguring", "$FrostfallInterfaceHeaderMetersWetnessName", OPTION_FLAG_DISABLED)
 		Meters_UIMeterColor_OID = AddColorOption("$FrostfallInterfaceSettingUIColor", _Frost_Setting_MeterWetnessColor.GetValueInt())
 		Meters_UIMeterOpacity_OID = AddSliderOption("$FrostfallInterfaceSettingUIMeterOpacity", _Frost_Setting_MeterWetnessOpacity.GetValue(), "{0}%")
-		Meters_UIMeterFillDirection_OID = AddMenuOption("$FrostfallInterfaceSettingUIMeterFillDirection", FillDirectionList[_Frost_Setting_MeterWetnessFillDirection.GetValueInt()])
+		Meters_UIMeterFillDirection_OID = AddMenuOption("$FrostfallInterfaceSettingUIMeterFillDirection", FillDirectionListLimited[_Frost_Setting_MeterWetnessFillDirection.GetValueInt()])
 		Meters_UIMeterHeight_OID = AddSliderOption("$FrostfallInterfaceSettingUIMeterHeight", _Frost_Setting_MeterWetnessHeight.GetValue(), "{1}")
 		Meters_UIMeterWidth_OID = AddSliderOption("$FrostfallInterfaceSettingUIMeterLength", _Frost_Setting_MeterWetnessWidth.GetValue(), "{1}")
 		Meters_UIMeterXPos_OID = AddSliderOption("$FrostfallInterfaceSettingUIMeterXPos", _Frost_Setting_MeterWetnessXPos.GetValue(), "{1}")
@@ -1723,11 +1728,11 @@ Event OnOptionMenuOpen(int option)
 		SetMenuDialogDefaultIndex(0)
 	elseif option == Meters_UIMeterFillDirection_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			SetMenuDialogOptions(FillDirectionList)
+			SetMenuDialogOptions(FillDirectionListLimited)
 			SetMenuDialogStartIndex(_Frost_Setting_MeterExposureFillDirection.GetValueInt())
 			SetMenuDialogDefaultIndex(1)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			SetMenuDialogOptions(FillDirectionList)
+			SetMenuDialogOptions(FillDirectionListLimited)
 			SetMenuDialogStartIndex(_Frost_Setting_MeterWetnessFillDirection.GetValueInt())
 			SetMenuDialogDefaultIndex(1)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
@@ -1828,12 +1833,12 @@ Event OnOptionMenuAccept(int option, int index)
 	elseif option == Meters_UIMeterFillDirection_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
 			_Frost_Setting_MeterExposureFillDirection.SetValueInt(index)
-			SetMenuOptionValue(Meters_UIMeterFillDirection_OID, FillDirectionList[index])
+			SetMenuOptionValue(Meters_UIMeterFillDirection_OID, FillDirectionListLimited[index])
 			UpdateMeterConfiguration(0)
 			SaveSettingToCurrentProfile("exposure_meter_fill_direction", index)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
 			_Frost_Setting_MeterWetnessFillDirection.SetValueInt(index)
-			SetMenuOptionValue(Meters_UIMeterFillDirection_OID, FillDirectionList[index])
+			SetMenuOptionValue(Meters_UIMeterFillDirection_OID, FillDirectionListLimited[index])
 			UpdateMeterConfiguration(1)
 			SaveSettingToCurrentProfile("wetness_meter_fill_direction", index)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
