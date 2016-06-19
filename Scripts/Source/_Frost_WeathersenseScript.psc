@@ -85,8 +85,6 @@ function DisplayPowerMessage()
 		endif
 	endif
 
-	
-
 	if display_mode >= 1
 		SendEvent_ForceWeathersenseMeterDisplay()
 		SendEvent_ForceExposureMeterDisplay()

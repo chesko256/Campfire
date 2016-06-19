@@ -5,6 +5,7 @@ import FrostUtil
 
 int property SKSE_MIN_VERSION = 10703 autoReadOnly
 float property CAMPFIRE_MIN_VERSION = 1.7 autoReadOnly
+float property WEARABLELANTERNS_MIN_VERSION = 4.02 autoReadOnly
 GlobalVariable property _Frost_PreviousVersion auto
 GlobalVariable property _Frost_FrostfallVersion auto
 
@@ -167,6 +168,7 @@ Message property _Frost_CriticalError_SKSE auto
 Message property _Frost_CriticalError_Campfire auto
 Message property _Frost_CriticalError_SkyUIInterfacePackage auto
 Message property _Frost_CriticalError_JSONReadWrite auto
+Message property _Frost_Error_WearableLanterns auto
 Weather property DLC2AshStorm auto hidden
 bool added_spell_books = false
 
@@ -209,6 +211,11 @@ function FatalErrorSkyUIPackage(int skyui_version)
 		_Frost_CriticalError_SkyUIInterfacePackage.Show(skyui_version)
 		utility.wait(3.0)
 	endWhile
+endFunction
+
+function ErrorWearableLanterns()
+	trace("[Frostfall][ERROR] Detected Wearable Lanterns 4.01 or earlier, out of date! Expected " + WEARABLELANTERNS_MIN_VERSION + " or newer.")
+	_Frost_Error_WearableLanterns.Show(WEARABLELANTERNS_MIN_VERSION)
 endFunction
 
 
@@ -269,6 +276,21 @@ function RunCompatibility()
 		FatalErrorCampfire(campfire_version)
 	else
 		trace("[Frostfall] Detected Campfire version " + campfire_version + " (expected " + CAMPFIRE_MIN_VERSION + " or newer, success!)")
+	endif
+
+	bool isWearableLanternsLoaded = IsPluginLoaded(0x7FDB, "Chesko_WearableLantern.esp")
+	if isWearableLanternsLoaded
+		GlobalVariable WLVersionGlobal = Game.GetFormFromFile(0x01E9D4, "Chesko_WearableLantern.esp") as GlobalVariable
+		if WLVersionGlobal
+			float wearablelanterns_version = WLVersionGlobal.GetValue()
+			if wearablelanterns_version >= WEARABLELANTERNS_MIN_VERSION
+				trace("[Frostfall] Detected Wearable Lanterns version " + wearablelanterns_version + " (expected " + WEARABLELANTERNS_MIN_VERSION + " or newer, success!)")
+			else
+				ErrorWearableLanterns()
+			endif
+		else
+			ErrorWearableLanterns()
+		endif
 	endif
 	
 	int ui_package_version_installed = JsonUtil.GetIntValue(CONFIG_PATH + "interface_package_version", "installed_package_version")

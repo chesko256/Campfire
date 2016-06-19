@@ -204,7 +204,8 @@ int function GetCurrentTemperature(Weather this_weather, int region)
 		return 10
 	endif
 
-	if GameHour.GetValue() > 19 || GameHour.GetValue() < 7
+	float hour = GameHour.GetValue()
+	if hour > 19 || hour < 7
 		is_nighttime = true
 	else
 		is_nighttime = false

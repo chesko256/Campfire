@@ -7,15 +7,20 @@ import _FrostInternal
 
 float property WET_SPEED 		= 27.0 autoReadOnly 		; Wetness gained when standing in rain.
 float property DRY_SPEED 		= -6.25 autoReadOnly 		; Wetness lost ambiently.
-float property DRYFIRE_SPEED 	= -75.0 autoReadOnly 		; Wetness lost near fires.
+float property DRY_SPEED_SUN	= -15.0 autoReadOnly 		; Wetness lost ambiently while in the sun.
+float property DRY_SPEED_FIRE 	= -75.0 autoReadOnly 		; Wetness lost near fires.
 float property MAX_WETNESS 		= 750.0 autoReadOnly
 float property WETNESS_LEVEL_3 	= 700.0 autoReadOnly
 float property WETNESS_LEVEL_2 	= 550.0 autoReadOnly
 float property WETNESS_LEVEL_1 	= 200.0 autoReadOnly
 float property MIN_WETNESS 		= 0.0 autoReadOnly
 int property WEATHERCLASS_RAIN 	= 2 autoReadOnly
+float property WATER_HEIGHT_KNEES = 35.0 autoReadOnly
+float property WATER_HEIGHT_THIGHS = 60.0 autoReadOnly
+float property WATER_HEIGHT_WAIST = 80.0 autoReadOnly
 
 Actor property PlayerRef auto
+GlobalVariable property GameHour auto
 GlobalVariable property _Frost_AttributeWetness auto
 GlobalVariable property _Frost_AttributeCoverage auto
 GlobalVariable property _Frost_Calc_MaxCoverage auto
@@ -83,17 +88,19 @@ function ModAttributeWetness(float amount, float limit)
 	endif
 
 	float wetness = wet_attr + amount
-	if wetness > limit && amount > 0
+
+	; Clamp values
+	; THRESHOLD CROSSED - INCREASING
+	if wetness >= limit && wet_attr < limit && amount > 0
 		wetness = limit
-		if limit < MAX_WETNESS && limit > MIN_WETNESS
-			_Frost_WetStateMsg_LeakingWater.Show()
-		endif
-	elseif wetness < limit && amount < 0
+	; THRESHOLD CROSSED - DECREASING
+	elseif wetness < limit && wet_attr >= limit && amount < 0
 		wetness = limit
-		if limit < MAX_WETNESS && limit > MIN_WETNESS
-			_Frost_WetStateMsg_LeakingWater.Show()
-		endif
+	; ALREADY ABOVE / BELOW LIMIT
+	elseif (wetness >= limit && amount > 0) || (wetness <= limit && amount < 0)
+		wetness = wet_attr
 	endif
+
 	_Frost_AttributeWetness.SetValue(wetness)
 	FrostfallAttributeWetnessReadOnly.SetValue(wetness)
 	FrostDebug(1, "~~~~ Wetness ::: Current Wetness: " + wetness + " (" + amount + ")")
@@ -152,6 +159,34 @@ function ShowWetStateMessage(int wet_level)
 	endif
 endFunction
 
+int function GetPlayerWaterHeight()
+	float water_level = PlayerRef.GetParentCell().GetWaterLevel()
+	float player_z = PlayerRef.GetPositionZ()
+	if water_level != -2147483648.0
+		float delta = water_level - player_z
+		if delta >= WATER_HEIGHT_WAIST
+			return 3
+		elseif delta >= WATER_HEIGHT_THIGHS
+			return 2
+		elseif delta >= WATER_HEIGHT_KNEES
+			return 1
+		else
+			return 0
+		endif
+	else
+		return 0
+	endif
+endFunction
+
+bool function IsStandingInSunlight()
+	float hour = GameHour.GetValue()
+	if GetWeatherClassificationActual(GetCurrentWeatherActual()) == 0 && !IsRefInInterior(PlayerRef) && (hour <= 19 || hour >= 7)
+		return true
+	else
+		return false
+	endif
+endFunction
+
 bool function IsNearWaterfall()
 	ObjectReference waterfall = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Frost_Waterfalls, PlayerRef, 85.0)
 	if waterfall && waterfall.IsEnabled()
@@ -170,6 +205,15 @@ function UpdateWetState()
 	if near_waterfall
 		ModAttributeWetness(MAX_WETNESS, MAX_WETNESS)
 		return
+	endif
+
+	int standing_water_height = GetPlayerWaterHeight()
+	if standing_water_height == 3
+		ModAttributeWetness(MAX_WETNESS, 562.5)
+	elseif standing_water_height == 2
+		ModAttributeWetness(MAX_WETNESS, 375.0)
+	elseif standing_water_height == 1
+		ModAttributeWetness(MAX_WETNESS, 187.5)
 	endif
 
 	;@TODO: Possibly pull from Weather System
@@ -198,15 +242,6 @@ function UpdateWetState()
 	else
 		DryOff(MIN_WETNESS)
 	endif
-	
-	;Less exposure drain in warmer weather.
-	;/ int theTemp = _DE_CurrentTemp.GetValueInt()
-	if theTemp >= 15
-		WetFactor /= 4
-	elseif theTemp > 10
-		WetFactor /= 2
-	endif
-	/;
 endFunction
 
 function DryOff(float limit)
@@ -220,9 +255,11 @@ function DryOff(float limit)
 
 	float amount
 	if IsPlayerNearFire()
-		 amount = (((DRYFIRE_SPEED * GetPlayerHeatSourceLevel()) * time_delta_seconds) / update_freq)
+		amount = (((DRY_SPEED_FIRE * GetPlayerHeatSourceLevel()) * time_delta_seconds) / update_freq)
+	elseif IsStandingInSunlight()
+		amount = ((DRY_SPEED_SUN * time_delta_seconds) / update_freq)
     else
-    	 amount = ((DRY_SPEED * time_delta_seconds) / update_freq)
+    	amount = ((DRY_SPEED * time_delta_seconds) / update_freq)
     endif
     ModAttributeWetness(amount, limit)
 endFunction
