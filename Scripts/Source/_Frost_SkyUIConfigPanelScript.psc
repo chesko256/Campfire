@@ -73,9 +73,9 @@ GlobalVariable property _Frost_PerkRank_GlacialSwimmer auto
 GlobalVariable property _Frost_PerkRank_InnerFire auto
 GlobalVariable property _Frost_PerkRank_WellInsulated auto
 
-; WIP
 GlobalVariable property _Frost_Setting_MeterExposureOpacity auto
 GlobalVariable property _Frost_Setting_MeterExposureColor auto
+GlobalVariable property _Frost_Setting_MeterExposureColorWarm auto
 GlobalVariable property _Frost_Setting_MeterExposureFillDirection auto
 GlobalVariable property _Frost_Setting_MeterExposureHeight auto
 GlobalVariable property _Frost_Setting_MeterExposureWidth auto
@@ -171,10 +171,9 @@ int Meters_UIMeterDisplay_OID
 int Meters_UIMeterLayout_OID
 int Meters_UIMeterDisplayTime_OID
 int Meters_UIMeterColor_OID
+int Meters_UIMeterColorAlt_OID
 int Meters_UIMeterOpacity_OID
 int Meters_UIMeterFillDirection_OID
-; int Meters_UIMeterHeight_OID
-; int Meters_UIMeterWidth_OID
 int Meters_UIMeterScale_OID
 int Meters_UIMeterFlipped_OID
 int Meters_UIMeterXPos_OID
@@ -720,7 +719,8 @@ function PageReset_Meters()
 	if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
 		AddHeaderOption("$FrostfallInterfaceHeaderMetersAdvanced")
 		AddTextOption("$FrostfallInterfaceSettingUIMeterConfiguring", "$FrostfallInterfaceHeaderMetersExposureName", OPTION_FLAG_DISABLED)
-		Meters_UIMeterColor_OID = AddColorOption("$FrostfallInterfaceSettingUIColor", _Frost_Setting_MeterExposureColor.GetValueInt())
+		Meters_UIMeterColor_OID = AddColorOption("$FrostfallInterfaceSettingUIColorExposure", _Frost_Setting_MeterExposureColor.GetValueInt())
+		Meters_UIMeterColorAlt_OID = AddColorOption("$FrostfallInterfaceSettingUIColorExposureAlt", _Frost_Setting_MeterExposureColorWarm.GetValueInt())
 		Meters_UIMeterOpacity_OID = AddSliderOption("$FrostfallInterfaceSettingUIMeterOpacity", _Frost_Setting_MeterExposureOpacity.GetValue(), "{0}%")
 		Meters_UIMeterFillDirection_OID = AddMenuOption("$FrostfallInterfaceSettingUIMeterFillDirection", FillDirectionListLimited[_Frost_Setting_MeterExposureFillDirection.GetValueInt()])
 		Meters_UIMeterScale_OID = AddSliderOption("$FrostfallScale", GetMeterScale(_Frost_Setting_MeterExposureWidth.GetValue(), NORMAL_METER_WIDTH), "{2}")
@@ -1236,23 +1236,31 @@ event OnOptionDefault(int option)
 		SaveSettingToCurrentProfile("meter_display_time", 4)
 	elseif option == Meters_UIMeterColor_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			;@TODO
-			_Frost_Setting_MeterExposureColor.SetValueInt(0xffff4d)
+			_Frost_Setting_MeterExposureColor.SetValueInt(0x93D0FF)
 			SetColorOptionValue(option, _Frost_Setting_MeterExposureColor.GetValueInt())
-			ExposureMeterHandler.SetMeterColors(_Frost_Setting_MeterExposureColor.GetValueInt(), -1)
+			if !IsMeterInverted(ExposureMeterHandler as CommonMeterInterfaceHandler)
+				ExposureMeterHandler.SetMeterColors(_Frost_Setting_MeterExposureColor.GetValueInt(), -1)
+			endif
 			SaveSettingToCurrentProfile("exposure_meter_color", _Frost_Setting_MeterExposureColor.GetValueInt())
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			;@TODO
-			_Frost_Setting_MeterWetnessColor.SetValueInt(0xff4dff)
+			_Frost_Setting_MeterWetnessColor.SetValueInt(0x2469F4)
 			SetColorOptionValue(option, _Frost_Setting_MeterWetnessColor.GetValueInt())
 			WetnessMeterHandler.SetMeterColors(_Frost_Setting_MeterWetnessColor.GetValueInt(), -1)
 			SaveSettingToCurrentProfile("wetness_meter_color", _Frost_Setting_MeterWetnessColor.GetValueInt())
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			;@TODO
-			_Frost_Setting_MeterWeathersenseColor.SetValueInt(0xff4dff)
+			_Frost_Setting_MeterWeathersenseColor.SetValueInt(0xFDC327)
 			SetColorOptionValue(option, _Frost_Setting_MeterWeathersenseColor.GetValueInt())
 			WeathersenseMeterHandler.SetMeterColors(_Frost_Setting_MeterWeathersenseColor.GetValueInt(), -1)
 			SaveSettingToCurrentProfile("weathersense_meter_color", _Frost_Setting_MeterWeathersenseColor.GetValueInt())
+		endif
+	elseif option == Meters_UIMeterColorAlt_OID
+		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
+			_Frost_Setting_MeterExposureColorWarm.SetValueInt(0xC25811)
+			SetColorOptionValue(option, _Frost_Setting_MeterExposureColorWarm.GetValueInt())
+			if IsMeterInverted(ExposureMeterHandler as CommonMeterInterfaceHandler)
+				ExposureMeterHandler.SetMeterColors(_Frost_Setting_MeterExposureColorWarm.GetValueInt(), -1)
+			endif
+			SaveSettingToCurrentProfile("exposure_meter_color_warm", _Frost_Setting_MeterExposureColorWarm.GetValueInt())
 		endif
 	elseif option == Meters_UIMeterOpacity_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
@@ -1430,7 +1438,7 @@ Event OnOptionHighlight(int option)
 		SetInfoText("$FrostfallMeterScaleHighlight")
 	elseif option == Meters_UIMeterFlipped_OID
 		SetInfoText("$FrostfallMeterFlippedHighlight")
-	elseif option == Meters_UIMeterColor_OID
+	elseif option == Meters_UIMeterColor_OID || option == Meters_UIMeterColorAlt_OID
 		SetInfoText("$FrostfallMeterColorHighlight")
 	elseif option == Meters_UIMeterXPos_OID
 		SetInfoText("$FrostfallMeterXPosHighlight")
@@ -1627,41 +1635,6 @@ Event OnOptionSliderAccept(int option, float value)
 			UpdateMeterConfiguration(2)
 			SaveSettingToCurrentProfileFloat("weathersense_meter_opacity", value)
 		endif
-	;/elseif option == Meters_UIMeterHeight_OID
-		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			_Frost_Setting_MeterExposureHeight.SetValue(value)
-			SetSliderOptionValue(Meters_UIMeterHeight_OID, value, "{1}")
-			UpdateMeterConfiguration(0)
-			SaveSettingToCurrentProfileFloat("exposure_meter_height", value)
-		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			_Frost_Setting_MeterWetnessHeight.SetValue(value)
-			SetSliderOptionValue(Meters_UIMeterHeight_OID, value, "{1}")
-			UpdateMeterConfiguration(1)
-			SaveSettingToCurrentProfileFloat("wetness_meter_height", value)
-		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			_Frost_Setting_MeterWeathersenseHeight.SetValue(value)
-			SetSliderOptionValue(Meters_UIMeterHeight_OID, value, "{1}")
-			UpdateMeterConfiguration(2)
-			SaveSettingToCurrentProfileFloat("weathersense_meter_height", value)
-		endif
-	elseif option == Meters_UIMeterWidth_OID
-		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			_Frost_Setting_MeterExposureWidth.SetValue(value)
-			SetSliderOptionValue(Meters_UIMeterWidth_OID, value, "{1}")
-			UpdateMeterConfiguration(0)
-			SaveSettingToCurrentProfileFloat("exposure_meter_width", value)
-		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
-			_Frost_Setting_MeterWetnessWidth.SetValue(value)
-			SetSliderOptionValue(Meters_UIMeterWidth_OID, value, "{1}")
-			UpdateMeterConfiguration(1)
-			SaveSettingToCurrentProfileFloat("wetness_meter_width", value)
-		elseif meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE
-			_Frost_Setting_MeterWeathersenseWidth.SetValue(value)
-			SetSliderOptionValue(Meters_UIMeterWidth_OID, value, "{1}")
-			UpdateMeterConfiguration(2)
-			SaveSettingToCurrentProfileFloat("weathersense_meter_width", value)
-		endif
-	/;
 	elseif option == Meters_UIMeterScale_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
 			_Frost_Setting_MeterExposureHeight.SetValue(NORMAL_METER_HEIGHT * value)
@@ -1975,7 +1948,9 @@ event OnOptionColorAccept(int option, int color)
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
 			_Frost_Setting_MeterExposureColor.SetValueInt(color)
 			SetColorOptionValue(option, color)
-			ExposureMeterHandler.SetMeterColors(color, -1)
+			if !IsMeterInverted(ExposureMeterHandler as CommonMeterInterfaceHandler)
+				ExposureMeterHandler.SetMeterColors(_Frost_Setting_MeterExposureColor.GetValueInt(), -1)
+			endif
 			SaveSettingToCurrentProfile("exposure_meter_color", color)
 		elseif meter_being_configured == METER_BEING_CONFIGURED_WETNESS
 			_Frost_Setting_MeterWetnessColor.SetValueInt(color)
@@ -1987,6 +1962,15 @@ event OnOptionColorAccept(int option, int color)
 			SetColorOptionValue(option, color)
 			WeathersenseMeterHandler.SetMeterColors(color, -1)
 			SaveSettingToCurrentProfile("weathersense_meter_color", color)
+		endif
+	elseif option == Meters_UIMeterColorAlt_OID
+		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
+			_Frost_Setting_MeterExposureColorWarm.SetValueInt(color)
+			SetColorOptionValue(option, color)
+			if IsMeterInverted(ExposureMeterHandler as CommonMeterInterfaceHandler)
+				ExposureMeterHandler.SetMeterColors(color, -1)
+			endif
+			SaveSettingToCurrentProfile("exposure_meter_color", color)
 		endif
 	endif
 endEvent
@@ -2198,6 +2182,10 @@ function SwitchToProfile(int aiProfileIndex)
 	if val != -1
 		_Frost_Setting_MeterExposureColor.SetValueInt(val)
 	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "exposure_meter_color_warm")
+	if val != -1
+		_Frost_Setting_MeterExposureColorWarm.SetValueInt(val)
+	endif
 	val = LoadSettingFromProfile(aiProfileIndex, "exposure_meter_fill_direction")
 	if val != -1
 		_Frost_Setting_MeterExposureFillDirection.SetValueInt(val)
@@ -2350,7 +2338,11 @@ function SwitchToProfile(int aiProfileIndex)
 		Utility.Wait(0.2)
 		i += 1
 	endWhile
-	ExposureMeterHandler.SetMeterColors(_Frost_Setting_MeterExposureColor.GetValueInt(), -1)
+	if !IsMeterInverted(ExposureMeterHandler as CommonMeterInterfaceHandler)
+		ExposureMeterHandler.SetMeterColors(_Frost_Setting_MeterExposureColor.GetValueInt(), -1)
+	else
+		ExposureMeterHandler.SetMeterColors(_Frost_Setting_MeterExposureColorWarm.GetValueInt(), -1)
+	endif
 	UpdateMeterConfiguration(0)
 
 	i = 0
@@ -2408,7 +2400,8 @@ function GenerateDefaultProfile(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "meter_display_mode", 2)
 	JsonUtil.SetIntValue(profile_path, "meter_display_time", 4)
 	JsonUtil.SetFloatValue(profile_path, "exposure_meter_opacity", 100.0)
-	JsonUtil.SetIntValue(profile_path, "exposure_meter_color", 2386420)
+	JsonUtil.SetIntValue(profile_path, "exposure_meter_color", 0x93D0FF)
+	JsonUtil.SetIntValue(profile_path, "exposure_meter_color_warm", 0xC25811)
 	JsonUtil.SetIntValue(profile_path, "exposure_meter_fill_direction", EXPOSURE_METER_TOPRIGHT_FILLDIR)
 	JsonUtil.SetFloatValue(profile_path, "exposure_meter_height", NORMAL_METER_HEIGHT)
 	JsonUtil.SetFloatValue(profile_path, "exposure_meter_width", NORMAL_METER_WIDTH)
@@ -2417,7 +2410,7 @@ function GenerateDefaultProfile(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "exposure_meter_hanchor", EXPOSURE_METER_TOPRIGHT_HANCHOR)
 	JsonUtil.SetIntValue(profile_path, "exposure_meter_vanchor", EXPOSURE_METER_TOPRIGHT_VANCHOR)
 	JsonUtil.SetFloatValue(profile_path, "wetness_meter_opacity", 100.0)
-	JsonUtil.SetIntValue(profile_path, "wetness_meter_color", 9687295)
+	JsonUtil.SetIntValue(profile_path, "wetness_meter_color", 0x2469F4)
 	JsonUtil.SetIntValue(profile_path, "wetness_meter_fill_direction", WETNESS_METER_TOPRIGHT_FILLDIR)
 	JsonUtil.SetFloatValue(profile_path, "wetness_meter_height", CHARGE_METER_HEIGHT_INV)
 	JsonUtil.SetFloatValue(profile_path, "wetness_meter_width", CHARGE_METER_WIDTH)
@@ -2426,7 +2419,7 @@ function GenerateDefaultProfile(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "wetness_meter_hanchor", WETNESS_METER_TOPRIGHT_HANCHOR)
 	JsonUtil.SetIntValue(profile_path, "wetness_meter_vanchor", WETNESS_METER_TOPRIGHT_VANCHOR)
 	JsonUtil.SetFloatValue(profile_path, "weathersense_meter_opacity", 100.0)
-	JsonUtil.SetIntValue(profile_path, "weathersense_meter_color", 16777011)
+	JsonUtil.SetIntValue(profile_path, "weathersense_meter_color", 0xFDC327)
 	JsonUtil.SetIntValue(profile_path, "weathersense_meter_fill_direction", WEATHERSENSE_METER_TOPRIGHT_FILLDIR)
 	JsonUtil.SetFloatValue(profile_path, "weathersense_meter_height", CHARGE_METER_HEIGHT_INV)
 	JsonUtil.SetFloatValue(profile_path, "weathersense_meter_width", CHARGE_METER_WIDTH)
@@ -2469,6 +2462,7 @@ function SaveAllSettings(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "meter_display_time", _Frost_Setting_MeterDisplayTime.GetValueInt())
 	JsonUtil.SetFloatValue(profile_path, "exposure_meter_opacity", _Frost_Setting_MeterExposureOpacity.GetValue())
 	JsonUtil.SetIntValue(profile_path, "exposure_meter_color", _Frost_Setting_MeterExposureColor.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "exposure_meter_color_warm", _Frost_Setting_MeterExposureColorWarm.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "exposure_meter_fill_direction", _Frost_Setting_MeterExposureFillDirection.GetValueInt())
 	JsonUtil.SetFloatValue(profile_path, "exposure_meter_height", _Frost_Setting_MeterExposureHeight.GetValue())
 	JsonUtil.SetFloatValue(profile_path, "exposure_meter_width", _Frost_Setting_MeterExposureWidth.GetValue())
@@ -3840,6 +3834,20 @@ endFunction
 
 float function GetMeterScale(float afCurrentWidth, float afBaseWidth)
 	return afCurrentWidth / afBaseWidth
+endFunction
+
+bool function IsMeterInverted(CommonMeterInterfaceHandler handler)
+	if handler.meter_inversion_value != -1.0
+		if handler.lower_is_better && handler.AttributeValue.GetValue() < handler.meter_inversion_value
+			return true
+		elseif !handler.lower_is_better && handler.AttributeValue.GetValue() > handler.meter_inversion_value
+			return true
+		else
+			return false
+		endif
+	else
+		return false
+	endif
 endFunction
 
 function SendEvent_FrostfallRemoveExposureMeter()
