@@ -11,6 +11,7 @@
 
 #Build files
 !ModTools.py
+!BuildSingle.bat
 !Campfire_BuildRelease.py
 !Frostfall_BuildRelease.py
 !CampDevKit_BuildRelease.py

@@ -1,0 +1,1 @@
+"E:\SteamLibrary\steamapps\common\Fallout 4\Papyrus Compiler\PapyrusCompiler.exe" %1 -f="Institute_Papyrus_Flags.flg" -i=".\Scripts\Source;E:\SteamLibrary\steamapps\common\Fallout 4\Data\Scripts\Source\Base" -o=".\Scripts"
