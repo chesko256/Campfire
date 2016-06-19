@@ -38,7 +38,6 @@ function SetUpProxy()
 			(camp as CampPlaceableCampsite).CampsiteObjects = new ObjectReference[128]
 			(camp as CampPlaceableCampsite).TakeDown()
 			Utility.Wait(3.0)
-			Game.PassTime(1)
 			Game.FadeOutGame(False, True, 0.0, 2.0)
 		endif
 
@@ -93,6 +92,8 @@ Event OnLoad()
 	if is_built && MyWorkshop
 		MyWorkshop.MoveTo(self)
 		CampDebug(0, MyWorkshop + " moved to proxy.")
+		; ResetWorkshop will not fire, so we must do it manually.
+		WorkshopParent.ResetWorkshop(MyWorkshop as WorkshopScript)
 	endif
 EndEvent
 

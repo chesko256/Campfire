@@ -15,13 +15,16 @@ event OnInit()
 endEvent
 
 Event OnTimer(int aiTimer)
-	if aiTimer == INIT_TIMER_ID && \
-		          !self.IsRunning() && \
-		          PlayerRef.GetWorldSpace() == Commonwealth
-		self.Start()
-		debug.trace("[Campfire] Performing first-time setup.")	
-		PlayerAlias.ForceRefTo(PlayerRef)
-		Compatibility.OnPlayerLoadGame()
+	Worldspace FarHarbor = Game.GetFormFromFile(0x000B0F, "DLCCoast.esm") as Worldspace
+	if aiTimer == INIT_TIMER_ID && !self.IsRunning()
+		if PlayerRef.GetWorldSpace() == Commonwealth || (FarHarbor && PlayerRef.GetWorldSpace() == FarHarbor)
+			self.Start()
+			debug.trace("[Campfire] Performing first-time setup.")	
+			PlayerAlias.ForceRefTo(PlayerRef)
+			Compatibility.OnPlayerLoadGame()
+		else
+			StartTimer(5, INIT_TIMER_ID)
+		endif
 	else
 		StartTimer(5, INIT_TIMER_ID)
 	endif

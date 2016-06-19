@@ -182,7 +182,6 @@ function DissolveSettlement()
 	CustomWorkshopBuiltGlobals[MyCustomWorkshopID].SetValueInt(1)
 
 	Utility.Wait(3.0)
-	Game.PassTime(1)
 	Game.FadeOutGame(False, True, 0.0, 2.0)
 endFunction
 
