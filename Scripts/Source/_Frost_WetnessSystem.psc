@@ -6,8 +6,8 @@ import _FrostInternal
 
 
 float property WET_SPEED 		= 27.0 autoReadOnly 		; Wetness gained when standing in rain.
-float property DRY_SPEED 		= -6.25 autoReadOnly 		; Wetness lost ambiently.
-float property DRY_SPEED_SUN	= -15.0 autoReadOnly 		; Wetness lost ambiently while in the sun.
+float property DRY_SPEED 		= -10.5 autoReadOnly 		; Wetness lost ambiently.
+float property DRY_SPEED_SUN	= -20.0 autoReadOnly 		; Wetness lost ambiently while in the sun.
 float property DRY_SPEED_FIRE 	= -75.0 autoReadOnly 		; Wetness lost near fires.
 float property MAX_WETNESS 		= 750.0 autoReadOnly
 float property WETNESS_LEVEL_3 	= 700.0 autoReadOnly
@@ -15,8 +15,6 @@ float property WETNESS_LEVEL_2 	= 550.0 autoReadOnly
 float property WETNESS_LEVEL_1 	= 200.0 autoReadOnly
 float property MIN_WETNESS 		= 0.0 autoReadOnly
 int property WEATHERCLASS_RAIN 	= 2 autoReadOnly
-float property WATER_HEIGHT_KNEES = 35.0 autoReadOnly
-float property WATER_HEIGHT_THIGHS = 60.0 autoReadOnly
 float property WATER_HEIGHT_WAIST = 80.0 autoReadOnly
 
 Actor property PlayerRef auto
@@ -99,6 +97,7 @@ function ModAttributeWetness(float amount, float limit)
 	; ALREADY ABOVE / BELOW LIMIT
 	elseif (wetness >= limit && amount > 0) || (wetness <= limit && amount < 0)
 		wetness = wet_attr
+	else
 	endif
 
 	_Frost_AttributeWetness.SetValue(wetness)
@@ -159,28 +158,29 @@ function ShowWetStateMessage(int wet_level)
 	endif
 endFunction
 
-int function GetPlayerWaterHeight()
+float function GetWetFromStandingInWater()
 	float water_level = PlayerRef.GetParentCell().GetWaterLevel()
-	float player_z = PlayerRef.GetPositionZ()
-	if water_level != -2147483648.0
+	if water_level > -100000000.0 && water_level < 100000000.0		; Discard large values
+		float player_z = PlayerRef.GetPositionZ()
+		if PlayerRef.IsOnMount() && PlayerRef.GetSitState() == 3
+			player_z -= 60.0
+		endif
 		float delta = water_level - player_z
-		if delta >= WATER_HEIGHT_WAIST
-			return 3
-		elseif delta >= WATER_HEIGHT_THIGHS
-			return 2
-		elseif delta >= WATER_HEIGHT_KNEES
-			return 1
+		if delta >= 35.0
+			float wet = ((delta * 600.0) / WATER_HEIGHT_WAIST)
+			FrostDebug(1, "~~~~ Wetness ::: Standing in water, get wet by " + wet)
+			return wet
 		else
-			return 0
+			return -1.0
 		endif
 	else
-		return 0
+		return -1.0
 	endif
 endFunction
 
 bool function IsStandingInSunlight()
 	float hour = GameHour.GetValue()
-	if GetWeatherClassificationActual(GetCurrentWeatherActual()) == 0 && !IsRefInInterior(PlayerRef) && (hour <= 19 || hour >= 7)
+	if GetWeatherClassificationActual(GetCurrentWeatherActual()) == 0 && !IsRefInInterior(PlayerRef) && (hour <= 19 && hour >= 7)
 		return true
 	else
 		return false
@@ -207,13 +207,9 @@ function UpdateWetState()
 		return
 	endif
 
-	int standing_water_height = GetPlayerWaterHeight()
-	if standing_water_height == 3
-		ModAttributeWetness(MAX_WETNESS, 562.5)
-	elseif standing_water_height == 2
-		ModAttributeWetness(MAX_WETNESS, 375.0)
-	elseif standing_water_height == 1
-		ModAttributeWetness(MAX_WETNESS, 187.5)
+	float wetness_from_standing_in_water = GetWetFromStandingInWater()
+	if wetness_from_standing_in_water != -1.0
+		ModAttributeWetness(wetness_from_standing_in_water, wetness_from_standing_in_water)
 	endif
 
 	;@TODO: Possibly pull from Weather System
