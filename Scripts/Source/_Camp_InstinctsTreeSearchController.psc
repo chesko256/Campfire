@@ -5,7 +5,7 @@ FormList property _Camp_SearchTinderTrees auto
 Activator property _Camp_InstinctsGlowTinderFX auto
 Activator property _Camp_InstinctsGlowFloraFX auto
 
-function DetectionGainedAction(ObjectReference akReference)
+function DetectionRefAddedAction(ObjectReference akReference)
 	Form tree_form = akReference.GetBaseObject()
 	if akReference.IsHarvested() || !akReference.Is3DLoaded()
 		return
@@ -15,15 +15,15 @@ function DetectionGainedAction(ObjectReference akReference)
 		; spawn branch
 	elseif tree_form.GetName() != ""
 		if _Camp_SearchTinderTrees.HasForm(tree_form)
-			if !Game.FindClosestReferenceOfTypeFromRef(_Camp_InstinctsGlowTinderFX, akReference, 64.0)
-				SpawnDetectionHighlight(akReference, _Camp_InstinctsGlowTinderFX)
-			endif
+			SpawnDetectionHighlight(akReference, _Camp_InstinctsGlowTinderFX)
         else
-        	if !Game.FindClosestReferenceOfTypeFromRef(_Camp_InstinctsGlowFloraFX, akReference, 64.0)
-        		SpawnDetectionHighlight(akReference, _Camp_InstinctsGlowFloraFX)
-        	endif
+        	SpawnDetectionHighlight(akReference, _Camp_InstinctsGlowFloraFX)
         endif
 	endif
+endFunction
+
+function DetectionGainedAction(ObjectReference akReference)
+	; pass	
 endFunction
 
 function DetectionLostAction(ObjectReference akReference)
@@ -36,6 +36,6 @@ endFunction
 
 function SpawnDetectionHighlight(ObjectReference akReference, Activator akHighlight)
 	ObjectReference fx = akReference.PlaceAtMe(akHighlight, abInitiallyDisabled = true)
-    fx.SetPosition(fx.GetPositionX(), fx.GetPositionY(), fx.GetPositionZ() + 16.0)
-    fx.EnableNoWait(true)
+	fx.MoveTo(fx, afZOffset = 16)
+    ; fx.EnableNoWait(true)
 endFunction

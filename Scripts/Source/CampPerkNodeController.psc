@@ -3,6 +3,7 @@ scriptname CampPerkNodeController extends _Camp_PlaceableObjectBase
 
 import _CampInternal
 
+
 Activator property PerkNode00 auto
 { The 0th perk node. }
 Activator property PerkNode01 auto
@@ -183,6 +184,8 @@ function Initialize()
     LineActMap[11] = PerkLine11
 
     parent.Initialize()
+
+    CheckCampfireExists()
 endFunction
 
 ;@Override _Camp_PlaceableObjectBase
@@ -531,7 +534,47 @@ function TakeDown()
         utility.wait(0.1)
         i += 1
     endWhile
-    (myCampfire as CampCampfire).myPerkNodeController = None
+    if myCampfire
+        (myCampfire as CampCampfire).myPerkNodeController = None
+    endif
+
+    if myPerkNode00
+        (myPerkNode00 as CampPerkNode).ClearData()
+    endif
+    if myPerkNode01
+        (myPerkNode01 as CampPerkNode).ClearData()
+    endif
+    if myPerkNode02
+        (myPerkNode02 as CampPerkNode).ClearData()
+    endif
+    if myPerkNode03
+        (myPerkNode03 as CampPerkNode).ClearData()
+    endif
+    if myPerkNode04
+        (myPerkNode04 as CampPerkNode).ClearData()
+    endif
+    if myPerkNode05
+        (myPerkNode05 as CampPerkNode).ClearData()
+    endif
+    if myPerkNode06
+        (myPerkNode06 as CampPerkNode).ClearData()
+    endif
+    if myPerkNode07
+        (myPerkNode07 as CampPerkNode).ClearData()
+    endif
+    if myPerkNode08
+        (myPerkNode08 as CampPerkNode).ClearData()
+    endif
+    if myPerkNode09
+        (myPerkNode09 as CampPerkNode).ClearData()
+    endif
+    if myPerkNode10
+        (myPerkNode10 as CampPerkNode).ClearData()
+    endif
+    if myPerkNode11
+        (myPerkNode11 as CampPerkNode).ClearData()
+    endif
+
     TryToDisableAndDeleteRef(myPerkNode00)
     TryToDisableAndDeleteRef(myPerkNode01)
     TryToDisableAndDeleteRef(myPerkNode02)
@@ -557,6 +600,11 @@ function TakeDown()
     TryToDisableAndDeleteRef(myPerkLine10)
     TryToDisableAndDeleteRef(myPerkLine11)
     TryToDisableAndDeleteRef(myPerkArtPlane)
+
+    NodeRefMap = new ObjectReference[12]
+    LineRefMap = new ObjectReference[12]
+    NodeActMap = new Activator[12]
+    LineActMap = new Activator[12]
 
     myCampfire = None
     myPerkNode00 = None
@@ -603,8 +651,30 @@ ObjectReference function PlaceObject_ArtPlane(Static akArtPlane, ObjectReference
     return PlacementSystem.PlaceObject(self, akArtPlane, akArtPlanePositionRef, initially_disabled = true, is_temp = is_temporary)
 endFunction
 
+function CheckCampfireExists()
+    ; Campfire 1.8 Fix: Try to find a nearby campfire and kill myself if not found.
+    FormList _Camp_CampfireCampfires = Game.GetFormFromFile(0x06BBE8, "Campfire.esm") as FormList
+    ObjectReference nearbyCampfire = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_CampfireCampfires, self, 100.0)
+    if !nearbyCampfire
+        CampDebug(2, "(Init/Attach) Found invalid Campfire perk node controller " + self + ". Cleaning up.")
+        int i = 0
+        while !initialized && i < 20
+            Utility.Wait(1)
+            i += 1
+        endWhile
+        TakeDown()
+        CampDebug(2, self + " removed.")
+    endif
+endFunction
+
+Event OnCellAttach()
+    CheckCampfireExists()
+EndEvent
+
 Event OnCellDetach()
     if !myCampfire
+        CampDebug(2, "(Detach) Found invalid Campfire perk node controller " + self + ". Cleaning up.")
         TakeDown()
+        CampDebug(2, self + " removed.")
     endif
 EndEvent

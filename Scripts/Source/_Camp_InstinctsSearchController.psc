@@ -1,6 +1,7 @@
 scriptname _Camp_InstinctsSearchController extends Quest
 
 import StorageUtil
+import CommonHelperFunctions
 
 Actor property PlayerRef auto
 GlobalVariable property _Camp_PerkRank_KeenSenses auto
@@ -120,17 +121,23 @@ endFunction
 function ScanCell(Cell akCell)
 	int ref_count = akCell.GetNumRefs(SearchFormType)
 	int i = 0
+	;debug.StartStackProfiling()
 	while i < ref_count
+
+		debug.trace("i = " + i)
 		ObjectReference o = akCell.GetNthRef(i, SearchFormType)
-		string cell_id = (akCell.GetFormID() as String)
-		string dist_id = cell_id + "_dist"
-		if FormListFind(SearchDataForm, cell_id, o as Form) == -1
-			debug.trace("adding " + o + " to list.")
-			FormListAdd(SearchDataForm, cell_id, o as Form)
-			FloatListAdd(SearchDataForm, dist_id, o.GetDistance(PlayerRef))
+		string cell_id = (akCell as String)
+		;string dist_id = cell_id + "_dist"
+		
+		int idx = FormListAdd(SearchDataForm, cell_id, o as Form, allowDuplicate = false)
+		if idx != -1
+			DetectionRefAddedAction(o)
+			;debug.trace("added " + o + " to list.")
+			;FloatListAdd(SearchDataForm, dist_id, o.GetDistance(PlayerRef))
 		endif
 		i += 1
 	endWhile
+	;debug.StopStackProfiling()
 endFunction
 
 function ScanAllTrackedCells()
@@ -146,12 +153,13 @@ endFunction
 function RefreshRefs()
 	; Refresh the distances and glow state of all objects
 	refreshing = true
-	float detection_distance = 2048.0 + (_Camp_PerkRank_KeenSenses.GetValueInt() * 1024.0)
+	;float detection_distance = 2048.0 + (_Camp_PerkRank_KeenSenses.GetValueInt() * 1024.0)
 
-	int i = 0
-	while i < 4
+	;int i = 0
+	debug.StartStackProfiling()
+	;/while i < 4
 		if cellsToSearch[i]
-			string cell_id = (cellsToSearch[i].GetFormID() as String)
+			string cell_id = (cellsToSearch[i] as String)
 			string dist_id = cell_id + "_dist"
 
 			int ref_count = FormListCount(SearchDataForm, cell_id)
@@ -173,7 +181,14 @@ function RefreshRefs()
 		endif
 		i += 1
 	endWhile
+	/;
+	SendEvent_InstinctsRefreshState()
+	debug.StopStackProfiling()
 	refreshing = false
+endFunction
+
+function DetectionRefAddedAction(ObjectReference akReference)
+
 endFunction
 
 function DetectionGainedAction(ObjectReference akReference)
@@ -202,7 +217,7 @@ function CleanUpCell(Cell akCell)
 		t += 1
 	endWhile
 
-	string cell_id = (akCell.GetFormID() as String)
+	string cell_id = (akCell as String)
 	string dist_id = cell_id + "_dist"
 
 	int ref_count = FormListCount(SearchDataForm, cell_id)
@@ -238,4 +253,11 @@ function CreateUniqueArray(Cell akCell1, Cell akCell2, Cell akCell3, Cell akCell
 		endif
 		i += 1
 	endWhile
+endFunction
+
+function SendEvent_InstinctsRefreshState()
+	int handle = ModEvent.Create("Campfire_InstinctsRefreshState")
+	if handle
+		ModEvent.Send(handle)
+	endif
 endFunction
