@@ -33,6 +33,7 @@ function Initialize()
 	self.SetAngle(0.0, 0.0, \
                   self.GetAngleZ() + self.GetHeadingAngle(PlayerRef) + 180.0)
 	parent.Initialize()
+	CheckCampfireExists()
 endFunction
 
 function Update()
@@ -152,3 +153,31 @@ endFunction
 ObjectReference function PlaceObject_Bug(Activator akBug, ObjectReference akPositionRef)
 	return PlacementSystem.PlaceObject(self, akBug, akPositionRef, initially_disabled = true, is_temp = is_temporary)
 endFunction
+
+function CheckCampfireExists()
+    ; Campfire 1.8 Fix: Try to find a nearby campfire and kill myself if not found.
+    FormList _Camp_CampfireCampfires = Game.GetFormFromFile(0x06BBE8, "Campfire.esm") as FormList
+    ObjectReference nearbyCampfire = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_CampfireCampfires, self, 100.0)
+    if !nearbyCampfire
+        CampDebug(2, "(Init/Attach) Found invalid Campfire perk bug nav controller " + self + ". Cleaning up.")
+        int i = 0
+        while !initialized && i < 20
+            Utility.Wait(1)
+            i += 1
+        endWhile
+        TakeDown()
+        CampDebug(2, self + " removed.")
+    endif
+endFunction
+
+Event OnCellAttach()
+    CheckCampfireExists()
+EndEvent
+
+Event OnCellDetach()
+    if !myCampfire
+    	CampDebug(2, "(Detach) Found invalid Campfire perk bug nav controller " + self + ". Cleaning up.")
+        TakeDown()
+        CampDebug(2, self + " removed.")
+    endif
+EndEvent
