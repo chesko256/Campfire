@@ -27,17 +27,16 @@ function RegisterForModEvents()
 endFunction
 
 Event InstinctsStartSearch(Form akCell1, Form akCell2, Form akCell3, Form akCell4)
-	debug.trace("test got start search")
+	;/debug.trace("test got start search")
 	cellsToSearch = new Cell[4]
 	CreateUniqueArray(akCell1 as Cell, akCell2 as Cell, akCell3 as Cell, akCell4 as Cell, cellsToSearch)
 	debug.trace("Unique cell array " + cellsToSearch)
-	int i = 0
-	while i < 4
-		Search(cellsToSearch[i])
-		i += 1
-	endWhile
+	ScanAllTrackedCells()
+	RefreshRefs()
 	RegisterForSingleUpdate(5)
 	searching = true
+	/;
+	self.Start()
 EndEvent
 
 Event InstinctsSearchCellUpdate(Form akCell1, Form akCell2, Form akCell3, Form akCell4)
@@ -89,7 +88,7 @@ Event InstinctsSearchCellUpdate(Form akCell1, Form akCell2, Form akCell3, Form a
 EndEvent
 
 Event InstinctsStopSearch()
-	debug.trace("test got stop search")
+	;/debug.trace("test got stop search")
 	searching = false
 	int i = 0
 	while i < 4
@@ -97,6 +96,8 @@ Event InstinctsStopSearch()
 		i += 1
 	endWhile
 	debug.trace("test stopped search.")
+	/;
+	self.Stop()
 EndEvent
 
 Event OnUpdate()
@@ -142,12 +143,14 @@ endFunction
 
 function ScanAllTrackedCells()
 	int i = 0
+	debug.StartStackProfiling()
 	while i < 4
 		if cellsToSearch[i]
 			ScanCell(cellsToSearch[i])
 		endif
 		i += 1
 	endWhile
+	debug.StopStackProfiling()
 endFunction
 
 function RefreshRefs()
@@ -156,7 +159,7 @@ function RefreshRefs()
 	;float detection_distance = 2048.0 + (_Camp_PerkRank_KeenSenses.GetValueInt() * 1024.0)
 
 	;int i = 0
-	debug.StartStackProfiling()
+	;debug.StartStackProfiling()
 	;/while i < 4
 		if cellsToSearch[i]
 			string cell_id = (cellsToSearch[i] as String)
@@ -183,7 +186,7 @@ function RefreshRefs()
 	endWhile
 	/;
 	SendEvent_InstinctsRefreshState()
-	debug.StopStackProfiling()
+	;debug.StopStackProfiling()
 	refreshing = false
 endFunction
 
