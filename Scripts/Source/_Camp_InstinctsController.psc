@@ -46,18 +46,19 @@ function StartSearching()
     RegisterForMenu("Dialogue Menu")
 	probe_ref = PlayerRef.PlaceAtMe(XMarker)
 	Cell[] cellsToSearch = GetCellsToSearch()
-	SendEvent_InstinctsStartSearch(cellsToSearch)
-	lastCellsToSearch = new Cell[4]
+	SendEvent_InstinctsStartSearch()
+	;/lastCellsToSearch = new Cell[4]
 	lastCellsToSearch[0] = cellsToSearch[0]
 	lastCellsToSearch[1] = cellsToSearch[1]
 	lastCellsToSearch[2] = cellsToSearch[2]
 	lastCellsToSearch[3] = cellsToSearch[3]
+	/;
 	RegisterForSingleUpdate(5)
 endFunction
 
 Event OnUpdate()
 	debug.trace("Updating cells.")
-	SearchCellUpdate()
+	;SearchCellUpdate()
 	if searching
 		if PlayerRef.IsOnMount()
             _Camp_VisionPowerErrorMounted.Show()
@@ -109,17 +110,7 @@ function CancelEffect_Movement()
 endFunction
 
 function SearchCellUpdate()
-	Cell[] cellsToSearch = GetCellsToSearch()
-
-	; Only notify the search controllers if the cell radius changes.
-	if cellsToSearch != lastCellsToSearch
-		SendEvent_InstinctsSearchCellUpdate(cellsToSearch)
-		lastCellsToSearch = new Cell[4]
-	    lastCellsToSearch[0] = cellsToSearch[0]
-    	lastCellsToSearch[1] = cellsToSearch[1]
-    	lastCellsToSearch[2] = cellsToSearch[2]
-    	lastCellsToSearch[3] = cellsToSearch[3]
-    endif
+	
 endFunction
 
 Cell[] function GetCellsToSearch()
@@ -169,13 +160,9 @@ float[] function GetOffsetsFromPos(Float afDistance = 100.0, float afOffset = 0.
 	Return Offsets
 EndFunction
 
-function SendEvent_InstinctsStartSearch(Cell[] akCells)
+function SendEvent_InstinctsStartSearch()
 	int handle = ModEvent.Create("Campfire_InstinctsStartSearch")
 	if handle
-		ModEvent.PushForm(handle, akCells[0])
-		ModEvent.PushForm(handle, akCells[1])
-		ModEvent.PushForm(handle, akCells[2])
-		ModEvent.PushForm(handle, akCells[3])
 		ModEvent.Send(handle)
 	endif
 endFunction
