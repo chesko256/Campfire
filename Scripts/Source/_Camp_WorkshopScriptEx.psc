@@ -16,6 +16,8 @@ int property MyCustomWorkshopID auto
 
 Quest property _Camp_SettlementManager auto Mandatory
 Message property _Camp_Error_StoreWorkshop auto
+Message property _Camp_SupplyLinesWait auto
+Message property _Camp_SupplyLinesReady auto
 
 ; Emulated Supply Line system
 Keyword property WorkshopCaravanKeyword auto
@@ -408,3 +410,13 @@ Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRefe
 		endif
 	endif
 EndEvent
+
+; 1.4 - Item Persistence Arrays
+ObjectReference[] WorkshopObjects1
+ObjectReference[] WorkshopObjects2
+ObjectReference[] WorkshopObjects3
+ObjectReference[] WorkshopObjects4
+ObjectReference[] WorkshopObjects5
+ObjectReference[] WorkshopObjects6
+ObjectReference[] WorkshopObjects7
+ObjectReference[] WorkshopObjects8
