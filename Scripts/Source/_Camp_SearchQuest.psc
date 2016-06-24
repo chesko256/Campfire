@@ -11,20 +11,17 @@ ReferenceAlias property Alias8 auto
 ReferenceAlias property Alias9 auto
 ReferenceAlias property Alias10 auto
 
-Event OnInit()
-	RegisterForModEvent("Campfire_InstinctsStartSearch", "InstinctsStartSearch")
-	RegisterForModEvent("Campfire_InstinctsStopSearch", "InstinctsStopSearch")
-EndEvent
-
 Event InstinctsStartSearch()
-	debug.trace("Starting!")
+	debug.trace("Starting quest.")
+	self.Start()
+	debug.trace("Quest started.")
 	int i = 0
 	while !IsReadyToStart() && i < 20
 		Utility.Wait(0.2)
 		i += 1
 	endWhile
-	self.Start()
 	SendEvent_InstinctsRunAliases()
+	debug.trace("Event sent.")
 endEvent
 
 Event InstinctsStopSearch()
@@ -32,19 +29,19 @@ Event InstinctsStopSearch()
 endEvent
 
 bool function IsReadyToStart()
-	if Alias1.GetRef() ||	\
-	   Alias2.GetRef() ||	\
-	   Alias3.GetRef() ||	\
-	   Alias4.GetRef() ||	\
-	   Alias5.GetRef() ||	\
-	   Alias6.GetRef() ||	\
-	   Alias7.GetRef() ||	\
-	   Alias8.GetRef() ||	\
-	   Alias9.GetRef() ||	\
-	   Alias10.GetRef()
-	   	return false
+	if SearchAlias(Alias1).initialized &&	\
+	   SearchAlias(Alias2).initialized &&	\
+	   SearchAlias(Alias3).initialized &&	\
+	   SearchAlias(Alias4).initialized &&	\
+	   SearchAlias(Alias5).initialized &&	\
+	   SearchAlias(Alias6).initialized &&	\
+	   SearchAlias(Alias7).initialized &&	\
+	   SearchAlias(Alias8).initialized &&	\
+	   SearchAlias(Alias9).initialized &&	\
+	   SearchAlias(Alias10).initialized
+	   	return true
 	else
-		return true
+		return false
 	endif
 endFunction
 
