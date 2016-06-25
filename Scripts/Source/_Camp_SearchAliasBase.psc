@@ -15,11 +15,11 @@ Event InstinctsRunAliases()
 	debug.trace("[Campfire]" + self + " InstinctsRunAliases received.")
 	float detection_distance = 2048.0 + (_Camp_PerkRank_KeenSenses.GetValueInt() * 1024.0)
 	ObjectReference ref = self.GetRef()
-	if PlayerRef.GetDistance(ref) <= detection_distance
+	if ref && PlayerRef.GetDistance(ref) <= detection_distance
 		debug.trace("[Campfire] " + ref + " running!")
 		AliasStart(ref)
 	else
-		debug.trace("[Campfire] " + ref + " too far away.")
+		debug.trace("[Campfire] " + ref + " is none or too far away.")
 	endif
 endEvent
 

@@ -15,11 +15,7 @@ Event InstinctsStartSearch()
 	debug.trace("Starting quest.")
 	self.Start()
 	debug.trace("Quest started.")
-	int i = 0
-	while !IsReadyToStart() && i < 20
-		Utility.Wait(0.2)
-		i += 1
-	endWhile
+	WaitUntilReady()
 	SendEvent_InstinctsRunAliases()
 	debug.trace("Event sent.")
 endEvent
@@ -27,6 +23,14 @@ endEvent
 Event InstinctsStopSearch()
 	self.Stop()
 endEvent
+
+function WaitUntilReady()
+	int i = 0
+	while !IsReadyToStart() && i < 20
+		Utility.Wait(0.2)
+		i += 1
+	endWhile
+endFunction
 
 bool function IsReadyToStart()
 	if SearchAlias(Alias1).initialized &&	\

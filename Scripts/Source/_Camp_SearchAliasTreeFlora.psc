@@ -1,11 +1,11 @@
-scriptname _Camp_SearchAliasTinder extends _Camp_SearchAliasBase
+scriptname _Camp_SearchAliasTreeFlora extends _Camp_SearchAliasBase
 
-Activator property _Camp_InstinctsGlowTinderFX auto
+Activator property _Camp_InstinctsGlowFloraFX auto
 ObjectReference fx
 
 function AliasStart(ObjectReference akReference)
 	if !akReference.IsHarvested()
-		fx = akReference.PlaceAtMe(_Camp_InstinctsGlowTinderFX, abInitiallyDisabled = true)
+		fx = akReference.PlaceAtMe(_Camp_InstinctsGlowFloraFX, abInitiallyDisabled = true)
 		fx.MoveTo(fx, afZOffset = 24)
     	fx.EnableNoWait(true)
     endif
