@@ -2,10 +2,10 @@ scriptname _Camp_InstinctsController extends ActiveMagicEffect
 {Maintains Instincts state-related things.}
 
 import math
+import CommonHelperFunctions
 
 ; Find New Usable Objects (Campfires, Deadwood, etc) (static + movable static)
 ; Find Branches Near Trees (trees with no name)
-; Find Arrows (ammoprojectile)
 ; Find Tinder Items (stuff to make tinder with)
 ; Find Harvestable Plants (trees with names, flora)
 ; Smell Dead Bodies (dead actors, uses MagicEffect)
@@ -17,7 +17,14 @@ Message property _Camp_VisionPowerErrorMounted auto
 Spell property _Camp_SurvivalVisionPower auto
 GlobalVariable property _Camp_PerkRank_KeenSenses auto
 
-Quest property _Camp_InstinctsTreeSearch auto
+Quest property _Camp_InstinctsTreeTinderSearch auto
+Quest property _Camp_InstinctsTreeFloraSearch auto
+Quest property _Camp_InstinctsArrowSearch auto
+Spell property _Camp_SurvivalVisionPowerDetectSpell auto
+Spell property _Camp_SurvivalVisionPowerGuideSpell auto
+
+float playerX = 0.0
+float playerY = 0.0
 
 bool searching = false
 
@@ -42,19 +49,27 @@ function StartSearching()
     RegisterForModEvent("Campfire_PlayerHit", "PlayerHit")
     RegisterForMenu("Dialogue Menu")
 
+    _Camp_SurvivalVisionPowerDetectSpell.Cast(PlayerRef)
+    _Camp_SurvivalVisionPowerGuideSpell.Cast(PlayerRef)
+
+    playerX = PlayerRef.GetPositionX()
+    playerY = PlayerRef.GetPositionY()
 	RegisterEventsOnSearchQuests()
 	SendEvent_InstinctsStartSearch()
-	; RegisterForSingleUpdate(5)
+	RegisterForSingleUpdate(5)
 endFunction
 
 function RegisterEventsOnSearchQuests()
-	_Camp_InstinctsTreeSearch.RegisterForModEvent("Campfire_InstinctsStartSearch", "InstinctsStartSearch")
-	_Camp_InstinctsTreeSearch.RegisterForModEvent("Campfire_InstinctsStopSearch", "InstinctsStopSearch")
+	_Camp_InstinctsTreeTinderSearch.RegisterForModEvent("Campfire_InstinctsStartSearch", "InstinctsStartSearch")
+	_Camp_InstinctsTreeTinderSearch.RegisterForModEvent("Campfire_InstinctsStopSearch", "InstinctsStopSearch")
+	_Camp_InstinctsTreeFloraSearch.RegisterForModEvent("Campfire_InstinctsStartSearch", "InstinctsStartSearch")
+	_Camp_InstinctsTreeFloraSearch.RegisterForModEvent("Campfire_InstinctsStopSearch", "InstinctsStopSearch")
+	;_Camp_InstinctsArrowSearch.RegisterForModEvent("Campfire_InstinctsStartSearch", "InstinctsStartSearch")
+	;_Camp_InstinctsArrowSearch.RegisterForModEvent("Campfire_InstinctsStopSearch", "InstinctsStopSearch")
 endFunction
 
 Event OnUpdate()
-	debug.trace("Updating cells.")
-	;SearchCellUpdate()
+	debug.trace("Updating.")
 	if searching
 		if PlayerRef.IsOnMount()
             _Camp_VisionPowerErrorMounted.Show()
@@ -62,6 +77,22 @@ Event OnUpdate()
             PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
             return
         endif
+
+        ; Keep the detection effects alive
+        _Camp_SurvivalVisionPowerDetectSpell.Cast(PlayerRef)
+        _Camp_SurvivalVisionPowerGuideSpell.Cast(PlayerRef)
+
+        float newX = PlayerRef.GetPositionX()
+        float newY = PlayerRef.GetPositionY()
+
+        float dist = GetDistance2DCoords(playerX, playerY, newX, newY)
+        if dist > 256.0
+        	RefreshObjects()
+        endif
+
+        playerX = newX
+        playerY = newY
+
 		RegisterForSingleUpdate(5)
 	endif
 EndEvent
@@ -90,16 +121,6 @@ EndEvent
 
 function CancelEffect_Movement()
     ; The effect is being cancelled because the player moved.
-
-    ;@TODO
-    ; Wait until an update cycle isn't running, or else we could remove the effect
-    ; from the actor and then try to register for an update with no native object bound.
-    ;int i = 0
-    ;while updating && i < 50
-    ;    utility.wait(0.1)
-    ;    i += 1
-    ;endWhile
-
     UnregisterForUpdate()
     StopSearching()
     PlayerRef.DispelSpell(_Camp_SurvivalVisionPower)
@@ -108,6 +129,14 @@ endFunction
 function StopSearching()
 	debug.trace("Stopping search.")
 	SendEvent_InstinctsStopSearch()
+endFunction
+
+function RefreshObjects()
+	SendEvent_InstinctsStopSearch()
+	debug.trace("Moved; refreshing objects.")
+	Utility.Wait(0.2)
+	RegisterEventsOnSearchQuests()
+	SendEvent_InstinctsStartSearch()
 endFunction
 
 function SendEvent_InstinctsStartSearch()
@@ -123,27 +152,3 @@ function SendEvent_InstinctsStopSearch()
 		ModEvent.Send(handle)
 	endif
 endFunction
-
-; instinct spell
-; instinct effect - has existing stuff
-; effect does cell probing. All it does is REPORT the data to a quest (Instincts controller) who maintains state
-; instincts controller sends events for search objects
-
-
-;/ Generic expected behavior:
-
-1. Search the area for all references we care about. <---- SLOW
-	Make it faster: Only search for:
-		Trees with NO name
-		Trees with Names (i.e. flora)
-		Movable Statics
-		Statics
-		ArrowProjectiles
-2. For each ref we care about, check (or know) their distance from the player.
-3. For each ref we care about, check the "found ref list" and abort if it's in it.
-4. If it's not in the list, put it in the list and figure out what to do.
-5. Look up what to do based on a set of registration values. (Glow, membrane, replace, etc)
-6. For every found "valid" object that is replaced or glowing, spawn 
-a state controller for that item. The state controller manages the lifecycle of
-that object's glowing / ownership / how long it lasts / swapping back if
-we receive an SKSE event./;
