@@ -18,6 +18,7 @@ Spell property _Camp_SurvivalVisionPower auto
 GlobalVariable property _Camp_PerkRank_KeenSenses auto
 
 Quest property _Camp_InstinctsTreeTinderSearch auto
+Quest property _Camp_InstinctsOtherTinderSearch auto
 Quest property _Camp_InstinctsTreeFloraSearch auto
 Quest property _Camp_InstinctsArrowSearch auto
 Spell property _Camp_SurvivalVisionPowerDetectSpell auto
@@ -62,6 +63,8 @@ endFunction
 function RegisterEventsOnSearchQuests()
 	_Camp_InstinctsTreeTinderSearch.RegisterForModEvent("Campfire_InstinctsStartSearch", "InstinctsStartSearch")
 	_Camp_InstinctsTreeTinderSearch.RegisterForModEvent("Campfire_InstinctsStopSearch", "InstinctsStopSearch")
+	_Camp_InstinctsOtherTinderSearch.RegisterForModEvent("Campfire_InstinctsStartSearch", "InstinctsStartSearch")
+	_Camp_InstinctsOtherTinderSearch.RegisterForModEvent("Campfire_InstinctsStopSearch", "InstinctsStopSearch")
 	_Camp_InstinctsTreeFloraSearch.RegisterForModEvent("Campfire_InstinctsStartSearch", "InstinctsStartSearch")
 	_Camp_InstinctsTreeFloraSearch.RegisterForModEvent("Campfire_InstinctsStopSearch", "InstinctsStopSearch")
 	;_Camp_InstinctsArrowSearch.RegisterForModEvent("Campfire_InstinctsStartSearch", "InstinctsStartSearch")
