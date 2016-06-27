@@ -1185,190 +1185,190 @@ bool function UnregisterPerkTree(Activator akPerkNodeController, string asPlugin
 	return compatibility.CampfirePerkSystemUnregister(akPerkNodeController, asPluginName)
 endFunction
 
-;/********f* CampUtil/RegisterExamineReplacement
-* API VERSION ADDED
-* 5
-*
-* DESCRIPTION
-* Register a new association between akFormToReplace and the Form to replace it with (akTargetForm) when using 
-* Survival Skill: Examine.
-*
-* SYNTAX
-*/;
-bool function RegisterExamineReplacement(Form akFormToReplace, Form akTargetForm, Message akSuccessMessage, \
-										 bool abForceRegistration = false, FormList akExtraObjectsToDisableList = None) global
-;/*
-* PARAMETERS
-* akFormToReplace: The form to look for and replace when using Examine.
-* akTargetForm: The form to replace akFormToReplace with when using Examine.
-* akSuccessMessage: The message to display when the object is successfully replaced.
-* abForceRegistration (Optional): If True, will register the examine replacement even if akFormToReplace is already registered to something else, overwriting the previous registration.
-* akExtraObjectsToDisableList (Optional): A formlist of objects to disable, if found within 512.0 units of akFormToReplace.
-*
-* RETURN VALUE
-* True if the replacement mapping was successfully registered. False if this mapping could not be registered
-* (akFormToReplace has already been mapped to something else without the Force flag turned on, or one of the 
-* required parameters is None).
-;*********/;
-	CampfireAPI Campfire = GetAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return false
-	endif
-
-	_Camp_Compatibility c = GetCompatibilitySystem()
-	if !c.ExamineFormsToReplace
-		return false
-	endif
-	
-	if akFormToReplace && akTargetForm && akSuccessMessage
-		int i = CommonArrayHelper.ArrayCountForm(c.ExamineFormsToReplace)
-		if i < 128
-			int idx = c.ExamineFormsToReplace.Find(akFormToReplace)
-			if idx == -1 || abForceRegistration
-				c.ExamineFormsToReplace[i] = akFormToReplace
-				c.ExamineReplacementForms[i] = akTargetForm
-				c.ExamineSuccessMessages[i] = akSuccessMessage
-				if akExtraObjectsToDisableList
-					c.ExamineExtraFormsToDisable[i] = akExtraObjectsToDisableList
-				endif
-				return true
-			else
-				return false
-			endif
-		else
-			return false
-		endif
-	else
-		return false
-	endif
-endFunction
-
-;/********f* CampUtil/UnregisterExamineReplacement
-* API VERSION ADDED
-* 5
-*
-* DESCRIPTION
-* Unregisters a Survival Skill: Examine association between two Forms.
-*
-* NOTES
-* If the Examine registration replaces a Form with a Form in your mod, you do not need to unregister
-* it before your user uninstalls the mod. The system will remove the registration automatically if it finds an
-* association where the replacement Form is None (which would happen if your mod is uninstalled). However, if 
-* the replacement is between two different forms not from your mod, you must unregister it if you want the 
-* replacement to no longer function.
-*
-* SYNTAX
-*/;
-bool function UnregisterExamineReplacement(Form akFormToReplace) global
-;/*
-* PARAMETERS
-* akFormToReplace: The previously registered Form to unregister.
-*
-* RETURN VALUE
-* True if the replacement mapping was successfully unregistered. False if akFormToReplace was not found.
-;*********/;
-	CampfireAPI Campfire = GetAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return false
-	endif
-
-	_Camp_Compatibility c = GetCompatibilitySystem()
-	if !c.ExamineFormsToReplace || !akFormToReplace
-		return false
-	endif
-
-	int idx = c.ExamineFormsToReplace.Find(akFormToReplace)
-	if idx != -1
-		CommonArrayHelper.ArrayRemoveForm(c.ExamineFormsToReplace, akFormToReplace, true)
-		CommonArrayHelper.ArrayRemoveForm(c.ExamineReplacementForms, c.ExamineReplacementForms[idx], true)
-		CommonArrayHelper.ArrayRemoveMessage(c.ExamineSuccessMessages, c.ExamineSuccessMessages[idx], true)
-		if c.ExamineExtraFormsToDisable[idx]
-			CommonArrayHelper.ArrayRemoveFormList(c.ExamineExtraFormsToDisable, c.ExamineExtraFormsToDisable[idx], true)
-		endif
-		return true
-	else
-		return false
-	endif
-	
-	
-endFunction
-
-;/********f* CampUtil/HasExamineReplacement
-* API VERSION ADDED
-* 5
-*
-* DESCRIPTION
-* Checks if akBaseObject has a Survival Skill: Examine replacement already registered.
-*
-* NOTES
-* In general, you don't need to call this before calling `RegisterExamineReplacement()`; it will simply
-* return False if the Form is already registered.
-*
-* SYNTAX
-*/;
-bool function HasExamineReplacement(Form akBaseObject) global
-;/*
-* PARAMETERS
-* akBaseObject: The Form to check for an Examine registration.
-*
-* RETURN VALUE
-* True if the Form is already registered, False if not.
-;*********/;
-	CampfireAPI Campfire = GetAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return false
-	endif
-	
-	_Camp_Compatibility c = GetCompatibilitySystem()
-	if !c.ExamineFormsToReplace || !akBaseObject
-		return false
-	endif
-
-	if c.ExamineFormsToReplace.Find(akBaseObject) != -1
-		return true
-	else
-		return false
-	endif
-endFunction
-
-;/********f* CampUtil/GetExamineReplacementTarget
-* API VERSION ADDED
-* 5
-*
-* DESCRIPTION
-* Returns the Form that will replace akBaseObject when using Survival Skill: Examine.
-*
-* SYNTAX
-*/;
-Form function GetExamineReplacementTarget(Form akBaseObject) global
-;/*
-* PARAMETERS
-* akBaseObject: The Form to look up.
-*
-* RETURN VALUE
-* The Form registered to replace akBaseObject, or None if a registration wasn't found.
-;*********/;
-	CampfireAPI Campfire = GetAPI()
-	if Campfire == none
-		RaiseCampAPIError()
-		return None
-	endif
-	
-	_Camp_Compatibility c = GetCompatibilitySystem()
-	if !c.ExamineFormsToReplace || !akBaseObject
-		return None
-	endif
-
-	int i = c.ExamineFormsToReplace.Find(akBaseObject)
-	if i != -1
-		return c.ExamineReplacementForms[i]
-	else
-		return None
-	endif
-endFunction
+;;/********f* CampUtil/RegisterExamineReplacement
+;* API VERSION ADDED
+;* 5
+;*
+;* DESCRIPTION
+;* Register a new association between akFormToReplace and the Form to replace it with (akTargetForm) when using 
+;* Survival Skill: Examine.
+;*
+;* SYNTAX
+;*/;
+;bool function RegisterExamineReplacement(Form akFormToReplace, Form akTargetForm, Message akSuccessMessage, \
+;										 bool abForceRegistration = false, FormList akExtraObjectsToDisableList = None) global
+;;/*
+;* PARAMETERS
+;* akFormToReplace: The form to look for and replace when using Examine.
+;* akTargetForm: The form to replace akFormToReplace with when using Examine.
+;* akSuccessMessage: The message to display when the object is successfully replaced.
+;* abForceRegistration (Optional): If True, will register the examine replacement even if akFormToReplace is already registered to something else, overwriting the previous registration.
+;* akExtraObjectsToDisableList (Optional): A formlist of objects to disable, if found within 512.0 units of akFormToReplace.
+;*
+;* RETURN VALUE
+;* True if the replacement mapping was successfully registered. False if this mapping could not be registered
+;* (akFormToReplace has already been mapped to something else without the Force flag turned on, or one of the 
+;* required parameters is None).
+;;*********/;
+;	CampfireAPI Campfire = GetAPI()
+;	if Campfire == none
+;		RaiseCampAPIError()
+;		return false
+;	endif
+;
+;	_Camp_Compatibility c = GetCompatibilitySystem()
+;	if !c.ExamineFormsToReplace
+;		return false
+;	endif
+	;
+;	if akFormToReplace && akTargetForm && akSuccessMessage
+;		int i = CommonArrayHelper.ArrayCountForm(c.ExamineFormsToReplace)
+;		if i < 128
+;			int idx = c.ExamineFormsToReplace.Find(akFormToReplace)
+;			if idx == -1 || abForceRegistration
+;				c.ExamineFormsToReplace[i] = akFormToReplace
+;				c.ExamineReplacementForms[i] = akTargetForm
+;				c.ExamineSuccessMessages[i] = akSuccessMessage
+;				if akExtraObjectsToDisableList
+;					c.ExamineExtraFormsToDisable[i] = akExtraObjectsToDisableList
+;				endif
+;				return true
+;			else
+;				return false
+;			endif
+;		else
+;			return false
+;		endif
+;	else
+;		return false
+;	endif
+;endFunction
+;
+;;/********f* CampUtil/UnregisterExamineReplacement
+;* API VERSION ADDED
+;* 5
+;*
+;* DESCRIPTION
+;* Unregisters a Survival Skill: Examine association between two Forms.
+;*
+;* NOTES
+;* If the Examine registration replaces a Form with a Form in your mod, you do not need to unregister
+;* it before your user uninstalls the mod. The system will remove the registration automatically if it finds an
+;* association where the replacement Form is None (which would happen if your mod is uninstalled). However, if 
+;* the replacement is between two different forms not from your mod, you must unregister it if you want the 
+;* replacement to no longer function.
+;*
+;* SYNTAX
+;*/;
+;bool function UnregisterExamineReplacement(Form akFormToReplace) global
+;;/*
+;* PARAMETERS
+;* akFormToReplace: The previously registered Form to unregister.
+;*
+;* RETURN VALUE
+;* True if the replacement mapping was successfully unregistered. False if akFormToReplace was not found.
+;;*********/;
+;	CampfireAPI Campfire = GetAPI()
+;	if Campfire == none
+;		RaiseCampAPIError()
+;		return false
+;	endif
+;
+;	_Camp_Compatibility c = GetCompatibilitySystem()
+;	if !c.ExamineFormsToReplace || !akFormToReplace
+;		return false
+;	endif
+;
+;	int idx = c.ExamineFormsToReplace.Find(akFormToReplace)
+;	if idx != -1
+;		CommonArrayHelper.ArrayRemoveForm(c.ExamineFormsToReplace, akFormToReplace, true)
+;		CommonArrayHelper.ArrayRemoveForm(c.ExamineReplacementForms, c.ExamineReplacementForms[idx], true)
+;		CommonArrayHelper.ArrayRemoveMessage(c.ExamineSuccessMessages, c.ExamineSuccessMessages[idx], true)
+;		if c.ExamineExtraFormsToDisable[idx]
+;			CommonArrayHelper.ArrayRemoveFormList(c.ExamineExtraFormsToDisable, c.ExamineExtraFormsToDisable[idx], true)
+;		endif
+;		return true
+;	else
+;		return false
+;	endif
+	;
+	;
+;endFunction
+;
+;;/********f* CampUtil/HasExamineReplacement
+;* API VERSION ADDED
+;* 5
+;*
+;* DESCRIPTION
+;* Checks if akBaseObject has a Survival Skill: Examine replacement already registered.
+;*
+;* NOTES
+;* In general, you don't need to call this before calling `RegisterExamineReplacement()`; it will simply
+;* return False if the Form is already registered.
+;*
+;* SYNTAX
+;*/;
+;bool function HasExamineReplacement(Form akBaseObject) global
+;;/*
+;* PARAMETERS
+;* akBaseObject: The Form to check for an Examine registration.
+;*
+;* RETURN VALUE
+;* True if the Form is already registered, False if not.
+;;*********/;
+;	CampfireAPI Campfire = GetAPI()
+;	if Campfire == none
+;		RaiseCampAPIError()
+;		return false
+;	endif
+	;
+;	_Camp_Compatibility c = GetCompatibilitySystem()
+;	if !c.ExamineFormsToReplace || !akBaseObject
+;		return false
+;	endif
+;
+;	if c.ExamineFormsToReplace.Find(akBaseObject) != -1
+;		return true
+;	else
+;		return false
+;	endif
+;endFunction
+;
+;;/********f* CampUtil/GetExamineReplacementTarget
+;* API VERSION ADDED
+;* 5
+;*
+;* DESCRIPTION
+;* Returns the Form that will replace akBaseObject when using Survival Skill: Examine.
+;*
+;* SYNTAX
+;*/;
+;Form function GetExamineReplacementTarget(Form akBaseObject) global
+;;/*
+;* PARAMETERS
+;* akBaseObject: The Form to look up.
+;*
+;* RETURN VALUE
+;* The Form registered to replace akBaseObject, or None if a registration wasn't found.
+;;*********/;
+;	CampfireAPI Campfire = GetAPI()
+;	if Campfire == none
+;		RaiseCampAPIError()
+;		return None
+;	endif
+	;
+;	_Camp_Compatibility c = GetCompatibilitySystem()
+;	if !c.ExamineFormsToReplace || !akBaseObject
+;		return None
+;	endif
+;
+;	int i = c.ExamineFormsToReplace.Find(akBaseObject)
+;	if i != -1
+;		return c.ExamineReplacementForms[i]
+;	else
+;		return None
+;	endif
+;endFunction
 
 ;/********f* CampUtil/GetCampfireSettingBool
 * API VERSION ADDED

@@ -7,16 +7,37 @@ Complete Camping System
 Change Log
 
 ===================================================
-Release 1.7.1 (2/28/2016)
+
+Release 1.8
 
 Features and Changes
 
-    This update supports creating tinder items using the Campfire Dev Kit without a direct dependency on Campfire.
+Survival Skill: Instincts Improvements
+	You can now toggle what Survival Skill: Instincts tracks on and off individually using the MCM.
+	You can now toggle the Instincts distortion visual effect and sound effect on and off.
+	Instincts can now allow you to see all harvestable flora more easily.
+	Instincts can now show you the path to your next quest target (disabled by default).
+	Instincts now works indoors, but is half as effective.
+	How fast and reliable Instincts works (making nearby objects glow) is now much better.
+	The glow effect transition when highlighting objects with Instincts is now smoother.
+
+Other Changes
+
+	Back-end changes required by Frostfall 3.1.
+
+Bug Fixes
+	Retroactively fixed a bug where old campfire skill trees would still be hovering where campfires had been built before. If you are experiencing this problem, after upgrading, orphaned skill trees should be deleted from your game automatically as you travel to areas where they used to be.
+
+
+Release 1.7.1
+
+Features and Changes
+
+This update supports creating tinder items using the Campfire Dev Kit without a direct dependency on Campfire.
         Added the following injected records:
         01CC0E0B - _Camp_CampfireItem_GoodWeather (MiscObject)
         01CC0E0C - _Camp_LastUsedCampfireSize (GlobalVariable)
         01CC0E0D - _Camp_LastUsedCampfireStage (GlobalVariable)
-
 
 Release 1.7 (2/23/2016)
 

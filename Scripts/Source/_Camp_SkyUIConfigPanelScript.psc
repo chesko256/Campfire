@@ -28,6 +28,13 @@ GlobalVariable property _Camp_Setting_CompatibilityEO auto
 GlobalVariable property _Camp_Setting_AutoSaveLoad auto
 GlobalVariable property _Camp_Setting_CurrentProfile auto
 GlobalVariable property _Camp_Setting_EnableTutorials auto
+GlobalVariable property _Camp_Setting_InstinctsFindTinder auto
+GlobalVariable property _Camp_Setting_InstinctsFindFlora auto
+GlobalVariable property _Camp_Setting_InstinctsHearCreatures auto
+GlobalVariable property _Camp_Setting_InstinctsSmellDead auto
+GlobalVariable property _Camp_Setting_InstinctsSenseObjective auto
+GlobalVariable property _Camp_Setting_InstinctsVFX auto
+GlobalVariable property _Camp_Setting_InstinctsSFX auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 GlobalVariable property _Camp_HotkeyCreateItem auto
 GlobalVariable property _Camp_HotkeyBuildCampfire auto
@@ -90,6 +97,14 @@ int Gameplay_HotkeyBuildCampfire_OID
 int Gameplay_HotkeyHarvestWood_OID
 int Gameplay_HotkeyInstincts_OID
 
+int Instincts_SettingFindTinder_OID
+int Instincts_SettingFindFlora_OID
+int Instincts_SettingHearCreatures_OID
+int Instincts_SettingSmellDead_OID
+int Instincts_SettingSenseObjective_OID
+int Instincts_SettingVFX_OID
+int Instincts_SettingSFX_OID
+
 int Advanced_SettingAdvancedPlacement_OID
 int Advanced_SettingMaxThreads_OID
 int Advanced_SettingTrackFollowers_OID
@@ -119,11 +134,12 @@ float MIN_THREADS = 0.0
 float MAX_THREADS = 30.0
 
 Event OnConfigInit()
-	Pages = new string[4]
+	Pages = new string[5]
 	Pages[0] = "$CampfireGameplayPage"
-	Pages[1] = "$CampfireAdvancedPage"
-	Pages[2] = "$CampfireHelpPage"
-	Pages[3] = "$CampfireSaveLoadPage"
+	Pages[1] = "$CampfireInstinctsPage"
+	Pages[2] = "$CampfireAdvancedPage"
+	Pages[3] = "$CampfireHelpPage"
+	Pages[4] = "$CampfireSaveLoadPage"
 	
 	TroubleshootingList = new string[2]
 	TroubleshootingList[0] = "$CampfireTroubleshooting0"
@@ -131,11 +147,11 @@ Event OnConfigInit()
 endEvent
 
 int function GetVersion()
-	return 2
+	return 3
 endFunction
 
 Event OnVersionUpdate(int a_version)
-	if (a_version >= 2 && CurrentVersion < 2)
+	if (a_version >= 3 && CurrentVersion < 3)
 		debug.trace("[Campfire][Info] Upgrading MCM script to version " + a_version)
 		OnConfigInit()
 	endif
@@ -250,6 +266,50 @@ function PageReset_Gameplay()
 	else
 		Gameplay_SettingCampingFollowersInteract_OID = AddToggleOption("$CampfireGameplaySettingFollowersInteract", false, OPTION_FLAG_DISABLED)		
 		Gameplay_SettingCampingFollowersRemoveGear_OID = AddToggleOption("$CampfireGameplaySettingShowFollowerGear", false, OPTION_FLAG_DISABLED)
+	endif
+endFunction
+
+function PageReset_Instincts()
+	SetCursorFillMode(TOP_TO_BOTTOM)
+	AddHeaderOption("$CampfireInstinctsHeaderDetection")
+	if _Camp_Setting_InstinctsFindTinder.GetValueInt() == 2
+		Instincts_SettingFindTinder_OID = AddToggleOption("$CampfireInstinctsSettingFindTinder", true)
+	else
+		Instincts_SettingFindTinder_OID = AddToggleOption("$CampfireInstinctsSettingFindTinder", false)
+	endif
+	if _Camp_Setting_InstinctsFindFlora.GetValueInt() == 2
+		Instincts_SettingFindFlora_OID = AddToggleOption("$CampfireInstinctsSettingFindFlora", true)
+	else
+		Instincts_SettingFindFlora_OID = AddToggleOption("$CampfireInstinctsSettingFindFlora", false)
+	endif
+	if _Camp_Setting_InstinctsHearCreatures.GetValueInt() == 2
+		Instincts_SettingHearCreatures_OID = AddToggleOption("$CampfireInstinctsSettingHearCreatures", true)
+	else
+		Instincts_SettingHearCreatures_OID = AddToggleOption("$CampfireInstinctsSettingHearCreatures", false)
+	endif
+	if _Camp_Setting_InstinctsSmellDead.GetValueInt() == 2
+		Instincts_SettingSmellDead_OID = AddToggleOption("$CampfireInstinctsSettingSmellDead", true)
+	else
+		Instincts_SettingSmellDead_OID = AddToggleOption("$CampfireInstinctsSettingSmellDead", false)
+	endif
+	if _Camp_Setting_InstinctsSenseObjective.GetValueInt() == 2
+		Instincts_SettingSenseObjective_OID = AddToggleOption("$CampfireInstinctsSettingSenseObjective", true)
+	else
+		Instincts_SettingSenseObjective_OID = AddToggleOption("$CampfireInstinctsSettingSenseObjective", false)
+	endif
+
+	SetCursorPosition(1)
+
+	AddHeaderOption("$CampfireInstinctsHeaderEffects")
+	if _Camp_Setting_InstinctsVFX.GetValueInt() == 2
+		Instincts_SettingVFX_OID = AddToggleOption("$CampfireInstinctsSettingVFX", true)
+	else
+		Instincts_SettingVFX_OID = AddToggleOption("$CampfireInstinctsSettingVFX", false)
+	endif
+	if _Camp_Setting_InstinctsSFX.GetValueInt() == 2
+		Instincts_SettingSFX_OID = AddToggleOption("$CampfireInstinctsSettingSFX", true)
+	else
+		Instincts_SettingSFX_OID = AddToggleOption("$CampfireInstinctsSettingSFX", false)
 	endif
 endFunction
 
@@ -391,6 +451,8 @@ event OnPageReset(string page)
 	
 	if page == "$CampfireGameplayPage"
 		PageReset_Gameplay()
+	elseif page == "$CampfireInstinctsPage"
+		PageReset_Instincts()
 	elseif page == "$CampfireAdvancedPage"
 		PageReset_Advanced()
 	elseif page == "$CampfireHelpPage"
@@ -439,6 +501,21 @@ event OnOptionHighlight(int option)
 	elseif option == Gameplay_HotkeyInstincts_OID
 		SetInfoText("$CampfireOptionHighlightHKInstincts")
 
+	elseif option == Instincts_SettingFindTinder_OID
+		SetInfoText("$CampfireOptionHighlightFindTinder")
+	elseif option == Instincts_SettingFindFlora_OID
+		SetInfoText("$CampfireOptionHighlightFindFlora")
+	elseif option == Instincts_SettingHearCreatures_OID
+		SetInfoText("$CampfireOptionHighlightHearCreatures")
+	elseif option == Instincts_SettingSmellDead_OID
+		SetInfoText("$CampfireOptionHighlightSmellDead")
+	elseif option == Instincts_SettingSenseObjective_OID
+		SetInfoText("$CampfireOptionHighlightSenseObjective")
+	elseif option == Instincts_SettingVFX_OID
+		SetInfoText("$CampfireOptionHighlightVFX")
+	elseif option == Instincts_SettingSFX_OID
+		SetInfoText("$CampfireOptionHighlightSFX")
+
 	elseif option == Advanced_SettingAdvancedPlacement_OID
 		SetInfoText("$CampfireOptionHighlightAdvancedPlacement")
 	elseif option == Advanced_SettingMaxThreads_OID
@@ -470,142 +547,50 @@ endEvent
 
 event OnOptionSelect(int option)
 	if option == Gameplay_SettingCampingArmorTentsText_OID
-		if _Camp_Setting_CampingArmorTakeOff.GetValueInt() == 2
-			_Camp_Setting_CampingArmorTakeOff.SetValueInt(1)
-			SetToggleOptionValue(Gameplay_SettingCampingArmorTentsText_OID, false)
-			ForcePageReset()
-		else
-			_Camp_Setting_CampingArmorTakeOff.SetValueInt(2)
-			SetToggleOptionValue(Gameplay_SettingCampingArmorTentsText_OID, true)
-			ForcePageReset()
-		endif
-		SaveSettingToCurrentProfile("tent_remove_player_equipment", _Camp_Setting_CampingArmorTakeOff.GetValueInt())
+		OnOptionSelectAction(_Camp_Setting_CampingArmorTakeOff, Gameplay_SettingCampingArmorTentsText_OID, "tent_remove_player_equipment")
+		ForcePageReset()
 	elseif option == Gameplay_SettingCampingLegalityToggle_OID
-		if _Camp_Setting_Legality.GetValueInt() == 2
-			_Camp_Setting_Legality.SetValueInt(1)
-			SetToggleOptionValue(Gameplay_SettingCampingLegalityToggle_OID, false)
-		else
-			_Camp_Setting_Legality.SetValueInt(2)
-			SetToggleOptionValue(Gameplay_SettingCampingLegalityToggle_OID, true)
-		endif
-		SaveSettingToCurrentProfile("camping_illegal_in_towns", _Camp_Setting_Legality.GetValueInt())
+		OnOptionSelectAction(_Camp_Setting_Legality, Gameplay_SettingCampingLegalityToggle_OID, "camping_illegal_in_towns")
 	elseif option == Gameplay_SettingCampingFlammabilityToggle_OID
-		if _Camp_Setting_EquipmentFlammable.GetValueInt() == 2
-			_Camp_Setting_EquipmentFlammable.SetValueInt(1)
-			SetToggleOptionValue(Gameplay_SettingCampingFlammabilityToggle_OID, false)
-		else
-			_Camp_Setting_EquipmentFlammable.SetValueInt(2)
-			SetToggleOptionValue(Gameplay_SettingCampingFlammabilityToggle_OID, true)
-		endif
-		SaveSettingToCurrentProfile("camping_gear_flammable", _Camp_Setting_EquipmentFlammable.GetValueInt())
+		OnOptionSelectAction(_Camp_Setting_EquipmentFlammable, Gameplay_SettingCampingFlammabilityToggle_OID, "camping_gear_flammable")
 	elseif option == Gameplay_SettingCampingPlaceHelm_OID
-		if _Camp_Setting_TakeOff_Helm.GetValueInt() == 2
-			_Camp_Setting_TakeOff_Helm.SetValueInt(1)
-			SetToggleOptionValue(Gameplay_SettingCampingPlaceHelm_OID, false)
-		else
-			_Camp_Setting_TakeOff_Helm.SetValueInt(2)
-			SetToggleOptionValue(Gameplay_SettingCampingPlaceHelm_OID, true)
-		endif
-		SaveSettingToCurrentProfile("tent_remove_player_helm", _Camp_Setting_TakeOff_Helm.GetValueInt())
+		OnOptionSelectAction(_Camp_Setting_TakeOff_Helm, Gameplay_SettingCampingPlaceHelm_OID, "tent_remove_player_helm")
 	elseif option == Gameplay_SettingCampingPlaceCuirass_OID
-		if _Camp_Setting_TakeOff_Cuirass.GetValueInt() == 2
-			_Camp_Setting_TakeOff_Cuirass.SetValueInt(1)
-			SetToggleOptionValue(Gameplay_SettingCampingPlaceCuirass_OID, false)
-		else
-			_Camp_Setting_TakeOff_Cuirass.SetValueInt(2)
-			SetToggleOptionValue(Gameplay_SettingCampingPlaceCuirass_OID, true)
-		endif
-		SaveSettingToCurrentProfile("tent_remove_player_cuirass", _Camp_Setting_TakeOff_Cuirass.GetValueInt())
+		OnOptionSelectAction(_Camp_Setting_TakeOff_Cuirass, Gameplay_SettingCampingPlaceCuirass_OID, "tent_remove_player_cuirass")
 	elseif option == Gameplay_SettingCampingPlaceGauntlets_OID
-		if _Camp_Setting_TakeOff_Gauntlets.GetValueInt() == 2
-			_Camp_Setting_TakeOff_Gauntlets.SetValueInt(1)
-			SetToggleOptionValue(Gameplay_SettingCampingPlaceGauntlets_OID, false)
-		else
-			_Camp_Setting_TakeOff_Gauntlets.SetValueInt(2)
-			SetToggleOptionValue(Gameplay_SettingCampingPlaceGauntlets_OID, true)
-		endif
-		SaveSettingToCurrentProfile("tent_remove_player_gauntlets", _Camp_Setting_TakeOff_Gauntlets.GetValueInt())
+		OnOptionSelectAction(_Camp_Setting_TakeOff_Gauntlets, Gameplay_SettingCampingPlaceGauntlets_OID, "tent_remove_player_gauntlets")
 	elseif option == Gameplay_SettingCampingPlaceBoots_OID
-		if _Camp_Setting_TakeOff_Boots.GetValueInt() == 2
-			_Camp_Setting_TakeOff_Boots.SetValueInt(1)
-			SetToggleOptionValue(Gameplay_SettingCampingPlaceBoots_OID, false)
-		else
-			_Camp_Setting_TakeOff_Boots.SetValueInt(2)
-			SetToggleOptionValue(Gameplay_SettingCampingPlaceBoots_OID, true)
-		endif
-		SaveSettingToCurrentProfile("tent_remove_player_boots", _Camp_Setting_TakeOff_Boots.GetValueInt())
+		OnOptionSelectAction(_Camp_Setting_TakeOff_Boots, Gameplay_SettingCampingPlaceBoots_OID, "tent_remove_player_boots")
 	elseif option == Gameplay_SettingCampingPlaceShield_OID
-		if _Camp_Setting_TakeOff_Shield.GetValueInt() == 2
-			_Camp_Setting_TakeOff_Shield.SetValueInt(1)
-			SetToggleOptionValue(Gameplay_SettingCampingPlaceShield_OID, false)
-		else
-			_Camp_Setting_TakeOff_Shield.SetValueInt(2)
-			SetToggleOptionValue(Gameplay_SettingCampingPlaceShield_OID, true)
-		endif
-		SaveSettingToCurrentProfile("tent_remove_player_shield", _Camp_Setting_TakeOff_Shield.GetValueInt())
+		OnOptionSelectAction(_Camp_Setting_TakeOff_Shield, Gameplay_SettingCampingPlaceShield_OID, "tent_remove_player_shield")
 	elseif option == Gameplay_SettingCampingPlaceWeapons_OID
-		if _Camp_Setting_TakeOff_Weapons.GetValueInt() == 2
-			_Camp_Setting_TakeOff_Weapons.SetValueInt(1)
-			SetToggleOptionValue(Gameplay_SettingCampingPlaceWeapons_OID, false)
-		else
-			_Camp_Setting_TakeOff_Weapons.SetValueInt(2)
-			SetToggleOptionValue(Gameplay_SettingCampingPlaceWeapons_OID, true)
-		endif
-		SaveSettingToCurrentProfile("tent_remove_player_weapons", _Camp_Setting_TakeOff_Weapons.GetValueInt())
+		OnOptionSelectAction(_Camp_Setting_TakeOff_Weapons, Gameplay_SettingCampingPlaceWeapons_OID, "tent_remove_player_weapons")
 	elseif option == Gameplay_SettingCampingPlaceAmmo_OID
-		if _Camp_Setting_TakeOff_Ammo.GetValueInt() == 2
-			_Camp_Setting_TakeOff_Ammo.SetValueInt(1)
-			SetToggleOptionValue(Gameplay_SettingCampingPlaceAmmo_OID, false)
-		else
-			_Camp_Setting_TakeOff_Ammo.SetValueInt(2)
-			SetToggleOptionValue(Gameplay_SettingCampingPlaceAmmo_OID, true)
-		endif
-		SaveSettingToCurrentProfile("tent_remove_player_ammo", _Camp_Setting_TakeOff_Ammo.GetValueInt())
+		OnOptionSelectAction(_Camp_Setting_TakeOff_Ammo, Gameplay_SettingCampingPlaceAmmo_OID, "tent_remove_player_ammo")
 	elseif option == Gameplay_SettingCampingPlaceBackpack_OID
-		if _Camp_Setting_TakeOff_Backpack.GetValueInt() == 2
-			_Camp_Setting_TakeOff_Backpack.SetValueInt(1)
-			SetToggleOptionValue(Gameplay_SettingCampingPlaceBackpack_OID, false)
-		else
-			_Camp_Setting_TakeOff_Backpack.SetValueInt(2)
-			SetToggleOptionValue(Gameplay_SettingCampingPlaceBackpack_OID, true)
-		endif
-		SaveSettingToCurrentProfile("tent_remove_player_backpack", _Camp_Setting_TakeOff_Backpack.GetValueInt())
+		OnOptionSelectAction(_Camp_Setting_TakeOff_Backpack, Gameplay_SettingCampingPlaceBackpack_OID, "tent_remove_player_backpack")
 	elseif option == Gameplay_SettingCampingFollowersInteract_OID
-		if _Camp_Setting_FollowersUseCampsite.GetValueInt() == 2
-			_Camp_Setting_FollowersUseCampsite.SetValueInt(1)
-			SetToggleOptionValue(Gameplay_SettingCampingFollowersInteract_OID, false)
-		else
-			_Camp_Setting_FollowersUseCampsite.SetValueInt(2)
-			SetToggleOptionValue(Gameplay_SettingCampingFollowersInteract_OID, true)
-		endif
-		SaveSettingToCurrentProfile("followers_use_campsite", _Camp_Setting_FollowersUseCampsite.GetValueInt())
+		OnOptionSelectAction(_Camp_Setting_FollowersUseCampsite, Gameplay_SettingCampingFollowersInteract_OID, "followers_use_campsite")
 	elseif option == Gameplay_SettingCampingFollowersRemoveGear_OID
-		if _Camp_Setting_FollowersRemoveGearInTents.GetValueInt() == 2
-			_Camp_Setting_FollowersRemoveGearInTents.SetValueInt(1)
-			SetToggleOptionValue(Gameplay_SettingCampingFollowersRemoveGear_OID, false)
-		else
-			_Camp_Setting_FollowersRemoveGearInTents.SetValueInt(2)
-			SetToggleOptionValue(Gameplay_SettingCampingFollowersRemoveGear_OID, true)
-		endif
-		SaveSettingToCurrentProfile("tent_remove_follower_equipment", _Camp_Setting_FollowersRemoveGearInTents.GetValueInt())
+		OnOptionSelectAction(_Camp_Setting_FollowersRemoveGearInTents, Gameplay_SettingCampingFollowersRemoveGear_OID, "tent_remove_follower_equipment")
+	elseif option == Instincts_SettingFindTinder_OID
+		OnOptionSelectAction(_Camp_Setting_InstinctsFindTinder, Instincts_SettingFindTinder_OID, "instincts_find_tinder")
+	elseif option == Instincts_SettingFindFlora_OID
+		OnOptionSelectAction(_Camp_Setting_InstinctsFindFlora, Instincts_SettingFindFlora_OID, "instincts_find_flora")
+	elseif option == Instincts_SettingHearCreatures_OID
+		OnOptionSelectAction(_Camp_Setting_InstinctsHearCreatures, Instincts_SettingHearCreatures_OID, "instincts_hear_creatures")
+	elseif option == Instincts_SettingSmellDead_OID
+		OnOptionSelectAction(_Camp_Setting_InstinctsSmellDead, Instincts_SettingSmellDead_OID, "instincts_smell_dead")
+	elseif option == Instincts_SettingSenseObjective_OID
+		OnOptionSelectAction(_Camp_Setting_InstinctsSenseObjective, Instincts_SettingSenseObjective_OID, "instincts_sense_objective")
+	elseif option == Instincts_SettingVFX_OID
+		OnOptionSelectAction(_Camp_Setting_InstinctsVFX, Instincts_SettingVFX_OID, "instincts_vfx")
+	elseif option == Instincts_SettingSFX_OID
+		OnOptionSelectAction(_Camp_Setting_InstinctsSFX, Instincts_SettingSFX_OID, "instincts_sfx")
 	elseif option == Advanced_SettingAdvancedPlacement_OID
-		if _Camp_Setting_AdvancedPlacement.GetValueInt() == 2
-			_Camp_Setting_AdvancedPlacement.SetValueInt(1)
-			SetToggleOptionValue(Advanced_SettingAdvancedPlacement_OID, false)
-		else
-			_Camp_Setting_AdvancedPlacement.SetValueInt(2)
-			SetToggleOptionValue(Advanced_SettingAdvancedPlacement_OID, true)
-		endif
-		SaveSettingToCurrentProfile("advanced_placement_mode", _Camp_Setting_AdvancedPlacement.GetValueInt())
+		OnOptionSelectAction(_Camp_Setting_AdvancedPlacement, Advanced_SettingAdvancedPlacement_OID, "advanced_placement_mode")
 	elseif option == Help_SettingEnableTutorials_OID
-		if _Camp_Setting_EnableTutorials.GetValueInt() == 2
-			_Camp_Setting_EnableTutorials.SetValueInt(1)
-			SetToggleOptionValue(Help_SettingEnableTutorials_OID, false)
-		else
-			_Camp_Setting_EnableTutorials.SetValueInt(2)
-			SetToggleOptionValue(Help_SettingEnableTutorials_OID, true)
-		endif
-		SaveSettingToCurrentProfile("enable_tutorials", _Camp_Setting_EnableTutorials.GetValueInt())
+		OnOptionSelectAction(_Camp_Setting_EnableTutorials, Help_SettingEnableTutorials_OID, "enable_tutorials")
 	elseif option == Help_ResetTutorials_OID
 		bool b = ShowMessage("$CampfireTutorialResetPrompt")
 		if b
@@ -692,6 +677,17 @@ event OnOptionSelect(int option)
 	endif
 endEvent
 
+function OnOptionSelectAction(GlobalVariable akSettingsGlobal, int aiOID, string asProfileSetting)
+	if akSettingsGlobal.GetValueInt() == 2
+		akSettingsGlobal.SetValueInt(1)
+		SetToggleOptionValue(aiOID, false)
+	else
+		akSettingsGlobal.SetValueInt(2)
+		SetToggleOptionValue(aiOID, true)
+	endif
+	SaveSettingToCurrentProfile(asProfileSetting, akSettingsGlobal.GetValueInt())
+endFunction
+
 event OnOptionDefault(int option)
 	if option == Gameplay_SettingCampingArmorTentsText_OID
 		_Camp_Setting_CampingArmorTakeOff.SetValue(2)
@@ -746,6 +742,34 @@ event OnOptionDefault(int option)
 		_Camp_Setting_FollowersRemoveGearInTents.SetValueInt(2)
 		SetToggleOptionValue(Gameplay_SettingCampingFollowersRemoveGear_OID, true)
 		SaveSettingToCurrentProfile("tent_remove_follower_equipment", _Camp_Setting_FollowersRemoveGearInTents.GetValueInt())
+	elseif option == Instincts_SettingFindTinder_OID
+		_Camp_Setting_InstinctsFindTinder.SetValueInt(2)
+		SetToggleOptionValue(Instincts_SettingFindTinder_OID, true)
+		SaveSettingToCurrentProfile("instincts_find_tinder", _Camp_Setting_InstinctsFindTinder.GetValueInt())
+	elseif option == Instincts_SettingFindFlora_OID
+		_Camp_Setting_InstinctsFindFlora.SetValueInt(2)
+		SetToggleOptionValue(Instincts_SettingFindFlora_OID, true)
+		SaveSettingToCurrentProfile("instincts_find_flora", _Camp_Setting_InstinctsFindFlora.GetValueInt())
+	elseif option == Instincts_SettingHearCreatures_OID
+		_Camp_Setting_InstinctsHearCreatures.SetValueInt(2)
+		SetToggleOptionValue(Instincts_SettingHearCreatures_OID, true)
+		SaveSettingToCurrentProfile("instincts_hear_creatures", _Camp_Setting_InstinctsHearCreatures.GetValueInt())
+	elseif option == Instincts_SettingSmellDead_OID
+		_Camp_Setting_InstinctsSmellDead.SetValueInt(2)
+		SetToggleOptionValue(Instincts_SettingSmellDead_OID, true)
+		SaveSettingToCurrentProfile("instincts_smell_dead", _Camp_Setting_InstinctsSmellDead.GetValueInt())
+	elseif option == Instincts_SettingSenseObjective_OID
+		_Camp_Setting_InstinctsSenseObjective.SetValueInt(1)
+		SetToggleOptionValue(Instincts_SettingSenseObjective_OID, false)
+		SaveSettingToCurrentProfile("instincts_sense_objective", _Camp_Setting_InstinctsSenseObjective.GetValueInt())
+	elseif option == Instincts_SettingVFX_OID
+		_Camp_Setting_InstinctsVFX.SetValueInt(2)
+		SetToggleOptionValue(Instincts_SettingVFX_OID, true)
+		SaveSettingToCurrentProfile("instincts_vfx", _Camp_Setting_InstinctsVFX.GetValueInt())
+	elseif option == Instincts_SettingSFX_OID
+		_Camp_Setting_InstinctsSFX.SetValueInt(2)
+		SetToggleOptionValue(Instincts_SettingSFX_OID, true)
+		SaveSettingToCurrentProfile("instincts_sfx", _Camp_Setting_InstinctsSFX.GetValueInt())
 	elseif option == Advanced_SettingAdvancedPlacement_OID
 		_Camp_Setting_AdvancedPlacement.SetValueInt(2)
 		SetToggleOptionValue(Advanced_SettingAdvancedPlacement_OID, true)
@@ -1136,6 +1160,34 @@ function SwitchToProfile(int aiProfileIndex)
 	if val != -1
 		_Camp_Setting_Legality.SetValueInt(val)
 	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "instincts_find_tinder")
+	if val != -1
+		_Camp_Setting_InstinctsFindTinder.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "instincts_find_flora")
+	if val != -1
+		_Camp_Setting_InstinctsFindFlora.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "instincts_hear_creatures")
+	if val != -1
+		_Camp_Setting_InstinctsHearCreatures.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "instincts_smell_dead")
+	if val != -1
+		_Camp_Setting_InstinctsSmellDead.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "instincts_sense_objective")
+	if val != -1
+		_Camp_Setting_InstinctsSenseObjective.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "instincts_vfx")
+	if val != -1
+		_Camp_Setting_InstinctsVFX.SetValueInt(val)
+	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "instincts_sfx")
+	if val != -1
+		_Camp_Setting_InstinctsSFX.SetValueInt(val)
+	endif
 	val = LoadSettingFromProfile(aiProfileIndex, "advanced_placement_mode")
 	if val != -1
 		_Camp_Setting_AdvancedPlacement.SetValueInt(val)
@@ -1213,6 +1265,13 @@ function GenerateDefaultProfile(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "follower_tracking", 2)
 	JsonUtil.SetIntValue(profile_path, "followers_use_campsite", 2)
 	JsonUtil.SetIntValue(profile_path, "camping_illegal_in_towns", 2)
+	JsonUtil.SetIntValue(profile_path, "instincts_find_tinder", 2)
+	JsonUtil.SetIntValue(profile_path, "instincts_find_flora", 2)
+	JsonUtil.SetIntValue(profile_path, "instincts_hear_creatures", 2)
+	JsonUtil.SetIntValue(profile_path, "instincts_smell_dead", 2)
+	JsonUtil.SetIntValue(profile_path, "instincts_sense_objective", 1)
+	JsonUtil.SetIntValue(profile_path, "instincts_vfx", 2)
+	JsonUtil.SetIntValue(profile_path, "instincts_sfx", 2)
 	JsonUtil.SetIntValue(profile_path, "advanced_placement_mode", 2)
 	JsonUtil.SetIntValue(profile_path, "max_placement_threads", 20)
 	JsonUtil.SetIntValue(profile_path, "eo_compatibility", 1)
@@ -1240,6 +1299,13 @@ function SaveAllSettings(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "follower_tracking", _Camp_Setting_TrackFollowers.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "followers_use_campsite", _Camp_Setting_FollowersUseCampsite.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "camping_illegal_in_towns", _Camp_Setting_Legality.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "instincts_find_tinder", _Camp_Setting_InstinctsFindTinder.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "instincts_find_flora", _Camp_Setting_InstinctsFindFlora.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "instincts_hear_creatures", _Camp_Setting_InstinctsHearCreatures.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "instincts_smell_dead", _Camp_Setting_InstinctsSmellDead.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "instincts_sense_objective", _Camp_Setting_InstinctsSenseObjective.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "instincts_vfx", _Camp_Setting_InstinctsVFX.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "instincts_sfx", _Camp_Setting_InstinctsSFX.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "advanced_placement_mode", _Camp_Setting_AdvancedPlacement.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "max_placement_threads", _Camp_Setting_MaxThreads.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "eo_compatibility", _Camp_Setting_CompatibilityEO.GetValueInt())
