@@ -12,12 +12,9 @@ ReferenceAlias property Alias9 auto
 ReferenceAlias property Alias10 auto
 
 Event InstinctsStartSearch()
-	debug.trace("Starting quest.")
 	self.Start()
-	debug.trace("Quest started.")
 	WaitUntilReady()
 	SendEvent_InstinctsRunAliases()
-	debug.trace("Event sent.")
 endEvent
 
 Event InstinctsStopSearch()

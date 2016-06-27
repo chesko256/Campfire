@@ -15,14 +15,9 @@ actor property PlayerRef auto
 ReferenceAlias property PlayerAlias auto
 Activator[] property PerkNodeControllers auto hidden
 bool property multiple_perk_trees = false auto hidden 				;Flag for perk tree navigation
-Form[] property ExamineFormsToReplace auto hidden
-Form[] property ExamineReplacementForms auto hidden
-Message[] property ExamineSuccessMessages auto hidden
-FormList[] property ExamineExtraFormsToDisable auto hidden
 
 ;#Examine======================================================================
-MiscObject property _Camp_CookingPot_MISC auto
-Message property _Camp_Examine_CookPotMsg auto
+; TBD
 
 ;#Scripts======================================================================
 _Camp_SkyUIConfigPanelScript property CampConfig Auto 				;SkyUI Configuration script
@@ -127,7 +122,6 @@ bool Upgraded_1_1 = false
 bool Upgraded_1_4 = false
 bool Upgraded_1_6 = false
 bool Upgraded_1_7 = false
-bool Upgraded_1_8 = false
 
 Event OnPlayerLoadGame()
 	CampfirePerkSystemSortOnStartup()
@@ -214,10 +208,6 @@ function RunCompatibility()
 
 	if !Upgraded_1_7
 		Upgrade_1_7()
-	endif
-
-	if !Upgraded_1_8
-		Upgrade_1_8()
 	endif
 
 	; Update the previous version value with the current version
@@ -661,20 +651,6 @@ function Upgrade_1_7()
 	PerkNodeControllers = new Activator[64]
 	bool b = CampfirePerkSystemRegister(_Camp_PerkNodeController_Camping, "Campfire.esm")
 	Upgraded_1_7 = true
-endFunction
-
-function Upgrade_1_8()
-	ExamineFormsToReplace = new Form[128]
-	ExamineReplacementForms = new Form[128]
-	ExamineSuccessMessages = new Message[128]
-	ExamineExtraFormsToDisable = new FormList[128]
-
-	; Register lightable campfire objects
-	Form SplitPotOpenLoose01 = Game.GetFormFromFile(0x054181, "Skyrim.esm")
-
-	RegisterExamineReplacement(SplitPotOpenLoose01, _Camp_CookingPot_MISC as Form, _Camp_Examine_CookPotMsg)
-
-	Upgraded_1_8 = true
 endFunction
 
 bool reg_locked = false

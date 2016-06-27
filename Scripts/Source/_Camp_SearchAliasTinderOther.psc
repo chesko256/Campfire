@@ -9,6 +9,7 @@ function AliasStart(ObjectReference akReference)
 endFunction
 
 function AliasStop(ObjectReference akReference)
-	_Camp_VisionTinderShader.Stop(akReference)
-	; The glow effect destroys itself.
+	if akReference
+		_Camp_VisionTinderShader.Stop(akReference)
+	endif
 endFunction
