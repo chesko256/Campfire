@@ -1852,23 +1852,10 @@ FrostUtil.SetArmorProtection(MyFurCollar, 6, 20, 5)
 FrostUtil.SetArmorProtection(MyMageRobes, 1, 125, 50, aiExtraHeadWarmth = 25, aiExtraHeadCoverage = 43)
 * NOTES
 * * This sets the default data for the armor. The player can then customize it. If the player "defaults" the protection, it will return to the values you set using this function.
-* * If the player selects "Repair Default Armor Data", changes set using this function will be deleted. You MUST register for the SKSE event Frostfall_OnArmorDefaultDataRepair and re-set your intended values when when you receive that event.
-* * An alternative to using this function that is immune to the player repairing default armor data is using injected keywords instead. See the Compatibility - Modders page for more info.
-* * Calling this will return false for armor in the Skyrim base game, Dawnguard, Dragonborn, Campfire, or Frostfall. Call this function for armor from your own mod only.
+* * An alternative to using this function is using injected keywords instead. See the Compatibility - Modders page for more info.
 ;*********/;
     if !akArmor || aiType > 7 || aiType < 1
         return false
-    endif
-
-    int form_id = akArmor.GetFormID()
-    int mod_index = form_id/16777216
-    if mod_index < 0
-        mod_index = 0
-    endif
-    string origin = Game.GetModName(mod_index)
-    if origin == "Skyrim.esm" || origin == "Dawnguard.esm" || origin == "Dragonborn.esm" || \
-       origin == "Campfire.esm" || origin == "Frostfall.esp"
-       return false
     endif
 
     _Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
@@ -1937,22 +1924,10 @@ FrostUtil.SetArmorProtectionA(MyMageRobes, magerobe_data)
 * NOTES
 * This sets the default data for the armor. The player can then customize it. If the player "defaults" the protection, it will return to the values you set using this function.
 * * If the player selects "Repair Default Armor Data", changes set using this function will be deleted. You MUST register for the SKSE event Frostfall_OnArmorDefaultDataRepair and re-set your intended values when when you receive that event.
-* * An alternative to using this function that is immune to the player repairing default armor data is using injected keywords instead. See the Compatibility - Modders page for more info.
-* * Calling this will return false for armor in the Skyrim base game, Dawnguard, Dragonborn, Campfire, or Frostfall. Call this function for armor from your own mod only.
+* * An alternative to using this function is using injected keywords instead. See the Compatibility - Modders page for more info.
 ;*********/;
     if !akArmor || aiProtectionValues.Length != 15 || aiProtectionValues[0] > 7 || aiProtectionValues[0] < 1
         return false
-    endif
-
-    int form_id = akArmor.GetFormID()
-    int mod_index = form_id/16777216
-    if mod_index < 0
-        mod_index = 0
-    endif
-    string origin = Game.GetModName(mod_index)
-    if origin == "Skyrim.esm" || origin == "Dawnguard.esm" || origin == "Dragonborn.esm" || \
-       origin == "Campfire.esm" || origin == "Frostfall.esp"
-       return false
     endif
 
     _Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
