@@ -665,6 +665,9 @@ function Upgrade_3_1()
 		GetFrostResistSystem().StartSystem()
 	endif
 
+	; Run the required Clothing System start-up tasks.
+	GetClothingSystem().StartUp()
+
 	; Load a meter preset for the user's display aspect ratio
 	FrostConfig.ApplyMeterPreset(1)
 
