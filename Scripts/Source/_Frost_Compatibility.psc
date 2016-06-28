@@ -4,7 +4,7 @@ import debug
 import FrostUtil
 
 int property SKSE_MIN_VERSION = 10703 autoReadOnly
-float property CAMPFIRE_MIN_VERSION = 1.7 autoReadOnly
+int property CAMPFIRE_MIN_VERSION = 108 autoReadOnly
 float property WEARABLELANTERNS_MIN_VERSION = 4.02 autoReadOnly
 GlobalVariable property _Frost_PreviousVersion auto
 GlobalVariable property _Frost_FrostfallVersion auto

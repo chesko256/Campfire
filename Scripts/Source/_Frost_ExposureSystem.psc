@@ -203,7 +203,7 @@ function UpdateExposure()
 	endif
 
 	; Immunity conditions
-	if PlayerRef.HasKeyword(ActorTypeDragon) || (_Frost_Setting_VampireMode.GetValueInt() == 2 && is_vampire)
+	if PlayerRef.HasKeyword(ActorTypeDragon)
 		(_Frost_MainQuest as _Frost_ConditionValues).IsImmune = true
 		return
 	else
@@ -448,9 +448,13 @@ endFunction
 function ExposureEffectsUpdate()
 	float current_exposure = _Frost_AttributeExposure.GetValue()
 	UpdateExposureLevel()
-	
+
 	if exposure_level == 6
-		HandleMaxExposure()
+		if is_vampire && _Frost_Setting_VampireMode.GetValueInt() == 2
+			;pass
+		else
+			HandleMaxExposure()
+		endif
 	endif
 
 	if exposure_level >= 4
