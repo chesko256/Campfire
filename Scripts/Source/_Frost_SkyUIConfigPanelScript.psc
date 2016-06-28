@@ -449,12 +449,17 @@ function PageReset_Overview()
 			Overview_RunSubStatusText_OID = AddTextOption("$FrostfallStartingUpDetail", "", OPTION_FLAG_DISABLED)
 		endif
 	else
-		if !must_exit
-			Overview_RunStatusText_OID = AddTextOption("$FrostfallOverviewCtrlStatus", "$FrostfallDisabled")
+		if Game.IsFightingControlsEnabled()
+			if !must_exit
+				Overview_RunStatusText_OID = AddTextOption("$FrostfallOverviewCtrlStatus", "$FrostfallDisabled")
+			else
+				Overview_RunStatusText_OID = AddTextOption("$FrostfallOverviewCtrlStatus", "$FrostfallDisabled", OPTION_FLAG_DISABLED)
+			endif
+			Overview_RunSubStatusText_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
 		else
 			Overview_RunStatusText_OID = AddTextOption("$FrostfallOverviewCtrlStatus", "$FrostfallDisabled", OPTION_FLAG_DISABLED)
+			Overview_RunSubStatusText_OID = AddTextOption("$FrostfallCantStart", "", OPTION_FLAG_DISABLED)
 		endif
-		Overview_RunSubStatusText_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
 	endif
 
 	AddHeaderOption("$FrostfallOverviewHeaderInfo")

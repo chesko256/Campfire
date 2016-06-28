@@ -8,6 +8,7 @@ Quest property _Frost_MainQuest auto
 GlobalVariable property _Frost_ArmorPerk3Active auto
 GlobalVariable property _Frost_ArmorPerk2Active auto
 GlobalVariable property _Frost_ArmorPerk1Active auto
+GlobalVariable property _Frost_Setting_VampireMode auto
 MagicEffect property _Frost_ExposureArmorFFSelf_3 auto
 MagicEffect property _Frost_ExposureArmorFFSelf_2 auto
 MagicEffect property _Frost_ExposureArmorFFSelf_1 auto
@@ -49,7 +50,7 @@ Event UpdateWarmth()
 	warmth += _Frost_PerkRank_Adaptation.GetValueInt() * 20
 	warmth += GetSpellBonus()
 
-	if (_Frost_MainQuest as _Frost_ConditionValues).IsVampire
+	if (_Frost_MainQuest as _Frost_ConditionValues).IsVampire && _Frost_Setting_VampireMode.GetValueInt() >= 1
 		warmth += 100
 	endif
 

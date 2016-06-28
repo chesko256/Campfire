@@ -44,6 +44,12 @@ EndEvent
 Event OnUpdate()
 	; We stop updating when the mod has been started
 	; and the friend items have been granted.
+
+	; Don't allow the player to start the mod at inopportune times
+	; (cart ride at beginning, etc)
+	if !Game.IsFightingControlsEnabled()
+		return
+	endif
 	
 	if _Frost_TrackingQuest.GetStage() == 10 && !started_via_stars
 		if !IsRefInInterior(PlayerRef) && 		\
