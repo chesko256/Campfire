@@ -4,6 +4,7 @@ import FrostUtil
 import _FrostInternal
 
 Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
+	debug.trace("OnObjectEquipped in player equip monitor, akBaseObject = " + akBaseObject)
 	if akBaseObject as Light
 		SendEvent_UpdateWarmth()
 	elseif akBaseObject as Armor
@@ -103,6 +104,7 @@ bool function qEnter(Form[] akFormQueue, int[] aiActionQueue, Form akEntry, bool
 	endif
 
 	newEntryIdx = (queue_frontidx + queue_count) % akFormQueue.Length
+	debug.trace("newEntryIdx = " + newEntryIdx)
 	akFormQueue[newEntryIdx] = akEntry
 
 	if abAction
@@ -133,7 +135,10 @@ int[] function qDelete(Form[] akFormQueue, int[] aiActionQueue)
 
 	; Save the element so we can return it.
 	oldElements[0] = akFormQueue[queue_frontidx].GetFormID()
+	debug.trace("oldElements[0] base = " + akFormQueue[queue_frontidx])
+	debug.trace("oldElements[0] = " + oldElements[0])
 	oldElements[1] = aiActionQueue[queue_frontidx]
+	debug.trace("oldElements[1] = " + oldElements[1])
 
 	; Advance the index of the front,
 	; making sure it wraps around the

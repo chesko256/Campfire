@@ -10,6 +10,11 @@ Change Log
 
 Release 1.8
 
+Upgrade Instructions
+
+Uninstall the previous version, install the new version, and load your save game. 
+
+
 Features and Changes
 
 Survival Skill: Instincts Improvements

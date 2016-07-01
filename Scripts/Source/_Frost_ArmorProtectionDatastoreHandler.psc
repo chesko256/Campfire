@@ -859,12 +859,7 @@ endFunction
 
 string function GetDatastoreKeyFromForm(Armor akArmor)
 	int form_id = akArmor.GetFormID()
-	int mod_index = form_id/16777216
-	if mod_index < 0
-		mod_index = 0
-	endif
-
-	return (form_id % 16777216) + "___" + Game.GetModName(mod_index)
+	return GetDatastoreKeyFromID(form_id)
 endFunction
 
 string function GetDatastoreKeyFromID(int aiFormID)

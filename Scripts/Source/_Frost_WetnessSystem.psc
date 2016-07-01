@@ -168,7 +168,10 @@ float function GetWetFromStandingInWater()
 		float delta = water_level - player_z
 		if delta >= 35.0
 			float wet = ((delta * 600.0) / WATER_HEIGHT_WAIST)
-			FrostDebug(1, "~~~~ Wetness ::: Standing in water, get wet by " + wet)
+			if wet > MAX_WETNESS
+				wet = MAX_WETNESS
+			endif
+			FrostDebug(1, "~~~~ Wetness ::: Standing in water, get wet by " + wet + " (height delta " + delta + ")")
 			return wet
 		else
 			return -1.0
@@ -207,7 +210,11 @@ function UpdateWetState()
 		return
 	endif
 
-	float wetness_from_standing_in_water = GetWetFromStandingInWater()
+	float wetness_from_standing_in_water = -1.0
+	; The water level of interior cells can't be trusted.
+	if !PlayerRef.IsInInterior()
+		wetness_from_standing_in_water = GetWetFromStandingInWater()
+	endif
 	if wetness_from_standing_in_water != -1.0
 		ModAttributeWetness(wetness_from_standing_in_water, wetness_from_standing_in_water)
 	endif
