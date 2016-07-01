@@ -13,8 +13,8 @@ E-mail - chesko.tesmod@gmail.com
 
 ===================================================
 
-Version: 3.0.3
-Date: 3/2/2016
+Version: 3.1.1
+Date: 6/28/2016
 
 Please see:
 
@@ -22,6 +22,4 @@ skyrimsurvival.com/
 
 for the most current information about Frostfall.
 
-Do not redistribute this mod, in whole or in part, except for the sole purpose of translating it into a language other than English. In that case, you already have my permission.
-
-If I cannot be reached at chesko.tesmod@gmail.com for 6 consecutive months, this mod becomes free for anyone to modify and redistribute for archival and maintenance, but never retail, purposes. I must always remain credited as the author.
+For accepted use, translation, and licensing, please see Frostfall_license.txt

@@ -17,6 +17,65 @@ E-mail - chesko.tesmod@gmail.com
 This changelog is mainly for posterity purposes. This mod has evolved a lot in the amount of time it's been in development. Read on only if you enjoy watching me change my mind many, many times.
 
 ===========================================
+Frostfall 3.1.1 Change Log
+===========================================
+UPGRADE INSTRUCTIONS - Uninstall the previous version, install the new one, and load your save game.
+
+Bug Fixes
+
+	Fixed an issue where the player would become wet when entering certain interior cells.
+
+===========================================
+Frostfall 3.1 Change Log
+===========================================
+UPGRADE INSTRUCTIONS - Uninstall the previous version, install the new one, and load your save game. If you have Papyrus logging enabled, these errors are expected on startup - http://pastebin.com/W6CmVNvG.
+
+Features and Changes
+
+Warmth and Coverage Customization
+	
+	You can now customize the Warmth and Coverage of any piece of gear, including mod-added gear, in the Armor and Clothing page of the MCM.
+	
+	You can now assign Warmth and Coverage to equipment that previously granted no benefit before, like mod-added scarves and fur collars.
+	
+	You can add extra areas covered by a single piece of armor by going to that armor's entry in the MCM and selecting "Extra Parts...", and selecting an option like "This equipment also has a cloak." Useful for some multi-part or unseparated pieces of armor that already have a cloak or other parts built in, such as the Paladin Armor set in Immersive Armors. The extra part will have its own entry on the Armor and Clothing page. You can adjust the extra part's Warmth and Coverage as if it were a separate piece of equipment.
+
+	All of your custom armor settings are synced to your Settings Profile, so your settings will be persistent across all save games.
+
+	All worn equipment now has a Type. Frostfall will count one worn item of type Body, Head, Hands, Feet, and Cloak toward your total protection. All items of type Accessory contribute toward your total protection.
+
+	Complete Meter Customization - You can now adjust the position, size, opacity, color, and so on, of all on-screen meters.
+
+	You now dry off 3 times as fast if the weather is clear during daytime.
+
+	You can now get wet when walking in water, but not swimming. The depth you stand determines how wet you will get. You will only get wet if the water comes above your knees.
+
+	You can now get wet when swimming in water while on horseback.
+
+	The Vampire Mode setting "Immortal", was reintroduced. You will get a +100 Warmth bonus and immunity to frostbite (same as Supernatural setting), and you will no longer succumb to maximum exposure. You will, however, be subject to all of the normal penalties that come with each level of exposure.
+
+	Added a profile read / write test to Frostfall's start-up sequence. If you have a Windows file permission issue that would prevent you from saving your profile settings, Frostfall will alert you about it.
+
+
+Bug Fixes
+
+	Fixed an issue where the temperature could become "stuck" cold when venturing into a higher-altitude snowy mountain area (like Bleak Falls Barrow) and then walking back down to a lower altitude.
+
+	Fixed many bugs related to equipment categorization and detection, cloaks not receiving any protection ratings, and so on.
+
+///Keep in mind that if you use a Bashed patch / combined plug-in of equipment or cloak mods, Frostfall will still have no way to correctly detect the equipment. If you still have issues with this and are combining your plug-ins, please use the Armor and Clothing MCM page to reassign the correct values for your gear.///
+
+	The way that Frostfall handles equipping many pieces of gear at once is now far more accurate. You should be able to use the SkyUI Group feature without having miscalculated Warmth and Coverage.
+
+	Fixed an issue where the most frigid water would restore the player's Stamina instead of draining it.
+
+	Fixed an issue where the player was not getting wet in the rain in some circumstances when using Wet and Cold.
+
+	Fixed an issue where the player's facial expression would be stuck scowling when playing as a vampire.
+
+	You can no longer start Frostfall when in the cart during the vanilla opening of the game.
+
+===========================================
 Frostfall 3.0.3 Change Log
 ===========================================
 Features and Changes

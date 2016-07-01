@@ -48,16 +48,20 @@ function RaceChanged()
 endFunction
 
 bool function ObjectEquipped(Form akBaseObject)
+    debug.trace("Called ObjectEquipped, akBaseObject = " + akBaseObject)
     if !akBaseObject || !akBaseObject as Armor
+        debug.trace("akBaseObject was none or was not armor")
         return false
     endif
 
     ; Initial equipment check
     if akBaseObject.HasKeyword(_Frost_DummyArmorKW)
+        debug.trace("akBaseObject has dummy keyword")
         return false
     endif
 
     bool update_required = AddWornGearEntryForArmorEquipped(akBaseObject as Armor, WornGearForms, _Frost_WornGearData)
+    debug.trace("update_required = " + update_required)
     DisplayWarmthCoverageNoSkyUIPkg(akBaseObject as Armor)
     return update_required
 endFunction
@@ -69,6 +73,7 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGear
 
     int[] armor_data = handler.GetArmorProtectionData(akArmor)
     if armor_data[0] == handler.GEARTYPE_IGNORE
+        debug.trace("gear type was ignore")
         return false
     endif
 
@@ -80,6 +85,7 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGear
         ; plug the data in
         ArrayAddArmor(akWornGearFormsArray, akArmor)
         string dskey = handler.GetDatastoreKeyFromForm(akArmor)
+        debug.trace("Using DS Key " + dskey + " on gear equipped.")
 
         int type = armor_data[0]
         StorageUtil.IntListResize(akWornGearData, dskey, 13)
@@ -105,6 +111,7 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGear
 
         return true
     else
+        debug.trace("idx == -1")
         return false
     endif
 endFunction
