@@ -6,6 +6,8 @@ import FrostUtil
 import _FrostInternal
 import Math
 
+Keyword property _FrostData_ArmorPrecache auto
+
 Keyword property WAF_ClothingCloak auto
 
 Keyword property ClothingCirclet auto
@@ -643,17 +645,29 @@ function InitializeDatastore()
 	endif
 endFunction
 
-int[] function GetTotalArmorProtectionValues(Armor akArmor)
+int[] function GetTotalArmorProtectionValues(Armor akArmor, string asArmorName = "")
+	debug.trace("GetTotalArmorProtectionValues " + akArmor + " named " + asArmorName)
 	int[] armor_totals = new int[2]
 
-	if !akArmor
-		armor_totals[0] = 0
-		armor_totals[1] = 0
-		return armor_totals
+	int[] ap = new int[15]
+	if PrecacheHasArmorData(asArmorName, _FrostData_ArmorPrecache)
+		debug.trace("GetTotalArmorProtectionValues from precache")
+		ap = GetArmorDataFromPrecache(asArmorName, _FrostData_ArmorPrecache)
+	else
+		debug.trace("GetTotalArmorProtectionValues lookup")
+		if !akArmor
+			debug.trace("GetTotalArmorProtectionValues akArmor none, bail")
+			armor_totals[0] = 0
+			armor_totals[1] = 0
+			return armor_totals
+		endif
+		debug.trace("GetTotalArmorProtectionValues akArmor found")
+		ap = GetArmorProtectionData(akArmor)
+		debug.trace("GetTotalArmorProtectionValues ap = " + ap)
+		TryToAddArmorDataToPrecache(akArmor, _FrostData_ArmorPrecache)
 	endif
 
-	int[] ap = GetArmorProtectionData(akArmor)
-
+	debug.trace("GetTotalArmorProtectionValues ap = " + ap)
 	if ap[0] == GEARTYPE_IGNORE
 		armor_totals[0] = 0
 		armor_totals[1] = 0
@@ -863,11 +877,13 @@ string function GetDatastoreKeyFromForm(Armor akArmor)
 endFunction
 
 string function GetDatastoreKeyFromID(int aiFormID)
-	int mod_index = aiFormID/16777216
-	if mod_index < 0
-		mod_index = 0
-	endif
-	return (aiFormID % 16777216) + "___" + Game.GetModName(mod_index)
+	; Values of aiFormID larger than 0x80000000 will be negative and require conversion
+	; to obtain the mod index.
+	int mod_index = GetModIndex(aiFormID)
+	int base_form_id = GetBaseFormID(aiFormID)
+	string ds_key = base_form_id + "___" + Game.GetModName(mod_index)
+	debug.trace("returning key " + ds_key)
+	return ds_key
 endFunction
 
 function RevertDatastore()
@@ -876,6 +892,20 @@ function RevertDatastore()
 	RestoreAllDefaultArmorData()
 
 	_Frost_DatastoreInitialized.SetValueInt(2)
+endFunction
+
+int function GetModIndex(int aiFormID)
+	; Values of aiFormID larger than 0x80000000 will be negative and require conversion
+	; to obtain the mod index.
+	int mod_index = aiFormID/16777216
+	if mod_index < 0
+		mod_index = LogicalAnd(mod_index, 0xFF) - 1
+	endif
+	return mod_index
+endFunction
+
+int function GetBaseFormID(int aiFormID)
+	return LogicalAnd(aiFormID, 0x00FFFFFF)
 endFunction
 
 ; Frostfall 3.1 Stuff
@@ -1258,31 +1288,30 @@ int[] function GetArmorData(Armor akArmor)
 		armor_data[13] = JsonUtil.IntListGet(profile_path, dskey, 13)
 		armor_data[14] = JsonUtil.IntListGet(profile_path, dskey, 14)
 	else
-		armor_data = GetDefaultArmorData(akArmor)
+		armor_data = GetDefaultArmorData(dskey)
 	endif
 	return armor_data
 endFunction
 
-int[] function GetDefaultArmorData(Armor akArmor)
+int[] function GetDefaultArmorData(string asKey)
 	string defaults_path = CONFIG_PATH + ARMOR_DEFAULT_PREFIX
-	string dskey = GetDatastoreKeyFromForm(akArmor)
 	int[] armor_data = new int[15]
-	if ProfileHasKey(defaults_path, dskey)
-		armor_data[0] = JsonUtil.IntListGet(defaults_path, dskey, 0)
-		armor_data[1] = JsonUtil.IntListGet(defaults_path, dskey, 1)
-		armor_data[2] = JsonUtil.IntListGet(defaults_path, dskey, 2)
-		armor_data[3] = JsonUtil.IntListGet(defaults_path, dskey, 3)
-		armor_data[4] = JsonUtil.IntListGet(defaults_path, dskey, 4)
-		armor_data[5] = JsonUtil.IntListGet(defaults_path, dskey, 5)
-		armor_data[6] = JsonUtil.IntListGet(defaults_path, dskey, 6)
-		armor_data[7] = JsonUtil.IntListGet(defaults_path, dskey, 7)
-		armor_data[8] = JsonUtil.IntListGet(defaults_path, dskey, 8)
-		armor_data[9] = JsonUtil.IntListGet(defaults_path, dskey, 9)
-		armor_data[10] = JsonUtil.IntListGet(defaults_path, dskey, 10)
-		armor_data[11] = JsonUtil.IntListGet(defaults_path, dskey, 11)
-		armor_data[12] = JsonUtil.IntListGet(defaults_path, dskey, 12)
-		armor_data[13] = JsonUtil.IntListGet(defaults_path, dskey, 13)
-		armor_data[14] = JsonUtil.IntListGet(defaults_path, dskey, 14)
+	if ProfileHasKey(defaults_path, asKey)
+		armor_data[0] = JsonUtil.IntListGet(defaults_path, asKey, 0)
+		armor_data[1] = JsonUtil.IntListGet(defaults_path, asKey, 1)
+		armor_data[2] = JsonUtil.IntListGet(defaults_path, asKey, 2)
+		armor_data[3] = JsonUtil.IntListGet(defaults_path, asKey, 3)
+		armor_data[4] = JsonUtil.IntListGet(defaults_path, asKey, 4)
+		armor_data[5] = JsonUtil.IntListGet(defaults_path, asKey, 5)
+		armor_data[6] = JsonUtil.IntListGet(defaults_path, asKey, 6)
+		armor_data[7] = JsonUtil.IntListGet(defaults_path, asKey, 7)
+		armor_data[8] = JsonUtil.IntListGet(defaults_path, asKey, 8)
+		armor_data[9] = JsonUtil.IntListGet(defaults_path, asKey, 9)
+		armor_data[10] = JsonUtil.IntListGet(defaults_path, asKey, 10)
+		armor_data[11] = JsonUtil.IntListGet(defaults_path, asKey, 11)
+		armor_data[12] = JsonUtil.IntListGet(defaults_path, asKey, 12)
+		armor_data[13] = JsonUtil.IntListGet(defaults_path, asKey, 13)
+		armor_data[14] = JsonUtil.IntListGet(defaults_path, asKey, 14)
 	endif
 	; debug.trace("Returning default armor data " + armor_data)
 	return armor_data

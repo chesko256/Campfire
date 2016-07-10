@@ -3,6 +3,16 @@ scriptname _Frost_PlayerEquipMonitor extends ReferenceAlias
 import FrostUtil
 import _FrostInternal
 
+Keyword property _FrostData_ArmorPrecache auto
+
+Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
+	TryToAddArmorDataToPrecache(akBaseItem, _FrostData_ArmorPrecache)
+EndEvent
+
+Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akDestContainer)
+	TryToRemoveArmorDataFromPrecache(akBaseItem, _FrostData_ArmorPrecache)
+EndEvent
+
 Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
 	debug.trace("OnObjectEquipped in player equip monitor, akBaseObject = " + akBaseObject)
 	if akBaseObject as Light
@@ -41,6 +51,8 @@ Form[] form_queue
 int[] action_queue
 int EQUIP_ACTION = 2
 int UNEQUIP_ACTION = 1
+form next_form = None
+int next_action = -1
 
 function InitializeEventQueue()
 	form_queue = new Form[128]
@@ -54,18 +66,17 @@ function ProcessQueuedEvents(Form[] akFormQueue, int[] aiActionQueue, bool aiRec
 		_Frost_ClothingSystem clothing = GetClothingSystem()
 		; debug.trace(">>>>>>> Processing queued events.")
 		while !qIsEmpty()
-			int[] entry = qDelete(akFormQueue, aiActionQueue)
+			qDelete(akFormQueue, aiActionQueue)
 			
-			if entry[0] == -1
+			if next_action == -1
 				return
 			endif
 
-			Form the_form = Game.GetForm(entry[0])
 			bool result = false
-			if entry[1] == EQUIP_ACTION
-				result = clothing.ObjectEquipped(the_form)
+			if next_action == EQUIP_ACTION
+				result = clothing.ObjectEquipped(next_form)
 			else
-				result = clothing.ObjectUnequipped(the_form)
+				result = clothing.ObjectUnequipped(next_form)
 			endif
 			if result == true
 				update_required = true
@@ -120,25 +131,30 @@ bool function qEnter(Form[] akFormQueue, int[] aiActionQueue, Form akEntry, bool
 	return true
 endFunction
 
-int[] function qDelete(Form[] akFormQueue, int[] aiActionQueue)
+function qDelete(Form[] akFormQueue, int[] aiActionQueue)
 	; Remove an entry from the queue and return it.
 	; Adapted from https://www.cs.bu.edu/teaching/c/queue/array/funcs.html
 
-	int[] oldElements = new int[2]
+	;int[] oldElements = new int[2]
+	next_form = None
+	next_action = -1
 
 	if queue_count <= 0
 		; print error
-		oldElements[0] = -1
-		oldElements[1] = -1
-		return oldElements
+		;oldElements[0] = -1
+		;oldElements[1] = -1
+		return
 	endif
 
 	; Save the element so we can return it.
-	oldElements[0] = akFormQueue[queue_frontidx].GetFormID()
-	debug.trace("oldElements[0] base = " + akFormQueue[queue_frontidx])
-	debug.trace("oldElements[0] = " + oldElements[0])
-	oldElements[1] = aiActionQueue[queue_frontidx]
-	debug.trace("oldElements[1] = " + oldElements[1])
+	;oldElements[0] = akFormQueue[queue_frontidx]
+	; debug.trace("oldElements[0] base = " + akFormQueue[queue_frontidx])
+	; debug.trace("oldElements[0] = " + oldElements[0])
+	; debug.trace("oldElements[0] one's complement = " + Math.LogicalNot(Math.LogicalNot(oldElements[0])))
+	; debug.trace("printing big number: " + 2181042900)
+	next_form = akFormQueue[queue_frontidx]
+	next_action = aiActionQueue[queue_frontidx]
+	; oldElements[1] = aiActionQueue[queue_frontidx]
 
 	; Advance the index of the front,
 	; making sure it wraps around the
@@ -150,7 +166,7 @@ int[] function qDelete(Form[] akFormQueue, int[] aiActionQueue)
 	queue_count -= 1
 	; debug.trace(" ------- queue delete " + oldElements[0] + " " + oldElements[1] + " queue_count " + queue_count)
 
-	return oldElements
+	; return oldElements
 endFunction
 
 bool function qIsFull(Form[] akQueue)
