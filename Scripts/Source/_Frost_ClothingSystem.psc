@@ -20,6 +20,7 @@ int[] property WornGearValues auto hidden
 Keyword property _Frost_WornGearData auto
 
 Keyword property _Frost_DummyArmorKW auto
+Keyword property _FrostData_ArmorPrecache auto
 Armor property initial_body auto hidden
 Armor property initial_head auto hidden
 Armor property initial_hands auto hidden
@@ -71,9 +72,19 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGear
     ; Return True if recalculation of warmth and coverage is necessary, false otherwise.
     int slot_mask = akArmor.GetSlotMask()
 
-    int[] armor_data = handler.GetArmorProtectionData(akArmor)
+    ; Check the pre-cache first
+    int[] armor_data
+    string armorName = akArmor.GetName()
+    if PrecacheHasArmorData(armorName, _FrostData_ArmorPrecache)
+        debug.trace("Retrieving " + armorName + " from precache.")
+        armor_data = GetArmorDataFromPrecache(armorName, _FrostData_ArmorPrecache)
+    else
+        debug.trace("Resolving " + armorName + ", not found in precache.")
+        armor_data = handler.GetArmorProtectionData(akArmor)
+        TryToAddArmorDataToPrecache(akArmor, _FrostData_ArmorPrecache)
+    endif
+
     if armor_data[0] == handler.GEARTYPE_IGNORE
-        debug.trace("gear type was ignore")
         return false
     endif
 
@@ -111,7 +122,6 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGear
 
         return true
     else
-        debug.trace("idx == -1")
         return false
     endif
 endFunction

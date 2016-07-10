@@ -1,5 +1,50 @@
 scriptname _FrostInternal hidden
 
+int[] function GetArmorDataFromPrecache(string asArmorName, Keyword akPrecache) global
+	return StorageUtil.IntListToArray(akPrecache, "FF__" + asArmorName)
+endFunction
+
+bool function PrecacheHasArmorData(string asArmorName, Keyword akPrecache) global
+	if asArmorName == ""
+		return false
+	endif
+
+	if StorageUtil.IntListGet(akPrecache, "FF__" + asArmorName, 0) != 0
+		return true
+	else
+		return false
+	endif
+endFunction
+
+function TryToAddArmorDataToPrecache(Form akBaseItem, Keyword akPrecache) global
+	if akBaseItem as Armor
+		string armorName = akBaseItem.GetName()
+		if armorName != ""
+			if StorageUtil.IntListGet(akPrecache, "FF__" + armorName, 0) == 0
+				debug.trace("Adding " + armorName + " to precache.")
+				int[] armor_data = FrostUtil.GetClothingDatastoreHandler().GetArmorProtectionData(akBaseItem as Armor)
+				bool result = StorageUtil.IntListCopy(akPrecache, "FF__" + armorName, armor_data)
+			endif
+		endif
+	endif
+endFunction
+
+function TryToRemoveArmorDataFromPrecache(Form akBaseItem, Keyword akPrecache) global
+	if akBaseItem as Armor
+		string armorName = akBaseItem.GetName()
+		if armorName != ""
+			if StorageUtil.IntListGet(akPrecache, "FF__" + armorName, 0) != 0
+				debug.trace("Removing " + armorName + " from precache.")
+				StorageUtil.IntListClear(akPrecache, "FF__" + armorName)
+			endif
+		endif
+	endif
+endFunction
+
+int function RemoveAllArmorFromPrecache(Keyword akPrecache) global
+	return StorageUtil.ClearAllObjPrefix(akPrecache, "FF__")
+endFunction
+
 _Frost_Strings function GetFrostfallStrings() global
 	return (Game.GetFormFromFile(0x068BED, "Frostfall.esp") as _Frost_Strings)
 endFunction

@@ -164,6 +164,7 @@ Activator property _Frost_PerkNodeController_Endurance auto
 
 ;#Misc=============================================================================
 Armor property ArmorHideCuirass auto
+Keyword property _FrostData_ArmorPrecache auto
 Message property _Frost_CriticalError_SKSE auto
 Message property _Frost_CriticalError_Campfire auto
 Message property _Frost_CriticalError_SkyUIInterfacePackage auto
@@ -229,6 +230,9 @@ function RunCompatibility()
 	; Initialize the Equip Monitor event queue
 	(PlayerAlias as _Frost_PlayerEquipMonitor).InitializeEventQueue()
 
+	; Clear the equipment precache.
+	_FrostInternal.RemoveAllArmorFromPrecache(_FrostData_ArmorPrecache)
+
 	_Frost_ClothingSystem clothing = GetClothingSystem()
 	clothing.WornGearFormsIntegrityCheck(clothing.WornGearForms)
 
@@ -251,7 +255,7 @@ function RunCompatibility()
 
 	; Verify that the default datastore has been populated.
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
-	int[] armor_data = handler.GetDefaultArmorData(ArmorHideCuirass)
+	int[] armor_data = handler.GetDefaultArmorData("80145___Skyrim.esm") ; ArmorHideCuirass
 	if armor_data[0] == handler.GEARTYPE_NOTFOUND
 		PopulateDefaultArmorData()
 	endif

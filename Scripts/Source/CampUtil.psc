@@ -280,8 +280,6 @@ Armor PlayerArrows = GetPlayerEquippedAmmo()
 	return Campfire.CampData.CurrentAmmo
 endFunction
 
-; @TODO: REMOVE
-
 ;/********f* CampUtil/IsRefInInterior
 * API VERSION ADDED
 * 1

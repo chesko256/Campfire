@@ -5,6 +5,8 @@ import gfx.ui.InputDetails;
 import gfx.io.GameDelegate;
 import Components.DeltaMeter;
 import Shared.GlobalFunc;
+//Frostfall
+import skyui.components.list.TabularList;
 
 import skyui.defines.Inventory;
 
@@ -69,6 +71,10 @@ class ItemCard extends MovieClip
 	
 	var _bEditNameMode: Boolean;
 	var bFadedIn: Boolean;
+	
+	//Frostfall
+	public var currentList: TabularList;
+	public var currentListIndex: Number;
 	
 
 	function ItemCard()
@@ -175,16 +181,13 @@ class ItemCard extends MovieClip
 	{
 		return LastUpdateObj;
 	}
-
+	
 	function set itemInfo(aUpdateObj: Object): Void
 	{
 		ItemCardMeters = new Array();
 		var strItemNameHtml: String = ItemName == undefined ? "" : ItemName.htmlText;
 		var _iItemType: Number = aUpdateObj.type;
-		if (_iItemType == 1){
-			skse.SendModEvent("Frost_OnSkyUIInvListSelectChangeArmor", "", 1, 0);
-		}
-				
+						
 		switch (_iItemType) {
 			case Inventory.ICT_ARMOR:
 				if (aUpdateObj.effects.length == 0)
@@ -196,6 +199,10 @@ class ItemCard extends MovieClip
 				ApparelEnchantedLabel.textAutoSize = "shrink";
 				ApparelEnchantedLabel.htmlText = aUpdateObj.effects;
 				SkillTextInstance.text = aUpdateObj.skillText;
+				skse.Log("warmth " + currentList[currentListIndex].warmth + " coverage " + currentList[currentListIndex].coverage);
+				skse.Log("current list " + currentList);
+				ExposureProtectionValue.text = currentList[currentListIndex].warmth === undefined ? "" : currentList[currentListIndex].warmth;
+				RainProtectionValue.text = currentList[currentListIndex].coverage === undefined ? "" : currentList[currentListIndex].coverage;
 				break;
 				
 			case Inventory.ICT_WEAPON:
@@ -733,6 +740,13 @@ class ItemCard extends MovieClip
 	function onListSelectionChange(event: Object): Void
 	{
 		ItemCardMeters[Inventory.ICT_LIST].SetDeltaPercent(ItemList.selectedEntry.chargeAdded + LastUpdateObj.currentCharge);
+	}
+	
+	// Frostfall
+	public function ForceProtectionDisplay(warmth: Number, coverage: Number): Void
+	{
+		ExposureProtectionValue.text = currentList[currentListIndex].warmth === undefined ? "" : currentList[currentListIndex].warmth;
+		RainProtectionValue.text = currentList[currentListIndex].coverage === undefined ? "" : currentList[currentListIndex].coverage;
 	}
 
 }
