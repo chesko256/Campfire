@@ -81,7 +81,7 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGear
     else
         debug.trace("Resolving " + armorName + ", not found in precache.")
         armor_data = handler.GetArmorProtectionData(akArmor)
-        TryToAddArmorDataToPrecache(akArmor, _FrostData_ArmorPrecache)
+        TryToAddArmorDataToPrecache(akArmor, armor_data, _FrostData_ArmorPrecache)
     endif
 
     if armor_data[0] == handler.GEARTYPE_IGNORE

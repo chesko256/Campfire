@@ -6,11 +6,7 @@ import _FrostInternal
 Keyword property _FrostData_ArmorPrecache auto
 
 Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
-	TryToAddArmorDataToPrecache(akBaseItem, _FrostData_ArmorPrecache)
-EndEvent
-
-Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akDestContainer)
-	TryToRemoveArmorDataFromPrecache(akBaseItem, _FrostData_ArmorPrecache)
+	TryToAddArmorToPrecache(akBaseItem, _FrostData_ArmorPrecache)
 EndEvent
 
 Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)

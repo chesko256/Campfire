@@ -664,7 +664,7 @@ int[] function GetTotalArmorProtectionValues(Armor akArmor, string asArmorName =
 		debug.trace("GetTotalArmorProtectionValues akArmor found")
 		ap = GetArmorProtectionData(akArmor)
 		debug.trace("GetTotalArmorProtectionValues ap = " + ap)
-		TryToAddArmorDataToPrecache(akArmor, _FrostData_ArmorPrecache)
+		TryToAddArmorDataToPrecache(akArmor, ap, _FrostData_ArmorPrecache)
 	endif
 
 	debug.trace("GetTotalArmorProtectionValues ap = " + ap)

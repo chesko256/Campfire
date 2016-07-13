@@ -75,17 +75,16 @@ Event OnSkyUIInvListGetEntryProtectionData(string asEventName, string asArmorNam
 	endif
 endEvent
 
-Event OnSkyUIInvListGetEntryProtectionDataOnProcess(string asEventName, string asString, float afFloat, Form akBaseObject)
+Event OnSkyUIInvListGetEntryProtectionDataOnProcess(string asEventName, string asString, float afIndex, Form akBaseObject)
 	debug.trace("Got OnSkyUIInvListGetEntryProtectionDataOnProcess")
-	UI.Invoke("InventoryMenu", "_root.Menu_mc.setEntryProtectionDataOnProcess")
 	if UI.IsMenuOpen("InventoryMenu")
-		UI.Invoke("InventoryMenu", "_root.Menu_mc.setEntryProtectionDataOnProcess")
+		UI.InvokeInt("InventoryMenu", "_root.Menu_mc.setEntryProtectionDataOnProcess", afIndex as Int)
 	elseif UI.IsMenuOpen("ContainerMenu")
-		UI.Invoke("ContainerMenu", "_root.Menu_mc.setEntryProtectionDataOnProcess")
+		UI.InvokeInt("ContainerMenu", "_root.Menu_mc.setEntryProtectionDataOnProcess", afIndex as Int)
 	elseif UI.IsMenuOpen("BarterMenu")
-		UI.Invoke("BarterMenu", "_root.Menu_mc.setEntryProtectionDataOnProcess")
+		UI.InvokeInt("BarterMenu", "_root.Menu_mc.setEntryProtectionDataOnProcess", afIndex as Int)
 	elseif UI.IsMenuOpen("Crafting Menu")
-		UI.Invoke("Crafting Menu", "_root.Menu.setEntryProtectionDataOnProcess")
+		UI.InvokeInt("Crafting Menu", "_root.Menu.setEntryProtectionDataOnProcess", afIndex as Int)
 	endif
 endEvent
 
