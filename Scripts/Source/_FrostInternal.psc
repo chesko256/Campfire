@@ -16,7 +16,7 @@ bool function PrecacheHasArmorData(string asArmorName, Keyword akPrecache) globa
 	endif
 endFunction
 
-function TryToAddArmorDataToPrecache(Form akBaseItem, Keyword akPrecache) global
+function TryToAddArmorToPrecache(Form akBaseItem, Keyword akPrecache) global
 	if akBaseItem as Armor
 		string armorName = akBaseItem.GetName()
 		if armorName != ""
@@ -29,7 +29,15 @@ function TryToAddArmorDataToPrecache(Form akBaseItem, Keyword akPrecache) global
 	endif
 endFunction
 
-function TryToRemoveArmorDataFromPrecache(Form akBaseItem, Keyword akPrecache) global
+function TryToAddArmorDataToPrecache(Form akBaseItem, Int[] aiArmorData, Keyword akPrecache) global
+	if aiArmorData[0] != 0 && akBaseItem as Armor
+		debug.trace("Adding " + armorName + " to precache.")
+		string armorName = akBaseItem.GetName()
+		bool result = StorageUtil.IntListCopy(akPrecache, "FF__" + armorName, aiArmorData)
+	endif
+endFunction
+
+function TryToRemoveArmorFromPrecache(Form akBaseItem, Keyword akPrecache) global
 	if akBaseItem as Armor
 		string armorName = akBaseItem.GetName()
 		if armorName != ""
