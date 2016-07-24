@@ -167,25 +167,25 @@ endFunction
 
 Event UpdateBottomBarWarmth(int aiWarmth)
 	if UI.IsMenuOpen("InventoryMenu")
-		UI.SetString("InventoryMenu", "_root.Menu_mc.bottomBar.frostInfoCard.ExposureProtectionValue.text", aiWarmth)
+		UI.InvokeInt("InventoryMenu", "_root.Menu_mc.bottomBar.updateFrostfallWarmth", aiWarmth)
 	elseif UI.IsMenuOpen("ContainerMenu")
-		UI.SetString("ContainerMenu", "_root.Menu_mc.bottomBar.frostInfoCard.ExposureProtectionValue.text", aiWarmth)
+		UI.InvokeInt("ContainerMenu", "_root.Menu_mc.bottomBar.updateFrostfallWarmth", aiWarmth)
 	elseif UI.IsMenuOpen("BarterMenu")
-		UI.SetString("BarterMenu", "_root.Menu_mc.bottomBar.frostInfoCard.ExposureProtectionValue.text", aiWarmth)
+		UI.InvokeInt("BarterMenu", "_root.Menu_mc.bottomBar.updateFrostfallWarmth", aiWarmth)
 	elseif UI.IsMenuOpen("Crafting Menu")
-		UI.SetString("Crafting Menu", "_root.Menu.BottomBarInfo.frostInfoCard.ExposureProtectionValue.text", aiWarmth)
+		UI.InvokeInt("Crafting Menu", "_root.Menu.BottomBarInfo.updateFrostfallWarmth", aiWarmth)
 	endif
 endEvent
 
 Event UpdateBottomBarCoverage(int aiCoverage)
 	if UI.IsMenuOpen("InventoryMenu")
-		UI.SetString("InventoryMenu", "_root.Menu_mc.bottomBar.frostInfoCard.RainProtectionValue.text", aiCoverage)
+		UI.InvokeInt("InventoryMenu", "_root.Menu_mc.bottomBar.updateFrostfallCoverage", aiCoverage)
 	elseif UI.IsMenuOpen("ContainerMenu")
-		UI.SetString("ContainerMenu", "_root.Menu_mc.bottomBar.frostInfoCard.RainProtectionValue.text", aiCoverage)
+		UI.InvokeInt("ContainerMenu", "_root.Menu_mc.bottomBar.updateFrostfallCoverage", aiCoverage)
 	elseif UI.IsMenuOpen("BarterMenu")
-		UI.SetString("BarterMenu", "_root.Menu_mc.bottomBar.frostInfoCard.RainProtectionValue.text", aiCoverage)
+		UI.InvokeInt("BarterMenu", "_root.Menu_mc.bottomBar.updateFrostfallCoverage", aiCoverage)
 	elseif UI.IsMenuOpen("Crafting Menu")
-		UI.SetString("Crafting Menu", "_root.Menu.BottomBarInfo.frostInfoCard.RainProtectionValue.text", aiCoverage)
+		UI.InvokeInt("Crafting Menu", "_root.Menu.BottomBarInfo.updateFrostfallCoverage", aiCoverage)
 	endif
 endEvent
 

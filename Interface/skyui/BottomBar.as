@@ -52,7 +52,6 @@ class BottomBar extends MovieClip
 		buttonPanel._x = a_leftOffset;
 		buttonPanel.updateButtons(true);
 		playerInfoCard._x = a_rightOffset - playerInfoCard._width;
-		// frostInfoCard._x = a_rightOffset - (frostInfoCard._width + playerInfoCard._width);
 	}
 
 	public function showPlayerInfo(): Void
@@ -183,6 +182,15 @@ class BottomBar extends MovieClip
 				if (itemType === Inventory.ICT_ARMOR) {
 					infoCard.ArmorRatingValue._x = infoCard.CarryWeightLabel._x + infoCard.CarryWeightLabel.getLineMetrics(0).x - infoCard.ArmorRatingValue._width - 5;
 					infoCard.ArmorRatingLabel._x = infoCard.ArmorRatingValue._x + infoCard.ArmorRatingValue.getLineMetrics(0).x - infoCard.ArmorRatingLabel._width;
+					//Frostfall
+					frostInfoCard._x = 1280.0 - (frostInfoCard._width + playerInfoCard._width - 100);
+					//Experimental
+					//frostInfoCard.RainProtectionValue._x = 
+					frostInfoCard.RainProtectionLabel._x = frostInfoCard.RainProtectionValue._x + frostInfoCard.RainProtectionValue.getLineMetrics(0).x - frostInfoCard.RainProtectionLabel._width;
+					frostInfoCard.ExposureProtectionValue._x = frostInfoCard.RainProtectionLabel._x + frostInfoCard.RainProtectionLabel.getLineMetrics(0).x - frostInfoCard.ExposureProtectionValue._width - 5;
+					frostInfoCard.ExposureProtectionLabel._x = frostInfoCard.ExposureProtectionValue._x + frostInfoCard.ExposureProtectionValue.getLineMetrics(0).x - frostInfoCard.ExposureProtectionLabel._width;
+
+					
 				} else if (itemType === Inventory.ICT_WEAPON) {
 					infoCard.DamageValue._x = infoCard.CarryWeightLabel._x + infoCard.CarryWeightLabel.getLineMetrics(0).x - infoCard.DamageValue._width - 5;
 					infoCard.DamageLabel._x = infoCard.DamageValue._x + infoCard.DamageValue.getLineMetrics(0).x - infoCard.DamageLabel._width;
@@ -190,7 +198,7 @@ class BottomBar extends MovieClip
 			}
 			updateStatMeter(infoCard.HealthRect, _healthMeter, _playerInfoObj.health, _playerInfoObj.maxHealth, _playerInfoObj.healthColor);
 			updateStatMeter(infoCard.MagickaRect, _magickaMeter, _playerInfoObj.magicka, _playerInfoObj.maxMagicka, _playerInfoObj.magickaColor);
-			updateStatMeter(infoCard.StaminaRect, _staminaMeter, _playerInfoObj.stamina, _playerInfoObj.maxStamina, _playerInfoObj.staminaColor);
+			updateStatMeter(infoCard.StaminaRect, _staminaMeter, _playerInfoObj.stamina, _playerInfoObj.maxStamina, _playerInfoObj.staminaColor);			
 		}
 	}
 
@@ -283,6 +291,11 @@ class BottomBar extends MovieClip
 					infoCard.ArmorRatingValue.SetText(strArmor, true);
 					infoCard.ArmorRatingValue._x = infoCard.CarryWeightLabel._x + infoCard.CarryWeightLabel.getLineMetrics(0).x - infoCard.ArmorRatingValue._width - 5;
 					infoCard.ArmorRatingLabel._x = infoCard.ArmorRatingValue._x + infoCard.ArmorRatingValue.getLineMetrics(0).x - infoCard.ArmorRatingLabel._width;
+					//Frostfall
+					frostInfoCard._x = 1280.0 - (frostInfoCard._width + playerInfoCard._width - 100);
+					frostInfoCard.RainProtectionLabel._x = frostInfoCard.RainProtectionValue._x + frostInfoCard.RainProtectionValue.getLineMetrics(0).x - frostInfoCard.RainProtectionLabel._width;
+					frostInfoCard.ExposureProtectionValue._x = frostInfoCard.RainProtectionLabel._x + frostInfoCard.RainProtectionLabel.getLineMetrics(0).x - frostInfoCard.ExposureProtectionValue._width - 5;
+					frostInfoCard.ExposureProtectionLabel._x = frostInfoCard.ExposureProtectionValue._x + frostInfoCard.ExposureProtectionValue.getLineMetrics(0).x - frostInfoCard.ExposureProtectionLabel._width;
 					break;
 					
 				case Inventory.ICT_WEAPON:
@@ -348,5 +361,24 @@ class BottomBar extends MovieClip
 		infoCard.LevelMeterInstance.gotoAndStop("Pause");
 		_levelMeter.SetPercent(a_levelPercent);
 	}
-
+	
+	//Frostfall
+	public function updateFrostfallWarmth(warmth: Number): Void
+	{
+		frostInfoCard.ExposureProtectionValue.text = warmth;
+		updateFrostfallElementPosition();
+	}
+	
+	public function updateFrostfallCoverage(coverage: Number): Void
+	{
+		frostInfoCard.RainProtectionValue.text = coverage;
+		updateFrostfallElementPosition();
+	}
+	
+	private function updateFrostfallElementPosition(): Void
+	{
+		frostInfoCard.RainProtectionLabel._x = frostInfoCard.RainProtectionValue._x + frostInfoCard.RainProtectionValue.getLineMetrics(0).x - frostInfoCard.RainProtectionLabel._width;
+		frostInfoCard.ExposureProtectionValue._x = frostInfoCard.RainProtectionLabel._x + frostInfoCard.RainProtectionLabel.getLineMetrics(0).x - frostInfoCard.ExposureProtectionValue._width - 5;
+		frostInfoCard.ExposureProtectionLabel._x = frostInfoCard.ExposureProtectionValue._x + frostInfoCard.ExposureProtectionValue.getLineMetrics(0).x - frostInfoCard.ExposureProtectionLabel._width;
+	}
 }
