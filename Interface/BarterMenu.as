@@ -98,21 +98,6 @@ class BarterMenu extends ItemMenu
 	// @override ItemMenu
 	public function UpdateItemCardInfo(a_updateObj: Object): Void
 	{
-		skse.Log('inventoryLists');
-		for (var id:String in inventoryLists) {
-			var value:Object = inventoryLists[id];
-			skse.Log(id + " = " + value);
-		}
-		skse.Log('ItemInfo');
-		for (var id:String in itemCard) {
-			var value:Object = itemCard.itemInfo[id];
-			skse.Log(id + " = " + value);
-		}
-		skse.Log('bottomBar');
-		for (var id:String in bottomBar) {
-			var value:Object = bottomBar[id];
-			skse.Log(id + " = " + value);
-		}
 		if (isViewingVendorItems()) {
 			a_updateObj.value = a_updateObj.value * _buyMult;
 			a_updateObj.value = Math.max(a_updateObj.value, 1);
@@ -137,10 +122,7 @@ class BarterMenu extends ItemMenu
   
 	// @override ItemMenu
 	private function onShowItemsList(event: Object): Void
-	{
-		//Frostfall
-		FetchProtectionDataForList(event.target.itemList._entryList);
-		
+	{		
 		inventoryLists.showItemsList();
 
 		//super.onShowItemsList(event);
