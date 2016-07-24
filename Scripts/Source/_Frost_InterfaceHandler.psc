@@ -14,6 +14,7 @@ EndEvent
 function RegisterForEvents()
 	RegisterForModEvent("Frost_OnSkyUIInvListGetEntryProtectionData", "OnSkyUIInvListGetEntryProtectionData")
 	RegisterForModEvent("Frost_OnSkyUIInvListGetEntryProtectionDataOnProcess", "OnSkyUIInvListGetEntryProtectionDataOnProcess")
+	RegisterForModEvent("Frost_InvalidateFetchedRangesOnProcess", "InvalidateFetchedRangesOnProcess")
 	RegisterForModEvent("Frost_UpdateBottomBarWarmth", "UpdateBottomBarWarmth")
 	RegisterForModEvent("Frost_UpdateBottomBarCoverage", "UpdateBottomBarCoverage")
 endFunction
@@ -85,6 +86,18 @@ Event OnSkyUIInvListGetEntryProtectionDataOnProcess(string asEventName, string a
 		UI.InvokeInt("BarterMenu", "_root.Menu_mc.setEntryProtectionDataOnProcess", afIndex as Int)
 	elseif UI.IsMenuOpen("Crafting Menu")
 		UI.InvokeInt("Crafting Menu", "_root.Menu.setEntryProtectionDataOnProcess", afIndex as Int)
+	endif
+endEvent
+
+Event InvalidateFetchedRangesOnProcess(string asEventName, string asArg, float afFloat, Form akBaseObject)
+	if UI.IsMenuOpen("InventoryMenu")
+		UI.Invoke("InventoryMenu", "_root.Menu_mc.onFrostfallInvalidateFetchedRangesOnProcess")
+	elseif UI.IsMenuOpen("ContainerMenu")
+		UI.Invoke("ContainerMenu", "_root.Menu_mc.onFrostfallInvalidateFetchedRangesOnProcess")
+	elseif UI.IsMenuOpen("BarterMenu")
+		UI.Invoke("BarterMenu", "_root.Menu_mc.onFrostfallInvalidateFetchedRangesOnProcess")
+	elseif UI.IsMenuOpen("Crafting Menu")
+		UI.Invoke("Crafting Menu", "_root.Menu.onFrostfallInvalidateFetchedRangesOnProcess")
 	endif
 endEvent
 

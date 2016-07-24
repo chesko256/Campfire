@@ -199,8 +199,7 @@ class ItemCard extends MovieClip
 				ApparelEnchantedLabel.textAutoSize = "shrink";
 				ApparelEnchantedLabel.htmlText = aUpdateObj.effects;
 				SkillTextInstance.text = aUpdateObj.skillText;
-				skse.Log("warmth " + currentList[currentListIndex].warmth + " coverage " + currentList[currentListIndex].coverage);
-				skse.Log("current list " + currentList);
+				//skse.Log("warmth " + currentList[currentListIndex].warmth + " coverage " + currentList[currentListIndex].coverage);
 				ExposureProtectionValue.text = currentList[currentListIndex].warmth === undefined ? "" : currentList[currentListIndex].warmth;
 				RainProtectionValue.text = currentList[currentListIndex].coverage === undefined ? "" : currentList[currentListIndex].coverage;
 				break;

@@ -204,9 +204,6 @@ class ContainerMenu extends ItemMenu
 	// @override ItemMenu
 	private function onShowItemsList(event: Object): Void
 	{
-		//Frostfall
-		FetchProtectionDataForList(event.target.itemList._entryList);
-		
 		inventoryLists.showItemsList();
 	}
 

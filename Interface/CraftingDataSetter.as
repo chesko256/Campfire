@@ -15,6 +15,9 @@ import skyui.components.list.IListProcessor;
 // @abstract
 class CraftingDataSetter implements IListProcessor
 {
+	//Frostfall
+	private var _listProcessed: Boolean;	
+	
   /* INITIALIZATION */
   
 	public function CraftingDataSetter()
@@ -25,6 +28,9 @@ class CraftingDataSetter implements IListProcessor
   	// @override IListProcessor
 	public function processList(a_list: BasicList): Void
 	{
+		//Frostfall
+		_listProcessed = false;
+		
 		var entryList = a_list.entryList;
 		
 		for (var i = 0; i < entryList.length; i++) {
@@ -39,6 +45,9 @@ class CraftingDataSetter implements IListProcessor
 
 			processEntry(e);
 		}
+		//Frostfall
+		_listProcessed = true;
+		skse.SendModEvent("Frost_InvalidateFetchedRangesOnProcess", "", 0, 0);
 	}
 	
 	
@@ -73,7 +82,9 @@ class CraftingDataSetter implements IListProcessor
 				processArmorOther(a_entryObject);
 				processArmorBaseId(a_entryObject);
 				//Frostfall
-				skse.SendModEvent("Frost_OnSkyUIInvListGetEntryProtectionDataOnProcess", "", 0, 0);
+				if (_listProcessed) {
+					skse.SendModEvent("Frost_OnSkyUIInvListGetEntryProtectionDataOnProcess", "", a_entryObject.itemIndex, 0);
+				}
 				break;
 
 			case Form.TYPE_BOOK:
