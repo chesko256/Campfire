@@ -39,7 +39,7 @@ class ItemMenu extends MovieClip
 	//Frostfall
 	private var _entriesSent: Number;
 	private var _entriesReceived: Number;
-	private var _fetchLoopID: Number;
+	private var _fetchedRanges: Array;
 	
 	
   /* STAGE ELEMENTS */
@@ -113,6 +113,11 @@ class ItemMenu extends MovieClip
 		
 		itemCard.addEventListener("quantitySelect",this,"onQuantityMenuSelect");
 		itemCard.addEventListener("subMenuAction",this,"onItemCardSubMenuAction");
+		
+		//Frostfall
+		_fetchedRanges = [];
+		itemCard.currentList = inventoryLists.itemList.entryList;
+		//skse.Log("currentList " + itemCard.currentList);
 		
 		positionFixedElements();
 		
@@ -324,11 +329,6 @@ class ItemMenu extends MovieClip
 		setConfig(event.config);
 
 		inventoryLists.showPanel(_bPlayBladeSound);
-		
-		//Frostfall
-		skse.Log("onConfigLoad");
-		_fetchLoopID = 0;
-		itemCard.currentList = inventoryLists.itemList.entryList;
 	}
 
 	private function onMouseWheel(delta: Number): Void
@@ -351,9 +351,18 @@ class ItemMenu extends MovieClip
 	}
 	
 	private function onItemHighlightChange(event: Object): Void
-	{	
+	{
 		//Frostfall
 		itemCard.currentListIndex = event.index;
+		var range = Math.floor(event.index / 5);
+		//skse.Log("Current range is " + range);
+		if (_fetchedRanges.indexOf(range) === -1 || _fetchedRanges.indexOf(range) === undefined) {
+			//skse.Log("Need to fetch range " + range);
+			var rangeMin = range * 5;
+			var rangeMax = (range * 5) + 4;
+			FetchProtectionDataForList(event.target.itemList._entryList, rangeMin, rangeMax);
+			_fetchedRanges.push(range);
+		}
 		
 		if (event.index != -1) {
 			if (!_bItemCardFadedIn) {
@@ -381,9 +390,6 @@ class ItemMenu extends MovieClip
 
 	private function onShowItemsList(event: Object): Void
 	{
-		//Frostfall
-		FetchProtectionDataForList(event.target.itemList._entryList);
-		
 		onItemHighlightChange(event);
 	}
 
@@ -614,20 +620,16 @@ class ItemMenu extends MovieClip
 	private function updateBottomBar(a_bSelected: Boolean): Void {}
 	
 	//Frostfall
-	public function FetchProtectionDataForList(entryList: Array): Void
-	{
-		skse.Log("FetchProtectionDataForList");
-		_fetchLoopID += 1;
-		var myLoopID = _fetchLoopID;
+	public function FetchProtectionDataForList(entryList: Array, rangeMin: Number, rangeMax: Number): Void
+	{		
 		_entriesSent = 0;
 		_entriesReceived = 0;
-		for(var idx in entryList) {
+		for(var i = rangeMin; i <= rangeMax; i++) {
 			//skse.Log(idx + " : " + event.target.itemList._entryList[idx]);
-			if (myLoopID !== _fetchLoopID) { break; }
-			var entry = entryList[idx];
+			var entry = entryList[i];
 			//skse.Log(idx + " : " + entry.formId);
 			if (entry.formType === 26) {
-				getEntryProtectionData(entry.text, Number(idx), Number(entry.formId));
+				getEntryProtectionData(entry.text, i, Number(entry.formId));
 			};
 		};
 		//skse.Log("FormID: " + event.target.itemList.selectedEntry.formId);
@@ -638,14 +640,14 @@ class ItemMenu extends MovieClip
 		var index:Number = arguments[0];
 		var warmth:Number = arguments[1];
 		var coverage:Number = arguments[2];
-		skse.Log("Receiving idx " + index + ", warmth " + warmth + ", coverage " + coverage);
+		//skse.Log("Receiving idx " + index + ", warmth " + warmth + ", coverage " + coverage);
 		var entry = inventoryLists.itemList.entryList[index];
 		entry["warmth"] = warmth;
 		entry["coverage"] = coverage;
 
 		_entriesReceived += 1;
 		if (_entriesReceived === _entriesSent) {
-			skse.Log("Got all of the data. Refreshing.");
+			//skse.Log("Got all of the data. Refreshing.");
 			var selectedEntry = inventoryLists.itemList.selectedEntry;
 			if (selectedEntry.formType === 26) {
 				itemCard.ForceProtectionDisplay(selectedEntry.warmth, selectedEntry.coverage);
@@ -654,12 +656,18 @@ class ItemMenu extends MovieClip
 		//skse.Log("Entry values are " + entry.warmth + " and " + entry.coverage);
 	}
 	
-	public function setEntryProtectionDataOnProcess(): Void
-	{
-		skse.Log("setEntryProtectionDataOnProcess, entries sent " + _entriesSent + " received " + _entriesReceived);
-		if (_entriesSent > 0 && _entriesReceived >= _entriesSent) {
-			skse.Log("Called set on process");
-			FetchProtectionDataForList(inventoryLists.itemList.entryList);
+	public function setEntryProtectionDataOnProcess(entryIndex: Number): Void
+	{		
+		//skse.Log("setEntryProtectionDataOnProcess")
+		itemCard.currentListIndex = entryIndex;
+		var range = Math.floor(entryIndex / 5);
+		//skse.Log("Current range is " + range);
+		if (_fetchedRanges.indexOf(range) === -1 || _fetchedRanges.indexOf(range) === undefined) {
+			//skse.Log("Need to fetch range " + range);
+			var rangeMin = range * 5;
+			var rangeMax = (range * 5) + 4;
+			FetchProtectionDataForList(inventoryLists.itemList.entryList, rangeMin, rangeMax);
+			_fetchedRanges.push(range);
 		}
 	}
 	
@@ -668,5 +676,11 @@ class ItemMenu extends MovieClip
 		_entriesSent += 1;
 		//skse.Log("sending " + entryIndex + " and " + formId);
 		skse.SendModEvent("Frost_OnSkyUIInvListGetEntryProtectionData", entryName, entryIndex, formId);
+	}
+	
+	private function onFrostfallInvalidateFetchedRangesOnProcess() 
+	{
+		_fetchedRanges = [];
+		setEntryProtectionDataOnProcess(inventoryLists.itemList.selectedIndex)
 	}
 }
