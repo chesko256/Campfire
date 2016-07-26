@@ -8,7 +8,7 @@ Quest property _Seed_HungerSystemQuest auto
 Quest property _Seed_ThirstSystemQuest auto
 
 Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
-	
+
 	if (_Seed_SpoilSystemQuest as _Seed_SpoilSystem).spoil_in_progress
 		debug.trace("[Seed] ########################### Discarding OnItemAdded event, spoil cycle in progress.")
 		return
@@ -76,8 +76,10 @@ Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRefe
 EndEvent
 
 Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
-	(_Seed_HungerSystemQuest as _Seed_HungerSystem).PlayerHit(abHitBlocked)
-	(_Seed_ThirstSystemQuest as _Seed_ThirstSystem).PlayerHit(abHitBlocked)
+	if abHitBlocked
+		(_Seed_HungerSystemQuest as _Seed_HungerSystem).PlayerHit()
+		(_Seed_ThirstSystemQuest as _Seed_ThirstSystem).PlayerHit()
+	endif
 EndEvent
 
 Event OnSpellCast(Form akSpell)
