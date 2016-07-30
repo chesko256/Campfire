@@ -161,6 +161,14 @@ _Frost_FrostResistSystem function GetFrostResistSystem() global
     return Frostfall.FrostResist
 endFunction
 
+Quest function GetEventSender_UpdateWarmth() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall._Frost_EventSender_UpdateWarmth
+endFunction
 
 ; Public Functions ================================================================================
 
@@ -243,7 +251,7 @@ bool function IsPlayerNearFire() global
 bool near_fire = FrostUtil.IsPlayerNearFire()
 * NOTES
 * This does NOT indicate if the player is near a heat source; there are heat sources
-* that are not fires. Fires have special properties in Frostfall and Campfire, which 
+* that are not fires. Fires have special properties in Frostfall and Campfire, which
 * include drying the player when wet, and being able to cook food using a cooking pot.
 *
 * To determine if the player is near a heat source of any kind, use GetPlayerHeatSourceLevel()
@@ -271,7 +279,7 @@ endFunction
 * 1
 *
 * DESCRIPTION
-* The level (size) of the player's current nearby heat source. 
+* The level (size) of the player's current nearby heat source.
 *
 * SYNTAX
 */;
@@ -314,7 +322,7 @@ endFunction
 * 1
 *
 * DESCRIPTION
-* The distance from the player to the player's current nearby heat source. 
+* The distance from the player to the player's current nearby heat source.
 *
 * SYNTAX
 */;
@@ -519,13 +527,13 @@ int class = FrostUtil.GetWeatherClassificationActual()
     if !akWeather
         return -1
     endif
-    
+
     if Frostfall._Frost_OvercastWeatherList.HasForm(akWeather)
         return 0
     endif
-    
+
     int classification = akWeather.GetClassification()
-    
+
     _Frost_Compatibility Compatibility = GetCompatibilitySystem()
     if classification == 3
         if Compatibility.isDLC2Loaded && akWeather == Compatibility.DLC2AshStorm
@@ -1365,7 +1373,7 @@ endFunction
 * 2
 *
 * DESCRIPTION
-* Adds a worldspace to the list of worldspaces that Frostfall maintains where fast travel controls should always be enabled. 
+* Adds a worldspace to the list of worldspaces that Frostfall maintains where fast travel controls should always be enabled.
 * Only Worldspace forms added to the list via AddFastTravelWorldspaceException can be removed.
 *
 * SYNTAX
@@ -1447,7 +1455,7 @@ int function GetPlayerWetnessLevel() global
 * None
 *
 * RETURN VALUE
-* * The player's current wetness level.    
+* * The player's current wetness level.
 * * 0 = Not wet
 * * 1 = Damp
 * * 2 = Wet
@@ -1757,7 +1765,7 @@ endFunction
 bool function ArmorProtectionDataExists(Armor akArmor) global
 ;/*
 * PARAMETERS
-* akArmor: 
+* akArmor:
 *
 * RETURN VALUE
 * True if data exists; False otherwise.
@@ -1955,7 +1963,7 @@ function RemoveArmorProtectionData(Armor akArmor)
 * EXAMPLES
 ;Remove the protection for my cool armor.
 FrostUtil.RemoveArmorProtectionData(MyCoolArmor)
-* 
+*
 * NOTES
 * If the default data for a piece of armor is removed, Frostfall will try to figure out values that make sense and use those instead.
 * Calling this will do nothing for armor in the Skyrim base game, Dawnguard, Dragonborn, Campfire, or Frostfall.
@@ -1990,7 +1998,7 @@ endFunction
 *
 * SYNTAX
 Event Frostfall_OnPlayerStartSwimming()
-* 
+*
 * PARAMETERS
 * None
 *
@@ -2020,7 +2028,7 @@ endFunction
 *
 * SYNTAX
 Event Frostfall_OnPlayerStopSwimming()
-* 
+*
 * PARAMETERS
 * None
 *
@@ -2057,7 +2065,7 @@ endFunction
 *
 * SYNTAX
 Event Frostfall_Loaded()
-* 
+*
 * PARAMETERS
 * None
 *
@@ -2084,7 +2092,7 @@ endEvent
 *
 * SYNTAX
 Event Frost_OnRescuePlayer(bool in_water)
-* 
+*
 * PARAMETERS
 * * in_water: Whether or not the player was swimming when they were rescued (mainly used by the rescue system to select a suitable destination).
 *
@@ -2107,7 +2115,7 @@ endEvent
 *
 * SYNTAX
 Event OnTamrielRegionChange(int region, bool in_region)
-* 
+*
 * PARAMETERS
 * * region: The ID of the region. See Notes for region IDs.
 * * in_region: If True, the player is entering this region. If False, the player is leaving it.
@@ -2125,15 +2133,15 @@ endEvent
 * NOTES
 * The following are possible region IDs:
 * * REGION_UNKNOWN = -1
-* * REGION_PINEFOREST = 1 
-* * REGION_VOLCANICTUNDRA = 2 
-* * REGION_FALLFOREST = 3 
-* * REGION_REACH = 4 
-* * REGION_TUNDRA = 5 
-* * REGION_TUNDRAMARSH = 6 
-* * REGION_COAST = 7 
-* * REGION_SNOW = 8 
-* * REGION_OBLIVION = 9 
+* * REGION_PINEFOREST = 1
+* * REGION_VOLCANICTUNDRA = 2
+* * REGION_FALLFOREST = 3
+* * REGION_REACH = 4
+* * REGION_TUNDRA = 5
+* * REGION_TUNDRAMARSH = 6
+* * REGION_COAST = 7
+* * REGION_SNOW = 8
+* * REGION_OBLIVION = 9
 * * REGION_FALMERVALLEY = 10
 * * REGION_SOLSTHEIM = 11
 * * REGION_WYRMSTOOTH = 20
@@ -2149,7 +2157,7 @@ endEvent
 *
 * SYNTAX
 Event Frost_OnInnerFireMeditate(bool abMeditating)
-* 
+*
 * PARAMETERS
 * * abMeditating: If True, the player entered the Inner Fire state. If False, they have just left it.
 *

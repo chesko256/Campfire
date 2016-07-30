@@ -680,6 +680,44 @@ int[] function GetTotalArmorProtectionValues(Armor akArmor, string asArmorName =
 	return armor_totals
 endFunction
 
+int[] function GetTotalArmorProtectionValuesWithType(Armor akArmor, string asArmorName = "")
+	debug.trace("GetTotalArmorProtectionValuesWithType " + akArmor + " named " + asArmorName)
+	int[] armor_totals = new int[3]
+
+	int[] ap = new int[15]
+	if PrecacheHasArmorData(asArmorName, _FrostData_ArmorPrecache)
+		debug.trace("GetTotalArmorProtectionValuesWithType from precache")
+		ap = GetArmorDataFromPrecache(asArmorName, _FrostData_ArmorPrecache)
+	else
+		debug.trace("GetTotalArmorProtectionValuesWithType lookup")
+		if !akArmor
+			debug.trace("GetTotalArmorProtectionValuesWithType akArmor none, bail")
+			armor_totals[0] = 0
+			armor_totals[1] = 0
+			armor_totals[2] = 0
+			return armor_totals
+		endif
+		debug.trace("GetTotalArmorProtectionValuesWithType akArmor found")
+		ap = GetArmorProtectionData(akArmor)
+		debug.trace("GetTotalArmorProtectionValuesWithType ap = " + ap)
+		TryToAddArmorDataToPrecache(akArmor, ap, _FrostData_ArmorPrecache)
+	endif
+
+	debug.trace("GetTotalArmorProtectionValuesWithType ap = " + ap)
+	if ap[0] == GEARTYPE_IGNORE
+		armor_totals[0] = 0
+		armor_totals[1] = 0
+		armor_totals[2] = 0
+		return armor_totals
+	endif
+
+	armor_totals[0] = ap[1] + ap[3] + ap[5] + ap[7] + ap[9] + ap[11] + ap[13]
+	armor_totals[1] = ap[2] + ap[4] + ap[6] + ap[8] + ap[10] + ap[12] + ap[14]
+	armor_totals[2] = ap[0]
+
+	return armor_totals
+endFunction
+
 int[] function GetArmorProtectionDataByKeyword(Armor akArmor)
 	int[] armor_data = new int[15]
 

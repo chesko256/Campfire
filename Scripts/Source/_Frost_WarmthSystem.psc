@@ -24,7 +24,9 @@ int current_spell_bonus
 bool property updating_warmth = false auto hidden
 
 function RegisterForEvents()
-	RegisterForModEvent("Frost_UpdateWarmth", "UpdateWarmth")
+	FallbackEventSender EventSender = GetEventSender_UpdateWarmth() as FallbackEventSender
+  EventSender.RegisterFormForModEventWithFallback("Frost_UpdateWarmth", "UpdateWarmth", self as Form)
+	; RegisterForModEvent("Frost_UpdateWarmth", "UpdateWarmth")
 	RegisterForModEvent("Frost_SoupEffectStart", "SoupEffectStart")
 	RegisterForModEvent("Frost_SoupEffectStop", "SoupEffectStop")
 	RegisterForModEvent("Campfire_CampfirePerkPurchased", "CampfirePerkPurchased")
