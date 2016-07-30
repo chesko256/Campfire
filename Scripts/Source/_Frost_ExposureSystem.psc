@@ -142,6 +142,7 @@ function RegisterForEvents()
 endFunction
 
 function Update()
+	SendEvent_UpdateWarmth()
 	if last_update_time == 0.0
 		; Skip the first update
 		last_update_time = Game.GetRealHoursPassed()
@@ -151,7 +152,7 @@ function Update()
 
 	this_update_time = Game.GetRealHoursPassed()
 	this_update_game_time = Utility.GetCurrentGameTime()
-	
+
 	;@TODO: Move to state update quest
 	RefreshAbleToWait()
 	RefreshAbleToFastTravel()
@@ -319,7 +320,7 @@ function RefreshPlayerStateData()
 	player_y = PlayerRef.GetPositionY()
 	in_interior = CampUtil.IsRefInInterior(PlayerRef)
 	distance_moved = GetDistanceMoved()
-	
+
 	recently_fast_travelled = GetFastTravelled(distance_moved)
 	if recently_fast_travelled
 		SetAfterFastTravelCondition()
@@ -355,7 +356,7 @@ endFunction
 ;@TODO: Possibly wrap in FrostUtil IsAbleToFastTravel() or similar
 ;@TODO: Check fast travel exceptions too, like black book
 function RefreshAbleToFastTravel()
-	
+
 	if FrostUtil.GetCompatibilitySystem().isDLC2Loaded
 		WorldSpace my_ws = PlayerRef.GetWorldspace()
 		if _Frost_WorldspacesExteriorOblivion.HasForm(my_ws) || _Frost_WorldspacesFTException.HasForm(my_ws)
@@ -663,7 +664,7 @@ float function GetEffectiveTemperature()
 
 	float current_temp = _Frost_CurrentTemperature.GetValue()
 	float temp_increase = 0
-	
+
 	current_weather = GetCurrentWeatherActual()
 	int current_weather_class = GetWeatherClassificationActual(current_weather)
 
@@ -762,7 +763,7 @@ function ExposureValueUpdate(float game_hours_passed)
 					GetColder(heat_amount, EXPOSURE_LEVEL_5, game_hours_passed)
 				endif
 			endif
-	
+
 		elseif current_temperature <= 0
 			if near_heat
 				if in_tent
@@ -787,7 +788,7 @@ function ExposureValueUpdate(float game_hours_passed)
 					GetColder(heat_amount, EXPOSURE_LEVEL_4, game_hours_passed)
 				endif
 			endif
-	
+
 		elseif current_temperature < 10
 			if near_heat
 				if in_tent
@@ -812,7 +813,7 @@ function ExposureValueUpdate(float game_hours_passed)
 					GetColder(heat_amount, EXPOSURE_LEVEL_2, game_hours_passed)
 				endif
 			endif
-	
+
 		elseif current_temperature >= 10
 			if near_heat
 				if in_tent
@@ -863,17 +864,17 @@ function GetColder(int heat_amount, float limit, float game_hours_passed)
 	if time_delta_seconds > (update_freq * 2)
 		time_delta_seconds = (update_freq * 2)
 	endif
-	
+
 	; Reduce the player's exposurke rate by up to 90%.
-	float exposure_reduction = 1.0 - (((_Frost_AttributeWarmth.GetValueInt() * 90.0) / _Frost_Calc_MaxWarmth.GetValue()) / 100.0)	
+	float exposure_reduction = 1.0 - (((_Frost_AttributeWarmth.GetValueInt() * 90.0) / _Frost_Calc_MaxWarmth.GetValue()) / 100.0)
 	; Rise (multiplier on Y-axis) over Run (distance from hemeostasis temperature)
 	float slope = _Frost_Calc_ExtremeMultiplier.GetValue()/(_Frost_Calc_ExtremeTemp.GetValue() - _Frost_Calc_StasisTemp.GetValue())
     float a_x = current_temperature
-    float a_b = (-slope + _Frost_Calc_StasisMultiplier.GetValue()) * _Frost_Calc_StasisTemp.GetValue()    
+    float a_b = (-slope + _Frost_Calc_StasisMultiplier.GetValue()) * _Frost_Calc_StasisTemp.GetValue()
     ; Slope-intercept form solving for Y
     float temp_multiplier = (slope * a_x) + a_b
     float wet_factor = GetWetFactor()
-    
+
     ; Master Exposure loss formula
 	float amount = ((((temp_multiplier / 3) * wet_factor) * exposure_reduction) * time_delta_seconds) * _Frost_Setting_ExposureRate.GetValue()
 	FrostDebug(0, "@@@@ Exposure ::: Calc Values - temp_multiplier " + temp_multiplier + " wet_factor " + wet_factor + " exposure_reduction " + exposure_reduction + " time_delta_seconds " + time_delta_seconds + " _Frost_Setting_ExposureRate " + _Frost_Setting_ExposureRate.GetValue())
@@ -897,7 +898,7 @@ function GetFrostbite(bool force_frostbite = false)
 	bool wearing_head = clothing.WornGearValues[2] > 0
 	bool wearing_hands = clothing.WornGearValues[4] > 0
 	bool wearing_feet = clothing.WornGearValues[6] > 0
-	float frostbite_chance 
+	float frostbite_chance
 	if force_frostbite
 		frostbite_chance = 0.5
 	else
@@ -1068,9 +1069,10 @@ function SendEvent_OnRescuePlayer(bool in_water)
 endFunction
 
 function SendEvent_UpdateWarmth()
-    int handle = ModEvent.Create("Frost_UpdateWarmth")
+		FallbackEventSender EventSender = GetEventSender_UpdateWarmth() as FallbackEventSender
+    int handle = EventSender.Create("Frost_UpdateWarmth")
     if handle
-        ModEvent.Send(handle)
+        EventSender.Send(handle)
     endif
 endFunction
 

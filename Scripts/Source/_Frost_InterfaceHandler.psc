@@ -7,12 +7,20 @@ import Math
 
 Actor property PlayerRef auto
 
+_Frost_ClothingSystem clothing
+_Frost_ArmorProtectionDatastoreHandler handler
+
 function RegisterForEvents()
 	RegisterForModEvent("Frost_OnSkyUIInvListGetEntryProtectionData", "OnSkyUIInvListGetEntryProtectionData")
+	RegisterForModEvent("Frost_OnSkyUIInvListGetEntryChangeData", "OnSkyUIInvListGetEntryChangeData")
 	RegisterForModEvent("Frost_OnSkyUIInvListGetEntryProtectionDataOnProcess", "OnSkyUIInvListGetEntryProtectionDataOnProcess")
 	RegisterForModEvent("Frost_InvalidateFetchedRangesOnProcess", "InvalidateFetchedRangesOnProcess")
 	RegisterForModEvent("Frost_UpdateBottomBarWarmth", "UpdateBottomBarWarmth")
 	RegisterForModEvent("Frost_UpdateBottomBarCoverage", "UpdateBottomBarCoverage")
+
+	; Pre-resolve these.
+	clothing = GetClothingSystem()
+	handler = GetClothingDatastoreHandler()
 endFunction
 
 function RegisterForMenus()
@@ -33,9 +41,9 @@ Event OnSkyUIInvListGetEntryProtectionData(string asEventName, string asArmorNam
 	int[] vals = new int[3]
 	vals[0] = afIndex as Int
 	if asArmorName != ""
-		int[] totals = GetClothingDatastoreHandler().GetTotalArmorProtectionValues(akBaseObject as Armor, asArmorName)
-		vals[1] = totals[0]
-		vals[2] = totals[1]
+		int[] totals = handler.GetTotalArmorProtectionValuesWithType(akBaseObject as Armor, asArmorName)
+		vals[1] = totals[0] ; Warmth
+		vals[2] = totals[1] ; Coverage
 		
 		if UI.IsMenuOpen("InventoryMenu")
 			UI.InvokeIntA("InventoryMenu", "_root.Menu_mc.setEntryProtectionData", vals)
@@ -45,6 +53,36 @@ Event OnSkyUIInvListGetEntryProtectionData(string asEventName, string asArmorNam
 			UI.InvokeIntA("BarterMenu", "_root.Menu_mc.setEntryProtectionData", vals)
 		elseif UI.IsMenuOpen("Crafting Menu")
 			UI.InvokeIntA("Crafting Menu", "_root.Menu.setEntryProtectionData", vals)
+		endif
+	endif
+endEvent
+
+Event OnSkyUIInvListGetEntryChangeData(string asEventName, string asArmorName, float afIndex, Form akBaseObject)
+	debug.trace("OnSkyUIInvListGetEntryChangeData called with index " + afIndex + " with name " + asArmorName + " with form " + akBaseObject)
+	int[] vals = new int[3]
+	vals[0] = afIndex as Int
+	if asArmorName != ""
+		Armor the_armor = akBaseObject as Armor
+		int type = handler.GetGearType(the_armor, the_armor.GetSlotMask())
+
+		if type != 0
+			int index_to_check = (type * 2) - 2
+			; Warmth Change
+			vals[1] = clothing.WornGearValues[index_to_check]
+			debug.trace("Current type warmth " + vals[1])
+			; Coverage Change
+			vals[2] = clothing.WornGearValues[index_to_check + 1]
+			debug.trace("Current type coverage " + vals[2])
+		endif
+		
+		if UI.IsMenuOpen("InventoryMenu")
+			UI.InvokeIntA("InventoryMenu", "_root.Menu_mc.setEntryChangeData", vals)
+		elseif UI.IsMenuOpen("ContainerMenu")
+			UI.InvokeIntA("ContainerMenu", "_root.Menu_mc.setEntryChangeData", vals)
+		elseif UI.IsMenuOpen("BarterMenu")
+			UI.InvokeIntA("BarterMenu", "_root.Menu_mc.setEntryChangeData", vals)
+		elseif UI.IsMenuOpen("Crafting Menu")
+			UI.InvokeIntA("Crafting Menu", "_root.Menu.setEntryChangeData", vals)
 		endif
 	endif
 endEvent
@@ -73,6 +111,19 @@ Event InvalidateFetchedRangesOnProcess(string asEventName, string asArg, float a
 		UI.Invoke("Crafting Menu", "_root.Menu.onFrostfallInvalidateFetchedRangesOnProcess")
 	endif
 endEvent
+
+function InvalidateFetchedChangeRangesOnRecalculate()
+	debug.trace("Got InvalidateFetchedChangeRangesOnRecalculate")
+	if UI.IsMenuOpen("InventoryMenu")
+		UI.Invoke("InventoryMenu", "_root.Menu_mc.onFrostfallInvalidateChangeRangesOnRecalculate")
+	elseif UI.IsMenuOpen("ContainerMenu")
+		UI.Invoke("ContainerMenu", "_root.Menu_mc.onFrostfallInvalidateChangeRangesOnRecalculate")
+	elseif UI.IsMenuOpen("BarterMenu")
+		UI.Invoke("BarterMenu", "_root.Menu_mc.onFrostfallInvalidateChangeRangesOnRecalculate")
+	elseif UI.IsMenuOpen("Crafting Menu")
+		UI.Invoke("Crafting Menu", "_root.Menu.onFrostfallInvalidateChangeRangesOnRecalculate")
+	endif
+endFunction
 
 Event UpdateBottomBarWarmth(int aiWarmth)
 	if UI.IsMenuOpen("InventoryMenu")
