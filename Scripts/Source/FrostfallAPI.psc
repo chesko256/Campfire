@@ -16,7 +16,8 @@ _Frost_WeatherMeterInterfaceHandler property WeathersenseMeterHandler auto
 _Frost_ShelterSystem property Shelter auto
 _Frost_FrostResistSystem property FrostResist auto
 _Frost_ArmorProtectionDatastoreHandler property ClothingDatastoreHandler auto
-Quest property _Frost_EventSender_UpdateWarmth auto
+Quest property _Frost_EventEmitter_UpdateWarmth auto
+Quest property _Frost_EventEmitter_OnTamrielRegionChange auto
 Actor property PlayerRef auto
 Formlist property _Frost_WorldspacesExteriorOblivion auto
 Formlist property _Frost_OvercastWeatherList auto

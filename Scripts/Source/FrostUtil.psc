@@ -161,13 +161,22 @@ _Frost_FrostResistSystem function GetFrostResistSystem() global
     return Frostfall.FrostResist
 endFunction
 
-Quest function GetEventSender_UpdateWarmth() global
+FallbackEventEmitter function GetEventEmitter_UpdateWarmth() global
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
         RaiseFrostAPIError()
         return none
     endif
-    return Frostfall._Frost_EventSender_UpdateWarmth
+    return Frostfall._Frost_EventEmitter_UpdateWarmth as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_OnTamrielRegionChange() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall._Frost_EventEmitter_OnTamrielRegionChange as FallbackEventEmitter
 endFunction
 
 ; Public Functions ================================================================================
