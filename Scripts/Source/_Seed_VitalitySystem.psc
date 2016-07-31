@@ -3,6 +3,8 @@ scriptname _Seed_VitalitySystem extends Quest
 Actor property PlayerRef auto
 GlobalVariable property _Seed_VitalitySystemEnabled auto
 GlobalVariable property _Seed_AttributeVitality auto
+Spell property _Seed_VitalityEffect8 auto
+Spell property _Seed_VitalityEffect7 auto
 Spell property _Seed_VitalityEffect6 auto
 Spell property _Seed_VitalityEffect5 auto
 Spell property _Seed_VitalityEffect4 auto
@@ -10,7 +12,15 @@ Spell property _Seed_VitalityEffect3 auto
 Spell property _Seed_VitalityEffect2 auto
 Spell property _Seed_VitalityEffect1 auto
 
-float property MAX_VITALITY = 120.0 autoReadOnly
+float property MAX_VITALITY = 100.0 autoReadOnly
+float property VITALITY_LEVEL_8 = 87.5 autoReadOnly
+float property VITALITY_LEVEL_7 = 75.0 autoReadOnly
+float property VITALITY_LEVEL_6 = 62.5 autoReadOnly
+float property VITALITY_LEVEL_5 = 50.0 autoReadOnly
+float property VITALITY_LEVEL_4 = 37.5 autoReadOnly
+float property VITALITY_LEVEL_3 = 25.0 autoReadOnly
+float property VITALITY_LEVEL_2 = 12.5 autoReadOnly
+float property VITALITY_LEVEL_1 = 0.0 autoReadOnly
 float property MIN_VITALITY = 0.0 autoReadOnly
 float property update_interval = 60.0 auto
 
@@ -22,7 +32,6 @@ function Initialize()
 endFunction
 
 Event OnUpdate()
-
     if _Seed_VitalitySystemEnabled.GetValueInt() == 2
         RegisterForSingleUpdate(update_interval)
     endif
@@ -92,17 +101,21 @@ function ApplyVitalityEffects()
     ; Apply magic effects, SFX, VFX.
 
     float current_value = _Seed_AttributeVitality.GetValue()
-    if current_value > 100.0
+    if current_value > VITALITY_LEVEL_8
+        TryToApplySpell(PlayerRef, _Seed_VitalityEffect8)
+    elseif current_value > VITALITY_LEVEL_7
+        TryToApplySpell(PlayerRef, _Seed_VitalityEffect7)
+    elseif current_value > VITALITY_LEVEL_6
         TryToApplySpell(PlayerRef, _Seed_VitalityEffect6)
-    elseif current_value > 80.0
+    elseif current_value > VITALITY_LEVEL_5
         TryToApplySpell(PlayerRef, _Seed_VitalityEffect5)
-    elseif current_value > 60.0
+    elseif current_value > VITALITY_LEVEL_4
         TryToApplySpell(PlayerRef, _Seed_VitalityEffect4)
-    elseif current_value > 40.0
+    elseif current_value > VITALITY_LEVEL_3
         TryToApplySpell(PlayerRef, _Seed_VitalityEffect3)
-    elseif current_value > 20.0
+    elseif current_value > VITALITY_LEVEL_2
         TryToApplySpell(PlayerRef, _Seed_VitalityEffect2)
-    elseif current_value > 0.0
+    elseif current_value > VITALITY_LEVEL_1
         TryToApplySpell(PlayerRef, _Seed_VitalityEffect1)
     else
         ; Death
@@ -113,22 +126,4 @@ function TryToApplySpell(Actor akActor, Spell akSpell)
     if !akActor.HasSpell(akSpell)
         akActor.AddSpell(akSpell, false)
     endif
-endFunction
-
-bool function ArrayAdd(float[] myArray, float value)
-    int index = myArray.Find(None)
-    if index >= 0
-        myArray[index] = value
-        return true
-    else
-        return false
-    endif
-endFunction
-
-function ArrayClear(float[] myArray)
-    int i = 0
-    while i < myArray.Length
-        myArray[i] = none
-        i += 1
-    endWhile
 endFunction
