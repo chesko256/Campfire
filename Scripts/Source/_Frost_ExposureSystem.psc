@@ -1069,10 +1069,10 @@ function SendEvent_OnRescuePlayer(bool in_water)
 endFunction
 
 function SendEvent_UpdateWarmth()
-		FallbackEventSender EventSender = GetEventSender_UpdateWarmth() as FallbackEventSender
-    int handle = EventSender.Create("Frost_UpdateWarmth")
+		FallbackEventEmitter emitter = GetEventEmitter_UpdateWarmth()
+    int handle = emitter.Create("Frost_UpdateWarmth")
     if handle
-        EventSender.Send(handle)
+        emitter.Send(handle)
     endif
 endFunction
 
