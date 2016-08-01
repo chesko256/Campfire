@@ -169,6 +169,21 @@ function Update()
 	last_update_game_time = this_update_game_time
 endFunction
 
+float function CalculateExposureTarget()
+	; the temperature increases the target
+	16 = -4.4444 * -25
+
+	(EXPMOD) = (-4.4444 * TEMP) + 88.89
+	float current_temp = _Frost_CurrentTemperature.GetValue()
+	float temp_mod = ()
+	; bad weather increases the target
+	; your wetness increases the target
+	; your warmth decreases the target
+	; your coverage decreases the target if the weather is bad
+	; nearby fires decrease the target
+	; shelter decreases the target
+endFunction
+
 function UpdateExposure()
 	if recently_fast_travelled
 		FrostDebug(1, "Player fast travelled.")
