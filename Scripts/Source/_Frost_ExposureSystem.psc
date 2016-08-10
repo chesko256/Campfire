@@ -199,7 +199,9 @@ float function CalculateExposureTarget()
 
 	float HEAT_MOD = GetPlayerHeatSourceLevel() * 40.0
 
-	return (TEMP_MOD + WETNESS_MOD) - (WARMTH_MOD + SHELTER_MOD + HEAT_MOD)
+	float target = (TEMP_MOD + WETNESS_MOD) - (WARMTH_MOD + SHELTER_MOD + HEAT_MOD)
+	debug.trace("EXPOSURE TARGET: " + target)
+	return target
 endFunction
 
 function UpdateExposure()
