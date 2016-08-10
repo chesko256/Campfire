@@ -171,17 +171,35 @@ endFunction
 
 float function CalculateExposureTarget()
 	; the temperature increases the target
-	16 = -4.4444 * -25
+	float SLOPE = -5.1
+	float Y_INT = 102.0
+	float currentTemp = _Frost_CurrentTemperature.GetValue()
+	float TEMP_MOD = (SLOPE * currentTemp) + Y_INT
 
-	(EXPMOD) = (-4.4444 * TEMP) + 88.89
-	float current_temp = _Frost_CurrentTemperature.GetValue()
-	float temp_mod = ()
-	; bad weather increases the target
-	; your wetness increases the target
-	; your warmth decreases the target
-	; your coverage decreases the target if the weather is bad
-	; nearby fires decrease the target
-	; shelter decreases the target
+	float WETNESS_MOD = GetPlayerWetnessLevel()
+	if WETNESS_MOD == 3
+		WETNESS_MOD = 4
+	endif
+	WETNESS_MOD *= 10
+
+	float WARMTH_MOD = (GetPlayerWarmth() * 40.0) / 550.0
+
+	ObjectReference tent = GetCurrentTent()
+	bool takingShelter = IsPlayerTakingShelter()
+	float SHELTER_MOD = 0.0
+	if tent
+		if IsTentWarm(tent)
+			SHELTER_MOD = 80.0
+		elseif IsTentWaterproof(tent) || takingShelter
+			SHELTER_MOD = 30.0
+		endif
+	elseif takingShelter
+		SHELTER_MOD = 30.0
+	endif
+
+	float HEAT_MOD = GetPlayerHeatSourceLevel() * 40.0
+
+	return (TEMP_MOD + WETNESS_MOD) - (WARMTH_MOD + SHELTER_MOD + HEAT_MOD)
 endFunction
 
 function UpdateExposure()
@@ -884,11 +902,11 @@ function GetColder(int heat_amount, float limit, float game_hours_passed)
 	float exposure_reduction = 1.0 - (((_Frost_AttributeWarmth.GetValueInt() * 90.0) / _Frost_Calc_MaxWarmth.GetValue()) / 100.0)
 	; Rise (multiplier on Y-axis) over Run (distance from hemeostasis temperature)
 	float slope = _Frost_Calc_ExtremeMultiplier.GetValue()/(_Frost_Calc_ExtremeTemp.GetValue() - _Frost_Calc_StasisTemp.GetValue())
-    float a_x = current_temperature
-    float a_b = (-slope + _Frost_Calc_StasisMultiplier.GetValue()) * _Frost_Calc_StasisTemp.GetValue()
-    ; Slope-intercept form solving for Y
-    float temp_multiplier = (slope * a_x) + a_b
-    float wet_factor = GetWetFactor()
+	float a_x = current_temperature
+	float a_b = (-slope + _Frost_Calc_StasisMultiplier.GetValue()) * _Frost_Calc_StasisTemp.GetValue()
+	; Slope-intercept form solving for Y
+	float temp_multiplier = (slope * a_x) + a_b
+	float wet_factor = GetWetFactor()
 
     ; Master Exposure loss formula
 	float amount = ((((temp_multiplier / 3) * wet_factor) * exposure_reduction) * time_delta_seconds) * _Frost_Setting_ExposureRate.GetValue()
