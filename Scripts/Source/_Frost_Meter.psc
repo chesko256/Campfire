@@ -7,6 +7,6 @@ string function GetWidgetSource()
 	if charge_meter
 		return "frostfall/chargemeter.swf"
 	else
-		return "frostfall/meter.swf"
+		return "frostfall/meterIndicator.swf"
 	endif
 endFunction

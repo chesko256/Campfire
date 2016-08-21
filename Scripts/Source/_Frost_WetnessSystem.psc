@@ -15,7 +15,6 @@ float property WETNESS_LEVEL_2 	= 550.0 autoReadOnly
 float property WETNESS_LEVEL_1 	= 200.0 autoReadOnly
 float property MIN_WETNESS 		= 0.0 autoReadOnly
 int property WEATHERCLASS_RAIN 	= 2 autoReadOnly
-float property WATER_HEIGHT_WAIST = 80.0 autoReadOnly
 
 Actor property PlayerRef auto
 GlobalVariable property GameHour auto
@@ -129,7 +128,7 @@ function UpdateWetLevel()
 
 	_Frost_WetLevel.SetValueInt(wet_level)
 	FrostfallWetLevelReadOnly.SetValueInt(wet_level)
-	
+
 	if wet_level > 0
 		last_wet_level = _Frost_WetLevel.GetValueInt()
 	elseif wetness == MIN_WETNESS
@@ -158,29 +157,6 @@ function ShowWetStateMessage(int wet_level)
 	endif
 endFunction
 
-float function GetWetFromStandingInWater()
-	float water_level = PlayerRef.GetParentCell().GetWaterLevel()
-	if water_level > -100000000.0 && water_level < 100000000.0		; Discard large values
-		float player_z = PlayerRef.GetPositionZ()
-		if PlayerRef.IsOnMount() && PlayerRef.GetSitState() == 3
-			player_z -= 60.0
-		endif
-		float delta = water_level - player_z
-		if delta >= 35.0
-			float wet = ((delta * 600.0) / WATER_HEIGHT_WAIST)
-			if wet > MAX_WETNESS
-				wet = MAX_WETNESS
-			endif
-			FrostDebug(1, "~~~~ Wetness ::: Standing in water, get wet by " + wet + " (height delta " + delta + ")")
-			return wet
-		else
-			return -1.0
-		endif
-	else
-		return -1.0
-	endif
-endFunction
-
 bool function IsStandingInSunlight()
 	float hour = GameHour.GetValue()
 	if GetWeatherClassificationActual(GetCurrentWeatherActual()) == 0 && !IsRefInInterior(PlayerRef) && (hour <= 19 && hour >= 7)
@@ -203,20 +179,11 @@ function UpdateWetState()
 	if PlayerRef.IsSwimming()
 		return
 	endif
-	
+
 	bool near_waterfall = IsNearWaterfall()
 	if near_waterfall
 		ModAttributeWetness(MAX_WETNESS, MAX_WETNESS)
 		return
-	endif
-
-	float wetness_from_standing_in_water = -1.0
-	; The water level of interior cells can't be trusted.
-	if !PlayerRef.IsInInterior()
-		wetness_from_standing_in_water = GetWetFromStandingInWater()
-	endif
-	if wetness_from_standing_in_water != -1.0
-		ModAttributeWetness(wetness_from_standing_in_water, wetness_from_standing_in_water)
 	endif
 
 	;@TODO: Possibly pull from Weather System
@@ -249,7 +216,7 @@ endFunction
 
 function DryOff(float limit)
 	FrostDebug(1, "~~~~ Wetness ::: DryOff : Limit " + limit)
-	
+
 	float update_freq = UpdateFrequencyGlobal.GetValue()
 	float time_delta_seconds = (this_update_time - last_update_time) * 3600.0
 	if time_delta_seconds > (update_freq * 2)
