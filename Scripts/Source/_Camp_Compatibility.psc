@@ -126,7 +126,7 @@ bool Upgraded_1_7 = false
 Event OnPlayerLoadGame()
 	CampfirePerkSystemSortOnStartup()
 	RunCompatibility()
-	
+
 	if isSKYUILoaded && isSKSELoaded
 		CampConfig.LoadProfileOnStartup()
 	else
@@ -146,8 +146,6 @@ Event OnPlayerLoadGame()
 		SendEvent_CampfireLoaded()
 	endif
 endEvent
-
-
 
 function FatalErrorFrostfallLegacy()
 	trace("[Campfire][ERROR] Detected Frostfall legacy version (2.6 or less). Expected 3.0 or newer.")
@@ -191,7 +189,7 @@ function RunCompatibility()
 	trace("[Campfire]     Campfire is now performing compatibility checks. Papyrus warnings about missing or               ")
 	trace("[Campfire]             unloaded files may follow. This is NORMAL and can be ignored.   		                   ")
 	trace("[Campfire]======================================================================================================")
-	
+
 	isFrostfallLoaded = false
 
 	if !Upgraded_1_1
@@ -227,7 +225,7 @@ function RunCompatibility()
 			trace("[Campfire] Detected SKSE version " + ((skse_version as float) / 10000) + " (expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer, success!)")
 		endif
 	endif
-	
+
 	if isSKYUILoaded
 		isSKYUILoaded = IsPluginLoaded(0x01000814, "SkyUI.esp")
 		if !isSKYUILoaded
@@ -275,7 +273,7 @@ function RunCompatibility()
 			Conditions.IsDragonbornLoaded = false
 		endif
 	endif
-	
+
 	if isHFLoaded
 		isHFLoaded = IsPluginLoaded(0x0200306C, "HearthFires.esm")
 		if !isHFLoaded
@@ -293,7 +291,7 @@ function RunCompatibility()
 			Conditions.IsHearthfireLoaded = false
 		endif
 	endif
-	
+
 	if isIMCNLoaded
 		isIMCNLoaded = IsPluginLoaded(0x0005CF47, "Imp's More Complex Needs.esp")
 		if !isIMCNLoaded
@@ -375,7 +373,7 @@ function RunCompatibility()
 			Conditions.isFrostfallLoaded = true
 		else
 			Conditions.isFrostfallLoaded = false
-			
+
 		endif
 	endif
 
@@ -394,12 +392,12 @@ function RunCompatibility()
 			Conditions.IsLastSeedLoaded = true
 		else
 			Conditions.IsLastSeedLoaded = false
-			
+
 		endif
 	endif
-	
+
 	if isDLC1Loaded
-		
+
 		;Add trees to valid tree formlist for wood harvesting
 		form DLC01TreeForm01 = Game.GetFormFromFile(0x02009670, "Dawnguard.esm")	;DLC1TreePineForestSnowHeavy01
 		form DLC01TreeForm02 = Game.GetFormFromFile(0x0200B55F, "Dawnguard.esm")	;DLC1TreePineForestSnowHeavy02
@@ -413,13 +411,13 @@ function RunCompatibility()
 		form DLC01TreeForm10 = Game.GetFormFromFile(0x02004333, "Dawnguard.esm")	;TreeSoulCairnTree02
 		form DLC01TreeForm11 = Game.GetFormFromFile(0x02004334, "Dawnguard.esm")	;TreeSoulCairnTree03
 		form DLC01TreeForm12 = Game.GetFormFromFile(0x0200DDB5, "Dawnguard.esm")	;TreeSoulCairnTreeGroup
-		
+
 		;Add worldspaces to appropriate formlists for region detection
 		form DLC01WS05 = Game.GetFormFromFile(0x020048C7, "Dawnguard.esm")			;DLC1AncestorsGladeWorld			;Interior
 		form DLC01WS06 = Game.GetFormFromFile(0x02004BEA, "Dawnguard.esm")			;DLC1DarkfallPassageWorld			;Interior
 		form DLC01WS07 = Game.GetFormFromFile(0x02002F64, "Dawnguard.esm")			;DLC1ForebearsHoldout				;Interior
-			
-		if !(_Camp_Trees.HasForm(DLC01TreeForm01))		
+
+		if !(_Camp_Trees.HasForm(DLC01TreeForm01))
 			_Camp_Trees.AddForm(DLC01TreeForm01)
 			_Camp_Trees.AddForm(DLC01TreeForm02)
 			_Camp_Trees.AddForm(DLC01TreeForm03)
@@ -433,17 +431,17 @@ function RunCompatibility()
 			_Camp_Trees.AddForm(DLC01TreeForm11)
 			_Camp_Trees.AddForm(DLC01TreeForm12)
 		endif
-		
+
 		if !(_Camp_WorldspacesInteriors.HasForm(DLC01WS05))
 			_Camp_WorldspacesInteriors.AddForm(DLC01WS05)
 			_Camp_WorldspacesInteriors.AddForm(DLC01WS06)
 			_Camp_WorldspacesInteriors.AddForm(DLC01WS07)
 		endif
-			
+
 	endif
 
 	if isDLC2Loaded
-		
+
 		;Heat sources
 		form DLC02HeatForm01 = Game.GetFormFromFile(0x02018616, "Dragonborn.esm")		;Campfire01LandBurning_SnowRocks
 		form DLC02HeatForm02 = Game.GetFormFromFile(0x02018619, "Dragonborn.esm")		;Campfire01LandBurning_LDirtSnowPath
@@ -515,7 +513,7 @@ function RunCompatibility()
 		form DLC02TreeForm29 = Game.GetFormFromFile(0x02017F67, "Dragonborn.esm")		;<DLC2TreePineForestLog02AshL>
 		form DLC02TreeForm30 = Game.GetFormFromFile(0x020185ED, "Dragonborn.esm")		;<DLC2TreePineForestStump01Ash>
 		form DLC02TreeForm31 = Game.GetFormFromFile(0x02017F64, "Dragonborn.esm")		;<DLC2TreePineForestStump01AshL>
-		
+
 		if !(_Camp_Trees.HasForm(DLC02TreeForm01))
 			_Camp_Trees.AddForm(DLC02TreeForm01)
 			_Camp_Trees.AddForm(DLC02TreeForm02)
@@ -549,10 +547,10 @@ function RunCompatibility()
 			_Camp_Trees.AddForm(DLC02TreeForm30)
 			_Camp_Trees.AddForm(DLC02TreeForm31)
 		endif
-		
+
 		;Weather
 		DLC2AshStorm = Game.GetFormFromFile(0x02032336, "Dragonborn.esm") as Weather
-		
+
 		if ((self as ReferenceAlias) as _Camp_LegalAreaCheck).DLC2RavenRockCenterMarker == none
 			((self as ReferenceAlias) as _Camp_LegalAreaCheck).DLC2RavenRockCenterMarker = Game.GetFormFromFile(0x020295EA, "Dragonborn.esm") as ObjectReference
 		endif
@@ -562,7 +560,7 @@ function RunCompatibility()
 		if !DLC2WS
 			DLC2WS = DLC02WS02 as Worldspace
 		endif
-		
+
 	endif
 
 	;#Region SKSE + Mod Support Section
@@ -571,7 +569,7 @@ function RunCompatibility()
 		_Camp_FireMiscRecipe_TinderStraw.SetNthIngredient(Straw, 0)
 		_Camp_FireMiscRecipe_BW_TinderStraw.SetNthIngredient(Straw, 0)
 	endif
-	
+
 	if isDLC1Loaded && isSKSELoaded
 		form ValeDeerHide = Game.GetFormFromFile(0x02011999, "Dawnguard.esm")			;Vale Deer Hide
 		form ValeSabreCatHide = Game.GetFormFromFile(0x0201199A, "Dawnguard.esm")		;Vale Sabre Cat Hide
@@ -592,10 +590,10 @@ function RunCompatibility()
 		isEOLoaded = IsPluginLoaded(0x00001827, "Equipping Overhaul.esp")
 		if isEOLoaded
 			;Equipping Overhaul was just added.
-			
+
 		endif
 	endif
-	
+
 	trace("[Campfire]======================================================================================================")
 	trace("[Campfire]                            Campfire compatibility check complete.   		                           ")
 	trace("[Campfire]======================================================================================================")
@@ -677,7 +675,7 @@ bool function CampfirePerkSystemRegister(Activator akNodeController, string asPl
 			j += 1
 		endif
 	endWhile
-	
+
 	PerkNodeControllers[index] = akNodeController
 	_Camp_PerkNodeControllerCount.SetValueInt(index + 1)
 	debug.trace("[Campfire] Registered Campfire Skill System mod: " + asPluginName)
@@ -733,7 +731,7 @@ function VanillaGameLoadUp()
 
 	; Grab forms we can't fill as properties
 	PlacementSystem.SmallFire = Game.GetFormFromFile(0x00056204, "Campfire.esm")
-	
+
 	;@TODO: Move to Frostfall
 	; TreeReachTreeStump01 = Game.GetFormFromFile(0x000B8A75, "Skyrim.esm") as TreeObject
 endFunction

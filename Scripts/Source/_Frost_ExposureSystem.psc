@@ -159,6 +159,11 @@ function Update()
 	RefreshVampireState()
 
 	RefreshPlayerStateData()
+
+	float target = CalculateExposureTarget()
+	debug.trace("Target is " + target)
+	SendEvent_UpdateExposureMeterIndicator(target / MAX_EXPOSURE)
+
 	UpdateExposure()
 
 	if warm_message_debounce > 0
@@ -200,6 +205,13 @@ float function CalculateExposureTarget()
 	float HEAT_MOD = GetPlayerHeatSourceLevel() * 40.0
 
 	float target = (TEMP_MOD + WETNESS_MOD) - (WARMTH_MOD + SHELTER_MOD + HEAT_MOD)
+
+	if target > MAX_EXPOSURE
+		target = MAX_EXPOSURE
+	elseif target < MIN_EXPOSURE
+		target = MIN_EXPOSURE
+	endif
+
 	debug.trace("EXPOSURE TARGET: " + target)
 	return target
 endFunction
@@ -1091,6 +1103,14 @@ endFunction
 function SendEvent_UpdateExposureMeter()
 	int handle = ModEvent.Create("Frostfall_UpdateExposureMeter")
 	if handle
+		ModEvent.Send(handle)
+	endif
+endFunction
+
+function SendEvent_UpdateExposureMeterIndicator(float percent)
+	int handle = ModEvent.Create("Frostfall_UpdateExposureMeterIndicator")
+	if handle
+		ModEvent.PushFloat(handle, percent)
 		ModEvent.Send(handle)
 	endif
 endFunction
