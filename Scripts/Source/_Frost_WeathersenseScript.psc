@@ -9,12 +9,12 @@ GlobalVariable property _Frost_Setting_DisplayAttributesInWeathersense auto
 GlobalVariable property _Frost_Setting_WeathersenseDisplayMode auto
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
-	DisplayPowerMessage()
+	UseWeathersense()
 EndEvent
 
-function DisplayPowerMessage()
+function UseWeathersense()
 	_Frost_Strings str = GetFrostfallStrings()
-	
+
 	bool warm = false
 	int temp = GetCurrentTemperature()
 	int exposure = (Math.Floor(GetPlayerExposure()) - 20)
@@ -41,7 +41,7 @@ function DisplayPowerMessage()
 			wet_val = wetness_pct + "%"
 			attribute_header = str.ExposurePrompt + exp_val + " " + str.WetnessPrompt + wet_val + " - "
 		endif
-		
+
 		;@TODO - This approach won't work on consoles
 		if IsRefInInterior(PlayerRef)
 			debug.notification(attribute_header + str.LevelIndoors)
@@ -50,7 +50,7 @@ function DisplayPowerMessage()
 			debug.notification(attribute_header + str.LevelOblivion)
 			return
 		endif
-	
+
 		int temp_level
 		if temp >= 18 						;Brilliant Emerald		;The sun is radiant.
 			debug.notification(attribute_header + str.Level10)
@@ -91,6 +91,8 @@ function DisplayPowerMessage()
 		SendEvent_ForceWetnessMeterDisplay()
 	endif
 endFunction
+
+function DisplayPowerMessage()
 
 function SendEvent_ForceExposureMeterDisplay(bool abFlash = false)
 	int handle = ModEvent.Create("Frostfall_ForceExposureMeterDisplay")
