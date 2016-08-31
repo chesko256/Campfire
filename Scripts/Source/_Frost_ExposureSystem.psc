@@ -27,6 +27,7 @@ GlobalVariable property _Frost_CurrentTemperature auto
 GlobalVariable property _Frost_AttributeWarmth auto
 GlobalVariable property _Frost_AttributeCoverage auto
 GlobalVariable property _Frost_AttributeExposure auto
+GlobalVariable property _Frost_ExposureTarget auto
 GlobalVariable property FrostfallAttributeExposureReadOnly auto
 GlobalVariable property FrostfallExposureLevelReadOnly auto
 GlobalVariable property _Frost_CurrentHeatSourceSize auto
@@ -159,7 +160,14 @@ function Update()
 	RefreshVampireState()
 
 	RefreshPlayerStateData()
-	UpdateExposure()
+
+	float target = CalculateExposureTarget()
+	_Frost_ExposureTarget.SetValue(target)
+	debug.trace("Target is " + target)
+	SendEvent_UpdateExposureMeterIndicator(target / MAX_EXPOSURE)
+
+	debug.trace("Updating exposure to target")
+	UpdateExposure(target)
 
 	if warm_message_debounce > 0
 		warm_message_debounce -= 1
@@ -170,20 +178,23 @@ function Update()
 endFunction
 
 float function CalculateExposureTarget()
-	; the temperature increases the target
+	; Temperature increases the target
 	float SLOPE = -5.1
 	float Y_INT = 102.0
 	float currentTemp = _Frost_CurrentTemperature.GetValue()
 	float TEMP_MOD = (SLOPE * currentTemp) + Y_INT
 
+	; Wetness increases the target
 	float WETNESS_MOD = GetPlayerWetnessLevel()
 	if WETNESS_MOD == 3
 		WETNESS_MOD = 4
 	endif
 	WETNESS_MOD *= 10
 
+	; Warmth rating decreases the target
 	float WARMTH_MOD = (GetPlayerWarmth() * 40.0) / 550.0
 
+	; Shelter decreases the target
 	ObjectReference tent = GetCurrentTent()
 	bool takingShelter = IsPlayerTakingShelter()
 	float SHELTER_MOD = 0.0
@@ -197,14 +208,22 @@ float function CalculateExposureTarget()
 		SHELTER_MOD = 30.0
 	endif
 
+	; Fire decreases the target
 	float HEAT_MOD = GetPlayerHeatSourceLevel() * 40.0
 
 	float target = (TEMP_MOD + WETNESS_MOD) - (WARMTH_MOD + SHELTER_MOD + HEAT_MOD)
+
+	if target > MAX_EXPOSURE
+		target = MAX_EXPOSURE
+	elseif target < MIN_EXPOSURE
+		target = MIN_EXPOSURE
+	endif
+
 	debug.trace("EXPOSURE TARGET: " + target)
 	return target
 endFunction
 
-function UpdateExposure()
+function UpdateExposure(float afExposureTarget)
 	if recently_fast_travelled
 		FrostDebug(1, "Player fast travelled.")
 		StoreLastPlayerState()
@@ -247,28 +266,21 @@ function UpdateExposure()
 	endif
 
 	; If enough game time has passed since the last update, modify based on waiting instead.
-	float time_delta_game_hours = (Utility.GetCurrentGameTime() - last_update_game_time) * 24.0
-	ExposureValueUpdate(time_delta_game_hours)
+	float timeDeltaGameHours = (Utility.GetCurrentGameTime() - last_update_game_time) * 24.0
+	debug.trace("Value update to " + afExposureTarget)
+	ExposureValueUpdate(afExposureTarget, timeDeltaGameHours)
 	ExposureEffectsUpdate()
 
 	StoreLastPlayerState()
 endFunction
 
-function ModAttributeExposure(float amount, float limit, bool allow_skill_advancement = true)
-	; Note: Limit values above 0 will result in the system "pushing up" (increasing) against
-	; it once it clamps to the limit.
+function ModAttributeExposure(float amount, float target, bool allow_skill_advancement = true)
+	debug.trace("ModAttributeExposure " + amount + " " + target + " " + allow_skill_advancement)
 
 	float exp_attr = _Frost_AttributeExposure.GetValue()
-	if exp_attr == limit
-		if limit == MIN_EXPOSURE && amount < 0
-			; Already at minimum
-			SendEvent_UpdateExposureMeter()
-			return
-		elseif limit > MIN_EXPOSURE && amount > 0
-			; Already at maximum
-			SendEvent_UpdateExposureMeter()
-			return
-		endif
+	if exp_attr == target
+		SendEvent_UpdateExposureMeter()
+		return
 	endif
 
 	bool advance_skill = false
@@ -284,12 +296,12 @@ function ModAttributeExposure(float amount, float limit, bool allow_skill_advanc
 	endif
 
 	bool limit_condition_triggered = false
-	if exposure > limit && increasing
-		if exp_attr <= limit
-			; This update would push us above the limit, cap at the limit
-			exposure = limit
+	if exposure > target && increasing
+		if exp_attr <= target
+			; This update would push us above the target, cap at the target
+			exposure = target
 			advance_skill = false
-			if limit < MAX_EXPOSURE && limit > EXPOSURE_LEVEL_1
+			if target < MAX_EXPOSURE && target > EXPOSURE_LEVEL_1
 				; Something is preventing the player from getting colder, display message.
 				if can_display_limit_msg
 					if (in_tent || in_shelter)
@@ -300,16 +312,16 @@ function ModAttributeExposure(float amount, float limit, bool allow_skill_advanc
 				limit_condition_triggered = true
 			endif
 		else
-			; We're increasing and already above the limit, do nothing
+			; We're increasing and already above the target, do nothing
 			SendEvent_UpdateExposureMeter()
 			return
 		endif
-	elseif exposure < limit && !increasing
-		if exp_attr >= limit
-			; This update would push us below the limit, cap at the limit
-			exposure = limit
+	elseif exposure < target && !increasing
+		if exp_attr >= target
+			; This update would push us below the target, cap at the target
+			exposure = target
 			advance_skill = false
-			if limit < MAX_EXPOSURE && limit > EXPOSURE_LEVEL_1
+			if target < MAX_EXPOSURE && target > EXPOSURE_LEVEL_1
 				; Something is preventing the player from getting warmer, display message.
 				if !in_interior && (near_heat || in_tent || is_meditating) && can_display_limit_msg
 					_Frost_ExposureCap_Warm.Show()
@@ -318,13 +330,13 @@ function ModAttributeExposure(float amount, float limit, bool allow_skill_advanc
 				limit_condition_triggered = true
 			endif
 		else
-			; We're decreasing and already below the limit
+			; We're decreasing and already below the target
 			SendEvent_UpdateExposureMeter()
 			return
 		endif
 	endif
 
-	DisplayWarmUpMessage(increasing, limit)
+	DisplayWarmUpMessage(increasing, target)
 
 	_Frost_AttributeExposure.SetValue(exposure)
 	FrostfallAttributeExposureReadOnly.SetValue(exposure)
@@ -727,39 +739,50 @@ float function GetWetFactor()
 	endif
 endFunction
 
-function ExposureValueUpdate(float game_hours_passed)
-	int heat_amount = 0
-	int current_heat_size = 0
+function ExposureValueUpdate(float afExposureTarget, float gameHoursPassed)
+	int heatAmount = 0
+	int currentHeatSize = 0
 
-	current_heat_size = _Frost_CurrentHeatSourceSize.GetValueInt()
-	if current_heat_size > 0
+	; If the player is near a heat source, how fast should they warm up?
+	currentHeatSize = _Frost_CurrentHeatSourceSize.GetValueInt()
+	if currentHeatSize > 0
 		near_heat = true
-		heat_amount = HEAT_FACTOR * _Frost_CurrentHeatSourceSize.GetValueInt()
+		heatAmount = HEAT_FACTOR * _Frost_CurrentHeatSourceSize.GetValueInt()
 	else
 		near_heat = false
 		if in_tent || in_interior
 			if tent_is_warm
-				heat_amount = TENT_FACTOR + WARM_TENT_BONUS
+				heatAmount = TENT_FACTOR + WARM_TENT_BONUS
 			else
-				heat_amount = TENT_FACTOR
+				heatAmount = TENT_FACTOR
 			endif
 		elseif is_meditating
-			heat_amount = 3
+			heatAmount = 3
 		endif
 	endif
 
 	FrostDebug(0, "@@@@ Exposure ::: near_heat: " + near_heat + ", in_interior: " + in_interior + ", in_tent: " + in_tent + ", tent_is_warm: " + tent_is_warm)
 
+	float currentExposure = _Frost_AttributeExposure.GetValue()
+	if currentExposure < afExposureTarget
+		debug.trace("GetColder")
+		GetColder(afExposureTarget, gameHoursPassed)
+	else
+		debug.trace("GetWarmer")
+		GetWarmer(currentHeatSize, afExposureTarget, gameHoursPassed)
+	endif
+
+	;/
 	; Override
 	ObjectReference heat_source_ref = HeatSource.GetRef()
 	if heat_source_ref
 		if heat_source_ref.GetBaseObject() == CampfireHeatsourceOverrideNormal
 			FrostDebug(0, "@@@@ Exposure ::: Heat source is Normal-type override.")
-			GetWarmer(heat_amount, EXPOSURE_LEVEL_1, game_hours_passed)
+			GetWarmer(heat_amount, EXPOSURE_LEVEL_1, gameHoursPassed)
 			return
 		elseif heat_source_ref.GetBaseObject() == CampfireHeatsourceOverrideWarm
 			FrostDebug(0, "@@@@ Exposure ::: Heat source is Warm-type override.")
-			GetWarmer(heat_amount, MIN_EXPOSURE, game_hours_passed)
+			GetWarmer(heat_amount, MIN_EXPOSURE, gameHoursPassed)
 			return
 		endif
 	endif
@@ -875,25 +898,21 @@ function ExposureValueUpdate(float game_hours_passed)
 			endif
 		endif
 	endif
+	/;
 endFunction
 
-function GetWarmer(int heat_amount, float limit, float game_hours_passed)
-	if _Frost_AttributeExposure.GetValue() < limit
-		FrostDebug(1, "@@@@ Exposure ::: Exposure less than limit, getting colder.")
-		GetColder(heat_amount, limit, game_hours_passed)
+function GetWarmer(int heat_amount, float target, float game_hours_passed)
+	FrostDebug(1, "@@@@ Exposure ::: GetWarmer : Limit " + Math.Ceiling(target) + " : GameHoursPassed " + game_hours_passed)
+	if game_hours_passed >= 1.0
+		float duration_amount = 15.0 * game_hours_passed
+		ModAttributeExposure(-duration_amount, target, allow_skill_advancement=false)
 	else
-		FrostDebug(1, "@@@@ Exposure ::: GetWarmer : Limit " + Math.Ceiling(limit) + " : GameHoursPassed " + game_hours_passed)
-		if game_hours_passed >= 1.0
-			float duration_amount = 15.0 * game_hours_passed
-			ModAttributeExposure(-duration_amount, limit, allow_skill_advancement=false)
-		else
-			ModAttributeExposure(-heat_amount, limit)
-		endif
+		ModAttributeExposure(-heat_amount, target)
 	endif
 endFunction
 
-function GetColder(int heat_amount, float limit, float game_hours_passed)
-	FrostDebug(1, "@@@@ Exposure ::: GetColder : Limit " + Math.Ceiling(limit) + " : GameHoursPassed " + game_hours_passed)
+function GetColder(float target, float game_hours_passed)
+	FrostDebug(1, "@@@@ Exposure ::: GetColder : Limit " + Math.Ceiling(target) + " : GameHoursPassed " + game_hours_passed)
 	float update_freq = UpdateFrequencyGlobal.GetValue()
 	float time_delta_seconds = (this_update_time - last_update_time) * 3600.0
 	if time_delta_seconds > (update_freq * 2)
@@ -915,12 +934,10 @@ function GetColder(int heat_amount, float limit, float game_hours_passed)
 	FrostDebug(0, "@@@@ Exposure ::: Calc Values - temp_multiplier " + temp_multiplier + " wet_factor " + wet_factor + " exposure_reduction " + exposure_reduction + " time_delta_seconds " + time_delta_seconds + " _Frost_Setting_ExposureRate " + _Frost_Setting_ExposureRate.GetValue())
 
 	if game_hours_passed >= 1.0
-		float duration_amount = (limit / 4) * game_hours_passed
-		ModAttributeExposure(duration_amount, limit, allow_skill_advancement=false)
-	elseif in_tent
-		ModAttributeExposure(amount, limit)
+		float duration_amount = (target / 4) * game_hours_passed
+		ModAttributeExposure(duration_amount, target, allow_skill_advancement=false)
 	else
-		ModAttributeExposure(amount, MAX_EXPOSURE)
+		ModAttributeExposure(amount, target)
 	endif
 endFunction
 
@@ -973,9 +990,9 @@ function ShowTutorial_Exposure()
 	endif
 endFunction
 
-function DisplayWarmUpMessage(bool exposure_increasing, float limit)
+function DisplayWarmUpMessage(bool exposure_increasing, float target)
 	if !exposure_increasing && !was_near_heat && near_heat && exposure_level > 0 && warm_message_debounce == 0
-		if (!in_tent && !in_shelter) && limit > 0.0
+		if (!in_tent && !in_shelter) && target > 0.0
 			_Frost_ExposureCap_FaintHeat.Show()
 			warm_message_debounce = 3
 		else
@@ -1091,6 +1108,14 @@ endFunction
 function SendEvent_UpdateExposureMeter()
 	int handle = ModEvent.Create("Frostfall_UpdateExposureMeter")
 	if handle
+		ModEvent.Send(handle)
+	endif
+endFunction
+
+function SendEvent_UpdateExposureMeterIndicator(float percent)
+	int handle = ModEvent.Create("Frostfall_UpdateExposureMeterIndicator")
+	if handle
+		ModEvent.PushFloat(handle, percent)
 		ModEvent.Send(handle)
 	endif
 endFunction

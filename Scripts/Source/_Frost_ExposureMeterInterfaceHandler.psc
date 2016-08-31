@@ -5,4 +5,12 @@ function RegisterForEvents()
 	RegisterForModEvent("Frostfall_RemoveExposureMeter", "RemoveMeter")
 	RegisterForModEvent("Frostfall_UpdateExposureMeter", "UpdateMeterDelegate")
 	RegisterForModEvent("Frostfall_CheckMeterRequirements", "CheckMeterRequirements")
+
+	; Special Frostfall indicator element
+	RegisterForModEvent("Frostfall_UpdateExposureMeterIndicator", "UpdateMeterIndicator")
 endFunction
+
+Event UpdateMeterIndicator(float percent)
+	debug.trace("Setting indicator to " + percent)
+	(Meter as _Frost_Meter).SetIndicatorPercent(percent)
+endEvent
