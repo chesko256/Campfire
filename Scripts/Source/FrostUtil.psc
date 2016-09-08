@@ -1606,6 +1606,44 @@ endif
     return Frostfall._Frost_ExposureLevel.GetValueInt()
 endFunction
 
+;/********f* FrostUtil/GetPlayerExposureLimit
+* API VERSION ADDED
+* ?
+*
+* DESCRIPTION
+* Return the player's current exposure limit value, the value that exposure will be attracted to over time.
+*
+* SYNTAX
+*/;
+float function GetPlayerExposureLimit() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* * The player's current exposure limit.
+* * 0.0 - 19.9 = Warm
+* * 20.0 - 39.9 = Comfortable
+* * 40.0 - 59.9 = Cold
+* * 60.0 - 79.9 = Very Cold
+* * 80.0 - 99.9 = Freezing
+* * 100.0 - 120.0 = Freezing to Death
+*
+* EXAMPLES
+;Is the player going to eventually be cold?
+float limit = FrostUtil.GetPlayerExposureLimit()
+if limit >= 40.0
+    debug.notification("Player will be chilly, eventually!")
+endif
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return -1.0
+    endif
+    return Frostfall._Frost_ExposureTarget.GetValue()
+endFunction
+
 ;/********f* FrostUtil/ModPlayerExposure
 * API VERSION ADDED
 * 1

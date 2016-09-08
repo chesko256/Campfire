@@ -202,10 +202,10 @@ float function CalculateExposureTarget()
 		if IsTentWarm(tent)
 			SHELTER_MOD = 80.0
 		elseif IsTentWaterproof(tent) || takingShelter
-			SHELTER_MOD = 30.0
+			SHELTER_MOD = 50.0
 		endif
 	elseif takingShelter
-		SHELTER_MOD = 30.0
+		SHELTER_MOD = 50.0
 	endif
 
 	; Fire decreases the target
