@@ -717,7 +717,7 @@ function PageReset_Meters()
 	Meters_UIWetnessMeterShowAdvanced_OID = AddToggleOption("$FrostfallInterfaceSettingUIMeterShowAdvanced", meter_being_configured == METER_BEING_CONFIGURED_WETNESS)
 	AddHeaderOption("$FrostfallInterfaceHeaderMetersWeathersenseName")
 	Meters_UIWeathersenseMeterShowAdvanced_OID = AddToggleOption("$FrostfallInterfaceSettingUIMeterShowAdvanced", meter_being_configured == METER_BEING_CONFIGURED_WEATHERSENSE)
-	
+
 	SetCursorPosition(1)
 
 	; Advanced settings
@@ -725,7 +725,8 @@ function PageReset_Meters()
 		AddHeaderOption("$FrostfallInterfaceHeaderMetersAdvanced")
 		AddTextOption("$FrostfallInterfaceSettingUIMeterConfiguring", "$FrostfallInterfaceHeaderMetersExposureName", OPTION_FLAG_DISABLED)
 		Meters_UIMeterColor_OID = AddColorOption("$FrostfallInterfaceSettingUIColorExposure", _Frost_Setting_MeterExposureColor.GetValueInt())
-		Meters_UIMeterColorAlt_OID = AddColorOption("$FrostfallInterfaceSettingUIColorExposureAlt", _Frost_Setting_MeterExposureColorWarm.GetValueInt())
+		; Removed - Frostfall 3.2
+		; Meters_UIMeterColorAlt_OID = AddColorOption("$FrostfallInterfaceSettingUIColorExposureAlt", _Frost_Setting_MeterExposureColorWarm.GetValueInt())
 		Meters_UIMeterOpacity_OID = AddSliderOption("$FrostfallInterfaceSettingUIMeterOpacity", _Frost_Setting_MeterExposureOpacity.GetValue(), "{0}%")
 		Meters_UIMeterFillDirection_OID = AddMenuOption("$FrostfallInterfaceSettingUIMeterFillDirection", FillDirectionListLimited[_Frost_Setting_MeterExposureFillDirection.GetValueInt()])
 		Meters_UIMeterScale_OID = AddSliderOption("$FrostfallScale", GetMeterScale(_Frost_Setting_MeterExposureWidth.GetValue(), NORMAL_METER_WIDTH), "{2}")
@@ -1128,7 +1129,7 @@ event OnOptionSelect(int option)
 		DefaultWornArmor()
 	elseif option == Armor_DefaultAllArmorOID
 		DefaultAllArmor()
-	endif	
+	endif
 endEvent
 
 event OnOptionDefault(int option)
@@ -1208,7 +1209,7 @@ event OnOptionDefault(int option)
 		_Frost_Setting_SoundEffects.SetValueInt(2)
 		SetToggleOptionValue(Interface_SoundEffects_OID, true)
 		SaveSettingToCurrentProfile("sound_effects", _Frost_Setting_SoundEffects.GetValueInt())
-	
+
 	elseif option == Gameplay_ExposureRate_OID
 		_Frost_Setting_ExposureRate.SetValue(1.0)
 		SetSliderOptionValue(Gameplay_ExposureRate_OID, 1.0, "{1}x")
@@ -1654,7 +1655,7 @@ Event OnOptionSliderAccept(int option, float value)
 			else
 				_Frost_Setting_MeterWetnessHeight.SetValue(CHARGE_METER_HEIGHT_INV * value)
 			endif
-			_Frost_Setting_MeterWetnessWidth.SetValue(CHARGE_METER_WIDTH * value)			
+			_Frost_Setting_MeterWetnessWidth.SetValue(CHARGE_METER_WIDTH * value)
 			SetSliderOptionValue(Meters_UIMeterScale_OID, value, "{2}")
 			UpdateMeterConfiguration(1)
 			SaveSettingToCurrentProfileFloat("wetness_meter_height", _Frost_Setting_MeterWetnessHeight.GetValue())
@@ -2235,7 +2236,7 @@ function SwitchToProfile(int aiProfileIndex)
 	if val != -1
 		_Frost_Setting_MeterWeathersenseVAnchor.SetValueInt(val)
 	endif
-	
+
 	val = LoadSettingFromProfile(aiProfileIndex, "movement_penalty")
 	if val != -1
 		_Frost_Setting_MovementPenalty.SetValueInt(val)
@@ -2586,7 +2587,7 @@ function GenerateEquipmentPage()
 	Armor_DefaultArmorEntryOIDs = new int[128]
 
 	int armor_count = ArrayCountArmor(worn_armor)
-	
+
 	int i = 0
 	int j = 0
 
@@ -2758,19 +2759,19 @@ function ModifyGearProtection(int aiOidIndex, int aiChoice)
 			new_coverage = 12
 		elseif aiChoice == 20
 			new_warmth = 6
-			new_coverage = 12 
+			new_coverage = 12
 		elseif aiChoice == 19
 			new_warmth = 12
 			new_coverage = 6
 		else
 			int wdx = ProtectionListWarmthIndex[aiChoice]
 			int cdx = ProtectionListCoverageIndex[aiChoice]
-	
+
 			if wdx == -1
 				ShowMessage("$FrostfallArmorInvalidOption")
 				return
 			endif
-	
+
 			if type == handler.GEARTYPE_BODY
 				new_warmth = handler.StandardBodyValues[wdx]
 				if cdx == -2
@@ -2848,7 +2849,7 @@ function ModifyGearProtection(int aiOidIndex, int aiChoice)
 		; Update the UI
 		SetSliderOptionValue(Armor_WarmthSliderOIDs[aiOIDIndex], new_warmth, "{0}", true)
 		SetSliderOptionValue(Armor_CoverageSliderOIDs[aiOIDIndex], new_coverage, "{0}")
-		
+
 		; Update the game
 		RefreshSingleItemValues(the_armor)
 	endif
@@ -2981,16 +2982,16 @@ function ModifyGearType(int aiOIDIndex, int aiChoice)
 	if !confirmed
 		return
 	endif
-	
+
 	SetMenuOptionValue(Armor_GearTypeOIDs[aiOIDIndex], GearTypeList[aiChoice])
 	armor the_armor = ArmorMenuEntries[aiOIDIndex]
 	int chosen_type = aiChoice + 1
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 	int[] armor_data = handler.GetArmorProtectionData(the_armor)
-	
+
 	armor_data[0] = chosen_type
 
-	; Does this type change override any existing Extra Part Data?		
+	; Does this type change override any existing Extra Part Data?
 	if chosen_type == handler.GEARTYPE_BODY
 		armor_data[3] = 0
 		armor_data[4] = 0
@@ -3013,7 +3014,7 @@ function ModifyGearType(int aiOIDIndex, int aiChoice)
 
 	handler.UpdateArmorDataA(the_armor, armor_data)
 	ArmorPageReset(true)
-	RefreshSingleItemValues(the_armor)	
+	RefreshSingleItemValues(the_armor)
 endFunction
 
 string[] function GetExtraPartChoiceList(int aiOIDIndex)
@@ -3190,7 +3191,7 @@ function DefaultWornArmor()
 	endWhile
 
 	ArmorPageReset(true)
-	
+
 	clothing.RefreshWornGearData(clothing.WornGearForms, clothing._Frost_WornGearData)
 	clothing.SendEvent_UpdateWarmthAndCoverage()
 endFunction
@@ -3759,7 +3760,7 @@ function ApplyMeterPreset(int aiPresetIdx)
 		_Frost_Setting_MeterWeathersenseHeight.SetValue(CHARGE_METER_HEIGHT_INV)
 		_Frost_Setting_MeterWeathersenseWidth.SetValue(CHARGE_METER_WIDTH)
 	endif
-	
+
 	UpdateMeterConfiguration(0)
 	UpdateMeterConfiguration(1)
 	UpdateMeterConfiguration(2)
