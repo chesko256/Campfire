@@ -4,6 +4,7 @@ scriptname _Seed_ThirstSystem extends Quest
 ;@TODO: Look for other sources of stamina damage
 
 import Utility
+import CampUtil
 
 GlobalVariable property _Seed_VitalitySystemEnabled auto
 GlobalVariable property _Seed_ThirstSystemEnabled auto
@@ -34,10 +35,13 @@ Message property _Seed_ThirstLevel6Msg auto
 Quest property _Seed_ThirstMeterQuest auto
 
 Actor property PlayerRef auto
-Keyword property ActorTypeUndead auto
-Keyword property ImmuneParalysis auto
 
 float property MAX_THIRST = 120.0 autoReadOnly
+float property THIRST_LEVEL_5 = 100.0 autoReadOnly
+float property THIRST_LEVEL_4 = 80.0 autoReadOnly
+float property THIRST_LEVEL_3 = 60.0 autoReadOnly
+float property THIRST_LEVEL_2 = 40.0 autoReadOnly
+float property THIRST_LEVEL_1 = 20.0 autoReadOnly
 float property MIN_THIRST = 0.0 autoReadOnly
 
 float property update_interval = 0.25 auto hidden
@@ -119,7 +123,7 @@ Event OnUpdateGameTime()
         thirst_increase = (rate * cycles) / 4
     endif
 
-    if _Seed_Setting_VampireBehavior.GetValueInt() == 2 && IsUndead()
+    if _Seed_Setting_VampireBehavior.GetValueInt() == 2 && IsPlayerUndead()
         thirst_increase /= 2
     endif
 
@@ -172,15 +176,6 @@ function ModThirst(float amount)
     (_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).UpdateMeter((120.0 - _Seed_AttributeThirst.GetValue()) / 120)
 endFunction
 
-bool function IsUndead()
-    ; Is player humanoid Vampire, undead, or transformed Vampire Lord?
-    if PlayerRef.GetRace().HasKeyword(ActorTypeUndead) || PlayerRef.GetRace().HasKeyword(ImmuneParalysis)
-        return true
-    else
-        return false
-    endif
-endFunction
-
 function ApplyThirstEffects()
     float thirst = _Seed_AttributeThirst.GetValue()
     bool increasing = false
@@ -188,7 +183,7 @@ function ApplyThirstEffects()
         increasing = true
     endif
 
-    if !(IsBetween(last_thirst, 20.0, 0.0)) && (IsBetween(thirst, 20.0, 0.0))
+    if !(IsBetween(last_thirst, 20.0, MIN_THIRST)) && (IsBetween(thirst, 20.0, MIN_THIRST))
         ApplyThirstLevel1()
     elseif !(IsBetween(last_thirst, 40.0, 20.0)) && (IsBetween(thirst, 40.0, 20.0))
         ApplyThirstLevel2(increasing)

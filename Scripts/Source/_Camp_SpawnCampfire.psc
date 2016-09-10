@@ -1,9 +1,7 @@
-Scriptname _Camp_SpawnCampfire extends activemagiceffect  
+Scriptname _Camp_SpawnCampfire extends activemagiceffect
 
 import CampUtil
 
-Keyword property ActorTypeCreature auto
-Keyword property ImmuneParalysis auto
 Actor property PlayerRef auto
 Activator property _Camp_Indicator_Campfire auto
 
