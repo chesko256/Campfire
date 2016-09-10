@@ -54,6 +54,10 @@ function ClearEquipmentFromCrimeAlias(ObjectReference akObject) global
 	endif
 endFunction
 
+bool function IsPlayerVampire() global
+	return false
+endFunction
+
 function TryToEnableRef(ObjectReference akReference, bool bFadeIn = false) global
 	;A more concise way to enable references without checking for None first (to avoid Papyrus log errors, etc)
 	if akReference
@@ -94,7 +98,7 @@ function TryToDisableAndDeletePotentialPlaceableObjectRef(ObjectReference akRefe
 		else
 			akReference.Disable(bFadeOut)
 			akReference.Delete()
-	
+
 			if akReference && akReference.IsEnabled()
 				; Try one more time
 				CampDebug(2, "Placed object " + akReference + " failed to disable/delete on first attempt, trying again.")
@@ -107,7 +111,7 @@ endFunction
 
 ObjectReference function PlaceAndWaitFor3DLoaded(ObjectReference akOrigin, Form FormToPlace, int Count = 1, bool ForcePersist = false, bool bDisableInteraction = false) global
 	;A more concise way to place an object and wait until the object's 3D is loaded.
-	;Prevents infinite loop if object never loads. 
+	;Prevents infinite loop if object never loads.
 	;Optionally set bDisableInteraction to True to make this object behave like a static (disable Havok physics) and disable activation.
 	ObjectReference myObject
 	if akOrigin

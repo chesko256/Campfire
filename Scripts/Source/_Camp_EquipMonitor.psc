@@ -55,7 +55,7 @@ Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 		CampDebug(1, "Setting ammo to none")
 		CampData.CurrentAmmo = none
 	endif
-	
+
 	processing_unequip = false
 endEvent
 
@@ -77,7 +77,7 @@ function ProcessEquippedObject(Form akBaseObject)
 	elseif akBaseObject.HasKeyword(ArmorHelmet) || akBaseObject.HasKeyword(ClothingHead)
 		CampDebug(1, "The player equipped a piece of head armor.")
 		CampData.CurrentHead = akBaseObject as Armor
-	elseif akBaseObject.HasKeyword(ArmorBoots) || akBaseObject.HasKeyword(ClothingFeet)	
+	elseif akBaseObject.HasKeyword(ArmorBoots) || akBaseObject.HasKeyword(ClothingFeet)
 		CampDebug(1, "The player equipped a piece of feet armor.")
 		CampData.CurrentFeet = akBaseObject as Armor
 	elseif _Camp_Backpacks.HasForm(akBaseObject)
@@ -220,9 +220,3 @@ bool function GetUsesMainBodySlot(Form akBaseObject)
 		return false
 	endif
 endFunction
-
-Event OnRaceSwitchComplete()
-	if GetCompatibilitySystem().IsFrostfallLoaded
-		FrostUtil.GetClothingSystem().RaceChanged()
-	endif
-endEvent
