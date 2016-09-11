@@ -3,7 +3,21 @@ scriptname _Frost_PlayerEquipMonitor extends ReferenceAlias
 import FrostUtil
 import _FrostInternal
 
+Quest property _Frost_MainQuest auto
 Keyword property _FrostData_ArmorPrecache auto
+
+Event OnRaceSwitchComplete()
+    if IsPlayerTransformed()
+        FrostDebug(1, "I am now a werewolf or vampire lord.")
+        ModPlayerExposure(-120.0, 0.0)
+        (_Frost_MainQuest as _Frost_ConditionValues).IsBeast = true
+        SendEvent_UpdateWarmth()
+    else
+        FrostDebug(1, "I am now not a werewolf or vampire lord.")
+        (_Frost_MainQuest as _Frost_ConditionValues).IsBeast = false
+        SendEvent_UpdateWarmth()
+    endif
+endEvent
 
 Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
 	TryToAddArmorToPrecache(akBaseItem, _FrostData_ArmorPrecache)
@@ -63,7 +77,7 @@ function ProcessQueuedEvents(Form[] akFormQueue, int[] aiActionQueue, bool aiRec
 		; debug.trace(">>>>>>> Processing queued events.")
 		while !qIsEmpty()
 			qDelete(akFormQueue, aiActionQueue)
-			
+
 			if next_action == -1
 				return
 			endif
@@ -86,7 +100,7 @@ function ProcessQueuedEvents(Form[] akFormQueue, int[] aiActionQueue, bool aiRec
 
     	; Did another event sneak in?
     	if queue_count > 0
-    		ProcessQueuedEvents(akFormQueue, aiActionQueue, true)    		
+    		ProcessQueuedEvents(akFormQueue, aiActionQueue, true)
     	endif
     	processing_queue = false
 		; debug.trace("<<<<<<< Finished processing queue.")

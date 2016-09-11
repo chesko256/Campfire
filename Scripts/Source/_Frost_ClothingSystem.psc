@@ -1,18 +1,16 @@
 scriptname _Frost_ClothingSystem extends _Frost_BaseSystem
 
+import _CampInternal
 import FrostUtil
 import _FrostInternal
 import math
 import CommonArrayHelper
 
 Actor property PlayerRef auto
-Quest property _Frost_MainQuest auto
 GlobalVariable property FrostfallRunning auto
 GlobalVariable property _Frost_Setting_Notifications_EquipmentValues auto
 GlobalVariable property _Frost_Setting_Notifications_EquipmentSummary auto
 GlobalVariable property _Frost_CheckInitialEquipment auto
-Keyword property ActorTypeCreature auto
-Keyword property ImmuneParalysis auto
 Keyword property WAF_ClothingCloak auto
 
 Armor[] property WornGearForms auto hidden
@@ -33,19 +31,6 @@ function StartUp()
     handler = GetClothingDatastoreHandler()
     WornGearForms = new Armor[31]
     WornGearValues = new int[12]
-endFunction
-
-function RaceChanged()
-    if PlayerRef.GetRace().HasKeyword(ActorTypeCreature) || PlayerRef.GetRace().HasKeyword(ImmuneParalysis)
-        FrostDebug(1, "I am now a werewolf or vampire lord.")
-        ModPlayerExposure(-120.0, 0.0)
-        (_Frost_MainQuest as _Frost_ConditionValues).IsBeast = true
-        SendEvent_UpdateWarmth()
-    else
-        FrostDebug(1, "I am now not a werewolf or vampire lord.")
-        (_Frost_MainQuest as _Frost_ConditionValues).IsBeast = false
-        SendEvent_UpdateWarmth()
-    endif
 endFunction
 
 bool function ObjectEquipped(Form akBaseObject)
@@ -102,7 +87,7 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGear
         StorageUtil.IntListResize(akWornGearData, dskey, 13)
         StorageUtil.IntListSet(akWornGearData, dskey, 0, type) ; type
         int jdx = (type * 2)
-        
+
         StorageUtil.IntListSet(akWornGearData, dskey, 1, armor_data[3])     ; body warmth (from extra body warmth)
         StorageUtil.IntListSet(akWornGearData, dskey, 2, armor_data[4])     ; body coverage (from extra body coverage)
         StorageUtil.IntListSet(akWornGearData, dskey, 3, armor_data[5])     ; head warmth (from extra head warmth)
@@ -180,7 +165,7 @@ function RefreshWornGearData(Armor[] akWornGearFormsArray, keyword akWornGearDat
         int type = armor_data[0]
         StorageUtil.IntListSet(akWornGearData, dskey, 0, type) ; type
         int jdx = (type * 2)
-        
+
         StorageUtil.IntListSet(akWornGearData, dskey, 1, armor_data[3])
         StorageUtil.IntListSet(akWornGearData, dskey, 2, armor_data[4])
         StorageUtil.IntListSet(akWornGearData, dskey, 3, armor_data[5])
@@ -209,7 +194,7 @@ function RecalculateProtectionData(Armor[] akWornGearFormsArray, int[] aiWornGea
     ; |---------------------------|------|-----------|----------|-----|-----------|----------|
     ; | WornGearForms             | Type | Body Warm | Body Cov | ... | Misc Warm | Misc Cov |
     ; | "80145___Skyrim.esm"      | 1    | 60        | 0        |     | 0         | 0        |
-    
+
     int key_count = ArrayCountArmor(akWornGearFormsArray)
     ; debug.trace("RecalculateProtectionData key_count " + key_count)
 
@@ -237,7 +222,7 @@ function RecalculateProtectionData(Armor[] akWornGearFormsArray, int[] aiWornGea
                 string dskey = handler.GetDatastoreKeyFromForm(akWornGearFormsArray[j])
                 int gear_type = StorageUtil.IntListGet(akWornGearData, dskey, 0)
                 int val = StorageUtil.IntListGet(akWornGearData, dskey, i + 1)
-        
+
                 if type_to_match != handler.GEARTYPE_MISC
                     ; Native type takes priority
                     if gear_type == type_to_match
@@ -261,7 +246,7 @@ function RecalculateProtectionData(Armor[] akWornGearFormsArray, int[] aiWornGea
         aiWornGearValuesArray[i] = column_value
         i += 1
     endWhile
-    
+
     ;Signal to the UI that we're ready for the "change" values to be updated.
     GetInterfaceHandler().InvalidateFetchedChangeRangesOnRecalculate()
 
