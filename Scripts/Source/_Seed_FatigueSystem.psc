@@ -4,6 +4,7 @@ scriptname _Seed_FatigueSystem extends Quest
 ;@TODO: Look for other sources of magicka damage
 
 import Utility
+import CampUtil
 
 GlobalVariable property _Seed_VitalitySystemEnabled auto
 GlobalVariable property _Seed_AttributeFatigue auto
@@ -36,8 +37,14 @@ Message property _Seed_FatigueLevel6Msg auto
 Quest property _Seed_FatigueMeterQuest auto
 
 Actor property PlayerRef auto
-Keyword property ActorTypeUndead auto
-Keyword property ImmuneParalysis auto
+
+float property MAX_FATIGUE = 120.0 autoReadOnly
+float property FATIGUE_LEVEL_5 = 100.0 autoReadOnly
+float property FATIGUE_LEVEL_4 = 80.0 autoReadOnly
+float property FATIGUE_LEVEL_3 = 60.0 autoReadOnly
+float property FATIGUE_LEVEL_2 = 40.0 autoReadOnly
+float property FATIGUE_LEVEL_1 = 20.0 autoReadOnly
+float property MIN_FATIGUE = 0.0 autoReadOnly
 
 float property MAX_FATIGUE = 120.0 autoReadOnly
 float property MIN_FATIGUE = 0.0 autoReadOnly
@@ -92,7 +99,7 @@ Event OnUpdateGameTime()
 		return
 	endif
 
-	if _Seed_Setting_VampireBehavior.GetValueInt() == 2 && IsUndead()
+	if _Seed_Setting_VampireBehavior.GetValueInt() == 2 && IsPlayerUndead()
 		return
 	endif
 
@@ -100,7 +107,7 @@ Event OnUpdateGameTime()
 	float this_time = GetCurrentGameTime() * 24.0
 	int cycles = Math.Floor((this_time - last_update_time))
 	float fatigue_increase = rate * cycles
-	
+
     IncreaseFatigue(fatigue_increase)
     last_update_time = this_time
 
@@ -179,15 +186,6 @@ function ModFatigue(float amount)
 	(_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).UpdateMeter((120.0 - _Seed_AttributeFatigue.GetValue()) / 120)
 endFunction
 
-bool function IsUndead()
-	; Is player humanoid Vampire, undead, or transformed Vampire Lord?
-	if PlayerRef.GetRace().HasKeyword(ActorTypeUndead) || PlayerRef.GetRace().HasKeyword(ImmuneParalysis)
-		return true
-	else
-		return false
-	endif
-endFunction
-
 function ApplyFatigueEffects()
     float fatigue = _Seed_AttributeFatigue.GetValue()
     bool increasing = false
@@ -195,17 +193,17 @@ function ApplyFatigueEffects()
         increasing = true
     endif
 
-    if !(IsBetween(last_fatigue, 20.0, 0.0)) && (IsBetween(fatigue, 20.0, 0.0))
+    if !(IsBetween(last_fatigue, FATIGUE_LEVEL_1, MIN_FATIGUE)) && (IsBetween(fatigue, FATIGUE_LEVEL_1, MIN_FATIGUE))
         ApplyFatigueLevel1()
-    elseif !(IsBetween(last_fatigue, 40.0, 20.0)) && (IsBetween(fatigue, 40.0, 20.0))
+    elseif !(IsBetween(last_fatigue, FATIGUE_LEVEL_2, FATIGUE_LEVEL_1)) && (IsBetween(fatigue, FATIGUE_LEVEL_2, FATIGUE_LEVEL_1))
         ApplyFatigueLevel2(increasing)
-    elseif !(IsBetween(last_fatigue, 60.0, 40.0)) && (IsBetween(fatigue, 60.0, 40.0))
+    elseif !(IsBetween(last_fatigue, FATIGUE_LEVEL_3, FATIGUE_LEVEL_2)) && (IsBetween(fatigue, FATIGUE_LEVEL_3, FATIGUE_LEVEL_2))
         ApplyFatigueLevel3()
-    elseif !(IsBetween(last_fatigue, 80.0, 60.0)) && (IsBetween(fatigue, 80.0, 60.0))
+    elseif !(IsBetween(last_fatigue, FATIGUE_LEVEL_4, FATIGUE_LEVEL_3)) && (IsBetween(fatigue, FATIGUE_LEVEL_4, FATIGUE_LEVEL_3))
         ApplyFatigueLevel4()
-    elseif !(IsBetween(last_fatigue, 100.0, 80.0)) && (IsBetween(fatigue, 100.0, 80.0))
+    elseif !(IsBetween(last_fatigue, FATIGUE_LEVEL_5, FATIGUE_LEVEL_4)) && (IsBetween(fatigue, FATIGUE_LEVEL_5, FATIGUE_LEVEL_4))
         ApplyFatigueLevel5()
-    elseif !(IsBetween(last_fatigue, 120.0, 100.0)) && (IsBetween(fatigue, 120.0, 100.0))
+    elseif !(IsBetween(last_fatigue, MAX_FATIGUE, FATIGUE_LEVEL_5)) && (IsBetween(fatigue, MAX_FATIGUE, FATIGUE_LEVEL_5))
         ApplyFatigueLevel6()
     endif
 

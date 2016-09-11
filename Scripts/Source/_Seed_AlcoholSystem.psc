@@ -1,6 +1,7 @@
 scriptname _Seed_AlcoholSystem extends Quest
 
 import Utility
+import CampUtil
 
 GlobalVariable property _Seed_AlcoholSystemEnabled auto
 GlobalVariable property _Seed_AttributeDrunk auto
@@ -34,8 +35,6 @@ Location property WhiterunDrunkenHuntsmanLocation auto
 Location property WinterholdTheFrozenHearthLocation auto
 
 Actor property PlayerRef auto
-Keyword property ActorTypeUndead auto
-Keyword property ImmuneParalysis auto
 
 float property MAX_DRUNK = 120.0 autoReadOnly
 float property MIN_DRUNK = 0.0 autoReadOnly
@@ -57,7 +56,7 @@ float last_drunk = 0.0
 float last_hangover_time
 
 function AlcoholConsumed(int drinktype)
-    if _Seed_Setting_VampireBehavior.GetValueInt() == 2 && IsUndead()
+    if _Seed_Setting_VampireBehavior.GetValueInt() == 2 && IsPlayerUndead()
         return
     endif
 
@@ -118,15 +117,6 @@ function ModDrunk(float amount)
         _Seed_AttributeDrunk.SetValue(current_drunk + amount)
     endif
     ApplyDrunkEffects()
-endFunction
-
-bool function IsUndead()
-    ; Is player humanoid Vampire, undead, or transformed Vampire Lord?
-    if PlayerRef.GetRace().HasKeyword(ActorTypeUndead) || PlayerRef.GetRace().HasKeyword(ImmuneParalysis)
-        return true
-    else
-        return false
-    endif
 endFunction
 
 function ApplyDrunkEffects()
@@ -231,7 +221,7 @@ endFunction
 function ApplyDrunkLevel6()
     RemoveAllDrunkEffects()
     PlayerRef.AddSpell(_Seed_DrunkSpellHungOver, false)
-    
+
     if _Seed_Setting_DrunkNotifications.GetValueInt() == 2
         _Seed_DrunkLevel6Msg.Show()
     endif

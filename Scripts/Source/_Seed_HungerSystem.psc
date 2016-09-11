@@ -3,6 +3,7 @@ scriptname _Seed_HungerSystem extends Quest
 ;@TODO: Look for other sources of health damage
 
 import Utility
+import CampUtil
 import CommonHelperWhatever ; IsBetween
 
 GlobalVariable property _Seed_Setting_VitalitySystemEnabled auto
@@ -34,10 +35,13 @@ Message property _Seed_HungerLevel6Msg auto
 Quest property _Seed_HungerMeterQuest auto
 
 Actor property PlayerRef auto
-Keyword property ActorTypeUndead auto
-Keyword property ImmuneParalysis auto
 
 float property MAX_HUNGER = 120.0 autoReadOnly
+float property HUNGER_LEVEL_5 = 100.0 autoReadOnly
+float property HUNGER_LEVEL_4 = 80.0 autoReadOnly
+float property HUNGER_LEVEL_3 = 60.0 autoReadOnly
+float property HUNGER_LEVEL_2 = 40.0 autoReadOnly
+float property HUNGER_LEVEL_1 = 20.0 autoReadOnly
 float property MIN_HUNGER = 0.0 autoReadOnly
 
 float property update_interval = 0.5 auto hidden
@@ -73,7 +77,7 @@ function PlayerHit()
 endFunction
 
 Event OnUpdateGameTime()
-		if _Seed_Setting_VampireBehavior.GetValueInt() == 2 && IsUndead()
+		if _Seed_Setting_VampireBehavior.GetValueInt() == 2 && IsPlayerUndead()
 				return
 		endif
 
@@ -165,15 +169,6 @@ function ModHunger(float amount)
     ApplyHungerEffects()
 endFunction
 
-bool function IsUndead()
-		; Is player humanoid Vampire, undead, or transformed Vampire Lord?
-		if PlayerRef.GetRace().HasKeyword(ActorTypeUndead) || PlayerRef.GetRace().HasKeyword(ImmuneParalysis)
-				return true
-		else
-				return false
-		endif
-endFunction
-
 function ApplyHungerEffects()
     float hunger = _Seed_AttributeHunger.GetValue()
     bool increasing = false
@@ -181,17 +176,17 @@ function ApplyHungerEffects()
         increasing = true
     endif
 
-    if !(IsBetween(last_hunger, 20.0, 0.0)) && (IsBetween(hunger, 20.0, 0.0))
+    if !(IsBetween(last_hunger, HUNGER_LEVEL_1, MIN_HUNGER)) && (IsBetween(hunger, HUNGER_LEVEL_1, MIN_HUNGER))
         ApplyHungerLevel1()
-    elseif !(IsBetween(last_hunger, 40.0, 20.0)) && (IsBetween(hunger, 40.0, 20.0))
+    elseif !(IsBetween(last_hunger, HUNGER_LEVEL_2, HUNGER_LEVEL_1)) && (IsBetween(hunger, HUNGER_LEVEL_2, HUNGER_LEVEL_1))
         ApplyHungerLevel2(increasing)
-    elseif !(IsBetween(last_hunger, 60.0, 40.0)) && (IsBetween(hunger, 60.0, 40.0))
+    elseif !(IsBetween(last_hunger, HUNGER_LEVEL_3, HUNGER_LEVEL_2)) && (IsBetween(hunger, HUNGER_LEVEL_3, HUNGER_LEVEL_2))
         ApplyHungerLevel3()
-    elseif !(IsBetween(last_hunger, 80.0, 60.0)) && (IsBetween(hunger, 80.0, 60.0))
+    elseif !(IsBetween(last_hunger, HUNGER_LEVEL_4, HUNGER_LEVEL_3)) && (IsBetween(hunger, HUNGER_LEVEL_4, HUNGER_LEVEL_3))
         ApplyHungerLevel4()
-    elseif !(IsBetween(last_hunger, 100.0, 80.0)) && (IsBetween(hunger, 100.0, 80.0))
+    elseif !(IsBetween(last_hunger, HUNGER_LEVEL_5, HUNGER_LEVEL_4)) && (IsBetween(hunger, HUNGER_LEVEL_5, HUNGER_LEVEL_4))
         ApplyHungerLevel5()
-    elseif !(IsBetween(last_hunger, 120.0, 100.0)) && (IsBetween(hunger, 120.0, 100.0))
+    elseif !(IsBetween(last_hunger, MAX_HUNGER, HUNGER_LEVEL_5)) && (IsBetween(hunger, MAX_HUNGER, HUNGER_LEVEL_5))
         ApplyHungerLevel6()
     endif
 

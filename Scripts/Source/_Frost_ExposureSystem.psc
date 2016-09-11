@@ -86,12 +86,11 @@ Potion property _Frost_FrostbittenPotionHead auto
 Potion property _Frost_FrostbittenPotionHands auto
 Potion property _Frost_FrostbittenPotionFeet auto
 ReferenceAlias property HeatSource auto
-Keyword property ActorTypeDragon auto
-Keyword property ActorTypeUndead auto
 Keyword property _Frost_FrostbiteBodyKW auto
 Keyword property _Frost_FrostbiteHeadKW auto
 Keyword property _Frost_FrostbiteHandsKW auto
 Keyword property _Frost_FrostbiteFeetKW auto
+Keyword property ActorTypeDragon auto
 
 Quest property DLC2DialogueRavenRock auto hidden
 
@@ -442,9 +441,10 @@ function RefreshAbleToFastTravel()
 	endif
 endFunction
 
+; @TODO: Candidate for moving to utility / misc monitor script
 function RefreshVampireState()
 	if _Frost_Setting_VampireMode.GetValueInt() > 0
-		if PlayerRef.HasKeyword(ActorTypeUndead)
+		if IsPlayerUndead()
 			is_vampire = true
 		else
 			is_vampire = false
