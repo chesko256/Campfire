@@ -3,8 +3,10 @@ scriptname _Seed_AlcoholSystem extends Quest
 import Utility
 import CampUtil
 
+GlobalVariable property _Seed_Setting_VitalitySystemEnabled auto
 GlobalVariable property _Seed_AlcoholSystemEnabled auto
 GlobalVariable property _Seed_AttributeDrunk auto
+GlobalVariable property _Seed_Setting_VampireBehavior auto
 GlobalVariable property _Seed_Setting_DrunkNotifications auto
 GlobalVariable property _Seed_Setting_DrunkVFX auto
 GlobalVariable property GameHour auto
@@ -14,6 +16,15 @@ Spell property _Seed_DrunkSpell2 auto          ; Tipsy
 Spell property _Seed_DrunkSpell3 auto          ; Drunk
 Spell property _Seed_DrunkSpell4 auto          ; Very Drunk (flag Disease)
 Spell property _Seed_DrunkSpellHungOver auto   ; Hung Over (after having passed out) (flag Disease)
+
+Keyword property LocTypeInn auto
+
+Message property _Seed_DrunkLevel1Msg auto
+Message property _Seed_DrunkLevel2Msg auto
+Message property _Seed_DrunkLevel3Msg auto
+Message property _Seed_DrunkLevel4Msg auto
+Message property _Seed_DrunkLevel5Msg auto
+Message property _Seed_DrunkLevel6Msg auto
 
 Location property KynesgroveBraidwoodInnLocation auto
 Location property WindhelmCandlehearthHallLocation auto
@@ -53,7 +64,7 @@ float SOBER_RATE = 10.0
 float property update_interval = 0.5 auto hidden
 float property last_update_time auto hidden
 float last_drunk = 0.0
-float last_hangover_time
+float last_hungover_time
 
 function AlcoholConsumed(int drinktype)
     if _Seed_Setting_VampireBehavior.GetValueInt() == 2 && IsPlayerUndead()
@@ -82,7 +93,7 @@ Event OnUpdateGameTime()
     DecreaseDrunk(drunk_decrease)
     last_update_time = this_time
 
-    if _Seed_VitalitySystemEnabled.GetValueInt() == 2 && _Seed_AttributeDrunk.GetValue() > 0.0
+    if _Seed_Setting_VitalitySystemEnabled.GetValueInt() == 2 && _Seed_AttributeDrunk.GetValue() > 0.0
         RegisterForSingleUpdateGameTime(update_interval)
     endif
 EndEvent
@@ -228,7 +239,7 @@ function ApplyDrunkLevel6()
     ; pass out FX
     GameHour.SetValue(GameHour.GetValue() + 6.0)
     if PlayerRef.GetCurrentLocation().HasKeyword(LocTypeInn)
-        KickPlayerOutOfInn()
+        ;KickPlayerOutOfInn()
     endif
     ; After time passes...
     last_hungover_time = GetCurrentGameTime()
@@ -242,6 +253,7 @@ bool function IsBetween(float fValue, float fUpperBound, float fLowerBound)
     endif
 endFunction
 
+;/
 function KickPlayerOutOfInn()
     ;@TODO: Support Retching Netch
     if loc == KynesgroveBraidwoodInnLocation
@@ -264,3 +276,4 @@ function KickPlayerOutOfInn()
     elseif loc == WinterholdTheFrozenHearthLocation ; bed
     endif
 endFunction
+/;

@@ -54,10 +54,6 @@ function ClearEquipmentFromCrimeAlias(ObjectReference akObject) global
 	endif
 endFunction
 
-bool function IsPlayerVampire() global
-	return false
-endFunction
-
 function TryToEnableRef(ObjectReference akReference, bool bFadeIn = false) global
 	;A more concise way to enable references without checking for None first (to avoid Papyrus log errors, etc)
 	if akReference

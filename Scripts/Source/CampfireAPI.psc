@@ -16,6 +16,7 @@ Keyword property isCampfireTentNoShelter auto
 Keyword property ActorTypeCreature auto
 Keyword property ImmuneParalysis auto
 Keyword property ActorTypeNPC auto
+Keyword property ActorTypeUndead auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 GlobalVariable property _Camp_Setting_ManualFireLighting auto
 GlobalVariable property _Camp_Setting_EquipmentFlammable auto

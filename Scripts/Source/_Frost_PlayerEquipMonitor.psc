@@ -1,5 +1,6 @@
 scriptname _Frost_PlayerEquipMonitor extends ReferenceAlias
 
+import CampUtil
 import FrostUtil
 import _FrostInternal
 
