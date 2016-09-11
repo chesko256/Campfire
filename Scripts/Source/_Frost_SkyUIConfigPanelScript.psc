@@ -25,6 +25,7 @@ GlobalVariable property FrostfallRunning auto
 GlobalVariable property _Frost_Setting_Animation auto
 GlobalVariable property _Frost_Setting_ConditionMessages auto
 GlobalVariable property _Frost_Setting_DisplayAttributesInWeathersense auto
+GlobalVariable property _Frost_Setting_DisplayAttributeValuesInWeathersense auto
 GlobalVariable property _Frost_Setting_ExposurePauseCombat auto
 GlobalVariable property _Frost_Setting_ExposurePauseDialogue auto
 GlobalVariable property _Frost_Setting_ExposureRate auto
@@ -162,6 +163,7 @@ int Interface_Animation_OID
 int Interface_FollowerAnimation_OID
 int Interface_WeathersenseDisplayMode_OID
 int Interface_DisplayAttributesInWeathersense_OID
+int Interface_DisplayAttributeValuesInWeathersense_OID
 int Interface_ConditionMessages_OID
 int Interface_WeatherMessages_OID
 int Interface_Notifications_EquipmentValues_OID
@@ -676,11 +678,19 @@ function PageReset_Interface()
 		Interface_WeatherMessages_OID = AddToggleOption("$FrostfallInterfaceSettingWeather", false)
 	endif
 	Interface_WeathersenseDisplayMode_OID = AddMenuOption("$FrostfallInterfaceSettingWeathersenseDisplayMode", WeathersenseDisplayList[_Frost_Setting_WeathersenseDisplayMode.GetValueInt()])
+	
 	if _Frost_Setting_DisplayAttributesInWeathersense.GetValueInt() == 2
 		Interface_DisplayAttributesInWeathersense_OID = AddToggleOption("$FrostfallInterfaceSettingWeathersense", true)
+		if _Frost_Setting_DisplayAttributeValuesInWeathersense.GetValueInt() == 2
+			Interface_DisplayAttributeValuesInWeathersense_OID = AddToggleOption("$FrostfallInterfaceSettingWeathersenseDetail", true)
+		else
+			Interface_DisplayAttributeValuesInWeathersense_OID = AddToggleOption("$FrostfallInterfaceSettingWeathersenseDetail", false)
+		endif
 	else
 		Interface_DisplayAttributesInWeathersense_OID = AddToggleOption("$FrostfallInterfaceSettingWeathersense", false)
+		Interface_DisplayAttributeValuesInWeathersense_OID = AddToggleOption("$FrostfallInterfaceSettingWeathersenseDetail", false, OPTION_FLAG_DISABLED)
 	endif
+
 	if Compatibility.isUIPackageInstalled
 		; Interface_Notifications_EquipmentValues_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentValues", false, OPTION_FLAG_DISABLED)
 		; Interface_Notifications_EquipmentSummary_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentSummary", false, OPTION_FLAG_DISABLED)
@@ -988,6 +998,16 @@ event OnOptionSelect(int option)
 			SetToggleOptionValue(Interface_DisplayAttributesInWeathersense_OID, true)
 		endif
 		SaveSettingToCurrentProfile("display_attributes_in_weathersense", _Frost_Setting_DisplayAttributesInWeathersense.GetValueInt())
+		ForcePageReset()
+	elseif option == Interface_DisplayAttributeValuesInWeathersense_OID
+		if _Frost_Setting_DisplayAttributeValuesInWeathersense.GetValueInt() == 2
+			_Frost_Setting_DisplayAttributeValuesInWeathersense.SetValueInt(1)
+			SetToggleOptionValue(Interface_DisplayAttributeValuesInWeathersense_OID, false)
+		else
+			_Frost_Setting_DisplayAttributeValuesInWeathersense.SetValueInt(2)
+			SetToggleOptionValue(Interface_DisplayAttributeValuesInWeathersense_OID, true)
+		endif
+		SaveSettingToCurrentProfile("display_attribute_values_in_weathersense", _Frost_Setting_DisplayAttributeValuesInWeathersense.GetValueInt())
 	elseif option == Interface_ConditionMessages_OID
 		if _Frost_Setting_ConditionMessages.GetValueInt() == 2
 			_Frost_Setting_ConditionMessages.SetValueInt(1)
@@ -1149,6 +1169,11 @@ event OnOptionDefault(int option)
 		_Frost_Setting_DisplayAttributesInWeathersense.SetValueInt(1)
 		SetToggleOptionValue(Interface_DisplayAttributesInWeathersense_OID, false)
 		SaveSettingToCurrentProfile("display_attributes_in_weathersense", _Frost_Setting_DisplayAttributesInWeathersense.GetValueInt())
+		ForcePageReset()
+	elseif option == Interface_DisplayAttributeValuesInWeathersense_OID
+		_Frost_Setting_DisplayAttributeValuesInWeathersense.SetValueInt(1)
+		SetToggleOptionValue(Interface_DisplayAttributeValuesInWeathersense_OID, false)
+		SaveSettingToCurrentProfile("display_attribute_values_in_weathersense", _Frost_Setting_DisplayAttributeValuesInWeathersense.GetValueInt())
 	elseif option == Interface_Notifications_EquipmentValues_OID
 		_Frost_Setting_Notifications_EquipmentValues.SetValueInt(2)
 		SetToggleOptionValue(Interface_Notifications_EquipmentValues_OID, true)
@@ -1414,6 +1439,8 @@ Event OnOptionHighlight(int option)
 		SetInfoText("$FrostfallOptionHighlightSettingWeatherMsgToggle")
 	elseif option == Interface_DisplayAttributesInWeathersense_OID
 		SetInfoText("$FrostfallOptionHighlightSettingExpValueMsgToggle")
+	elseif option == Interface_DisplayAttributeValuesInWeathersense_OID
+		SetInfoText("$FrostfallOptionHighlightSettingExpValueMsgDetailToggle")
 	elseif option == Interface_Notifications_EquipmentValues_OID
 		SetInfoText("$FrostfallOptionHighlightSettingEquipValuesMsgToggle")
 	elseif option == Interface_Notifications_EquipmentSummary_OID
@@ -2138,6 +2165,10 @@ function SwitchToProfile(int aiProfileIndex)
 	if val != -1
 		_Frost_Setting_DisplayAttributesInWeathersense.SetValueInt(val)
 	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "display_attribute_values_in_weathersense")
+	if val != -1
+		_Frost_Setting_DisplayAttributeValuesInWeathersense.SetValueInt(val)
+	endif
 	val = LoadSettingFromProfile(aiProfileIndex, "notification_equipmentvalues")
 	if val != -1
 		_Frost_Setting_Notifications_EquipmentValues.SetValueInt(val)
@@ -2394,6 +2425,7 @@ function GenerateDefaultProfile(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "follower_animation", 2)
 	JsonUtil.SetIntValue(profile_path, "condition_messages", 2)
 	JsonUtil.SetIntValue(profile_path, "display_attributes_in_weathersense", 1)
+	JsonUtil.SetIntValue(profile_path, "display_attribute_values_in_weathersense", 1)
 	JsonUtil.SetIntValue(profile_path, "notification_equipmentvalues", 2)
 	JsonUtil.SetIntValue(profile_path, "notification_equipmentsummary", 2)
 	JsonUtil.SetIntValue(profile_path, "exposure_pause_combat", 2)
@@ -2455,6 +2487,7 @@ function SaveAllSettings(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "follower_animation", _Frost_Setting_FollowerAnimation.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "condition_messages", _Frost_Setting_ConditionMessages.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "display_attributes_in_weathersense", _Frost_Setting_DisplayAttributesInWeathersense.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "display_attribute_values_in_weathersense", _Frost_Setting_DisplayAttributeValuesInWeathersense.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "notification_equipmentvalues", _Frost_Setting_Notifications_EquipmentValues.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "notification_equipmentsummary", _Frost_Setting_Notifications_EquipmentSummary.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "exposure_pause_combat", _Frost_Setting_ExposurePauseCombat.GetValueInt())
