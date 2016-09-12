@@ -187,6 +187,7 @@ function RefreshWornGearData(Armor[] akWornGearFormsArray, keyword akWornGearDat
 endFunction
 
 function RecalculateProtectionData(Armor[] akWornGearFormsArray, int[] aiWornGearValuesArray, keyword akWornGearData)
+    debug.StartStackProfiling()
     ;/
         Iterates over a "table" of values in the form below to determine total Warmth and Coverage.
     /;
@@ -199,8 +200,19 @@ function RecalculateProtectionData(Armor[] akWornGearFormsArray, int[] aiWornGea
     ; debug.trace("RecalculateProtectionData key_count " + key_count)
 
     int i = 0
+    int d = 0
+    int worn_count = 0
     int type_counter = -1
     int type_to_match = 1
+
+    ; Pre-fetch the datastore keys for worn forms. Check if actually being worn.
+    string[] dskeys = new String[31]
+    while d < 31
+        if d < key_count
+            dskeys[d] = handler.GetDatastoreKeyFromForm(akWornGearFormsArray[d])
+        endif
+        d += 1
+    endWhile
 
     while i < 12
         int j = 0
@@ -214,15 +226,13 @@ function RecalculateProtectionData(Armor[] akWornGearFormsArray, int[] aiWornGea
 
         bool gear_type_found = false
         while j < key_count && !gear_type_found
-            ; Make sure I'm even still wearing this gear. This calculation can be
-            ; out of sync with reality (queued events exit that are not yet processed).
-            ; Leave the bogus entry alone, the array will eventually be accurate after
+            ; This calculation can be out of sync with reality (queued events exit that 
+            ; are not yet processed). The array will eventually be accurate after
             ; the next integrity check.
             if PlayerHasArmorEquipped(akWornGearFormsArray[j])
-                string dskey = handler.GetDatastoreKeyFromForm(akWornGearFormsArray[j])
-                int gear_type = StorageUtil.IntListGet(akWornGearData, dskey, 0)
-                int val = StorageUtil.IntListGet(akWornGearData, dskey, i + 1)
-
+                int gear_type = StorageUtil.IntListGet(akWornGearData, dskeys[j], 0)
+                int val = StorageUtil.IntListGet(akWornGearData, dskeys[j], i + 1)
+    
                 if type_to_match != handler.GEARTYPE_MISC
                     ; Native type takes priority
                     if gear_type == type_to_match
@@ -250,6 +260,7 @@ function RecalculateProtectionData(Armor[] akWornGearFormsArray, int[] aiWornGea
     ;Signal to the UI that we're ready for the "change" values to be updated.
     GetInterfaceHandler().InvalidateFetchedChangeRangesOnRecalculate()
 
+    debug.StopStackProfiling()
     FrostDebug(0, "Worn Gear Values: " + aiWornGearValuesArray)
 endFunction
 
