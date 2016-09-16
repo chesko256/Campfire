@@ -650,10 +650,10 @@ int[] function GetTotalArmorProtectionValues(Armor akArmor, string asArmorName =
 	int[] armor_totals = new int[2]
 
 	int[] ap = new int[15]
-	;if PrecacheHasArmorData(asArmorName, _FrostData_ArmorPrecache)
+	if PrecacheHasArmorData(asArmorName, _FrostData_ArmorPrecache)
 		; debug.trace("GetTotalArmorProtectionValues from precache")
-	;	ap = GetArmorDataFromPrecache(asArmorName, _FrostData_ArmorPrecache)
-	;else
+		ap = GetArmorDataFromPrecache(asArmorName, _FrostData_ArmorPrecache)
+	else
 		; debug.trace("GetTotalArmorProtectionValues lookup")
 		if !akArmor
 			armor_totals[0] = 0
@@ -664,7 +664,7 @@ int[] function GetTotalArmorProtectionValues(Armor akArmor, string asArmorName =
 		ap = GetArmorProtectionData(akArmor)
 		; debug.trace("GetTotalArmorProtectionValues ap = " + ap)
 		TryToAddArmorDataToPrecache(akArmor, ap, _FrostData_ArmorPrecache)
-	;endif
+	endif
 
 	; debug.trace("GetTotalArmorProtectionValues ap = " + ap)
 	if ap[0] == GEARTYPE_IGNORE
