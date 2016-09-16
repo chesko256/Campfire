@@ -274,7 +274,7 @@ function UpdateExposure(float afExposureTarget)
 endFunction
 
 function ModAttributeExposure(float amount, float target, bool allow_skill_advancement = true)
-	debug.trace("ModAttributeExposure " + amount + " " + target + " " + allow_skill_advancement)
+	; debug.trace("ModAttributeExposure " + amount + " " + target + " " + allow_skill_advancement)
 
 	float exp_attr = _Frost_AttributeExposure.GetValue()
 	if exp_attr == target
@@ -768,7 +768,7 @@ function ExposureValueUpdate(float afExposureTarget, float gameHoursPassed)
 		debug.trace("GetColder")
 		GetColder(afExposureTarget, gameHoursPassed)
 	else
-		debug.trace("GetWarmer")
+		; debug.trace("GetWarmer")
 		GetWarmer(currentHeatSize, afExposureTarget, gameHoursPassed)
 	endif
 

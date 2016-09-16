@@ -75,7 +75,7 @@ function ProcessQueuedEvents(Form[] akFormQueue, int[] aiActionQueue, bool aiRec
 		processing_queue = true
 		bool update_required = false
 		_Frost_ClothingSystem clothing = GetClothingSystem()
-		; debug.trace(">>>>>>> Processing queued events.")
+		;debug.trace(">>>>>>> Processing queued events.")
 		while !qIsEmpty()
 			qDelete(akFormQueue, aiActionQueue)
 
@@ -104,7 +104,7 @@ function ProcessQueuedEvents(Form[] akFormQueue, int[] aiActionQueue, bool aiRec
     		ProcessQueuedEvents(akFormQueue, aiActionQueue, true)
     	endif
     	processing_queue = false
-		; debug.trace("<<<<<<< Finished processing queue.")
+		;debug.trace("<<<<<<< Finished processing queue.")
 	endif
 endFunction
 
@@ -126,7 +126,7 @@ bool function qEnter(Form[] akFormQueue, int[] aiActionQueue, Form akEntry, bool
 	endif
 
 	newEntryIdx = (queue_frontidx + queue_count) % akFormQueue.Length
-	debug.trace("newEntryIdx = " + newEntryIdx)
+	; debug.trace("newEntryIdx = " + newEntryIdx)
 	akFormQueue[newEntryIdx] = akEntry
 
 	if abAction
@@ -162,7 +162,6 @@ function qDelete(Form[] akFormQueue, int[] aiActionQueue)
 	; debug.trace("oldElements[0] base = " + akFormQueue[queue_frontidx])
 	; debug.trace("oldElements[0] = " + oldElements[0])
 	; debug.trace("oldElements[0] one's complement = " + Math.LogicalNot(Math.LogicalNot(oldElements[0])))
-	; debug.trace("printing big number: " + 2181042900)
 	next_form = akFormQueue[queue_frontidx]
 	next_action = aiActionQueue[queue_frontidx]
 	; oldElements[1] = aiActionQueue[queue_frontidx]
@@ -175,7 +174,7 @@ function qDelete(Form[] akFormQueue, int[] aiActionQueue)
 	queue_frontidx %= akFormQueue.Length
 
 	queue_count -= 1
-	; debug.trace(" ------- queue delete " + oldElements[0] + " " + oldElements[1] + " queue_count " + queue_count)
+	; debug.trace(" ------- queue delete " + next_form + " " + next_action + " queue_count " + queue_count)
 
 	; return oldElements
 endFunction

@@ -650,24 +650,23 @@ int[] function GetTotalArmorProtectionValues(Armor akArmor, string asArmorName =
 	int[] armor_totals = new int[2]
 
 	int[] ap = new int[15]
-	if PrecacheHasArmorData(asArmorName, _FrostData_ArmorPrecache)
-		debug.trace("GetTotalArmorProtectionValues from precache")
-		ap = GetArmorDataFromPrecache(asArmorName, _FrostData_ArmorPrecache)
-	else
-		debug.trace("GetTotalArmorProtectionValues lookup")
+	;if PrecacheHasArmorData(asArmorName, _FrostData_ArmorPrecache)
+		; debug.trace("GetTotalArmorProtectionValues from precache")
+	;	ap = GetArmorDataFromPrecache(asArmorName, _FrostData_ArmorPrecache)
+	;else
+		; debug.trace("GetTotalArmorProtectionValues lookup")
 		if !akArmor
-			debug.trace("GetTotalArmorProtectionValues akArmor none, bail")
 			armor_totals[0] = 0
 			armor_totals[1] = 0
 			return armor_totals
 		endif
-		debug.trace("GetTotalArmorProtectionValues akArmor found")
+		; debug.trace("GetTotalArmorProtectionValues akArmor found")
 		ap = GetArmorProtectionData(akArmor)
-		debug.trace("GetTotalArmorProtectionValues ap = " + ap)
+		; debug.trace("GetTotalArmorProtectionValues ap = " + ap)
 		TryToAddArmorDataToPrecache(akArmor, ap, _FrostData_ArmorPrecache)
-	endif
+	;endif
 
-	debug.trace("GetTotalArmorProtectionValues ap = " + ap)
+	; debug.trace("GetTotalArmorProtectionValues ap = " + ap)
 	if ap[0] == GEARTYPE_IGNORE
 		armor_totals[0] = 0
 		armor_totals[1] = 0
@@ -920,7 +919,6 @@ string function GetDatastoreKeyFromID(int aiFormID)
 	int mod_index = GetModIndex(aiFormID)
 	int base_form_id = GetBaseFormID(aiFormID)
 	string ds_key = base_form_id + "___" + Game.GetModName(mod_index)
-	debug.trace("returning key " + ds_key)
 	return ds_key
 endFunction
 
