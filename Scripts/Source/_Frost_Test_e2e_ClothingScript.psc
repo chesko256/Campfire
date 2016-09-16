@@ -333,8 +333,8 @@ function testStress_1()
 	PlayerRef.EquipItem(_Camp_Cloak_BasicHide, abSilent = true)
 	WaitForEquipQueueDone()
 
-	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 189) ;@FAIL
-	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 221) ;@FAIL
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 189)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 221)
 
 	PlayerRef.UnequipItem(ArmorLeatherCuirass, abSilent = true)
 	PlayerRef.UnequipItem(ArmorLeatherHelmet, abSilent = true)
@@ -362,8 +362,8 @@ function testStress_2()
 	PlayerRef.EquipItem(_Frost_UnitTestUnknownCloak1, abSilent = true)
 	WaitForEquipQueueDone()
 
-	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 174) ;@FAIL
-	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 99) ;@FAIL
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 174)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 99)
 
 	PlayerRef.EquipItem(_Frost_UnitTestUnknownBody2, abSilent = true)
 	PlayerRef.EquipItem(_Frost_UnitTestUnknownHead2, abSilent = true)
@@ -373,8 +373,8 @@ function testStress_2()
 	PlayerRef.EquipItem(_Frost_UnitTestUnknownCloak2, abSilent = true)
 	WaitForEquipQueueDone()
 
-	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 174) ;@FAIL
-	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 99) ;@FAIL
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 174)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 99)
 
 	PlayerRef.UnequipItem(_Frost_UnitTestUnknownBody2, abSilent = true)
 	PlayerRef.UnequipItem(_Frost_UnitTestUnknownHead2, abSilent = true)
@@ -420,8 +420,8 @@ function testStress_3()
 
 	WaitForEquipQueueDone()
 
-	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 189) ;@FAIL
-	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 221) ;@FAIL
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 189)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 221)
 
 	PlayerRef.UnequipItem(ArmorLeatherCuirass, abSilent = true)
 	PlayerRef.UnequipItem(ArmorLeatherHelmet, abSilent = true)
@@ -493,8 +493,8 @@ function testStress_4()
 	WaitForEquipQueueDone()
 
 	; also check integrity of the keys array
-	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 189) ;@FAIL
-	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 221) ;@FAIL
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 189)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 221)
 
 	PlayerRef.UnequipItem(ArmorLeatherCuirass, abSilent = true)
 	PlayerRef.UnequipItem(ArmorLeatherHelmet, abSilent = true)
@@ -565,8 +565,8 @@ function testStress_5()
 	WaitForEquipQueueDone()
 
 	; also check integrity of the keys array
-	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 234) ;@FAIL
-	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 183) ;@FAIL
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 234)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 183)
 
 	PlayerRef.UnequipItem(_Frost_UnitTestNormalBody, abSilent = true)
 	PlayerRef.UnequipItem(_Frost_UnitTestWarmHead, abSilent = true)
@@ -637,8 +637,8 @@ function testStress_6()
 	WaitForEquipQueueDone()
 
 	; also check integrity of the keys array
-	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 174) ;@FAIL
-	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 99) ;@FAIL
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 174)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 99)
 
 	PlayerRef.UnequipItem(_Frost_UnitTestUnknownBody2, abSilent = true)
 	PlayerRef.UnequipItem(_Frost_UnitTestUnknownHead2, abSilent = true)
