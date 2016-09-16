@@ -21,7 +21,7 @@ function TryToAddArmorToPrecache(Form akBaseItem, Keyword akPrecache) global
 		string armorName = akBaseItem.GetName()
 		if armorName != ""
 			if StorageUtil.IntListGet(akPrecache, "FF__" + armorName, 0) == 0
-				debug.trace("Adding " + armorName + " to precache.")
+				;debug.trace("Adding " + armorName + " to precache.")
 				int[] armor_data = FrostUtil.GetClothingDatastoreHandler().GetArmorProtectionData(akBaseItem as Armor)
 				bool result = StorageUtil.IntListCopy(akPrecache, "FF__" + armorName, armor_data)
 			endif
@@ -31,7 +31,7 @@ endFunction
 
 function TryToAddArmorDataToPrecache(Form akBaseItem, Int[] aiArmorData, Keyword akPrecache) global
 	if aiArmorData[0] != 0 && akBaseItem as Armor
-		debug.trace("Adding " + armorName + " to precache.")
+		;debug.trace("Adding " + armorName + " to precache.")
 		string armorName = akBaseItem.GetName()
 		bool result = StorageUtil.IntListCopy(akPrecache, "FF__" + armorName, aiArmorData)
 	endif
@@ -42,7 +42,7 @@ function TryToRemoveArmorFromPrecache(Form akBaseItem, Keyword akPrecache) globa
 		string armorName = akBaseItem.GetName()
 		if armorName != ""
 			if StorageUtil.IntListGet(akPrecache, "FF__" + armorName, 0) != 0
-				debug.trace("Removing " + armorName + " from precache.")
+				;debug.trace("Removing " + armorName + " from precache.")
 				StorageUtil.IntListClear(akPrecache, "FF__" + armorName)
 			endif
 		endif

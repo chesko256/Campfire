@@ -1,5 +1,7 @@
 scriptname _Frost_ClothingSystem_test extends Lilac
 
+import _FrostInternal
+
 _Frost_ClothingSystem clothing
 _Frost_ArmorProtectionDatastoreHandler ds
 
@@ -19,6 +21,7 @@ Weapon property Axe01 auto
 Armor[] property mockWornGearForms auto hidden
 int[] property mockWornGearValues auto hidden
 Keyword property _Frost_WornGearData_mock auto
+Keyword property _FrostData_ArmorPrecache auto
 
 string body_key = "77385___Skyrim.esm"
 string head_key = "77389___Skyrim.esm"
@@ -103,6 +106,9 @@ endFunction
 
 ; Before / After Each =========================================================
 
+function beforeEach()
+	RemoveAllArmorFromPrecache(_FrostData_ArmorPrecache)
+endFunction
 
 function beforeEach_ObjectEquippedSuite()
 	clothing.mock_AddWornGearEntryForArmorEquipped_callcount = 0

@@ -103,6 +103,8 @@ GlobalVariable property _Frost_Setting_MeterWeathersenseVAnchor auto
 GlobalVariable property _Frost_Setting_MeterWeathersenseXPos auto
 GlobalVariable property _Frost_Setting_MeterWeathersenseYPos auto
 
+Keyword property _FrostData_ArmorPrecache auto
+
 _Frost_Meter property ExposureMeter auto
 _Frost_ExposureMeterInterfaceHandler property ExposureMeterHandler auto
 _Frost_Meter property WetnessMeter auto
@@ -3246,6 +3248,7 @@ endFunction
 
 function RefreshSingleItemValues(Armor akArmor)
 	; Update currently worn armor data in-place and force recalculate
+	TryToRemoveArmorFromPrecache(akArmor, _FrostData_ArmorPrecache)
 	_Frost_ClothingSystem clothing = GetClothingSystem()
 	bool b = clothing.RemoveWornGearEntryForArmorUnequipped(akArmor, clothing.WornGearForms, clothing._Frost_WornGearData)
 	b = clothing.AddWornGearEntryForArmorEquipped(akArmor, clothing.WornGearForms, clothing._Frost_WornGearData)
