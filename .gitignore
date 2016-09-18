@@ -51,8 +51,7 @@
 !Interface/exported/widgets/frostfall/*
 !Interface/exported/widgets/lastseed/*
 !Interface/skyui/*
-!Interface/*.as
-!Interface/*.fla
+!Interface/src/*
 !Interface/*.swf
 
 #Meshes
