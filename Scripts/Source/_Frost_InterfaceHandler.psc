@@ -81,8 +81,6 @@ Event OnSkyUIInvListGetEntryChangeData(string asEventName, string asArmorName, f
 			UI.InvokeIntA("ContainerMenu", "_root.Menu_mc.setEntryChangeData", vals)
 		elseif UI.IsMenuOpen("BarterMenu")
 			UI.InvokeIntA("BarterMenu", "_root.Menu_mc.setEntryChangeData", vals)
-		elseif UI.IsMenuOpen("Crafting Menu")
-			UI.InvokeIntA("Crafting Menu", "_root.Menu.setEntryChangeData", vals)
 		endif
 	endif
 endEvent
@@ -110,18 +108,18 @@ Event InvalidateFetchedRangesOnProcess(string asEventName, string asArg, float a
 	elseif UI.IsMenuOpen("Crafting Menu")
 		UI.Invoke("Crafting Menu", "_root.Menu.onFrostfallInvalidateFetchedRangesOnProcess")
 	endif
+
+	; Also update the bottom bar change data.
+	InvalidateFetchedChangeRanges()
 endEvent
 
-function InvalidateFetchedChangeRangesOnRecalculate()
-	debug.trace("Got InvalidateFetchedChangeRangesOnRecalculate")
+function InvalidateFetchedChangeRanges()
 	if UI.IsMenuOpen("InventoryMenu")
-		UI.Invoke("InventoryMenu", "_root.Menu_mc.onFrostfallInvalidateChangeRangesOnRecalculate")
+		UI.Invoke("InventoryMenu", "_root.Menu_mc.onFrostfallInvalidateChangeRanges")
 	elseif UI.IsMenuOpen("ContainerMenu")
-		UI.Invoke("ContainerMenu", "_root.Menu_mc.onFrostfallInvalidateChangeRangesOnRecalculate")
+		UI.Invoke("ContainerMenu", "_root.Menu_mc.onFrostfallInvalidateChangeRanges")
 	elseif UI.IsMenuOpen("BarterMenu")
-		UI.Invoke("BarterMenu", "_root.Menu_mc.onFrostfallInvalidateChangeRangesOnRecalculate")
-	elseif UI.IsMenuOpen("Crafting Menu")
-		UI.Invoke("Crafting Menu", "_root.Menu.onFrostfallInvalidateChangeRangesOnRecalculate")
+		UI.Invoke("BarterMenu", "_root.Menu_mc.onFrostfallInvalidateChangeRanges")
 	endif
 endFunction
 
