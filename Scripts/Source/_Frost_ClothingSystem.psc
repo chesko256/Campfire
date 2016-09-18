@@ -253,7 +253,7 @@ function RecalculateProtectionData(Armor[] akWornGearFormsArray, int[] aiWornGea
     endWhile
 
     ;Signal to the UI that we're ready for the "change" values to be updated.
-    GetInterfaceHandler().InvalidateFetchedChangeRangesOnRecalculate()
+    GetInterfaceHandler().InvalidateFetchedChangeRanges()
 
     FrostDebug(0, "Worn Gear Values: " + aiWornGearValuesArray)
 endFunction
