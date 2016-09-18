@@ -66,6 +66,8 @@ bool function IsPlayerTransformed() global
 		else
 			return false
 		endif
+	else
+		return false
 	endif
 endFunction
 

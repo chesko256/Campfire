@@ -211,9 +211,9 @@ function GiveDeadwoodBranches()
 endFunction
 
 function AdvanceTime()
-	;Advance time by 1 hour
+	;Advance time by 30 minutes
 	if GameHour.GetValue() <= 22.9
-		GameHour.SetValue(GameHour.GetValue() + 1.0)
+		GameHour.SetValue(GameHour.GetValue() + 0.5)
 	else
 		GameHour.SetValue(23.999999)
 	endif
