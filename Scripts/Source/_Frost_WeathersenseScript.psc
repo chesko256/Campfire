@@ -122,6 +122,42 @@ Message property _frost_StatusTemp_Warmer_Level10_NoValue auto
 Message property _frost_StatusTemp_Warmer_Indoors_NoValue auto
 Message property _frost_StatusTemp_Warmer_Oblivion_NoValue auto
 
+Message property _frost_StatusTemp_Colder_FireLevel1 auto
+Message property _frost_StatusTemp_Colder_FireLevel2 auto
+Message property _frost_StatusTemp_Colder_FireLevel3 auto
+Message property _frost_StatusTemp_Colder_FireShelterLevel1 auto
+Message property _frost_StatusTemp_Colder_FireShelterLevel2 auto
+Message property _frost_StatusTemp_Colder_FireShelterLevel3 auto
+Message property _frost_StatusTemp_Colder_Shelter auto
+Message property _frost_StatusTemp_Steady_FireLevel1 auto
+Message property _frost_StatusTemp_Steady_FireLevel2 auto
+Message property _frost_StatusTemp_Steady_FireLevel3 auto
+Message property _frost_StatusTemp_Steady_Shelter_Chilly auto
+Message property _frost_StatusTemp_Steady_Shelter_Warm auto
+Message property _frost_StatusTemp_Steady_FireShelter_Chilly auto
+Message property _frost_StatusTemp_Steady_FireShelter_Warm auto
+Message property _frost_StatusTemp_Warmer_FireLevel1 auto
+Message property _frost_StatusTemp_Warmer_FireLevel2 auto
+Message property _frost_StatusTemp_Warmer_FireLevel3 auto
+Message property _frost_StatusTemp_Warmer_FireShelterLevel1 auto
+Message property _frost_StatusTemp_Warmer_FireShelterLevel2 auto
+Message property _frost_StatusTemp_Warmer_FireShelterLevel3 auto
+Message property _frost_StatusTemp_Warmer_Shelter auto
+Message property _frost_StatusTemp_Colder_FireLevel1_NoValue auto
+Message property _frost_StatusTemp_Colder_FireLevel2_NoValue auto
+Message property _frost_StatusTemp_Colder_FireLevel3_NoValue auto
+Message property _frost_StatusTemp_Colder_FireShelterLevel1_NoValue auto
+Message property _frost_StatusTemp_Colder_FireShelterLevel2_NoValue auto
+Message property _frost_StatusTemp_Colder_FireShelterLevel3_NoValue auto
+Message property _frost_StatusTemp_Colder_Shelter_NoValue auto
+Message property _frost_StatusTemp_Warmer_FireLevel1_NoValue auto
+Message property _frost_StatusTemp_Warmer_FireLevel2_NoValue auto
+Message property _frost_StatusTemp_Warmer_FireLevel3_NoValue auto
+Message property _frost_StatusTemp_Warmer_FireShelterLevel1_NoValue auto
+Message property _frost_StatusTemp_Warmer_FireShelterLevel2_NoValue auto
+Message property _frost_StatusTemp_Warmer_FireShelterLevel3_NoValue auto
+Message property _frost_StatusTemp_Warmer_Shelter_NoValue auto
+
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	UseWeathersense()
 EndEvent
@@ -287,9 +323,23 @@ function DisplayTemperatureMessage()
 	int limit = Math.Floor(GetPlayerExposureLimit())
 	int limitPct = (limit * 100) / 120
 
+	; Enums
+
+	; direction
 	int GETTING_COLDER = 0
 	int HOLDING_STEADY = 1
 	int GETTING_WARMER = 2
+
+	; heatStatus
+	int NO_HELP = 0
+	int NEAR_FIRE = 1
+	int NEAR_SHELTER = 2
+	int NEAR_FIRE_AND_SHELTER = 3
+
+	int FIRE_LEVEL = 0
+	if IsPlayerNearFire()
+		FIRE_LEVEL = GetPlayerHeatSourceLevel()
+	endif
 
 	bool displayStatus = _Frost_Setting_DisplayAttributesInWeathersense.GetValueInt() == 2
 	bool displayStatusValues = _Frost_Setting_DisplayAttributeValuesInWeathersense.GetValueInt() == 2
@@ -300,6 +350,20 @@ function DisplayTemperatureMessage()
 		direction = GETTING_WARMER
 	endif
 
+	bool TAKING_SHELTER = false
+	if GetCurrentTent() || IsPlayerTakingShelter()
+		TAKING_SHELTER = true
+	endif
+
+	int heatStatus = 0
+	if FIRE_LEVEL > 0 && !TAKING_SHELTER
+		heatStatus = NEAR_FIRE
+	elseif FIRE_LEVEL == 0 && TAKING_SHELTER
+		heatStatus = NEAR_SHELTER
+	elseif FIRE_LEVEL > 0 && TAKING_SHELTER
+		heatStatus = NEAR_FIRE_AND_SHELTER
+	endif
+
 	if displayStatusValues
 		if direction == GETTING_COLDER
 			if IsRefInInterior(PlayerRef)
@@ -307,6 +371,30 @@ function DisplayTemperatureMessage()
 				return
 			elseif IsRefInOblivion(PlayerRef)
 				_frost_StatusTemp_Colder_Oblivion.Show(limitPct)
+				return
+			endif
+
+			if heatStatus != NO_HELP
+				if heatStatus == NEAR_FIRE
+					if FIRE_LEVEL == 1
+						_frost_StatusTemp_Colder_FireLevel1.Show(limitPct)
+					elseif FIRE_LEVEL == 2
+						_frost_StatusTemp_Colder_FireLevel2.Show(limitPct)
+					elseif FIRE_LEVEL == 3
+						_frost_StatusTemp_Colder_FireLevel3.Show(limitPct)
+					endif
+				elseif heatStatus == NEAR_SHELTER
+					_frost_StatusTemp_Colder_Shelter.Show(limitPct)
+				elseif heatStatus == NEAR_FIRE_AND_SHELTER
+					if FIRE_LEVEL == 1
+						_frost_StatusTemp_Colder_FireShelterLevel1.Show(limitPct)
+					elseif FIRE_LEVEL == 2
+						_frost_StatusTemp_Colder_FireShelterLevel2.Show(limitPct)
+					elseif FIRE_LEVEL == 3
+						_frost_StatusTemp_Colder_FireShelterLevel3.Show(limitPct)
+					endif
+				endif
+
 				return
 			endif
 	
@@ -339,6 +427,32 @@ function DisplayTemperatureMessage()
 				_frost_StatusTemp_Steady_Oblivion.Show()
 				return
 			endif
+
+			if heatStatus != NO_HELP
+				if heatStatus == NEAR_FIRE
+					if FIRE_LEVEL == 1
+						_frost_StatusTemp_Steady_FireLevel1.Show()
+					elseif FIRE_LEVEL == 2
+						_frost_StatusTemp_Steady_FireLevel2.Show()
+					elseif FIRE_LEVEL == 3
+						_frost_StatusTemp_Steady_FireLevel3.Show()
+					endif
+				elseif heatStatus == NEAR_SHELTER
+					if limit < 40
+						_frost_StatusTemp_Steady_Shelter_Warm.Show()
+					else
+						_frost_StatusTemp_Steady_Shelter_Chilly.Show()
+					endif
+				elseif heatStatus == NEAR_FIRE_AND_SHELTER
+					if limit < 40
+						_frost_StatusTemp_Steady_FireShelter_Warm.Show()
+					else
+						_frost_StatusTemp_Steady_FireShelter_Chilly.Show()
+					endif
+				endif
+
+				return
+			endif
 	
 			if temp >= 18 						;The sun is radiant.
 				_frost_StatusTemp_Steady_Level10.Show()
@@ -367,6 +481,30 @@ function DisplayTemperatureMessage()
 				return
 			elseif IsRefInOblivion(PlayerRef)
 				_frost_StatusTemp_Warmer_Oblivion.Show(limitPct)
+				return
+			endif
+
+			if heatStatus != NO_HELP
+				if heatStatus == NEAR_FIRE
+					if FIRE_LEVEL == 1
+						_frost_StatusTemp_Warmer_FireLevel1.Show(limitPct)
+					elseif FIRE_LEVEL == 2
+						_frost_StatusTemp_Warmer_FireLevel2.Show(limitPct)
+					elseif FIRE_LEVEL == 3
+						_frost_StatusTemp_Warmer_FireLevel3.Show(limitPct)
+					endif
+				elseif heatStatus == NEAR_SHELTER
+					_frost_StatusTemp_Warmer_Shelter.Show(limitPct)
+				elseif heatStatus == NEAR_FIRE_AND_SHELTER
+					if FIRE_LEVEL == 1
+						_frost_StatusTemp_Warmer_FireShelterLevel1.Show(limitPct)
+					elseif FIRE_LEVEL == 2
+						_frost_StatusTemp_Warmer_FireShelterLevel2.Show(limitPct)
+					elseif FIRE_LEVEL == 3
+						_frost_StatusTemp_Warmer_FireShelterLevel3.Show(limitPct)
+					endif
+				endif
+
 				return
 			endif
 	
@@ -401,6 +539,30 @@ function DisplayTemperatureMessage()
 				_frost_StatusTemp_Colder_Oblivion_NoValue.Show()
 				return
 			endif
+
+			if heatStatus != NO_HELP
+				if heatStatus == NEAR_FIRE
+					if FIRE_LEVEL == 1
+						_frost_StatusTemp_Colder_FireLevel1_NoValue.Show()
+					elseif FIRE_LEVEL == 2
+						_frost_StatusTemp_Colder_FireLevel2_NoValue.Show()
+					elseif FIRE_LEVEL == 3
+						_frost_StatusTemp_Colder_FireLevel3_NoValue.Show()
+					endif
+				elseif heatStatus == NEAR_SHELTER
+					_frost_StatusTemp_Colder_Shelter_NoValue.Show()
+				elseif heatStatus == NEAR_FIRE_AND_SHELTER
+					if FIRE_LEVEL == 1
+						_frost_StatusTemp_Colder_FireShelterLevel1_NoValue.Show()
+					elseif FIRE_LEVEL == 2
+						_frost_StatusTemp_Colder_FireShelterLevel2_NoValue.Show()
+					elseif FIRE_LEVEL == 3
+						_frost_StatusTemp_Colder_FireShelterLevel3_NoValue.Show()
+					endif
+				endif
+
+				return
+			endif
 	
 			if temp >= 18 						;The sun is radiant.
 				_frost_StatusTemp_Colder_Level10_NoValue.Show()
@@ -431,6 +593,32 @@ function DisplayTemperatureMessage()
 				_frost_StatusTemp_Steady_Oblivion.Show()
 				return
 			endif
+
+			if heatStatus != NO_HELP
+				if heatStatus == NEAR_FIRE
+					if FIRE_LEVEL == 1
+						_frost_StatusTemp_Steady_FireLevel1.Show()
+					elseif FIRE_LEVEL == 2
+						_frost_StatusTemp_Steady_FireLevel2.Show()
+					elseif FIRE_LEVEL == 3
+						_frost_StatusTemp_Steady_FireLevel3.Show()
+					endif
+				elseif heatStatus == NEAR_SHELTER
+					if limit < 40
+						_frost_StatusTemp_Steady_Shelter_Warm.Show()
+					else
+						_frost_StatusTemp_Steady_Shelter_Chilly.Show()
+					endif
+				elseif heatStatus == NEAR_FIRE_AND_SHELTER
+					if limit < 40
+						_frost_StatusTemp_Steady_FireShelter_Warm.Show()
+					else
+						_frost_StatusTemp_Steady_FireShelter_Chilly.Show()
+					endif
+				endif
+
+				return
+			endif
 	
 			if temp >= 18 						;The sun is radiant.
 				_frost_StatusTemp_Steady_Level10.Show()
@@ -459,6 +647,30 @@ function DisplayTemperatureMessage()
 				return
 			elseif IsRefInOblivion(PlayerRef)
 				_frost_StatusTemp_Warmer_Oblivion_NoValue.Show()
+				return
+			endif
+
+			if heatStatus != NO_HELP
+				if heatStatus == NEAR_FIRE
+					if FIRE_LEVEL == 1
+						_frost_StatusTemp_Warmer_FireLevel1_NoValue.Show()
+					elseif FIRE_LEVEL == 2
+						_frost_StatusTemp_Warmer_FireLevel2_NoValue.Show()
+					elseif FIRE_LEVEL == 3
+						_frost_StatusTemp_Warmer_FireLevel3_NoValue.Show()
+					endif
+				elseif heatStatus == NEAR_SHELTER
+					_frost_StatusTemp_Warmer_Shelter_NoValue.Show()
+				elseif heatStatus == NEAR_FIRE_AND_SHELTER
+					if FIRE_LEVEL == 1
+						_frost_StatusTemp_Warmer_FireShelterLevel1_NoValue.Show()
+					elseif FIRE_LEVEL == 2
+						_frost_StatusTemp_Warmer_FireShelterLevel2_NoValue.Show()
+					elseif FIRE_LEVEL == 3
+						_frost_StatusTemp_Warmer_FireShelterLevel3_NoValue.Show()
+					endif
+				endif
+
 				return
 			endif
 	
