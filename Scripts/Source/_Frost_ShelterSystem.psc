@@ -61,9 +61,9 @@ function Update()
 				_Frost_ShelterDetectOriginRef.Enable()
 				_Frost_ShelterDetectSensorRef.Enable()
 			endif
-			_Frost_ShelterDetectOriginRef.MoveTo(PlayerRef, 0.0, 0.0, 130.0)
+			; _Frost_ShelterDetectOriginRef.MoveTo(PlayerRef, 0.0, 0.0, 130.0)
 			_Frost_ShelterDetectSensorRef.MoveTo(PlayerRef, 0.0, 0.0, 1200.0)
-			_Frost_ShelterDetectBeam.Cast(_Frost_ShelterDetectOriginRef, _Frost_ShelterDetectSensorRef)
+			_Frost_ShelterDetectBeam.Cast(_Frost_ShelterDetectSensorRef, PlayerRef)
 		endif
 	endif
 endFunction
