@@ -535,7 +535,7 @@ function StopPlacement(int aiReason = -1)
     if aiReason == STOPPLACEMENT_UNKNOWN
         reason = "Unknown reason."
     elseif aiReason == STOPPLACEMENT_CANT_PLACE_OBJECTS
-        reason = "Player can't place objects."
+        reason = "Player can't place objects or was hit recently."
     elseif aiReason == STOPPLACEMENT_SUCCESS
         reason = "Player successfully placed object."
     elseif aiReason == STOPPLACEMENT_SUCCESS_ILLEGAL
@@ -564,7 +564,16 @@ endFunction
 
 bool was_hit = false
 function PlayerHitEvent(ObjectReference akAggressor, Form akSource, Projectile akProjectile)
-    was_hit = true
+    debug.trace("akAggressor " + akAggressor + " akSource " + akSource + " akProjectile " + akProjectile)
+    if akSource as Spell
+        if (akSource as Spell).IsHostile()
+            was_hit = true
+        else
+            was_hit = false
+        endif
+    else
+        was_hit = true
+    endif
 endFunction
 
 bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  \
