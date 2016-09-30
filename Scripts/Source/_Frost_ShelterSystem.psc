@@ -46,7 +46,7 @@ function Update()
 				wac_in_faction_counter = 0
 			endif
 		else
-			if time_delta_seconds > 4.0
+			;/if time_delta_seconds > 4.0
 				if current_val == 1
 					FrostDebug(1, "|||| Shelter ::: Started taking shelter.")
 				endif
@@ -57,13 +57,12 @@ function Update()
 				endif
 				_Frost_IsTakingShelter.SetValue(1)
 			endif
-			if _Frost_ShelterDetectOriginRef.IsDisabled() || _Frost_ShelterDetectSensorRef.IsDisabled()
+			/;
+			if _Frost_ShelterDetectOriginRef.IsDisabled()
 				_Frost_ShelterDetectOriginRef.Enable()
-				_Frost_ShelterDetectSensorRef.Enable()
 			endif
-			; _Frost_ShelterDetectOriginRef.MoveTo(PlayerRef, 0.0, 0.0, 130.0)
-			_Frost_ShelterDetectSensorRef.MoveTo(PlayerRef, 0.0, 0.0, 1200.0)
-			_Frost_ShelterDetectBeam.Cast(_Frost_ShelterDetectSensorRef, PlayerRef)
+			_Frost_ShelterDetectOriginRef.MoveTo(PlayerRef, 0.0, 0.0, 1200.0)
+			_Frost_ShelterDetectBeam.Cast(_Frost_ShelterDetectOriginRef, PlayerRef)
 		endif
 	endif
 endFunction
