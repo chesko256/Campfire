@@ -879,6 +879,8 @@ bool function IsTentWarm(ObjectReference akTent) global
 	Form TentForm = akTent.GetBaseObject()
 	if TentForm.HasKeyword(Campfire.isCampfireTentWarm)
 		return true
+	elseif Campfire._Camp_WarmBaseTents.HasForm(TentForm)
+		return true
 	else
 		return false
 	endif
@@ -972,8 +974,15 @@ bool function IsCurrentTentWarm() global
 		return false
 	endif
 
-	if Campfire.CurrentTent && Campfire.CurrentTent.GetBaseObject().HasKeyword(Campfire.isCampfireTentWarm)
-		return true
+	if Campfire.CurrentTent
+		Form TentForm = Campfire.CurrentTent.GetBaseObject()
+		if TentForm.HasKeyword(Campfire.isCampfireTentWarm)
+			return true
+		elseif Campfire._Camp_WarmBaseTents.HasForm(TentForm)
+			return true
+		else
+			return false
+		endif
 	else
 		return false
 	endif

@@ -35,9 +35,6 @@ bool started_via_stars = false
 bool gave_friend_items = false
 
 Event OnInit()
-	if _Frost_TrackingQuest.GetStage() == 0			;Kicks things off for the player
-		_Frost_TrackingQuest.SetStage(10)
-	endif
 	RegisterForSingleUpdate(5)
 EndEvent
 
@@ -47,8 +44,13 @@ Event OnUpdate()
 
 	; Don't allow the player to start the mod at inopportune times
 	; (cart ride at beginning, etc)
-	if !Game.IsFightingControlsEnabled()
+	if !Game.IsFightingControlsEnabled() || PlayerRef.IsInInterior()
+		RegisterForSingleUpdate(5)
 		return
+	endif
+
+	if _Frost_TrackingQuest.GetStage() == 0			;Kicks things off for the player
+		_Frost_TrackingQuest.SetStage(10)
 	endif
 	
 	if _Frost_TrackingQuest.GetStage() == 10 && !started_via_stars
@@ -199,10 +201,17 @@ function CheckInitialEquipment()
 endFunction
 
 function AddFriendItems()
-	if RiverwoodFriend.GetActorRef() != none
-		RiverwoodFriend.GetActorRef().AddItem(_Camp_Tent_LeatherSmall1BR_MISC)
-		RiverwoodFriend.GetActorRef().AddItem(_Camp_Cloak_BasicBurlap)
-		RiverwoodFriend.GetActorRef().AddItem(_Camp_ArmorSonsBoots)
+	Actor friend = RiverwoodFriend.GetActorRef()
+	if friend
+		if friend.GetItemCount(_Camp_Tent_LeatherSmall1BR_MISC) == 0
+			friend.AddItem(_Camp_Tent_LeatherSmall1BR_MISC)
+		endif
+		if friend.GetItemCount(_Camp_Cloak_BasicBurlap) == 0
+			friend.AddItem(_Camp_Cloak_BasicBurlap)
+		endif
+		if friend.GetItemCount(_Camp_ArmorSonsBoots) == 0
+			friend.AddItem(_Camp_ArmorSonsBoots)
+		endif
 		gave_friend_items = true
 	endif
 endFunction

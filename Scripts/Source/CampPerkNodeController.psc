@@ -651,11 +651,20 @@ ObjectReference function PlaceObject_ArtPlane(Static akArtPlane, ObjectReference
     return PlacementSystem.PlaceObject(self, akArtPlane, akArtPlanePositionRef, initially_disabled = true, is_temp = is_temporary)
 endFunction
 
+FormList function GetCampfireFormList()
+    FormList list = Game.GetFormFromFile(0x06BBE8, "Campfire.esm") as FormList
+    if !list
+        list = Game.GetFormFromFile(0x06BBE8, "Campfire.esp") as FormList
+    endif
+    return list
+endFunction
+
 function CheckCampfireExists()
     ; Campfire 1.8 Fix: Try to find a nearby campfire and kill myself if not found.
-    FormList _Camp_CampfireCampfires = Game.GetFormFromFile(0x06BBE8, "Campfire.esm") as FormList
+    FormList _Camp_CampfireCampfires = GetCampfireFormList()
+
     ObjectReference nearbyCampfire = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_CampfireCampfires, self, 100.0)
-    if !nearbyCampfire
+    if !nearbyCampfire || nearbyCampfire.IsDisabled()
         CampDebug(2, "(Init/Attach) Found invalid Campfire perk node controller " + self + ". Cleaning up.")
         int i = 0
         while !initialized && i < 20
@@ -672,8 +681,13 @@ Event OnCellAttach()
 EndEvent
 
 Event OnCellDetach()
+    CampDebug(2, "Checking if Perk Node Controller is valid on cell detach. (myCampfire = " + myCampfire + ")")
     if !myCampfire
-        CampDebug(2, "(Detach) Found invalid Campfire perk node controller " + self + ". Cleaning up.")
+        CampDebug(2, "(Detach) Found invalid Campfire perk node controller " + self + " (parent campfire did not exist). Cleaning up.")
+        TakeDown()
+        CampDebug(2, self + " removed.")
+    elseif myCampfire.IsDisabled()
+        CampDebug(2, "(Detach) Found invalid Campfire perk node controller " + self + " (parent campfire " + myCampfire + " was disabled). Cleaning up.")
         TakeDown()
         CampDebug(2, self + " removed.")
     endif
