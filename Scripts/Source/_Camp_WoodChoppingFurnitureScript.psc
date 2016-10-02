@@ -16,6 +16,12 @@ Event OnActivate(ObjectReference akActionRef)
 endEvent
 
 Event OnUpdate()
+	bool hasBaseObject = self.GetBaseObject()
+	if !hasBaseObject
+		CampDebug(2, "Invalid registration detected. You should run 'ClearInvalidRegistrations' from the console while playing using SKSE in order to fix this.")
+		return
+	endif
+
 	if self.IsFurnitureInUse()
 		CampDebug(0, "I am in use by the player!")
 		(_Camp_MainQuest as _Camp_ConditionValues).IsChoppingWood = true

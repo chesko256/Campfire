@@ -192,10 +192,18 @@ function SetCurrentTent(ObjectReference akTent) global
 			; * Event OnTentEnter(Form akTent, bool abHasShelter)
 			; * akTent: The tent ObjectReference entered.
 			; * abHasShelter: Whether or not this tent has any overhead shelter.
+
+			bool has_shelter
+			if Campfire._Camp_WarmBaseTents.HasForm(akTent.GetBaseObject())
+				has_shelter = true
+			else
+				has_shelter = !akTent.GetBaseObject().HasKeyword(Campfire.isCampfireTentNoShelter)
+			endif
+
     		int handle = ModEvent.Create("Campfire_OnTentEnter")
     		if handle
     			ModEvent.PushForm(handle, akTent)
-    			ModEvent.PushBool(handle, !akTent.GetBaseObject().HasKeyword(Campfire.isCampfireTentNoShelter))
+    			ModEvent.PushBool(handle, has_shelter)
         		ModEvent.Send(handle)
     		endif
 		else
@@ -281,6 +289,23 @@ endFunction
 function ExitMenus() global
 	Game.DisablePlayerControls()
 	Game.EnablePlayerControls()
+endFunction
+
+bool function IsNone(Form akForm) global
+	; Objects from unloaded mods
+	; will fail '== None' checks because they are
+	; 'Form<None>' objects. Check FormID as well.
+	int i = 0
+	if akForm
+		i = akForm.GetFormID()
+		if i == 0
+			return true
+		else
+			return false
+		endif
+	else
+		return true
+	endif
 endFunction
 
 function RaiseCampAPIError() global
