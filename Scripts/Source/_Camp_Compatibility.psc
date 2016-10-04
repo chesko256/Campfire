@@ -480,6 +480,10 @@ function RunCompatibility()
 			_Camp_HeatSources_Fire_Medium.AddForm(DLC02HeatForm05)
 			_Camp_HeatSources_Fire_Medium.AddForm(DLC02HeatForm06)
 		endif
+		if !(_Camp_HeatSources_Fire_Large.HasForm(DLC02HeatForm07))
+			_Camp_HeatSources_Fire_Large.AddForm(DLC02HeatForm07)
+			_Camp_HeatSources_Fire_Large.AddForm(DLC02HeatForm08)
+		endif
 
 		;Trees
 		form DLC02TreeForm01 = Game.GetFormFromFile(0x02017F76, "Dragonborn.esm")		;<DLC2TreePineForestAsh05>

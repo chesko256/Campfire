@@ -122,7 +122,13 @@ Event OnUpdate()
 EndEvent
 
 Event PlayerHit(Form akAggressor, Form akSource, Form akProjectile)
-	Dispel()
+	if akSource as Spell
+        if (akSource as Spell).IsHostile()
+            Dispel()
+        endif
+    else
+        Dispel()
+    endif
 endEvent
 
 Event OnMenuOpen(string menuName)
