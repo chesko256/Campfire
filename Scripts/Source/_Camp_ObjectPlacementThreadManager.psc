@@ -564,7 +564,6 @@ endFunction
 
 bool was_hit = false
 function PlayerHitEvent(ObjectReference akAggressor, Form akSource, Projectile akProjectile)
-    debug.trace("akAggressor " + akAggressor + " akSource " + akSource + " akProjectile " + akProjectile)
     if akSource as Spell
         if (akSource as Spell).IsHostile()
             was_hit = true
