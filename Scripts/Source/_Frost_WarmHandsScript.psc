@@ -1,10 +1,10 @@
 scriptname _Frost_WarmHandsScript extends ActiveMagicEffect
 
 import Utility
+import FrostUtil
 import _FrostInternal
 
 Actor property PlayerRef auto
-Spell property _Frost_HandWarmingPower auto
 Message property _Frost_Help_WarmHands auto
 Message property _Frost_Help_WarmHandsExit auto
 Idle property IdleWarmHandsCrouched auto
@@ -12,72 +12,59 @@ Idle property IdleWarmHandsStanding auto
 Idle property IdleBowHeadAtGrave_01 auto
 Idle property IdleStop_Loose auto
 Quest property _Frost_System_Follower auto
-GlobalVariable property _Frost_PlayingWarmHands auto
 GlobalVariable property _Frost_CurrentHeatSourceSize auto
 GlobalVariable property _Frost_Setting_DisplayTutorials auto
 GlobalVariable property _Frost_HelpDone_WarmHands auto
 
 bool animation_playing = false
 bool was_first_person = false
+float last_animation_time = 0.0
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	FrostDebug(0, ")))) ANIMATION ::: The hand-warming effect conditions are met.")
-	RegisterForAnimationEvent(PlayerRef, "tailSneakIdle")
-	RegisterForAnimationEvent(PlayerRef, "tailSneakLocomotion")
+	FallbackEventEmitter emitter = GetEventEmitter_OnSneak()
+	emitter.RegisterActiveMagicEffectForModEventWithFallback("Frost_OnSneak", "OnSneak", self)
 	ShowTutorial_WarmHands()
 endEvent
 
 Event OnEffectFinish(Actor akTarget, Actor akCaster)
 	FrostDebug(0, ")))) ANIMATION ::: The hand-warming effect conditions are no longer met.")
+	if !Game.IsCamSwitchControlsEnabled()
+		Game.EnablePlayerControls(false, false, true, false, false, false, false)
+	endif
+	_Frost_System_Follower.Stop()
+	last_animation_time = Game.GetRealHoursPassed() * 3600.0
 endEvent
 
 Event OnAnimationEvent(ObjectReference akSource, string asEventName)
 	if akSource == PlayerRef
-		if asEventName == "tailSneakIdle" || asEventName == "tailSneakLocomotion"
-			WarmHandsStart()
-			ShowTutorial_WarmHands(true)
-			RegisterForSingleUpdate(1)
-		elseif animation_playing && (asEventName == "FootLeft" || asEventName == "JumpUp")
+		if animation_playing && (asEventName == "FootLeft" || asEventName == "JumpUp")
 			WarmHandsEnd()
-		endif
-	endif
-EndEvent
-
-Event OnUpdate()
-	if animation_playing
-		if PlayerRef.IsSneaking()
-			WarmHandsEnd()
-		else
-			RegisterForSingleUpdate(1)
 		endif
 	endif
 EndEvent
 
 function WarmHandsStart()
-	if _Frost_PlayingWarmHands.GetValueInt() == 1
-		FrostDebug(0, ")))) ANIMATION ::: Not playing animation; pick one")
-		Game.DisablePlayerControls(false, false, true, false, false, false, false)
-		
-		if PlayerRef.GetAnimationVariableBool("IsFirstPerson")
-			was_first_person = true
-			Game.ForceThirdPerson()
-			Wait(1)
-		endif
+	FrostDebug(0, ")))) ANIMATION ::: Not playing animation; pick one")
+	Game.DisablePlayerControls(false, false, true, false, false, false, false)
 
-		if PlayerRef.IsSneaking()
-			PlayerRef.StartSneaking()
-		endif
-
-		_Frost_PlayingWarmHands.SetValueInt(2)
-		
-		PickAnimation()
-
-		; Register for movement that can cancel the effect.
-		RegisterForAnimationEvent(PlayerRef, "FootLeft")
-		RegisterForAnimationEvent(PlayerRef, "JumpUp")
-		
-		animation_playing = true
+	if PlayerRef.GetAnimationVariableBool("IsFirstPerson")
+		was_first_person = true
+		Game.ForceThirdPerson()
+		Wait(0.5)
 	endif
+	
+	if PlayerRef.IsSneaking()
+		PlayerRef.StartSneaking()
+	endif
+	
+	PickAnimation()
+	
+	; Register for movement that can cancel the effect.
+	RegisterForAnimationEvent(PlayerRef, "FootLeft")
+	RegisterForAnimationEvent(PlayerRef, "JumpUp")		
+	
+	animation_playing = true
 endFunction
 
 function WarmHandsEnd()
@@ -98,8 +85,8 @@ function WarmHandsEnd()
 	if !Game.IsCamSwitchControlsEnabled()
 		Game.EnablePlayerControls(false, false, true, false, false, false, false)
 	endif
+	last_animation_time = Game.GetRealHoursPassed() * 3600.0
 
-	_Frost_PlayingWarmHands.SetValueInt(1)
 	animation_playing = false
 endFunction
 
@@ -152,12 +139,24 @@ function ShowTutorial_WarmHands(bool exit = false)
 			Message.ResetHelpMessage("Activate")
 			_Frost_Help_WarmHands.ShowAsHelpMessage("Activate", 5, 30, 1)
 		else
+			Utility.Wait(7)
 			Message.ResetHelpMessage("Activate")
-			_Frost_Help_WarmHandsExit.ShowAsHelpMessage("Activate", 5, 30, 1)
+			_Frost_Help_WarmHandsExit.ShowAsHelpMessage("Activate", 3, 30, 1)
 			_Frost_HelpDone_WarmHands.SetValueInt(2)
 		endif
 	endif
 endFunction
+
+Event OnSneak()
+	if !animation_playing
+		if (Game.GetRealHoursPassed() * 3600.0) - last_animation_time >= 3.0
+			WarmHandsStart()
+			ShowTutorial_WarmHands(true)
+		endif
+	elseif animation_playing
+		WarmHandsEnd()
+	endif
+endEvent
 
 ; DEPRECATED
 GlobalVariable property _Frost_Setting_1PAnimationAllowed auto
