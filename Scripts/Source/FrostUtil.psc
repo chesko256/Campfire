@@ -2232,8 +2232,18 @@ endEvent
 ; Deprecated / Unused Functions ===================================================================
 
 bool function IsWarmEnoughToRemoveGearInTent() global
-    ; This feature is currently unimplemented in Campfire
-    return true
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return false
+    endif
+
+    int temp = Frostfall._Frost_CurrentTemperature.GetValueInt()
+    if temp > 0.0
+        return true
+    else
+        return false
+    endif
 endFunction
 
 bool function IsWarmEnoughToHarvestWood() global

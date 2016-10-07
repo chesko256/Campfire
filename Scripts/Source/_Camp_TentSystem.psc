@@ -378,8 +378,10 @@ function PlayerSit(ObjectReference akTent)
 	Game.ForceThirdPerson()
 	TentObject.myPlayerSitMarker.Activate(PlayerRef)
 	if _Camp_Setting_CampingArmorTakeOff.GetValueInt() == 2
-		if Compatibility.IsFrostfallLoaded && FrostUtil.IsWarmEnoughToRemoveGearInTent()
-			DisplayPlayerTentEquipment(akTent)
+		if Compatibility.IsFrostfallLoaded
+			if FrostUtil.IsWarmEnoughToRemoveGearInTent()
+				DisplayPlayerTentEquipment(akTent)
+			endif
 		else
 			DisplayPlayerTentEquipment(akTent)
 		endif

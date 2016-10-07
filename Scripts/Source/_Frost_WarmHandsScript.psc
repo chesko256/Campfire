@@ -22,8 +22,10 @@ float last_animation_time = 0.0
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	FrostDebug(0, ")))) ANIMATION ::: The hand-warming effect conditions are met.")
+
 	FallbackEventEmitter emitter = GetEventEmitter_OnSneak()
 	emitter.RegisterActiveMagicEffectForModEventWithFallback("Frost_OnSneak", "OnSneak", self)
+	
 	ShowTutorial_WarmHands()
 endEvent
 
@@ -32,7 +34,9 @@ Event OnEffectFinish(Actor akTarget, Actor akCaster)
 	if !Game.IsCamSwitchControlsEnabled()
 		Game.EnablePlayerControls(false, false, true, false, false, false, false)
 	endif
+
 	_Frost_System_Follower.Stop()
+
 	last_animation_time = Game.GetRealHoursPassed() * 3600.0
 endEvent
 
@@ -153,7 +157,7 @@ Event OnSneak()
 			WarmHandsStart()
 			ShowTutorial_WarmHands(true)
 		endif
-	elseif animation_playing
+	else
 		WarmHandsEnd()
 	endif
 endEvent
