@@ -92,8 +92,6 @@ Event StartFrostfall(bool abBypassStartupMessage = false)
 	FrostDebug(1, "Starting Frostfall...")
 	GetClothingDatastoreHandler().InitializeDatastore()
 	FrostUtil.GetCompatibilitySystem().RunCompatibilityArmors()
-	; Prompt player to exit menu now.
-	SendEvent_StartupAlmostDone()
 
 	; Menu-Mode blocked functions
 	if !self.IsRunning()
@@ -231,13 +229,6 @@ function StartModFirstTime(bool abBypassStartupMessage = false)
 		utility.wait(1)
 		_Frost_FirstStartup_3.Show()
 	endif
-endFunction
-
-function SendEvent_StartupAlmostDone()
-    int handle = ModEvent.Create("Frost_StartupAlmostDone")
-    if handle
-        ModEvent.Send(handle)
-    endif
 endFunction
 
 function UnregisterCampfireSkill()

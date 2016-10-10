@@ -96,7 +96,8 @@ Quest property DLC2DialogueRavenRock auto hidden
 
 float property MIN_EXPOSURE = 0.0 autoReadOnly
 float property MAX_EXPOSURE = 120.0 autoReadOnly
-int property HEAT_FACTOR = 5 autoReadOnly
+int property HEAT_FACTOR = 4 autoReadOnly
+int property AMBIENT_FACTOR = 1 autoReadOnly
 int property TENT_FACTOR = 1 autoReadOnly
 int property WARM_TENT_BONUS = 1 autoReadOnly
 float property EXPOSURE_LEVEL_5 = 100.0 autoReadOnly
@@ -117,6 +118,7 @@ float last_y = 0.0
 float distance_moved = 0.0
 int exposure_level = 0
 int last_exposure_level = 0
+float last_exposure_target = 0.0
 int warm_message_debounce = 0
 bool totalwarm_message_debounce = false
 WorldSpace this_worldspace = None
@@ -163,6 +165,12 @@ function Update()
 	float target = CalculateExposureTarget()
 	_Frost_ExposureTarget.SetValue(target)
 	debug.trace("Target is " + target)
+
+	; Display the exposure meter in contextual mode if the
+	; exposure target changes dramatically.
+	if abs(last_exposure_target - target) >= 20.0
+		SendEvent_ForceExposureMeterDisplay()
+	endif
 	SendEvent_UpdateExposureMeterIndicator(target / MAX_EXPOSURE)
 
 	debug.trace("Updating exposure to target")
@@ -172,6 +180,7 @@ function Update()
 		warm_message_debounce -= 1
 	endif
 
+	last_exposure_target = target
 	last_update_time = this_update_time
 	last_update_game_time = this_update_game_time
 endFunction
@@ -750,14 +759,12 @@ function ExposureValueUpdate(float afExposureTarget, float gameHoursPassed)
 		heatAmount = HEAT_FACTOR * _Frost_CurrentHeatSourceSize.GetValueInt()
 	else
 		near_heat = false
-		if in_tent || in_interior
+		heatAmount = AMBIENT_FACTOR
+		if in_tent
+			heatAmount += TENT_FACTOR
 			if tent_is_warm
-				heatAmount = TENT_FACTOR + WARM_TENT_BONUS
-			else
-				heatAmount = TENT_FACTOR
+				heatAmount += WARM_TENT_BONUS
 			endif
-		elseif is_meditating
-			heatAmount = 3
 		endif
 	endif
 
@@ -769,7 +776,7 @@ function ExposureValueUpdate(float afExposureTarget, float gameHoursPassed)
 		GetColder(afExposureTarget, gameHoursPassed)
 	else
 		; debug.trace("GetWarmer")
-		GetWarmer(currentHeatSize, afExposureTarget, gameHoursPassed)
+		GetWarmer(heatAmount, afExposureTarget, gameHoursPassed)
 	endif
 
 	;/
@@ -902,7 +909,7 @@ function ExposureValueUpdate(float afExposureTarget, float gameHoursPassed)
 endFunction
 
 function GetWarmer(int heat_amount, float target, float game_hours_passed)
-	FrostDebug(1, "@@@@ Exposure ::: GetWarmer : Limit " + Math.Ceiling(target) + " : GameHoursPassed " + game_hours_passed)
+	FrostDebug(1, "@@@@ Exposure ::: GetWarmer : Target " + Math.Ceiling(target) + " : GameHoursPassed " + game_hours_passed)
 	if game_hours_passed >= 1.0
 		float duration_amount = 15.0 * game_hours_passed
 		ModAttributeExposure(-duration_amount, target, allow_skill_advancement=false)
@@ -912,14 +919,14 @@ function GetWarmer(int heat_amount, float target, float game_hours_passed)
 endFunction
 
 function GetColder(float target, float game_hours_passed)
-	FrostDebug(1, "@@@@ Exposure ::: GetColder : Limit " + Math.Ceiling(target) + " : GameHoursPassed " + game_hours_passed)
+	FrostDebug(1, "@@@@ Exposure ::: GetColder : Target " + Math.Ceiling(target) + " : GameHoursPassed " + game_hours_passed)
 	float update_freq = UpdateFrequencyGlobal.GetValue()
 	float time_delta_seconds = (this_update_time - last_update_time) * 3600.0
 	if time_delta_seconds > (update_freq * 2)
 		time_delta_seconds = (update_freq * 2)
 	endif
 
-	; Reduce the player's exposurke rate by up to 90%.
+	; Reduce the player's exposure rate by up to 90%.
 	float exposure_reduction = 1.0 - (((_Frost_AttributeWarmth.GetValueInt() * 90.0) / _Frost_Calc_MaxWarmth.GetValue()) / 100.0)
 	; Rise (multiplier on Y-axis) over Run (distance from hemeostasis temperature)
 	float slope = _Frost_Calc_ExtremeMultiplier.GetValue()/(_Frost_Calc_ExtremeTemp.GetValue() - _Frost_Calc_StasisTemp.GetValue())

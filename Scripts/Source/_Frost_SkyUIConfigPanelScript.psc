@@ -424,9 +424,6 @@ Event OnConfigOpen()
 		must_exit = false
 	endif
 
-	; Register for callbacks
-	RegisterForModEvent("Frost_StartupAlmostDone", "StartupAlmostDone")
-
 	config_is_open = true
 EndEvent
 
@@ -450,7 +447,7 @@ function PageReset_Overview()
 			Overview_RunSubStatusText_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
 		else
 			Overview_RunStatusText_OID = AddTextOption("$FrostfallOverviewCtrlStatus", "$FrostfallStartingUp", OPTION_FLAG_DISABLED)
-			Overview_RunSubStatusText_OID = AddTextOption("$FrostfallStartingUpDetail", "", OPTION_FLAG_DISABLED)
+			Overview_RunSubStatusText_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
 		endif
 	else
 		if Game.IsFightingControlsEnabled()
@@ -479,7 +476,7 @@ function PageReset_Overview()
 			Overview_InfoLine8_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
 		else
 			Overview_InfoLine1_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
-			Overview_InfoLine2_OID = AddTextOption("$FrostfallStartUpProgress", "$FrostfallStartUpWorking")
+			Overview_InfoLine2_OID = AddTextOption("$FrostfallStartUpProgress", "$FrostfallGeneralExitMenuPrompt")
 			Overview_InfoLine3_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
 			Overview_InfoLine4_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
 			Overview_InfoLine5_OID = AddTextOption("", "", OPTION_FLAG_DISABLED)
@@ -2558,13 +2555,6 @@ function ShowProfileHelp()
 	ShowMessage("$FrostfallSaveLoadTopicCont", false)
 	ShowMessage("$FrostfallSaveLoadTopicCont2", false)
 endFunction
-
-Event StartupAlmostDone()
-	if CurrentPage == "$FrostfallOverviewPage" && Overview_InfoLine7_OID
-		Utility.WaitMenuMode(1.0)
-		SetTextOptionValue(Overview_InfoLine2_OID, "$FrostfallGeneralExitMenuPrompt")
-	endif
-endEvent
 
 function SendEvent_StartFrostfall()
     int handle = ModEvent.Create("Frost_StartFrostfall")

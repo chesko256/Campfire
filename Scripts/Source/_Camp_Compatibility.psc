@@ -84,6 +84,13 @@ Activator property _Camp_PerkNodeController_Camping auto
 ; GlobalVariable property _Camp_PerkNodeControllersSorted auto ; Constant value = 1
 GlobalVariable property _Camp_PerkNodeControllerCount auto
 
+;#Followers========================================================================
+ReferenceAlias property Follower1 auto
+ReferenceAlias property Follower2 auto
+ReferenceAlias property Follower3 auto
+ReferenceAlias property Animal auto
+Faction property CurrentHireling auto
+
 ;#Misc=============================================================================
 GlobalVariable property _Camp_HotkeyCreateItem auto
 GlobalVariable property _Camp_HotkeyBuildCampfire auto
@@ -94,6 +101,7 @@ GlobalVariable property _Camp_HarvestWoodEnabled auto
 GlobalVariable property _Camp_PerkRank_Resourceful auto
 GlobalVariable property _Camp_PerkRank_Firecraft auto
 GlobalVariable property _Camp_LastSelectedSkill auto
+GlobalVariable property _Camp_Setting_MaxThreads auto
 
 ConstructibleObject property _Camp_FireMiscRecipe_TinderStraw auto
 ConstructibleObject property _Camp_FireMiscRecipe_BW_TinderStraw auto
@@ -145,7 +153,64 @@ Event OnPlayerLoadGame()
 	if isSKSELoaded
 		SendEvent_CampfireLoaded()
 	endif
+
+	CleanUpInvalidFollowers()
 endEvent
+
+function CleanUpInvalidFollowers()
+	Actor f1
+	Actor f2
+	Actor f3
+	Actor a1
+
+	if Follower1
+		f1 = Follower1.GetActorRef()
+	endif
+
+	if Follower2
+		f2 = Follower2.GetActorRef()
+	endif
+
+	if Follower3
+		f3 = Follower3.GetActorRef()
+	endif
+
+	if Animal
+		a1 = Animal.GetActorRef()
+	endif
+
+	if f1
+		if !(f1.IsPlayerTeammate() || f1.GetFactionRank(CurrentHireling) >= 0) || !f1.Is3DLoaded()
+			CampDebug(2, "Tracked Follower 1 is invalid (NPC not a teammate / hireling or not in loaded area), clearing.")
+			Follower1.Clear()
+        	(_Camp_MainQuest as _Camp_ConditionValues).Follower1Registered = false
+		endif
+	endif
+
+	if f2
+		if !(f2.IsPlayerTeammate() || f2.GetFactionRank(CurrentHireling) >= 0) || !f2.Is3DLoaded()
+			CampDebug(2, "Tracked Follower 2 is invalid (NPC not a teammate / hireling or not in loaded area), clearing.")
+			Follower2.Clear()
+        	(_Camp_MainQuest as _Camp_ConditionValues).Follower2Registered = false
+		endif
+	endif
+
+	if f3
+		if !(f3.IsPlayerTeammate() || f3.GetFactionRank(CurrentHireling) >= 0) || !f3.Is3DLoaded()
+			CampDebug(2, "Tracked Follower 3 is invalid (NPC not a teammate / hireling or not in loaded area), clearing.")
+			Follower3.Clear()
+        	(_Camp_MainQuest as _Camp_ConditionValues).Follower3Registered = false
+		endif
+	endif
+
+	if a1
+		if !(a1.IsPlayerTeammate() || a1.GetFactionRank(CurrentHireling) >= 0) || !a1.Is3DLoaded()
+			CampDebug(2, "Tracked Animal is invalid (NPC not a teammate / hireling or not in loaded area), clearing.")
+			Animal.Clear()
+        	(_Camp_MainQuest as _Camp_ConditionValues).AnimalRegistered = false
+		endif
+	endif
+endFunction
 
 function FatalErrorFrostfallLegacy()
 	trace("[Campfire][ERROR] Detected Frostfall legacy version (2.6 or less). Expected 3.0 or newer.")
@@ -595,6 +660,15 @@ function RunCompatibility()
 		if isEOLoaded
 			;Equipping Overhaul was just added.
 
+		endif
+	endif
+
+	; Make sure that the Max Threads setting never drops below 1.
+	int threadCount = _Camp_Setting_MaxThreads.GetValueInt()
+	if threadCount <= 0
+		_Camp_Setting_MaxThreads.SetValueInt(20)
+		if isSKYUILoaded
+			CampConfig.SaveSettingToCurrentProfile("max_placement_threads", 20)
 		endif
 	endif
 
