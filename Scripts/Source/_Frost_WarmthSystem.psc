@@ -25,7 +25,7 @@ bool property updating_warmth = false auto hidden
 
 function RegisterForEvents()
 	FallbackEventEmitter emitter = GetEventEmitter_UpdateWarmth()
-  emitter.RegisterFormForModEventWithFallback("Frost_UpdateWarmth", "UpdateWarmth", self as Form)
+  	emitter.RegisterFormForModEventWithFallback("Frost_UpdateWarmth", "UpdateWarmth", self as Form)
 	; RegisterForModEvent("Frost_UpdateWarmth", "UpdateWarmth")
 	RegisterForModEvent("Frost_SoupEffectStart", "SoupEffectStart")
 	RegisterForModEvent("Frost_SoupEffectStop", "SoupEffectStop")

@@ -16,6 +16,11 @@ string property Level3 auto				; The air is biting cold.
 string property Level2 auto				; The air is bone-chilling.
 string property Level1 auto				; The air is frigid and deadly.
 
+; Fur Armor
+string property ArmorBanditCuirass1Name auto ; Fur Armor (Bare Top)
+string property ArmorBanditCuirass2Name auto ; Fur Armor (Bare Top, Shawl)
+string property ArmorBanditCuirass3Name auto ; Fur Armor (Sleeveless)
+
 ; Warmth Coverage message strings
 string property Warmth auto				; Warmth:
 string property Coverage auto			; Coverage:

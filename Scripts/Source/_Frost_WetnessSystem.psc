@@ -7,8 +7,8 @@ import _FrostInternal
 
 float property WET_SPEED 		= 27.0 autoReadOnly 		; Wetness gained when standing in rain.
 float property DRY_SPEED 		= -10.5 autoReadOnly 		; Wetness lost ambiently.
-float property DRY_SPEED_SUN	= -20.0 autoReadOnly 		; Wetness lost ambiently while in the sun.
-float property DRY_SPEED_FIRE 	= -75.0 autoReadOnly 		; Wetness lost near fires.
+float property DRY_SPEED_SUN	= -15.0 autoReadOnly 		; Wetness lost ambiently while in the sun.
+float property DRY_SPEED_FIRE 	= -35.0 autoReadOnly 		; Wetness lost near fires.
 float property MAX_WETNESS 		= 750.0 autoReadOnly
 float property WETNESS_LEVEL_3 	= 700.0 autoReadOnly
 float property WETNESS_LEVEL_2 	= 550.0 autoReadOnly

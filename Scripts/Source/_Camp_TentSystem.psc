@@ -381,6 +381,8 @@ function PlayerSit(ObjectReference akTent)
 		if Compatibility.IsFrostfallLoaded
 			if FrostUtil.IsWarmEnoughToRemoveGearInTent()
 				DisplayPlayerTentEquipment(akTent)
+			else
+				DisplayPlayerTentEquipment(akTent, true)
 			endif
 		else
 			DisplayPlayerTentEquipment(akTent)
@@ -439,8 +441,12 @@ function PlayerLieDown(ObjectReference akTent)
 	ActivateLayDownMarker(TentObject)
 
 	if _Camp_Setting_CampingArmorTakeOff.GetValueInt() == 2
-		if Compatibility.IsFrostfallLoaded && FrostUtil.IsWarmEnoughToRemoveGearInTent()
-			DisplayPlayerTentEquipment(akTent)
+		if Compatibility.IsFrostfallLoaded
+			if FrostUtil.IsWarmEnoughToRemoveGearInTent()
+				DisplayPlayerTentEquipment(akTent)
+			else
+				DisplayPlayerTentEquipment(akTent, true)
+			endif
 		else
 			DisplayPlayerTentEquipment(akTent)
 		endif

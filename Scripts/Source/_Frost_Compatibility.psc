@@ -2,6 +2,7 @@ scriptname _Frost_Compatibility extends ReferenceAlias
 
 import debug
 import FrostUtil
+import _FrostInternal
 
 int property SKSE_MIN_VERSION = 10703 autoReadOnly
 int property CAMPFIRE_MIN_VERSION = 108 autoReadOnly
@@ -30,6 +31,7 @@ bool property isHFLoaded auto hidden						;Hearthfire
 ;#Supported Mods===============================================================
 bool property isUIPackageInstalled auto hidden				;SkyUI optional UI package
 bool property isSKYUILoaded auto hidden						;SkyUI 4.1+
+bool property isSKSELoaded auto hidden						;SKSE 1.7.3+
 bool property isLastSeedLoaded auto hidden					;Last Seed
 bool property isCOTLoaded auto hidden						;Climates of Tamriel
 bool property isIMALoaded auto hidden						;Immersive Armors 7.1
@@ -172,12 +174,20 @@ Message property _Frost_CriticalError_JSONReadWrite auto
 Message property _Frost_Error_WearableLanterns auto
 Weather property DLC2AshStorm auto hidden
 bool added_spell_books = false
+GlobalVariable property _Frost_Setting_MeterExposureColor auto
+Armor property ArmorBanditCuirass1 auto
+Armor property ArmorBanditCuirass2 auto
+Armor property ArmorBanditCuirass3 auto
+Armor property _Camp_ArmorBanditCuirass1 auto
+Armor property _Camp_ArmorBanditCuirass2 auto
+Armor property _Camp_ArmorBanditCuirass3 auto
 
 ;#Upgrade Flags====================================================================
 GlobalVariable property _Frost_Setting_1PAnimationAllowed auto
 GlobalVariable property _Frost_Upgraded_3_0_1 auto
 GlobalVariable property _Frost_Upgraded_3_0_2 auto
 GlobalVariable property _Frost_Upgraded_3_1 auto
+GlobalVariable property _Frost_Upgraded_3_2 auto
 GlobalVariable property _Frost_Setting_DisplayTutorials auto
 
 Event OnPlayerLoadGame()
@@ -253,6 +263,10 @@ function RunCompatibility()
 		Upgrade_3_1()
 	endif
 
+	if _Frost_Upgraded_3_2.GetValueInt() != 2
+		Upgrade_3_2()
+	endif
+
 	; Verify that the default datastore has been populated.
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 	int[] armor_data = handler.GetDefaultArmorData("80145___Skyrim.esm") ; ArmorHideCuirass
@@ -267,11 +281,14 @@ function RunCompatibility()
 	if skse_loaded
 		int skse_version = (SKSE.GetVersion() * 10000) + (SKSE.GetVersionMinor() * 100) + SKSE.GetVersionBeta()
 		if skse_version < SKSE_MIN_VERSION
+			isSKSELoaded = false
 			FatalErrorSKSE(skse_version)
 		else
+			isSKSELoaded = true
 			trace("[Frostfall] Detected SKSE version " + ((skse_version as float) / 10000) + " (expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer, success!)")
 		endif
 	else
+		isSKSELoaded = false
 		FatalErrorSKSE(0)
 	endif
 
@@ -323,6 +340,10 @@ function RunCompatibility()
 		if isSKYUILoaded
 			;SkyUI was just loaded.
 		endif
+	endif
+
+	if isSKSELoaded
+		ModifyFurArmorNames()
 	endif
 
 	if isDLC1Loaded
@@ -680,6 +701,26 @@ function Upgrade_3_1()
 	_Frost_Upgraded_3_1.SetValueInt(2)
 endFunction
 
+function Upgrade_3_2()
+	if _Frost_PreviousVersion.GetValue() > 0.0
+		; Upgraded from previous version, switch to new meter.
+		if isSKYUILoaded
+			_Frost_ExposureMeterInterfaceHandler exposureMeterHandler = GetExposureMeterHandler()
+			SKI_WidgetManager manager = (Game.GetFormFromFile(0x00000824, "SkyUI.esp") as Quest) as SKI_WidgetManager
+			int id = ((exposureMeterHandler as Quest) as _Frost_Meter).WidgetID		
+			manager.CreateWidget(id, "frostfall/meterIndicator.swf")
+			exposureMeterHandler.meter_inversion_value = -1.0
+			exposureMeterHandler.improvement_display_delta_threshold = 2.0
+			exposureMeterHandler.SetMeterColors(_Frost_Setting_MeterExposureColor.GetValueInt(), -1)
+
+			_Frost_WetnessMeterInterfaceHandler wetnessMeterHandler = GetWetnessMeterHandler()
+			wetnessMeterHandler.improvement_display_delta_threshold = 30.0
+		endif
+	endif
+
+	_Frost_Upgraded_3_2.SetValueInt(2)
+endFunction
+
 bool function CheckJSONReadWrite()
 	; Attempt to open the file and write a value.
 	string path = "../FrostfallData/startup_test_file"
@@ -1013,8 +1054,21 @@ function VanillaGameLoadUp()
 	if added_spell_books == false
 		AddSpellBooks()
 	endif
-	
+
 	; TreeReachTreeStump01 = Game.GetFormFromFile(0x000B8A75, "Skyrim.esm") as TreeObject
+endFunction
+
+function ModifyFurArmorNames()
+	; This is necessary because the new (SKSE PapyrusUtil-based) clothing detection system
+	; relies on unique display names in order to overcome FormID-related issues.
+	
+	_Frost_Strings str = GetFrostfallStrings()
+	ArmorBanditCuirass1.SetName(str.ArmorBanditCuirass1Name)
+	_Camp_ArmorBanditCuirass1.SetName(str.ArmorBanditCuirass1Name)
+	ArmorBanditCuirass2.SetName(str.ArmorBanditCuirass2Name)
+	_Camp_ArmorBanditCuirass2.SetName(str.ArmorBanditCuirass2Name)
+	ArmorBanditCuirass3.SetName(str.ArmorBanditCuirass3Name)
+	_Camp_ArmorBanditCuirass3.SetName(str.ArmorBanditCuirass3Name)
 endFunction
 
 function AddStartupSpells()
