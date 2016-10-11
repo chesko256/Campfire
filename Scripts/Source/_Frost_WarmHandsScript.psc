@@ -15,6 +15,7 @@ Quest property _Frost_System_Follower auto
 GlobalVariable property _Frost_CurrentHeatSourceSize auto
 GlobalVariable property _Frost_Setting_DisplayTutorials auto
 GlobalVariable property _Frost_HelpDone_WarmHands auto
+ReferenceAlias property HeatSource auto
 
 bool animation_playing = false
 bool was_first_person = false
@@ -98,13 +99,24 @@ function PickAnimation()
 	; High chance to crouch near small fires (sconces, etc)
 	; Medium chance to crouch near medium fires (campfires, etc)
 	; Always stand near larger fires (bonfires, etc)
+	; Always stand near fires placed higher than you
 	float crouchChance
-	if _Frost_CurrentHeatSourceSize.GetValueInt() <= 1
-		crouchChance = 0.75
-	elseif _Frost_CurrentHeatSourceSize.GetValueInt() == 2
-		crouchChance = 0.50
-	else
+	
+	ObjectReference hs
+	if HeatSource
+		hs = HeatSource.GetRef()
+	endif
+
+	if hs && (hs.GetPositionZ() - PlayerRef.GetPositionZ()) >= 50.0
 		crouchChance = 0.0
+	else
+		if _Frost_CurrentHeatSourceSize.GetValueInt() <= 1
+			crouchChance = 0.65
+		elseif _Frost_CurrentHeatSourceSize.GetValueInt() == 2
+			crouchChance = 0.25
+		else
+			crouchChance = 0.0
+		endif
 	endif
 
 	float random = RandomFloat()

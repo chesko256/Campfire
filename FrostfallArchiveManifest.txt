@@ -4,7 +4,7 @@ readmes\Frostfall_readme.txt
 Interface\frostfall\frostfall_splash.swf
 Interface\frostfall\frostfallskyuisplash.dds
 Interface\exported\widgets\frostfall\chargemeter.swf
-Interface\exported\widgets\frostfall\meter.swf
+Interface\exported\widgets\frostfall\meterIndicator.swf
 Interface\Translations\Frostfall_ENGLISH.txt
 meshes\frostfall\_de_shelter_cookingpotfurniture.nif
 meshes\frostfall\_de_shelter_cookingpotfurniture_steam.nif
@@ -53,6 +53,11 @@ Scripts\CommonArrayHelper.pex
 Scripts\CommonHelperFunctions.pex
 Scripts\CommonMeterInterfaceHandler.pex
 Scripts\Common_SKI_MeterWidget.pex
+Scripts\FallbackEventEmitter.pex
+Scripts\FallbackEventHandler.pex
+Scripts\FallbackEventReceiverActiveMagicEffect.pex
+Scripts\FallbackEventReceiverAlias.pex
+Scripts\FallbackEventReceiverForm.pex
 Scripts\Lilac.pex
 Scripts\FrostfallAPI.pex
 Scripts\FrostUtil.pex
@@ -101,7 +106,6 @@ Scripts\_Frost_PlayerFoodMonitor.pex
 Scripts\_Frost_PlayerSpellMonitor.pex
 Scripts\_Frost_RegionDetectScript.pex
 Scripts\_Frost_RescueSystem.pex
-Scripts\_Frost_ShelterDetectSensorScript.pex
 Scripts\_Frost_ShelterSystem.pex
 Scripts\_Frost_SKI_MeterWidget.pex
 Scripts\_Frost_SkyUIConfigPanelScript.pex
@@ -127,6 +131,20 @@ Scripts\_Frost_WoodHarvestingQuestScript.pex
 Scripts\_Frost_WoodHarvestNodeController.pex
 Scripts\_Frost_WoodpileAliasScript.pex
 Scripts\_Frost_WoodpileNodeController.pex
+Scripts\_Frost_FallbackReceiverClimateSystem.pex
+Scripts\_Frost_FallbackReceiverWarmthSystem.pex
+Scripts\_Frost_PlayerSpeedEffectScript.pex
+Scripts\_Frost_ShelterDetectScriptFar.pex
+Scripts\_Frost_ShelterDetectScriptNear.pex
+Scripts\_Frost_SneakEventScript.pex
+Scripts\_Frost_WeathersenseMessages.pex
+Scripts\Source\_Frost_FallbackReceiverClimateSystem.psc
+Scripts\Source\_Frost_FallbackReceiverWarmthSystem.psc
+Scripts\Source\_Frost_PlayerSpeedEffectScript.psc
+Scripts\Source\_Frost_ShelterDetectScriptFar.psc
+Scripts\Source\_Frost_ShelterDetectScriptNear.psc
+Scripts\Source\_Frost_SneakEventScript.psc
+Scripts\Source\_Frost_WeathersenseMessages.psc
 Scripts\Source\FrostfallAPI.psc
 Scripts\Source\FrostUtil.psc
 Scripts\Source\qf__de_trackingquest_010177d7.psc
@@ -178,7 +196,6 @@ Scripts\Source\_Frost_PlayerLocationSystem.psc
 Scripts\Source\_Frost_PlayerSpellMonitor.psc
 Scripts\Source\_Frost_RegionDetectScript.psc
 Scripts\Source\_Frost_RescueSystem.psc
-Scripts\Source\_Frost_ShelterDetectSensorScript.psc
 Scripts\Source\_Frost_ShelterSystem.psc
 Scripts\Source\_Frost_SKI_MeterWidget.psc
 Scripts\Source\_Frost_SkyUIConfigPanelScript.psc

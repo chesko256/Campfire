@@ -5,7 +5,6 @@ float property effectMagnitude auto
 Actor property PlayerRef auto
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
-	debug.trace("Slowing down by " + effectMagnitude)
 	PlayerRef.DamageAV("SpeedMult", effectMagnitude)
 
 	; Force the speed to update instantly as per
@@ -15,7 +14,6 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 EndEvent
 
 Event OnEffectFinish(Actor akTarget, Actor akCaster)
-	debug.trace("Restoring movement speed by " + effectMagnitude)
 	PlayerRef.RestoreAV("SpeedMult", effectMagnitude)
 
 	PlayerRef.DamageAV("CarryWeight", 0.1)

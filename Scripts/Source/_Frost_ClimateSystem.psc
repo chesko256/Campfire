@@ -175,7 +175,6 @@ bool function IsWeatherTransitioning()
 endFunction
 
 Event OnTamrielRegionChange(int region, bool in_region)
-	debug.trace("region " + region + " in_region " + in_region)
 	if region == 1
 		in_region_pineforest = in_region
 	elseif region == 2

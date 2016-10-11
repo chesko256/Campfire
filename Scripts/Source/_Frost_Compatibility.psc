@@ -5,7 +5,7 @@ import FrostUtil
 import _FrostInternal
 
 int property SKSE_MIN_VERSION = 10703 autoReadOnly
-int property CAMPFIRE_MIN_VERSION = 108 autoReadOnly
+int property CAMPFIRE_MIN_VERSION = 109 autoReadOnly
 float property WEARABLELANTERNS_MIN_VERSION = 4.02 autoReadOnly
 GlobalVariable property _Frost_PreviousVersion auto
 GlobalVariable property _Frost_FrostfallVersion auto
@@ -170,6 +170,7 @@ Keyword property _FrostData_ArmorPrecache auto
 Message property _Frost_CriticalError_SKSE auto
 Message property _Frost_CriticalError_Campfire auto
 Message property _Frost_CriticalError_SkyUIInterfacePackage auto
+Message property _Frost_CriticalError_SkyUIInterfacePackageOld auto
 Message property _Frost_CriticalError_JSONReadWrite auto
 Message property _Frost_Error_WearableLanterns auto
 Weather property DLC2AshStorm auto hidden
@@ -209,9 +210,11 @@ function FatalErrorSKSE(int version)
 endFunction
 
 function FatalErrorCampfire(float version)
-	trace("[Frostfall][ERROR] Detected Campfire version " + version + ", out of date! Expected " + CAMPFIRE_MIN_VERSION + " or newer.")
+	float version_formatted = ((version as float) / 100)
+	float min_version_formatted = ((CAMPFIRE_MIN_VERSION as float) / 100)
+	trace("[Frostfall][ERROR] Detected Campfire version " + version_formatted + ", out of date! Expected " + min_version_formatted + " or newer.")
 	while true
-		_Frost_CriticalError_Campfire.Show(version, CAMPFIRE_MIN_VERSION)
+		_Frost_CriticalError_Campfire.Show(version_formatted, min_version_formatted)
 		utility.wait(3.0)
 	endWhile
 endFunction
@@ -220,6 +223,14 @@ function FatalErrorSkyUIPackage(int skyui_version)
 	trace("[Frostfall][ERROR] Detected optional Frostfall SkyUI Interface Package, but the wrong version of SkyUI is installed!")
 	while true
 		_Frost_CriticalError_SkyUIInterfacePackage.Show(skyui_version)
+		utility.wait(3.0)
+	endWhile
+endFunction
+
+function FatalErrorSkyUIPackageOld()
+	trace("[Frostfall][ERROR] Detected optional Frostfall SkyUI Interface Package, but it is out of date!")
+	while true
+		_Frost_CriticalError_SkyUIInterfacePackageOld.Show()
 		utility.wait(3.0)
 	endWhile
 endFunction
@@ -315,7 +326,7 @@ function RunCompatibility()
 	endif
 	
 	int ui_package_version_installed = JsonUtil.GetIntValue(CONFIG_PATH + "interface_package_version", "installed_package_version")
-	if ui_package_version_installed == 5
+	if ui_package_version_installed == 6
 		SKI_Main skyui = Game.GetFormFromFile(0x00000814, "SkyUI.esp") as SKI_Main
 		int skyui_version = skyui.ReqSWFRelease
 		if skyui_version >= 1026 	; SkyUI 5.1+
@@ -325,6 +336,8 @@ function RunCompatibility()
 			isUIPackageInstalled = false
 			FatalErrorSkyUIPackage(5)
 		endif
+	elseif ui_package_version_installed == 5
+		FatalErrorSkyUIPackageOld()
 	else
 		isUIPackageInstalled = false
 	endif
@@ -718,6 +731,7 @@ function Upgrade_3_2()
 		endif
 	endif
 
+	trace("[Frostfall] Upgraded to 3.2.")
 	_Frost_Upgraded_3_2.SetValueInt(2)
 endFunction
 
