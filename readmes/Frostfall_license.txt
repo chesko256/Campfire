@@ -8,8 +8,6 @@ License Agreement
 
 ===================================================
 
-This license is dated 6/28/2016 and supercedes any other licenses or permissions, written or oral, in any form.
-
 === TL;DR ===
 
 	* You can use the mod for personal use.
