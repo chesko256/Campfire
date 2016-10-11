@@ -11,6 +11,5 @@ function RegisterForEvents()
 endFunction
 
 Event UpdateMeterIndicator(float percent)
-	debug.trace("Setting indicator to " + percent)
 	(Meter as _Frost_Meter).SetIndicatorPercent(percent)
 endEvent

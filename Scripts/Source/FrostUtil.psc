@@ -1335,19 +1335,6 @@ FrostUtil.RemoveSleepException(my_horse)
     endif
 endFunction
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 ;/********f* FrostUtil/AddFastTravelWorldspaceException
 * API VERSION ADDED
 * 2
@@ -1617,7 +1604,7 @@ endFunction
 
 ;/********f* FrostUtil/GetPlayerExposureLimit
 * API VERSION ADDED
-* ?
+* 3
 *
 * DESCRIPTION
 * Return the player's current exposure limit value, the value that exposure will be attracted to over time.
@@ -1864,183 +1851,6 @@ bool data_exists = FrostUtil.ArmorProtectionDataExistsByKey("20258___MyCoolMod.e
 ;*********/;
     _Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
     return handler.DatastoreHasKey(asKey)
-endFunction
-
-;/********f* FrostUtil/SetArmorProtectionData
-* API VERSION ADDED
-* 3
-*
-* DESCRIPTION
-* Set the default protection of a piece of armor.
-*
-* SYNTAX
-*/;
-bool function SetArmorProtectionData(Armor akArmor, int aiType, int aiWarmth, int aiCoverage,   \
-                                 int aiExtraBodyWarmth = 0, int aiExtraBodyCoverage = 0,    \
-                                 int aiExtraHeadWarmth = 0, int aiExtraHeadCoverage = 0,    \
-                                 int aiExtraHandsWarmth = 0, int aiExtraHandsCoverage = 0,  \
-                                 int aiExtraFeetWarmth = 0, int aiExtraFeetCoverage = 0,    \
-                                 int aiExtraCloakWarmth = 0, int aiExtraCloakCoverage = 0,  \
-                                 int aiExtraMiscWarmth = 0, int aiExtraMiscCoverage = 0)
-;/*
-* PARAMETERS
-* * akArmor: The armor to set data for.
-* * aiType: The armor's Type. 1 = Body, 2 = Head, 3 = Hands, 4 = Feet, 5 = Cloak, 6 = Accessory, 7 = No Protection.
-* * aiWarmth: The armor's Warmth.
-* * aiCoverage: The armor's Coverage.
-* * aiExtraBodyWarmth (optional): For gear that covers multiple locations only. If this armor is not type Body, sets the Warmth for the Body slot that this armor also covers.
-* * aiExtraBodyCoverage (optional): For gear that covers multiple locations only. If this armor is not type Body, sets the Coverage for the Body slot that this armor also covers.
-* * aiExtraHeadWarmth (optional): See above. Sets the Warmth for the Head slot that this armor also covers.
-* * aiExtraHeadCoverage (optional): See above. Sets the Coverage for the Head slot that this armor also covers.
-* * aiExtraHandsWarmth (optional): See above. Sets the Warmth for the Hands slot that this armor also covers.
-* * aiExtraHandsCoverage (optional): See above. Sets the Coverage for the Hands slot that this armor also covers.
-* * aiExtraFeetWarmth (optional): See above. Sets the Warmth for the Feet slot that this armor also covers.
-* * aiExtraFeetCoverage (optional): See above. Sets the Coverage for the Feet slot that this armor also covers.
-* * aiExtraCloakWarmth (optional): See above. Sets the Warmth for the Cloak that this armor also includes.
-* * aiExtraCloakCoverage (optional): See above. Sets the Coverage for the Cloak that this armor also includes.
-* * aiExtraMiscWarmth (optional): See above. Sets the Warmth for the Accessory that this armor also includes.
-* * aiExtraMiscCoverage (optional): See above. Sets the Coverage for the Accessory that this armor also includes.
-*
-* RETURN VALUE
-* True if the data provided was valid and the protection data was set. False if there was a problem with the data you provided (see Parameters, above).
-*
-* EXAMPLES
-;Set the protection for my cool armor and my cool cloak.
-FrostUtil.SetArmorProtection(MyCoolArmor, 1, 115, 75)
-FrostUtil.SetArmorProtection(MyCoolCloak, 5, 40, 20)
-
-;Set the protection for my fur collar, an accessory.
-FrostUtil.SetArmorProtection(MyFurCollar, 6, 20, 5)
-
-;Set the protection for my new mages robes, which also includes a hood.
-FrostUtil.SetArmorProtection(MyMageRobes, 1, 125, 50, aiExtraHeadWarmth = 25, aiExtraHeadCoverage = 43)
-* NOTES
-* * This sets the default data for the armor. The player can then customize it. If the player "defaults" the protection, it will return to the values you set using this function.
-* * An alternative to using this function is using injected keywords instead. See the Compatibility - Modders page for more info.
-;*********/;
-    if !akArmor || aiType > 7 || aiType < 1
-        return false
-    endif
-
-    _Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
-    handler.SetArmorData(akArmor, aiType, aiWarmth, aiCoverage, aiExtraBodyWarmth, aiExtraBodyCoverage,    \
-                         aiExtraHeadWarmth, aiExtraHeadCoverage, aiExtraHandsWarmth, aiExtraHandsCoverage, \
-                         aiExtraFeetWarmth, aiExtraFeetCoverage, aiExtraCloakWarmth, aiExtraCloakCoverage, \
-                         aiExtraMiscWarmth, aiExtraMiscCoverage, true)
-    return true
-endFunction
-
-;/********f* FrostUtil/SetArmorProtectionDataA
-* API VERSION ADDED
-* 3
-*
-* DESCRIPTION
-* Set the default protection of a piece of armor. Like SetArmorProtection(), but takes an array of protection values instead.
-*
-* SYNTAX
-*/;
-bool function SetArmorProtectionDataA(Armor akArmor, int[] aiProtectionValues)
-;/*
-* PARAMETERS
-* * akArmor: The armor to set data for.
-* * aiProtectionValues: An int[15] array describing the armor's protection values. See SetArmorProtection for descriptions of each parameter.
-* aiProtectionValues[0] = aiType.
-* aiProtectionValues[1] = aiWarmth
-* aiProtectionValues[2] = aiCoverage
-* aiProtectionValues[3] = aiExtraBodyWarmth
-* aiProtectionValues[4] = aiExtraBodyCoverage
-* aiProtectionValues[5] = aiExtraHeadWarmth
-* aiProtectionValues[6] = aiExtraHeadCoverage
-* aiProtectionValues[7] = aiExtraHandsWarmth
-* aiProtectionValues[8] = aiExtraHandsCoverage
-* aiProtectionValues[9] = aiExtraFeetWarmth
-* aiProtectionValues[10] = aiExtraFeetCoverage
-* aiProtectionValues[11] = aiExtraCloakWarmth
-* aiProtectionValues[12] = aiExtraCloakCoverage
-* aiProtectionValues[13] = aiExtraMiscWarmth
-* aiProtectionValues[14] = aiExtraMiscCoverage
-*
-* RETURN VALUE
-* True if the data provided was valid and the protection data was set. False if there was a problem with the data you provided (see Parameters, above).
-*
-* EXAMPLES
-;Set the protection for my cool armor and my cool cloak.
-int[] coolarmor_data = new int[15]
-coolarmor_data[0] = 1
-coolarmor_data[1] = 115
-coolarmor_data[2] = 75
-FrostUtil.SetArmorProtectionA(MyCoolArmor, coolarmor_data)
-
-int[] coolcloak_data = new int[15]
-coolarmor_data[0] = 5
-coolarmor_data[1] = 40
-coolarmor_data[2] = 20
-FrostUtil.SetArmorProtectionA(MyCoolCloak, coolcloak_data)
-
-;Set the protection for my new mages robes, which also includes a hood.
-int[] magerobe_data = new int[15]
-magerobe_data[0] = 1
-magerobe_data[1] = 125
-magerobe_data[2] = 50
-magerobe_data[5] = 25
-magerobe_data[6] = 43
-FrostUtil.SetArmorProtectionA(MyMageRobes, magerobe_data)
-* NOTES
-* This sets the default data for the armor. The player can then customize it. If the player "defaults" the protection, it will return to the values you set using this function.
-* * If the player selects "Repair Default Armor Data", changes set using this function will be deleted. You MUST register for the SKSE event Frostfall_OnArmorDefaultDataRepair and re-set your intended values when when you receive that event.
-* * An alternative to using this function is using injected keywords instead. See the Compatibility - Modders page for more info.
-;*********/;
-    if !akArmor || aiProtectionValues.Length != 15 || aiProtectionValues[0] > 7 || aiProtectionValues[0] < 1
-        return false
-    endif
-
-    _Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
-    handler.SetArmorDataA(akArmor, aiProtectionValues, true)
-    return true
-endFunction
-
-;/********f* FrostUtil/RemoveArmorProtectionData
-* API VERSION ADDED
-* 3
-*
-* DESCRIPTION
-* Remove the default protection data of a piece of armor.
-*
-* SYNTAX
-*/;
-function RemoveArmorProtectionData(Armor akArmor)
-;/*
-* PARAMETERS
-* * akArmor: The armor to remove data for.
-*
-* RETURN VALUE
-* None
-*
-* EXAMPLES
-;Remove the protection for my cool armor.
-FrostUtil.RemoveArmorProtectionData(MyCoolArmor)
-*
-* NOTES
-* If the default data for a piece of armor is removed, Frostfall will try to figure out values that make sense and use those instead.
-* Calling this will do nothing for armor in the Skyrim base game, Dawnguard, Dragonborn, Campfire, or Frostfall.
-;*********/;
-    if !akArmor
-        return
-    endif
-
-    int form_id = akArmor.GetFormID()
-    int mod_index = form_id/16777216
-    if mod_index < 0
-        mod_index = 0
-    endif
-    string origin = Game.GetModName(mod_index)
-    if origin == "Skyrim.esm" || origin == "Dawnguard.esm" || origin == "Dragonborn.esm" || \
-       origin == "Campfire.esm" || origin == "Frostfall.esp"
-       return
-    endif
-
-    _Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
-    handler.RemoveDefaultArmorData(akArmor)
 endFunction
 
 ; Events ==========================================================================================

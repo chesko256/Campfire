@@ -25,7 +25,6 @@ Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemRefere
 EndEvent
 
 Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
-	debug.trace("OnObjectEquipped in player equip monitor, akBaseObject = " + akBaseObject)
 	if akBaseObject as Light
 		SendEvent_UpdateWarmth()
 	elseif akBaseObject as Armor

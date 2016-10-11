@@ -34,7 +34,6 @@ function StartUp()
 endFunction
 
 bool function ObjectEquipped(Form akBaseObject)
-    debug.trace("Called ObjectEquipped, akBaseObject = " + akBaseObject)
     if !akBaseObject || !akBaseObject as Armor
         ; debug.trace("akBaseObject was none or was not armor")
         return false
@@ -60,10 +59,10 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGear
     int[] armor_data
     string armorName = akArmor.GetName()
     if PrecacheHasArmorData(armorName, _FrostData_ArmorPrecache)
-        debug.trace("Retrieving " + armorName + " from precache.")
+        FrostDebug(0, "Retrieving " + armorName + " from precache.")
         armor_data = GetArmorDataFromPrecache(armorName, _FrostData_ArmorPrecache)
     else
-        debug.trace("Resolving " + armorName + ", not found in precache.")
+        FrostDebug(0, "Resolving " + armorName + ", not found in precache.")
         armor_data = handler.GetArmorProtectionData(akArmor)
         TryToAddArmorDataToPrecache(akArmor, armor_data, _FrostData_ArmorPrecache)
     endif

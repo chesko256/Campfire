@@ -181,6 +181,8 @@ meshes\campfire\_Camp_WoodShavings.nif
 Scripts\BladesSparringScript.pex
 Scripts\C00TrainerScript.pex
 Scripts\C00VilkasScript.pex
+Scripts\C00JorrvaskrFightAthisScript.pex
+Scripts\C00JorrvaskrFightNjadaScript.pex
 Scripts\CampCampfire.pex
 Scripts\CampConjuredContainer.pex
 Scripts\CampConjuredPlaceableObject.pex
@@ -328,6 +330,8 @@ Scripts\_Camp_TentSitLayScript.pex
 Scripts\Source\BladesSparringScript.psc
 Scripts\Source\C00TrainerScript.psc
 Scripts\Source\C00VilkasScript.psc
+Scripts\Source\C00JorrvaskrFightAthisScript.psc
+Scripts\Source\C00JorrvaskrFightNjadaScript.psc
 Scripts\Source\CampCampfire.psc
 Scripts\Source\CampConjuredContainer.psc
 Scripts\Source\CampConjuredPlaceableObject.psc

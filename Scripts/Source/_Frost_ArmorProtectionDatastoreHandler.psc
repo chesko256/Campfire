@@ -646,27 +646,22 @@ function InitializeDatastore()
 endFunction
 
 int[] function GetTotalArmorProtectionValues(Armor akArmor, string asArmorName = "")
-	debug.trace("GetTotalArmorProtectionValues " + akArmor + " named " + asArmorName)
 	int[] armor_totals = new int[2]
 
 	int[] ap = new int[15]
 	if PrecacheHasArmorData(asArmorName, _FrostData_ArmorPrecache)
-		; debug.trace("GetTotalArmorProtectionValues from precache")
 		ap = GetArmorDataFromPrecache(asArmorName, _FrostData_ArmorPrecache)
 	else
-		; debug.trace("GetTotalArmorProtectionValues lookup")
 		if !akArmor
 			armor_totals[0] = 0
 			armor_totals[1] = 0
 			return armor_totals
 		endif
-		; debug.trace("GetTotalArmorProtectionValues akArmor found")
 		ap = GetArmorProtectionData(akArmor)
-		; debug.trace("GetTotalArmorProtectionValues ap = " + ap)
 		TryToAddArmorDataToPrecache(akArmor, ap, _FrostData_ArmorPrecache)
 	endif
 
-	; debug.trace("GetTotalArmorProtectionValues ap = " + ap)
+	FrostDebug(0, "GetTotalArmorProtectionValues ap = " + ap)
 	if ap[0] == GEARTYPE_IGNORE
 		armor_totals[0] = 0
 		armor_totals[1] = 0
@@ -680,29 +675,23 @@ int[] function GetTotalArmorProtectionValues(Armor akArmor, string asArmorName =
 endFunction
 
 int[] function GetTotalArmorProtectionValuesWithType(Armor akArmor, string asArmorName = "")
-	debug.trace("GetTotalArmorProtectionValuesWithType " + akArmor + " named " + asArmorName)
 	int[] armor_totals = new int[3]
 
 	int[] ap = new int[15]
 	if PrecacheHasArmorData(asArmorName, _FrostData_ArmorPrecache)
-		debug.trace("GetTotalArmorProtectionValuesWithType from precache")
 		ap = GetArmorDataFromPrecache(asArmorName, _FrostData_ArmorPrecache)
 	else
-		debug.trace("GetTotalArmorProtectionValuesWithType lookup")
 		if !akArmor
-			debug.trace("GetTotalArmorProtectionValuesWithType akArmor none, bail")
 			armor_totals[0] = 0
 			armor_totals[1] = 0
 			armor_totals[2] = 0
 			return armor_totals
 		endif
-		debug.trace("GetTotalArmorProtectionValuesWithType akArmor found")
 		ap = GetArmorProtectionData(akArmor)
-		debug.trace("GetTotalArmorProtectionValuesWithType ap = " + ap)
 		TryToAddArmorDataToPrecache(akArmor, ap, _FrostData_ArmorPrecache)
 	endif
 
-	debug.trace("GetTotalArmorProtectionValuesWithType ap = " + ap)
+	FrostDebug(0, "GetTotalArmorProtectionValuesWithType ap = " + ap)
 	if ap[0] == GEARTYPE_IGNORE
 		armor_totals[0] = 0
 		armor_totals[1] = 0
