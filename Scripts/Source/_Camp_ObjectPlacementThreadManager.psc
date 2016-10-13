@@ -93,6 +93,16 @@ _Camp_ObjectPlacementThread30 thread30
 _Camp_ObjectPlacementIndicatorThread01 PlacementIndicatorThread1
 _Camp_ObjectPlacementIndicatorThread02 PlacementIndicatorThread2
 _Camp_ObjectPlacementIndicatorThread03 PlacementIndicatorThread3
+
+; Placement Cancellation Reason Enum
+int STOPPLACEMENT_UNKNOWN                       = -1
+int STOPPLACEMENT_CANT_PLACE_OBJECTS            = 0
+int STOPPLACEMENT_CATASTROPHIC_ERROR            = 1
+int STOPPLACEMENT_NO_INGREDIENTS                = 2
+int STOPPLACEMENT_NO_ITEMS                      = 3
+int STOPPLACEMENT_SUCCESS                       = 4
+int STOPPLACEMENT_SUCCESS_ILLEGAL               = 5
+int STOPPLACEMENT_USER_CANCELLED                = 6
  
 Event OnInit()
     ;Let's cast our threads to local variables so things are less cluttered in our code
@@ -509,6 +519,7 @@ ObjectReference function PlaceObject(ObjectReference origin_object, Form form_to
 endFunction
 
 function StartPlacement(ObjectReference akIndicator)
+    CampDebug(1, "Starting object placement using indicator " + akIndicator)
     ; Block inventory menu access
     Game.DisablePlayerControls(false, false, false, false, false, true, false, false)
     was_hit = false
@@ -519,7 +530,27 @@ function StartPlacement(ObjectReference akIndicator)
     endif
 endFunction
 
-function StopPlacement()
+function StopPlacement(int aiReason = -1)
+    string reason
+    if aiReason == STOPPLACEMENT_UNKNOWN
+        reason = "Unknown reason."
+    elseif aiReason == STOPPLACEMENT_CANT_PLACE_OBJECTS
+        reason = "Player can't place objects or was hit recently."
+    elseif aiReason == STOPPLACEMENT_SUCCESS
+        reason = "Player successfully placed object."
+    elseif aiReason == STOPPLACEMENT_SUCCESS_ILLEGAL
+        reason = "Player successfully placed object (illegally)."
+    elseif aiReason == STOPPLACEMENT_USER_CANCELLED
+        reason = "Player cancelled placement."
+    elseif aiReason == STOPPLACEMENT_NO_INGREDIENTS
+        reason = "Player lacks required ingredients."
+    elseif aiReason == STOPPLACEMENT_NO_ITEMS
+        reason = "Player lacks required items."
+    elseif aiReason == STOPPLACEMENT_CATASTROPHIC_ERROR
+        reason = "The catastrophic placement error occurred."
+    endif
+
+    CampDebug(1, "Stopping object placement. Reason: " + reason)
     Game.EnablePlayerControls()
     _Camp_CurrentlyPlacingObject.SetValueInt(1)
     _Camp_IndicatorTriggerRef.MoveTo(_Camp_Anchor)
@@ -533,7 +564,15 @@ endFunction
 
 bool was_hit = false
 function PlayerHitEvent(ObjectReference akAggressor, Form akSource, Projectile akProjectile)
-    was_hit = true
+    if akSource as Spell
+        if (akSource as Spell).IsHostile()
+            was_hit = true
+        else
+            was_hit = false
+        endif
+    else
+        was_hit = true
+    endif
 endFunction
 
 bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  \
@@ -544,13 +583,13 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
                               int aiCost)
     if !PlayerCanPlaceObjects(abPlayerBusyCheck = false) || was_hit
         was_hit = false
-        StopPlacement()
+        StopPlacement(STOPPLACEMENT_CANT_PLACE_OBJECTS)
         return false
     endif
     
     ;Scenario: The catastrophic placement error was encountered.
     if _Camp_CurrentlyPlacingObject.GetValueInt() == 3 && _Camp_HelpDone_PlacementError.GetValueInt() == 1
-        StopPlacement()
+        StopPlacement(STOPPLACEMENT_CATASTROPHIC_ERROR)
         if _Camp_HelpDone_PlacementError.GetValue() == 1
             int i = _Camp_Placement_Cancelled_CollisionBug.Show()
             if i == 0
@@ -608,14 +647,14 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
                     if PlayerRef.GetItemCount(akIngredient) >= aiCost
                         PlayerRef.RemoveItem(akIngredient, aiCost)
                     else
-                        StopPlacement()
+                        StopPlacement(STOPPLACEMENT_NO_INGREDIENTS)
                         return false
                     endif
                 elseif akMiscItem && aiCost > 0
                     if PlayerRef.GetItemCount(akMiscItem) >= aiCost
                         PlayerRef.RemoveItem(akMiscItem, aiCost)
                     else
-                        StopPlacement()
+                        StopPlacement(STOPPLACEMENT_NO_ITEMS)
                         return false
                     endif
                 endif
@@ -630,7 +669,7 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
                     (campitem as _Camp_PlaceableObjectBase).Required_InventoryItem = akInventoryItem
                     PlayerRef.RemoveItem(akInventoryItem, 1, true)
                 endif
-                StopPlacement()
+                StopPlacement(STOPPLACEMENT_SUCCESS_ILLEGAL)
 
                 ;Raise the ire of those around you
                 _Camp_CampingCrimeTracking.Stop()
@@ -650,7 +689,7 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
 
                 return false
             elseif ibutton == 1
-                StopPlacement()
+                StopPlacement(STOPPLACEMENT_USER_CANCELLED)
                 _Camp_Placement_Cancelled.Show()
                 return false
             elseif ibutton == 2     ;Back
@@ -664,14 +703,14 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
                     if PlayerRef.GetItemCount(akIngredient) >= aiCost
                         PlayerRef.RemoveItem(akIngredient, aiCost)
                     else
-                        StopPlacement()
+                        StopPlacement(STOPPLACEMENT_NO_INGREDIENTS)
                         return false
                     endif
                 elseif akMiscItem && aiCost > 0
                     if PlayerRef.GetItemCount(akMiscItem) >= aiCost
                         PlayerRef.RemoveItem(akMiscItem, aiCost)
                     else
-                        StopPlacement()
+                        StopPlacement(STOPPLACEMENT_NO_ITEMS)
                         return false
                     endif
                 endif
@@ -685,10 +724,10 @@ bool function UpdateIndicator(ObjectReference akIndicator, Form akFormToPlace,  
                     (campitem as _Camp_PlaceableObjectBase).Required_InventoryItem = akInventoryItem
                     PlayerRef.RemoveItem(akInventoryItem, 1, true)
                 endif
-                StopPlacement()
+                StopPlacement(STOPPLACEMENT_SUCCESS)
                 return false
             elseif ibutton == 1     ;Exit Placement
-                StopPlacement()
+                StopPlacement(STOPPLACEMENT_USER_CANCELLED)
                 _Camp_Placement_Cancelled.Show()
                 return false
             elseif ibutton == 2     ;Back

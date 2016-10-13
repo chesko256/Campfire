@@ -17,6 +17,164 @@ E-mail - chesko.tesmod@gmail.com
 This changelog is mainly for posterity purposes. This mod has evolved a lot in the amount of time it's been in development. Read on only if you enjoy watching me change my mind many, many times.
 
 ===========================================
+Frostfall 3.2 Change Log
+===========================================
+UPGRADE INSTRUCTIONS - Uninstall the previous version, install the new one, and load your save game.
+
+Features and Changes
+
+
+- New Exposure System
+
+ - A new exposure system was introduced. This is the first major overhaul to the core exposure mechanic since Frostfall 1.0. It will hopefully make Frostfall's mechanics clearer, be more fun to play, allow more freedom, and make rain and wetness a more interesting mechanic in the southern Holds.
+
+    - There is now an Exposure Limit. Instead of your exposure increasing without limit in most situations (with the only variation being rate of exposure), there is now a target value. Your exposure will increase or decrease toward this target value.
+
+    - Once the limit is reached, your exposure will remain at that level until something changes; you have reached equilibrium with your surroundings. This means that, if the target in a rain shower is "chilly", you will eventually become chilly, but then have no risk of further penalties.
+
+    - The exposure meter now shows the exposure limit as a glowing white line, which shifts up and down as the target changes. It was inspired by the "rally indicator" from Bloodborne.
+
+    - The ambient temperature, the weather, the time of day, and wetness can increase the exposure limit.
+
+    - Warmth from clothing and other effects, being near fire, and taking shelter can decrease the exposure limit.
+
+    - Coverage from clothing makes severe weather less severe (by blocking the wind, rain, and snow) and also slows down how fast you get wet in the rain. This causes Coverage to have a significant impact on your exposure limit in bad weather.
+
+    - Some areas, like the Pale, are so cold that the limit is always maximum exposure (death or incapacitate) regardless of the Warmth and Coverage of your clothing. You will still have to camp and build fires to survive in these areas.
+
+    - Some areas, like Morthal and Markarth, are very cold during the day, but might be deadly frigid at night or in bad weather. It is still possible to collapse in these areas if the environment conspires against you.
+
+    - Areas like Falkreath and the Rift remain fairly warm at most times. You can become very cold during rain showers or after swimming until you dry off. In general, it's not possible to collapse in these areas unless you venture up a snow-capped mountain.
+
+    - Like in previous versions of Frostfall, Warmth reduces your rate of exposure at all times, and Coverage reduces your rate of exposure in severe weather.
+
+    - Like in previous versions of Frostfall, it may not be possible to get completely warm in extremely cold conditions unless you are near a fire and are taking shelter. The amount your exposure will be reduced to is now represented by the target.
+
+- UI Improvements
+
+    - (SkyUI 5.1 Add-On) Warmth and Coverage displayed on item cards no longer takes several seconds to load. It is now nearly instantaneous!
+
+    - (SkyUI 5.1 Add-On) The total Warmth and Coverage values at the bottom of the inventory now show the warmth and coverage change if a piece of gear were equipped (just like armor) and now display correctly on 4:3 monitors.
+
+    - Improvements to the Weathersense status messages were made. There are now over 100 unique status messages. They now focus on plain, descriptive text first, instead of containing only numerical values. i.e.: "You are cold and damp.", "The air is chilly. You are getting colder." You can still turn on numerical values.
+
+    - The description of the surrounding temperature also notes if you are getting warmer or colder, and what the exposure limit is. i.e.: "The air is frigid and deadly. You are getting colder. (Max: 100%)"
+
+    - When warming up near a fire, if you reach the exposure limit, you are given an indication as to why the limit is what it is (i.e. no shelter, etc)
+
+- Hand Warming Animations
+
+    - You can now warm your hands near fires by standing near them with your weapons sheathed and pressing the Sneak button. Press Sneak again in order to exit. Works on both keyboard and gamepad.
+
+    - A new contextual help message will notify you of this change.
+
+    - The animation will no longer play automatically.
+
+    - Since you are now in control of the animation, this should fix issues some users experience with the animation never playing correctly, or playing too often and interrupting them.
+
+- Performance Improvements
+
+    - Faster Equipment Checks - Calculating the Warmth and Coverage of a piece of equipment is one of the most complex things that Frostfall does. Frostfall now does this much, much faster.
+
+    - General Performance Improvements - Performance was optimized when taking certain actions, such as equipping gear.
+
+- Other Changes
+
+    - When starting a new game using the vanilla intro sequence, Frostfall's quest will not start until after you have exited Helgen Keep with Ralof or Hadvar.
+
+    - If your exposure is high, reductions to your movement speed now happen instantly.
+
+    - Movement speed penalties at high exposure no longer apply if you are in combat,  in order to make frost magic against the player more balanced.
+
+    - Forges are now "large" heat sources. You can be warmed by them from a larger distance.
+
+    - Fur Armor variants are now renamed at start-up via script in order to give them unique names (which is required for the new armor detection system to work correctly). The renaming is via script and is not a conflicting change with other mods. The renaming is translation-compatible (see FrostfallStrings quest script properties).
+
+    - If the temperature is low enough, you will no longer remove certain equipment when sitting / laying in tents regardless of your settings in Campfire.
+
+    - Began laying some ground work for Frostfall: Console Edition, and for "fallback mode" on PC, which will not require SKSE or SkyUI.
+
+    - Improved compatibility with mods that might utilize the ImmuneParalysis keyword.
+
+    - Removed all machine translation from the mod. Translation of the mod is still supported by 3rd party translators, but out-of-the-box machine translation will no longer be provided due to repeated complaints.
+
+Bug Fixes
+
+- Fixed a bug which would prevent Warmth and Coverage of mod-added equipment from being calculated correctly if the mod that added it was in your load order above position 128.
+
+- Improved the accuracy of checking if the player is a vampire or the undead, or if they are transformed into a werewolf or vampire lord.
+
+- Fixed an issue where the Total Warmth / Coverage notification (when not using the SkyUI Add-On) was not displaying the correct information when swapping between full sets of gear.
+
+- Fixed an issue where large fur tents already in the world were not being counted as a warm shelter.
+
+- Fixed an issue where Frostfall could sometimes generate multiple quest journal entries.
+
+- Fixed a bug that would cause the "stare up at the stars" start method to not work if starting a new game using the vanilla intro sequence.
+
+- Fixed a bug where the Solitude lighthouse was not recognized as a heat source.
+
+
+===========================================
+Frostfall 3.1.1 Change Log
+===========================================
+UPGRADE INSTRUCTIONS - Uninstall the previous version, install the new one, and load your save game.
+
+Bug Fixes
+
+	Fixed an issue where the player would become wet when entering certain interior cells.
+
+===========================================
+Frostfall 3.1 Change Log
+===========================================
+UPGRADE INSTRUCTIONS - Uninstall the previous version, install the new one, and load your save game. If you have Papyrus logging enabled, these errors are expected on startup - http://pastebin.com/W6CmVNvG.
+
+Features and Changes
+
+Warmth and Coverage Customization
+	
+	You can now customize the Warmth and Coverage of any piece of gear, including mod-added gear, in the Armor and Clothing page of the MCM.
+	
+	You can now assign Warmth and Coverage to equipment that previously granted no benefit before, like mod-added scarves and fur collars.
+	
+	You can add extra areas covered by a single piece of armor by going to that armor's entry in the MCM and selecting "Extra Parts...", and selecting an option like "This equipment also has a cloak." Useful for some multi-part or unseparated pieces of armor that already have a cloak or other parts built in, such as the Paladin Armor set in Immersive Armors. The extra part will have its own entry on the Armor and Clothing page. You can adjust the extra part's Warmth and Coverage as if it were a separate piece of equipment.
+
+	All of your custom armor settings are synced to your Settings Profile, so your settings will be persistent across all save games.
+
+	All worn equipment now has a Type. Frostfall will count one worn item of type Body, Head, Hands, Feet, and Cloak toward your total protection. All items of type Accessory contribute toward your total protection.
+
+	Complete Meter Customization - You can now adjust the position, size, opacity, color, and so on, of all on-screen meters.
+
+	You now dry off 3 times as fast if the weather is clear during daytime.
+
+	You can now get wet when walking in water, but not swimming. The depth you stand determines how wet you will get. You will only get wet if the water comes above your knees.
+
+	You can now get wet when swimming in water while on horseback.
+
+	The Vampire Mode setting "Immortal", was reintroduced. You will get a +100 Warmth bonus and immunity to frostbite (same as Supernatural setting), and you will no longer succumb to maximum exposure. You will, however, be subject to all of the normal penalties that come with each level of exposure.
+
+	Added a profile read / write test to Frostfall's start-up sequence. If you have a Windows file permission issue that would prevent you from saving your profile settings, Frostfall will alert you about it.
+
+
+Bug Fixes
+
+	Fixed an issue where the temperature could become "stuck" cold when venturing into a higher-altitude snowy mountain area (like Bleak Falls Barrow) and then walking back down to a lower altitude.
+
+	Fixed many bugs related to equipment categorization and detection, cloaks not receiving any protection ratings, and so on.
+
+///Keep in mind that if you use a Bashed patch / combined plug-in of equipment or cloak mods, Frostfall will still have no way to correctly detect the equipment. If you still have issues with this and are combining your plug-ins, please use the Armor and Clothing MCM page to reassign the correct values for your gear.///
+
+	The way that Frostfall handles equipping many pieces of gear at once is now far more accurate. You should be able to use the SkyUI Group feature without having miscalculated Warmth and Coverage.
+
+	Fixed an issue where the most frigid water would restore the player's Stamina instead of draining it.
+
+	Fixed an issue where the player was not getting wet in the rain in some circumstances when using Wet and Cold.
+
+	Fixed an issue where the player's facial expression would be stuck scowling when playing as a vampire.
+
+	You can no longer start Frostfall when in the cart during the vanilla opening of the game.
+
+===========================================
 Frostfall 3.0.3 Change Log
 ===========================================
 Features and Changes

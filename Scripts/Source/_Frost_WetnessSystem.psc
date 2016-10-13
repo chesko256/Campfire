@@ -6,8 +6,9 @@ import _FrostInternal
 
 
 float property WET_SPEED 		= 27.0 autoReadOnly 		; Wetness gained when standing in rain.
-float property DRY_SPEED 		= -6.25 autoReadOnly 		; Wetness lost ambiently.
-float property DRYFIRE_SPEED 	= -75.0 autoReadOnly 		; Wetness lost near fires.
+float property DRY_SPEED 		= -10.5 autoReadOnly 		; Wetness lost ambiently.
+float property DRY_SPEED_SUN	= -15.0 autoReadOnly 		; Wetness lost ambiently while in the sun.
+float property DRY_SPEED_FIRE 	= -35.0 autoReadOnly 		; Wetness lost near fires.
 float property MAX_WETNESS 		= 750.0 autoReadOnly
 float property WETNESS_LEVEL_3 	= 700.0 autoReadOnly
 float property WETNESS_LEVEL_2 	= 550.0 autoReadOnly
@@ -16,6 +17,7 @@ float property MIN_WETNESS 		= 0.0 autoReadOnly
 int property WEATHERCLASS_RAIN 	= 2 autoReadOnly
 
 Actor property PlayerRef auto
+GlobalVariable property GameHour auto
 GlobalVariable property _Frost_AttributeWetness auto
 GlobalVariable property _Frost_AttributeCoverage auto
 GlobalVariable property _Frost_Calc_MaxCoverage auto
@@ -83,17 +85,20 @@ function ModAttributeWetness(float amount, float limit)
 	endif
 
 	float wetness = wet_attr + amount
-	if wetness > limit && amount > 0
+
+	; Clamp values
+	; THRESHOLD CROSSED - INCREASING
+	if wetness >= limit && wet_attr < limit && amount > 0
 		wetness = limit
-		if limit < MAX_WETNESS && limit > MIN_WETNESS
-			_Frost_WetStateMsg_LeakingWater.Show()
-		endif
-	elseif wetness < limit && amount < 0
+	; THRESHOLD CROSSED - DECREASING
+	elseif wetness < limit && wet_attr >= limit && amount < 0
 		wetness = limit
-		if limit < MAX_WETNESS && limit > MIN_WETNESS
-			_Frost_WetStateMsg_LeakingWater.Show()
-		endif
+	; ALREADY ABOVE / BELOW LIMIT
+	elseif (wetness >= limit && amount > 0) || (wetness <= limit && amount < 0)
+		wetness = wet_attr
+	else
 	endif
+
 	_Frost_AttributeWetness.SetValue(wetness)
 	FrostfallAttributeWetnessReadOnly.SetValue(wetness)
 	FrostDebug(1, "~~~~ Wetness ::: Current Wetness: " + wetness + " (" + amount + ")")
@@ -123,7 +128,7 @@ function UpdateWetLevel()
 
 	_Frost_WetLevel.SetValueInt(wet_level)
 	FrostfallWetLevelReadOnly.SetValueInt(wet_level)
-	
+
 	if wet_level > 0
 		last_wet_level = _Frost_WetLevel.GetValueInt()
 	elseif wetness == MIN_WETNESS
@@ -152,6 +157,15 @@ function ShowWetStateMessage(int wet_level)
 	endif
 endFunction
 
+bool function IsStandingInSunlight()
+	float hour = GameHour.GetValue()
+	if GetWeatherClassificationActual(GetCurrentWeatherActual()) == 0 && !IsRefInInterior(PlayerRef) && (hour <= 19 && hour >= 7)
+		return true
+	else
+		return false
+	endif
+endFunction
+
 bool function IsNearWaterfall()
 	ObjectReference waterfall = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Frost_Waterfalls, PlayerRef, 85.0)
 	if waterfall && waterfall.IsEnabled()
@@ -165,7 +179,7 @@ function UpdateWetState()
 	if PlayerRef.IsSwimming()
 		return
 	endif
-	
+
 	bool near_waterfall = IsNearWaterfall()
 	if near_waterfall
 		ModAttributeWetness(MAX_WETNESS, MAX_WETNESS)
@@ -198,20 +212,11 @@ function UpdateWetState()
 	else
 		DryOff(MIN_WETNESS)
 	endif
-	
-	;Less exposure drain in warmer weather.
-	;/ int theTemp = _DE_CurrentTemp.GetValueInt()
-	if theTemp >= 15
-		WetFactor /= 4
-	elseif theTemp > 10
-		WetFactor /= 2
-	endif
-	/;
 endFunction
 
 function DryOff(float limit)
 	FrostDebug(1, "~~~~ Wetness ::: DryOff : Limit " + limit)
-	
+
 	float update_freq = UpdateFrequencyGlobal.GetValue()
 	float time_delta_seconds = (this_update_time - last_update_time) * 3600.0
 	if time_delta_seconds > (update_freq * 2)
@@ -220,9 +225,11 @@ function DryOff(float limit)
 
 	float amount
 	if IsPlayerNearFire()
-		 amount = (((DRYFIRE_SPEED * GetPlayerHeatSourceLevel()) * time_delta_seconds) / update_freq)
+		amount = (((DRY_SPEED_FIRE * GetPlayerHeatSourceLevel()) * time_delta_seconds) / update_freq)
+	elseif IsStandingInSunlight()
+		amount = ((DRY_SPEED_SUN * time_delta_seconds) / update_freq)
     else
-    	 amount = ((DRY_SPEED * time_delta_seconds) / update_freq)
+    	amount = ((DRY_SPEED * time_delta_seconds) / update_freq)
     endif
     ModAttributeWetness(amount, limit)
 endFunction
@@ -270,7 +277,7 @@ function SetWetness(float value, bool force_meter_display = false)
 endFunction
 
 function SendEvent_ForceWetnessMeterDisplay(bool flash = false)
-	int handle = ModEvent.Create("Frost_ForceWetnessMeterDisplay")
+	int handle = ModEvent.Create("Frostfall_ForceWetnessMeterDisplay")
 	if handle
 		ModEvent.PushBool(handle, flash)
 		ModEvent.Send(handle)
@@ -278,7 +285,7 @@ function SendEvent_ForceWetnessMeterDisplay(bool flash = false)
 endFunction
 
 function SendEvent_UpdateWetnessMeter()
-	int handle = ModEvent.Create("Frost_UpdateWetnessMeter")
+	int handle = ModEvent.Create("Frostfall_UpdateWetnessMeter")
 	if handle
 		ModEvent.Send(handle)
 	endif

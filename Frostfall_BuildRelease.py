@@ -20,6 +20,9 @@ os.chdir("..\\")
 # Build the temp directory
 print "Creating temp directories..."
 tempdir = ".\\tmp\\Data\\"
+if os.path.isdir(tempdir):
+    print "Removing old temp directory..."
+    shutil.rmtree(".\\tmp")
 os.makedirs('./tmp/Data/readmes')
 os.makedirs('./tmp/Data/Interface/frostfall')
 os.makedirs('./tmp/Data/Interface/exported/widgets/frostfall')
@@ -47,12 +50,15 @@ else:
     os.mkdir(dirname)
 
 os.mkdir(dirname + "/readmes")
+os.makedirs(dirname + "/Interface/Translations")
+os.makedirs(dirname + "/SKSE/Plugins/FrostfallData")
 
 # Generate BSA archive
 print "Generating BSA archive..."
 shutil.copy('./Campfire/Archive.exe', './tmp/Archive.exe')
 shutil.copy('./Campfire/FrostfallArchiveBuilder.txt', './tmp/FrostfallArchiveBuilder.txt')
 shutil.copy('./Campfire/FrostfallArchiveManifest.txt', './tmp/FrostfallArchiveManifest.txt')
+
 os.chdir("./tmp")
 subprocess.call(['./Archive.exe', './FrostfallArchiveBuilder.txt'])
 os.chdir("..\\")
@@ -64,13 +70,16 @@ shutil.copyfile("./Campfire/readmes/Frostfall_readme.txt", dirname + "/readmes/F
 shutil.copyfile("./Campfire/readmes/Frostfall_license.txt", dirname + "/readmes/Frostfall_license.txt")
 shutil.copyfile("./Campfire/readmes/Frostfall_changelog.txt", dirname + "/readmes/Frostfall_changelog.txt")
 
-# Clean Up
-print "Removing temp files..."
-shutil.rmtree("./tmp")
-
 # Create release zip
 zip_name_ver = user_input.replace(".", "_")
 shutil.make_archive("./Frostfall_" + zip_name_ver + "_Release", format="zip", root_dir=dirname)
 shutil.move("./Frostfall_" + zip_name_ver + "_Release.zip", dirname + "/Frostfall_" + zip_name_ver + "_Release.zip")
 print "Created " + dirname + "/Frostfall_" + zip_name_ver + "_Release.zip"
+
+shutil.copyfile("./Campfire/Interface/Translations/Frostfall_ENGLISH.txt", dirname + "/Interface/Translations/Frostfall_ENGLISH.txt")
+
+# Clean Up
+print "Removing temp files..."
+shutil.rmtree("./tmp")
+
 print "Done!"

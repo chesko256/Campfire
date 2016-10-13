@@ -47,6 +47,45 @@ _Camp_TentSystem function GetTentSystem() global
 	return Campfire.CampfireTentSystem as _Camp_TentSystem
 endFunction
 
+bool function IsPlayerTransformed() global
+	; Whether or not the player is transformed into a beast (Werewolf or Vampire Lord)
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+
+	Race playerRace = Campfire.PlayerRef.GetRace()
+	if playerRace.HasKeyword(Campfire.ImmuneParalysis)
+		if playerRace.HasKeyword(Campfire.ActorTypeCreature)
+			; Werewolf
+			return true
+		elseif playerRace.HasKeyword(Campfire.ActorTypeUndead) && !playerRace.HasKeyword(Campfire.ActorTypeNPC)
+			; Vampire Lord
+			return true
+		else
+			return false
+		endif
+	else
+		return false
+	endif
+endFunction
+
+bool function IsPlayerUndead() global
+	CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return false
+	endif
+
+	Race playerRace = Campfire.PlayerRef.GetRace()
+	if playerRace.HasKeyword(Campfire.ActorTypeUndead)
+		return true
+	else
+		return false
+	endif
+endFunction
+
 ;/********f* CampUtil/GetAPIVersion
 * API VERSION ADDED
 * 1
@@ -129,7 +168,7 @@ Armor PlayerHelm = GetPlayerEquippedHead()
 		RaiseCampAPIError()
 		return None
 	endif
-	
+
 	return Campfire.CampData.CurrentHead
 endFunction
 
@@ -280,8 +319,6 @@ Armor PlayerArrows = GetPlayerEquippedAmmo()
 	return Campfire.CampData.CurrentAmmo
 endFunction
 
-; @TODO: REMOVE
-
 ;/********f* CampUtil/IsRefInInterior
 * API VERSION ADDED
 * 1
@@ -305,9 +342,9 @@ if IsRefInInterior(Box)
 	Debug.Trace("Box is inside!")
 endif
 * NOTES
-* The standard IsInInterior() function can only return whether or not the current cell 
-* is marked as an Interior. There are numerous worldspaces (such as AlftandWorld, 
-* Blackreach, BlindCliffCaveWorld, etc) that look and act like interiors, but are set 
+* The standard IsInInterior() function can only return whether or not the current cell
+* is marked as an Interior. There are numerous worldspaces (such as AlftandWorld,
+* Blackreach, BlindCliffCaveWorld, etc) that look and act like interiors, but are set
 * as external worldspaces. This can cause IsInInterior() to return undesirable results.
 * This function takes these known base game (and DLC) worldspaces into account when
 * evaluating the object reference's location.
@@ -566,7 +603,7 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true, bool abPlayerBusy
 * PARAMETERS
 * * abShowMessage: Whether to show an informative message detailing why the player can't place a Placeable Object right now if returning false.
 * * abPlayerBusyCheck: Whether or not to check if the player is already placing an object.
-* 
+*
 * RETURN VALUE
 * True if the player can currently place Placeable Objects, false otherwise.
 *
@@ -615,7 +652,7 @@ bool function PlayerCanPlaceObjects(bool abShowMessage = true, bool abPlayerBusy
 			Campfire._Camp_GeneralError_Busy.Show()
 		endif
 		return false
-	elseif Campfire.PlayerRef.GetRace().HasKeyword(Campfire.ActorTypeCreature) || Campfire.PlayerRef.GetRace().HasKeyword(Campfire.ImmuneParalysis)
+	elseif IsPlayerTransformed()
 		if abShowMessage
 			Campfire._Camp_GeneralError_Transformed.Show()
 		endif
@@ -652,7 +689,7 @@ endif
 		RaiseCampAPIError()
 		return False
 	endif
-	
+
 	if Campfire._Camp_CurrentlyPlacingObject.GetValueInt() == 2
 		return True
 	else
@@ -842,6 +879,8 @@ bool function IsTentWarm(ObjectReference akTent) global
 	Form TentForm = akTent.GetBaseObject()
 	if TentForm.HasKeyword(Campfire.isCampfireTentWarm)
 		return true
+	elseif Campfire._Camp_WarmBaseTents.HasForm(TentForm)
+		return true
 	else
 		return false
 	endif
@@ -935,8 +974,15 @@ bool function IsCurrentTentWarm() global
 		return false
 	endif
 
-	if Campfire.CurrentTent && Campfire.CurrentTent.GetBaseObject().HasKeyword(Campfire.isCampfireTentWarm)
-		return true
+	if Campfire.CurrentTent
+		Form TentForm = Campfire.CurrentTent.GetBaseObject()
+		if TentForm.HasKeyword(Campfire.isCampfireTentWarm)
+			return true
+		elseif Campfire._Camp_WarmBaseTents.HasForm(TentForm)
+			return true
+		else
+			return false
+		endif
 	else
 		return false
 	endif
@@ -1115,7 +1161,7 @@ endFunction
 *
 * NOTES
 * Unless you have a specific reason to control the availability of the perk tree, you should use
-* the CampPerkSystemRegister script on a Player ReferenceAlias instead of calling this function directly. 
+* the CampPerkSystemRegister script on a Player ReferenceAlias instead of calling this function directly.
 * See the Campfire Skill System Dev Kit tutorial for more info.
 *
 * SYNTAX
@@ -1134,15 +1180,15 @@ bool function RegisterPerkTree(Activator akPerkNodeController, string asPluginNa
 		RaiseCampAPIError()
 		return false
 	endif
-	
+
 	_Camp_Compatibility compatibility = GetCompatibilitySystem()
-	
+
 	int i = 0
 	while !compatibility.PerkNodeControllers && i < 30
 		Utility.Wait(1)
 		i += 1
 	endWhile
-	
+
 	return compatibility.CampfirePerkSystemRegister(akPerkNodeController, asPluginName)
 endFunction
 
@@ -1173,17 +1219,202 @@ bool function UnregisterPerkTree(Activator akPerkNodeController, string asPlugin
 		RaiseCampAPIError()
 		return false
 	endif
-	
+
 	_Camp_Compatibility compatibility = GetCompatibilitySystem()
-	
+
 	int i = 0
 	while !compatibility.PerkNodeControllers && i < 30
 		Utility.Wait(1)
 		i += 1
 	endWhile
-	
+
 	return compatibility.CampfirePerkSystemUnregister(akPerkNodeController, asPluginName)
 endFunction
+
+;;/********f* CampUtil/RegisterExamineReplacement
+;* API VERSION ADDED
+;* 5
+;*
+;* DESCRIPTION
+;* Register a new association between akFormToReplace and the Form to replace it with (akTargetForm) when using
+;* Survival Skill: Examine.
+;*
+;* SYNTAX
+;*/;
+;bool function RegisterExamineReplacement(Form akFormToReplace, Form akTargetForm, Message akSuccessMessage, \
+;										 bool abForceRegistration = false, FormList akExtraObjectsToDisableList = None) global
+;;/*
+;* PARAMETERS
+;* akFormToReplace: The form to look for and replace when using Examine.
+;* akTargetForm: The form to replace akFormToReplace with when using Examine.
+;* akSuccessMessage: The message to display when the object is successfully replaced.
+;* abForceRegistration (Optional): If True, will register the examine replacement even if akFormToReplace is already registered to something else, overwriting the previous registration.
+;* akExtraObjectsToDisableList (Optional): A formlist of objects to disable, if found within 512.0 units of akFormToReplace.
+;*
+;* RETURN VALUE
+;* True if the replacement mapping was successfully registered. False if this mapping could not be registered
+;* (akFormToReplace has already been mapped to something else without the Force flag turned on, or one of the
+;* required parameters is None).
+;;*********/;
+;	CampfireAPI Campfire = GetAPI()
+;	if Campfire == none
+;		RaiseCampAPIError()
+;		return false
+;	endif
+;
+;	_Camp_Compatibility c = GetCompatibilitySystem()
+;	if !c.ExamineFormsToReplace
+;		return false
+;	endif
+	;
+;	if akFormToReplace && akTargetForm && akSuccessMessage
+;		int i = CommonArrayHelper.ArrayCountForm(c.ExamineFormsToReplace)
+;		if i < 128
+;			int idx = c.ExamineFormsToReplace.Find(akFormToReplace)
+;			if idx == -1 || abForceRegistration
+;				c.ExamineFormsToReplace[i] = akFormToReplace
+;				c.ExamineReplacementForms[i] = akTargetForm
+;				c.ExamineSuccessMessages[i] = akSuccessMessage
+;				if akExtraObjectsToDisableList
+;					c.ExamineExtraFormsToDisable[i] = akExtraObjectsToDisableList
+;				endif
+;				return true
+;			else
+;				return false
+;			endif
+;		else
+;			return false
+;		endif
+;	else
+;		return false
+;	endif
+;endFunction
+;
+;;/********f* CampUtil/UnregisterExamineReplacement
+;* API VERSION ADDED
+;* 5
+;*
+;* DESCRIPTION
+;* Unregisters a Survival Skill: Examine association between two Forms.
+;*
+;* NOTES
+;* If the Examine registration replaces a Form with a Form in your mod, you do not need to unregister
+;* it before your user uninstalls the mod. The system will remove the registration automatically if it finds an
+;* association where the replacement Form is None (which would happen if your mod is uninstalled). However, if
+;* the replacement is between two different forms not from your mod, you must unregister it if you want the
+;* replacement to no longer function.
+;*
+;* SYNTAX
+;*/;
+;bool function UnregisterExamineReplacement(Form akFormToReplace) global
+;;/*
+;* PARAMETERS
+;* akFormToReplace: The previously registered Form to unregister.
+;*
+;* RETURN VALUE
+;* True if the replacement mapping was successfully unregistered. False if akFormToReplace was not found.
+;;*********/;
+;	CampfireAPI Campfire = GetAPI()
+;	if Campfire == none
+;		RaiseCampAPIError()
+;		return false
+;	endif
+;
+;	_Camp_Compatibility c = GetCompatibilitySystem()
+;	if !c.ExamineFormsToReplace || !akFormToReplace
+;		return false
+;	endif
+;
+;	int idx = c.ExamineFormsToReplace.Find(akFormToReplace)
+;	if idx != -1
+;		CommonArrayHelper.ArrayRemoveForm(c.ExamineFormsToReplace, akFormToReplace, true)
+;		CommonArrayHelper.ArrayRemoveForm(c.ExamineReplacementForms, c.ExamineReplacementForms[idx], true)
+;		CommonArrayHelper.ArrayRemoveMessage(c.ExamineSuccessMessages, c.ExamineSuccessMessages[idx], true)
+;		if c.ExamineExtraFormsToDisable[idx]
+;			CommonArrayHelper.ArrayRemoveFormList(c.ExamineExtraFormsToDisable, c.ExamineExtraFormsToDisable[idx], true)
+;		endif
+;		return true
+;	else
+;		return false
+;	endif
+	;
+	;
+;endFunction
+;
+;;/********f* CampUtil/HasExamineReplacement
+;* API VERSION ADDED
+;* 5
+;*
+;* DESCRIPTION
+;* Checks if akBaseObject has a Survival Skill: Examine replacement already registered.
+;*
+;* NOTES
+;* In general, you don't need to call this before calling `RegisterExamineReplacement()`; it will simply
+;* return False if the Form is already registered.
+;*
+;* SYNTAX
+;*/;
+;bool function HasExamineReplacement(Form akBaseObject) global
+;;/*
+;* PARAMETERS
+;* akBaseObject: The Form to check for an Examine registration.
+;*
+;* RETURN VALUE
+;* True if the Form is already registered, False if not.
+;;*********/;
+;	CampfireAPI Campfire = GetAPI()
+;	if Campfire == none
+;		RaiseCampAPIError()
+;		return false
+;	endif
+	;
+;	_Camp_Compatibility c = GetCompatibilitySystem()
+;	if !c.ExamineFormsToReplace || !akBaseObject
+;		return false
+;	endif
+;
+;	if c.ExamineFormsToReplace.Find(akBaseObject) != -1
+;		return true
+;	else
+;		return false
+;	endif
+;endFunction
+;
+;;/********f* CampUtil/GetExamineReplacementTarget
+;* API VERSION ADDED
+;* 5
+;*
+;* DESCRIPTION
+;* Returns the Form that will replace akBaseObject when using Survival Skill: Examine.
+;*
+;* SYNTAX
+;*/;
+;Form function GetExamineReplacementTarget(Form akBaseObject) global
+;;/*
+;* PARAMETERS
+;* akBaseObject: The Form to look up.
+;*
+;* RETURN VALUE
+;* The Form registered to replace akBaseObject, or None if a registration wasn't found.
+;;*********/;
+;	CampfireAPI Campfire = GetAPI()
+;	if Campfire == none
+;		RaiseCampAPIError()
+;		return None
+;	endif
+	;
+;	_Camp_Compatibility c = GetCompatibilitySystem()
+;	if !c.ExamineFormsToReplace || !akBaseObject
+;		return None
+;	endif
+;
+;	int i = c.ExamineFormsToReplace.Find(akBaseObject)
+;	if i != -1
+;		return c.ExamineReplacementForms[i]
+;	else
+;		return None
+;	endif
+;endFunction
 
 ;/********f* CampUtil/GetCampfireSettingBool
 * API VERSION ADDED
@@ -1382,7 +1613,7 @@ endFunction
 *
 * SYNTAX
 Event Campfire_OnObjectPlaced(Form akPlacedObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
-* 
+*
 * PARAMETERS
 * akPlacedObject: The ObjectReference that was placed. Cast to an ObjectReference (i.e. akPlacedObject as ObjectReference).
 * afXPos: The X position of the object.
@@ -1451,7 +1682,7 @@ endFunction
 *
 * SYNTAX
 Event Campfire_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPositionY, float afPositionZ, float afAngleX, float afAngleY, float afAngleZ, bool abIsTent)
-* 
+*
 * PARAMETERS
 * akPlacedObject: The base object of the object that was removed.
 * afPositionX: The X position of the object.
@@ -1464,7 +1695,7 @@ Event Campfire_OnObjectRemoved(Form akBaseObject, float afPositionX, float afPos
 *
 * NOTES
 * This event does not send the object reference of the object picked up as a parameter because, by the time this event is sent, the reference no longer exists.
-* This event will also be sent when a Campfire Perk Tree is exited. 
+* This event will also be sent when a Campfire Perk Tree is exited.
 *
 * EXAMPLES
 Event OnInit()
@@ -1514,7 +1745,7 @@ endFunction
 *
 * SYNTAX
 Event Campfire_OnBedrollSitLay(Form akTent, bool abGettingUp)
-* 
+*
 * PARAMETERS
 * akTent: The tent the player is sitting on, laying on, or getting up from. Cast to an ObjectReference (i.e. akTent as ObjectReference).
 * abGettingUp: Whether or not the player is getting up from this tent or bed roll.
@@ -1562,7 +1793,7 @@ endFunction
 *
 * SYNTAX
 Event Campfire_OnTentEnter(Form akTent, bool abHasShelter)
-* 
+*
 * PARAMETERS
 * akTent: The tent the player just "entered". Cast to an ObjectReference (i.e. akTent as ObjectReference).
 * abHasShelter: Whether or not the tent the player entered has overhead shelter of some kind.
@@ -1591,7 +1822,7 @@ endEvent
 *
 * SYNTAX
 Event Campfire_OnTentLeave()
-* 
+*
 * PARAMETERS
 * None.
 *
@@ -1618,7 +1849,7 @@ endEvent
 *
 * SYNTAX
 Event Campfire_Loaded()
-* 
+*
 * PARAMETERS
 * None
 *

@@ -35,15 +35,23 @@ bool started_via_stars = false
 bool gave_friend_items = false
 
 Event OnInit()
-	if _Frost_TrackingQuest.GetStage() == 0			;Kicks things off for the player
-		_Frost_TrackingQuest.SetStage(10)
-	endif
 	RegisterForSingleUpdate(5)
 EndEvent
 
 Event OnUpdate()
 	; We stop updating when the mod has been started
 	; and the friend items have been granted.
+
+	; Don't allow the player to start the mod at inopportune times
+	; (cart ride at beginning, etc)
+	if !Game.IsFightingControlsEnabled() || PlayerRef.IsInInterior()
+		RegisterForSingleUpdate(5)
+		return
+	endif
+
+	if _Frost_TrackingQuest.GetStage() == 0			;Kicks things off for the player
+		_Frost_TrackingQuest.SetStage(10)
+	endif
 	
 	if _Frost_TrackingQuest.GetStage() == 10 && !started_via_stars
 		if !IsRefInInterior(PlayerRef) && 		\
@@ -79,13 +87,11 @@ function RegisterForModEvents()
 	RegisterForModEvent("Frost_StopFrostfall", "StopFrostfall")
 endFunction
 
-Event StartFrostfall()
-	_Frost_StartingUp.Show()
+Event StartFrostfall(bool abBypassStartupMessage = false)
+	; _Frost_StartingUp.Show()
 	FrostDebug(1, "Starting Frostfall...")
 	GetClothingDatastoreHandler().InitializeDatastore()
 	FrostUtil.GetCompatibilitySystem().RunCompatibilityArmors()
-	; Prompt player to exit menu now.
-	SendEvent_StartupAlmostDone()
 
 	; Menu-Mode blocked functions
 	if !self.IsRunning()
@@ -95,7 +101,7 @@ Event StartFrostfall()
 		GetClothingDatastoreHandler().Start()
 	endif
 	PlayerAlias.ForceRefTo(PlayerRef)
-	StartModFirstTime()
+	StartModFirstTime(abBypassStartupMessage)
 	_Frost_TrackingQuest.SetStage(20)
 	Utility.Wait(2.0)
 	StartAllSystems()
@@ -114,7 +120,7 @@ Event StopFrostfall()
 		Game.EnableFastTravel()
 	endif
 	PlayerRef.RemoveSpell(_Frost_NoWait_Spell)
-	GetInterfaceHandler().RemoveAllMeters()
+	RemoveAllMeters()
 	UnregisterCampfireSkill()
 endEvent
 
@@ -128,6 +134,7 @@ function StartAllSystems()
 	GetCoverageSystem().StartSystem()
 	GetExposureSystem().StartSystem()
 	GetWetnessSystem().StartSystem()
+	GetFrostResistSystem().StartSystem()
 endFunction
 
 function StopAllSystems()
@@ -141,6 +148,7 @@ function StopAllSystems()
 	GetCoverageSystem().StopSystem()
 	GetExposureSystem().StopSystem()
 	GetWetnessSystem().StopSystem()
+	GetFrostResistSystem().StopSystem()
 	Utility.Wait(2)
 endFunction
 
@@ -191,20 +199,29 @@ function CheckInitialEquipment()
 endFunction
 
 function AddFriendItems()
-	if RiverwoodFriend.GetActorRef() != none
-		RiverwoodFriend.GetActorRef().AddItem(_Camp_Tent_LeatherSmall1BR_MISC)
-		RiverwoodFriend.GetActorRef().AddItem(_Camp_Cloak_BasicBurlap)
-		RiverwoodFriend.GetActorRef().AddItem(_Camp_ArmorSonsBoots)
+	Actor friend = RiverwoodFriend.GetActorRef()
+	if friend
+		if friend.GetItemCount(_Camp_Tent_LeatherSmall1BR_MISC) == 0
+			friend.AddItem(_Camp_Tent_LeatherSmall1BR_MISC)
+		endif
+		if friend.GetItemCount(_Camp_Cloak_BasicBurlap) == 0
+			friend.AddItem(_Camp_Cloak_BasicBurlap)
+		endif
+		if friend.GetItemCount(_Camp_ArmorSonsBoots) == 0
+			friend.AddItem(_Camp_ArmorSonsBoots)
+		endif
 		gave_friend_items = true
 	endif
 endFunction
 
-function StartModFirstTime()
+function StartModFirstTime(bool abBypassStartupMessage = false)
 	if _Frost_TrackingQuest.GetStage() == 20
 		return
 	else
 		;New game / first time user, show startup routine.
-		_Frost_FirstStartup_1.Show()
+		if !abBypassStartupMessage
+			_Frost_FirstStartup_1.Show()
+		endif
 		utility.wait(1)
 		PlayerRef.AddItem(_Frost_SurvivorsGuide)
 		utility.wait(6)
@@ -214,13 +231,6 @@ function StartModFirstTime()
 	endif
 endFunction
 
-function SendEvent_StartupAlmostDone()
-    int handle = ModEvent.Create("Frost_StartupAlmostDone")
-    if handle
-        ModEvent.Send(handle)
-    endif
-endFunction
-
 function UnregisterCampfireSkill()
 	GlobalVariable CampfireAPIVersion = Game.GetFormFromFile(0x03F1BE, "Campfire.esm") as GlobalVariable
 	if CampfireAPIVersion && CampfireAPIVersion.GetValueInt() >= 4
@@ -228,4 +238,31 @@ function UnregisterCampfireSkill()
 	else
 		debug.trace("[Campfire] ERROR: Unable to register Campfire Skill System for Frostfall.esp. Campfire was not found or the version loaded is not compatible. Expected CampUtil API 4 or higher, got " + CampfireAPIVersion.GetValueInt())
 	endif
+endFunction
+
+function RemoveAllMeters()
+	SendEvent_FrostfallRemoveExposureMeter()
+	SendEvent_FrostfallRemoveWetnessMeter()
+	SendEvent_FrostfallRemoveWeathersenseMeter()
+endFunction
+
+function SendEvent_FrostfallRemoveExposureMeter()
+	int handle = ModEvent.Create("Frostfall_RemoveExposureMeter")
+    if handle
+        ModEvent.Send(handle)
+    endif
+endFunction
+
+function SendEvent_FrostfallRemoveWetnessMeter()
+	int handle = ModEvent.Create("Frostfall_RemoveWetnessMeter")
+    if handle
+        ModEvent.Send(handle)
+    endif
+endFunction
+
+function SendEvent_FrostfallRemoveWeathersenseMeter()
+	int handle = ModEvent.Create("Frostfall_RemoveWeathersenseMeter")
+    if handle
+        ModEvent.Send(handle)
+    endif
 endFunction

@@ -126,3 +126,11 @@ function AssignDownstreamNodes()
     
     UpdateLines()
 endFunction
+
+function ClearData()
+    downstream_node_1_ref = None
+    downstream_node_2_ref = None
+    downstream_line_1_ref = None
+    downstream_line_2_ref = None
+    controller = None
+endFunction

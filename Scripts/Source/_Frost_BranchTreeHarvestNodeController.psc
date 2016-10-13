@@ -1,10 +1,8 @@
 scriptname _Frost_BranchTreeHarvestNodeController extends ObjectReference
+{Attached to the branch (from tree) node controller.}
 
 import Utility
 
-float RESET_TIME = 12.0
-float BACKOFF_TIME
-MiscObject property _Camp_Tinder auto
 MiscObject property _Camp_DeadwoodBranch auto
 Activator property _Camp_HarvestBranchTree_Node auto
 Activator property _Camp_ZTestReceiver auto
@@ -12,20 +10,19 @@ Spell property _Camp_BranchZTestSpell auto
 Actor property PlayerRef auto
 FormList property _Camp_HarvestableBranchTrees auto
 bool property harvested = false auto hidden
-float property tinder_yield_chance auto hidden
 int property yield_branch auto hidden
 float property bonus_chance auto hidden
+
+float RESET_TIME = 12.0
+float BACKOFF_TIME
+
 bool eligible_for_reset = false
 
-function Setup(float _tinder_yield_chance, 								\
-			   int _yield_branch, float _bonus_chance)
-
-	;debug.trace("[Campfire] Setting up new branch / tree harvesting node " + self)
-	tinder_yield_chance = _tinder_yield_chance
-	yield_branch = _yield_branch
-	bonus_chance = _bonus_chance
+function Setup()
+	debug.trace("[Campfire] Setting up new branch / tree harvesting node " + self)
+	yield_branch = 1
+	bonus_chance = 0.0
 	
-	;Store a random back-off value for use during reset
 	BACKOFF_TIME = RandomFloat(0.0, 3.0)
 
 	;@TODO: SKSE
@@ -33,10 +30,10 @@ function Setup(float _tinder_yield_chance, 								\
 endFunction
 
 function Handle_Tree(ObjectReference akReference)
-	ObjectReference tr = akReference.PlaceAtMe(_Camp_ZTestReceiver)
-	tr.MoveTo(tr, afZOffset = -2000.0)
+	ObjectReference receiver = akReference.PlaceAtMe(_Camp_ZTestReceiver)
+	receiver.MoveTo(receiver, afZOffset = -2000.0)
 	debug.trace("[Campfire] Firing...")
-	_Camp_BranchZTestSpell.Cast(akReference, tr)
+	_Camp_BranchZTestSpell.Cast(akReference, receiver)
 endFunction
 
 Event OnActivate(ObjectReference akActionRef)
@@ -52,14 +49,10 @@ function YieldResources(ObjectReference akActionRef)
 		if bonus_roll <= bonus_chance
 			branch_count += 1
 		endif
-		;float tinder_roll = RandomFloat(0.01, 1.0)
 
 		if branch_count > 0
 			akActionRef.AddItem(_Camp_DeadwoodBranch, branch_count)
 		endif
-		;if tinder_roll <= tinder_yield_chance
-		;	akActionRef.AddItem(_Camp_Tinder)
-		;endif
 
 		self.DisableNoWait()
 

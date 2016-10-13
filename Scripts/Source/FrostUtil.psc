@@ -44,6 +44,33 @@ _Frost_InterfaceHandler function GetInterfaceHandler() global
     return Frostfall.Interface
 endFunction
 
+_Frost_ExposureMeterInterfaceHandler function GetExposureMeterHandler() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.ExposureMeterHandler
+endFunction
+
+_Frost_WetnessMeterInterfaceHandler function GetWetnessMeterHandler() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.WetnessMeterHandler
+endFunction
+
+_Frost_WeatherMeterInterfaceHandler function GetWeathersenseMeterHandler() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.WeathersenseMeterHandler
+endFunction
+
 _Frost_ArmorProtectionDatastoreHandler function GetClothingDatastoreHandler() global
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
@@ -125,6 +152,41 @@ _Frost_ShelterSystem function GetShelterSystem() global
     return Frostfall.Shelter
 endFunction
 
+_Frost_FrostResistSystem function GetFrostResistSystem() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.FrostResist
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_UpdateWarmth() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall._Frost_EventEmitter_UpdateWarmth as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_OnTamrielRegionChange() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall._Frost_EventEmitter_OnTamrielRegionChange as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_OnSneak() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall._Frost_EventEmitter_OnSneak as FallbackEventEmitter
+endFunction
 
 ; Public Functions ================================================================================
 
@@ -207,7 +269,7 @@ bool function IsPlayerNearFire() global
 bool near_fire = FrostUtil.IsPlayerNearFire()
 * NOTES
 * This does NOT indicate if the player is near a heat source; there are heat sources
-* that are not fires. Fires have special properties in Frostfall and Campfire, which 
+* that are not fires. Fires have special properties in Frostfall and Campfire, which
 * include drying the player when wet, and being able to cook food using a cooking pot.
 *
 * To determine if the player is near a heat source of any kind, use GetPlayerHeatSourceLevel()
@@ -235,7 +297,7 @@ endFunction
 * 1
 *
 * DESCRIPTION
-* The level (size) of the player's current nearby heat source. 
+* The level (size) of the player's current nearby heat source.
 *
 * SYNTAX
 */;
@@ -278,7 +340,7 @@ endFunction
 * 1
 *
 * DESCRIPTION
-* The distance from the player to the player's current nearby heat source. 
+* The distance from the player to the player's current nearby heat source.
 *
 * SYNTAX
 */;
@@ -483,13 +545,13 @@ int class = FrostUtil.GetWeatherClassificationActual()
     if !akWeather
         return -1
     endif
-    
+
     if Frostfall._Frost_OvercastWeatherList.HasForm(akWeather)
         return 0
     endif
-    
+
     int classification = akWeather.GetClassification()
-    
+
     _Frost_Compatibility Compatibility = GetCompatibilitySystem()
     if classification == 3
         if Compatibility.isDLC2Loaded && akWeather == Compatibility.DLC2AshStorm
@@ -1273,19 +1335,6 @@ FrostUtil.RemoveSleepException(my_horse)
     endif
 endFunction
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 ;/********f* FrostUtil/AddFastTravelWorldspaceException
 * API VERSION ADDED
 * 2
@@ -1329,7 +1378,7 @@ endFunction
 * 2
 *
 * DESCRIPTION
-* Adds a worldspace to the list of worldspaces that Frostfall maintains where fast travel controls should always be enabled. 
+* Adds a worldspace to the list of worldspaces that Frostfall maintains where fast travel controls should always be enabled.
 * Only Worldspace forms added to the list via AddFastTravelWorldspaceException can be removed.
 *
 * SYNTAX
@@ -1411,7 +1460,7 @@ int function GetPlayerWetnessLevel() global
 * None
 *
 * RETURN VALUE
-* * The player's current wetness level.    
+* * The player's current wetness level.
 * * 0 = Not wet
 * * 1 = Damp
 * * 2 = Wet
@@ -1553,6 +1602,44 @@ endif
     return Frostfall._Frost_ExposureLevel.GetValueInt()
 endFunction
 
+;/********f* FrostUtil/GetPlayerExposureLimit
+* API VERSION ADDED
+* 3
+*
+* DESCRIPTION
+* Return the player's current exposure limit value, the value that exposure will be attracted to over time.
+*
+* SYNTAX
+*/;
+float function GetPlayerExposureLimit() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* * The player's current exposure limit.
+* * 0.0 - 19.9 = Warm
+* * 20.0 - 39.9 = Comfortable
+* * 40.0 - 59.9 = Cold
+* * 60.0 - 79.9 = Very Cold
+* * 80.0 - 99.9 = Freezing
+* * 100.0 - 120.0 = Freezing to Death
+*
+* EXAMPLES
+;Is the player going to eventually be cold?
+float limit = FrostUtil.GetPlayerExposureLimit()
+if limit >= 40.0
+    debug.notification("Player will be chilly, eventually!")
+endif
+;*********/;
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return -1.0
+    endif
+    return Frostfall._Frost_ExposureTarget.GetValue()
+endFunction
+
 ;/********f* FrostUtil/ModPlayerExposure
 * API VERSION ADDED
 * 1
@@ -1678,7 +1765,7 @@ int gear_warmth = FrostUtil.GetPlayerArmorWarmth()
 * the player's total Warmth value. If you want the total Warmth, use GetPlayerWarmth() instead.
 ;*********/;
     _Frost_ClothingSystem clothing_system = GetClothingSystem()
-    return clothing_system.GetArmorWarmth()
+    return clothing_system.GetArmorWarmth(clothing_system.WornGearValues)
 endFunction
 
 ;/********f* FrostUtil/GetPlayerArmorCoverage
@@ -1706,9 +1793,65 @@ int gear_coverage = FrostUtil.GetPlayerArmorCoverage()
 * the player's total Coverage value. If you want the total Coverage, use GetPlayerCoverage() instead.
 ;*********/;
     _Frost_ClothingSystem clothing_system = GetClothingSystem()
-    return clothing_system.GetArmorCoverage()
+    return clothing_system.GetArmorCoverage(clothing_system.WornGearValues)
 endFunction
 
+;/********f* FrostUtil/ArmorProtectionDataExists
+* API VERSION ADDED
+* 3
+*
+* DESCRIPTION
+* Whether or not the player's current profile (or the default values profile) contains data about this armor.
+*
+* SYNTAX
+*/;
+bool function ArmorProtectionDataExists(Armor akArmor) global
+;/*
+* PARAMETERS
+* akArmor:
+*
+* RETURN VALUE
+* True if data exists; False otherwise.
+*
+* EXAMPLES
+;Does the player have warmth and coverage data for my cool armor?
+bool data_exists = FrostUtil.ArmorProtectionDataExists(MyCoolArmor)
+* NOTES
+* This function only looks at profile data, and not other factors that could determine
+* the protection data of this gear (like keywords).
+;*********/;
+    _Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+    string dskey = handler.GetDatastoreKeyFromForm(akArmor)
+    return handler.DatastoreHasKey(dskey)
+endFunction
+
+;/********f* FrostUtil/ArmorProtectionDataExistsByKey
+* API VERSION ADDED
+* 3
+*
+* DESCRIPTION
+* Whether or not the player's current profile (or the default values profile) contains data about this armor, by datastore key.
+*
+* SYNTAX
+*/;
+bool function ArmorProtectionDataExistsByKey(string asKey) global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* True if data exists; False otherwise.
+*
+* EXAMPLES
+;Does the player have warmth and coverage data for my cool armor?
+bool data_exists = FrostUtil.ArmorProtectionDataExistsByKey("20258___MyCoolMod.esp")
+* NOTES
+* This function only looks at profile data, and not other factors that could determine
+* the protection data of this gear (like keywords).
+;*********/;
+    _Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+    return handler.DatastoreHasKey(asKey)
+endFunction
 
 ; Events ==========================================================================================
 
@@ -1721,7 +1864,7 @@ endFunction
 *
 * SYNTAX
 Event Frostfall_OnPlayerStartSwimming()
-* 
+*
 * PARAMETERS
 * None
 *
@@ -1751,7 +1894,7 @@ endFunction
 *
 * SYNTAX
 Event Frostfall_OnPlayerStopSwimming()
-* 
+*
 * PARAMETERS
 * None
 *
@@ -1788,7 +1931,7 @@ endFunction
 *
 * SYNTAX
 Event Frostfall_Loaded()
-* 
+*
 * PARAMETERS
 * None
 *
@@ -1815,7 +1958,7 @@ endEvent
 *
 * SYNTAX
 Event Frost_OnRescuePlayer(bool in_water)
-* 
+*
 * PARAMETERS
 * * in_water: Whether or not the player was swimming when they were rescued (mainly used by the rescue system to select a suitable destination).
 *
@@ -1838,7 +1981,7 @@ endEvent
 *
 * SYNTAX
 Event OnTamrielRegionChange(int region, bool in_region)
-* 
+*
 * PARAMETERS
 * * region: The ID of the region. See Notes for region IDs.
 * * in_region: If True, the player is entering this region. If False, the player is leaving it.
@@ -1856,15 +1999,15 @@ endEvent
 * NOTES
 * The following are possible region IDs:
 * * REGION_UNKNOWN = -1
-* * REGION_PINEFOREST = 1 
-* * REGION_VOLCANICTUNDRA = 2 
-* * REGION_FALLFOREST = 3 
-* * REGION_REACH = 4 
-* * REGION_TUNDRA = 5 
-* * REGION_TUNDRAMARSH = 6 
-* * REGION_COAST = 7 
-* * REGION_SNOW = 8 
-* * REGION_OBLIVION = 9 
+* * REGION_PINEFOREST = 1
+* * REGION_VOLCANICTUNDRA = 2
+* * REGION_FALLFOREST = 3
+* * REGION_REACH = 4
+* * REGION_TUNDRA = 5
+* * REGION_TUNDRAMARSH = 6
+* * REGION_COAST = 7
+* * REGION_SNOW = 8
+* * REGION_OBLIVION = 9
 * * REGION_FALMERVALLEY = 10
 * * REGION_SOLSTHEIM = 11
 * * REGION_WYRMSTOOTH = 20
@@ -1880,7 +2023,7 @@ endEvent
 *
 * SYNTAX
 Event Frost_OnInnerFireMeditate(bool abMeditating)
-* 
+*
 * PARAMETERS
 * * abMeditating: If True, the player entered the Inner Fire state. If False, they have just left it.
 *
@@ -1899,8 +2042,18 @@ endEvent
 ; Deprecated / Unused Functions ===================================================================
 
 bool function IsWarmEnoughToRemoveGearInTent() global
-    ; This feature is currently unimplemented in Campfire
-    return true
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return false
+    endif
+
+    int temp = Frostfall._Frost_CurrentTemperature.GetValueInt()
+    if temp > 0.0
+        return true
+    else
+        return false
+    endif
 endFunction
 
 bool function IsWarmEnoughToHarvestWood() global

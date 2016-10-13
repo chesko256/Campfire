@@ -13,6 +13,10 @@ GlobalVariable property CampfireIsPerkEligibleToBuy auto hidden
 message property _Camp_PerkGeneral_UpgradeVerify auto hidden
 { Filled at runtime. }
 
+function Initialize()
+    parent.Initialize()
+endFunction
+
 function AssignCampfire(ObjectReference akCampfire)
     myCampfire = akCampfire
 endFunction

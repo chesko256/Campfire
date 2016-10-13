@@ -1,0 +1,2 @@
+@ECHO OFF
+"E:\ModOrganizerData\mods\PapyrusCommon\Papyrus Compiler\PapyrusCompiler.exe" %1 -f="TESV_Papyrus_Flags.flg" -i=".\Scripts\Source;E:\ModOrganizerData\mods\Lilac\Scripts\Source;E:\ModOrganizerData\mods\PapyrusCommon\Scripts\Source;E:\ModOrganizerData\mods\PapyrusCommon\Scripts\Source\Dragonborn;E:\ModOrganizerData\mods\CheskoPapyrusShared\Scripts\Source;E:\ModOrganizerData\mods\Wet and Cold 2.0.2\Scripts\Source" -o=".\Scripts"

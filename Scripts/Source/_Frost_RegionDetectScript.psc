@@ -13,10 +13,11 @@ Event OnEffectFinish(Actor akTarget, Actor akCaster)
 endEvent
 
 function SendEvent_OnTamrielRegionChange(int region, bool in_region)
-	int handle = ModEvent.Create("Frost_OnTamrielRegionChange")
+	FallbackEventEmitter emitter = GetEventEmitter_OnTamrielRegionChange()
+	int handle = emitter.Create("Frost_OnTamrielRegionChange")
 	if handle
-		ModEvent.PushInt(handle, region)
-		ModEvent.PushBool(handle, in_region)
-		ModEvent.Send(handle)
+		emitter.PushInt(handle, region)
+		emitter.PushBool(handle, in_region)
+		emitter.Send(handle)
 	endif
 endFunction

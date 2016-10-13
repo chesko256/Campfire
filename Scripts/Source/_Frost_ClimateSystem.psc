@@ -17,6 +17,7 @@ GlobalVariable property _Frost_RegionDetect_ForceUpdate auto
 GlobalVariable property _Frost_Setting_DisplayTutorials auto
 GlobalVariable property _Frost_HelpDone_Cold auto
 GlobalVariable property FrostfallCurrentTemperatureReadOnly auto
+GlobalVariable property _Frost_AttributeMeterTempLevel auto
 
 FormList property _Frost_WorldspacesExteriorPineForest auto
 FormList property _Frost_WorldspacesExteriorVolcanicTundra auto
@@ -90,6 +91,7 @@ float pos_y
 float pos_z
 Worldspace ws
 int current_max_temperature
+int last_max_temperature
 int last_region
 int last_current_temperature
 bool was_nighttime
@@ -111,7 +113,8 @@ function Update()
 endFunction
 
 function RegisterForEvents()
-	RegisterForModEvent("Frost_OnTamrielRegionChange", "OnTamrielRegionChange")
+	FallbackEventEmitter emitter = GetEventEmitter_OnTamrielRegionChange()
+	emitter.RegisterFormForModEventWithFallback("Frost_OnTamrielRegionChange", "OnTamrielRegionChange", self as Form)
 
 	; Force the region detect system to fire something on start-up.
 	_Frost_RegionDetect_ForceUpdate.SetValueInt(0)
@@ -140,7 +143,7 @@ function UpdateClimateState()
 	ShowWeatherTransitionMessage(current_weather, incoming_weather, region)
 
 	current_max_temperature = GetMaxTemperatureByLocation()
-	
+
 	; To calculate temperature, always use the incoming weather if present.
 	if transitioning
 		current_temperature = GetCurrentTemperature(incoming_weather, region)
@@ -151,7 +154,7 @@ function UpdateClimateState()
 	if !first_update && current_temperature <= 3
 		ShowTutorial_Cold()
 	endif
-	
+
 	FrostDebug(0, "%%%% Climate ::: Current Temp: " + current_temperature + ", Region: " + region)
 	_Frost_CurrentTemperature.SetValueInt(current_temperature)
 	_Frost_CurrentWaterTemperature.SetValueInt(current_temperature + 2)
@@ -162,6 +165,7 @@ function UpdateClimateState()
 	last_current_weather = current_weather
 	last_incoming_weather = incoming_weather
 	last_current_temperature = current_temperature
+	last_max_temperature = current_max_temperature
 	last_region = region
 	first_update = false
 endFunction
@@ -201,7 +205,8 @@ int function GetCurrentTemperature(Weather this_weather, int region)
 		return 10
 	endif
 
-	if GameHour.GetValue() > 19 || GameHour.GetValue() < 7
+	float hour = GameHour.GetValue()
+	if hour > 19 || hour < 7
 		is_nighttime = true
 	else
 		is_nighttime = false
@@ -213,14 +218,16 @@ int function GetCurrentTemperature(Weather this_weather, int region)
 	endif
 
 	; Don't recalculate if the weather, region or time hasn't changed.
-	if this_weather == last_current_weather && region == last_region && !time_changed
+	if last_max_temperature == current_max_temperature && 	\
+	   this_weather == last_current_weather && 				\
+	   region == last_region && !time_changed
 		return last_current_temperature
 	endif
 
 	int current_temperature = 10
 	int base_temperature = GetRegionBaselineTemperature(region)
 	int current_weather_class = GetWeatherClassificationActual(this_weather)
-	
+
 	if current_weather_class == WEATHERCLASS_UNKNOWN
 		current_temperature = (base_temperature - 2) - RandomInt(-1, 1)
 
@@ -267,8 +274,8 @@ int function GetMaxTemperatureByLocation()
 	int max_temp = 100
 	if ws != Tamriel
 		return max_temp
-	endif	
-	
+	endif
+
 	; High Hrothgar
 	if (pos_x <= 74340 && pos_x >= 32000) && (pos_y <= -21000 && pos_y >= -66600)
 								;						~~~~    _  ~~~~
@@ -318,7 +325,7 @@ int function GetMaxTemperatureByLocation()
 		endif
 		FrostDebug(0, "%%%% Climate ::: Override Area: Haafingar | Max Temp: " + max_temp)
 	endif
-	
+
 	return max_temp
 endFunction
 
@@ -341,13 +348,13 @@ int function GetRegionBaselineTemperature(int region)
 		return -10
 	elseif region == REGION_OBLIVION
 		return 16
-	
+
 	;			####Official DLC Compatibility####
 	elseif region == REGION_FALMERVALLEY
 		return Compatibility.GetPlayerRegionTemp_FalmerValley(pos_x, pos_y)
 	elseif region == REGION_SOLSTHEIM
 		return Compatibility.GetPlayerRegionTemp_Solstheim(pos_x, pos_y)
-	
+
 	;			####Landmass Mod Compatibility####
 	elseif region == REGION_WYRMSTOOTH
 		return Compatibility.GetPlayerRegionTemp_Wyrmstooth(pos_x, pos_y)
@@ -388,15 +395,15 @@ int function GetPlayerRegion()
 	endif
 endFunction
 
-int function GetWeatherClassificationActual(Weather akWeather)	
+int function GetWeatherClassificationActual(Weather akWeather)
 	if !akWeather
 		return -1
 	endif
-	
+
 	if _Frost_OvercastWeatherList.HasForm(akWeather)
 		return 0
 	endif
-	
+
 	int weather_class = akWeather.GetClassification()
 	if weather_class == 3
 		if Compatibility.isDLC2Loaded && akWeather == Compatibility.DLC2AshStorm
@@ -522,29 +529,28 @@ endFunction
 function SendEvent_UpdateWeathersenseMeter(int temp)
 	int temp_level
 	if temp >= 18
-		temp_level = 10
+		_Frost_AttributeMeterTempLevel.SetValueInt(10)
 	elseif temp < 18 && temp >= 15
-		temp_level = 9
+		_Frost_AttributeMeterTempLevel.SetValueInt(9)
 	elseif temp < 15 && temp > 10
-		temp_level = 8
+		_Frost_AttributeMeterTempLevel.SetValueInt(8)
 	elseif temp == 10
-		temp_level = 7
+		_Frost_AttributeMeterTempLevel.SetValueInt(7)
 	elseif temp < 10 && temp >= 6
-		temp_level = 6
+		_Frost_AttributeMeterTempLevel.SetValueInt(6)
 	elseif temp < 6 && temp >= 1
-		temp_level = 5
+		_Frost_AttributeMeterTempLevel.SetValueInt(5)
 	elseif temp < 1 && temp >= -4
-		temp_level = 4
+		_Frost_AttributeMeterTempLevel.SetValueInt(4)
 	elseif temp < -4 && temp >= -9
-		temp_level = 3
+		_Frost_AttributeMeterTempLevel.SetValueInt(3)
 	elseif temp < -9 && temp >= -14
-		temp_level = 2
+		_Frost_AttributeMeterTempLevel.SetValueInt(2)
 	elseif temp < -14
-		temp_level = 1
+		_Frost_AttributeMeterTempLevel.SetValueInt(1)
 	endif
-	int handle = ModEvent.Create("Frost_UpdateWeathersenseMeter")
+	int handle = ModEvent.Create("Frostfall_UpdateWeathersenseMeter")
 	if handle
-		ModEvent.PushInt(handle, temp_level)
 		ModEvent.Send(handle)
 	endif
 endFunction

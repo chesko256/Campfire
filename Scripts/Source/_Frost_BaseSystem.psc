@@ -15,6 +15,7 @@ function StartSystem()
 	if UpdateFrequencyGlobal
 		RegisterForSingleUpdate(1)
 	endif
+	StartUp()
 	initialized = true
 endFunction
 
@@ -23,7 +24,18 @@ function StopSystem()
 	if self.IsRunning()
 		self.Stop()
 	endif
+	ShutDown()
 	initialized = false
+endFunction
+
+; @Override
+function StartUp()
+	; pass
+endFunction
+
+; @Override
+function ShutDown()
+	; pass
 endFunction
 
 bool function IsSystemRunning()

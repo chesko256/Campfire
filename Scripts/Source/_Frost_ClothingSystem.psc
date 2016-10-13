@@ -1,319 +1,288 @@
 scriptname _Frost_ClothingSystem extends _Frost_BaseSystem
 
+import _CampInternal
 import FrostUtil
 import _FrostInternal
 import math
+import CommonArrayHelper
 
 Actor property PlayerRef auto
-Quest property _Frost_MainQuest auto
 GlobalVariable property FrostfallRunning auto
 GlobalVariable property _Frost_Setting_Notifications_EquipmentValues auto
 GlobalVariable property _Frost_Setting_Notifications_EquipmentSummary auto
 GlobalVariable property _Frost_CheckInitialEquipment auto
-Quest property FrostfallStrings auto
-Keyword property ActorTypeCreature auto
-Keyword property ImmuneParalysis auto
 Keyword property WAF_ClothingCloak auto
 
-Armor property equipped_body auto hidden
-Armor property equipped_head auto hidden
-Armor property equipped_hands auto hidden
-Armor property equipped_feet auto hidden
-Armor property equipped_cloak auto hidden
-Armor property equipped_shield auto hidden
-
-int property body_warmth auto hidden
-int property head_warmth auto hidden
-int property hands_warmth auto hidden
-int property feet_warmth auto hidden
-int property cloak_warmth auto hidden
-int property shield_warmth auto hidden
-
-int property body_coverage auto hidden
-int property head_coverage auto hidden
-int property hands_coverage auto hidden
-int property feet_coverage auto hidden
-int property cloak_coverage auto hidden
-int property shield_coverage auto hidden
+Armor[] property WornGearForms auto hidden
+int[] property WornGearValues auto hidden
+Keyword property _Frost_WornGearData auto
 
 Keyword property _Frost_DummyArmorKW auto
+Keyword property _FrostData_ArmorPrecache auto
 Armor property initial_body auto hidden
 Armor property initial_head auto hidden
 Armor property initial_hands auto hidden
 Armor property initial_feet auto hidden
 Armor property initial_shield auto hidden
 
-bool unequip_lock = false
+_Frost_ArmorProtectionDatastoreHandler handler
 
-function RegisterForEvents()
-    RegisterForModEvent("Frost_ShieldEquipped", "ShieldEquipped")
-endFunction 
-
-function RaceChanged()
-    if PlayerRef.GetRace().HasKeyword(ActorTypeCreature) || PlayerRef.GetRace().HasKeyword(ImmuneParalysis)
-        FrostDebug(1, "I am now a werewolf or vampire lord.")
-        ModPlayerExposure(-120.0, 0.0)
-        (_Frost_MainQuest as _Frost_ConditionValues).IsBeast = true
-        SendEvent_UpdateWarmth()
-    else
-        FrostDebug(1, "I am now a werewolf or vampire lord.")
-        (_Frost_MainQuest as _Frost_ConditionValues).IsBeast = false
-        SendEvent_UpdateWarmth()
-    endif
+function StartUp()
+    handler = GetClothingDatastoreHandler()
+    WornGearForms = new Armor[31]
+    WornGearValues = new int[12]
 endFunction
 
-function ObjectEquipped(Form akBaseObject, int iGearType)
-    ;===========
-    ;Parameters
-    ;===========
-    ;   akBaseObject: The base object the actor just equipped.
-    ;   iGearType: The type of gear the actor equipped, which is one of the following values:
-    ;       1: Body gear (Armor, clothing)
-    ;       2: Hands gear (Gauntlets, gloves)
-    ;       3: Head gear (Helmet, hat, hoods)
-    ;       4: Foot gear (Boots, shoes)
-    ;       5: Backpack
-    ;       6: Ammo
-    ;       7: Other (could be cloak)
-    ;       8: Shield
-        
-    if !akBaseObject
-        return
+bool function ObjectEquipped(Form akBaseObject)
+    if !akBaseObject || !akBaseObject as Armor
+        ; debug.trace("akBaseObject was none or was not armor")
+        return false
     endif
 
     ; Initial equipment check
     if akBaseObject.HasKeyword(_Frost_DummyArmorKW)
-        return
+        return false
     endif
 
-    HandleEquippedObject(akBaseObject, iGearType)
-
-    SendEvent_UpdateWarmthAndCoverage()
-    DisplayWarmthCoverageNoSkyUIPkg(akBaseObject as Armor, iGearType)
-
-    FrostDebug(0, "Armor protection report: BODY(" + body_warmth + ", " + body_coverage +       \
-                                            ") HANDS(" + hands_warmth + ", " + hands_coverage + \
-                                            ") HEAD(" + head_warmth + ", " + head_coverage +    \
-                                            ") FEET(" + feet_warmth + ", " + feet_coverage +    \
-                                            ") CLOAK(" + cloak_warmth + ", " + cloak_coverage + \
-                                            ") SHIELD(0, " + shield_coverage + ")")
+    bool update_required = AddWornGearEntryForArmorEquipped(akBaseObject as Armor, WornGearForms, _Frost_WornGearData)
+    ;debug.trace("update_required = " + update_required)
+    DisplayWarmthCoverageNoSkyUIPkg(akBaseObject as Armor)
+    return update_required
 endFunction
 
-function HandleEquippedObject(Form akBaseObject, int iGearType)
-    int i = 20
-    while unequip_lock == true && i > 0
-        utility.wait(0.2)
-        i -= 1
-    endWhile
+bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
+    ; Assign protection data to the correct internal slots and store the results.
+    ; Return True if recalculation of warmth and coverage is necessary, false otherwise.
+    int slot_mask = akArmor.GetSlotMask()
 
-    Armor armor_object = akBaseObject as Armor
-    if !armor_object
-        return
+    ; Check the pre-cache first
+    int[] armor_data
+    string armorName = akArmor.GetName()
+    if PrecacheHasArmorData(armorName, _FrostData_ArmorPrecache)
+        FrostDebug(0, "Retrieving " + armorName + " from precache.")
+        armor_data = GetArmorDataFromPrecache(armorName, _FrostData_ArmorPrecache)
+    else
+        FrostDebug(0, "Resolving " + armorName + ", not found in precache.")
+        armor_data = handler.GetArmorProtectionData(akArmor)
+        TryToAddArmorDataToPrecache(akArmor, armor_data, _FrostData_ArmorPrecache)
     endif
 
-    _Frost_ArmorProtectionDatastoreHandler DSHandler = GetClothingDatastoreHandler()
-    int[] protection_data
-
-    ; Gear Type Overrides
-    if akBaseObject.HasKeyword(WAF_ClothingCloak)
-        iGearType = 7
-    endif
-    int mySlotMask = armor_object.GetSlotMask()
-    if LogicalAnd(mySlotMask, armor_object.kSlotMask31) && !LogicalAnd(mySlotMask, armor_object.kSlotMask32)
-        iGearType = 3
+    if armor_data[0] == handler.GEARTYPE_IGNORE
+        return false
     endif
 
-    if iGearType == 1
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType, aiMode = 1)
-        equipped_body = armor_object
-        body_warmth = protection_data[0]
-        body_coverage = protection_data[1]
-        if protection_data[2] != -1
-            equipped_hands = armor_object
-            hands_warmth = protection_data[2]
-            hands_coverage = protection_data[3]
-        endif
-        if protection_data[4] != -1
-            equipped_head = armor_object
-            head_warmth = protection_data[4]
-            head_coverage = protection_data[5]
-        endif
-        if protection_data[6] != -1
-            equipped_feet = armor_object
-            feet_warmth = protection_data[6]
-            feet_coverage = protection_data[7]
-        endif
-        if protection_data[8] != -1
-            equipped_cloak = armor_object
-            cloak_warmth = protection_data[8]
-            cloak_coverage = protection_data[9]
-        endif
-    elseif iGearType == 2
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
-        equipped_hands = armor_object
-        hands_warmth = protection_data[0]
-        hands_coverage = protection_data[1]
-    elseif iGearType == 3
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType, aiMode = 2)
-        equipped_head = armor_object
-        head_warmth = protection_data[0]
-        head_coverage = protection_data[1]
-        if protection_data[2] != -1
-            equipped_cloak = armor_object
-            cloak_warmth = protection_data[2]
-            cloak_coverage = protection_data[3]
-        endif
-    elseif iGearType == 4
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
-        equipped_feet = armor_object
-        feet_warmth = protection_data[0]
-        feet_coverage = protection_data[1]
-    elseif iGearType == 7
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
-        if protection_data[0] != -1
-            equipped_cloak = armor_object
-            cloak_warmth = protection_data[0]
-            cloak_coverage = protection_data[1]
-        endif
-    elseif iGearType == 8
-        protection_data = DSHandler.GetArmorProtectionData(armor_object, iGearType)
-        if protection_data[0] != -1
-            equipped_shield = armor_object
-            shield_warmth = protection_data[0]
-            shield_coverage = protection_data[1]
-        endif
+    ; The system will store ONE Body, Head, Hands, Feet, and Cloak slot Warmth and Coverage.
+    ; The system will keep any number of warmth/coverage values for Misc.
+    ; Explicit gear types win over extra part data.
+    int idx = akWornGearFormsArray.Find(akArmor)
+    if idx == -1
+        ; plug the data in
+        ArrayAddArmor(akWornGearFormsArray, akArmor)
+        string dskey = handler.GetDatastoreKeyFromForm(akArmor)
+
+        int type = armor_data[0]
+        StorageUtil.IntListResize(akWornGearData, dskey, 13)
+        StorageUtil.IntListSet(akWornGearData, dskey, 0, type) ; type
+        int jdx = (type * 2)
+
+        StorageUtil.IntListSet(akWornGearData, dskey, 1, armor_data[3])     ; body warmth (from extra body warmth)
+        StorageUtil.IntListSet(akWornGearData, dskey, 2, armor_data[4])     ; body coverage (from extra body coverage)
+        StorageUtil.IntListSet(akWornGearData, dskey, 3, armor_data[5])     ; head warmth (from extra head warmth)
+        StorageUtil.IntListSet(akWornGearData, dskey, 4, armor_data[6])     ; head coverage (from extra head coverage)
+        StorageUtil.IntListSet(akWornGearData, dskey, 5, armor_data[7])     ; hands warmth (from extra hands warmth)
+        StorageUtil.IntListSet(akWornGearData, dskey, 6, armor_data[8])     ; hands coverage (from extra hands coverage)
+        StorageUtil.IntListSet(akWornGearData, dskey, 7, armor_data[9])     ; feet warmth (from extra feet warmth)
+        StorageUtil.IntListSet(akWornGearData, dskey, 8, armor_data[10])    ; feet coverage (from extra feet coverage)
+        StorageUtil.IntListSet(akWornGearData, dskey, 9, armor_data[11])    ; cloak warmth (from extra cloak warmth)
+        StorageUtil.IntListSet(akWornGearData, dskey, 10, armor_data[12])    ; cloak coverage (from extra cloak coverage)
+        StorageUtil.IntListSet(akWornGearData, dskey, 11, armor_data[13])    ; misc warmth (from extra misc warmth)
+        StorageUtil.IntListSet(akWornGearData, dskey, 12, armor_data[14])    ; misc coverage (from extra misc coverage)
+
+        ; Main values - these overwrite "extra" data in the same category (shouldn't do that anyway)
+        StorageUtil.IntListSet(akWornGearData, dskey, jdx - 1, armor_data[1])     ; warmth
+        StorageUtil.IntListSet(akWornGearData, dskey, jdx, armor_data[2])         ; coverage
+
+        return true
+    else
+        return false
     endif
 endFunction
 
-function ObjectUnequipped(Form akBaseObject, int iGearType)
-    ;===========
-    ;Parameters
-    ;===========
-    ;   akBaseObject: The base object the actor just unequipped.
-    ;   iGearType: The type of gear the actor unequipped, which is one of the following values:
-    ;       1: Body gear (Armor, clothing)
-    ;       2: Hands gear (Gauntlets, gloves)
-    ;       3: Head gear (Helmet, hat, hoods)
-    ;       4: Foot gear (Boots, shoes)
-    ;       5: Backpack
-    ;       6: Ammo
-    ;       7: Other (could be cloak)
-    ;       8: Shield
-
-    unequip_lock = true
-    if !akBaseObject
-        return
+bool function ObjectUnequipped(Form akBaseObject)
+    if !akBaseObject || !akBaseObject as Armor
+        return false
     endif
     if akBaseObject.HasKeyword(_Frost_DummyArmorKW)
-        return
+        return false
     endif
+
+    ; During start-up, we need to know what to re-equip. Store these in
+    ; 'initial' equipment properties.
     if _Frost_CheckInitialEquipment.GetValueInt() == 2
-        if iGearType == 1
-            initial_body = akBaseObject as Armor
-        elseif iGearType == 2
-            initial_hands = akBaseObject as Armor
-        elseif iGearType == 3
-            initial_head = akBaseObject as Armor
-        elseif iGearType == 4
-            initial_feet = akBaseObject as Armor
-        elseif iGearType == 8
-            initial_shield = akBaseObject as Armor
+        Armor armor_object = akBaseObject as Armor
+        int armor_mask = armor_object.GetSlotMask()
+        int gear_type = handler.GetGearType(armor_object, armor_mask)
+        if gear_type == handler.GEARTYPE_BODY
+            initial_body = armor_object
+        elseif gear_type == handler.GEARTYPE_HEAD
+            initial_head = armor_object
+        elseif gear_type == handler.GEARTYPE_HANDS
+            initial_hands = armor_object
+        elseif gear_type == handler.GEARTYPE_FEET
+            initial_feet = armor_object
+        elseif gear_type == handler.GEARTYPE_MISC && armor_object.IsShield()
+            initial_shield = armor_object
         endif
     endif
-    HandleUnequippedObject(akBaseObject, iGearType)
-    unequip_lock = false
-
-    SendEvent_UpdateWarmthAndCoverage()
-    DisplayWarmthCoverageNoSkyUIPkgRemove(akBaseObject as Armor, iGearType)
-
-    FrostDebug(0, "Armor protection report: BODY(" + body_warmth + ", " + body_coverage +       \
-                                            ") HANDS(" + hands_warmth + ", " + hands_coverage + \
-                                            ") HEAD(" + head_warmth + ", " + head_coverage +    \
-                                            ") FEET(" + feet_warmth + ", " + feet_coverage +    \
-                                            ") CLOAK(" + cloak_warmth + ", " + cloak_coverage + \
-                                            ") SHIELD(0, " + shield_coverage + ")")
+    bool update_required = RemoveWornGearEntryForArmorUnequipped(akBaseObject as Armor, WornGearForms, _Frost_WornGearData)
+    DisplayWarmthCoverageNoSkyUIPkgRemove(akBaseObject as Armor)
+    return update_required
 endFunction
 
-function HandleUnequippedObject(Form akBaseObject, int iGearType)
-    Armor armor_object = akBaseObject as Armor
-    if !armor_object
-        return
+bool function RemoveWornGearEntryForArmorUnequipped(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
+    bool worn_gear_found = ArrayRemoveArmor(akWornGearFormsArray, akArmor, true)
+    if worn_gear_found
+        string dskey = handler.GetDatastoreKeyFromForm(akArmor)
+        StorageUtil.IntListClear(akWornGearData, dskey)
+        return true
     endif
-    ; Gear Type Overrides
-    if akBaseObject.HasKeyword(WAF_ClothingCloak)
-        iGearType = 7
-    endif
-    int mySlotMask = armor_object.GetSlotMask()
-    if LogicalAnd(mySlotMask, armor_object.kSlotMask31) && !LogicalAnd(mySlotMask, armor_object.kSlotMask32)
-        iGearType = 3
-    endif
-
-    if iGearType == 1
-        if equipped_body == armor_object
-            equipped_body = None
-            body_warmth = 0
-            body_coverage = 0
-            ; Is this a multi-part gear set?
-            HandleUnequippedObject(akBaseObject, 2)
-            HandleUnequippedObject(akBaseObject, 3)
-            HandleUnequippedObject(akBaseObject, 4)
-            HandleUnequippedObject(akBaseObject, 7)
-        endif
-    elseif iGearType == 2
-        if equipped_hands == armor_object
-            equipped_hands = None
-            hands_warmth = 0
-            hands_coverage = 0
-        endif
-    elseif iGearType == 3
-        if equipped_head == armor_object
-            equipped_head = None
-            head_warmth = 0
-            head_coverage = 0
-        endif
-    elseif iGearType == 4
-        if equipped_feet == armor_object
-            equipped_feet = None
-            feet_warmth = 0
-            feet_coverage = 0
-        endif
-    elseif iGearType == 7
-        if equipped_cloak == armor_object
-            equipped_cloak = None
-            cloak_warmth = 0
-            cloak_coverage = 0
-        endif
-    elseif iGearType == 8
-        if equipped_shield == armor_object
-            equipped_shield = None
-            shield_warmth = 0
-            shield_coverage = 0
-        endif
-    endif
+    return false
 endFunction
 
-Event ShieldEquipped(Form akBaseObject, bool abEquipped)
-    if abEquipped
-        ObjectEquipped(akBaseObject, 8)
-    else
-        ObjectUnequipped(akBaseObject, 8)
-    endif
-endEvent
+function RefreshWornGearData(Armor[] akWornGearFormsArray, keyword akWornGearData)
+    ; Pull the latest values for all currently worn gear. (Player switched profiles, changed the JSON file
+    ; by hand since they last loaded the game, etc)
+    int i = 0
+    int gear_count = ArrayCountArmor(akWornGearFormsArray)
+    while i < gear_count
+        Armor the_armor = akWornGearFormsArray[i]
+        int[] armor_data = handler.GetArmorProtectionData(the_armor)
+        string dskey = handler.GetDatastoreKeyFromForm(the_armor)
 
-int function GetArmorWarmth()
-    int total = body_warmth + hands_warmth + \
-                head_warmth + feet_warmth + \
-                cloak_warmth
-    return total
+        int type = armor_data[0]
+        StorageUtil.IntListSet(akWornGearData, dskey, 0, type) ; type
+        int jdx = (type * 2)
+
+        StorageUtil.IntListSet(akWornGearData, dskey, 1, armor_data[3])
+        StorageUtil.IntListSet(akWornGearData, dskey, 2, armor_data[4])
+        StorageUtil.IntListSet(akWornGearData, dskey, 3, armor_data[5])
+        StorageUtil.IntListSet(akWornGearData, dskey, 4, armor_data[6])
+        StorageUtil.IntListSet(akWornGearData, dskey, 5, armor_data[7])
+        StorageUtil.IntListSet(akWornGearData, dskey, 6, armor_data[8])
+        StorageUtil.IntListSet(akWornGearData, dskey, 7, armor_data[9])
+        StorageUtil.IntListSet(akWornGearData, dskey, 8, armor_data[10])
+        StorageUtil.IntListSet(akWornGearData, dskey, 9, armor_data[11])
+        StorageUtil.IntListSet(akWornGearData, dskey, 10, armor_data[12])
+        StorageUtil.IntListSet(akWornGearData, dskey, 11, armor_data[13])
+        StorageUtil.IntListSet(akWornGearData, dskey, 12, armor_data[14])
+
+        ; Main values - these overwrite "extra" data in the same category (shouldn't do that anyway)
+        StorageUtil.IntListSet(akWornGearData, dskey, jdx - 1, armor_data[1])     ; warmth
+        StorageUtil.IntListSet(akWornGearData, dskey, jdx, armor_data[2])         ; coverage
+        i += 1
+    endWhile
 endFunction
 
-int function GetArmorCoverage()
-    int total = body_coverage + hands_coverage + \
-                head_coverage + feet_coverage + \
-                cloak_coverage + shield_coverage
-    return total
+function RecalculateProtectionData(Armor[] akWornGearFormsArray, int[] aiWornGearValuesArray, keyword akWornGearData)
+    ;/
+        Iterates over a "table" of values in the form below to determine total Warmth and Coverage.
+    /;
+    ; | _Frost_WornGearData Index |  0   |     1     |    2     |     |    10     |    11    |
+    ; |---------------------------|------|-----------|----------|-----|-----------|----------|
+    ; | WornGearForms             | Type | Body Warm | Body Cov | ... | Misc Warm | Misc Cov |
+    ; | "80145___Skyrim.esm"      | 1    | 60        | 0        |     | 0         | 0        |
+
+    int key_count = ArrayCountArmor(akWornGearFormsArray)
+    ; debug.trace("RecalculateProtectionData key_count " + key_count)
+
+    int i = 0
+    int d = 0
+    int worn_count = 0
+    int type_counter = -1
+    int type_to_match = 1
+
+    ; Pre-fetch the datastore keys for worn forms. Check if actually being worn.
+    string[] dskeys = new String[31]
+    while d < 31
+        if d < key_count && PlayerHasArmorEquipped(akWornGearFormsArray[d])
+            dskeys[d] = handler.GetDatastoreKeyFromForm(akWornGearFormsArray[d])
+        endif
+        d += 1
+    endWhile
+
+    while i < 12
+        int j = 0
+        int column_value = 0
+
+        type_counter += 1
+        if type_counter == 2
+            type_counter = 0
+            type_to_match += 1
+        endif
+
+        bool gear_type_found = false
+        while j < key_count && !gear_type_found
+            ; This calculation can be out of sync with reality (queued events exit that 
+            ; are not yet processed). The array will eventually be accurate after
+            ; the next integrity check.
+            int gear_type = StorageUtil.IntListGet(akWornGearData, dskeys[j], 0)
+            int val = StorageUtil.IntListGet(akWornGearData, dskeys[j], i + 1)
+    
+            if type_to_match != handler.GEARTYPE_MISC
+                ; Native type takes priority
+                if gear_type == type_to_match
+                    column_value = val
+                    gear_type_found = true
+                else
+                    ; Otherwise, take the highest Extra value
+                    if val > column_value
+                        column_value = val
+                    endif
+                endif
+            else
+                ; Sum MISC type items (and never type match)
+                column_value += val
+            endif
+            j += 1
+        endWhile
+
+        ; Result for this column
+        aiWornGearValuesArray[i] = column_value
+        i += 1
+    endWhile
+
+    ;Signal to the UI that we're ready for the "change" values to be updated.
+    GetInterfaceHandler().InvalidateFetchedChangeRanges()
+
+    FrostDebug(0, "Worn Gear Values: " + aiWornGearValuesArray)
 endFunction
 
+function WornGearFormsIntegrityCheck(Armor[] akWornGearFormsArray)
+    int i = 0
+    int key_count = ArrayCountArmor(akWornGearFormsArray)
+    debug.trace("[Frostfall] Beginning worn gear integrity check.")
+    int removed = 0
+    while i < key_count
+        Armor the_armor = akWornGearFormsArray[i]
+        if !PlayerRef.IsEquipped(the_armor)
+            ArrayRemoveArmor(akWornGearFormsArray, akWornGearFormsArray[i], true)
+            removed += 1
+        endif
+        i += 1
+    endWhile
+    debug.trace("[Frostfall] Integrity check complete. Removed " + removed + " invalid forms from worn gear list.")
+endFunction
+
+int function GetArmorWarmth(int[] aiWornGearValuesArray)
+    return aiWornGearValuesArray[0] + aiWornGearValuesArray[2] + aiWornGearValuesArray[4] + aiWornGearValuesArray[6] + aiWornGearValuesArray[8] + aiWornGearValuesArray[10]
+endFunction
+
+int function GetArmorCoverage(int[] aiWornGearValuesArray)
+    return aiWornGearValuesArray[1] + aiWornGearValuesArray[3] + aiWornGearValuesArray[5] + aiWornGearValuesArray[7] + aiWornGearValuesArray[9] + aiWornGearValuesArray[11]
+endFunction
+
+; Only runs if the SkyUI Package is not installed. Displays warmth and coverage
+; in a debug notification.
 Event OnUpdate()
     ; Suppress this message when getting into / out of a tent
     if PlayerRef.GetSitState() > 0
@@ -324,22 +293,22 @@ Event OnUpdate()
         return
     endif
 
-    _Frost_Strings str = FrostfallStrings as _Frost_Strings
+    _Frost_Strings str = GetFrostfallStrings()
     debug.notification(str.TotalWarmth + " " + GetPlayerWarmth() + ", " + str.TotalCoverage + " " + GetPlayerCoverage())
 EndEvent
 
-function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor, int aiGearType)
+function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor)
     if !akArmor
         return
     endif
     if !GetCompatibilitySystem().isUIPackageInstalled && FrostfallRunning.GetValueInt() == 2
-        int[] result = GetClothingDatastoreHandler().GetTotalProtectionValues(akArmor, aiGearType)
+        int[] result = handler.GetTotalArmorProtectionValues(akArmor)
         if result[0] == 0 && result[1] == 0
             return
         endif
         if UI.IsMenuOpen("InventoryMenu")
             if _Frost_Setting_Notifications_EquipmentValues.GetValueInt() == 2
-                _Frost_Strings str = FrostfallStrings as _Frost_Strings
+                _Frost_Strings str = GetFrostfallStrings()
                 string name = akArmor.GetName()
                 if result[0] == -99
                     debug.notification(name + " - " + str.Warmth + " N/A, " + str.Coverage + " N/A")
@@ -354,12 +323,12 @@ function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor, int aiGearType)
     endif
 endFunction
 
-function DisplayWarmthCoverageNoSkyUIPkgRemove(Armor akArmor, int aiGearType)
+function DisplayWarmthCoverageNoSkyUIPkgRemove(Armor akArmor)
     if !akArmor
         return
     endif
     if !GetCompatibilitySystem().isUIPackageInstalled && FrostfallRunning.GetValueInt() == 2
-        int[] result = GetClothingDatastoreHandler().GetTotalProtectionValues(akArmor, aiGearType)
+        int[] result = handler.GetTotalArmorProtectionValues(akArmor)
         if result[0] == 0 && result[1] == 0
             return
         endif
@@ -377,7 +346,7 @@ Event OnMenuClose(string menuName)
             UnregisterForMenu("InventoryMenu")
             return
         endif
-        _Frost_Strings str = FrostfallStrings as _Frost_Strings
+        _Frost_Strings str = GetFrostfallStrings()
         debug.notification(str.TotalWarmth + " " + GetPlayerWarmth() + ", " + str.TotalCoverage + " " + GetPlayerCoverage())
         UnregisterForMenu("InventoryMenu")
     endif
@@ -400,3 +369,42 @@ function SendEvent_UpdateWarmth()
         ModEvent.Send(handle)
     endif
 endFunction
+
+bool function PlayerHasArmorEquipped(Armor akArmor)
+    ; An alias for PlayerRef.IsEquipped(), to make testing easier.
+    return PlayerRef.IsEquipped(akArmor)
+endFunction
+
+
+; Lilac Mock States ===========================================================
+
+int property mock_AddWornGearEntryForArmorEquipped_callcount = 0 auto hidden
+int property mock_RemoveWornGearEntryForArmorUnequipped_callcount = 0 auto hidden
+
+State mock_testObjectEquipped
+
+    bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
+        mock_AddWornGearEntryForArmorEquipped_callcount += 1
+        return false
+    endFunction
+
+    bool function RemoveWornGearEntryForArmorUnequipped(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
+        mock_RemoveWornGearEntryForArmorUnequipped_callcount += 1
+        return false
+    endFunction
+
+    function SendEvent_UpdateWarmthAndCoverage()
+        ; pass
+    endFunction
+
+    function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor)
+        ; pass
+    endFunction
+
+EndState
+
+State mock_testRecalculateProtectionData
+    bool function PlayerHasArmorEquipped(Armor akArmor)
+        return true
+    endFunction
+endState

@@ -8,6 +8,7 @@ _Camp_LegalAreaCheck property Legal auto
 _Camp_Compatibility property Compatibility auto
 Actor property PlayerRef auto
 Formlist property _Camp_WorldspacesInteriors auto
+Formlist property _Camp_WarmBaseTents auto
 Keyword property isCampfireCrimeToPlaceInTowns auto
 Keyword property isCampfireTentWaterproof auto
 Keyword property isCampfireTentWarm auto
@@ -15,6 +16,8 @@ Keyword property isCampfireObjectTemporary auto
 Keyword property isCampfireTentNoShelter auto
 Keyword property ActorTypeCreature auto
 Keyword property ImmuneParalysis auto
+Keyword property ActorTypeNPC auto
+Keyword property ActorTypeUndead auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 GlobalVariable property _Camp_Setting_ManualFireLighting auto
 GlobalVariable property _Camp_Setting_EquipmentFlammable auto

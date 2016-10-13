@@ -8,6 +8,7 @@ Quest property _Frost_MainQuest auto
 GlobalVariable property _Frost_ArmorPerk3Active auto
 GlobalVariable property _Frost_ArmorPerk2Active auto
 GlobalVariable property _Frost_ArmorPerk1Active auto
+GlobalVariable property _Frost_Setting_VampireMode auto
 MagicEffect property _Frost_ExposureArmorFFSelf_3 auto
 MagicEffect property _Frost_ExposureArmorFFSelf_2 auto
 MagicEffect property _Frost_ExposureArmorFFSelf_1 auto
@@ -20,16 +21,28 @@ bool property well_insulated_perk_active = false auto hidden
 int current_food_bonus
 int current_spell_bonus
 
+bool property updating_warmth = false auto hidden
+
 function RegisterForEvents()
-	RegisterForModEvent("Frost_UpdateWarmth", "UpdateWarmth")
+	FallbackEventEmitter emitter = GetEventEmitter_UpdateWarmth()
+  	emitter.RegisterFormForModEventWithFallback("Frost_UpdateWarmth", "UpdateWarmth", self as Form)
+	; RegisterForModEvent("Frost_UpdateWarmth", "UpdateWarmth")
 	RegisterForModEvent("Frost_SoupEffectStart", "SoupEffectStart")
 	RegisterForModEvent("Frost_SoupEffectStop", "SoupEffectStop")
 	RegisterForModEvent("Campfire_CampfirePerkPurchased", "CampfirePerkPurchased")
 endFunction
 
 Event UpdateWarmth()
+	int i = 20
+    while updating_warmth == true && i > 0
+        utility.wait(0.2)
+        i -= 1
+    endWhile
+
+    updating_warmth = true
 	int warmth
-	warmth += GetClothingSystem().GetArmorWarmth()
+	_Frost_ClothingSystem clothing = GetClothingSystem()
+	warmth += clothing.GetArmorWarmth(clothing.WornGearValues)
 	if well_insulated_perk_active
 		warmth += Math.Ceiling(warmth * 0.25)
 	endif
@@ -39,7 +52,7 @@ Event UpdateWarmth()
 	warmth += _Frost_PerkRank_Adaptation.GetValueInt() * 20
 	warmth += GetSpellBonus()
 
-	if (_Frost_MainQuest as _Frost_ConditionValues).IsVampire
+	if (_Frost_MainQuest as _Frost_ConditionValues).IsVampire && _Frost_Setting_VampireMode.GetValueInt() >= 1
 		warmth += 100
 	endif
 
@@ -51,6 +64,7 @@ Event UpdateWarmth()
 	_Frost_AttributeWarmth.SetValueInt(warmth)
 	FrostfallAttributeWarmthReadOnly.SetValueInt(warmth)
 	SendEvent_UpdateBottomBarWarmth(warmth)
+	updating_warmth = false
 endEvent
 
 Event SoupEffectStart()

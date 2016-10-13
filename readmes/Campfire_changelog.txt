@@ -7,16 +7,91 @@ Complete Camping System
 Change Log
 
 ===================================================
-Release 1.7.1 (2/28/2016)
+
+Release 1.9
+
+Upgrade Instructions
+
+Uninstall the previous version, install the new version, and load your save game. 
+
 
 Features and Changes
 
-    This update supports creating tinder items using the Campfire Dev Kit without a direct dependency on Campfire.
+	- Upgraded included PapyrusUtil version to 3.3.
+
+
+
+	- Upgraded included Brawl Bugs Patch scripts to EnaiSiaion's Modern Brawl Bug Fix (1.4).
+
+	- Harvesting wood now takes 30 in-game minutes per attempt, instead of 1 hour.
+
+	- Changes required to support the latest bug fixes, features, and changes in Frostfall and Last Seed.
+
+
+
+	- Removed all machine translation from the mod. Translation of the mod is still supported by 3rd party translators, but out-of-the-box machine translation will no longer be provided due to repeated complaints.
+
+Bug Fixes
+
+	- Fixed a bug that could cause some objects used during object placement to not be deleted correctly.
+
+
+	
+- Improved follower detection; followers not in the current loaded area will no longer be counted. Should solve a bug where Esbern was perpetually registered as a follower after doing certain portions of the main quest.
+
+
+	
+- On start-up, Campfire ensures that your placement thread count is at least 1, in order to avoid an object placement error.
+
+
+
+	- The object placement system would stop placement if anything hit the player, including non-hostile spells. It now filters out non-hostile spells.
+
+
+
+	- Fixed a bug where, under certain conditions, the Next / Previous / Exit skill torchbugs at a campfire would not be cleaned up correctly. If you have torchbugs that never disappeared, simply leave the area and come back; they should be gone when you return.
+
+
+
+	- If a mod is uninstalled that added wood chopping blocks, a continuous Papyrus log error could occur. Added a Papyrus log message prompting the user to run 'ClearInvalidRegistrations' from the console if this occurs.
+
+
+
+Release 1.8
+
+Upgrade Instructions
+
+Uninstall the previous version, install the new version, and load your save game. 
+
+
+Features and Changes
+
+Survival Skill: Instincts Improvements
+	You can now toggle what Survival Skill: Instincts tracks on and off individually using the MCM.
+	You can now toggle the Instincts distortion visual effect and sound effect on and off.
+	Instincts can now allow you to see all harvestable flora more easily.
+	Instincts can now show you the path to your next quest target (disabled by default).
+	Instincts now works indoors, but is half as effective.
+	How fast and reliable Instincts works (making nearby objects glow) is now much better.
+	The glow effect transition when highlighting objects with Instincts is now smoother.
+
+Other Changes
+
+	Back-end changes required by Frostfall 3.1.
+
+Bug Fixes
+	Retroactively fixed a bug where old campfire skill trees would still be hovering where campfires had been built before. If you are experiencing this problem, after upgrading, orphaned skill trees should be deleted from your game automatically as you travel to areas where they used to be.
+
+
+Release 1.7.1
+
+Features and Changes
+
+This update supports creating tinder items using the Campfire Dev Kit without a direct dependency on Campfire.
         Added the following injected records:
         01CC0E0B - _Camp_CampfireItem_GoodWeather (MiscObject)
         01CC0E0C - _Camp_LastUsedCampfireSize (GlobalVariable)
         01CC0E0D - _Camp_LastUsedCampfireStage (GlobalVariable)
-
 
 Release 1.7 (2/23/2016)
 

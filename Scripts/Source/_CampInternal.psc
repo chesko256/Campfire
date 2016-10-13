@@ -71,6 +71,7 @@ endFunction
 function TryToDisableAndDeleteRef(ObjectReference akReference, bool bFadeOut = false) global
 	; A more concise way to disable and delete references without checking for None first (to avoid Papyrus log errors, etc)
 	if akReference
+		CampDebug(1, "Disabling and deleting reference " + akReference)
 		akReference.Disable(bFadeOut)
 		akReference.Delete()
 
@@ -93,7 +94,7 @@ function TryToDisableAndDeletePotentialPlaceableObjectRef(ObjectReference akRefe
 		else
 			akReference.Disable(bFadeOut)
 			akReference.Delete()
-	
+
 			if akReference && akReference.IsEnabled()
 				; Try one more time
 				CampDebug(2, "Placed object " + akReference + " failed to disable/delete on first attempt, trying again.")
@@ -106,7 +107,7 @@ endFunction
 
 ObjectReference function PlaceAndWaitFor3DLoaded(ObjectReference akOrigin, Form FormToPlace, int Count = 1, bool ForcePersist = false, bool bDisableInteraction = false) global
 	;A more concise way to place an object and wait until the object's 3D is loaded.
-	;Prevents infinite loop if object never loads. 
+	;Prevents infinite loop if object never loads.
 	;Optionally set bDisableInteraction to True to make this object behave like a static (disable Havok physics) and disable activation.
 	ObjectReference myObject
 	if akOrigin
@@ -191,10 +192,18 @@ function SetCurrentTent(ObjectReference akTent) global
 			; * Event OnTentEnter(Form akTent, bool abHasShelter)
 			; * akTent: The tent ObjectReference entered.
 			; * abHasShelter: Whether or not this tent has any overhead shelter.
+
+			bool has_shelter
+			if Campfire._Camp_WarmBaseTents.HasForm(akTent.GetBaseObject())
+				has_shelter = true
+			else
+				has_shelter = !akTent.GetBaseObject().HasKeyword(Campfire.isCampfireTentNoShelter)
+			endif
+
     		int handle = ModEvent.Create("Campfire_OnTentEnter")
     		if handle
     			ModEvent.PushForm(handle, akTent)
-    			ModEvent.PushBool(handle, !akTent.GetBaseObject().HasKeyword(Campfire.isCampfireTentNoShelter))
+    			ModEvent.PushBool(handle, has_shelter)
         		ModEvent.Send(handle)
     		endif
 		else
@@ -280,6 +289,23 @@ endFunction
 function ExitMenus() global
 	Game.DisablePlayerControls()
 	Game.EnablePlayerControls()
+endFunction
+
+bool function IsNone(Form akForm) global
+	; Objects from unloaded mods
+	; will fail '== None' checks because they are
+	; 'Form<None>' objects. Check FormID as well.
+	int i = 0
+	if akForm
+		i = akForm.GetFormID()
+		if i == 0
+			return true
+		else
+			return false
+		endif
+	else
+		return true
+	endif
 endFunction
 
 function RaiseCampAPIError() global

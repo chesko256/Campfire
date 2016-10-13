@@ -23,6 +23,7 @@ os.makedirs('./tmp/Data/readmes')
 os.makedirs('./tmp/Data/Interface/campfire')
 os.makedirs('./tmp/Data/Interface/Translations')
 os.makedirs('./tmp/Data/meshes/campfire')
+os.makedirs('./tmp/Data/meshes/mps')
 os.makedirs('./tmp/Data/Scripts/Source')
 os.makedirs('./tmp/Data/textures/campfire')
 
@@ -44,13 +45,14 @@ else:
     os.mkdir(dirname)
 
 os.mkdir(dirname + "/readmes")
-os.makedirs(dirname + "/SKSE/Plugins")
+os.makedirs(dirname + "/SKSE/Plugins/CampfireData")
 
 # Generate BSA archive
 print "Generating BSA archive..."
 shutil.copy('./Campfire/Archive.exe', './tmp/Archive.exe')
 shutil.copy('./Campfire/CampfireArchiveBuilder.txt', './tmp/CampfireArchiveBuilder.txt')
 shutil.copy('./Campfire/CampfireArchiveManifest.txt', './tmp/CampfireArchiveManifest.txt')
+
 os.chdir("./tmp")
 subprocess.call(['./Archive.exe', './CampfireArchiveBuilder.txt'])
 os.chdir("..\\")
