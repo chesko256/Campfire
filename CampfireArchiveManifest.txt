@@ -214,6 +214,13 @@ Scripts\CampUsableObject.pex
 Scripts\CampUtil.pex
 Scripts\CommonArrayHelper.pex
 Scripts\CommonHelperFunctions.pex
+Scripts\CommonMeterInterfaceHandler.pex
+Scripts\Common_SKI_MeterWidget.pex
+Scripts\FallbackEventEmitter.pex
+Scripts\FallbackEventHandler.pex
+Scripts\FallbackEventReceiverActiveMagicEffect.pex
+Scripts\FallbackEventReceiverAlias.pex
+Scripts\FallbackEventReceiverForm.pex
 Scripts\CompanionsSingleCombatantScript.pex
 Scripts\DGIntimidateAliasScript.pex
 Scripts\DGIntimidatePlayerScript.pex

@@ -41,6 +41,18 @@ GlobalVariable property _Camp_CampfireVersion auto
 Quest property CampfireObjectPlacementSystem auto
 Quest property CampfireTentSystem auto
 Quest property _Camp_MainQuest auto
+Quest property _Camp_EventEmitter_CampfirePerkPurchased auto
+Quest property _Camp_EventEmitter_InstinctsRunAliases auto
+Quest property _Camp_EventEmitter_InstinctsStartSearch auto
+Quest property _Camp_EventEmitter_InstinctsStopSearch auto
+Quest property _Camp_EventEmitter_Loaded auto
+Quest property _Camp_EventEmitter_OnBedrollSitLay auto
+Quest property _Camp_EventEmitter_OnConjuredObjectIDUpdated auto
+Quest property _Camp_EventEmitter_OnObjectPlaced auto
+Quest property _Camp_EventEmitter_OnObjectRemoved auto
+Quest property _Camp_EventEmitter_OnTentEnter auto
+Quest property _Camp_EventEmitter_OnTentLeave auto
+Quest property _Camp_EventEmitter_PlayerHit auto
 ObjectReference property LastUsedCampfire auto hidden
 ObjectReference property CurrentTent auto hidden
 ReferenceAlias property Follower1 auto

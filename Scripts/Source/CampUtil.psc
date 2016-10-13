@@ -16,6 +16,116 @@ CampfireAPI function GetAPI() global
 	return (Game.GetFormFromFile(0x00024095, "Campfire.esm") as Quest) as CampfireAPI
 endFunction
 
+; Event Emitters =============================================================================
+
+FallbackEventEmitter function GetEventEmitter_CampfirePerkPurchased() global
+    CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+    return Campfire._Camp_EventEmitter_CampfirePerkPurchased as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_InstinctsRunAliases() global
+    CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+    return Campfire._Camp_EventEmitter_InstinctsRunAliases as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_InstinctsStartSearch() global
+    CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+    return Campfire._Camp_EventEmitter_InstinctsStartSearch as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_InstinctsStopSearch() global
+    CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+    return Campfire._Camp_EventEmitter_InstinctsStopSearch as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_Loaded() global
+    CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+    return Campfire._Camp_EventEmitter_Loaded as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_OnBedrollSitLay() global
+    CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+    return Campfire._Camp_EventEmitter_OnBedrollSitLay as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_OnConjuredObjectIDUpdated() global
+    CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+    return Campfire._Camp_EventEmitter_OnConjuredObjectIDUpdated as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_OnObjectPlaced() global
+    CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+    return Campfire._Camp_EventEmitter_OnObjectPlaced as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_OnObjectRemoved() global
+    CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+    return Campfire._Camp_EventEmitter_OnObjectRemoved as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_OnTentEnter() global
+    CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+    return Campfire._Camp_EventEmitter_OnTentEnter as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_OnTentLeave() global
+    CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+    return Campfire._Camp_EventEmitter_OnTentLeave as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_PlayerHit() global
+    CampfireAPI Campfire = GetAPI()
+	if Campfire == none
+		RaiseCampAPIError()
+		return None
+	endif
+    return Campfire._Camp_EventEmitter_PlayerHit as FallbackEventEmitter
+endFunction
+
 ; Functions ==================================================================================
 
 _Camp_ObjectPlacementThreadManager function GetPlacementSystem() global
@@ -1646,29 +1756,28 @@ function SendEvent_OnObjectPlaced(ObjectReference akObjectReference) global
 	endif
 
 	if akObjectReference
-		if GetCompatibilitySystem().isSKSELoaded
-			float px = akObjectReference.GetPositionX()
-			float py = akObjectReference.GetPositionY()
-			float pz = akObjectReference.GetPositionZ()
-			float ax = akObjectReference.GetAngleX()
-			float ay = akObjectReference.GetAngleY()
-			float az = akObjectReference.GetAngleZ()
-			bool is_tent = IsTent(akObjectReference)
-			_CampInternal.CampDebug(0, "Sending event Campfire_OnObjectPlaced " + akObjectReference + " " + \
-				                    px + " " + py + " " + pz + " " + ax + \
-				                    " " + ay + " " + az + " " + is_tent)
-			int handle = ModEvent.Create("Campfire_OnObjectPlaced")
-			if handle
-				ModEvent.PushForm(handle, akObjectReference as Form)
-				ModEvent.PushFloat(handle, px)
-				ModEvent.PushFloat(handle, py)
-				ModEvent.PushFloat(handle, pz)
-				ModEvent.PushFloat(handle, ax)
-				ModEvent.PushFloat(handle, ay)
-				ModEvent.PushFloat(handle, az)
-				ModEvent.PushBool(handle, is_tent)
-				ModEvent.Send(handle)
-			endif
+		float px = akObjectReference.GetPositionX()
+		float py = akObjectReference.GetPositionY()
+		float pz = akObjectReference.GetPositionZ()
+		float ax = akObjectReference.GetAngleX()
+		float ay = akObjectReference.GetAngleY()
+		float az = akObjectReference.GetAngleZ()
+		bool is_tent = IsTent(akObjectReference)
+		_CampInternal.CampDebug(0, "Sending event Campfire_OnObjectPlaced " + akObjectReference + " " + \
+				                   px + " " + py + " " + pz + " " + ax + \
+				                   " " + ay + " " + az + " " + is_tent)
+		FallbackEventEmitter emitter = GetEventEmitter_OnObjectPlaced()
+		int handle = emitter.Create("Campfire_OnObjectPlaced")
+		if handle
+			emitter.PushForm(handle, akObjectReference as Form)
+			emitter.PushFloat(handle, px)
+			emitter.PushFloat(handle, py)
+			emitter.PushFloat(handle, pz)
+			emitter.PushFloat(handle, ax)
+			emitter.PushFloat(handle, ay)
+			emitter.PushFloat(handle, az)
+			emitter.PushBool(handle, is_tent)
+			emitter.Send(handle)
 		endif
 	endif
 endFunction
@@ -1716,22 +1825,21 @@ function SendEvent_OnObjectRemoved(Form akBaseObject, float afPositionX, float a
 	endif
 
 	if akBaseObject
-		if GetCompatibilitySystem().isSKSELoaded
-			_CampInternal.CampDebug(0, "Sending event Campfire_OnObjectRemoved " + akBaseObject + " " + \
-				                    afPositionX + " " + afPositionY + " " + afPositionZ + " " + afAngleX + \
-				                    " " + afAngleY + " " + afAngleZ + " " + abIsTent)
-			int handle = ModEvent.Create("Campfire_OnObjectRemoved")
-			if handle
-				ModEvent.PushForm(handle, akBaseObject)
-				ModEvent.PushFloat(handle, afPositionX)
-				ModEvent.PushFloat(handle, afPositionY)
-				ModEvent.PushFloat(handle, afPositionZ)
-				ModEvent.PushFloat(handle, afAngleX)
-				ModEvent.PushFloat(handle, afAngleY)
-				ModEvent.PushFloat(handle, afAngleZ)
-				ModEvent.PushBool(handle, abIsTent)
-				ModEvent.Send(handle)
-			endif
+		_CampInternal.CampDebug(0, "Sending event Campfire_OnObjectRemoved " + akBaseObject + " " + \
+				                   afPositionX + " " + afPositionY + " " + afPositionZ + " " + afAngleX + \
+				                   " " + afAngleY + " " + afAngleZ + " " + abIsTent)
+		FallbackEventEmitter emitter = GetEventEmitter_OnObjectRemoved()
+		int handle = emitter.Create("Campfire_OnObjectRemoved")
+		if handle
+			emitter.PushForm(handle, akBaseObject)
+			emitter.PushFloat(handle, afPositionX)
+			emitter.PushFloat(handle, afPositionY)
+			emitter.PushFloat(handle, afPositionZ)
+			emitter.PushFloat(handle, afAngleX)
+			emitter.PushFloat(handle, afAngleY)
+			emitter.PushFloat(handle, afAngleZ)
+			emitter.PushBool(handle, abIsTent)
+			emitter.Send(handle)
 		endif
 	endif
 endFunction
@@ -1769,13 +1877,12 @@ function SendEvent_OnBedrollSitLay(ObjectReference akTent, bool abGettingUp = fa
 	endif
 
 	if akTent
-		if GetCompatibilitySystem().isSKSELoaded
-			int handle = ModEvent.Create("Campfire_OnBedrollSitLay")
-			if handle
-				ModEvent.PushForm(handle, akTent as Form)
-				ModEvent.PushBool(handle, abGettingUp)
-				ModEvent.Send(handle)
-			endif
+		FallbackEventEmitter emitter = GetEventEmitter_OnBedrollSitLay()
+		int handle = emitter.Create("Campfire_OnBedrollSitLay")
+		if handle
+			emitter.PushForm(handle, akTent as Form)
+			emitter.PushBool(handle, abGettingUp)
+			emitter.Send(handle)
 		endif
 	endif
 endFunction

@@ -1,6 +1,7 @@
 scriptname _CampInternal hidden
 
 import math
+import CampUtil
 
 _CampfireInternalAPI function GetAPI() global
 	return (Game.GetFormFromFile(0x00024095, "Campfire.esm") as Quest) as _CampfireInternalAPI
@@ -186,34 +187,32 @@ function SetCurrentTent(ObjectReference akTent) global
 		return
 	endif
 	Campfire.CurrentTent = akTent
-	if CampUtil.GetCompatibilitySystem().isSKSELoaded
-		if akTent
-			CampDebug(0, "Sending event Campfire_OnTentEnter")
-			; * Event OnTentEnter(Form akTent, bool abHasShelter)
-			; * akTent: The tent ObjectReference entered.
-			; * abHasShelter: Whether or not this tent has any overhead shelter.
-
-			bool has_shelter
-			if Campfire._Camp_WarmBaseTents.HasForm(akTent.GetBaseObject())
-				has_shelter = true
-			else
-				has_shelter = !akTent.GetBaseObject().HasKeyword(Campfire.isCampfireTentNoShelter)
-			endif
-
-    		int handle = ModEvent.Create("Campfire_OnTentEnter")
-    		if handle
-    			ModEvent.PushForm(handle, akTent)
-    			ModEvent.PushBool(handle, has_shelter)
-        		ModEvent.Send(handle)
-    		endif
+	if akTent
+		CampDebug(0, "Sending event Campfire_OnTentEnter")
+		; * Event OnTentEnter(Form akTent, bool abHasShelter)
+		; * akTent: The tent ObjectReference entered.
+		; * abHasShelter: Whether or not this tent has any overhead shelter.
+		bool has_shelter
+		if Campfire._Camp_WarmBaseTents.HasForm(akTent.GetBaseObject())
+			has_shelter = true
 		else
-			CampDebug(0, "Sending event Campfire_OnTentLeave")
-			; * Event OnTentLeave()
-    		int handle = ModEvent.Create("Campfire_OnTentLeave")
-    		if handle
-        		ModEvent.Send(handle)
-    		endif
+			has_shelter = !akTent.GetBaseObject().HasKeyword(Campfire.isCampfireTentNoShelter)
 		endif
+		FallbackEventEmitter emitter = GetEventEmitter_OnTentEnter()
+    	int handle = emitter.Create("Campfire_OnTentEnter")
+    	if handle
+    		emitter.PushForm(handle, akTent)
+    		emitter.PushBool(handle, has_shelter)
+        	emitter.Send(handle)
+    	endif
+	else
+		CampDebug(0, "Sending event Campfire_OnTentLeave")
+		; * Event OnTentLeave()
+		FallbackEventEmitter emitter = GetEventEmitter_OnTentLeave()
+    	int handle = emitter.Create("Campfire_OnTentLeave")
+    	if handle
+        	emitter.Send(handle)
+    	endif
 	endif
 endFunction
 
@@ -276,9 +275,10 @@ int function UpdateConjuredObjectID(GlobalVariable akGlobal) global
 		int new_value = akGlobal.GetValueInt() + 1
 		akGlobal.SetValueInt(new_value)
 		CampDebug(0, "Sending event Campfire_OnConjuredObjectIDUpdated")
-    	int handle = ModEvent.Create("Campfire_OnConjuredObjectIDUpdated")
+		FallbackEventEmitter emitter = GetEventEmitter_OnConjuredObjectIDUpdated()
+    	int handle = emitter.Create("Campfire_OnConjuredObjectIDUpdated")
     	if handle
-    		ModEvent.Send(handle)
+    		emitter.Send(handle)
    		endif
    		return new_value
    	else

@@ -169,15 +169,17 @@ function RefreshObjects()
 endFunction
 
 function SendEvent_InstinctsStartSearch()
-	int handle = ModEvent.Create("Campfire_InstinctsStartSearch")
+    FallbackEventEmitter emitter = GetEventEmitter_InstinctsStartSearch()
+	int handle = emitter.Create("Campfire_InstinctsStartSearch")
 	if handle
-		ModEvent.Send(handle)
+		emitter.Send(handle)
 	endif
 endFunction
 
 function SendEvent_InstinctsStopSearch()
-	int handle = ModEvent.Create("Campfire_InstinctsStopSearch")
+    FallbackEventEmitter emitter = GetEventEmitter_InstinctsStopSearch()
+	int handle = emitter.Create("Campfire_InstinctsStopSearch")
 	if handle
-		ModEvent.Send(handle)
+		emitter.Send(handle)
 	endif
 endFunction

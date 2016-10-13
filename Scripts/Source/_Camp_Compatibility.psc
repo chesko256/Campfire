@@ -894,8 +894,9 @@ function CheckHarvestWoodDisabled()
 endFunction
 
 function SendEvent_CampfireLoaded()
-	int handle = ModEvent.Create("Campfire_Loaded")
+	FallbackEventEmitter emitter = GetEventEmitter_Loaded()
+	int handle = emitter.Create("Campfire_Loaded")
 	if handle
-		ModEvent.Send(handle)
+		emitter.Send(handle)
 	endif
 endFunction

@@ -1,5 +1,7 @@
 scriptname _Camp_SearchQuest extends Quest
 
+import CampUtil
+
 ReferenceAlias property Alias1 auto
 ReferenceAlias property Alias2 auto
 ReferenceAlias property Alias3 auto
@@ -47,9 +49,10 @@ bool function IsReadyToStart()
 endFunction
 
 function SendEvent_InstinctsRunAliases()
-	int handle = ModEvent.Create("Campfire_InstinctsRunAliases")
+	FallbackEventEmitter emitter = GetEventEmitter_InstinctsRunAliases()
+	int handle = emitter.Create("Campfire_InstinctsRunAliases")
 	if handle
-		ModEvent.Send(handle)
+		emitter.Send(handle)
 	endif
 endFunction
 

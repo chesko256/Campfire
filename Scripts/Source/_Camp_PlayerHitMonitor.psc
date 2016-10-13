@@ -14,13 +14,12 @@ function SendEvent_PlayerHit(ObjectReference akAggressor, Form akSource, Project
 	if FireLightingReference
 		(FireLightingReference as _Camp_LightFireFurnScript).PlayerHitEvent(akAggressor, akSource, akProjectile)
 	endif
-	if GetCompatibilitySystem().isSKSELoaded
-		int handle = ModEvent.Create("Campfire_PlayerHit")
-		if handle
-			ModEvent.PushForm(handle, akAggressor as Form)
-			ModEvent.PushForm(handle, akSource)
-			ModEvent.PushForm(handle, akProjectile as Form)
-			ModEvent.Send(handle)
-		endif
+	FallbackEventEmitter emitter = GetEventEmitter_PlayerHit()
+	int handle = emitter.Create("Campfire_PlayerHit")
+	if handle
+		emitter.PushForm(handle, akAggressor as Form)
+		emitter.PushForm(handle, akSource)
+		emitter.PushForm(handle, akProjectile as Form)
+		emitter.Send(handle)
 	endif
 endFunction

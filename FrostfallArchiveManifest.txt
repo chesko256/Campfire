@@ -49,15 +49,6 @@ meshes\frostfall\_Frost_treepineforestuprootedstump01_NoMesh.nif
 meshes\frostfall\_Frost_tundradriftwood02_NoMesh.nif
 meshes\frostfall\_Frost_VaporBlastAreaEffect.nif
 meshes\frostfall\_frost_WoodHarvestingAnimAxe.nif
-Scripts\CommonArrayHelper.pex
-Scripts\CommonHelperFunctions.pex
-Scripts\CommonMeterInterfaceHandler.pex
-Scripts\Common_SKI_MeterWidget.pex
-Scripts\FallbackEventEmitter.pex
-Scripts\FallbackEventHandler.pex
-Scripts\FallbackEventReceiverActiveMagicEffect.pex
-Scripts\FallbackEventReceiverAlias.pex
-Scripts\FallbackEventReceiverForm.pex
 Scripts\Lilac.pex
 Scripts\FrostfallAPI.pex
 Scripts\FrostUtil.pex

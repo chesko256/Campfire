@@ -1,5 +1,6 @@
 scriptname CampPerkNodeControllerBehavior extends CampPerkNodeController
 
+import CampUtil
 
 message property required_skill_description auto
 { Fill with the skill overview description message. }
@@ -129,8 +130,9 @@ function ShowPerkDescription(CampPerkNode akPerkNode, bool abEligibleForIncrease
 endFunction
 
 function SendEvent_CampfirePerkPurchased()
-    int handle = ModEvent.Create("Campfire_CampfirePerkPurchased")
+    FallbackEventEmitter emitter = GetEventEmitter_CampfirePerkPurchased()
+    int handle = emitter.Create("Campfire_CampfirePerkPurchased")
     if handle
-        ModEvent.Send(handle)
+        emitter.Send(handle)
     endif
 endFunction
