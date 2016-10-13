@@ -41,6 +41,10 @@
 !HungerInTheNorth.esp
 !campfire_steam_splash.jpg
 
+#Installers
+!Installers/Campfire/fomod/*
+!Installers/Frostfall/fomod/*
+
 #Interface
 !Interface/frostfall/*
 !Interface/campfire/*
