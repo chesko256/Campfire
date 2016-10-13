@@ -185,6 +185,19 @@ function Update()
 endFunction
 
 float function CalculateExposureTarget()
+	;@TODO: Pull this out to Heat Source System
+	if HeatSource
+		ObjectReference hs = HeatSource.GetRef()
+		if hs
+			Form hsBase = hs.GetBaseObject()
+			if hsBase == CampfireHeatsourceOverrideNormal
+				return EXPOSURE_LEVEL_1
+			elseif hsBase == CampfireHeatsourceOverrideWarm
+				return MIN_EXPOSURE
+			endif
+		endif
+	endif
+
 	; Temperature increases the target
 	float SLOPE = -5.1
 	float Y_INT = 102.0
