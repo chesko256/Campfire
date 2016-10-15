@@ -10,6 +10,7 @@ String property mod_name = "Unknown" auto
 bool campfire_is_loaded = false
 
 Event OnInit()
+	; Let the error potentially occur; can't afford for this to not happen.
 	RegisterForModEvent("Campfire_Loaded", "OnCampfireLoaded")
 	Wait(RandomFloat(3.0, 6.0))
 	AttemptRegistration()

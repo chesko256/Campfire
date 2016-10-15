@@ -3,6 +3,7 @@ scriptname _Camp_InstinctsController extends ActiveMagicEffect
 
 import math
 import CampUtil
+import _CampInternal
 import CommonHelperFunctions
 
 ; Find New Usable Objects (Campfires, Deadwood, etc) (static + movable static)
@@ -57,7 +58,7 @@ function StartSearching()
         return
     endif
 	RegisterForAnimationEvent(PlayerRef, "FootLeft")
-    RegisterForModEvent("Campfire_PlayerHit", "PlayerHit")
+    RegisterEffectForModEventIfSKSELoaded(self, "Campfire_PlayerHit", "PlayerHit")
     RegisterForMenu("Dialogue Menu")
 
     if IsRefInInterior(PlayerRef)
@@ -76,16 +77,16 @@ endFunction
 
 function RegisterEventsOnSearchQuests()
 	if _Camp_Setting_InstinctsFindTinder.GetValueInt() == 2
-		_Camp_InstinctsTreeTinderSearch.RegisterForModEvent("Campfire_InstinctsStartSearch", "InstinctsStartSearch")
-		_Camp_InstinctsTreeTinderSearch.RegisterForModEvent("Campfire_InstinctsStopSearch", "InstinctsStopSearch")
-		_Camp_InstinctsOtherTinderSearch.RegisterForModEvent("Campfire_InstinctsStartSearch", "InstinctsStartSearch")
-		_Camp_InstinctsOtherTinderSearch.RegisterForModEvent("Campfire_InstinctsStopSearch", "InstinctsStopSearch")
+		RegisterFormForModEventIfSKSELoaded(_Camp_InstinctsTreeTinderSearch, "Campfire_InstinctsStartSearch", "InstinctsStartSearch")
+		RegisterFormForModEventIfSKSELoaded(_Camp_InstinctsTreeTinderSearch, "Campfire_InstinctsStopSearch", "InstinctsStopSearch")
+		RegisterFormForModEventIfSKSELoaded(_Camp_InstinctsOtherTinderSearch, "Campfire_InstinctsStartSearch", "InstinctsStartSearch")
+		RegisterFormForModEventIfSKSELoaded(_Camp_InstinctsOtherTinderSearch, "Campfire_InstinctsStopSearch", "InstinctsStopSearch")
 	endif
 	if _Camp_Setting_InstinctsFindFlora.GetValueInt() == 2
-		_Camp_InstinctsTreeFloraSearch.RegisterForModEvent("Campfire_InstinctsStartSearch", "InstinctsStartSearch")
-		_Camp_InstinctsTreeFloraSearch.RegisterForModEvent("Campfire_InstinctsStopSearch", "InstinctsStopSearch")
-		_Camp_InstinctsOtherFloraSearch.RegisterForModEvent("Campfire_InstinctsStartSearch", "InstinctsStartSearch")
-		_Camp_InstinctsOtherFloraSearch.RegisterForModEvent("Campfire_InstinctsStopSearch", "InstinctsStopSearch")
+		RegisterFormForModEventIfSKSELoaded(_Camp_InstinctsTreeFloraSearch, "Campfire_InstinctsStartSearch", "InstinctsStartSearch")
+		RegisterFormForModEventIfSKSELoaded(_Camp_InstinctsTreeFloraSearch, "Campfire_InstinctsStopSearch", "InstinctsStopSearch")
+		RegisterFormForModEventIfSKSELoaded(_Camp_InstinctsOtherFloraSearch, "Campfire_InstinctsStartSearch", "InstinctsStartSearch")
+		RegisterFormForModEventIfSKSELoaded(_Camp_InstinctsOtherFloraSearch, "Campfire_InstinctsStopSearch", "InstinctsStopSearch")
 	endif
 endFunction
 

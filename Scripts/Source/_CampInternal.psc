@@ -308,6 +308,24 @@ bool function IsNone(Form akForm) global
 	endif
 endFunction
 
+function RegisterFormForModEventIfSKSELoaded(Form akForm, string asEventName, string asCallbackName) global
+	if GetCompatibilitySystem().isSKSELoaded
+		akForm.RegisterForModEvent(asEventName, asCallbackName)
+	endif
+endFunction
+
+function RegisterAliasForModEventIfSKSELoaded(Alias akAlias, string asEventName, string asCallbackName) global
+	if GetCompatibilitySystem().isSKSELoaded
+		akAlias.RegisterForModEvent(asEventName, asCallbackName)
+	endif
+endFunction
+
+function RegisterEffectForModEventIfSKSELoaded(ActiveMagicEffect akEffect, string asEventName, string asCallbackName) global
+	if GetCompatibilitySystem().isSKSELoaded
+		akEffect.RegisterForModEvent(asEventName, asCallbackName)
+	endif
+endFunction
+
 function RaiseCampAPIError() global
 	CampDebug(3, "Fatal Internal Campfire API error occurred.")
 endFunction

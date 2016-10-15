@@ -114,9 +114,7 @@ endFunction
 function Initialize()
 	if Setting_IsConjured && UniqueConjuredObjectIDGlobal
 		conjured_object_id = UpdateConjuredObjectID(UniqueConjuredObjectIDGlobal)
-		if GetCompatibilitySystem().isSKSELoaded
-			RegisterForModEvent("Campfire_OnConjuredObjectIDUpdated", "OnConjuredObjectIDUpdated")
-		endif
+		RegisterFormForModEventIfSKSELoaded(self, "Campfire_OnConjuredObjectIDUpdated", "OnConjuredObjectIDUpdated")
 	endif
 
 	PlacementSystem = CampUtil.GetPlacementSystem()

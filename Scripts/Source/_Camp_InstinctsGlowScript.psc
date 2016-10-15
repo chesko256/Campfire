@@ -1,12 +1,14 @@
 Scriptname _Camp_InstinctsGlowScript extends ObjectReference  
 
+import _CampInternal
+
 MagicEffect property _Camp_SurvivalVisionEffect auto
 Actor property PlayerRef auto
 
 bool eligibleForDeletion = false
 
 Event OnInit()
-    RegisterForModEvent("Campfire_InstinctsStopSearch", "InstinctsStopSearch")
+    RegisterFormForModEventIfSKSELoaded(self, "Campfire_InstinctsStopSearch", "InstinctsStopSearch")
     RegisterForSingleUpdate(5.0)
 EndEvent
 
