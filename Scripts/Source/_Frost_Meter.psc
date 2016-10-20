@@ -3,6 +3,7 @@ scriptname _Frost_Meter extends Common_SKI_MeterWidget
 bool property charge_meter auto
 
 float _indicatorPercent = 0.0
+GlobalVariable property _Frost_Setting_MeterExposureColorWarm auto
 
 ; @overrides Common_SKI_MeterWidget
 event OnWidgetReset()
@@ -47,4 +48,13 @@ endFunction
 function ForceIndicatorPercent(float a_percent)
 	{Convenience function for SetPercent(a_percent, true)}
 	SetIndicatorPercent(a_percent, true)
+endFunction
+
+function SetGlow(float a_value)
+	if a_value > 20.0
+		FlashColor = -1
+	else
+		FlashColor = _Frost_Setting_MeterExposureColorWarm.GetValueInt()
+	endif
+	UI.InvokeFloat(HUD_MENU, WidgetRoot + ".setGlow", a_value)
 endFunction

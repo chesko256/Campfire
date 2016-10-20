@@ -17,6 +17,91 @@ E-mail - chesko.tesmod@gmail.com
 This changelog is mainly for posterity purposes. This mod has evolved a lot in the amount of time it's been in development. Read on only if you enjoy watching me change my mind many, many times.
 
 ===========================================
+Frostfall 3.2.1 Change Log
+===========================================
+UPGRADE INSTRUCTIONS - Uninstall the previous version, install the new one, and load your save game.
+
+Features and Changes
+Several changes were made using feedback following the release of 3.2.
+
+
+
+
+General Changes
+
+
+
+- You will now only warm up when standing still. This will prevent the exposure meter from jumping around when running through towns with lots of small heat sources, like Windhelm and Whiterun.
+
+
+- The exposure limit inside Windhelm is now "freezing", making it far less deadly on the inside.
+
+
+- Dev Kit users: "Override" heat source markers now work when swimming, and prevent the player blacking out in frigid water.
+
+
+Hand Warming Animations
+
+
+
+- Automatic hand warming animations have been re-added, as seen in Frostfall 3.1.1 and prior.
+
+
+- In the MCM, you can now select between Hand Warming Animation: Auto, Prompt, or Off. The default is Auto.
+
+
+- You must now be facing the heat source in order for the animation to play, or to be prompted to play it. This should greatly reduce the number of accidental animations. ("Large" heat sources don't have to be faced.)
+
+
+- Pressing the Sneak key to warm your hands was removed.
+
+
+- The fade-in tutorial prompt, "Press CTRL to warm your hands..." was removed.
+
+
+- When using Prompt mode, when facing a nearby heat source, you will be prompted on-screen to press the Use button to warm your hands.  If you stop facing a heat source when using Prompt mode, the prompt will disappear.
+
+
+- You will be prompted to press the Use key to exit the animation in both modes.
+- You can now exit the animation much faster after it has begun.
+
+
+
+Exposure Meter
+
+
+
+- When you enter the "warm" range, the meter's frame will now glow a soft red to indicate you are warm. As you get colder, it will "cool" back to its normal grey color before starting to fill up.
+
+
+
+
+SkyUI 5.1 Add-On
+
+
+
+- Added base SkyUI translation file replacers for all languages. If you are a non-English user, you should no longer see $(variable names) along the bottom of the inventory screen. These files will need to be overridden with a translation of Frostfall, if you install one.
+
+Frostfall SkyUI MCM
+
+
+
+- SkyUI MCM translation files are now included for all languages, but are in English. If you are a non-English user, you should no longer see $(variable names) in the place of MCM controls.  These files will need to be overridden with a translation of Frostfall, if you install one.
+
+
+
+Installer
+
+
+
+- Fixed an issue where Campfire was reported as not installed.
+- Removed the use of a problematic font.
+- Fixed an install path issue.
+
+
+- Removed the background graphics, which were causing the installer to not start for some users. Replaced it with ASCII art instead.
+
+===========================================
 Frostfall 3.2 Change Log
 ===========================================
 UPGRADE INSTRUCTIONS - Uninstall the previous version, install the new one, and load your save game.

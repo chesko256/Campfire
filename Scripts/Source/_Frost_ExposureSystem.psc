@@ -27,6 +27,7 @@ GlobalVariable property _Frost_CurrentTemperature auto
 GlobalVariable property _Frost_AttributeWarmth auto
 GlobalVariable property _Frost_AttributeCoverage auto
 GlobalVariable property _Frost_AttributeExposure auto
+GlobalVariable property _Frost_AttributeExposureMeter auto
 GlobalVariable property _Frost_ExposureTarget auto
 GlobalVariable property FrostfallAttributeExposureReadOnly auto
 GlobalVariable property FrostfallExposureLevelReadOnly auto
@@ -120,6 +121,7 @@ float distance_moved = 0.0
 int exposure_level = 0
 int last_exposure_level = 0
 float last_exposure_target = 0.0
+float last_exposure = 0.0
 int warm_message_debounce = 0
 bool totalwarm_message_debounce = false
 WorldSpace this_worldspace = None
@@ -171,7 +173,13 @@ function Update()
 	if abs(last_exposure_target - target) >= 20.0
 		SendEvent_ForceExposureMeterDisplay()
 	endif
-	SendEvent_UpdateExposureMeterIndicator(target / MAX_EXPOSURE)
+
+	; Update the indicator
+	if target >= EXPOSURE_LEVEL_1
+		SendEvent_UpdateExposureMeterIndicator((target - EXPOSURE_LEVEL_1) / 100)
+	else
+		SendEvent_UpdateExposureMeterIndicator(0.0)
+	endif
 
 	UpdateExposure(target)
 
@@ -365,6 +373,9 @@ function ModAttributeExposure(float amount, float target, bool allow_skill_advan
 
 	_Frost_AttributeExposure.SetValue(exposure)
 	FrostfallAttributeExposureReadOnly.SetValue(exposure)
+	SetExposureMeterPercentValue(exposure)
+	SetExposureMeterGlow(exposure)
+
 	FrostDebug(1, "@@@@ Exposure ::: Current Exposure: " + exposure + " (" + amount + ")")
 
 	if advance_skill && allow_skill_advancement
@@ -376,6 +387,30 @@ function ModAttributeExposure(float amount, float target, bool allow_skill_advan
 	endif
 
 	SendEvent_UpdateExposureMeter()
+
+	; Hack to force the meter to stay on until completely warm when warming up
+	if !increasing && abs(amount) >= GetExposureMeterHandler().improvement_display_delta_threshold
+		if exposure < 20.0 && exposure >= 0.0
+			SendEvent_ForceExposureMeterDisplay()
+		endif
+	endif
+endFunction
+
+function SetExposureMeterGlow(float exposureValue)
+	if ((exposureValue > 20.0 && last_exposure <= 20.0) || \
+		(exposureValue <= 20.0 && last_exposure <= 20.0) || \
+		(exposureValue <= 20.0 && last_exposure > 20.0))
+		SendEvent_SetExposureMeterGlow(exposureValue)
+	endif
+	last_exposure = exposureValue
+endFunction
+
+function SetExposureMeterPercentValue(float exposureValue)
+	float exposure_meter_value = exposureValue - 20.0
+	if exposure_meter_value < 0.0
+		exposure_meter_value = 0.0
+	endif
+	_Frost_AttributeExposureMeter.SetValue(exposure_meter_value)
 endFunction
 
 function RefreshPlayerStateData()
@@ -956,6 +991,8 @@ endFunction
 function SetExposure(float value, bool force_meter_display = false)
 	_Frost_AttributeExposure.SetValue(value)
 	FrostfallAttributeExposureReadOnly.SetValue(value)
+	SetExposureMeterPercentValue(value)
+	SetExposureMeterGlow(value)
 	if force_meter_display
 		SendEvent_ForceExposureMeterDisplay()
 	else
@@ -1010,6 +1047,14 @@ endFunction
 
 function SendEvent_UpdateExposureMeterIndicator(float percent)
 	int handle = ModEvent.Create("Frostfall_UpdateExposureMeterIndicator")
+	if handle
+		ModEvent.PushFloat(handle, percent)
+		ModEvent.Send(handle)
+	endif
+endFunction
+
+function SendEvent_SetExposureMeterGlow(float percent)
+	int handle = ModEvent.Create("Frostfall_SetExposureMeterGlow")
 	if handle
 		ModEvent.PushFloat(handle, percent)
 		ModEvent.Send(handle)

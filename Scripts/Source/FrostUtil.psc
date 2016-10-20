@@ -167,7 +167,7 @@ FallbackEventEmitter function GetEventEmitter_UpdateWarmth() global
         RaiseFrostAPIError()
         return none
     endif
-    return Frostfall._Frost_EventEmitter_UpdateWarmth as FallbackEventEmitter
+    return Frostfall.EventEmitter_UpdateWarmth as FallbackEventEmitter
 endFunction
 
 FallbackEventEmitter function GetEventEmitter_OnTamrielRegionChange() global
@@ -176,16 +176,7 @@ FallbackEventEmitter function GetEventEmitter_OnTamrielRegionChange() global
         RaiseFrostAPIError()
         return none
     endif
-    return Frostfall._Frost_EventEmitter_OnTamrielRegionChange as FallbackEventEmitter
-endFunction
-
-FallbackEventEmitter function GetEventEmitter_OnSneak() global
-    FrostfallAPI Frostfall = GetAPI()
-    if Frostfall == none
-        RaiseFrostAPIError()
-        return none
-    endif
-    return Frostfall._Frost_EventEmitter_OnSneak as FallbackEventEmitter
+    return Frostfall.EventEmitter_OnTamrielRegionChange as FallbackEventEmitter
 endFunction
 
 ; Public Functions ================================================================================

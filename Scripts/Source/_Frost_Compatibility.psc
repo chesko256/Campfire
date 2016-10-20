@@ -5,7 +5,7 @@ import FrostUtil
 import _FrostInternal
 
 int property SKSE_MIN_VERSION = 10703 autoReadOnly
-int property CAMPFIRE_MIN_VERSION = 109 autoReadOnly
+int property CAMPFIRE_MIN_VERSION = 10901 autoReadOnly
 float property WEARABLELANTERNS_MIN_VERSION = 4.02 autoReadOnly
 GlobalVariable property _Frost_PreviousVersion auto
 GlobalVariable property _Frost_FrostfallVersion auto
@@ -176,6 +176,8 @@ Message property _Frost_Error_WearableLanterns auto
 Weather property DLC2AshStorm auto hidden
 bool added_spell_books = false
 GlobalVariable property _Frost_Setting_MeterExposureColor auto
+GlobalVariable property _Frost_Setting_MeterExposureColorWarm auto
+GlobalVariable property _Frost_AttributeExposureMeter auto
 Armor property ArmorBanditCuirass1 auto
 Armor property ArmorBanditCuirass2 auto
 Armor property ArmorBanditCuirass3 auto
@@ -189,6 +191,7 @@ GlobalVariable property _Frost_Upgraded_3_0_1 auto
 GlobalVariable property _Frost_Upgraded_3_0_2 auto
 GlobalVariable property _Frost_Upgraded_3_1 auto
 GlobalVariable property _Frost_Upgraded_3_2 auto
+GlobalVariable property _Frost_Upgraded_3_2_1 auto
 GlobalVariable property _Frost_Setting_DisplayTutorials auto
 
 Event OnPlayerLoadGame()
@@ -276,6 +279,10 @@ function RunCompatibility()
 
 	if _Frost_Upgraded_3_2.GetValueInt() != 2
 		Upgrade_3_2()
+	endif
+
+	if _Frost_Upgraded_3_2_1.GetValueInt() != 2
+		Upgrade_3_2_1()
 	endif
 
 	; Verify that the default datastore has been populated.
@@ -733,6 +740,24 @@ function Upgrade_3_2()
 
 	trace("[Frostfall] Upgraded to 3.2.")
 	_Frost_Upgraded_3_2.SetValueInt(2)
+endFunction
+
+function Upgrade_3_2_1()
+	if _Frost_PreviousVersion.GetValue() > 0.0
+		; Upgraded from previous version, further meter tweaks.
+		_Frost_ExposureMeterInterfaceHandler exposureMeterHandler = GetExposureMeterHandler()
+		exposureMeterHandler.AttributeValue = _Frost_AttributeExposureMeter
+		exposureMeterHandler.contextual_display_thresholds = new float[5]
+		exposureMeterHandler.contextual_display_thresholds[0] = 0.0
+		exposureMeterHandler.contextual_display_thresholds[1] = 20.0
+		exposureMeterHandler.contextual_display_thresholds[2] = 40.0
+		exposureMeterHandler.contextual_display_thresholds[3] = 60.0
+		exposureMeterHandler.contextual_display_thresholds[4] = 80.0
+		_Frost_Setting_MeterExposureColorWarm.SetValueInt(0xCC0000)
+	endif
+
+	trace("[Frostfall] Upgraded to 3.2.1.")
+	_Frost_Upgraded_3_2_1.SetValueInt(2)
 endFunction
 
 bool function CheckJSONReadWrite()

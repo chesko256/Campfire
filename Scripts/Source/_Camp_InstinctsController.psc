@@ -58,8 +58,11 @@ function StartSearching()
         return
     endif
 	RegisterForAnimationEvent(PlayerRef, "FootLeft")
-    RegisterEffectForModEventIfSKSELoaded(self, "Campfire_PlayerHit", "PlayerHit")
-    RegisterForMenu("Dialogue Menu")
+    FallbackEventEmitter emitterHit = GetEventEmitter_PlayerHit()
+    emitterHit.RegisterActiveMagicEffectForModEventWithFallback("Campfire_PlayerHit", "PlayerHit", self)
+    if GetSKSELoaded()
+        RegisterForMenu("Dialogue Menu")
+    endif
 
     if IsRefInInterior(PlayerRef)
        	_Camp_SurvivalVisionPowerDetectSpellIndoors.Cast(PlayerRef)
@@ -76,18 +79,24 @@ function StartSearching()
 endFunction
 
 function RegisterEventsOnSearchQuests()
-	if _Camp_Setting_InstinctsFindTinder.GetValueInt() == 2
-		RegisterFormForModEventIfSKSELoaded(_Camp_InstinctsTreeTinderSearch, "Campfire_InstinctsStartSearch", "InstinctsStartSearch")
-		RegisterFormForModEventIfSKSELoaded(_Camp_InstinctsTreeTinderSearch, "Campfire_InstinctsStopSearch", "InstinctsStopSearch")
-		RegisterFormForModEventIfSKSELoaded(_Camp_InstinctsOtherTinderSearch, "Campfire_InstinctsStartSearch", "InstinctsStartSearch")
-		RegisterFormForModEventIfSKSELoaded(_Camp_InstinctsOtherTinderSearch, "Campfire_InstinctsStopSearch", "InstinctsStopSearch")
-	endif
-	if _Camp_Setting_InstinctsFindFlora.GetValueInt() == 2
-		RegisterFormForModEventIfSKSELoaded(_Camp_InstinctsTreeFloraSearch, "Campfire_InstinctsStartSearch", "InstinctsStartSearch")
-		RegisterFormForModEventIfSKSELoaded(_Camp_InstinctsTreeFloraSearch, "Campfire_InstinctsStopSearch", "InstinctsStopSearch")
-		RegisterFormForModEventIfSKSELoaded(_Camp_InstinctsOtherFloraSearch, "Campfire_InstinctsStartSearch", "InstinctsStartSearch")
-		RegisterFormForModEventIfSKSELoaded(_Camp_InstinctsOtherFloraSearch, "Campfire_InstinctsStopSearch", "InstinctsStopSearch")
-	endif
+    if GetSKSELoaded()
+	   if _Camp_Setting_InstinctsFindTinder.GetValueInt() == 2
+            FallbackEventEmitter emitterStart = GetEventEmitter_InstinctsStartSearch()
+            FallbackEventEmitter emitterStop = GetEventEmitter_InstinctsStopSearch()
+            emitterStart.RegisterFormForModEventWithFallback("Campfire_InstinctsStartSearch", "InstinctsStartSearch", _Camp_InstinctsTreeTinderSearch)
+            emitterStop.RegisterFormForModEventWithFallback("Campfire_InstinctsStopSearch", "InstinctsStopSearch", _Camp_InstinctsTreeTinderSearch)
+            emitterStart.RegisterFormForModEventWithFallback("Campfire_InstinctsStartSearch", "InstinctsStartSearch", _Camp_InstinctsOtherTinderSearch)
+            emitterStop.RegisterFormForModEventWithFallback("Campfire_InstinctsStopSearch", "InstinctsStopSearch", _Camp_InstinctsOtherTinderSearch)
+	   endif
+	   if _Camp_Setting_InstinctsFindFlora.GetValueInt() == 2
+            FallbackEventEmitter emitterStart = GetEventEmitter_InstinctsStartSearch()
+            FallbackEventEmitter emitterStop = GetEventEmitter_InstinctsStopSearch()
+		  emitterStart.RegisterFormForModEventWithFallback("Campfire_InstinctsStartSearch", "InstinctsStartSearch", _Camp_InstinctsTreeFloraSearch)
+		  emitterStop.RegisterFormForModEventWithFallback("Campfire_InstinctsStopSearch", "InstinctsStopSearch", _Camp_InstinctsTreeFloraSearch)
+		  emitterStart.RegisterFormForModEventWithFallback("Campfire_InstinctsStartSearch", "InstinctsStartSearch", _Camp_InstinctsOtherFloraSearch)
+		  emitterStop.RegisterFormForModEventWithFallback("Campfire_InstinctsStopSearch", "InstinctsStopSearch", _Camp_InstinctsOtherFloraSearch)
+	   endif
+    endif
 endFunction
 
 Event OnUpdate()

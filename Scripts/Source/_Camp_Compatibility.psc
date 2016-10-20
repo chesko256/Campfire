@@ -117,6 +117,7 @@ Spell property _Camp_CampfireSpell auto
 Spell property _Camp_HarvestWoodSpell auto
 Spell property _Camp_SurvivalVisionPower auto
 Spell property _Camp_LegacyConfig_Spell auto
+Spell property _Camp_CombinedActionsSpell auto
 Spell property _Camp_FollowerDetectSpell auto
 Message property _Camp_CriticalError_SKSE auto
 Message property _Camp_CriticalError_FrostfallLegacy auto
@@ -844,12 +845,11 @@ function AddStartupSpells()
 			PlayerRef.AddSpell(_Camp_SurvivalVisionPower, false)
 		endif
 	else
-		PlayerRef.AddSpell(_Camp_CreateItemSpell, false)
-		PlayerRef.AddSpell(_Camp_CampfireSpell, false)
-		PlayerRef.AddSpell(_Camp_HarvestWoodSpell, false)
-		if isSKSELoaded
-			PlayerRef.AddSpell(_Camp_SurvivalVisionPower, false)
-		endif
+		PlayerRef.RemoveSpell(_Camp_CreateItemSpell)
+		PlayerRef.RemoveSpell(_Camp_CampfireSpell)
+		PlayerRef.RemoveSpell(_Camp_HarvestWoodSpell)
+		PlayerRef.AddSpell(_Camp_CombinedActionsSpell, false)
+		PlayerRef.AddSpell(_Camp_SurvivalVisionPower, false)
 		_Camp_HotkeyCreateItem.SetValueInt(0)
 		_Camp_HotkeyBuildCampfire.SetValueInt(0)
 		_Camp_HotkeyHarvestWood.SetValueInt(0)

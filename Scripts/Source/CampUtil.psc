@@ -24,7 +24,7 @@ FallbackEventEmitter function GetEventEmitter_CampfirePerkPurchased() global
 		RaiseCampAPIError()
 		return None
 	endif
-    return Campfire._Camp_EventEmitter_CampfirePerkPurchased as FallbackEventEmitter
+    return Campfire.EventEmitter_CampfirePerkPurchased as FallbackEventEmitter
 endFunction
 
 FallbackEventEmitter function GetEventEmitter_InstinctsRunAliases() global
@@ -33,7 +33,7 @@ FallbackEventEmitter function GetEventEmitter_InstinctsRunAliases() global
 		RaiseCampAPIError()
 		return None
 	endif
-    return Campfire._Camp_EventEmitter_InstinctsRunAliases as FallbackEventEmitter
+    return Campfire.EventEmitter_InstinctsRunAliases as FallbackEventEmitter
 endFunction
 
 FallbackEventEmitter function GetEventEmitter_InstinctsStartSearch() global
@@ -42,7 +42,7 @@ FallbackEventEmitter function GetEventEmitter_InstinctsStartSearch() global
 		RaiseCampAPIError()
 		return None
 	endif
-    return Campfire._Camp_EventEmitter_InstinctsStartSearch as FallbackEventEmitter
+    return Campfire.EventEmitter_InstinctsStartSearch as FallbackEventEmitter
 endFunction
 
 FallbackEventEmitter function GetEventEmitter_InstinctsStopSearch() global
@@ -51,7 +51,7 @@ FallbackEventEmitter function GetEventEmitter_InstinctsStopSearch() global
 		RaiseCampAPIError()
 		return None
 	endif
-    return Campfire._Camp_EventEmitter_InstinctsStopSearch as FallbackEventEmitter
+    return Campfire.EventEmitter_InstinctsStopSearch as FallbackEventEmitter
 endFunction
 
 FallbackEventEmitter function GetEventEmitter_Loaded() global
@@ -60,7 +60,7 @@ FallbackEventEmitter function GetEventEmitter_Loaded() global
 		RaiseCampAPIError()
 		return None
 	endif
-    return Campfire._Camp_EventEmitter_Loaded as FallbackEventEmitter
+    return Campfire.EventEmitter_Loaded as FallbackEventEmitter
 endFunction
 
 FallbackEventEmitter function GetEventEmitter_OnBedrollSitLay() global
@@ -69,7 +69,7 @@ FallbackEventEmitter function GetEventEmitter_OnBedrollSitLay() global
 		RaiseCampAPIError()
 		return None
 	endif
-    return Campfire._Camp_EventEmitter_OnBedrollSitLay as FallbackEventEmitter
+    return Campfire.EventEmitter_OnBedrollSitLay as FallbackEventEmitter
 endFunction
 
 FallbackEventEmitter function GetEventEmitter_OnConjuredObjectIDUpdated() global
@@ -78,7 +78,7 @@ FallbackEventEmitter function GetEventEmitter_OnConjuredObjectIDUpdated() global
 		RaiseCampAPIError()
 		return None
 	endif
-    return Campfire._Camp_EventEmitter_OnConjuredObjectIDUpdated as FallbackEventEmitter
+    return Campfire.EventEmitter_OnConjuredObjectIDUpdated as FallbackEventEmitter
 endFunction
 
 FallbackEventEmitter function GetEventEmitter_OnObjectPlaced() global
@@ -87,7 +87,7 @@ FallbackEventEmitter function GetEventEmitter_OnObjectPlaced() global
 		RaiseCampAPIError()
 		return None
 	endif
-    return Campfire._Camp_EventEmitter_OnObjectPlaced as FallbackEventEmitter
+    return Campfire.EventEmitter_OnObjectPlaced as FallbackEventEmitter
 endFunction
 
 FallbackEventEmitter function GetEventEmitter_OnObjectRemoved() global
@@ -96,7 +96,7 @@ FallbackEventEmitter function GetEventEmitter_OnObjectRemoved() global
 		RaiseCampAPIError()
 		return None
 	endif
-    return Campfire._Camp_EventEmitter_OnObjectRemoved as FallbackEventEmitter
+    return Campfire.EventEmitter_OnObjectRemoved as FallbackEventEmitter
 endFunction
 
 FallbackEventEmitter function GetEventEmitter_OnTentEnter() global
@@ -105,7 +105,7 @@ FallbackEventEmitter function GetEventEmitter_OnTentEnter() global
 		RaiseCampAPIError()
 		return None
 	endif
-    return Campfire._Camp_EventEmitter_OnTentEnter as FallbackEventEmitter
+    return Campfire.EventEmitter_OnTentEnter as FallbackEventEmitter
 endFunction
 
 FallbackEventEmitter function GetEventEmitter_OnTentLeave() global
@@ -114,7 +114,7 @@ FallbackEventEmitter function GetEventEmitter_OnTentLeave() global
 		RaiseCampAPIError()
 		return None
 	endif
-    return Campfire._Camp_EventEmitter_OnTentLeave as FallbackEventEmitter
+    return Campfire.EventEmitter_OnTentLeave as FallbackEventEmitter
 endFunction
 
 FallbackEventEmitter function GetEventEmitter_PlayerHit() global
@@ -123,7 +123,7 @@ FallbackEventEmitter function GetEventEmitter_PlayerHit() global
 		RaiseCampAPIError()
 		return None
 	endif
-    return Campfire._Camp_EventEmitter_PlayerHit as FallbackEventEmitter
+    return Campfire.EventEmitter_PlayerHit as FallbackEventEmitter
 endFunction
 
 ; Functions ==================================================================================
@@ -194,6 +194,10 @@ bool function IsPlayerUndead() global
 	else
 		return false
 	endif
+endFunction
+
+bool function GetSKSELoaded() global
+	return GetCompatibilitySystem().isSKSELoaded
 endFunction
 
 ;/********f* CampUtil/GetAPIVersion

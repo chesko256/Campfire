@@ -1,0 +1,6 @@
+Frostfall Data Files
+====================
+
+The purpose of the files in Skyrim/Data/SKSE/Plugins/FrostfallData are to store Frostfall's Settings Profile data. These files are created and are required in order for Frostfall to run.
+
+Please DO NOT delete the files created in this directory, or all of your mod settings for Frostfall will be reset.

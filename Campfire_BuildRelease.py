@@ -38,14 +38,15 @@ with open("./Campfire/CampfireArchiveManifest.txt") as manifest:
 dirname = "./Campfire " + user_input + " Release"
 if not os.path.isdir(dirname):
     print "Creating new build..."
-    os.mkdir(dirname)
+    os.makedirs(dirname + "/Campfire")
 else:
     print "Removing old build of same version..."
     shutil.rmtree(dirname)
     os.mkdir(dirname)
 
-os.mkdir(dirname + "/readmes")
-os.makedirs(dirname + "/SKSE/Plugins/CampfireData")
+os.makedirs(dirname + "/Campfire/readmes")
+os.makedirs(dirname + "/Campfire/SKSE/Plugins/CampfireData")
+os.makedirs(dirname + "/fomod")
 
 # Generate BSA archive
 print "Generating BSA archive..."
@@ -57,13 +58,18 @@ os.chdir("./tmp")
 subprocess.call(['./Archive.exe', './CampfireArchiveBuilder.txt'])
 os.chdir("..\\")
 
-# Copy files
-shutil.copyfile("./Campfire/Campfire.esm", dirname + "/Campfire.esm")
-shutil.copyfile("./tmp/Campfire.bsa", dirname + "/Campfire.bsa")
-shutil.copyfile("./Campfire/SKSE/Plugins/StorageUtil.dll", dirname + "/SKSE/Plugins/StorageUtil.dll")
-shutil.copyfile("./Campfire/readmes/Campfire_readme.txt", dirname + "/readmes/Campfire_readme.txt")
-shutil.copyfile("./Campfire/readmes/Campfire_license.txt", dirname + "/readmes/Campfire_license.txt")
-shutil.copyfile("./Campfire/readmes/Campfire_changelog.txt", dirname + "/readmes/Campfire_changelog.txt")
+# Copy files - Mod
+shutil.copyfile("./Campfire/Campfire.esm", dirname + "/Campfire/Campfire.esm")
+shutil.copyfile("./tmp/Campfire.bsa", dirname + "/Campfire/Campfire.bsa")
+shutil.copyfile("./Campfire/SKSE/Plugins/CampfireData/READ_THIS_PLEASE_AND_DO_NOT_DELETE.txt", dirname + "/Campfire/SKSE/Plugins/CampfireData/READ_THIS_PLEASE_AND_DO_NOT_DELETE.txt")
+shutil.copyfile("./Campfire/SKSE/Plugins/StorageUtil.dll", dirname + "/Campfire/SKSE/Plugins/StorageUtil.dll")
+shutil.copyfile("./Campfire/readmes/Campfire_readme.txt", dirname + "/Campfire/readmes/Campfire_readme.txt")
+shutil.copyfile("./Campfire/readmes/Campfire_license.txt", dirname + "/Campfire/readmes/Campfire_license.txt")
+shutil.copyfile("./Campfire/readmes/Campfire_changelog.txt", dirname + "/Campfire/readmes/Campfire_changelog.txt")
+
+# Copy files - Installer
+shutil.copyfile("./Campfire/Installers/Campfire/fomod/info.xml", dirname + "/fomod/info.xml")
+shutil.copyfile("./Campfire/Installers/Campfire/fomod/script.cs", dirname + "/fomod/script.cs")
 
 # Clean Up
 print "Removing temp files..."

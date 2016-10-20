@@ -6,6 +6,7 @@ ReferenceAlias property HeatSource auto
 GlobalVariable property _Frost_CurrentHeatSourceSize auto
 GlobalVariable property _Frost_CurrentHeatSourceDistance auto
 GlobalVariable property _Frost_NearFire auto
+ObjectReference property _Frost_CurrentHeatSourceMarker auto
 
 Actor property PlayerRef auto
 Formlist property _Camp_HeatSources_All auto
@@ -25,6 +26,11 @@ endFunction
 function GetHeatSourceData()
     ObjectReference current_heat_source = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_HeatSources_All, PlayerRef, 600.0)
     
+    ; Prevent "you are getting warmer" bouncing while running through towns.
+    if PlayerRef.IsRunning() || PlayerRef.IsSprinting()
+        current_heat_source = none
+    endif
+
     if current_heat_source && current_heat_source.IsEnabled()
         Form heat_source_object = current_heat_source.GetBaseObject()
         float distance_from_heat = PlayerRef.GetDistance(current_heat_source)
@@ -61,6 +67,7 @@ function GetHeatSourceData()
         if current_heat_size > 0
             ; We successfully found a heat source.
             HeatSource.ForceRefTo(current_heat_source)
+            _Frost_CurrentHeatSourceMarker.MoveTo(current_heat_source)
             current_heat_distance = SetHeatSourceDistance(distance_from_heat)
             
             FrostDebug(1, "%%%% Heat ::: Size " + current_heat_size + ", Distance " + current_heat_distance + ", Fire " + near_fire + ", Ref " + current_heat_source)

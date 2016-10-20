@@ -1,5 +1,6 @@
 Scriptname _Camp_InstinctsGlowScript extends ObjectReference  
 
+import CampUtil
 import _CampInternal
 
 MagicEffect property _Camp_SurvivalVisionEffect auto
@@ -8,7 +9,8 @@ Actor property PlayerRef auto
 bool eligibleForDeletion = false
 
 Event OnInit()
-    RegisterFormForModEventIfSKSELoaded(self, "Campfire_InstinctsStopSearch", "InstinctsStopSearch")
+    FallbackEventEmitter emitter = GetEventEmitter_InstinctsStopSearch()
+    emitter.RegisterFormForModEventWithFallback("Campfire_InstinctsStopSearch", "InstinctsStopSearch", self)
     RegisterForSingleUpdate(5.0)
 EndEvent
 
@@ -32,7 +34,8 @@ endEvent
 
 function Destroy()
     UnregisterForUpdate()
-    UnregisterForAllModEvents()
+    FallbackEventEmitter emitter = GetEventEmitter_InstinctsStopSearch()
+    emitter.UnregisterFormForModEventWithFallback("Campfire_InstinctsStopSearch", self)
     self.Disable(true)
     self.Delete()
 endFunction

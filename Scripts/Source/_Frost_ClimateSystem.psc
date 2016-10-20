@@ -54,6 +54,8 @@ Message property _Frost_WeatherTransMsg_RainToSnowSevere auto
 Message property _Frost_Help_Cold auto
 
 Worldspace property Tamriel auto
+Worldspace property WindhelmWorld auto
+Worldspace property WindhelmPitWorldspace auto
 
 int property WEATHERCLASS_UNKNOWN 			= -1 	autoReadOnly
 int property WEATHERCLASS_PLEASANT 			= 0 	autoReadOnly
@@ -91,7 +93,9 @@ float pos_y
 float pos_z
 Worldspace ws
 int current_max_temperature
+int current_min_temperature
 int last_max_temperature
+int last_min_temperature
 int last_region
 int last_current_temperature
 bool was_nighttime
@@ -143,6 +147,7 @@ function UpdateClimateState()
 	ShowWeatherTransitionMessage(current_weather, incoming_weather, region)
 
 	current_max_temperature = GetMaxTemperatureByLocation()
+	current_min_temperature = GetMinTemperatureByLocation()
 
 	; To calculate temperature, always use the incoming weather if present.
 	if transitioning
@@ -166,6 +171,7 @@ function UpdateClimateState()
 	last_incoming_weather = incoming_weather
 	last_current_temperature = current_temperature
 	last_max_temperature = current_max_temperature
+	last_min_temperature = current_min_temperature
 	last_region = region
 	first_update = false
 endFunction
@@ -219,6 +225,7 @@ int function GetCurrentTemperature(Weather this_weather, int region)
 
 	; Don't recalculate if the weather, region or time hasn't changed.
 	if last_max_temperature == current_max_temperature && 	\
+	   last_min_temperature == current_min_temperature &&	\
 	   this_weather == last_current_weather && 				\
 	   region == last_region && !time_changed
 		return last_current_temperature
@@ -266,8 +273,20 @@ int function GetCurrentTemperature(Weather this_weather, int region)
 	if current_temperature > current_max_temperature
 		current_temperature = current_max_temperature
 	endif
+	if current_temperature < current_min_temperature
+		current_temperature = current_min_temperature
+	endif
 
 	return current_temperature
+endFunction
+
+int function GetMinTemperatureByLocation()
+	int min_temp = -100
+	if ws == WindhelmWorld || ws == WindhelmPitWorldspace
+		return 2
+	else
+		return min_temp
+	endif
 endFunction
 
 int function GetMaxTemperatureByLocation()

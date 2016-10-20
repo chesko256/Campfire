@@ -178,13 +178,13 @@ class Script : SkyrimBaseScript {
 	static bool installAnyway = false;
 
 	static void installCampfire() {
-		InstallFileFromMod("Campfire 1.9/Campfire.esm", "Campfire.esm");
-		InstallFileFromMod("Campfire 1.9/Campfire.bsa", "Campfire.bsa");
-		InstallFileFromMod("Campfire 1.9/readmes/Campfire_readme.txt", "readmes/Campfire_readme.txt");
-		InstallFileFromMod("Campfire 1.9/readmes/Campfire_changelog.txt", "readmes/Campfire_changelog.txt");
-		InstallFileFromMod("Campfire 1.9/readmes/Campfire_license.txt", "readmes/Campfire_license.txt");
-		InstallFileFromMod("Campfire 1.9/SKSE/Plugins/StorageUtil.dll", "SKSE/Plugins/StorageUtil.dll");
-		InstallFileFromMod("Campfire 1.9/SKSE/Plugins/CampfireData/READ_THIS_PLEASE_AND_DO_NOT_DELETE.txt", "SKSE/Plugins/CampfireData/READ_THIS_PLEASE_AND_DO_NOT_DELETE.txt");
+		InstallFileFromMod("Campfire/Campfire.esm", "Campfire.esm");
+		InstallFileFromMod("Campfire/Campfire.bsa", "Campfire.bsa");
+		InstallFileFromMod("Campfire/readmes/Campfire_readme.txt", "readmes/Campfire_readme.txt");
+		InstallFileFromMod("Campfire/readmes/Campfire_changelog.txt", "readmes/Campfire_changelog.txt");
+		InstallFileFromMod("Campfire/readmes/Campfire_license.txt", "readmes/Campfire_license.txt");
+		InstallFileFromMod("Campfire/SKSE/Plugins/StorageUtil.dll", "SKSE/Plugins/StorageUtil.dll");
+		InstallFileFromMod("Campfire/SKSE/Plugins/CampfireData/READ_THIS_PLEASE_AND_DO_NOT_DELETE.txt", "SKSE/Plugins/CampfireData/READ_THIS_PLEASE_AND_DO_NOT_DELETE.txt");
 	}
 	
 	public static bool OnActivate()
@@ -333,7 +333,7 @@ class Script : SkyrimBaseScript {
         titleLabel.BackColor = Color.Transparent;
         titleLabel.Location = new System.Drawing.Point(156, 11);
         titleLabel.Name = "titleLabel";
-        titleLabel.Font = new Font("Palatino Linotype", 55);
+        titleLabel.Font = new Font("Times New Roman", 55);
         titleLabel.Size = new System.Drawing.Size(473, 82);
         titleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         titleLabel.Text = "CAMPFIRE";
@@ -344,7 +344,7 @@ class Script : SkyrimBaseScript {
         subTitleLabel.BackColor = Color.Transparent;
         subTitleLabel.Location = new System.Drawing.Point(155, 97);
         subTitleLabel.Name = "subTitleLabel";
-        subTitleLabel.Font = new Font("Palatino Linotype", 16);
+        subTitleLabel.Font = new Font("Times New Roman", 16);
         subTitleLabel.Size = new System.Drawing.Size(474, 23);
         subTitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         subTitleLabel.Text = "COMPLETE CAMPING SYSTEM";

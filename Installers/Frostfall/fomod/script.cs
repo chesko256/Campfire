@@ -138,12 +138,12 @@ class Script : SkyrimBaseScript {
 
 	static void frostfallInstall()
 	{
-		InstallFileFromMod("Frostfall 3.2/Frostfall.esp", "Frostfall.esp");
-		InstallFileFromMod("Frostfall 3.2/Frostfall.bsa", "Frostfall.bsa");
-		InstallFileFromMod("Frostfall 3.2/readmes/Frostfall_readme.txt", "readmes/Frostfall_readme.txt");
-		InstallFileFromMod("Frostfall 3.2/readmes/Frostfall_changelog.txt", "readmes/Frostfall_changelog.txt");
-		InstallFileFromMod("Frostfall 3.2/readmes/Frostfall_license.txt", "readmes/Frostfall_license.txt");
-		InstallFileFromMod("Frostfall 3.2/SKSE/Plugins/FrostfallData/READ_THIS_PLEASE_AND_DO_NOT_DELETE.txt", "SKSE/Plugins/FrostfallData/READ_THIS_PLEASE_AND_DO_NOT_DELETE.txt");
+		InstallFileFromMod("Frostfall/Frostfall.esp", "Frostfall.esp");
+		InstallFileFromMod("Frostfall/Frostfall.bsa", "Frostfall.bsa");
+		InstallFileFromMod("Frostfall/readmes/Frostfall_readme.txt", "readmes/Frostfall_readme.txt");
+		InstallFileFromMod("Frostfall/readmes/Frostfall_changelog.txt", "readmes/Frostfall_changelog.txt");
+		InstallFileFromMod("Frostfall/readmes/Frostfall_license.txt", "readmes/Frostfall_license.txt");
+		InstallFileFromMod("Frostfall/SKSE/Plugins/FrostfallData/READ_THIS_PLEASE_AND_DO_NOT_DELETE.txt", "SKSE/Plugins/FrostfallData/READ_THIS_PLEASE_AND_DO_NOT_DELETE.txt");
 	}
 
 	static void frostfallAndUIInstall()
@@ -155,7 +155,15 @@ class Script : SkyrimBaseScript {
 		InstallFileFromMod("SkyUI51AddOn/Interface/inventorymenu.swf", "Interface/inventorymenu.swf");
 		InstallFileFromMod("SkyUI51AddOn/Interface/skyui/bottombar.swf", "Interface/skyui/bottombar.swf");
 		InstallFileFromMod("SkyUI51AddOn/Interface/skyui/itemcard.swf", "Interface/skyui/itemcard.swf");
+		InstallFileFromMod("SkyUI51AddOn/Interface/Translations/skyui_czech.txt", "Interface/Translations/skyui_czech.txt");
 		InstallFileFromMod("SkyUI51AddOn/Interface/Translations/skyui_english.txt", "Interface/Translations/skyui_english.txt");
+		InstallFileFromMod("SkyUI51AddOn/Interface/Translations/skyui_french.txt", "Interface/Translations/skyui_french.txt");
+		InstallFileFromMod("SkyUI51AddOn/Interface/Translations/skyui_german.txt", "Interface/Translations/skyui_german.txt");
+		InstallFileFromMod("SkyUI51AddOn/Interface/Translations/skyui_italian.txt", "Interface/Translations/skyui_italian.txt");
+		InstallFileFromMod("SkyUI51AddOn/Interface/Translations/skyui_japanese.txt", "Interface/Translations/skyui_japanese.txt");
+		InstallFileFromMod("SkyUI51AddOn/Interface/Translations/skyui_polish.txt", "Interface/Translations/skyui_polish.txt");
+		InstallFileFromMod("SkyUI51AddOn/Interface/Translations/skyui_russian.txt", "Interface/Translations/skyui_russian.txt");
+		InstallFileFromMod("SkyUI51AddOn/Interface/Translations/skyui_spanish.txt", "Interface/Translations/skyui_spanish.txt");
 		InstallFileFromMod("SkyUI51AddOn/readmes/Frostfall_SkyUI_AddOn_readme.txt", "readmes/Frostfall_SkyUI_AddOn_readme.txt");
 		InstallFileFromMod("SkyUI51AddOn/SKSE/Plugins/FrostfallData/interface_package_version.json", "SKSE/Plugins/FrostfallData/interface_package_version.json");
 	}
@@ -389,7 +397,7 @@ class Script : SkyrimBaseScript {
         titleLabel.BackColor = Color.Transparent;
         titleLabel.Location = new System.Drawing.Point(156, 11);
         titleLabel.Name = "titleLabel";
-        titleLabel.Font = new Font("Palatino Linotype", 55);
+        titleLabel.Font = new Font("Times New Roman", 55);
         titleLabel.Size = new System.Drawing.Size(473, 82);
         titleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         titleLabel.Text = "FROSTFALL";
@@ -400,7 +408,7 @@ class Script : SkyrimBaseScript {
         subTitleLabel.BackColor = Color.Transparent;
         subTitleLabel.Location = new System.Drawing.Point(155, 97);
         subTitleLabel.Name = "subTitleLabel";
-        subTitleLabel.Font = new Font("Palatino Linotype", 16);
+        subTitleLabel.Font = new Font("Times New Roman", 16);
         subTitleLabel.Size = new System.Drawing.Size(474, 23);
         subTitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         subTitleLabel.Text = "HYPOTHERMIA - CAMPING - SURVIVAL";

@@ -123,6 +123,7 @@ string[] WeathersenseDisplayList
 string[] MeterDisplayModeList
 string[] GearTypeList
 string[] ProtectionList
+string[] AnimationList
 
 string[] MeterLayoutList
 string[] FillDirectionList
@@ -246,6 +247,11 @@ Event OnConfigInit()
 	WeathersenseDisplayList[0] = "$FrostfallWeathersenseDisplayMessageOnly"		;"Message"
 	WeathersenseDisplayList[1] = "$FrostfallWeathersenseDisplayMetersOnly"		;"Meters"
 	WeathersenseDisplayList[2] = "$FrostfallWeathersenseDisplayMessageMeters"	;"Message + Meters"
+
+	AnimationList = new String[3]
+	AnimationList[0] = "$FrostfallOff"
+	AnimationList[1] = "$FrostfallAnimationAuto"
+	AnimationList[2] = "$FrostfallAnimationPrompt"
 
 	MeterLayoutList = new string[4]
 	MeterLayoutList[0] = "$FrostfallMeterLayoutList1"	;"Bottom Left"
@@ -386,7 +392,7 @@ Event OnConfigInit()
 endEvent
 
 int function GetVersion()
-	return 2
+	return 3
 endFunction
 
 Event OnVersionUpdate(int a_version)
@@ -652,11 +658,7 @@ function PageReset_Interface()
 	else
 		Interface_ForceFeedback_OID = AddToggleOption("$FrostfallInterfaceSettingForceFeedback", false)
 	endif
-	if _Frost_Setting_Animation.GetValueInt() == 2
-		Interface_Animation_OID = AddToggleOption("$FrostfallInterfaceSettingAnimation", true)
-	else
-		Interface_Animation_OID = AddToggleOption("$FrostfallInterfaceSettingAnimation", false)
-	endif
+	Interface_Animation_OID = AddMenuOption("$FrostfallInterfaceSettingAnimation", AnimationList[_Frost_Setting_Animation.GetValueInt() - 1])
 	if _Frost_Setting_FollowerAnimation.GetValueInt() == 2
 		Interface_FollowerAnimation_OID = AddToggleOption("$FrostfallInterfaceSettingFollowerAnimation", true)
 	else
@@ -734,8 +736,7 @@ function PageReset_Meters()
 		AddHeaderOption("$FrostfallInterfaceHeaderMetersAdvanced")
 		AddTextOption("$FrostfallInterfaceSettingUIMeterConfiguring", "$FrostfallInterfaceHeaderMetersExposureName", OPTION_FLAG_DISABLED)
 		Meters_UIMeterColor_OID = AddColorOption("$FrostfallInterfaceSettingUIColorExposure", _Frost_Setting_MeterExposureColor.GetValueInt())
-		; Removed - Frostfall 3.2
-		; Meters_UIMeterColorAlt_OID = AddColorOption("$FrostfallInterfaceSettingUIColorExposureAlt", _Frost_Setting_MeterExposureColorWarm.GetValueInt())
+		Meters_UIMeterColorAlt_OID = AddColorOption("$FrostfallInterfaceSettingUIColorExposureAlt", _Frost_Setting_MeterExposureColorWarm.GetValueInt())
 		Meters_UIMeterOpacity_OID = AddSliderOption("$FrostfallInterfaceSettingUIMeterOpacity", _Frost_Setting_MeterExposureOpacity.GetValue(), "{0}%")
 		Meters_UIMeterFillDirection_OID = AddMenuOption("$FrostfallInterfaceSettingUIMeterFillDirection", FillDirectionListLimited[_Frost_Setting_MeterExposureFillDirection.GetValueInt()])
 		Meters_UIMeterScale_OID = AddSliderOption("$FrostfallScale", GetMeterScale(_Frost_Setting_MeterExposureWidth.GetValue(), NORMAL_METER_WIDTH), "{2}")
@@ -970,15 +971,6 @@ event OnOptionSelect(int option)
 			SetToggleOptionValue(Interface_ForceFeedback_OID, true)
 		endif
 		SaveSettingToCurrentProfile("force_feedback", _Frost_Setting_ForceFeedback.GetValueInt())
-	elseif option == Interface_Animation_OID
-		if _Frost_Setting_Animation.GetValueInt() == 2
-			_Frost_Setting_Animation.SetValueInt(1)
-			SetToggleOptionValue(Interface_Animation_OID, false)
-		else
-			_Frost_Setting_Animation.SetValueInt(2)
-			SetToggleOptionValue(Interface_Animation_OID, true)
-		endif
-		SaveSettingToCurrentProfile("animation", _Frost_Setting_Animation.GetValueInt())
 	elseif option == Interface_FollowerAnimation_OID
 		if _Frost_Setting_FollowerAnimation.GetValueInt() == 2
 			_Frost_Setting_FollowerAnimation.SetValueInt(1)
@@ -1154,7 +1146,7 @@ endEvent
 event OnOptionDefault(int option)
 	if option == Interface_Animation_OID
 		_Frost_Setting_Animation.SetValueInt(2)
-		SetToggleOptionValue(Interface_Animation_OID, true)
+		SetMenuOptionValue(Interface_Animation_OID, AnimationList[1])
 		SaveSettingToCurrentProfile("animation", _Frost_Setting_Animation.GetValueInt())
 	elseif option == Interface_FollowerAnimation_OID
 		_Frost_Setting_FollowerAnimation.SetValueInt(2)
@@ -1285,7 +1277,7 @@ event OnOptionDefault(int option)
 		endif
 	elseif option == Meters_UIMeterColorAlt_OID
 		if meter_being_configured == METER_BEING_CONFIGURED_EXPOSURE
-			_Frost_Setting_MeterExposureColorWarm.SetValueInt(0xC25811)
+			_Frost_Setting_MeterExposureColorWarm.SetValueInt(0xCC0000)
 			SetColorOptionValue(option, _Frost_Setting_MeterExposureColorWarm.GetValueInt())
 			if IsMeterInverted(ExposureMeterHandler as CommonMeterInterfaceHandler)
 				ExposureMeterHandler.SetMeterColors(_Frost_Setting_MeterExposureColorWarm.GetValueInt(), -1)
@@ -1767,6 +1759,10 @@ Event OnOptionMenuOpen(int option)
 		SetMenuDialogOptions(WeathersenseDisplayList)
 		SetMenuDialogStartIndex(_Frost_Setting_WeathersenseDisplayMode.GetValueInt())
 		SetMenuDialogDefaultIndex(2)
+	elseif option == Interface_Animation_OID
+		SetMenuDialogOptions(AnimationList)
+		SetMenuDialogStartIndex(_Frost_Setting_Animation.GetValueInt() - 1)
+		SetMenuDialogDefaultIndex(1)
 	elseif option == SaveLoad_SelectProfile_OID
 		string[] profile_list = new string[10]
 		int i = 0
@@ -1867,6 +1863,10 @@ Event OnOptionMenuAccept(int option, int index)
 		SetMenuOptionValue(Interface_WeathersenseDisplayMode_OID, WeathersenseDisplayList[index])
 		_Frost_Setting_WeathersenseDisplayMode.SetValueInt(index)
 		SaveSettingToCurrentProfile("weathersense_display_mode", _Frost_Setting_WeathersenseDisplayMode.GetValueInt())
+	elseif option == Interface_Animation_OID
+		SetMenuOptionValue(Interface_Animation_OID, AnimationList[index])
+		_Frost_Setting_Animation.SetValueInt(index + 1)
+		SaveSettingToCurrentProfile("animation", _Frost_Setting_Animation.GetValueInt())
 	elseif option == Gameplay_VampirismMode_OID
 		SetMenuOptionValue(Gameplay_VampirismMode_OID, VampirismModeList[index])
 		_Frost_Setting_VampireMode.SetValueInt(index)
@@ -2438,7 +2438,7 @@ function GenerateDefaultProfile(int aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "meter_display_time", 4)
 	JsonUtil.SetFloatValue(profile_path, "exposure_meter_opacity", 100.0)
 	JsonUtil.SetIntValue(profile_path, "exposure_meter_color", 0x93D0FF)
-	JsonUtil.SetIntValue(profile_path, "exposure_meter_color_warm", 0xC25811)
+	JsonUtil.SetIntValue(profile_path, "exposure_meter_color_warm", 0xCC0000)
 	JsonUtil.SetIntValue(profile_path, "exposure_meter_fill_direction", EXPOSURE_METER_TOPRIGHT_FILLDIR)
 	JsonUtil.SetFloatValue(profile_path, "exposure_meter_height", NORMAL_METER_HEIGHT)
 	JsonUtil.SetFloatValue(profile_path, "exposure_meter_width", NORMAL_METER_WIDTH)

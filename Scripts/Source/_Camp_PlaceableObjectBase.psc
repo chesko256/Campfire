@@ -114,7 +114,8 @@ endFunction
 function Initialize()
 	if Setting_IsConjured && UniqueConjuredObjectIDGlobal
 		conjured_object_id = UpdateConjuredObjectID(UniqueConjuredObjectIDGlobal)
-		RegisterFormForModEventIfSKSELoaded(self, "Campfire_OnConjuredObjectIDUpdated", "OnConjuredObjectIDUpdated")
+		FallbackEventEmitter emitter = GetEventEmitter_OnConjuredObjectIDUpdated()
+		emitter.RegisterFormForModEventWithFallback("Campfire_OnConjuredObjectIDUpdated", "OnConjuredObjectIDUpdated", self)
 	endif
 
 	PlacementSystem = CampUtil.GetPlacementSystem()
