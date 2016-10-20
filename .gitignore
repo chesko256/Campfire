@@ -41,6 +41,11 @@
 !HungerInTheNorth.esp
 !campfire_steam_splash.jpg
 
+#Backup
+!backpacks_old/*
+!backpacks_old/meshes/*
+!backpacks_old/textures/*
+
 #Installers
 !Installers/Campfire/fomod/*
 !Installers/Frostfall/fomod/*
