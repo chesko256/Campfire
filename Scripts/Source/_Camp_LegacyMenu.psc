@@ -50,6 +50,18 @@ Message property _Camp_legacyconfig_campingskill auto
 Message property _Camp_legacyconfig_campingskillrespec auto
 Message property _Camp_legacyconfig_campingskillrestore auto
 Message property _Camp_legacyconfig_campingskillrestoredone auto
+Message property _Camp_legacyconfig_instincts auto
+Message property _Camp_legacyconfig_instincts2 auto
+Message property _Camp_legacyconfig_hearcreatures_on auto
+Message property _Camp_legacyconfig_hearcreatures_off auto
+Message property _Camp_legacyconfig_smelldead_on auto
+Message property _Camp_legacyconfig_smelldead_off auto
+Message property _Camp_legacyconfig_senseobjective_on auto
+Message property _Camp_legacyconfig_senseobjective_off auto
+Message property _Camp_legacyconfig_instinctsSFX_on auto
+Message property _Camp_legacyconfig_instinctsSFX_off auto
+Message property _Camp_legacyconfig_instinctsVFX_on auto
+Message property _Camp_legacyconfig_instinctsVFX_off auto
 
 ;Globals
 GlobalVariable property _Camp_Setting_CampingArmorTakeOff auto
@@ -69,6 +81,12 @@ GlobalVariable property _Camp_Setting_AdvancedPlacement auto
 GlobalVariable property _Camp_Setting_MaxThreads auto
 GlobalVariable property _Camp_Setting_TrackFollowers auto
 GlobalVariable property _Camp_Setting_EnableTutorials auto
+GlobalVariable property _Camp_Setting_InstinctsHearCreatures auto
+GlobalVariable property _Camp_Setting_InstinctsSmellDead auto
+GlobalVariable property _Camp_Setting_InstinctsSenseObjective auto
+GlobalVariable property _Camp_Setting_InstinctsSFX auto
+GlobalVariable property _Camp_Setting_InstinctsVFX auto
+
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 GlobalVariable property _Camp_LegacyConfigCampingRestore auto
 GlobalVariable property CampingPerkPoints auto
@@ -114,10 +132,12 @@ function menu_root()
     elseif i == 1
         menu_tents()
     elseif i == 2
-        menu_advanced()
+        menu_instincts()
     elseif i == 3
-        menu_help()
+        menu_advanced()
     elseif i == 4
+        menu_help()
+    elseif i == 5
         ;Exit
     endif
 endFunction
@@ -196,6 +216,39 @@ function menu_tents2()
         menu_root()
     endif
 
+endFunction
+
+function menu_instincts()
+    int i = _Camp_legacyconfig_instincts.Show()
+    if i == 0
+        MenuHandler_Toggle(_Camp_legacyconfig_hearcreatures_on, _Camp_legacyconfig_hearcreatures_off, _Camp_Setting_InstinctsHearCreatures)
+        menu_instincts()
+    elseif i == 1
+        MenuHandler_Toggle(_Camp_legacyconfig_smelldead_on, _Camp_legacyconfig_smelldead_off, _Camp_Setting_InstinctsSmellDead)
+        menu_instincts()
+    elseif i == 2
+        MenuHandler_Toggle(_Camp_legacyconfig_senseobjective_on, _Camp_legacyconfig_senseobjective_off, _Camp_Setting_InstinctsSenseObjective)
+        menu_instincts()
+    elseif i == 3
+        menu_instincts2()
+    elseif i == 4
+        menu_root()
+    endif
+endFunction
+
+function menu_instincts2()
+    int i = _Camp_legacyconfig_instincts2.Show()
+    if i == 0
+        MenuHandler_Toggle(_Camp_legacyconfig_instinctsSFX_on, _Camp_legacyconfig_instinctsSFX_off, _Camp_Setting_InstinctsSFX)
+        menu_instincts2()
+    elseif i == 1
+        MenuHandler_Toggle(_Camp_legacyconfig_instinctsVFX_on, _Camp_legacyconfig_instinctsVFX_off, _Camp_Setting_InstinctsVFX)
+        menu_instincts2()
+    elseif i == 2
+        menu_instincts()
+    elseif i == 3
+        menu_root()
+    endif
 endFunction
 
 function menu_advanced()
