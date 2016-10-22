@@ -220,3 +220,43 @@ function RemoveItemFromVendor(Form akItem, ObjectReference akContainer)
 		akContainer.RemoveItem(akItem, akContainer.GetItemCount(akItem))
 	endif
 endFunction
+
+; When readding alias counts...
+;	RiverwoodTrader
+;		1	backpack brown
+;		2	cloak burlap
+;	CaravanAChest
+;		1	backpack brown
+;		1	cloak burlap
+;	CaravanBChest
+;		1	backpack brown
+;		1	burlap
+;	CaravanBChest
+;		1	backpack brown
+;		1	burlap
+;	AvalAtheronChest
+;		1 backpack black
+;		1	burlap
+;	Belethors
+;		1	backpack brown
+;		2	linen
+;	BirnaChest
+;		1	backpack white
+;		1	linen
+;	BrandChest
+;		1	burlap
+;	PawnedPrawn
+;		1	backpack brown
+;		1	burlap
+;	SolitudeBitsAndPieces
+;		2	backpack brown
+;		3	linen
+;	ArnleifChest
+;		1	burlap
+;		2 	backpack brown
+;	GrayPineGoods
+;		1	backpack brown
+;		1	burlap
+;	NiranyeChest
+;		2	backpack brown
+;		2	burlap
