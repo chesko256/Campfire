@@ -762,9 +762,15 @@ Event OnPlayerCameraState(int oldState, int newState)
 EndEvent
 
 bool function PlayerIsInDialogue()
-	if UI.IsMenuOpen("Dialogue Menu")
-		return true
+	;@TODO: Figure out how to do this without SKSE
+	if GetSKSELoaded()
+		if UI.IsMenuOpen("Dialogue Menu")
+			return true
+		else
+			return false
+		endif
 	else
+		; something else
 		return false
 	endif
 endFunction

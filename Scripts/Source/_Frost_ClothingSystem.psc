@@ -131,9 +131,9 @@ EndEvent
 ;/* AddWornGearEntryForArmorEquipped wrapper */;
 bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
     if GetSKSELoaded()
-        AddWornGearEntryForArmorEquipped_SKSE(akArmor, akWornGearFormsArray, akWornGearData)
+        return AddWornGearEntryForArmorEquipped_SKSE(akArmor, akWornGearFormsArray, akWornGearData)
     Else
-        AddWornGearEntryForArmorEquipped_Vanilla(akArmor, akWornGearFormsArray)
+        return AddWornGearEntryForArmorEquipped_Vanilla(akArmor, akWornGearFormsArray)
     endif
 endFunction
 
@@ -552,20 +552,24 @@ EndEvent
 ;***
 
 function SendEvent_UpdateWarmthAndCoverage()
-    int handle = ModEvent.Create("Frost_UpdateWarmth")
+    FallbackEventEmitter warmthEvent = GetEventEmitter_UpdateWarmth()
+    FallbackEventEmitter coverageEvent = GetEventEmitter_UpdateCoverage()
+
+    int handle = warmthEvent.Create("Frost_UpdateWarmth")
     if handle
-        ModEvent.Send(handle)
+        warmthEvent.Send(handle)
     endif
-    handle = ModEvent.Create("Frost_UpdateCoverage")
+    handle = coverageEvent.Create("Frost_UpdateCoverage")
     if handle
-        ModEvent.Send(handle)
+        coverageEvent.Send(handle)
     endif
 endFunction
 
 function SendEvent_UpdateWarmth()
-    int handle = ModEvent.Create("Frost_UpdateWarmth")
+    FallbackEventEmitter warmthEvent = GetEventEmitter_UpdateWarmth()
+    int handle = warmthEvent.Create("Frost_UpdateWarmth")
     if handle
-        ModEvent.Send(handle)
+        warmthEvent.Send(handle)
     endif
 endFunction
 

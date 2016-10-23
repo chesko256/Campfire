@@ -84,7 +84,7 @@ int rescueDestinationIndex = 0
 float nearestDist = 0.0
 
 function RegisterForEvents()
-	RegisterForModEvent("Frost_OnRescuePlayer", "OnRescuePlayer")
+	GetEventEmitter_OnRescuePlayer().RegisterFormForModEventWithFallback("Frost_OnRescuePlayer", "OnRescuePlayer", self)
 endFunction
 
 Event OnRescuePlayer(bool bInWater)

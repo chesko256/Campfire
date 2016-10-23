@@ -11,6 +11,10 @@ _Frost_ClothingSystem clothing
 _Frost_ArmorProtectionDatastoreHandler handler
 
 function RegisterForEvents()
+	if !GetSKSELoaded()
+		return
+	endif
+
 	RegisterForModEvent("Frost_OnSkyUIInvListGetEntryProtectionData", "OnSkyUIInvListGetEntryProtectionData")
 	RegisterForModEvent("Frost_OnSkyUIInvListGetEntryChangeData", "OnSkyUIInvListGetEntryChangeData")
 	RegisterForModEvent("Frost_OnSkyUIInvListGetEntryProtectionDataOnProcess", "OnSkyUIInvListGetEntryProtectionDataOnProcess")
@@ -24,6 +28,10 @@ function RegisterForEvents()
 endFunction
 
 function RegisterForMenus()
+	if !GetSKSELoaded()
+		return
+	endif
+	
 	RegisterForMenu("InventoryMenu")
 	RegisterForMenu("ContainerMenu")
 	RegisterForMenu("BarterMenu")

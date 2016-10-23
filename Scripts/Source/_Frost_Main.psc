@@ -83,8 +83,11 @@ function StartPrompt()
 endFunction
 
 function RegisterForModEvents()
-	RegisterForModEvent("Frost_StartFrostfall", "StartFrostfall")
-	RegisterForModEvent("Frost_StopFrostfall", "StopFrostfall")
+	FallbackEventEmitter startEvent = GetEventEmitter_StartFrostfall()
+	FallbackEventEmitter stopEvent = GetEventEmitter_StopFrostfall()
+
+	startEvent.RegisterFormForModEventWithFallback("Frost_StartFrostfall", "StartFrostfall", self)
+	stopEvent.RegisterFormForModEventWithFallback("Frost_StopFrostfall", "StopFrostfall", self)
 endFunction
 
 Event StartFrostfall(bool abBypassStartupMessage = false)

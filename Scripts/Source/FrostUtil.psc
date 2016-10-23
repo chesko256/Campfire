@@ -179,6 +179,15 @@ FallbackEventEmitter function GetEventEmitter_UpdateWarmth() global
     return Frostfall.EventEmitter_UpdateWarmth as FallbackEventEmitter
 endFunction
 
+FallbackEventEmitter function GetEventEmitter_UpdateCoverage() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.EventEmitter_UpdateCoverage as FallbackEventEmitter
+endFunction
+
 FallbackEventEmitter function GetEventEmitter_OnTamrielRegionChange() global
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
@@ -249,6 +258,24 @@ FallbackEventEmitter function GetEventEmitter_FrostfallLoaded() global
         return none
     endif
     return Frostfall.EventEmitter_FrostfallLoaded as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_StartFrostfall() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.EventEmitter_StartFrostfall as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_StopFrostfall() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.EventEmitter_StopFrostfall as FallbackEventEmitter
 endFunction
 
 bool function IsArmorShield(Armor akArmor) global

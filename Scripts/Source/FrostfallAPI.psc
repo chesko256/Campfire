@@ -20,6 +20,7 @@ _Frost_ArmorProtectionDatastoreHandler property ClothingDatastoreHandler auto
 _Frost_LegacyArmorDatastore property LegacyArmorDatastore auto
 
 ReferenceAlias property EventEmitter_UpdateWarmth auto
+ReferenceAlias property EventEmitter_UpdateCoverage auto
 ReferenceAlias property EventEmitter_OnTamrielRegionChange auto
 ReferenceAlias property EventEmitter_OnRescuePlayer auto
 ReferenceAlias property EventEmitter_OnInnerFireMeditate auto
@@ -28,6 +29,8 @@ ReferenceAlias property EventEmitter_OnPlayerStopSwimming auto
 ReferenceAlias property EventEmitter_SoupEffectStart auto
 ReferenceAlias property EventEmitter_SoupEffectStop auto
 ReferenceAlias property EventEmitter_FrostfallLoaded auto
+ReferenceAlias property EventEmitter_StartFrostfall auto
+ReferenceAlias property EventEmitter_StopFrostfall auto
 Actor property PlayerRef auto
 Formlist property _Frost_WorldspacesExteriorOblivion auto
 Formlist property _Frost_OvercastWeatherList auto

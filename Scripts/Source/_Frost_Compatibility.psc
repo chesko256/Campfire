@@ -2282,9 +2282,10 @@ endFunction
 
 
 function SendEvent_FrostfallLoaded()
-	int handle = ModEvent.Create("Frostfall_Loaded")
+	FallbackEventEmitter emitter = GetEventEmitter_FrostfallLoaded()
+	int handle = emitter.Create("Frostfall_Loaded")
 	if handle
-		ModEvent.Send(handle)
+		emitter.Send(handle)
 	endif
 endFunction
 

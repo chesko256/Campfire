@@ -1,6 +1,12 @@
 scriptname _Frost_ExposureMeterInterfaceHandler extends CommonMeterInterfaceHandler
 
+import CampUtil
+
 function RegisterForEvents()
+	if !GetSKSELoaded()
+		return
+	endif
+	
 	RegisterForModEvent("Frostfall_ForceExposureMeterDisplay", "ForceMeterDisplay")
 	RegisterForModEvent("Frostfall_RemoveExposureMeter", "RemoveMeter")
 	RegisterForModEvent("Frostfall_UpdateExposureMeter", "UpdateMeterDelegate")

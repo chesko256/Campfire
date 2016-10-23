@@ -17,40 +17,50 @@ bool function PrecacheHasArmorData(string asArmorName, Keyword akPrecache) globa
 endFunction
 
 function TryToAddArmorToPrecache(Form akBaseItem, Keyword akPrecache) global
-	if akBaseItem as Armor
-		string armorName = akBaseItem.GetName()
-		if armorName != ""
-			if StorageUtil.IntListGet(akPrecache, "FF__" + armorName, 0) == 0
-				;debug.trace("Adding " + armorName + " to precache.")
-				int[] armor_data = FrostUtil.GetClothingDatastoreHandler().GetArmorProtectionData(akBaseItem as Armor)
-				bool result = StorageUtil.IntListCopy(akPrecache, "FF__" + armorName, armor_data)
+	if CampUtil.GetSKSELoaded()
+		if akBaseItem as Armor
+			string armorName = akBaseItem.GetName()
+			if armorName != ""
+				if StorageUtil.IntListGet(akPrecache, "FF__" + armorName, 0) == 0
+					;debug.trace("Adding " + armorName + " to precache.")
+					int[] armor_data = FrostUtil.GetClothingDatastoreHandler().GetArmorProtectionData(akBaseItem as Armor)
+					bool result = StorageUtil.IntListCopy(akPrecache, "FF__" + armorName, armor_data)
+				endif
 			endif
 		endif
 	endif
 endFunction
 
 function TryToAddArmorDataToPrecache(Form akBaseItem, Int[] aiArmorData, Keyword akPrecache) global
-	if aiArmorData[0] != 0 && akBaseItem as Armor
-		;debug.trace("Adding " + armorName + " to precache.")
-		string armorName = akBaseItem.GetName()
-		bool result = StorageUtil.IntListCopy(akPrecache, "FF__" + armorName, aiArmorData)
+	if CampUtil.GetSKSELoaded()
+		if aiArmorData[0] != 0 && akBaseItem as Armor
+			;debug.trace("Adding " + armorName + " to precache.")
+			string armorName = akBaseItem.GetName()
+			bool result = StorageUtil.IntListCopy(akPrecache, "FF__" + armorName, aiArmorData)
+		endif
 	endif
 endFunction
 
 function TryToRemoveArmorFromPrecache(Form akBaseItem, Keyword akPrecache) global
-	if akBaseItem as Armor
-		string armorName = akBaseItem.GetName()
-		if armorName != ""
-			if StorageUtil.IntListGet(akPrecache, "FF__" + armorName, 0) != 0
-				;debug.trace("Removing " + armorName + " from precache.")
-				StorageUtil.IntListClear(akPrecache, "FF__" + armorName)
+	if CampUtil.GetSKSELoaded()
+		if akBaseItem as Armor
+			string armorName = akBaseItem.GetName()
+			if armorName != ""
+				if StorageUtil.IntListGet(akPrecache, "FF__" + armorName, 0) != 0
+					;debug.trace("Removing " + armorName + " from precache.")
+					StorageUtil.IntListClear(akPrecache, "FF__" + armorName)
+				endif
 			endif
 		endif
 	endif
 endFunction
 
 int function RemoveAllArmorFromPrecache(Keyword akPrecache) global
-	return StorageUtil.ClearAllObjPrefix(akPrecache, "FF__")
+	if CampUtil.GetSKSELoaded()
+		return StorageUtil.ClearAllObjPrefix(akPrecache, "FF__")
+	else
+		return 0
+	endif
 endFunction
 
 _Frost_Strings function GetFrostfallStrings() global

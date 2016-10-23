@@ -1,5 +1,6 @@
 scriptname _Frost_CoverageSystem extends _Frost_BaseSystem
 
+import CampUtil
 import FrostUtil
 import _FrostInternal
 
@@ -11,8 +12,11 @@ bool property windbreaker_perk_active auto hidden
 bool property updating_coverage = false auto hidden
 
 function RegisterForEvents()
-	RegisterForModEvent("Frost_UpdateCoverage", "UpdateCoverage")
-	RegisterForModEvent("Campfire_CampfirePerkPurchased", "CampfirePerkPurchased")
+	FallbackEventEmitter updateCoverageEvent = GetEventEmitter_UpdateCoverage()
+	FallbackEventEmitter campfirePerkEvent = GetEventEmitter_CampfirePerkPurchased()
+
+	updateCoverageEvent.RegisterFormForModEventWithFallback("Frost_UpdateCoverage", "UpdateCoverage", self)
+	campfirePerkEvent.RegisterFormForModEventWithFallback("Campfire_CampfirePerkPurchased", "CampfirePerkPurchased", self)
 endFunction
 
 Event UpdateCoverage()
@@ -47,16 +51,19 @@ function SetWindbreaker(bool active)
 	endif
 endFunction
 
+;@NOFALLBACK
 function SendEvent_UpdateBottomBarCoverage(int aiCoverage)
-    if _Frost_DatastoreInitialized.GetValueInt() != 2
-        return
-    endif
+	if GetSKSELoaded()
+    	if _Frost_DatastoreInitialized.GetValueInt() != 2
+        	return
+    	endif
 
-    FrostDebug(0, "Sending event Frost_UpdateBottomBarCoverage")
-    int handle = ModEvent.Create("Frost_UpdateBottomBarCoverage")
-    if handle
-        ModEvent.PushInt(handle, aiCoverage)
-        ModEvent.Send(handle)
+    	FrostDebug(0, "Sending event Frost_UpdateBottomBarCoverage")
+    	int handle = ModEvent.Create("Frost_UpdateBottomBarCoverage")
+    	if handle
+        	ModEvent.PushInt(handle, aiCoverage)
+        	ModEvent.Send(handle)
+    	endif
     endif
 endFunction
 
