@@ -1,6 +1,7 @@
 scriptname _Frost_Compatibility extends ReferenceAlias
 
 import debug
+import CampUtil
 import FrostUtil
 import _FrostInternal
 
@@ -9,6 +10,7 @@ int property CAMPFIRE_MIN_VERSION = 10901 autoReadOnly
 float property WEARABLELANTERNS_MIN_VERSION = 4.02 autoReadOnly
 GlobalVariable property _Frost_PreviousVersion auto
 GlobalVariable property _Frost_FrostfallVersion auto
+GlobalVariable property _Camp_IsSpecialEdition auto
 
 string CONFIG_PATH = "../FrostfallData/"
 bool datastore_update_required = false
@@ -20,7 +22,6 @@ Spell property _Frost_Weathersense_Spell auto
 GlobalVariable property _Frost_HotkeyWeathersense auto
 
 ;#Scripts======================================================================
-_Frost_SkyUIConfigPanelScript property FrostConfig Auto 			;SkyUI Configuration script
 _Frost_ConditionValues property Conditions auto
 
 ;#Official DLC=================================================================
@@ -204,12 +205,9 @@ Event OnPlayerLoadGame()
 	SendEvent_FrostfallLoaded()
 endEvent
 
-function FatalErrorSKSE(int version)
-	trace("[Frostfall][ERROR] Detected SKSE version " + ((version as float) / 10000) + ", out of date! Expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer.")
-	while true
-		_Frost_CriticalError_SKSE.Show(((version as float) / 10000), ((SKSE_MIN_VERSION as float) / 10000))
-		utility.wait(3.0)
-	endWhile
+function ErrorSKSE(int version)
+	trace("[Frostfall][Warning] Detected SKSE version " + ((version as float) / 10000) + ". Expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer.")
+	_Frost_CriticalError_SKSE.Show(((version as float) / 10000), ((SKSE_MIN_VERSION as float) / 10000))
 endFunction
 
 function FatalErrorCampfire(float version)
@@ -245,24 +243,46 @@ endFunction
 
 
 function RunCompatibility()
-	VanillaGameLoadUp()
-
 	trace("[Frostfall]======================================================================================================")
 	trace("[Frostfall]                    Frostfall is now performing start-up and compatibility checks.                    ")
+	trace("[Frostfall]           Errors related to missing files may follow. These are NORMAL and should be ignored.        ")
 	trace("[Frostfall]======================================================================================================")
-	
+
+	if _Camp_IsSpecialEdition.GetValueInt() != 2
+		bool skse_loaded = SKSE.GetVersion()
+		if skse_loaded
+			int skse_version = (SKSE.GetVersion() * 10000) + (SKSE.GetVersionMinor() * 100) + SKSE.GetVersionBeta()
+			if skse_version < SKSE_MIN_VERSION
+				isSKSELoaded = false
+				ErrorSKSE(skse_version)
+			else
+				isSKSELoaded = true
+				trace("[Frostfall] Detected SKSE version " + ((skse_version as float) / 10000) + " (expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer, success!)")
+			endif
+		else
+			isSKSELoaded = false
+			ErrorSKSE(0)
+		endif
+	endif
+
+	VanillaGameLoadUp()
+
 	; Initialize the Equip Monitor event queue
 	(PlayerAlias as _Frost_PlayerEquipMonitor).InitializeEventQueue()
 
 	; Clear the equipment precache.
-	_FrostInternal.RemoveAllArmorFromPrecache(_FrostData_ArmorPrecache)
+	if isSKSELoaded
+		_FrostInternal.RemoveAllArmorFromPrecache(_FrostData_ArmorPrecache)
+	endif
 
 	_Frost_ClothingSystem clothing = GetClothingSystem()
 	clothing.WornGearFormsIntegrityCheck(clothing.WornGearForms)
 
-	bool can_read_write = CheckJSONReadWrite()
-	if !can_read_write
-		_Frost_CriticalError_JSONReadWrite.Show()
+	if isSKSELoaded
+		bool can_read_write = CheckJSONReadWrite()
+		if !can_read_write
+			_Frost_CriticalError_JSONReadWrite.Show()
+		endif
 	endif
 
 	if _Frost_Upgraded_3_0_1.GetValueInt() != 2
@@ -286,29 +306,10 @@ function RunCompatibility()
 	endif
 
 	; Verify that the default datastore has been populated.
-	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
-	int[] armor_data = handler.GetDefaultArmorData("80145___Skyrim.esm") ; ArmorHideCuirass
-	if armor_data[0] == handler.GEARTYPE_NOTFOUND
-		PopulateDefaultArmorData()
-	endif
+	CheckDatastore()
 
 	; Update the previous version value with the current version
 	_Frost_PreviousVersion.SetValue(_Frost_FrostfallVersion.GetValue())
-
-	bool skse_loaded = SKSE.GetVersion()
-	if skse_loaded
-		int skse_version = (SKSE.GetVersion() * 10000) + (SKSE.GetVersionMinor() * 100) + SKSE.GetVersionBeta()
-		if skse_version < SKSE_MIN_VERSION
-			isSKSELoaded = false
-			FatalErrorSKSE(skse_version)
-		else
-			isSKSELoaded = true
-			trace("[Frostfall] Detected SKSE version " + ((skse_version as float) / 10000) + " (expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer, success!)")
-		endif
-	else
-		isSKSELoaded = false
-		FatalErrorSKSE(0)
-	endif
 
 	float campfire_version = CampUtil.GetCampfireVersion()
 	if campfire_version < CAMPFIRE_MIN_VERSION
@@ -331,25 +332,7 @@ function RunCompatibility()
 			ErrorWearableLanterns()
 		endif
 	endif
-	
-	int ui_package_version_installed = JsonUtil.GetIntValue(CONFIG_PATH + "interface_package_version", "installed_package_version")
-	if ui_package_version_installed == 6
-		SKI_Main skyui = Game.GetFormFromFile(0x00000814, "SkyUI.esp") as SKI_Main
-		int skyui_version = skyui.ReqSWFRelease
-		if skyui_version >= 1026 	; SkyUI 5.1+
-			isUIPackageInstalled = true
-			trace("[Frostfall] Detected optional SkyUI Interface Package version " + ui_package_version_installed + " and SkyUI version " + skyui_version + ", success!")
-		else
-			isUIPackageInstalled = false
-			FatalErrorSkyUIPackage(5)
-		endif
-	elseif ui_package_version_installed == 5
-		FatalErrorSkyUIPackageOld()
-	else
-		isUIPackageInstalled = false
-	endif
 
-	;@TODO: Rework to check version. SkyUI is now required.
 	if isSKYUILoaded
 		isSKYUILoaded = IsPluginLoaded(0x01000814, "SkyUI.esp")
 		if !isSKYUILoaded
@@ -360,6 +343,10 @@ function RunCompatibility()
 		if isSKYUILoaded
 			;SkyUI was just loaded.
 		endif
+	endif
+
+	if isSKYUILoaded
+		SendEvent_SKSE_CheckInterfacePackage()
 	endif
 
 	if isSKSELoaded
@@ -456,8 +443,6 @@ function RunCompatibility()
 			Conditions.IsSkyReLoaded = false
 		endif
 	endif
-
-	; DarkenD
 
 	if isCOTLoaded
 		isCOTLoaded = IsPluginLoaded(0x01068A1A, "ClimatesOfTamriel.esm")
@@ -560,6 +545,7 @@ function RunCompatibility()
 		endif
 	endif
 
+	; DarkenD
 	if isDRKLoaded
 		isDRKLoaded = IsPluginLoaded(0x00000D62, "Darkend.esp")
 		if !isDRKLoaded
@@ -578,7 +564,9 @@ function RunCompatibility()
 	trace("[Frostfall]                      Frostfall start-up and compatibility checks complete.   		                ")
 	trace("[Frostfall]======================================================================================================")
 
-	FrostConfig.LoadProfileOnStartup()
+	if isSKYUILoaded
+		SendEvent_SKSE_LoadProfileOnStartup()
+	endif
 	
 	RegisterForControlsOnLoad()
 	RegisterForEventsOnLoad()
@@ -614,96 +602,101 @@ function Upgrade_3_0_2()
 endFunction
 
 function Upgrade_3_1()
-	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
-	handler.CreateProtectionKeywordValueMaps()
+	if isSKSELoaded
+		_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+		handler.CreateProtectionKeywordValueMaps()
 
-	; Get rid of the old data
-	int cleared_count = 0
-	if _Frost_PreviousVersion.GetValue() < 3.1
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "0")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "1")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "2")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "3")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "4")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "5")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "6")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "7")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "8")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "9")
-
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "0")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "1")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "2")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "3")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "4")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "5")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "6")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "7")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "8")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "9")
-
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "0")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "1")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "2")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "3")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "4")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "5")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "6")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "7")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "8")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "9")
-
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "0")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "1")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "2")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "3")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "4")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "5")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "6")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "7")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "8")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "9")
-
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "0")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "1")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "2")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "3")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "4")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "5")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "6")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "7")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "8")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "9")
-
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "0")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "1")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "2")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "3")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "4")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "5")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "6")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "7")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "8")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "9")
-
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "0")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "1")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "2")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "3")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "4")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "5")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "6")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "7")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "8")
-		cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "9")
+		int cleared_count = 0
+	
+		; Get rid of the old data
+		if _Frost_PreviousVersion.GetValue() < 3.1
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "0")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "1")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "2")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "3")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "4")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "5")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "6")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "7")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "8")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorBody, "9")
+	
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "0")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "1")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "2")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "3")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "4")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "5")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "6")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "7")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "8")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHead, "9")
+	
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "0")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "1")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "2")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "3")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "4")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "5")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "6")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "7")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "8")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorHands, "9")
+	
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "0")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "1")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "2")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "3")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "4")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "5")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "6")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "7")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "8")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorFeet, "9")
+	
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "0")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "1")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "2")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "3")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "4")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "5")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "6")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "7")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "8")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorCloak, "9")
+	
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "0")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "1")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "2")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "3")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "4")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "5")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "6")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "7")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "8")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorShield, "9")
+	
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "0")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "1")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "2")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "3")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "4")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "5")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "6")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "7")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "8")
+			cleared_count += StorageUtil.ClearAllObjPrefix(handler._FrostData_ArmorIgnore, "9")
+	
+			trace("[Frostfall] Upgrade cleared " + cleared_count + " old records.")
+		endif
 
 		; Re-enable tutorials on upgrade.
 		_Frost_Setting_DisplayTutorials.SetValueInt(2)
-		FrostConfig.SaveSettingToCurrentProfile("display_tutorials", _Frost_Setting_DisplayTutorials.GetValueInt())
+		SendEvent_SKSE_SaveSettingToCurrentProfile("display_tutorials", _Frost_Setting_DisplayTutorials.GetValueInt())
+	
+		; Create new default data
+		PopulateDefaultArmorData()
 	endif
-
-	; Create new default data
-	PopulateDefaultArmorData()
 
 	if _Frost_PreviousVersion.GetValue() > 0.0
 		; Upgraded from previous version, start the new Frost Resist system.
@@ -714,9 +707,8 @@ function Upgrade_3_1()
 	GetClothingSystem().StartUp()
 
 	; Load a meter preset for the user's display aspect ratio
-	FrostConfig.ApplyMeterPreset(1)
-
-	trace("[Frostfall] Upgrade cleared " + cleared_count + " old records.")
+	SendEvent_SKSE_ApplyMeterPreset(1)
+	
 	trace("[Frostfall] Upgraded to 3.1.")
 	_Frost_Upgraded_3_1.SetValueInt(2)
 endFunction
@@ -725,16 +717,7 @@ function Upgrade_3_2()
 	if _Frost_PreviousVersion.GetValue() > 0.0
 		; Upgraded from previous version, switch to new meter.
 		if isSKYUILoaded
-			_Frost_ExposureMeterInterfaceHandler exposureMeterHandler = GetExposureMeterHandler()
-			SKI_WidgetManager manager = (Game.GetFormFromFile(0x00000824, "SkyUI.esp") as Quest) as SKI_WidgetManager
-			int id = ((exposureMeterHandler as Quest) as _Frost_Meter).WidgetID		
-			manager.CreateWidget(id, "frostfall/meterIndicator.swf")
-			exposureMeterHandler.meter_inversion_value = -1.0
-			exposureMeterHandler.improvement_display_delta_threshold = 2.0
-			exposureMeterHandler.SetMeterColors(_Frost_Setting_MeterExposureColor.GetValueInt(), -1)
-
-			_Frost_WetnessMeterInterfaceHandler wetnessMeterHandler = GetWetnessMeterHandler()
-			wetnessMeterHandler.improvement_display_delta_threshold = 30.0
+			SendEvent_SKSE_Upgrade_3_2()
 		endif
 	endif
 
@@ -744,16 +727,9 @@ endFunction
 
 function Upgrade_3_2_1()
 	if _Frost_PreviousVersion.GetValue() > 0.0
-		; Upgraded from previous version, further meter tweaks.
-		_Frost_ExposureMeterInterfaceHandler exposureMeterHandler = GetExposureMeterHandler()
-		exposureMeterHandler.AttributeValue = _Frost_AttributeExposureMeter
-		exposureMeterHandler.contextual_display_thresholds = new float[5]
-		exposureMeterHandler.contextual_display_thresholds[0] = 0.0
-		exposureMeterHandler.contextual_display_thresholds[1] = 20.0
-		exposureMeterHandler.contextual_display_thresholds[2] = 40.0
-		exposureMeterHandler.contextual_display_thresholds[3] = 60.0
-		exposureMeterHandler.contextual_display_thresholds[4] = 80.0
-		_Frost_Setting_MeterExposureColorWarm.SetValueInt(0xCC0000)
+		if isSKYUILoaded
+			SendEvent_SKSE_Upgrade_3_2_1()
+		endif
 	endif
 
 	trace("[Frostfall] Upgraded to 3.2.1.")
@@ -812,6 +788,30 @@ bool function CheckJSONReadWrite()
 	endif
 endFunction
 
+function CheckDatastore()
+	if isSKSELoaded
+		CheckDatastore_SKSE()
+	else
+		CheckDatastore_Vanilla()
+	endif
+endFunction
+
+function CheckDatastore_SKSE()
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+	int[] armor_data = handler.GetDefaultArmorData("80145___Skyrim.esm") ; ArmorHideCuirass
+	if armor_data[0] == handler.GEARTYPE_NOTFOUND
+		PopulateDefaultArmorData()
+	endif
+endFunction
+
+function CheckDatastore_Vanilla()
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+	int[] armor_data = handler.GetArmorData_Vanilla(ArmorHideCuirass, handler.GEARTYPE_BODY)
+	if armor_data[0] == handler.GEARTYPE_NOTFOUND
+		GetLegacyArmorDatastore().PopulateDefaultArmorData()
+	endif
+endFunction
+
 function PopulateDefaultArmorData()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 	handler.CreateProtectionKeywordValueMaps()
@@ -826,6 +826,14 @@ function PopulateDefaultArmorData()
 endFunction
 
 function RunCompatibilityArmors()
+	if isSKSELoaded
+		RunCompatibilityArmors_SKSE()
+	else
+		RunCompatibilityArmors_Vanilla()
+	endif
+endFunction
+
+function RunCompatibilityArmors_SKSE()
 	IMALoadUp()
 	NFHLoadUp()
 	WICLoadUp()
@@ -838,16 +846,37 @@ function RunCompatibilityArmors()
 	GetClothingDatastoreHandler().SaveDefaultArmorProfile()
 endFunction
 
+function RunCompatibilityArmors_Vanilla()
+	IMALoadUp_Vanilla()
+	NFHLoadUp_Vanilla()
+	WICLoadUp_Vanilla()
+	COSLoadUp_Vanilla()
+	COSDGLoadUp_Vanilla()
+	AEALoadUp_Vanilla()
+	WACLoadUp_Vanilla()
+endFunction
+
 
 bool function IsPluginLoaded(int iFormID, string sPluginName)
-	int i = Game.GetModByName(sPluginName)
-	if i != 255
-		debug.trace("[Frostfall] Loaded: " + sPluginName)
-		return true
+	if isSKSELoaded
+		int i = Game.GetModByName(sPluginName)
+		if i != 255
+			debug.trace("[Frostfall] Loaded: " + sPluginName)
+			return true
+		else
+			return false
+		endif
 	else
-		return false
+		bool b = Game.GetFormFromFile(iFormID, sPluginName)
+		if b
+			debug.trace("[Frostfall] Loaded: " + sPluginName)
+			return true
+		else
+			return false
+		endif
 	endif
 endFunction
+
 
 function DLC1LoadUp()
 
@@ -1185,7 +1214,7 @@ function AddSpellBooks()
 endFunction
 
 function RegisterForKeysOnLoad()
-	FrostConfig.RegisterForKeysOnLoad()
+	SendEvent_SKSE_RegisterForKeysOnLoad()
 endFunction
 
 function RegisterForControlsOnLoad()
@@ -2216,6 +2245,42 @@ function IMALoadUp()
 	handler.SetArmorDataByKey("139153___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_IGNORE, abExportToDefaults = true, abSave = false) ; IARitualBoethiahShroud		@IGNORE
 endFunction
 
+;@TODO
+function IMALoadUp_Vanilla()
+
+endFunction
+
+;@TODO
+function NFHLoadUp_Vanilla()
+
+endFunction
+
+;@TODO
+function WICLoadUp_Vanilla()
+
+endFunction
+
+;@TODO
+function COSLoadUp_Vanilla()
+
+endFunction
+
+;@TODO
+function COSDGLoadUp_Vanilla()
+
+endFunction
+
+;@TODO
+function AEALoadUp_Vanilla()
+
+endFunction
+
+;@TODO
+function WACLoadUp_Vanilla()
+
+endFunction
+
+
 function SendEvent_FrostfallLoaded()
 	int handle = ModEvent.Create("Frostfall_Loaded")
 	if handle
@@ -2229,5 +2294,78 @@ function RegisterCampfireSkill()
 		bool b = CampUtil.RegisterPerkTree(_Frost_PerkNodeController_Endurance, "Frostfall.esp")
 	else
 		debug.trace("[Campfire] ERROR: Unable to register Campfire Skill System for Frostfall.esp. Campfire was not found or the version loaded is not compatible. Expected CampUtil API 4 or higher, got " + CampfireAPIVersion.GetValueInt())
+	endif
+endFunction
+
+;@NOFALLBACK
+function SendEvent_SKSE_Upgrade_3_2()
+	if isSKSELoaded
+		int handle = ModEvent.Create("Frostfall_Upgrade_3_2")
+		if handle
+			ModEvent.Send(handle)
+		endif
+	endif
+endFunction
+
+;@NOFALLBACK
+function SendEvent_SKSE_Upgrade_3_2_1()
+	if isSKSELoaded
+		int handle = ModEvent.Create("Frostfall_Upgrade_3_2_1")
+		if handle
+			ModEvent.Send(handle)
+		endif
+	endif
+endFunction
+
+;@NOFALLBACK
+function SendEvent_SKSE_LoadProfileOnStartup()
+	if isSKSELoaded
+		int handle = ModEvent.Create("Frostfall_LoadProfileOnStartup")
+		if handle
+			ModEvent.Send(handle)
+		endif
+	endif
+endFunction
+
+;@NOFALLBACK
+function SendEvent_SKSE_SaveSettingToCurrentProfile(string asKey, int aiValue)
+	if isSKSELoaded
+		int handle = ModEvent.Create("Frostfall_SaveSettingToCurrentProfile")
+		if handle
+			ModEvent.PushString(handle, asKey)
+			ModEvent.PushInt(handle, aiValue)
+			ModEvent.Send(handle)
+		endif
+	endif
+endFunction
+
+;@NOFALLBACK
+function SendEvent_SKSE_ApplyMeterPreset(int aiValue)
+	if isSKSELoaded
+		int handle = ModEvent.Create("Frostfall_ApplyMeterPreset")
+		if handle
+			ModEvent.PushInt(handle, aiValue)
+			ModEvent.Send(handle)
+		endif
+	endif
+endFunction
+
+;@NOFALLBACK
+function SendEvent_SKSE_RegisterForKeysOnLoad()
+	if isSKSELoaded
+		int handle = ModEvent.Create("Frostfall_RegisterForKeysOnLoad")
+		if handle
+			ModEvent.Send(handle)
+		endif
+	endif
+endFunction
+
+;@NOFALLBACK
+function SendEvent_SKSE_CheckInterfacePackage()
+	if isSKSELoaded
+		int handle = ModEvent.Create("Frostfall_CheckInterfacePackage")
+		if handle
+			ModEvent.Send(handle)
+		endif
 	endif
 endFunction

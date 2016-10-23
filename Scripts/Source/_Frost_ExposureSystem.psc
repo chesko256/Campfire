@@ -142,12 +142,14 @@ bool recently_fast_travelled = false
 bool ism_running = false
 
 function RegisterForEvents()
-	RegisterForModEvent("Frost_OnInnerFireMeditate", "OnInnerFireMeditate")
-	RegisterForModEvent("Campfire_CampfirePerkPurchased", "CampfirePerkPurchased")
+	FallbackEventEmitter meditateEvent = GetEventEmitter_OnInnerFireMeditate()
+	FallbackEventEmitter campfirePerkEvent = GetEventEmitter_CampfirePerkPurchased()
+	
+	meditateEvent.RegisterFormForModEventWithFallback("Frost_OnInnerFireMeditate", "OnInnerFireMeditate", self)
+	campfirePerkEvent.RegisterFormForModEventWithFallback("Campfire_CampfirePerkPurchased", "CampfirePerkPurchased", self)
 endFunction
 
 function Update()
-	SendEvent_UpdateWarmth()
 	if last_update_time == 0.0
 		; Skip the first update
 		last_update_time = Game.GetRealHoursPassed()
@@ -1030,47 +1032,60 @@ Event CampfirePerkPurchased()
 	endif
 endEvent
 
+;@NOFALLBACK
 function SendEvent_ForceExposureMeterDisplay(bool flash = false)
-	int handle = ModEvent.Create("Frostfall_ForceExposureMeterDisplay")
-	if handle
-		ModEvent.PushBool(handle, flash)
-		ModEvent.Send(handle)
+	if GetSKSELoaded()
+		int handle = ModEvent.Create("Frostfall_ForceExposureMeterDisplay")
+		if handle
+			ModEvent.PushBool(handle, flash)
+			ModEvent.Send(handle)
+		endif
 	endif
 endFunction
 
+;@NOFALLBACK
 function SendEvent_UpdateExposureMeter()
-	int handle = ModEvent.Create("Frostfall_UpdateExposureMeter")
-	if handle
-		ModEvent.Send(handle)
+	if GetSKSELoaded()
+		int handle = ModEvent.Create("Frostfall_UpdateExposureMeter")
+		if handle
+			ModEvent.Send(handle)
+		endif
 	endif
 endFunction
 
+;@NOFALLBACK
 function SendEvent_UpdateExposureMeterIndicator(float percent)
-	int handle = ModEvent.Create("Frostfall_UpdateExposureMeterIndicator")
-	if handle
-		ModEvent.PushFloat(handle, percent)
-		ModEvent.Send(handle)
+	if GetSKSELoaded()
+		int handle = ModEvent.Create("Frostfall_UpdateExposureMeterIndicator")
+		if handle
+			ModEvent.PushFloat(handle, percent)
+			ModEvent.Send(handle)
+		endif
 	endif
 endFunction
 
+;@NOFALLBACK
 function SendEvent_SetExposureMeterGlow(float percent)
-	int handle = ModEvent.Create("Frostfall_SetExposureMeterGlow")
-	if handle
-		ModEvent.PushFloat(handle, percent)
-		ModEvent.Send(handle)
+	if GetSKSELoaded()
+		int handle = ModEvent.Create("Frostfall_SetExposureMeterGlow")
+		if handle
+			ModEvent.PushFloat(handle, percent)
+			ModEvent.Send(handle)
+		endif
 	endif
 endFunction
 
 function SendEvent_OnRescuePlayer(bool in_water)
-	int handle = ModEvent.Create("Frost_OnRescuePlayer")
+	FallbackEventEmitter emitter = GetEventEmitter_OnRescuePlayer()
+	int handle = emitter.Create("Frost_OnRescuePlayer")
 	if handle
-		ModEvent.PushBool(handle, in_water)
-		ModEvent.Send(handle)
+		emitter.PushBool(handle, in_water)
+		emitter.Send(handle)
 	endif
 endFunction
 
 function SendEvent_UpdateWarmth()
-		FallbackEventEmitter emitter = GetEventEmitter_UpdateWarmth()
+	FallbackEventEmitter emitter = GetEventEmitter_UpdateWarmth()
     int handle = emitter.Create("Frost_UpdateWarmth")
     if handle
         emitter.Send(handle)

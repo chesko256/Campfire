@@ -14,12 +14,10 @@ bool fire_damage_lock = false
 bool frost_damage_lock = false
 
 Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
-	if akEffect.IsEffectFlagSet(0x00000001)
-		if !fire_damage_lock && akEffect.HasKeyword(MagicDamageFire)
-			DecreaseExposureWetnessFireDamage()
-		elseif !frost_damage_lock && akEffect.HasKeyword(MagicDamageFrost)
-			IncreaseExposureFrostDamage()
-		endif
+	if !fire_damage_lock && akEffect.HasKeyword(MagicDamageFire)
+		DecreaseExposureWetnessFireDamage()
+	elseif !frost_damage_lock && akEffect.HasKeyword(MagicDamageFrost)
+		IncreaseExposureFrostDamage()
 	endif
 EndEvent
 

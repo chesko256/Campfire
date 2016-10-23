@@ -1,5 +1,7 @@
 Scriptname _Frost_WeathersenseScript extends ActiveMagicEffect
 
+import CampUtil
+
 Quest property _Frost_MainQuest auto
 GlobalVariable property _Frost_Setting_WeathersenseDisplayMode auto
 
@@ -24,26 +26,35 @@ function UseWeathersense()
 	endif
 endFunction
 
+;@NOFALLBACK
 function SendEvent_ForceExposureMeterDisplay(bool abFlash = false)
-	int handle = ModEvent.Create("Frostfall_ForceExposureMeterDisplay")
-	if handle
-		ModEvent.PushBool(handle, abFlash)
-		ModEvent.Send(handle)
+	if GetSKSELoaded()
+		int handle = ModEvent.Create("Frostfall_ForceExposureMeterDisplay")
+		if handle
+			ModEvent.PushBool(handle, abFlash)
+			ModEvent.Send(handle)
+		endif
 	endif
 endFunction
 
+;@NOFALLBACK
 function SendEvent_ForceWetnessMeterDisplay(bool abFlash = false)
-	int handle = ModEvent.Create("Frostfall_ForceWetnessMeterDisplay")
-	if handle
-		ModEvent.PushBool(handle, abFlash)
-		ModEvent.Send(handle)
+	if GetSKSELoaded()
+		int handle = ModEvent.Create("Frostfall_ForceWetnessMeterDisplay")
+		if handle
+			ModEvent.PushBool(handle, abFlash)
+			ModEvent.Send(handle)
+		endif
 	endif
 endFunction
 
+;@NOFALLBACK
 function SendEvent_ForceWeathersenseMeterDisplay(bool abFlash = false)
-	int handle = ModEvent.Create("Frostfall_ForceWeathersenseMeterDisplay")
-	if handle
-		ModEvent.PushBool(handle, abFlash)
-		ModEvent.Send(handle)
+	if GetSKSELoaded()
+		int handle = ModEvent.Create("Frostfall_ForceWeathersenseMeterDisplay")
+		if handle
+			ModEvent.PushBool(handle, abFlash)
+			ModEvent.Send(handle)
+		endif
 	endif
 endFunction

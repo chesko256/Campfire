@@ -204,9 +204,12 @@ function AddFriendItems()
 		if friend.GetItemCount(_Camp_Tent_LeatherSmall1BR_MISC) == 0
 			friend.AddItem(_Camp_Tent_LeatherSmall1BR_MISC)
 		endif
+		;/
+		@TODO: Re-add when cloak is functioning.
 		if friend.GetItemCount(_Camp_Cloak_BasicBurlap) == 0
 			friend.AddItem(_Camp_Cloak_BasicBurlap)
 		endif
+		/;
 		if friend.GetItemCount(_Camp_ArmorSonsBoots) == 0
 			friend.AddItem(_Camp_ArmorSonsBoots)
 		endif

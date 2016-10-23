@@ -1,5 +1,6 @@
 scriptname FrostfallAPI extends Quest
 
+
 _Frost_ExposureSystem property Exposure auto
 _Frost_Compatibility property Compatibility auto
 _Frost_HeatSourceSystem property HeatSource auto
@@ -16,8 +17,17 @@ _Frost_WeatherMeterInterfaceHandler property WeathersenseMeterHandler auto
 _Frost_ShelterSystem property Shelter auto
 _Frost_FrostResistSystem property FrostResist auto
 _Frost_ArmorProtectionDatastoreHandler property ClothingDatastoreHandler auto
+_Frost_LegacyArmorDatastore property LegacyArmorDatastore auto
+
 ReferenceAlias property EventEmitter_UpdateWarmth auto
 ReferenceAlias property EventEmitter_OnTamrielRegionChange auto
+ReferenceAlias property EventEmitter_OnRescuePlayer auto
+ReferenceAlias property EventEmitter_OnInnerFireMeditate auto
+ReferenceAlias property EventEmitter_OnPlayerStartSwimming auto
+ReferenceAlias property EventEmitter_OnPlayerStopSwimming auto
+ReferenceAlias property EventEmitter_SoupEffectStart auto
+ReferenceAlias property EventEmitter_SoupEffectStop auto
+ReferenceAlias property EventEmitter_FrostfallLoaded auto
 Actor property PlayerRef auto
 Formlist property _Frost_WorldspacesExteriorOblivion auto
 Formlist property _Frost_OvercastWeatherList auto
@@ -40,3 +50,4 @@ GlobalVariable property _Frost_AttributeCoverage auto
 GlobalVariable property _Frost_CurrentTemperature auto
 GlobalVariable property _Frost_FrostfallVersion auto
 GlobalVariable property _Frost_APIVersion auto
+Keyword property ArmorShield auto

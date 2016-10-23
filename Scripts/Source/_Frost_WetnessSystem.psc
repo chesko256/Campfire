@@ -39,6 +39,8 @@ int last_wet_level = 0
 float last_update_time = 0.0
 float this_update_time = 0.0
 
+bool is_swimming = false
+
 function Update()
 	if last_update_time == 0.0
 		; Skip the first update
@@ -53,16 +55,21 @@ function Update()
 endFunction
 
 function RegisterForEvents()
-	RegisterForModEvent("Frostfall_OnPlayerStartSwimming", "OnPlayerStartSwimming")
-	RegisterForModEvent("Frostfall_OnPlayerStopSwimming", "OnPlayerStopSwimming")
+	FallbackEventEmitter startSwimming = GetEventEmitter_OnPlayerStartSwimming()
+	FallbackEventEmitter stopSwimming = GetEventEmitter_OnPlayerStopSwimming()
+
+	startSwimming.RegisterFormForModEventWithFallback("Frostfall_OnPlayerStartSwimming", "OnPlayerStartSwimming", self)
+	stopSwimming.RegisterFormForModEventWithFallback("Frostfall_OnPlayerStopSwimming", "OnPlayerStopSwimming", self)
 endFunction
 
 Event OnPlayerStartSwimming()
+	is_swimming = true
 	ModAttributeWetness(MAX_WETNESS, MAX_WETNESS)
 	UpdateWetLevel()
 endEvent
 
 Event OnPlayerStopSwimming()
+	is_swimming = false
 	_Frost_WetStateMsg_Wet3.Show()
 	SendEvent_ForceWetnessMeterDisplay()
 endEvent
@@ -137,7 +144,7 @@ function UpdateWetLevel()
 endFunction
 
 function ShowWetStateMessage(int wet_level)
-	if PlayerRef.IsSwimming()
+	if is_swimming
 		return
 	endif
 	if _Frost_Setting_ConditionMessages.GetValueInt() == 2
@@ -176,7 +183,7 @@ bool function IsNearWaterfall()
 endFunction
 
 function UpdateWetState()
-	if PlayerRef.IsSwimming()
+	if is_swimming
 		return
 	endif
 
@@ -276,18 +283,24 @@ function SetWetness(float value, bool force_meter_display = false)
 	endif
 endFunction
 
+;@NOFALLBACK
 function SendEvent_ForceWetnessMeterDisplay(bool flash = false)
-	int handle = ModEvent.Create("Frostfall_ForceWetnessMeterDisplay")
-	if handle
-		ModEvent.PushBool(handle, flash)
-		ModEvent.Send(handle)
+	if GetSKSELoaded()
+		int handle = ModEvent.Create("Frostfall_ForceWetnessMeterDisplay")
+		if handle
+			ModEvent.PushBool(handle, flash)
+			ModEvent.Send(handle)
+		endif
 	endif
 endFunction
 
+;@NOFALLBACK
 function SendEvent_UpdateWetnessMeter()
-	int handle = ModEvent.Create("Frostfall_UpdateWetnessMeter")
-	if handle
-		ModEvent.Send(handle)
+	if GetSKSELoaded()
+		int handle = ModEvent.Create("Frostfall_UpdateWetnessMeter")
+		if handle
+			ModEvent.Send(handle)
+		endif
 	endif
 endFunction
 

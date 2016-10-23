@@ -1,4 +1,4 @@
-;/********s* Form/CampUtil
+;/********s* Form/FrostUtil
 * SCRIPTNAME
 */;
 scriptname FrostUtil hidden
@@ -78,6 +78,15 @@ _Frost_ArmorProtectionDatastoreHandler function GetClothingDatastoreHandler() gl
         return none
     endif
     return Frostfall.ClothingDatastoreHandler
+endFunction
+
+_Frost_LegacyArmorDatastore function GetLegacyArmorDatastore() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.LegacyArmorDatastore
 endFunction
 
 _Frost_Compatibility function GetCompatibilitySystem() global
@@ -177,6 +186,83 @@ FallbackEventEmitter function GetEventEmitter_OnTamrielRegionChange() global
         return none
     endif
     return Frostfall.EventEmitter_OnTamrielRegionChange as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_OnRescuePlayer() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.EventEmitter_OnRescuePlayer as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_OnInnerFireMeditate() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.EventEmitter_OnInnerFireMeditate as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_OnPlayerStartSwimming() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.EventEmitter_OnPlayerStartSwimming as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_OnPlayerStopSwimming() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.EventEmitter_OnPlayerStopSwimming as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_SoupEffectStart() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.EventEmitter_SoupEffectStart as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_SoupEffectStop() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.EventEmitter_SoupEffectStop as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_FrostfallLoaded() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.EventEmitter_FrostfallLoaded as FallbackEventEmitter
+endFunction
+
+bool function IsArmorShield(Armor akArmor) global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return false
+    endif
+    return akArmor.HasKeyword(Frostfall.ArmorShield)
+endFunction
+
+bool function IsArmorCloak(Armor akArmor) global
+    ;@TODO
+    return false
 endFunction
 
 ; Public Functions ================================================================================
@@ -1870,9 +1956,10 @@ endEvent
 ;*********/;
 function SendEvent_OnPlayerStartSwimming() global
     _FrostInternal.FrostDebug(0, "Sending event Frostfall_OnPlayerStartSwimming")
-    int handle = ModEvent.Create("Frostfall_OnPlayerStartSwimming")
+    FallbackEventEmitter emitter = GetEventEmitter_OnPlayerStartSwimming()
+    int handle = emitter.Create("Frostfall_OnPlayerStartSwimming")
     if handle
-        ModEvent.Send(handle)
+        emitter.Send(handle)
     endif
 endFunction
 
@@ -1900,9 +1987,10 @@ endEvent
 ;*********/;
 function SendEvent_OnPlayerStopSwimming() global
     _FrostInternal.FrostDebug(0, "Sending event Frostfall_OnPlayerStopSwimming")
-    int handle = ModEvent.Create("Frostfall_OnPlayerStopSwimming")
+    FallbackEventEmitter emitter = GetEventEmitter_OnPlayerStopSwimming()
+    int handle = emitter.Create("Frostfall_OnPlayerStopSwimming")
     if handle
-        ModEvent.Send(handle)
+        emitter.Send(handle)
     endif
 endFunction
 

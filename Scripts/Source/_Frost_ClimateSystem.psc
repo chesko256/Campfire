@@ -546,30 +546,32 @@ function ShowTutorial_Cold()
 endFunction
 
 function SendEvent_UpdateWeathersenseMeter(int temp)
-	int temp_level
-	if temp >= 18
-		_Frost_AttributeMeterTempLevel.SetValueInt(10)
-	elseif temp < 18 && temp >= 15
-		_Frost_AttributeMeterTempLevel.SetValueInt(9)
-	elseif temp < 15 && temp > 10
-		_Frost_AttributeMeterTempLevel.SetValueInt(8)
-	elseif temp == 10
-		_Frost_AttributeMeterTempLevel.SetValueInt(7)
-	elseif temp < 10 && temp >= 6
-		_Frost_AttributeMeterTempLevel.SetValueInt(6)
-	elseif temp < 6 && temp >= 1
-		_Frost_AttributeMeterTempLevel.SetValueInt(5)
-	elseif temp < 1 && temp >= -4
-		_Frost_AttributeMeterTempLevel.SetValueInt(4)
-	elseif temp < -4 && temp >= -9
-		_Frost_AttributeMeterTempLevel.SetValueInt(3)
-	elseif temp < -9 && temp >= -14
-		_Frost_AttributeMeterTempLevel.SetValueInt(2)
-	elseif temp < -14
-		_Frost_AttributeMeterTempLevel.SetValueInt(1)
-	endif
-	int handle = ModEvent.Create("Frostfall_UpdateWeathersenseMeter")
-	if handle
-		ModEvent.Send(handle)
+	if GetSKSELoaded()
+		int temp_level
+		if temp >= 18
+			_Frost_AttributeMeterTempLevel.SetValueInt(10)
+		elseif temp < 18 && temp >= 15
+			_Frost_AttributeMeterTempLevel.SetValueInt(9)
+		elseif temp < 15 && temp > 10
+			_Frost_AttributeMeterTempLevel.SetValueInt(8)
+		elseif temp == 10
+			_Frost_AttributeMeterTempLevel.SetValueInt(7)
+		elseif temp < 10 && temp >= 6
+			_Frost_AttributeMeterTempLevel.SetValueInt(6)
+		elseif temp < 6 && temp >= 1
+			_Frost_AttributeMeterTempLevel.SetValueInt(5)
+		elseif temp < 1 && temp >= -4
+			_Frost_AttributeMeterTempLevel.SetValueInt(4)
+		elseif temp < -4 && temp >= -9
+			_Frost_AttributeMeterTempLevel.SetValueInt(3)
+		elseif temp < -9 && temp >= -14
+			_Frost_AttributeMeterTempLevel.SetValueInt(2)
+		elseif temp < -14
+			_Frost_AttributeMeterTempLevel.SetValueInt(1)
+		endif
+		int handle = ModEvent.Create("Frostfall_UpdateWeathersenseMeter")
+		if handle
+			ModEvent.Send(handle)
+		endif
 	endif
 endFunction

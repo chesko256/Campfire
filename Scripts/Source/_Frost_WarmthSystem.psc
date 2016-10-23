@@ -1,5 +1,6 @@
 scriptname _Frost_WarmthSystem extends _Frost_BaseSystem
 
+import CampUtil
 import FrostUtil
 import _FrostInternal
 
@@ -24,12 +25,15 @@ int current_spell_bonus
 bool property updating_warmth = false auto hidden
 
 function RegisterForEvents()
-	FallbackEventEmitter emitter = GetEventEmitter_UpdateWarmth()
-  	emitter.RegisterFormForModEventWithFallback("Frost_UpdateWarmth", "UpdateWarmth", self as Form)
-	; RegisterForModEvent("Frost_UpdateWarmth", "UpdateWarmth")
-	RegisterForModEvent("Frost_SoupEffectStart", "SoupEffectStart")
-	RegisterForModEvent("Frost_SoupEffectStop", "SoupEffectStop")
-	RegisterForModEvent("Campfire_CampfirePerkPurchased", "CampfirePerkPurchased")
+	FallbackEventEmitter updateWarmthEvent = GetEventEmitter_UpdateWarmth()
+	FallbackEventEmitter campfirePerkEvent = GetEventEmitter_CampfirePerkPurchased()
+	FallbackEventEmitter soupStart = GetEventEmitter_SoupEffectStart()
+	FallbackEventEmitter soupStop = GetEventEmitter_SoupEffectStop()
+
+  	updateWarmthEvent.RegisterFormForModEventWithFallback("Frost_UpdateWarmth", "UpdateWarmth", self)
+	soupStart.RegisterFormForModEventWithFallback("Frost_SoupEffectStart", "SoupEffectStart", self)
+	soupStop.RegisterFormForModEventWithFallback("Frost_SoupEffectStop", "SoupEffectStop", self)
+	campfirePerkEvent.RegisterFormForModEventWithFallback("Campfire_CampfirePerkPurchased", "CampfirePerkPurchased", self)
 endFunction
 
 Event UpdateWarmth()
@@ -137,16 +141,19 @@ function SetWellInsulated(bool active)
 	endif
 endFunction
 
+;@NOFALLBACK
 function SendEvent_UpdateBottomBarWarmth(int aiWarmth)
-    if _Frost_DatastoreInitialized.GetValueInt() != 2
-        return
-    endif
+	if GetSKSELoaded()
+    	if _Frost_DatastoreInitialized.GetValueInt() != 2
+        	return
+    	endif
 
-    FrostDebug(0, "Sending event Frost_UpdateBottomBarWarmth")
-    int handle = ModEvent.Create("Frost_UpdateBottomBarWarmth")
-    if handle
-        ModEvent.PushInt(handle, aiWarmth)
-        ModEvent.Send(handle)
+    	FrostDebug(0, "Sending event Frost_UpdateBottomBarWarmth")
+    	int handle = ModEvent.Create("Frost_UpdateBottomBarWarmth")
+    	if handle
+        	ModEvent.PushInt(handle, aiWarmth)
+        	ModEvent.Send(handle)
+    	endif
     endif
 endFunction
 
