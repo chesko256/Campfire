@@ -9,6 +9,7 @@ import math
 import CommonArrayHelper
 
 Actor property PlayerRef auto
+_Frost_PlayerEquipMonitor property EquipMon auto
 GlobalVariable property FrostfallRunning auto
 GlobalVariable property _Frost_Setting_Notifications_EquipmentValues auto
 GlobalVariable property _Frost_Setting_Notifications_EquipmentSummary auto
@@ -119,6 +120,12 @@ Event OnUpdate()
     endif
 
     if _Frost_Setting_Notifications_EquipmentSummary.GetValueInt() == 2
+        ; Don't display the message while still processing
+        int i = 0
+        while EquipMon.processing_queue && i < 100
+            Utility.Wait(0.1)
+            i += 1
+        endWhile
         _Frost_ProtectionTotalsMsg.Show(GetPlayerWarmth(), GetPlayerCoverage())
     endif
 EndEvent
@@ -316,7 +323,6 @@ function RecalculateProtectionData_SKSE(Armor[] akWornGearFormsArray, int[] aiWo
 
     int i = 0
     int d = 0
-    int worn_count = 0
     int type_counter = -1
     int type_to_match = 1
 
@@ -377,7 +383,70 @@ function RecalculateProtectionData_SKSE(Armor[] akWornGearFormsArray, int[] aiWo
 endFunction
 
 function RecalculateProtectionData_Vanilla(Armor[] akWornGearFormsArray, int[] aiWornGearValuesArray)
-    ;@TODO
+    bool realHeadFound = false
+    bool realCloakFound = false
+    
+    ; Clear the existing array.
+    int j = 0
+    while j < aiWornGearValuesArray.Length
+        aiWornGearValuesArray[j] = 0
+        j += 1
+    endWhile
+
+    int wornCount = ArrayCountArmor(akWornGearFormsArray)
+
+    int i = 0
+    while i < wornCount
+        int[] armorData = handler.GetArmorProtectionData_Vanilla(akWornGearFormsArray[i])
+        int gearType = armorData[0]
+
+        if gearType == handler.GEARTYPE_BODY
+            aiWornGearValuesArray[0] = armorData[1]
+            aiWornGearValuesArray[1] = armorData[2]
+
+            ; Check for extra head piece
+            if !realHeadFound
+                aiWornGearValuesArray[2] = armorData[5]
+                aiWornGearValuesArray[3] = armorData[6]
+            endif
+
+            ; Check for extra cloak piece
+            if !realCloakFound
+                aiWornGearValuesArray[8] = armorData[11]
+                aiWornGearValuesArray[9] = armorData[12]
+            endif
+
+        elseif gearType == handler.GEARTYPE_HEAD
+            realHeadFound = true
+            aiWornGearValuesArray[2] = armorData[1]
+            aiWornGearValuesArray[3] = armorData[2]
+
+            ; Check for extra cloak piece
+            if !realCloakFound
+                aiWornGearValuesArray[8] = armorData[11]
+                aiWornGearValuesArray[9] = armorData[12]
+            endif
+
+        elseif gearType == handler.GEARTYPE_HANDS
+            aiWornGearValuesArray[4] = armorData[1]
+            aiWornGearValuesArray[5] = armorData[2]
+
+        elseif gearType == handler.GEARTYPE_FEET
+            aiWornGearValuesArray[6] = armorData[1]
+            aiWornGearValuesArray[7] = armorData[2]
+
+        elseif gearType == handler.GEARTYPE_CLOAK
+            realCloakFound = true
+            aiWornGearValuesArray[8] = armorData[1]
+            aiWornGearValuesArray[9] = armorData[2]
+
+        elseif gearType == handler.GEARTYPE_MISC
+            aiWornGearValuesArray[8] = aiWornGearValuesArray[8] + armorData[1]
+            aiWornGearValuesArray[9] = aiWornGearValuesArray[9] + armorData[2]
+        endif
+
+        i += 1
+    endWhile
 endFunction
 
 ;/* DisplayWarmthCoverageNoSkyUIPkg wrapper */;
@@ -443,6 +512,7 @@ function DisplayWarmthCoverageNoSkyUIPkg_Vanilla(Armor akArmor)
                     elseif type == handler.GEARTYPE_CLOAK
                         _Frost_ProtectionArmorDisplayCloak.Show(result[0], result[1])
                     elseif type == handler.GEARTYPE_MISC
+                        ;@TODO: If ArmorIsShield...
                         _Frost_ProtectionArmorDisplayShield.Show(result[0], result[1])
                     endif
                 endif

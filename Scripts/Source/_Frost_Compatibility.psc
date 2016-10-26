@@ -305,6 +305,8 @@ function RunCompatibility()
 		Upgrade_3_2_1()
 	endif
 
+	;@TODO: Upgrade for 3.3, rerun CreateProtectionKeywordValueMaps.
+
 	; Verify that the default datastore has been populated.
 	CheckDatastore()
 
@@ -807,6 +809,7 @@ endFunction
 function CheckDatastore_Vanilla()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 	int[] armor_data = handler.GetArmorData_Vanilla(ArmorHideCuirass, handler.GEARTYPE_BODY)
+	debug.trace("armor_data for the datastore check was " + armor_data)
 	if armor_data[0] == handler.GEARTYPE_NOTFOUND
 		GetLegacyArmorDatastore().PopulateDefaultArmorData()
 	endif

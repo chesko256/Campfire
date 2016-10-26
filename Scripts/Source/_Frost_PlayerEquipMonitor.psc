@@ -44,9 +44,10 @@ EndEvent
 
 function SendEvent_UpdateWarmth()
 	FrostDebug(0, "Sending event Frost_UpdateWarmth")
-    int handle = ModEvent.Create("Frost_UpdateWarmth")
+	FallbackEventEmitter emitter = GetEventEmitter_UpdateWarmth()
+    int handle = emitter.Create("Frost_UpdateWarmth")
     if handle
-        ModEvent.Send(handle)
+        emitter.Send(handle)
     endif
 endFunction
 
@@ -70,11 +71,12 @@ function InitializeEventQueue()
 endFunction
 
 function ProcessQueuedEvents(Form[] akFormQueue, int[] aiActionQueue, bool aiRecursiveCall = false)
+	; debug.trace("ProcessQueuedEvents processing_queue " + processing_queue + " aiRecursiveCall " + aiRecursiveCall)
 	if !processing_queue || aiRecursiveCall == true
 		processing_queue = true
 		bool update_required = false
 		_Frost_ClothingSystem clothing = GetClothingSystem()
-		;debug.trace(">>>>>>> Processing queued events.")
+		; debug.trace(">>>>>>> Processing queued events.")
 		while !qIsEmpty()
 			qDelete(akFormQueue, aiActionQueue)
 
@@ -93,6 +95,8 @@ function ProcessQueuedEvents(Form[] akFormQueue, int[] aiActionQueue, bool aiRec
 			endif
 		endWhile
 
+		debug.trace("Update required " + update_required)
+
 		if update_required
         	clothing.RecalculateProtectionData(clothing.WornGearForms, clothing.WornGearValues, clothing._Frost_WornGearData)
         	clothing.SendEvent_UpdateWarmthAndCoverage()
@@ -103,7 +107,7 @@ function ProcessQueuedEvents(Form[] akFormQueue, int[] aiActionQueue, bool aiRec
     		ProcessQueuedEvents(akFormQueue, aiActionQueue, true)
     	endif
     	processing_queue = false
-		;debug.trace("<<<<<<< Finished processing queue.")
+		; debug.trace("<<<<<<< Finished processing queue.")
 	endif
 endFunction
 

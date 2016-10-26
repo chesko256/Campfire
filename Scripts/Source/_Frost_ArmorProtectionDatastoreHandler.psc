@@ -10,8 +10,7 @@ import Math
 Keyword property _FrostData_ArmorPrecache auto
 
 Keyword property WAF_ClothingCloak auto
-
-Keyword property ClothingCirclet auto
+Keyword property ArmorJewelry auto
 
 Keyword property ArmorCuirass auto
 Keyword property ClothingBody auto
@@ -25,6 +24,7 @@ FormList property _Camp_Backpacks auto
 
 ; Override keywords
 Keyword property _Frost_Ignore auto
+Keyword property _Frost_EnableKeywordProtection auto
 Keyword property _Frost_WarmthPoor auto
 Keyword property _Frost_WarmthFair auto
 Keyword property _Frost_WarmthGood auto
@@ -36,97 +36,37 @@ Keyword property _Frost_CoverageGood auto
 Keyword property _Frost_CoverageExcellent auto
 Keyword property _Frost_CoverageMax auto
 
-Keyword property _Frost_ExtraBodyWarmthPoor auto
-Keyword property _Frost_ExtraBodyWarmthFair auto
-Keyword property _Frost_ExtraBodyWarmthGood auto
-Keyword property _Frost_ExtraBodyWarmthExcellent auto
-Keyword property _Frost_ExtraBodyWarmthMax auto
-
-Keyword property _Frost_ExtraHeadWarmthPoor auto
-Keyword property _Frost_ExtraHeadWarmthFair auto
-Keyword property _Frost_ExtraHeadWarmthGood auto
-Keyword property _Frost_ExtraHeadWarmthExcellent auto
-Keyword property _Frost_ExtraHeadWarmthMax auto
-
-Keyword property _Frost_ExtraHandsWarmthPoor auto
-Keyword property _Frost_ExtraHandsWarmthFair auto
-Keyword property _Frost_ExtraHandsWarmthGood auto
-Keyword property _Frost_ExtraHandsWarmthExcellent auto
-Keyword property _Frost_ExtraHandsWarmthMax auto
-
-Keyword property _Frost_ExtraFeetWarmthPoor auto
-Keyword property _Frost_ExtraFeetWarmthFair auto
-Keyword property _Frost_ExtraFeetWarmthGood auto
-Keyword property _Frost_ExtraFeetWarmthExcellent auto
-Keyword property _Frost_ExtraFeetWarmthMax auto
-
-Keyword property _Frost_ExtraCloakWarmthPoor auto
-Keyword property _Frost_ExtraCloakWarmthFair auto
-Keyword property _Frost_ExtraCloakWarmthGood auto
-Keyword property _Frost_ExtraCloakWarmthExcellent auto
-Keyword property _Frost_ExtraCloakWarmthMax auto
-
-Keyword property _Frost_ExtraMiscWarmthPoor auto
-Keyword property _Frost_ExtraMiscWarmthFair auto
-Keyword property _Frost_ExtraMiscWarmthGood auto
-Keyword property _Frost_ExtraMiscWarmthExcellent auto
-Keyword property _Frost_ExtraMiscWarmthMax auto
-
-Keyword property _Frost_ExtraBodyCoveragePoor auto
-Keyword property _Frost_ExtraBodyCoverageFair auto
-Keyword property _Frost_ExtraBodyCoverageGood auto
-Keyword property _Frost_ExtraBodyCoverageExcellent auto
-Keyword property _Frost_ExtraBodyCoverageMax auto
-
-Keyword property _Frost_ExtraHeadCoveragePoor auto
-Keyword property _Frost_ExtraHeadCoverageFair auto
-Keyword property _Frost_ExtraHeadCoverageGood auto
-Keyword property _Frost_ExtraHeadCoverageExcellent auto
-Keyword property _Frost_ExtraHeadCoverageMax auto
-
-Keyword property _Frost_ExtraHandsCoveragePoor auto
-Keyword property _Frost_ExtraHandsCoverageFair auto
-Keyword property _Frost_ExtraHandsCoverageGood auto
-Keyword property _Frost_ExtraHandsCoverageExcellent auto
-Keyword property _Frost_ExtraHandsCoverageMax auto
-
-Keyword property _Frost_ExtraFeetCoveragePoor auto
-Keyword property _Frost_ExtraFeetCoverageFair auto
-Keyword property _Frost_ExtraFeetCoverageGood auto
-Keyword property _Frost_ExtraFeetCoverageExcellent auto
-Keyword property _Frost_ExtraFeetCoverageMax auto
-
-Keyword property _Frost_ExtraCloakCoveragePoor auto
-Keyword property _Frost_ExtraCloakCoverageFair auto
-Keyword property _Frost_ExtraCloakCoverageGood auto
-Keyword property _Frost_ExtraCloakCoverageExcellent auto
-Keyword property _Frost_ExtraCloakCoverageMax auto
-
-Keyword property _Frost_ExtraMiscCoveragePoor auto
-Keyword property _Frost_ExtraMiscCoverageFair auto
-Keyword property _Frost_ExtraMiscCoverageGood auto
-Keyword property _Frost_ExtraMiscCoverageExcellent auto
-Keyword property _Frost_ExtraMiscCoverageMax auto
+Keyword property _Frost_IsCloakCloth auto
+Keyword property _Frost_IsCloakLeather auto
+Keyword property _Frost_IsCloakFur auto
+Keyword property _Frost_IsWeatherproofAccessory auto
+Keyword property _Frost_IsWarmAccessory auto
+Keyword property _Frost_ExtraHeadCloth auto
+Keyword property _Frost_ExtraHeadWeatherproof auto
+Keyword property _Frost_ExtraHeadWarm auto
+Keyword property _Frost_ExtraCloakCloth auto
+Keyword property _Frost_ExtraCloakLeather auto
+Keyword property _Frost_ExtraCloakFur auto
 
 GlobalVariable property _Frost_DatastoreInitialized auto
 GlobalVariable property _Frost_Setting_CurrentProfile auto
 
 int property DEFAULT_BODY_WARMTH 				= 110 autoReadOnly hidden
-int property DEFAULT_BODY_COVERAGE 				= 35 autoReadOnly hidden
+int property DEFAULT_BODY_COVERAGE 				= 54 autoReadOnly hidden
 int property DEFAULT_HANDS_WARMTH 				= 12 autoReadOnly hidden
-int property DEFAULT_HANDS_COVERAGE 			= 6 autoReadOnly hidden
+int property DEFAULT_HANDS_COVERAGE 			= 14 autoReadOnly hidden
 int property DEFAULT_HEAD_WARMTH 				= 30 autoReadOnly hidden
-int property DEFAULT_HEAD_COVERAGE 				= 14 autoReadOnly hidden
+int property DEFAULT_HEAD_COVERAGE 				= 29 autoReadOnly hidden
 int property DEFAULT_HEADHOOD_WARMTH 			= 25 autoReadOnly hidden
 int property DEFAULT_HEADHOOD_COVERAGE 			= 43 autoReadOnly hidden
 int property DEFAULT_FEET_WARMTH 				= 12 autoReadOnly hidden
 int property DEFAULT_FEET_COVERAGE 				= 14 autoReadOnly hidden
-int property DEFAULT_CLOAK_WARMTH				= 10 autoReadOnly hidden
-int property DEFAULT_CLOAK_COVERAGE				= 10 autoReadOnly hidden
+int property DEFAULT_CLOAK_WARMTH				= 12 autoReadOnly hidden
+int property DEFAULT_CLOAK_COVERAGE				= 12 autoReadOnly hidden
 int property DEFAULT_SHIELD_WARMTH				= 0 autoReadOnly hidden
 int property DEFAULT_SHIELD_COVERAGE			= 20 autoReadOnly hidden
-int property DEFAULT_MISC_WARMTH				= 10 autoReadOnly hidden
-int property DEFAULT_MISC_COVERAGE				= 10 autoReadOnly hidden
+int property DEFAULT_MISC_WARMTH				= 12 autoReadOnly hidden
+int property DEFAULT_MISC_COVERAGE				= 12 autoReadOnly hidden
 
 int property SLOTMASK_HEAD 						= 0x00000001 autoReadOnly hidden
 int property SLOTMASK_HAIR 						= 0x00000002 autoReadOnly hidden
@@ -168,7 +108,7 @@ int[] property StandardMiscValues auto hidden
 int[] property StandardPartIndex auto hidden
 
 int property WARMTH_BODY_POOR 					= 60 autoReadOnly hidden
-int property WARMTH_BODY_FAIR 					= 125 autoReadOnly hidden
+int property WARMTH_BODY_FAIR 					= 110 autoReadOnly hidden
 int property WARMTH_BODY_GOOD 					= 140 autoReadOnly hidden
 int property WARMTH_BODY_EXCELLENT 				= 175 autoReadOnly hidden
 int property WARMTH_BODY_MAX 					= 190 autoReadOnly hidden
@@ -364,9 +304,9 @@ function CreateProtectionKeywordValueMaps()
 	StandardMiscValues = new int[10]
 	StandardPartIndex = new int[10]
 
-	OverrideKeywords = new Keyword[60]
-	OverrideValues = new int[60]
-	OverrideExtraPartIndex = new int[60]
+	OverrideKeywords = new Keyword[11]
+	OverrideValues = new int[22]
+	OverrideExtraPartIndex = new int[11]
 
 	StandardKeywords[0] = _Frost_WarmthPoor
 	StandardKeywords[1] = _Frost_WarmthFair
@@ -456,188 +396,52 @@ function CreateProtectionKeywordValueMaps()
 	StandardPartIndex[8] = 2
 	StandardPartIndex[9] = 2
 
-	OverrideKeywords[0] = _Frost_ExtraBodyWarmthPoor
-	OverrideKeywords[1] = _Frost_ExtraBodyWarmthFair
-	OverrideKeywords[2] = _Frost_ExtraBodyWarmthGood
-	OverrideKeywords[3] = _Frost_ExtraBodyWarmthExcellent
-	OverrideKeywords[4] = _Frost_ExtraBodyWarmthMax
-	OverrideKeywords[5] = _Frost_ExtraHeadWarmthPoor
-	OverrideKeywords[6] = _Frost_ExtraHeadWarmthFair
-	OverrideKeywords[7] = _Frost_ExtraHeadWarmthGood
-	OverrideKeywords[8] = _Frost_ExtraHeadWarmthExcellent
-	OverrideKeywords[9] = _Frost_ExtraHeadWarmthMax
-	OverrideKeywords[10] = _Frost_ExtraHandsWarmthPoor
-	OverrideKeywords[11] = _Frost_ExtraHandsWarmthFair
-	OverrideKeywords[12] = _Frost_ExtraHandsWarmthGood
-	OverrideKeywords[13] = _Frost_ExtraHandsWarmthExcellent
-	OverrideKeywords[14] = _Frost_ExtraHandsWarmthMax
-	OverrideKeywords[15] = _Frost_ExtraFeetWarmthPoor
-	OverrideKeywords[16] = _Frost_ExtraFeetWarmthFair
-	OverrideKeywords[17] = _Frost_ExtraFeetWarmthGood
-	OverrideKeywords[18] = _Frost_ExtraFeetWarmthExcellent
-	OverrideKeywords[19] = _Frost_ExtraFeetWarmthMax
-	OverrideKeywords[20] = _Frost_ExtraCloakWarmthPoor
-	OverrideKeywords[21] = _Frost_ExtraCloakWarmthFair
-	OverrideKeywords[22] = _Frost_ExtraCloakWarmthGood
-	OverrideKeywords[23] = _Frost_ExtraCloakWarmthExcellent
-	OverrideKeywords[24] = _Frost_ExtraCloakWarmthMax
-	OverrideKeywords[25] = _Frost_ExtraMiscWarmthPoor
-	OverrideKeywords[26] = _Frost_ExtraMiscWarmthFair
-	OverrideKeywords[27] = _Frost_ExtraMiscWarmthGood
-	OverrideKeywords[28] = _Frost_ExtraMiscWarmthExcellent
-	OverrideKeywords[29] = _Frost_ExtraMiscWarmthMax
-	OverrideKeywords[30] = _Frost_ExtraBodyCoveragePoor
-	OverrideKeywords[31] = _Frost_ExtraBodyCoverageFair
-	OverrideKeywords[32] = _Frost_ExtraBodyCoverageGood
-	OverrideKeywords[33] = _Frost_ExtraBodyCoverageExcellent
-	OverrideKeywords[34] = _Frost_ExtraBodyCoverageMax
-	OverrideKeywords[35] = _Frost_ExtraHeadCoveragePoor
-	OverrideKeywords[36] = _Frost_ExtraHeadCoverageFair
-	OverrideKeywords[37] = _Frost_ExtraHeadCoverageGood
-	OverrideKeywords[38] = _Frost_ExtraHeadCoverageExcellent
-	OverrideKeywords[39] = _Frost_ExtraHeadCoverageMax
-	OverrideKeywords[40] = _Frost_ExtraHandsCoveragePoor
-	OverrideKeywords[41] = _Frost_ExtraHandsCoverageFair
-	OverrideKeywords[42] = _Frost_ExtraHandsCoverageGood
-	OverrideKeywords[43] = _Frost_ExtraHandsCoverageExcellent
-	OverrideKeywords[44] = _Frost_ExtraHandsCoverageMax
-	OverrideKeywords[45] = _Frost_ExtraFeetCoveragePoor
-	OverrideKeywords[46] = _Frost_ExtraFeetCoverageFair
-	OverrideKeywords[47] = _Frost_ExtraFeetCoverageGood
-	OverrideKeywords[48] = _Frost_ExtraFeetCoverageExcellent
-	OverrideKeywords[49] = _Frost_ExtraFeetCoverageMax
-	OverrideKeywords[50] = _Frost_ExtraCloakCoveragePoor
-	OverrideKeywords[51] = _Frost_ExtraCloakCoverageFair
-	OverrideKeywords[52] = _Frost_ExtraCloakCoverageGood
-	OverrideKeywords[53] = _Frost_ExtraCloakCoverageExcellent
-	OverrideKeywords[54] = _Frost_ExtraCloakCoverageMax
-	OverrideKeywords[55] = _Frost_ExtraMiscCoveragePoor
-	OverrideKeywords[56] = _Frost_ExtraMiscCoverageFair
-	OverrideKeywords[57] = _Frost_ExtraMiscCoverageGood
-	OverrideKeywords[58] = _Frost_ExtraMiscCoverageExcellent
-	OverrideKeywords[59] = _Frost_ExtraMiscCoverageMax
+	OverrideKeywords[0] = _Frost_IsCloakCloth
+	OverrideKeywords[1] = _Frost_IsCloakLeather
+	OverrideKeywords[2] = _Frost_IsCloakFur
+	OverrideKeywords[3] = _Frost_IsWeatherproofAccessory
+	OverrideKeywords[4] = _Frost_IsWarmAccessory
+	OverrideKeywords[5] = _Frost_ExtraHeadCloth
+	OverrideKeywords[6] = _Frost_ExtraHeadWeatherproof
+	OverrideKeywords[7] = _Frost_ExtraHeadWarm
+	OverrideKeywords[8] = _Frost_ExtraCloakCloth
+	OverrideKeywords[9] = _Frost_ExtraCloakLeather
+	OverrideKeywords[10] = _Frost_ExtraCloakFur
 
-	OverrideValues[0] = WARMTH_BODY_POOR
-	OverrideValues[1] = WARMTH_BODY_FAIR
-	OverrideValues[2] = WARMTH_BODY_GOOD
-	OverrideValues[3] = WARMTH_BODY_EXCELLENT
-	OverrideValues[4] = WARMTH_BODY_MAX
-	OverrideValues[5] = WARMTH_HEAD_POOR
+	OverrideValues[0] = WARMTH_CLOAK_FAIR
+	OverrideValues[1] = WARMTH_CLOAK_FAIR
+	OverrideValues[2] = WARMTH_CLOAK_MAX
+	OverrideValues[3] = WARMTH_MISC_POOR
+	OverrideValues[4] = WARMTH_MISC_FAIR
+	OverrideValues[5] = WARMTH_HEAD_FAIR
 	OverrideValues[6] = WARMTH_HEAD_FAIR
 	OverrideValues[7] = WARMTH_HEAD_GOOD
-	OverrideValues[8] = WARMTH_HEAD_EXCELLENT
-	OverrideValues[9] = WARMTH_HEAD_MAX
-	OverrideValues[10] = WARMTH_HANDS_POOR
-	OverrideValues[11] = WARMTH_HANDS_FAIR
-	OverrideValues[12] = WARMTH_HANDS_GOOD
-	OverrideValues[13] = WARMTH_HANDS_EXCELLENT
-	OverrideValues[14] = WARMTH_HANDS_MAX
-	OverrideValues[15] = WARMTH_FEET_POOR
-	OverrideValues[16] = WARMTH_FEET_FAIR
-	OverrideValues[17] = WARMTH_FEET_GOOD
-	OverrideValues[18] = WARMTH_FEET_EXCELLENT
-	OverrideValues[19] = WARMTH_FEET_MAX
-	OverrideValues[20] = WARMTH_CLOAK_POOR
-	OverrideValues[21] = WARMTH_CLOAK_FAIR
-	OverrideValues[22] = WARMTH_CLOAK_GOOD
-	OverrideValues[23] = WARMTH_CLOAK_EXCELLENT
-	OverrideValues[24] = WARMTH_CLOAK_MAX
-	OverrideValues[25] = WARMTH_MISC_POOR
-	OverrideValues[26] = WARMTH_MISC_FAIR
-	OverrideValues[27] = WARMTH_MISC_GOOD
-	OverrideValues[28] = WARMTH_MISC_EXCELLENT
-	OverrideValues[29] = WARMTH_MISC_MAX
-	OverrideValues[30] = COVERAGE_BODY_POOR
-	OverrideValues[31] = COVERAGE_BODY_FAIR
-	OverrideValues[32] = COVERAGE_BODY_GOOD
-	OverrideValues[33] = COVERAGE_BODY_EXCELLENT
-	OverrideValues[34] = COVERAGE_BODY_MAX
-	OverrideValues[35] = COVERAGE_HEAD_POOR
-	OverrideValues[36] = COVERAGE_HEAD_FAIR
-	OverrideValues[37] = COVERAGE_HEAD_GOOD
-	OverrideValues[38] = COVERAGE_HEAD_EXCELLENT
-	OverrideValues[39] = COVERAGE_HEAD_MAX
-	OverrideValues[40] = COVERAGE_HANDS_POOR
-	OverrideValues[41] = COVERAGE_HANDS_FAIR
-	OverrideValues[42] = COVERAGE_HANDS_GOOD
-	OverrideValues[43] = COVERAGE_HANDS_EXCELLENT
-	OverrideValues[44] = COVERAGE_HANDS_MAX
-	OverrideValues[45] = COVERAGE_FEET_POOR
-	OverrideValues[46] = COVERAGE_FEET_FAIR
-	OverrideValues[47] = COVERAGE_FEET_GOOD
-	OverrideValues[48] = COVERAGE_FEET_EXCELLENT
-	OverrideValues[49] = COVERAGE_FEET_MAX
-	OverrideValues[50] = COVERAGE_CLOAK_POOR
-	OverrideValues[51] = COVERAGE_CLOAK_FAIR
-	OverrideValues[52] = COVERAGE_CLOAK_GOOD
-	OverrideValues[53] = COVERAGE_CLOAK_EXCELLENT
-	OverrideValues[54] = COVERAGE_CLOAK_MAX
-	OverrideValues[55] = COVERAGE_MISC_POOR
-	OverrideValues[56] = COVERAGE_MISC_FAIR
-	OverrideValues[57] = COVERAGE_MISC_GOOD
-	OverrideValues[58] = COVERAGE_MISC_EXCELLENT
-	OverrideValues[59] = COVERAGE_MISC_MAX
+	OverrideValues[8] = WARMTH_CLOAK_FAIR
+	OverrideValues[9] = WARMTH_CLOAK_FAIR
+	OverrideValues[10] = WARMTH_CLOAK_MAX
+	OverrideValues[11] = COVERAGE_CLOAK_FAIR
+	OverrideValues[12] = COVERAGE_CLOAK_MAX
+	OverrideValues[13] = COVERAGE_CLOAK_FAIR
+	OverrideValues[14] = COVERAGE_MISC_FAIR
+	OverrideValues[15] = COVERAGE_MISC_POOR
+	OverrideValues[16] = COVERAGE_HEAD_FAIR
+	OverrideValues[17] = COVERAGE_HEAD_GOOD
+	OverrideValues[18] = COVERAGE_HEAD_FAIR
+	OverrideValues[19] = COVERAGE_CLOAK_FAIR
+	OverrideValues[20] = COVERAGE_CLOAK_MAX
+	OverrideValues[21] = COVERAGE_CLOAK_FAIR
 
-	OverrideExtraPartIndex[0] = 3
-	OverrideExtraPartIndex[1] = 3
-	OverrideExtraPartIndex[2] = 3
-	OverrideExtraPartIndex[3] = 3
-	OverrideExtraPartIndex[4] = 3
+	OverrideExtraPartIndex[0] = 1
+	OverrideExtraPartIndex[1] = 1
+	OverrideExtraPartIndex[2] = 1
+	OverrideExtraPartIndex[3] = 1
+	OverrideExtraPartIndex[4] = 1
 	OverrideExtraPartIndex[5] = 5
 	OverrideExtraPartIndex[6] = 5
 	OverrideExtraPartIndex[7] = 5
-	OverrideExtraPartIndex[8] = 5
-	OverrideExtraPartIndex[9] = 5
-	OverrideExtraPartIndex[10] = 7
-	OverrideExtraPartIndex[11] = 7
-	OverrideExtraPartIndex[12] = 7
-	OverrideExtraPartIndex[13] = 7
-	OverrideExtraPartIndex[14] = 7
-	OverrideExtraPartIndex[15] = 9
-	OverrideExtraPartIndex[16] = 9
-	OverrideExtraPartIndex[17] = 9
-	OverrideExtraPartIndex[18] = 9
-	OverrideExtraPartIndex[19] = 9
-	OverrideExtraPartIndex[20] = 11
-	OverrideExtraPartIndex[21] = 11
-	OverrideExtraPartIndex[22] = 11
-	OverrideExtraPartIndex[23] = 11
-	OverrideExtraPartIndex[24] = 11
-	OverrideExtraPartIndex[25] = 13
-	OverrideExtraPartIndex[26] = 13
-	OverrideExtraPartIndex[27] = 13
-	OverrideExtraPartIndex[28] = 13
-	OverrideExtraPartIndex[29] = 13
-	OverrideExtraPartIndex[30] = 4
-	OverrideExtraPartIndex[31] = 4
-	OverrideExtraPartIndex[32] = 4
-	OverrideExtraPartIndex[33] = 4
-	OverrideExtraPartIndex[34] = 4
-	OverrideExtraPartIndex[35] = 6
-	OverrideExtraPartIndex[36] = 6
-	OverrideExtraPartIndex[37] = 6
-	OverrideExtraPartIndex[38] = 6
-	OverrideExtraPartIndex[39] = 6
-	OverrideExtraPartIndex[40] = 8
-	OverrideExtraPartIndex[41] = 8
-	OverrideExtraPartIndex[42] = 8
-	OverrideExtraPartIndex[43] = 8
-	OverrideExtraPartIndex[44] = 8
-	OverrideExtraPartIndex[45] = 10
-	OverrideExtraPartIndex[46] = 10
-	OverrideExtraPartIndex[47] = 10
-	OverrideExtraPartIndex[48] = 10
-	OverrideExtraPartIndex[49] = 10
-	OverrideExtraPartIndex[50] = 12
-	OverrideExtraPartIndex[51] = 12
-	OverrideExtraPartIndex[52] = 12
-	OverrideExtraPartIndex[53] = 12
-	OverrideExtraPartIndex[54] = 12
-	OverrideExtraPartIndex[55] = 14
-	OverrideExtraPartIndex[56] = 14
-	OverrideExtraPartIndex[57] = 14
-	OverrideExtraPartIndex[58] = 14
-	OverrideExtraPartIndex[59] = 14
+	OverrideExtraPartIndex[8] = 11
+	OverrideExtraPartIndex[9] = 11
+	OverrideExtraPartIndex[10] = 11
 endFunction
 
 function InitializeDatastore()
@@ -793,19 +597,22 @@ int[] function GetArmorProtectionData(Armor akArmor)
 endFunction
 
 int[] function GetArmorProtectionData_SKSE(Armor akArmor)
+	int armorMask = akArmor.GetSlotMask()
+    int gearType = GetGearType(akArmor, armorMask)
+    
     int[] armor_data = GetArmorData(akArmor)
     
-    if armor_data[0] == GEARTYPE_IGNORE ; Ignore
+    if armor_data[0] == GEARTYPE_IGNORE
     	return armor_data
     endif
 
-    if armor_data[0] == GEARTYPE_NOTFOUND ; No entry for this armor.
-    	armor_data = GetArmorProtectionDataByKeyword(akArmor)
-    	if armor_data[0] == GEARTYPE_IGNORE ; Ignore
+    if armor_data[0] == GEARTYPE_NOTFOUND
+    	armor_data = GetArmorProtectionDataByKeyword(akArmor, gearType)
+    	if armor_data[0] == GEARTYPE_IGNORE
     		return armor_data
     	endif
     	if armor_data[0] == GEARTYPE_NOTFOUND
-    		armor_data = GetArmorProtectionDataByAnalysis(akArmor)
+    		armor_data = GetArmorProtectionDataByAnalysis(akArmor, armorMask)
     	endif
     endif
 
@@ -813,21 +620,21 @@ int[] function GetArmorProtectionData_SKSE(Armor akArmor)
 endFunction
 
 int[] function GetArmorProtectionData_Vanilla(Armor akArmor)
-	; Fallback mode
-
-	; The datastore is now a set of arrays
-
-	; Lookup flow:
-	; 	arrays (specific search)
-	;	Keywords (Frostfall-specific)
-	;		Only look at the "base" keywords for now.
-	;	Keywords (Analysis)
-
 	int gearType = GetGearType_Vanilla(akArmor)
 	int[] armor_data = GetArmorData_Vanilla(akArmor, gearType)
 
-	if armor_data[0] == GEARTYPE_IGNORE ; Ignore
+	if armor_data[0] == GEARTYPE_IGNORE
     	return armor_data
+    endif
+
+    if armor_data[0] == GEARTYPE_NOTFOUND
+    	armor_data = GetArmorProtectionDataByKeyword(akArmor, gearType)
+    	if armor_data[0] == GEARTYPE_IGNORE
+    		return armor_data
+    	endif
+    	if armor_data[0] == GEARTYPE_NOTFOUND
+    		armor_data = GetArmorProtectionDataByAnalysis_Vanilla(akArmor, gearType)
+    	endif
     endif
 
     return armor_data
@@ -849,75 +656,82 @@ int function GetArmorProtectionDataByType(Armor akArmor, int aiGearType, int aiS
 	endif
 endFunction
 
-;/* GetArmorProtectionDataByKeyword wrapper */;
-int[] function GetArmorProtectionDataByKeyword(Armor akArmor)
+int[] function GetArmorProtectionDataByKeyword(Armor akArmor, int aiGearType)
 	int[] armor_data = new int[15]
+
+	; Require this keyword to perform any further keyword checks.
+	if !akArmor.HasKeyword(_Frost_EnableKeywordProtection)
+		armor_data[0] = GEARTYPE_NOTFOUND
+		return armor_data
+	endif
 
 	if akArmor.HasKeyword(_Frost_Ignore)
 		armor_data[0] = GEARTYPE_IGNORE
 		return armor_data
 	endif
-	
-	int armor_mask = akArmor.GetSlotMask()
-	;@TODO: Do I need this?
-	int gear_type = GetGearType(akArmor, armor_mask)
-	if gear_type == GEARTYPE_NOTFOUND
+
+	if aiGearType == GEARTYPE_NOTFOUND
 		; No gear type found for this item. Ignore it.
 		armor_data[0] = GEARTYPE_IGNORE
 		return armor_data
 	endif
 
-	armor_data[0] = gear_type
+	armor_data[0] = aiGearType
 
-	int keyword_count = akArmor.GetNumKeywords()
-	int i = 1
+	int i = 0
 	bool found_keyword = false
-	while i < keyword_count
-		Keyword k = akArmor.GetNthKeyword(i)
-		int idx = StandardKeywords.Find(k)
-		if idx != -1
-			; standard keyword
-			int determined_value = GetArmorProtectionDataByType(akArmor, gear_type, idx)
-			armor_data[StandardPartIndex[idx]] = determined_value
+	while i < StandardKeywords.Length
+		if akArmor.HasKeyword(StandardKeywords[i])
+			int determined_value = GetArmorProtectionDataByType(akArmor, aiGearType, i)
+			armor_data[StandardPartIndex[i]] = determined_value
 			found_keyword = true
-		else
-			; extra parts
-			idx = OverrideKeywords.Find(k)
-			if idx != -1
-				armor_data[OverrideExtraPartIndex[idx]] = OverrideValues[idx]
-				found_keyword = true
-			endif
 		endif
 		i += 1
 	endWhile
 
-	; If we didn't find anything, say that the gear type was NOT FOUND so that
-	; the system will try an analysis check.
+	; Combination keywords
+	i = 0
 	if !found_keyword
-		armor_data[0] = GEARTYPE_NOTFOUND
+		while i < 5
+			if akArmor.HasKeyword(OverrideKeywords[i])
+				armor_data[OverrideExtraPartIndex[i]] = OverrideValues[i]
+				armor_data[OverrideExtraPartIndex[i + 1]] = OverrideValues[i + 11]
+				found_keyword = true
+			endif
+			i += 1
+		endWhile
+	endif
+
+	; Extra parts only
+	i = 5
+	if found_keyword && (aiGearType == GEARTYPE_BODY || aiGearType == GEARTYPE_HEAD)
+		while i < OverrideKeywords.Length
+			if akArmor.HasKeyword(OverrideKeywords[i])
+				armor_data[OverrideExtraPartIndex[i]] = OverrideValues[i]
+				armor_data[OverrideExtraPartIndex[i + 1]] = OverrideValues[i + 11]
+			endif
+			i += 1
+		endWhile
 	endif
 
 	return armor_data
 endFunction
 
-int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
+int[] function GetArmorProtectionDataByAnalysis(Armor akArmor, int aiArmorMask)
 	int[] armor_data = new int[15]
 
-	; The slot mask is the single source of truth for what "kind" of armor this is.
-	int armor_mask = akArmor.GetSlotMask()
-
 	; Check exceptions
-	if armor_mask == SLOTMASK_CIRCLET
+	if aiArmorMask == SLOTMASK_CIRCLET
 		armor_data[0] = GEARTYPE_IGNORE
 		return armor_data
 	endif
 
-	if LogicalAnd(armor_mask, SLOTMASK_RING) || LogicalAnd(armor_mask, SLOTMASK_AMULET)
+	if LogicalAnd(aiArmorMask, SLOTMASK_RING) || LogicalAnd(aiArmorMask, SLOTMASK_AMULET)
 		armor_data[0] = GEARTYPE_IGNORE
 		return armor_data
 	endif
 
-	int gear_type = GetGearType(akArmor, armor_mask)
+	int gear_type = GetGearType(akArmor, aiArmorMask)
 	armor_data[0] = gear_type
 
 	if gear_type == GEARTYPE_NOTFOUND
@@ -949,7 +763,7 @@ int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
 		armor_data[1] = DEFAULT_CLOAK_WARMTH
 		armor_data[2] = DEFAULT_CLOAK_COVERAGE
 	elseif gear_type == GEARTYPE_MISC
-		if LogicalAnd(armor_mask, SLOTMASK_SHIELD)
+		if LogicalAnd(aiArmorMask, SLOTMASK_SHIELD)
 			armor_data[1] = DEFAULT_SHIELD_WARMTH
 			armor_data[2] = DEFAULT_SHIELD_COVERAGE
 		else
@@ -959,7 +773,7 @@ int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
 	endif
 
 	; Now, check extra data
-	if gear_type != GEARTYPE_HEAD && (LogicalAnd(armor_mask, SLOTMASK_HAIR) || LogicalAnd(armor_mask, SLOTMASK_HEAD))
+	if gear_type != GEARTYPE_HEAD && (LogicalAnd(aiArmorMask, SLOTMASK_HAIR) || LogicalAnd(aiArmorMask, SLOTMASK_HEAD))
 		; Coarsely differentiate between hoods and helms
 		_Frost_Strings str = GetFrostfallStrings()
 		if StringUtil.Find(akArmor.GetName(), str.Hood) != -1 || StringUtil.Find(akArmor.GetName(), str.Robes) != -1
@@ -970,17 +784,64 @@ int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
 			armor_data[6] = DEFAULT_HEAD_COVERAGE
 		endif
 	endif
-	if gear_type != GEARTYPE_HANDS && LogicalAnd(armor_mask, SLOTMASK_HANDS)
+	if gear_type != GEARTYPE_HANDS && LogicalAnd(aiArmorMask, SLOTMASK_HANDS)
 		armor_data[7] = DEFAULT_HANDS_WARMTH
 		armor_data[8] = DEFAULT_HANDS_COVERAGE
 	endif
-	if gear_type != GEARTYPE_FEET && LogicalAnd(armor_mask, SLOTMASK_FEET)
+	if gear_type != GEARTYPE_FEET && LogicalAnd(aiArmorMask, SLOTMASK_FEET)
 		armor_data[9] = DEFAULT_FEET_WARMTH
 		armor_data[10] = DEFAULT_FEET_COVERAGE
 	endif
-	if gear_type != GEARTYPE_CLOAK && (LogicalAnd(armor_mask, SLOTMASK_CLOAK) || akArmor.HasKeyword(WAF_ClothingCloak))
+	if gear_type != GEARTYPE_CLOAK && (LogicalAnd(aiArmorMask, SLOTMASK_CLOAK) || akArmor.HasKeyword(WAF_ClothingCloak))
 		armor_data[11] = DEFAULT_CLOAK_WARMTH
 		armor_data[12] = DEFAULT_CLOAK_COVERAGE
+	endif
+
+	FrostDebug(0, "GetArmorProtectionDataByAnalysis Result: " + armor_data)
+	return armor_data
+endFunction
+
+int[] function GetArmorProtectionDataByAnalysis_Vanilla(Armor akArmor, int aiGearType)
+	int[] armor_data = new int[15]
+
+	if aiGearType == GEARTYPE_NOTFOUND
+		; No gear type found for this item. Ignore it.
+		armor_data[0] = GEARTYPE_IGNORE
+		return armor_data
+	endif
+
+	; Ignore circlets, rings, and amulets
+	if akArmor.HasKeyword(ArmorJewelry)
+		armor_data[0] = GEARTYPE_IGNORE
+		return armor_data
+	endif
+
+	armor_data[0] = aiGearType
+
+	if aiGearType == GEARTYPE_BODY
+		armor_data[1] = DEFAULT_BODY_WARMTH
+		armor_data[2] = DEFAULT_BODY_COVERAGE
+	elseif aiGearType == GEARTYPE_HEAD
+		;@TODO: Differentiate hoods?
+		armor_data[1] = DEFAULT_HEAD_WARMTH
+		armor_data[2] = DEFAULT_HEAD_COVERAGE
+	elseif aiGearType == GEARTYPE_HANDS
+		armor_data[1] = DEFAULT_HANDS_WARMTH
+		armor_data[2] = DEFAULT_HANDS_COVERAGE
+	elseif aiGearType == GEARTYPE_FEET
+		armor_data[1] = DEFAULT_FEET_WARMTH
+		armor_data[2] = DEFAULT_FEET_COVERAGE
+	elseif aiGearType == GEARTYPE_CLOAK
+		armor_data[1] = DEFAULT_CLOAK_WARMTH
+		armor_data[2] = DEFAULT_CLOAK_COVERAGE
+	elseif aiGearType == GEARTYPE_MISC
+		if IsArmorShield(akArmor)
+			armor_data[1] = DEFAULT_SHIELD_WARMTH
+			armor_data[2] = DEFAULT_SHIELD_COVERAGE
+		else
+			armor_data[1] = DEFAULT_MISC_WARMTH
+			armor_data[2] = DEFAULT_MISC_COVERAGE
+		endif
 	endif
 
 	FrostDebug(0, "GetArmorProtectionDataByAnalysis Result: " + armor_data)
@@ -1613,7 +1474,7 @@ state mock_getArmorProtectionDataByX
 		return mock_GetArmorData_value
 	endFunction
 
-	int[] function GetArmorProtectionDataByKeyword(Armor akArmor)
+	int[] function GetArmorProtectionDataByKeyword(Armor akArmor, int aiGearType)
 		mock_GetArmorProtectionDataByKeyword_callcount += 1
 		return mock_GetArmorProtectionDataByKeyword_value
 	endFunction
@@ -1623,7 +1484,7 @@ state mock_getArmorProtectionDataByX
 		return mock_GetArmorProtectionDataByType_value
 	endFunction
 
-	int[] function GetArmorProtectionDataByAnalysis(Armor akArmor)
+	int[] function GetArmorProtectionDataByAnalysis(Armor akArmor, int aiSlotMask)
 		mock_GetArmorProtectionDataByAnalysis_callcount += 1
 		return mock_GetArmorProtectionDataByAnalysis_value
 	endFunction
