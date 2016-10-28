@@ -1,5 +1,7 @@
 Scriptname _Frost_TempRestoreExposureScript extends ActiveMagicEffect
 
+import CampUtil
+
 float property exposure_restore_amount auto
 {The amount to decrease the player's exposure by when this effect starts.}
 
@@ -31,9 +33,11 @@ Event OnEffectFinish(Actor akTarget, Actor akCaster)
 endEvent
 
 function SendEvent_ForceExposureMeterDisplay(bool flash = false)
-	int handle = ModEvent.Create("Frost_ForceExposureMeterDisplay")
-	if handle
-		ModEvent.PushBool(handle, flash)
-		ModEvent.Send(handle)
+	if GetSKSELoaded()
+		int handle = ModEvent.Create("Frost_ForceExposureMeterDisplay")
+		if handle
+			ModEvent.PushBool(handle, flash)
+			ModEvent.Send(handle)
+		endif
 	endif
 endFunction

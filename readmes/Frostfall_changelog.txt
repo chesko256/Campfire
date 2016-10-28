@@ -17,6 +17,18 @@ E-mail - chesko.tesmod@gmail.com
 This changelog is mainly for posterity purposes. This mod has evolved a lot in the amount of time it's been in development. Read on only if you enjoy watching me change my mind many, many times.
 
 ===========================================
+Frostfall 3.3 SE Change Log
+===========================================
+
+OUTSTANDING ISSUES:
+
+ - Conjured Cloaks are temporarily unavailable due to some mesh issues I'm working through.
+ - The Inspect Equipment ability (in order to modify the warmth and coverage of gear) needs a little more time in the oven.
+ - Any features that relied on SkyUI, such as hotkeys, Settings Profiles, and the SkyUI Interface Add-On, are not available.
+ - Everything else should be fully intact from the original Skyrim version. Enjoy!
+
+
+===========================================
 Frostfall 3.2.1 Change Log
 ===========================================
 UPGRADE INSTRUCTIONS - Uninstall the previous version, install the new one, and load your save game.

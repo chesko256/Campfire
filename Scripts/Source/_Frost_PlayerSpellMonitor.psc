@@ -1,6 +1,7 @@
 scriptname _Frost_PlayerSpellMonitor extends ReferenceAlias
 
 import FrostUtil
+import CampUtil
 
 GlobalVariable property _Frost_WetLevel auto
 GlobalVariable property _Frost_PerkRank_FrostWarding auto
@@ -51,10 +52,13 @@ function IncreaseExposureFrostDamage()
 	frost_damage_lock = false
 endFunction
 
+;@NOFALLBACK
 function SendEvent_ForceExposureMeterDisplay()
-	int handle = ModEvent.Create("Frost_ForceExposureMeterDisplay")
-	if handle
-		ModEvent.PushBool(handle, false)
-		ModEvent.Send(handle)
+	if GetSKSELoaded()
+		int handle = ModEvent.Create("Frost_ForceExposureMeterDisplay")
+		if handle
+			ModEvent.PushBool(handle, false)
+			ModEvent.Send(handle)
+		endif
 	endif
 endFunction

@@ -1,5 +1,7 @@
 scriptname _Frost_InnerFireMonitorScript extends ReferenceAlias
 
+import FrostUtil
+
 Actor property PlayerRef auto
 Furniture property _Frost_SitMarkerInnerFire auto
 
@@ -21,9 +23,10 @@ EndEvent
 
 
 function SendEvent_OnInnerFireMeditate(bool abMeditating)
-	int handle = ModEvent.Create("Frost_OnInnerFireMeditate")
+	FallbackEventEmitter emitter = GetEventEmitter_OnInnerFireMeditate()
+	int handle = emitter.Create("Frost_OnInnerFireMeditate")
 	if handle
-		ModEvent.PushBool(handle, abMeditating)
-		ModEvent.Send(handle)
+		emitter.PushBool(handle, abMeditating)
+		emitter.Send(handle)
 	endif
 endFunction

@@ -197,6 +197,15 @@ FallbackEventEmitter function GetEventEmitter_OnTamrielRegionChange() global
     return Frostfall.EventEmitter_OnTamrielRegionChange as FallbackEventEmitter
 endFunction
 
+FallbackEventEmitter function GetEventEmitter_OnConjuredObjectIDUpdated() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.EventEmitter_OnConjuredObjectIDUpdated as FallbackEventEmitter
+endFunction
+
 FallbackEventEmitter function GetEventEmitter_OnRescuePlayer() global
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
@@ -204,6 +213,15 @@ FallbackEventEmitter function GetEventEmitter_OnRescuePlayer() global
         return none
     endif
     return Frostfall.EventEmitter_OnRescuePlayer as FallbackEventEmitter
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_DispelBoundCloaks() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.EventEmitter_DispelBoundCloaks as FallbackEventEmitter
 endFunction
 
 FallbackEventEmitter function GetEventEmitter_OnInnerFireMeditate() global

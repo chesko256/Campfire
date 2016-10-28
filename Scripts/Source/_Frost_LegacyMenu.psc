@@ -1,13 +1,22 @@
 scriptname _Frost_LegacyMenu extends ActiveMagicEffect
 
+import FrostUtil
+
+_Frost_Main property FrostfallMain auto
+Quest property _Frost_TrackingQuest auto
+
 Message property _Frost_legacyconfig_firsttime auto
 {Enable Frostfall, Back}
 
 Message property _Frost_legacyconfig_root auto
 {Enable / Disable Frostfall, Select Preset, More Options, Exit}
 
-Message property _Frost_legacyconfig_activate_enable auto
-Message property _Frost_legacyconfig_activate_disable auto
+Message property _Frost_legacyconfig_activate_enabled auto
+Message property _Frost_legacyconfig_activate_disabled auto
+
+Message property _Frost_legacyconfig_activate_error auto
+Message property _Frost_legacyconfig_activate_donedisabled auto
+Message property _Frost_legacyconfig_activate_doneenabled auto
 
 Message property _Frost_legacyconfig_preset auto
 {Immersive, standard, Hardcore, Back}
@@ -97,7 +106,8 @@ Message property _Frost_legacyconfig_fxISM_on auto
 Message property _Frost_legacyconfig_fxISM_off auto
 Message property _Frost_legacyconfig_fxforcefeedback_on auto
 Message property _Frost_legacyconfig_fxforcefeedback_off auto
-Message property _Frost_legacyconfig_fxplayeranim_on auto
+Message property _Frost_legacyconfig_fxplayeranim_auto auto
+Message property _Frost_legacyconfig_fxplayeranim_prompt auto
 Message property _Frost_legacyconfig_fxplayeranim_off auto
 Message property _Frost_legacyconfig_fxfolloweranim_on auto
 Message property _Frost_legacyconfig_fxfolloweranim_off auto
@@ -183,6 +193,24 @@ GlobalVariable property _Frost_PerkRank_WellInsulated auto
 
 GlobalVariable property _Frost_LegacyConfigEnduranceRestore auto
 
+Event OnEffectStart(Actor akTarget, Actor akCaster)
+    if akCaster == Game.GetPlayer()
+
+    	if _Frost_TrackingQuest.GetStage() == 0
+    		_Frost_legacyconfig_activate_error.Show()
+    	elseif _Frost_TrackingQuest.GetStage() == 10
+    		int i = _Frost_legacyconfig_firsttime.Show()
+    		if i == 0
+    			startmod()
+    		else
+    			; Exit
+    		endif
+    	elseif _Frost_TrackingQuest.GetStage() > 10
+        	menu_root()
+        endif
+    endif
+EndEvent
+
 ; Not Active menu
 function menu_firsttimeactivation()
 	int i = _Frost_legacyconfig_firsttime.Show()
@@ -197,8 +225,32 @@ endFunction
 function menu_root()
     int i = _Frost_legacyconfig_root.Show()
     if i == 0
-        startup_shutdown()
-        menu_root()
+
+    	int j = 0
+    	bool changed_setting = false
+    	if FrostfallRunning.GetValueInt() == 2
+    		j = _Frost_legacyconfig_activate_enabled.Show()
+    		if j == 0
+    			stopmod()
+    			_Frost_legacyconfig_activate_donedisabled.Show()
+				changed_setting = true
+			elseif j == 1
+				; Back
+			endif
+		elseif FrostfallRunning.GetValueInt() == 1
+			j = _Frost_legacyconfig_activate_disabled.Show()
+    		if j == 0
+    			startmod()
+    			_Frost_legacyconfig_activate_doneenabled.Show()
+				changed_setting = true
+			elseif j == 1
+				; Back
+			endif
+		endif
+
+		if !changed_setting
+        	menu_root()
+        endif
     elseif i == 1
         menu_preset()
     elseif i == 2
@@ -206,6 +258,18 @@ function menu_root()
     elseif i == 3
         ;Exit
     endif
+endFunction
+
+function startmod()
+	FrostfallRunning.SetValue(2)
+	FrostfallMain.RegisterForModEvents()
+	SendEvent_StartFrostfall()
+endFunction
+
+function stopmod()
+	FrostfallRunning.SetValue(1)
+	FrostfallMain.RegisterForModEvents()
+	SendEvent_StopFrostfall()
 endFunction
 
 function menu_preset()
@@ -228,7 +292,6 @@ function menu_preset()
 		else
 			menu_preset()
 		endif
-		menu_root()
 	elseif i == 2
 		bool activatedPreset = MenuHandler_Execute(_Frost_legacyconfig_preset_hardcore)
 		if activatedPreset
@@ -238,7 +301,6 @@ function menu_preset()
 		else
 			menu_preset()
 		endif
-		menu_root()
 	elseif i == 3
 		menu_root()
 	endif
@@ -278,7 +340,7 @@ endFunction
 function menu_exposure()
 	int i = _Frost_legacyconfig_exposure.Show()
 	if i == 0
-		MenuHandler_UpDown(_Frost_legacyconfig_exposurerate, _Frost_Setting_ExposureRate, 0.0, 4.0, 0.1)
+		MenuHandler_UpDown(_Frost_legacyconfig_exposurerate, _Frost_Setting_ExposureRate, 0.0, 3.0, 0.1)
         menu_exposure()
     elseif i == 1
     	MenuHandler_MultiSelect(_Frost_legacyconfig_explethality_off, _Frost_legacyconfig_explethality_rescue, _Frost_legacyconfig_explethality_on, _Frost_Setting_MaxExposureMode, 1)
@@ -360,7 +422,7 @@ endFunction
 function menu_effects3()
 	int i = _Frost_legacyconfig_effects3.Show()
 	if i == 0
-		MenuHandler_Toggle(_Frost_legacyconfig_fxplayeranim_on, _Frost_legacyconfig_fxplayeranim_off, _Frost_Setting_Animation)
+		MenuHandler_MultiSelect(_Frost_legacyconfig_fxplayeranim_off, _Frost_legacyconfig_fxplayeranim_auto, _Frost_legacyconfig_fxplayeranim_prompt, _Frost_Setting_Animation, 1)
 		menu_effects3()
 	elseif i == 1
 		MenuHandler_Toggle(_Frost_legacyconfig_fxfolloweranim_on, _Frost_legacyconfig_fxfolloweranim_off, _Frost_Setting_FollowerAnimation)
@@ -463,7 +525,6 @@ function activate_preset_immersive()
 	_Frost_Setting_ExposurePauseCombat.SetValueInt(2)
 	_Frost_Setting_ExposureRate.SetValue(0.8)
 	_Frost_Setting_MovementPenalty.SetValueInt(1)
-	_Frost_Setting_VampireMode.SetValueInt(2)
 endFunction
 
 function activate_preset_standard()
@@ -474,7 +535,6 @@ function activate_preset_standard()
 	_Frost_Setting_ExposurePauseCombat.SetValueInt(2)
 	_Frost_Setting_ExposureRate.SetValue(1.0)
 	_Frost_Setting_MovementPenalty.SetValueInt(2)
-	_Frost_Setting_VampireMode.SetValueInt(1)
 endFunction
 
 function activate_preset_hardcore()
@@ -485,7 +545,6 @@ function activate_preset_hardcore()
 	_Frost_Setting_ExposurePauseCombat.SetValueInt(1)
 	_Frost_Setting_ExposureRate.SetValue(1.0)
 	_Frost_Setting_MovementPenalty.SetValueInt(2)
-	_Frost_Setting_VampireMode.SetValueInt(0)
 endFunction
 
 ;Format: On/Off, Back
@@ -522,7 +581,7 @@ function MenuHandler_MultiSelect(Message akOption1Active, Message akOption2Activ
 
     if i < 3
     	akSetting.SetValueInt(i + aiSettingOffset)
-    	MenuHandler_MultiSelect(akOption1Active, akOption2Active, akOption3Active, akSetting)
+    	MenuHandler_MultiSelect(akOption1Active, akOption2Active, akOption3Active, akSetting, aiSettingOffset)
     endif
 endFunction
 
@@ -538,7 +597,7 @@ endFunction
 
 ;Format: Down, Up, Back
 function MenuHandler_UpDown(Message akMessage, GlobalVariable akSetting, float afMin, float afMax, float afStepSize)
-    int i = akMessage.Show(akSetting.GetValueInt())
+    int i = akMessage.Show(akSetting.GetValue())
     if i == 0
         ;Down
         if akSetting.GetValue() > afMin
@@ -595,5 +654,22 @@ function MenuHandler_Tutorials(Message akMessageOn, Message akMessageOff, Messag
         elseif i == 2
             ;return
         endif
+    endif
+endFunction
+
+function SendEvent_StartFrostfall()
+	FallbackEventEmitter emitter = GetEventEmitter_StartFrostfall()
+    int handle = emitter.Create("Frost_StartFrostfall")
+    if handle
+    	emitter.PushBool(handle, false)
+        emitter.Send(handle)
+    endif
+endFunction
+
+function SendEvent_StopFrostfall()
+	FallbackEventEmitter emitter = GetEventEmitter_StopFrostfall()
+    int handle = emitter.Create("Frost_StopFrostfall")
+    if handle
+        emitter.Send(handle)
     endif
 endFunction

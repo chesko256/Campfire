@@ -19,6 +19,7 @@ bool datastore_update_required = false
 actor property PlayerRef auto
 ReferenceAlias property PlayerAlias auto
 Spell property _Frost_Weathersense_Spell auto
+Spell property _Frost_LegacyConfig_Spell auto
 GlobalVariable property _Frost_HotkeyWeathersense auto
 
 ;#Scripts======================================================================
@@ -1143,6 +1144,12 @@ function ModifyFurArmorNames()
 endFunction
 
 function AddStartupSpells()
+	if isSKYUILoaded
+		PlayerRef.RemoveSpell(_Frost_LegacyConfig_Spell)
+	else
+		PlayerRef.AddSpell(_Frost_LegacyConfig_Spell, false)
+	endif
+
 	if _Frost_HotkeyWeathersense.GetValueInt() != 0
 		PlayerRef.RemoveSpell(_Frost_Weathersense_Spell)
 	else
@@ -1166,11 +1173,11 @@ function AddSpellBooks()
 		LItemSpellTomes25Alteration.AddForm(_Frost_SpellTomeFoxskin, 1, 1)
 		LItemSpellTomes25AllIllusion.AddForm(_Frost_SpellTomeSoothe2, 1, 1)
 		LItemSpellTomes25Illusion.AddForm(_Frost_SpellTomeSoothe2, 1, 1)
-		LItemSpellTomes25AllConjuration.AddForm(_Frost_SpellTomeBoundCloakLesser, 1, 1)
-		LItemSpellTomes25Conjuration.AddForm(_Frost_SpellTomeBoundCloakLesser, 1, 1)
+		;LItemSpellTomes25AllConjuration.AddForm(_Frost_SpellTomeBoundCloakLesser, 1, 1)
+		;LItemSpellTomes25Conjuration.AddForm(_Frost_SpellTomeBoundCloakLesser, 1, 1)
 		LItemScroll25Skill.AddForm(_Frost_ScrollBask, 1, 1)
 		LItemScroll25Skill.AddForm(_Frost_ScrollFoxskin, 1, 1)
-		LItemScroll25Skill.AddForm(_Frost_ScrollBoundCloakLesser, 1, 1)
+		;LItemScroll25Skill.AddForm(_Frost_ScrollBoundCloakLesser, 1, 1)
 
 		;50
 		LItemSpellTomes50AllAlteration.AddForm(_Frost_SpellTomeWolfskin, 1, 1)
@@ -1185,9 +1192,9 @@ function AddSpellBooks()
 		LItemSpellTOmes50AllRestoration.AddForm(_Frost_SpellTomeKindle, 1, 1)
 		LItemSpellTOmes50Restoration.AddForm(_Frost_SpellTomeKindle, 1, 1)
 		LItemSpellTomes50Spells.AddForm(_Frost_SpellTomeKindle, 1, 1)
-		LItemSpellTomes50AllConjuration.AddForm(_Frost_SpellTomeBoundCloakGreater, 1, 1)
-		LItemSpellTomes50Conjuration.AddForm(_Frost_SpellTomeBoundCloakGreater, 1, 1)
-		LItemSpellTomes50Spells.AddForm(_Frost_SpellTomeBoundCloakGreater, 1, 1)
+		; LItemSpellTomes50AllConjuration.AddForm(_Frost_SpellTomeBoundCloakGreater, 1, 1)
+		; LItemSpellTomes50Conjuration.AddForm(_Frost_SpellTomeBoundCloakGreater, 1, 1)
+		; LItemSpellTomes50Spells.AddForm(_Frost_SpellTomeBoundCloakGreater, 1, 1)
 		LItemScroll50Skill.AddForm(_Frost_ScrollRevel, 1, 1)
 		LItemScroll50Skill.AddForm(_Frost_ScrollWolfskin, 1, 1)
 		LItemScroll50Skill.AddForm(_Frost_ScrollVaporBlast, 1, 1)
@@ -1208,9 +1215,9 @@ function AddSpellBooks()
 		; LItemScroll75Skill.AddForm(_Frost_ScrollConjureShelterLesser, 1, 1)
 
 		;100
-		; LItemSpellTomes100Conjuration.AddForm(_Frost_SpellTomeConjureShelterGreater, 1, 1)
-		; MGRitualConjurationBooks.AddForm(_Frost_SpellTomeConjureShelterGreater, 1, 1)
-		; LItemScroll100Skill.AddForm(_Frost_ScrollConjureShelterGreater, 1, 1)
+		LItemSpellTomes100Conjuration.AddForm(_Frost_SpellTomeConjureShelterGreater, 1, 1)
+		MGRitualConjurationBooks.AddForm(_Frost_SpellTomeConjureShelterGreater, 1, 1)
+		LItemScroll100Skill.AddForm(_Frost_ScrollConjureShelterGreater, 1, 1)
 
 		added_spell_books = true
 	endif

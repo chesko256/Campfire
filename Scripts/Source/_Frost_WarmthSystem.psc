@@ -65,10 +65,15 @@ Event UpdateWarmth()
 	endif
 
 	_FrostInternal.FrostDebug(0, "**** Warmth ::: Warmth Value: " + warmth)
+	int old_warmth = _Frost_AttributeWarmth.GetValueInt()
 	_Frost_AttributeWarmth.SetValueInt(warmth)
 	FrostfallAttributeWarmthReadOnly.SetValueInt(warmth)
 	SendEvent_UpdateBottomBarWarmth(warmth)
 	updating_warmth = false
+
+	if old_warmth != warmth
+		GetClothingSystem().RegisterForSingleUpdate(2)
+	endif
 endEvent
 
 Event SoupEffectStart()

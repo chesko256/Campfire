@@ -16,9 +16,9 @@ Event OnEffectFinish(Actor akTarget, Actor akCaster)
 EndEvent
 
 function SendEvent_UpdateCoverage()
-    FrostDebug(0, "Sending event Frost_UpdateCoverage")
-    int handle = ModEvent.Create("Frost_UpdateCoverage")
+	FallbackEventEmitter emitter = GetEventEmitter_UpdateCoverage()
+    int handle = emitter.Create("Frost_UpdateCoverage")
     if handle
-        ModEvent.Send(handle)
+        emitter.Send(handle)
     endif
 endFunction

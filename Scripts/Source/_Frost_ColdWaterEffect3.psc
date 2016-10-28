@@ -149,10 +149,11 @@ function HandleMaxWaterExposure()
 endFunction
 
 function SendEvent_OnRescuePlayer(bool in_water)
-	int handle = ModEvent.Create("Frost_OnRescuePlayer")
+	FallbackEventEmitter emitter = GetEventEmitter_OnRescuePlayer()
+	int handle = emitter.Create("Frost_OnRescuePlayer")
 	if handle
-		ModEvent.PushBool(handle, in_water)
-		ModEvent.Send(handle)
+		emitter.PushBool(handle, in_water)
+		emitter.Send(handle)
 	endif
 endFunction
 

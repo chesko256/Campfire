@@ -8,6 +8,16 @@ Change Log
 
 ===================================================
 
+Release 1.10 SE Release
+
+ - Burlap, Linen, and Hide cloaks are temporarily unavailable due to some mesh issues I'm working through.
+
+ - Backpacks are temporarily unavailable. I have a surprise in store for these, though :) More very soon.
+
+ - Survival Skill: Instincts does not highlight Flora in the world; it still highlights creatures and the dead / undead.
+
+ - Everything else should be fully intact from the original Skyrim version. Enjoy!
+
 Release 1.9.1
 
  - Removed a problematic font from the installer.

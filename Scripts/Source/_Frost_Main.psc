@@ -19,6 +19,7 @@ Armor property _Frost_DummyGauntlets auto
 Armor property _Frost_DummyBoots auto
 Armor property _Frost_DummyShield auto
 Spell property _Frost_NoWait_Spell auto
+Spell property _Frost_LegacyConfig_Spell auto
 Message property _Frost_StartingUp auto
 Message property _Frost_FirstStartup_1 auto
 Message property _Frost_FirstStartup_2 auto
@@ -35,6 +36,14 @@ bool started_via_stars = false
 bool gave_friend_items = false
 
 Event OnInit()
+	; Add config spell on start-up.
+	bool isSKYUILoaded = Game.GetFormFromFile(0x01000814, "SkyUI.esp")
+	if isSKYUILoaded
+		PlayerRef.RemoveSpell(_Frost_LegacyConfig_Spell)
+	else
+		PlayerRef.AddSpell(_Frost_LegacyConfig_Spell, false)
+	endif
+
 	RegisterForSingleUpdate(5)
 EndEvent
 
@@ -171,7 +180,7 @@ function CheckInitialEquipment()
 	PlayerRef.EquipItem(_Frost_DummyBoots, abSilent = true)
 	Utility.Wait(0.2)
 	PlayerRef.EquipItem(_Frost_DummyShield, abSilent = true)
-	Utility.Wait(1.0)
+	Utility.Wait(2.0)
 	_Frost_CheckInitialEquipment.SetValue(1)
 	PlayerRef.RemoveItem(_Frost_DummyCuirass, 1, true)
 	PlayerRef.RemoveItem(_Frost_DummyHelmet, 1, true)
@@ -247,9 +256,11 @@ function UnregisterCampfireSkill()
 endFunction
 
 function RemoveAllMeters()
-	SendEvent_FrostfallRemoveExposureMeter()
-	SendEvent_FrostfallRemoveWetnessMeter()
-	SendEvent_FrostfallRemoveWeathersenseMeter()
+	if GetSKSELoaded()
+		SendEvent_FrostfallRemoveExposureMeter()
+		SendEvent_FrostfallRemoveWetnessMeter()
+		SendEvent_FrostfallRemoveWeathersenseMeter()
+	endif
 endFunction
 
 function SendEvent_FrostfallRemoveExposureMeter()

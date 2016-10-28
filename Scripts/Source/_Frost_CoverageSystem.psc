@@ -37,10 +37,15 @@ Event UpdateCoverage()
 	; spells
 	
 	_FrostInternal.FrostDebug(0, "==== Coverage ::: Coverage Value: " + coverage)
+	int old_coverage = _Frost_AttributeCoverage.GetValueInt()
 	_Frost_AttributeCoverage.SetValueInt(coverage)
 	FrostfallAttributeCoverageReadOnly.SetValueInt(coverage)
 	SendEvent_UpdateBottomBarCoverage(coverage)
 	updating_coverage = false
+
+	if old_coverage != coverage
+		GetClothingSystem().RegisterForSingleUpdate(2)
+	endif
 endEvent
 
 function SetWindbreaker(bool active)

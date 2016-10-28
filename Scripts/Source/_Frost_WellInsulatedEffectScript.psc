@@ -16,9 +16,9 @@ Event OnEffectFinish(Actor akTarget, Actor akCaster)
 EndEvent
 
 function SendEvent_UpdateWarmth()
-    FrostDebug(0, "Sending event Frost_UpdateWarmth")
-    int handle = ModEvent.Create("Frost_UpdateWarmth")
+	FallbackEventEmitter emitter = GetEventEmitter_UpdateWarmth()
+    int handle = emitter.Create("Frost_UpdateWarmth")
     if handle
-        ModEvent.Send(handle)
+        emitter.Send(handle)
     endif
 endFunction

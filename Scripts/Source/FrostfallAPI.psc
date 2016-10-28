@@ -31,6 +31,8 @@ ReferenceAlias property EventEmitter_SoupEffectStop auto
 ReferenceAlias property EventEmitter_FrostfallLoaded auto
 ReferenceAlias property EventEmitter_StartFrostfall auto
 ReferenceAlias property EventEmitter_StopFrostfall auto
+ReferenceAlias property EventEmitter_DispelBoundCloaks auto
+ReferenceAlias property EventEmitter_OnConjuredObjectIDUpdated auto
 Actor property PlayerRef auto
 Formlist property _Frost_WorldspacesExteriorOblivion auto
 Formlist property _Frost_OvercastWeatherList auto

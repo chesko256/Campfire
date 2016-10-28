@@ -1,6 +1,7 @@
 Scriptname _Frost_VaporBlastScript extends ActiveMagicEffect
 
 import FrostUtil
+import CampUtil
 
 Actor property PlayerRef auto
 GlobalVariable property _Frost_WetLevel auto
@@ -35,9 +36,11 @@ function DispelWetness()
 endFunction
 
 function SendEvent_ForceWetnessMeterDisplay(bool flash = false)
-	int handle = ModEvent.Create("Frost_ForceWetnessMeterDisplay")
-	if handle
-		ModEvent.PushBool(handle, flash)
-		ModEvent.Send(handle)
+	if GetSKSELoaded()
+		int handle = ModEvent.Create("Frost_ForceWetnessMeterDisplay")
+		if handle
+			ModEvent.PushBool(handle, flash)
+			ModEvent.Send(handle)
+		endif
 	endif
 endFunction

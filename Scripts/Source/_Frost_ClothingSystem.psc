@@ -57,10 +57,14 @@ bool function ObjectEquipped(Form akBaseObject)
         return false
     endif
 
-    bool update_required = AddWornGearEntryForArmorEquipped(akBaseObject as Armor, WornGearForms, _Frost_WornGearData)
+    int gear_type = AddWornGearEntryForArmorEquipped(akBaseObject as Armor, WornGearForms, _Frost_WornGearData)
     ;debug.trace("update_required = " + update_required)
-    DisplayWarmthCoverageNoSkyUIPkg(akBaseObject as Armor)
-    return update_required
+    DisplayWarmthCoverageNoSkyUIPkg(akBaseObject as Armor, gear_type)
+    if gear_type > 0
+        return true
+    else
+        return false
+    endif
 endFunction
 
 bool function ObjectUnequipped(Form akBaseObject)
@@ -97,7 +101,12 @@ bool function ObjectUnequipped(Form akBaseObject)
         endif
     endif
     bool update_required = RemoveWornGearEntryForArmorUnequipped(akBaseObject as Armor, WornGearForms, _Frost_WornGearData)
-    DisplayWarmthCoverageNoSkyUIPkgRemove(akBaseObject as Armor)
+
+    ; Don't display "total" values during start-up sequence.
+    if _Frost_CheckInitialEquipment.GetValueInt() != 2
+        DisplayWarmthCoverageNoSkyUIPkgRemove(akBaseObject as Armor)
+    endif
+
     return update_required
 endFunction
 
@@ -107,7 +116,7 @@ Event OnUpdate()
 
     if waitingForMenuExit
         if IsInMenuMode()
-            RegisterForUpdate(1)
+            RegisterForSingleUpdate(2)
             return
         else
             waitingForMenuExit = false
@@ -126,6 +135,23 @@ Event OnUpdate()
             Utility.Wait(0.1)
             i += 1
         endWhile
+
+        ; Don't display the message while still calculating warmth
+        _Frost_WarmthSystem warmth = GetWarmthSystem()
+        int w = 0
+        while warmth.updating_warmth && w < 100
+            Utility.Wait(0.1)
+            w += 1
+        endWhile
+
+        ; Don't display the message while still calculating warmth
+        _Frost_CoverageSystem coverage = GetCoverageSystem()
+        int c = 0
+        while coverage.updating_coverage && c < 100
+            Utility.Wait(0.1)
+            c += 1
+        endWhile
+
         _Frost_ProtectionTotalsMsg.Show(GetPlayerWarmth(), GetPlayerCoverage())
     endif
 EndEvent
@@ -136,7 +162,7 @@ EndEvent
 ;***
 
 ;/* AddWornGearEntryForArmorEquipped wrapper */;
-bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
+int function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
     if GetSKSELoaded()
         return AddWornGearEntryForArmorEquipped_SKSE(akArmor, akWornGearFormsArray, akWornGearData)
     Else
@@ -144,7 +170,7 @@ bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGear
     endif
 endFunction
 
-bool function AddWornGearEntryForArmorEquipped_SKSE(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
+int function AddWornGearEntryForArmorEquipped_SKSE(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
     ; Assign protection data to the correct internal slots and store the results.
     ; Return True if recalculation of warmth and coverage is necessary, false otherwise.
 
@@ -161,7 +187,7 @@ bool function AddWornGearEntryForArmorEquipped_SKSE(Armor akArmor, Armor[] akWor
     endif
 
     if armor_data[0] == handler.GEARTYPE_IGNORE
-        return false
+        return 0
     endif
 
     ; The system will store ONE Body, Head, Hands, Feet, and Cloak slot Warmth and Coverage.
@@ -195,18 +221,18 @@ bool function AddWornGearEntryForArmorEquipped_SKSE(Armor akArmor, Armor[] akWor
         StorageUtil.IntListSet(akWornGearData, dskey, jdx - 1, armor_data[1])     ; warmth
         StorageUtil.IntListSet(akWornGearData, dskey, jdx, armor_data[2])         ; coverage
 
-        return true
+        return type
     else
-        return false
+        return 0
     endif
 endFunction
 
-bool function AddWornGearEntryForArmorEquipped_Vanilla(Armor akArmor, Armor[] akWornGearFormsArray)
+int function AddWornGearEntryForArmorEquipped_Vanilla(Armor akArmor, Armor[] akWornGearFormsArray)
     FrostDebug(0, "(Vanilla) Resolving " + akArmor + ".")
     int[] armor_data = handler.GetArmorProtectionData(akArmor)
 
     if armor_data[0] == handler.GEARTYPE_IGNORE
-        return false
+        return 0
     endif
 
     ; Keep a running list of what I'm currently wearing.
@@ -215,9 +241,9 @@ bool function AddWornGearEntryForArmorEquipped_Vanilla(Armor akArmor, Armor[] ak
     if idx == -1
         ; plug the data in
         ArrayAddArmor(akWornGearFormsArray, akArmor)
-        return true
+        return armor_data[0]
     else
-        return false
+        return 0
     endif
 endFunction
 
@@ -450,11 +476,11 @@ function RecalculateProtectionData_Vanilla(Armor[] akWornGearFormsArray, int[] a
 endFunction
 
 ;/* DisplayWarmthCoverageNoSkyUIPkg wrapper */;
-function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor)
+function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor, int aiGearType)
     if GetSKSELoaded()
         DisplayWarmthCoverageNoSkyUIPkg_SKSE(akArmor)
     else
-        DisplayWarmthCoverageNoSkyUIPkg_Vanilla(akArmor)
+        DisplayWarmthCoverageNoSkyUIPkg_Vanilla(akArmor, aiGearType)
     endif
 endFunction
 
@@ -480,12 +506,12 @@ function DisplayWarmthCoverageNoSkyUIPkg_SKSE(Armor akArmor)
             RegisterForMenu("InventoryMenu")
         else
             ; Show the total warmth and coverage
-            RegisterForSingleUpdate(1)
+            ; RegisterForSingleUpdate(3)
         endif
     endif
 endFunction
 
-function DisplayWarmthCoverageNoSkyUIPkg_Vanilla(Armor akArmor)
+function DisplayWarmthCoverageNoSkyUIPkg_Vanilla(Armor akArmor, int aiGearType)
     if !akArmor
         return
     endif
@@ -500,20 +526,20 @@ function DisplayWarmthCoverageNoSkyUIPkg_Vanilla(Armor akArmor)
                 if result[0] == -99
                     ;debug.notification(name + " - " + str.Warmth + " N/A, " + str.Coverage + " N/A")
                 else
-                    int type = handler.GetGearType_Vanilla(akArmor)
-                    if type == handler.GEARTYPE_BODY
+                    if aiGearType == handler.GEARTYPE_BODY
                         _Frost_ProtectionArmorDisplayBody.Show(result[0], result[1])
-                    elseif type == handler.GEARTYPE_HEAD
+                    elseif aiGearType == handler.GEARTYPE_HEAD
                         _Frost_ProtectionArmorDisplayHead.Show(result[0], result[1])
-                    elseif type == handler.GEARTYPE_HANDS
+                    elseif aiGearType == handler.GEARTYPE_HANDS
                         _Frost_ProtectionArmorDisplayHands.Show(result[0], result[1])
-                    elseif type == handler.GEARTYPE_FEET
+                    elseif aiGearType == handler.GEARTYPE_FEET
                         _Frost_ProtectionArmorDisplayFeet.Show(result[0], result[1])
-                    elseif type == handler.GEARTYPE_CLOAK
+                    elseif aiGearType == handler.GEARTYPE_CLOAK
                         _Frost_ProtectionArmorDisplayCloak.Show(result[0], result[1])
-                    elseif type == handler.GEARTYPE_MISC
-                        ;@TODO: If ArmorIsShield...
-                        _Frost_ProtectionArmorDisplayShield.Show(result[0], result[1])
+                    elseif aiGearType == handler.GEARTYPE_MISC
+                        if IsArmorShield(akArmor)
+                            _Frost_ProtectionArmorDisplayShield.Show(result[0], result[1])
+                        endif
                     endif
                 endif
                 waitingForMenuExit = true
@@ -521,7 +547,7 @@ function DisplayWarmthCoverageNoSkyUIPkg_Vanilla(Armor akArmor)
         endif
 
         ; Show the total warmth and coverage
-        RegisterForSingleUpdate(1)
+        ; RegisterForSingleUpdate(3)
     endif
 endFunction
 
@@ -548,7 +574,7 @@ function DisplayWarmthCoverageNoSkyUIPkgRemove_SKSE(Armor akArmor)
             RegisterForMenu("InventoryMenu")
         else
             ; Show the total warmth and coverage
-            RegisterForSingleUpdate(1)
+            ; RegisterForSingleUpdate(3)
         endif
     endif
 endFunction
@@ -567,7 +593,7 @@ function DisplayWarmthCoverageNoSkyUIPkgRemove_Vanilla(Armor akArmor)
         endif
         
         ; Show the total warmth and coverage
-        RegisterForSingleUpdate(1)
+        ; RegisterForSingleUpdate(3)
     endif
 endFunction
 
@@ -658,9 +684,9 @@ int property mock_RemoveWornGearEntryForArmorUnequipped_callcount = 0 auto hidde
 
 State mock_testObjectEquipped
 
-    bool function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
+    int function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
         mock_AddWornGearEntryForArmorEquipped_callcount += 1
-        return false
+        return 0
     endFunction
 
     bool function RemoveWornGearEntryForArmorUnequipped(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
@@ -672,7 +698,7 @@ State mock_testObjectEquipped
         ; pass
     endFunction
 
-    function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor)
+    function DisplayWarmthCoverageNoSkyUIPkg(Armor akArmor, int aiGearType)
         ; pass
     endFunction
 

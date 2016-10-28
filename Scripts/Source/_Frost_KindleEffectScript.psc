@@ -1,6 +1,7 @@
 Scriptname _Frost_KindleEffectScript extends ActiveMagicEffect  
 
 import FrostUtil
+import CampUtil
 
 Actor property PlayerRef auto
 MiscObject property Firewood01 auto
@@ -34,10 +35,13 @@ function FailNoWood()
 	_Frost_KindleWoodError.Show()
 endFunction
 
+;@NOFALLBACK
 function SendEvent_ForceExposureMeterDisplay(bool flash = false)
-	int handle = ModEvent.Create("Frost_ForceExposureMeterDisplay")
-	if handle
-		ModEvent.PushBool(handle, flash)
-		ModEvent.Send(handle)
+	if GetSKSELoaded()
+		int handle = ModEvent.Create("Frost_ForceExposureMeterDisplay")
+		if handle
+			ModEvent.PushBool(handle, flash)
+			ModEvent.Send(handle)
+		endif
 	endif
 endFunction
