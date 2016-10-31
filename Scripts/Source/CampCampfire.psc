@@ -259,6 +259,7 @@ Actor property PlayerRef auto
 GlobalVariable property _Camp_LastUsedCampfireSize auto
 GlobalVariable property _Camp_LastUsedCampfireStage auto
 GlobalVariable property _Camp_Setting_ManualFireLighting auto
+GlobalVariable property _Camp_Setting_CampfireMode auto
 GlobalVariable property _Camp_LastSelectedSkill auto
 GlobalVariable property _Camp_WasFirstPersonBeforeUse auto
 GlobalVariable property _Camp_TinderQualityTimeRate auto
@@ -372,7 +373,28 @@ function Initialize()
     self.BlockActivation()
     parent.Initialize()
     last_update_registration_time = Utility.GetCurrentGameTime()
-    remaining_time = ASH_DURATION
+
+    if _Camp_Setting_CampfireMode.GetValueInt() == 2
+        remaining_time = ASH_DURATION
+    else
+        ; Take fuel
+        if PlayerRef.GetItemCount(_Camp_DeadwoodLog) >= 4
+            PlayerRef.RemoveItem(_Camp_DeadwoodLog, 4)
+            supplied_deadwood = 4
+            SetFuel(_Camp_Fuel_Crackling_DeadwoodLit, _Camp_Fuel_Crackling_DeadwoodUnlit, _Camp_Campfire_Light_3, 12)
+        elseif PlayerRef.GetItemCount(Firewood01) >= 4
+            PlayerRef.RemoveItem(Firewood01, 4)
+            supplied_firewood = 4
+            SetFuel(_Camp_Fuel_Crackling_FirewoodLit, _Camp_Fuel_Crackling_FirewoodUnlit, _Camp_Campfire_Light_3, 12)
+        else
+            ; uh oh
+        endif
+
+        campfire_size = 3
+        SetBonusLevel(1)
+        _Camp_LastUsedCampfireSize.SetValueInt(3)
+        LightFire()
+    endif
     RegisterForSingleUpdateGameTime(remaining_time)
     CampDebug(0, "Campfire registered for update in " + remaining_time + " hours.")
 endFunction
