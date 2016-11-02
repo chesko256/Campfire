@@ -25,7 +25,6 @@ Event OnTriggerLeave(ObjectReference akActionRef)
 EndEvent
 
 function FireBurnedOut()
-	Utility.Wait(2.0)
 	if player_in_trigger
 		ApplyBonus()
 		bonus_level = 0

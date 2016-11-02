@@ -62,6 +62,8 @@ Message property _Camp_legacyconfig_instinctsSFX_on auto
 Message property _Camp_legacyconfig_instinctsSFX_off auto
 Message property _Camp_legacyconfig_instinctsVFX_on auto
 Message property _Camp_legacyconfig_instinctsVFX_off auto
+Message property _Camp_legacyconfig_campfiremode_quick auto
+Message property _Camp_legacyconfig_campfiremode_realistic auto
 
 ;Globals
 GlobalVariable property _Camp_Setting_CampingArmorTakeOff auto
@@ -86,6 +88,7 @@ GlobalVariable property _Camp_Setting_InstinctsSmellDead auto
 GlobalVariable property _Camp_Setting_InstinctsSenseObjective auto
 GlobalVariable property _Camp_Setting_InstinctsSFX auto
 GlobalVariable property _Camp_Setting_InstinctsVFX auto
+GlobalVariable property _Camp_Setting_CampfireMode auto
 
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 GlobalVariable property _Camp_LegacyConfigCampingRestore auto
@@ -169,8 +172,11 @@ function menu_camping2()
         MenuHandler_Toggle(_Camp_legacyconfig_flammableitems_on, _Camp_legacyconfig_flammableitems_off, _Camp_Setting_EquipmentFlammable)
         menu_camping2()
     elseif i == 2
-        menu_camping()
+        MenuHandler_MultiSelect2(_Camp_legacyconfig_campfiremode_quick, _Camp_legacyconfig_campfiremode_realistic, _Camp_Setting_CampfireMode)
+        menu_camping2()
     elseif i == 3
+        menu_camping()
+    elseif i == 4
         menu_root()
     endif
 endFunction
@@ -426,6 +432,25 @@ function MenuHandler_UpDown(Message akMessage, GlobalVariable akSetting, float a
         endif
     else
         ;return
+    endif
+endFunction
+
+function MenuHandler_MultiSelect2(Message akOption1Active, Message akOption2Active, GlobalVariable akSetting, int aiSettingOffset = 0)
+    int setting = akSetting.GetValueInt()
+    if setting > 1
+        setting = 1
+    endif
+
+    int i
+    if (setting - aiSettingOffset) == 0
+        i = akOption1Active.Show()
+    elseif (setting - aiSettingOffset) == 1
+        i = akOption2Active.Show()
+    endif
+
+    if i < 2
+        akSetting.SetValueInt(i + aiSettingOffset)
+        MenuHandler_MultiSelect2(akOption1Active, akOption2Active, akSetting, aiSettingOffset)
     endif
 endFunction
 

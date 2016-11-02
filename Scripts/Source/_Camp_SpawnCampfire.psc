@@ -10,19 +10,20 @@ Message property _Camp_CampfireNoFuelMsg auto
 MiscObject property Firewood01 auto
 MiscObject property _Camp_DeadwoodLog auto
 
-
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	if PlayerCanPlaceObjects()
-		if _Camp_Setting_CampfireMode.GetValueInt() == 3
+		if _Camp_Setting_CampfireMode.GetValueInt() == 2
 			int i = _Camp_CampfireModeSelect.Show()
 			if i == 0
-				_Camp_Setting_CampfireMode.SetValueInt(1)
+				; Quick
+				_Camp_Setting_CampfireMode.SetValueInt(0)
 			elseif i == 1
-				_Camp_Setting_CampfireMode.SetValueInt(2)
+				; Realistic
+				_Camp_Setting_CampfireMode.SetValueInt(1)
 			endif
 		endif
 
-		if _Camp_Setting_CampfireMode.GetValueInt() == 1
+		if _Camp_Setting_CampfireMode.GetValueInt() == 0
 			; What fuel does the player have?
 			if PlayerRef.GetItemCount(_Camp_DeadwoodLog) < 4 && PlayerRef.GetItemCount(Firewood01) < 4
 				_Camp_CampfireNoFuelMsg.Show()

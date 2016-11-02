@@ -255,6 +255,7 @@ Message property _Camp_Campfire_LitError auto
 Message property _Camp_TalkMenu auto
 Message property _Camp_PerkAdvancement auto
 Message property _Camp_PerkEarned auto
+Message property _Camp_CampfireQuickBurnedOutMenu auto
 Actor property PlayerRef auto
 GlobalVariable property _Camp_LastUsedCampfireSize auto
 GlobalVariable property _Camp_LastUsedCampfireStage auto
@@ -278,6 +279,13 @@ MiscObject property _Camp_DeadwoodLog auto
 MiscObject property _Camp_CookingPot_MISC auto
 MiscObject property _Camp_BlankItem auto
 Furniture property _Camp_CookingPot auto
+
+Activator property _Camp_Fuel_Crackling_DeadwoodLit auto
+Activator property _Camp_Fuel_Crackling_DeadwoodUnlit auto
+Activator property _Camp_Fuel_Crackling_FirewoodLit auto
+Activator property _Camp_Fuel_Crackling_FirewoodUnlit auto
+Light property _Camp_Campfire_Light_4 auto
+Message property _Camp_CampfireNoFuelMsg auto
 
 ;Run-time objects
 ObjectReference property myFuelLit auto hidden
@@ -374,26 +382,30 @@ function Initialize()
     parent.Initialize()
     last_update_registration_time = Utility.GetCurrentGameTime()
 
-    if _Camp_Setting_CampfireMode.GetValueInt() == 2
+    if _Camp_Setting_CampfireMode.GetValueInt() == 1
+        ; Realistic
         remaining_time = ASH_DURATION
-    else
-        ; Take fuel
+    elseif _Camp_Setting_CampfireMode.GetValueInt() == 0
+        ; Quick
         if PlayerRef.GetItemCount(_Camp_DeadwoodLog) >= 4
             PlayerRef.RemoveItem(_Camp_DeadwoodLog, 4)
             supplied_deadwood = 4
-            SetFuel(_Camp_Fuel_Crackling_DeadwoodLit, _Camp_Fuel_Crackling_DeadwoodUnlit, _Camp_Campfire_Light_3, 12)
+            SetFuel(_Camp_Fuel_Crackling_DeadwoodLit, _Camp_Fuel_Crackling_DeadwoodUnlit, _Camp_Campfire_Light_4, 6)
         elseif PlayerRef.GetItemCount(Firewood01) >= 4
             PlayerRef.RemoveItem(Firewood01, 4)
             supplied_firewood = 4
-            SetFuel(_Camp_Fuel_Crackling_FirewoodLit, _Camp_Fuel_Crackling_FirewoodUnlit, _Camp_Campfire_Light_3, 12)
+            SetFuel(_Camp_Fuel_Crackling_FirewoodLit, _Camp_Fuel_Crackling_FirewoodUnlit, _Camp_Campfire_Light_4, 6)
         else
-            ; uh oh
+            _Camp_CampfireNoFuelMsg.Show()
+            RegisterForSingleUpdateGameTime(0.001)
+            return
         endif
 
         campfire_size = 3
         SetBonusLevel(1)
         _Camp_LastUsedCampfireSize.SetValueInt(3)
         LightFire()
+        AdvanceCampingSkill()
     endif
     RegisterForSingleUpdateGameTime(remaining_time)
     CampDebug(0, "Campfire registered for update in " + remaining_time + " hours.")
@@ -424,9 +436,25 @@ function DoActivate(ObjectReference akActionRef)
     SetLastUsedCampfire(self)
     ; Should we refund the player fuel because it was put out?
     if campfire_stage == 3 && campfire_size > 1
-        RefundRemainingFuel()
         remaining_time = ASH_DURATION
-        BurnToAshes()
+        if _Camp_Setting_CampfireMode.GetValueInt() == 0
+            int i = _Camp_CampfireQuickBurnedOutMenu.Show()
+            if i == 0
+                LightFire()
+                return
+            elseif i == 1
+                ; Destroy
+                RefundRemainingFuel()
+                BurnToAshes()
+                return
+            else
+                ; Exit
+                return
+            endif
+        else
+            RefundRemainingFuel()
+            BurnToAshes()
+        endif
     endif
 
     _Camp_LastUsedCampfireSize.SetValueInt(campfire_size)
@@ -566,6 +594,10 @@ endFunction
 
 function ShowTutorial(int aiTutorialIndex)
     if _Camp_Setting_EnableTutorials.GetValueInt() == 1
+        return
+    endif
+
+    if _Camp_Setting_CampfireMode.GetValueInt() == 0
         return
     endif
 
@@ -893,6 +925,18 @@ Event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
         if campfire_size > 0 && campfire_stage == 2
             PutOutFire()
         endif
+    elseif akEffect.HasKeyword(GetMagicDamageFireKeyword()) && _Camp_Setting_CampfireMode.GetValueInt() == 0
+        if campfire_size > 0 && campfire_stage >= 3
+            LightFire()
+        endif
+    endif
+EndEvent
+
+Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
+    if akSource == none && (akAggressor as Actor).GetEquippedItemType(0) == 11 && _Camp_Setting_CampfireMode.GetValueInt() == 0
+        if campfire_size > 0 && campfire_stage >= 3
+            LightFire()
+        endif
     endif
 EndEvent
 
@@ -1193,16 +1237,9 @@ endFunction
 
 function PutOutFire()
     CampDebug(0, "PutOutFire")
-    if myPerkNodeController
-        (myPerkNodeController as CampPerkNodeController).TakeDown()
-    endif
-    if myPerkNavController
-        (myPerkNavController as _Camp_PerkNavController).TakeDown()
-    endif
     myFuelUnlit.EnableNoWait()
     myFuelLit.DisableNoWait()
     myLight.DisableNoWait()
-    (myUpliftedTriggerVolume as _Camp_UpliftedTriggerVolumeScript).FireBurnedOut()
     RegisterForSingleUpdateGameTime(ASH_DURATION)
     last_put_out_time = Utility.GetCurrentGameTime()
     last_update_registration_time = Utility.GetCurrentGameTime()
@@ -1214,22 +1251,33 @@ function PutOutFire()
     mySteam.Enable()
     utility.wait(2)
     mySteam.Disable(true)
-endFunction
 
-function BurnToEmbers()
-    CampDebug(0, "BurnToEmbers")
+    (myUpliftedTriggerVolume as _Camp_UpliftedTriggerVolumeScript).FireBurnedOut()
+
     if myPerkNodeController
         (myPerkNodeController as CampPerkNodeController).TakeDown()
     endif
     if myPerkNavController
         (myPerkNavController as _Camp_PerkNavController).TakeDown()
     endif
+endFunction
+
+function BurnToEmbers()
+    CampDebug(0, "BurnToEmbers")
+    
     myFuelUnlit.DisableNoWait(true)
     myFuelLit.DisableNoWait(true)
     myLight.DisableNoWait(true)
     myEmbers.EnableNoWait()
     myAshes.EnableNoWait()
     (myUpliftedTriggerVolume as _Camp_UpliftedTriggerVolumeScript).FireBurnedOut()
+
+    if _Camp_Setting_CampfireMode.GetValueInt() == 0
+        ; If Quick mode, destroy now
+        TakeDown()
+        return
+    endif
+
     last_update_registration_time = Utility.GetCurrentGameTime()
     RegisterForSingleUpdateGameTime(remaining_time - ASH_DURATION)
 
@@ -1238,16 +1286,31 @@ function BurnToEmbers()
     campfire_size = 0
 
     DepleteAllRefundFuel()
+
+    if myPerkNodeController
+        (myPerkNodeController as CampPerkNodeController).TakeDown()
+    endif
+    if myPerkNavController
+        (myPerkNavController as _Camp_PerkNavController).TakeDown()
+    endif
 endFunction
 
 function BurnToAshes()
     CampDebug(0, "BurnToAshes or Refunding Fuel")
+
     myFuelUnlit.DisableNoWait(true)
     myFuelLit.DisableNoWait(true)
     myLight.DisableNoWait()
     myEmbers.DisableNoWait(true)
     myAshes.EnableNoWait()
     (myUpliftedTriggerVolume as _Camp_UpliftedTriggerVolumeScript).FireBurnedOut()
+
+    if _Camp_Setting_CampfireMode.GetValueInt() == 0
+        ; If Quick mode, destroy now
+        TakeDown()
+        return
+    endif
+
     last_update_registration_time = Utility.GetCurrentGameTime()
     RegisterForSingleUpdateGameTime(remaining_time)
     CampDebug(1, "Campfire registered for update in " + remaining_time + " hours.")
@@ -1255,6 +1318,13 @@ function BurnToAshes()
     campfire_size = 0
     
     DepleteAllRefundFuel()
+
+    if myPerkNodeController
+        (myPerkNodeController as CampPerkNodeController).TakeDown()
+    endif
+    if myPerkNavController
+        (myPerkNavController as _Camp_PerkNavController).TakeDown()
+    endif
 endFunction
 
 Event OnUpdateGameTime()

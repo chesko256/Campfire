@@ -25,7 +25,6 @@ endFunction
 
 function GetHeatSourceData()
     ObjectReference current_heat_source = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Camp_HeatSources_All, PlayerRef, 600.0)
-    
     ; Prevent "you are getting warmer" bouncing while running through towns.
     if PlayerRef.IsRunning() || PlayerRef.IsSprinting()
         current_heat_source = none

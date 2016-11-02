@@ -35,6 +35,7 @@ GlobalVariable property _Camp_Setting_InstinctsSmellDead auto
 GlobalVariable property _Camp_Setting_InstinctsSenseObjective auto
 GlobalVariable property _Camp_Setting_InstinctsVFX auto
 GlobalVariable property _Camp_Setting_InstinctsSFX auto
+GlobalVariable property _Camp_Setting_CampfireMode auto
 GlobalVariable property _Camp_CurrentlyPlacingObject auto
 GlobalVariable property _Camp_HotkeyCreateItem auto
 GlobalVariable property _Camp_HotkeyBuildCampfire auto
@@ -74,8 +75,10 @@ Message property _Camp_TroubleshootingConfirmMsg auto
 
 string[] ProfileList
 string[] TroubleshootingList
+string[] CampfireModeList
 int TroubleshootingIndex = 0
 
+int Gameplay_SettingCampingCampfireMode_OID
 int Gameplay_SettingCampingLegalityToggle_OID
 int Gameplay_SettingCampingArmorTentsText_OID
 int Gameplay_SettingCampingFlammabilityToggle_OID
@@ -140,6 +143,10 @@ Event OnConfigInit()
 	Pages[2] = "$CampfireAdvancedPage"
 	Pages[3] = "$CampfireHelpPage"
 	Pages[4] = "$CampfireSaveLoadPage"
+
+	CampfireModeList = new string[2]
+	CampfireModeList[0] = "$CampfireCampfireModeQuick"
+	CampfireModeList[1] = "$CampfireCampfireModeRealistic"
 	
 	TroubleshootingList = new string[2]
 	TroubleshootingList[0] = "$CampfireTroubleshooting0"
@@ -147,7 +154,7 @@ Event OnConfigInit()
 endEvent
 
 int function GetVersion()
-	return 3
+	return 4
 endFunction
 
 Event OnVersionUpdate(int a_version)
@@ -161,6 +168,12 @@ function PageReset_Gameplay()
 	SetCursorFillMode(TOP_TO_BOTTOM)
 
 	AddHeaderOption("$CampfireGameplayHeaderCamping")
+
+	int campfireMode = _Camp_Setting_CampfireMode.GetValueInt() 
+	if campfireMode > 1
+		campfireMode = 1
+	endif
+	Gameplay_SettingCampingCampfireMode_OID = AddMenuOption("$CampfireGameplaySettingCampfireMode", CampfireModeList[campfireMode])
 	
 	if _Camp_Setting_CampingArmorTakeOff.GetValueInt() == 2
 		Gameplay_SettingCampingArmorTentsText_OID = AddToggleOption("$CampfireGameplaySettingCampingRemoveGear", true)
@@ -463,7 +476,9 @@ event OnPageReset(string page)
 endEvent
 
 event OnOptionHighlight(int option)
-	if option == Gameplay_SettingCampingArmorTentsText_OID
+	if option == Gameplay_SettingCampingCampfireMode_OID
+		SetInfoText("$CampfireOptionHighlightCampfireMode")
+	elseif option == Gameplay_SettingCampingArmorTentsText_OID
 		SetInfoText("$CampfireOptionHighlightSettingCampingArmorTentsText")
 	elseif option == Gameplay_SettingCampingLegalityToggle_OID
 		SetInfoText("$CampfireOptionHighlightSettingLegality")
@@ -689,7 +704,11 @@ function OnOptionSelectAction(GlobalVariable akSettingsGlobal, int aiOID, string
 endFunction
 
 event OnOptionDefault(int option)
-	if option == Gameplay_SettingCampingArmorTentsText_OID
+	if option == Gameplay_SettingCampingCampfireMode_OID
+		SetMenuOptionValue(Gameplay_SettingCampingCampfireMode_OID, CampfireModeList[1])
+		_Camp_Setting_CampfireMode.SetValueInt(1)
+		SaveSettingToCurrentProfile("campfire_mode", _Camp_Setting_CampfireMode.GetValueInt())
+	elseif option == Gameplay_SettingCampingArmorTentsText_OID
 		_Camp_Setting_CampingArmorTakeOff.SetValue(2)
 		SetToggleOptionValue(Gameplay_SettingCampingArmorTentsText_OID, true)
 		ForcePageReset()
@@ -818,6 +837,12 @@ event OnOptionDefault(int option)
 endEvent
 
 event OnOptionMenuOpen(int option)
+	if option == Gameplay_SettingCampingCampfireMode_OID
+		SetMenuDialogOptions(CampfireModeList)
+		SetMenuDialogStartIndex(0)
+		SetMenuDialogDefaultIndex(0)
+	endif
+
 	if option == Help_TroubleshootingMenu_OID
 		SetMenuDialogOptions(TroubleshootingList)
 		SetMenuDialogStartIndex(TroubleshootingIndex)
@@ -839,7 +864,11 @@ event OnOptionMenuOpen(int option)
 endEvent
 
 event OnOptionMenuAccept(int option, int index)
-	if option == Help_TroubleshootingMenu_OID
+	if option == Gameplay_SettingCampingCampfireMode_OID
+		SetMenuOptionValue(Gameplay_SettingCampingCampfireMode_OID, CampfireModeList[index])
+		_Camp_Setting_CampfireMode.SetValueInt(index)
+		SaveSettingToCurrentProfile("campfire_mode", _Camp_Setting_CampfireMode.GetValueInt())
+	elseif option == Help_TroubleshootingMenu_OID
 		if index == 0
 			;do nothing
 		elseif index == 1
@@ -1099,6 +1128,10 @@ function SwitchToProfile(int aiProfileIndex)
 	if val != -1
 		_Camp_Setting_EquipmentFlammable.SetValueInt(val)
 	endif
+	val = LoadSettingFromProfile(aiProfileIndex, "campfire_mode")
+	if val != -1
+		_Camp_Setting_CampfireMode.SetValueInt(val)
+	endif
 	val = LoadSettingFromProfile(aiProfileIndex, "tent_remove_player_equipment")
 	if val != -1
 		_Camp_Setting_CampingArmorTakeOff.SetValueInt(val)
@@ -1252,6 +1285,7 @@ function GenerateDefaultProfile(int aiProfileIndex)
 	string profile_path = CONFIG_PATH + "profile" + aiProfileIndex
 	JsonUtil.SetStringValue(profile_path, "profile_name", "Profile " + aiProfileIndex)
 	JsonUtil.SetIntValue(profile_path, "camping_gear_flammable", 2)
+	JsonUtil.SetIntValue(profile_path, "campfire_mode", 2)
 	JsonUtil.SetIntValue(profile_path, "tent_remove_player_equipment", 2)
 	JsonUtil.SetIntValue(profile_path, "tent_remove_player_cuirass", 1)
 	JsonUtil.SetIntValue(profile_path, "tent_remove_player_helm", 2)
@@ -1286,6 +1320,7 @@ endFunction
 function SaveAllSettings(int aiProfileIndex)
 	string profile_path = CONFIG_PATH + "profile" + aiProfileIndex
 	JsonUtil.SetIntValue(profile_path, "camping_gear_flammable", _Camp_Setting_EquipmentFlammable.GetValueInt())
+	JsonUtil.SetIntValue(profile_path, "campfire_mode", _Camp_Setting_CampfireMode.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "tent_remove_player_equipment", _Camp_Setting_CampingArmorTakeOff.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "tent_remove_player_cuirass", _Camp_Setting_TakeOff_Cuirass.GetValueInt())
 	JsonUtil.SetIntValue(profile_path, "tent_remove_player_helm", _Camp_Setting_TakeOff_Helm.GetValueInt())
