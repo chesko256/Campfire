@@ -157,10 +157,12 @@ endEvent
 function SendEvent_UpdateWarmthAndCoverage()
     int handle_1 = ModEvent.Create("Frost_UpdateWarmth")
     if handle_1
+    	ModEvent.PushBool(handle_1, false)
         ModEvent.Send(handle_1)
     endif
     int handle_2 = ModEvent.Create("Frost_UpdateCoverage")
     if handle_2
+    	ModEvent.PushBool(handle_2, false)
         ModEvent.Send(handle_2)
     endif
 endFunction

@@ -2413,7 +2413,7 @@ function SwitchToProfile(int aiProfileIndex)
 	; Update the player's currently worn armor values.
 	_Frost_ClothingSystem clothing = GetClothingSystem()
 	clothing.RefreshWornGearData(clothing.WornGearForms, clothing._Frost_WornGearData)
-	clothing.SendEvent_UpdateWarmthAndCoverage()
+	clothing.SendEvent_UpdateWarmthAndCoverage(false)
 endFunction
 
 function GenerateDefaultProfile(int aiProfileIndex)
@@ -3194,7 +3194,7 @@ function RepairArmorDefaults()
 	ArmorPageReset(true)
 	_Frost_ClothingSystem clothing = GetClothingSystem()
 	clothing.RefreshWornGearData(clothing.WornGearForms, clothing._Frost_WornGearData)
-	clothing.SendEvent_UpdateWarmthAndCoverage()
+	clothing.SendEvent_UpdateWarmthAndCoverage(false)
 endFunction
 
 function DefaultWornArmor()
@@ -3218,7 +3218,7 @@ function DefaultWornArmor()
 	ArmorPageReset(true)
 
 	clothing.RefreshWornGearData(clothing.WornGearForms, clothing._Frost_WornGearData)
-	clothing.SendEvent_UpdateWarmthAndCoverage()
+	clothing.SendEvent_UpdateWarmthAndCoverage(false)
 endFunction
 
 function DefaultAllArmor()
@@ -3233,7 +3233,7 @@ function DefaultAllArmor()
 	ArmorPageReset(true)
 	_Frost_ClothingSystem clothing = GetClothingSystem()
 	clothing.RefreshWornGearData(clothing.WornGearForms, clothing._Frost_WornGearData)
-	clothing.SendEvent_UpdateWarmthAndCoverage()
+	clothing.SendEvent_UpdateWarmthAndCoverage(false)
 endFunction
 
 function RefreshSingleItemValues(Armor akArmor)
@@ -3243,7 +3243,7 @@ function RefreshSingleItemValues(Armor akArmor)
 	bool b = clothing.RemoveWornGearEntryForArmorUnequipped(akArmor, clothing.WornGearForms, clothing._Frost_WornGearData)
 	b = clothing.AddWornGearEntryForArmorEquipped(akArmor, clothing.WornGearForms, clothing._Frost_WornGearData)
 	clothing.RecalculateProtectionData(clothing.WornGearForms, clothing.WornGearValues, clothing._Frost_WornGearData)
-	clothing.SendEvent_UpdateWarmthAndCoverage()
+	clothing.SendEvent_UpdateWarmthAndCoverage(false)
 endFunction
 
 function ArmorPageReset(bool abShowUpdatedMessage)

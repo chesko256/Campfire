@@ -19,6 +19,7 @@ function SendEvent_UpdateCoverage()
 	FallbackEventEmitter emitter = GetEventEmitter_UpdateCoverage()
     int handle = emitter.Create("Frost_UpdateCoverage")
     if handle
+    	emitter.PushBool(handle, false)
         emitter.Send(handle)
     endif
 endFunction

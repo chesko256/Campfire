@@ -518,7 +518,7 @@ function RefreshVampireState()
 
 	if is_vampire != last_vampire_state
 		(_Frost_MainQuest as _Frost_ConditionValues).IsVampire = is_vampire
-		SendEvent_UpdateWarmth()
+		SendEvent_UpdateWarmth(false)
 	endif
 endFunction
 
@@ -1090,10 +1090,11 @@ function SendEvent_OnRescuePlayer(bool in_water)
 	endif
 endFunction
 
-function SendEvent_UpdateWarmth()
+function SendEvent_UpdateWarmth(bool abDisplayTextUpdate)
 	FallbackEventEmitter emitter = GetEventEmitter_UpdateWarmth()
     int handle = emitter.Create("Frost_UpdateWarmth")
     if handle
+    	emitter.PushBool(handle, abDisplayTextUpdate)
         emitter.Send(handle)
     endif
 endFunction

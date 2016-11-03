@@ -14,6 +14,7 @@ function SendEvent_UpdateWarmth()
     FallbackEventEmitter warmthEvent = GetEventEmitter_UpdateWarmth()
     int handle = warmthEvent.Create("Frost_UpdateWarmth")
     if handle
+    	warmthEvent.PushBool(handle, false)
         warmthEvent.Send(handle)
     endif
 endFunction

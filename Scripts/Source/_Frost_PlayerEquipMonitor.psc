@@ -12,11 +12,11 @@ Event OnRaceSwitchComplete()
         FrostDebug(1, "I am now a werewolf or vampire lord.")
         ModPlayerExposure(-120.0, 0.0)
         (_Frost_MainQuest as _Frost_ConditionValues).IsBeast = true
-        SendEvent_UpdateWarmth()
+        SendEvent_UpdateWarmth(false)
     else
         FrostDebug(1, "I am now not a werewolf or vampire lord.")
         (_Frost_MainQuest as _Frost_ConditionValues).IsBeast = false
-        SendEvent_UpdateWarmth()
+        SendEvent_UpdateWarmth(false)
     endif
 endEvent
 
@@ -25,28 +25,33 @@ Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemRefere
 EndEvent
 
 Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
+	debug.StartStackProfiling()
 	if akBaseObject as Light
-		SendEvent_UpdateWarmth()
+		SendEvent_UpdateWarmth(false)
 	elseif akBaseObject as Armor
 		bool b = qEnter(form_queue, action_queue, akBaseObject, true)
 		ProcessQueuedEvents(form_queue, action_queue)
 	endif
+	debug.StopStackProfiling()
 EndEvent
 
 Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
+	debug.StartStackProfiling()
 	if akBaseObject as Light
-		SendEvent_UpdateWarmth()
+		SendEvent_UpdateWarmth(false)
 	elseif akBaseObject as Armor
 		bool b = qEnter(form_queue, action_queue, akBaseObject, false)
 		ProcessQueuedEvents(form_queue, action_queue)
 	endif
+	debug.StopStackProfiling()
 EndEvent
 
-function SendEvent_UpdateWarmth()
+function SendEvent_UpdateWarmth(bool abDisplayTextUpdate)
 	FrostDebug(0, "Sending event Frost_UpdateWarmth")
 	FallbackEventEmitter emitter = GetEventEmitter_UpdateWarmth()
     int handle = emitter.Create("Frost_UpdateWarmth")
     if handle
+    	emitter.PushBool(handle, abDisplayTextUpdate)
         emitter.Send(handle)
     endif
 endFunction
@@ -99,7 +104,7 @@ function ProcessQueuedEvents(Form[] akFormQueue, int[] aiActionQueue, bool aiRec
 
 		if update_required
         	clothing.RecalculateProtectionData(clothing.WornGearForms, clothing.WornGearValues, clothing._Frost_WornGearData)
-        	clothing.SendEvent_UpdateWarmthAndCoverage()
+        	clothing.SendEvent_UpdateWarmthAndCoverage(true)
     	endif
 
     	; Did another event sneak in?

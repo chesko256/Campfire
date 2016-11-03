@@ -2610,9 +2610,7 @@ function SetArmorData(int aiFormID, string asPluginName, int aiGearType, int aiW
 	endif
 endFunction
 
-function SetArmorDataBody(int aiFormID, string asPluginName, int aiWarmthType, int aiCoverageType, int aiHeadWarmthType = 0, int aiHeadCoverageType = 0, int aiExtraCloakType = 0)
-	debug.trace("SetArmorDataBody " + aiFormID + " " + asPluginName + " " + aiWarmthType + " " + aiCoverageType + " " + aiHeadWarmthType + " " + aiHeadCoverageType + " " + aiExtraCloakType)
-	
+function SetArmorDataBody(int aiFormID, string asPluginName, int aiWarmthType, int aiCoverageType, int aiHeadWarmthType = 0, int aiHeadCoverageType = 0, int aiExtraCloakType = 0)	
 	Armor theArmor = Game.GetFormFromFile(aiFormID, asPluginName) as Armor
 	if !theArmor
 		return

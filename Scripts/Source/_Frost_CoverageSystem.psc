@@ -19,7 +19,7 @@ function RegisterForEvents()
 	campfirePerkEvent.RegisterFormForModEventWithFallback("Campfire_CampfirePerkPurchased", "CampfirePerkPurchased", self)
 endFunction
 
-Event UpdateCoverage()
+Event UpdateCoverage(bool abDisplayTextUpdate)
 	int i = 20
     while updating_coverage == true && i > 0
         utility.wait(0.2)
@@ -43,8 +43,10 @@ Event UpdateCoverage()
 	SendEvent_UpdateBottomBarCoverage(coverage)
 	updating_coverage = false
 
-	if old_coverage != coverage
-		GetClothingSystem().RegisterForSingleUpdate(2)
+	if abDisplayTextUpdate
+		if old_coverage != coverage
+			GetClothingSystem().RegisterForSingleUpdate(2)
+		endif
 	endif
 endEvent
 
@@ -73,5 +75,5 @@ function SendEvent_UpdateBottomBarCoverage(int aiCoverage)
 endFunction
 
 Event CampfirePerkPurchased()
-	UpdateCoverage()
+	UpdateCoverage(false)
 endEvent

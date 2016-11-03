@@ -36,7 +36,7 @@ function RegisterForEvents()
 	campfirePerkEvent.RegisterFormForModEventWithFallback("Campfire_CampfirePerkPurchased", "CampfirePerkPurchased", self)
 endFunction
 
-Event UpdateWarmth()
+Event UpdateWarmth(bool abDisplayTextUpdate)
 	int i = 20
     while updating_warmth == true && i > 0
         utility.wait(0.2)
@@ -71,19 +71,21 @@ Event UpdateWarmth()
 	SendEvent_UpdateBottomBarWarmth(warmth)
 	updating_warmth = false
 
-	if old_warmth != warmth
-		GetClothingSystem().RegisterForSingleUpdate(2)
+	if abDisplayTextUpdate
+		if old_warmth != warmth
+			GetClothingSystem().RegisterForSingleUpdate(2)
+		endif
 	endif
 endEvent
 
 Event SoupEffectStart()
 	current_food_bonus = 25
-	UpdateWarmth()
+	UpdateWarmth(false)
 endEvent
 
 Event SoupEffectStop()
 	current_food_bonus = 0
-	UpdateWarmth()
+	UpdateWarmth(false)
 endEvent
 
 int function GetTorchBonus()
@@ -163,5 +165,5 @@ function SendEvent_UpdateBottomBarWarmth(int aiWarmth)
 endFunction
 
 Event CampfirePerkPurchased()
-	UpdateWarmth()
+	UpdateWarmth(false)
 endEvent

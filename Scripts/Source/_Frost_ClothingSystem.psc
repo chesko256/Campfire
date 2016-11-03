@@ -16,9 +16,16 @@ GlobalVariable property _Frost_Setting_Notifications_EquipmentSummary auto
 GlobalVariable property _Frost_CheckInitialEquipment auto
 Keyword property WAF_ClothingCloak auto
 
+; This now only stores "Accessories".
 Armor[] property WornGearForms auto hidden
+
 int[] property WornGearValues auto hidden
 Keyword property _Frost_WornGearData auto
+Armor property WornBody auto hidden
+Armor property WornHead auto hidden
+Armor property WornHands auto hidden
+Armor property WornFeet auto hidden
+Armor property WornCloak auto hidden
 
 Keyword property _Frost_DummyArmorKW auto
 Keyword property _FrostData_ArmorPrecache auto
@@ -42,7 +49,7 @@ bool waitingForMenuExit = false
 
 function StartUp()
     handler = GetClothingDatastoreHandler()
-    WornGearForms = new Armor[31]
+    WornGearForms = new Armor[26]
     WornGearValues = new int[12]
 endFunction
 
@@ -196,7 +203,7 @@ int function AddWornGearEntryForArmorEquipped_SKSE(Armor akArmor, Armor[] akWorn
     int idx = akWornGearFormsArray.Find(akArmor)
     if idx == -1
         ; plug the data in
-        ArrayAddArmor(akWornGearFormsArray, akArmor)
+        AddToWornGearFormsArray(akArmor, armor_data[0], akWornGearFormsArray)
         string dskey = handler.GetDatastoreKeyFromForm(akArmor)
 
         int type = armor_data[0]
@@ -240,10 +247,31 @@ int function AddWornGearEntryForArmorEquipped_Vanilla(Armor akArmor, Armor[] akW
     int idx = akWornGearFormsArray.Find(akArmor)
     if idx == -1
         ; plug the data in
-        ArrayAddArmor(akWornGearFormsArray, akArmor)
+        AddToWornGearFormsArray(akArmor, armor_data[0], akWornGearFormsArray)
         return armor_data[0]
     else
         return 0
+    endif
+endFunction
+
+bool function StoreWornGear(Armor akArmor, int aiGearType, Armor[] akWornGearFormsArray)
+    ; Add the worn gear form to the array.
+    if aiGearType == 0
+        return false
+    elseif aiGearType == 1
+
+        ; Main type
+        akWornGearFormsArray[aiGearType - 1] = akArmor
+    else
+        ;Misc Type
+        int i = 5
+        while i < akWornGearFormsArray.Length
+            if CommonArrayHelper.IsNone(akWornGearFormsArray[i])
+                akWornGearFormsArray[i] = akArmor
+            else
+                i += 1
+            endif
+        endWhile
     endif
 endFunction
 
@@ -355,8 +383,30 @@ function RecalculateProtectionData_SKSE(Armor[] akWornGearFormsArray, int[] aiWo
     ; Pre-fetch the datastore keys for worn forms. Check if actually being worn.
     string[] dskeys = new String[31]
     while d < 31
-        if d < key_count && PlayerHasArmorEquipped(akWornGearFormsArray[d])
-            dskeys[d] = handler.GetDatastoreKeyFromForm(akWornGearFormsArray[d])
+        if d == 0
+            if WornBody && PlayerHasArmorEquipped(WornBody)
+                dskeys[d] = handler.GetDatastoreKeyFromForm(WornBody)
+            endif
+        elseif d == 1
+            if WornHead && PlayerHasArmorEquipped(WornHead)
+                dskeys[d] = handler.GetDatastoreKeyFromForm(WornHead)
+            endif
+        elseif d == 2
+            if WornHands && PlayerHasArmorEquipped(WornHands)
+                dskeys[d] = handler.GetDatastoreKeyFromForm(WornHands)
+            endif
+        elseif d == 3
+            if WornFeet && PlayerHasArmorEquipped(WornFeet)
+                dskeys[d] = handler.GetDatastoreKeyFromForm(WornFeet)
+            endif
+        elseif d == 4
+            if WornCloak && PlayerHasArmorEquipped(WornCloak)
+                dskeys[d] = handler.GetDatastoreKeyFromForm(WornCloak)
+            endif
+        else
+            if d < key_count && PlayerHasArmorEquipped(akWornGearFormsArray[d])
+                dskeys[d] = handler.GetDatastoreKeyFromForm(akWornGearFormsArray[d])
+            endif
         endif
         d += 1
     endWhile
@@ -647,16 +697,18 @@ EndEvent
 ;*** Mod Events
 ;***
 
-function SendEvent_UpdateWarmthAndCoverage()
+function SendEvent_UpdateWarmthAndCoverage(bool abDisplayTextUpdate)
     FallbackEventEmitter warmthEvent = GetEventEmitter_UpdateWarmth()
     FallbackEventEmitter coverageEvent = GetEventEmitter_UpdateCoverage()
 
     int handle = warmthEvent.Create("Frost_UpdateWarmth")
     if handle
+        warmthEvent.PushBool(handle, abDisplayTextUpdate)
         warmthEvent.Send(handle)
     endif
     handle = coverageEvent.Create("Frost_UpdateCoverage")
     if handle
+        coverageEvent.PushBool(handle, abDisplayTextUpdate)
         coverageEvent.Send(handle)
     endif
 endFunction
@@ -694,7 +746,7 @@ State mock_testObjectEquipped
         return false
     endFunction
 
-    function SendEvent_UpdateWarmthAndCoverage()
+    function SendEvent_UpdateWarmthAndCoverage(bool abDisplayTextUpdate)
         ; pass
     endFunction
 
