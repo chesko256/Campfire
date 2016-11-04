@@ -103,7 +103,7 @@ function ProcessQueuedEvents(Form[] akFormQueue, int[] aiActionQueue, bool aiRec
 		debug.trace("Update required " + update_required)
 
 		if update_required
-        	clothing.RecalculateProtectionData(clothing.WornGearForms, clothing.WornGearValues, clothing._Frost_WornGearData)
+        	clothing.RecalculateProtectionData(clothing.WornGearMainForms, clothing.WornGearForms, clothing.WornGearValues, clothing._Frost_WornGearData)
         	clothing.SendEvent_UpdateWarmthAndCoverage(true)
     	endif
 

@@ -16,16 +16,19 @@ GlobalVariable property _Frost_Setting_Notifications_EquipmentSummary auto
 GlobalVariable property _Frost_CheckInitialEquipment auto
 Keyword property WAF_ClothingCloak auto
 
+; Main body pieces.
+; [0] = Body
+; [1] = Head
+; [2] = Hands
+; [3] = Feet
+; [4] = Cloak
+Armor[] property WornGearMainForms auto hidden
 ; This now only stores "Accessories".
+; [n] = Accessory
 Armor[] property WornGearForms auto hidden
 
 int[] property WornGearValues auto hidden
 Keyword property _Frost_WornGearData auto
-Armor property WornBody auto hidden
-Armor property WornHead auto hidden
-Armor property WornHands auto hidden
-Armor property WornFeet auto hidden
-Armor property WornCloak auto hidden
 
 Keyword property _Frost_DummyArmorKW auto
 Keyword property _FrostData_ArmorPrecache auto
@@ -49,6 +52,7 @@ bool waitingForMenuExit = false
 
 function StartUp()
     handler = GetClothingDatastoreHandler()
+    WornGearMainForms = new Armor[5]
     WornGearForms = new Armor[26]
     WornGearValues = new int[12]
 endFunction
@@ -64,7 +68,7 @@ bool function ObjectEquipped(Form akBaseObject)
         return false
     endif
 
-    int gear_type = AddWornGearEntryForArmorEquipped(akBaseObject as Armor, WornGearForms, _Frost_WornGearData)
+    int gear_type = AddWornGearEntryForArmorEquipped(akBaseObject as Armor, WornGearMainForms, WornGearForms, _Frost_WornGearData)
     ;debug.trace("update_required = " + update_required)
     DisplayWarmthCoverageNoSkyUIPkg(akBaseObject as Armor, gear_type)
     if gear_type > 0
@@ -107,7 +111,7 @@ bool function ObjectUnequipped(Form akBaseObject)
             initial_shield = armor_object
         endif
     endif
-    bool update_required = RemoveWornGearEntryForArmorUnequipped(akBaseObject as Armor, WornGearForms, _Frost_WornGearData)
+    bool update_required = RemoveWornGearEntryForArmorUnequipped(akBaseObject as Armor, WornGearMainForms, WornGearForms, _Frost_WornGearData)
 
     ; Don't display "total" values during start-up sequence.
     if _Frost_CheckInitialEquipment.GetValueInt() != 2
@@ -169,15 +173,15 @@ EndEvent
 ;***
 
 ;/* AddWornGearEntryForArmorEquipped wrapper */;
-int function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
+int function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGearMainFormsArray, Armor[] akWornGearFormsArray, keyword akWornGearData)
     if GetSKSELoaded()
-        return AddWornGearEntryForArmorEquipped_SKSE(akArmor, akWornGearFormsArray, akWornGearData)
+        return AddWornGearEntryForArmorEquipped_SKSE(akArmor, akWornGearMainFormsArray, akWornGearFormsArray, akWornGearData)
     Else
-        return AddWornGearEntryForArmorEquipped_Vanilla(akArmor, akWornGearFormsArray)
+        return AddWornGearEntryForArmorEquipped_Vanilla(akArmor, akWornGearMainFormsArray, akWornGearFormsArray)
     endif
 endFunction
 
-int function AddWornGearEntryForArmorEquipped_SKSE(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
+int function AddWornGearEntryForArmorEquipped_SKSE(Armor akArmor, Armor[] akWornGearMainFormsArray, Armor[] akWornGearFormsArray, keyword akWornGearData)
     ; Assign protection data to the correct internal slots and store the results.
     ; Return True if recalculation of warmth and coverage is necessary, false otherwise.
 
@@ -200,10 +204,29 @@ int function AddWornGearEntryForArmorEquipped_SKSE(Armor akArmor, Armor[] akWorn
     ; The system will store ONE Body, Head, Hands, Feet, and Cloak slot Warmth and Coverage.
     ; The system will keep any number of warmth/coverage values for Misc.
     ; Explicit gear types win over extra part data.
-    int idx = akWornGearFormsArray.Find(akArmor)
-    if idx == -1
+    int idx
+    bool shouldStoreData = false
+    if armor_data[0] < handler.GEARTYPE_MISC
+        idx = akWornGearMainFormsArray.Find(akArmor)
+        if idx == -1
+            AddToWornGearFormsArray(akArmor, armor_data[0], akWornGearMainFormsArray, akWornGearFormsArray)
+            shouldStoreData = true
+        else
+            return 0
+        endif
+    else
+        idx = akWornGearFormsArray.Find(akArmor)
+        if idx == -1
+            AddToWornGearFormsArray(akArmor, armor_data[0], akWornGearMainFormsArray, akWornGearFormsArray)
+            shouldStoreData = true
+        else
+            return 0
+        endif
+    endif
+
+    if shouldStoreData
         ; plug the data in
-        AddToWornGearFormsArray(akArmor, armor_data[0], akWornGearFormsArray)
+        AddToWornGearFormsArray(akArmor, armor_data[0], akWornGearMainFormsArray, akWornGearFormsArray)
         string dskey = handler.GetDatastoreKeyFromForm(akArmor)
 
         int type = armor_data[0]
@@ -229,12 +252,10 @@ int function AddWornGearEntryForArmorEquipped_SKSE(Armor akArmor, Armor[] akWorn
         StorageUtil.IntListSet(akWornGearData, dskey, jdx, armor_data[2])         ; coverage
 
         return type
-    else
-        return 0
     endif
 endFunction
 
-int function AddWornGearEntryForArmorEquipped_Vanilla(Armor akArmor, Armor[] akWornGearFormsArray)
+int function AddWornGearEntryForArmorEquipped_Vanilla(Armor akArmor, Armor[] akWornGearMainFormsArray, Armor[] akWornGearFormsArray)
     FrostDebug(0, "(Vanilla) Resolving " + akArmor + ".")
     int[] armor_data = handler.GetArmorProtectionData(akArmor)
 
@@ -244,72 +265,85 @@ int function AddWornGearEntryForArmorEquipped_Vanilla(Armor akArmor, Armor[] akW
 
     ; Keep a running list of what I'm currently wearing.
     ; All worn gear values will be recalculated during update cycle.
-    int idx = akWornGearFormsArray.Find(akArmor)
-    if idx == -1
-        ; plug the data in
-        AddToWornGearFormsArray(akArmor, armor_data[0], akWornGearFormsArray)
-        return armor_data[0]
+    int idx
+    if armor_data[0] < handler.GEARTYPE_MISC
+        idx = akWornGearMainFormsArray.Find(akArmor)
+        if idx == -1
+            AddToWornGearFormsArray(akArmor, armor_data[0], akWornGearMainFormsArray, akWornGearFormsArray)
+            return armor_data[0]
+        else
+            return 0
+        endif
     else
-        return 0
+        idx = akWornGearFormsArray.Find(akArmor)
+        if idx == -1
+            AddToWornGearFormsArray(akArmor, armor_data[0], akWornGearMainFormsArray, akWornGearFormsArray)
+            return armor_data[0]
+        else
+            return 0
+        endif
     endif
 endFunction
 
-bool function StoreWornGear(Armor akArmor, int aiGearType, Armor[] akWornGearFormsArray)
-    ; Add the worn gear form to the array.
+bool function AddToWornGearFormsArray(Armor akArmor, int aiGearType, Armor[] akWornGearMainFormsArray, Armor[] akWornGearFormsArray)
+    ; Add the worn gear form to the appropriate array.
     if aiGearType == 0
         return false
-    elseif aiGearType == 1
-
+    elseif aiGearType < 6
         ; Main type
-        akWornGearFormsArray[aiGearType - 1] = akArmor
+        akWornGearMainFormsArray[aiGearType - 1] = akArmor
     else
         ;Misc Type
-        int i = 5
-        while i < akWornGearFormsArray.Length
-            if CommonArrayHelper.IsNone(akWornGearFormsArray[i])
-                akWornGearFormsArray[i] = akArmor
-            else
-                i += 1
-            endif
-        endWhile
+        ArrayAddArmor(akWornGearFormsArray, akArmor)
     endif
 endFunction
 
 
 ;/* RemoveWornGearEntryForArmorUnequipped wrapper */;
-bool function RemoveWornGearEntryForArmorUnequipped(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
+bool function RemoveWornGearEntryForArmorUnequipped(Armor akArmor, Armor[] akWornGearMainFormsArray, Armor[] akWornGearFormsArray, keyword akWornGearData)
     if GetSKSELoaded()
-        return RemoveWornGearEntryForArmorUnequipped_SKSE(akArmor, akWornGearFormsArray, akWornGearData)
+        return RemoveWornGearEntryForArmorUnequipped_SKSE(akArmor, akWornGearMainFormsArray, akWornGearFormsArray, akWornGearData)
     else
-        return RemoveWornGearEntryForArmorUnequipped_Vanilla(akArmor, akWornGearFormsArray)
+        return RemoveWornGearEntryForArmorUnequipped_Vanilla(akArmor, akWornGearMainFormsArray, akWornGearFormsArray)
     endif
 endFunction
 
-bool function RemoveWornGearEntryForArmorUnequipped_SKSE(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
-    bool worn_gear_found = ArrayRemoveArmor(akWornGearFormsArray, akArmor, true)
+bool function RemoveWornGearEntryForArmorUnequipped_SKSE(Armor akArmor, Armor[] akWornGearMainFormsArray, Armor[] akWornGearFormsArray, keyword akWornGearData)
+    bool worn_gear_found = ArrayRemoveArmor(akWornGearMainFormsArray, akArmor, false)
+    if !worn_gear_found
+        worn_gear_found = ArrayRemoveArmor(akWornGearFormsArray, akArmor, true)
+    endif
+
     if worn_gear_found
         string dskey = handler.GetDatastoreKeyFromForm(akArmor)
         StorageUtil.IntListClear(akWornGearData, dskey)
         return true
+    else
+        return false    
     endif
-    return false
 endFunction
 
-bool function RemoveWornGearEntryForArmorUnequipped_Vanilla(Armor akArmor, Armor[] akWornGearFormsArray)
-    return ArrayRemoveArmor(akWornGearFormsArray, akArmor, true)
+bool function RemoveWornGearEntryForArmorUnequipped_Vanilla(Armor akArmor, Armor[] akWornGearMainFormsArray, Armor[] akWornGearFormsArray)
+    bool worn_gear_found = ArrayRemoveArmor(akWornGearMainFormsArray, akArmor, false)
+    if !worn_gear_found
+        worn_gear_found = ArrayRemoveArmor(akWornGearFormsArray, akArmor, true)
+    endif
+
+    return worn_gear_found
 endFunction
 
 
 ;/* RefreshWornGearData wrapper */;
-function RefreshWornGearData(Armor[] akWornGearFormsArray, keyword akWornGearData)
+function RefreshWornGearData(Armor[] akWornGearMainFormsArray, Armor[] akWornGearFormsArray, keyword akWornGearData)
     if GetSKSELoaded()
-        RefreshWornGearData_SKSE(akWornGearFormsArray, akWornGearData)
+        RefreshWornGearData_SKSE(akWornGearMainFormsArray, akWornGearFormsArray, akWornGearData)
     else
         RefreshWornGearData_Vanilla(akWornGearFormsArray)
     endif
 endFunction
 
-function RefreshWornGearData_SKSE(Armor[] akWornGearFormsArray, keyword akWornGearData)
+;@TODO: UPDATE
+function RefreshWornGearData_SKSE(Armor[] akWornGearMainFormsArray, Armor[] akWornGearFormsArray, keyword akWornGearData)
     ; Pull the latest values for all currently worn gear. (Player switched profiles, changed the JSON file
     ; by hand since they last loaded the game, etc)
     int i = 0
@@ -344,8 +378,7 @@ function RefreshWornGearData_SKSE(Armor[] akWornGearFormsArray, keyword akWornGe
 endFunction
 
 function RefreshWornGearData_Vanilla(Armor[] akWornGearFormsArray)
-    ; Pull the latest values for all currently worn gear. (Player switched profiles, changed the JSON file
-    ; by hand since they last loaded the game, etc)
+    ; Pull the latest values for all currently worn gear. (Player defaulted protection values, etc)
     int i = 0
     int gear_count = ArrayCountArmor(akWornGearFormsArray)
     while i < gear_count
@@ -355,15 +388,16 @@ endFunction
 
 
 ;/* RecalculateProtectionData wrapper */;
-function RecalculateProtectionData(Armor[] akWornGearFormsArray, int[] aiWornGearValuesArray, keyword akWornGearData)
+function RecalculateProtectionData(Armor[] akWornGearMainFormsArray, Armor[] akWornGearFormsArray, int[] aiWornGearValuesArray, keyword akWornGearData)
     if GetSKSELoaded()
-        RecalculateProtectionData_SKSE(akWornGearFormsArray, aiWornGearValuesArray, akWornGearData)
+        RecalculateProtectionData_SKSE(akWornGearMainFormsArray, akWornGearFormsArray, aiWornGearValuesArray, akWornGearData)
     else
-        RecalculateProtectionData_Vanilla(akWornGearFormsArray, aiWornGearValuesArray)
+        RecalculateProtectionData_Vanilla(akWornGearMainFormsArray, akWornGearFormsArray, aiWornGearValuesArray)
     endif
 endFunction
 
-function RecalculateProtectionData_SKSE(Armor[] akWornGearFormsArray, int[] aiWornGearValuesArray, keyword akWornGearData)
+
+function RecalculateProtectionData_SKSE(Armor[] akWornGearMainFormsArray, Armor[] akWornGearFormsArray, int[] aiWornGearValuesArray, keyword akWornGearData)
     ;/
         Iterates over a "table" of values in the form below to determine total Warmth and Coverage.
     /;
@@ -372,47 +406,37 @@ function RecalculateProtectionData_SKSE(Armor[] akWornGearFormsArray, int[] aiWo
     ; | WornGearForms             | Type | Body Warm | Body Cov | ... | Misc Warm | Misc Cov |
     ; | "80145___Skyrim.esm"      | 1    | 60        | 0        |     | 0         | 0        |
 
-    int key_count = ArrayCountArmor(akWornGearFormsArray)
-    ; debug.trace("RecalculateProtectionData key_count " + key_count)
-
     int i = 0
-    int d = 0
-    int type_counter = -1
-    int type_to_match = 1
-
-    ; Pre-fetch the datastore keys for worn forms. Check if actually being worn.
+    int j = 0
     string[] dskeys = new String[31]
-    while d < 31
-        if d == 0
-            if WornBody && PlayerHasArmorEquipped(WornBody)
-                dskeys[d] = handler.GetDatastoreKeyFromForm(WornBody)
-            endif
-        elseif d == 1
-            if WornHead && PlayerHasArmorEquipped(WornHead)
-                dskeys[d] = handler.GetDatastoreKeyFromForm(WornHead)
-            endif
-        elseif d == 2
-            if WornHands && PlayerHasArmorEquipped(WornHands)
-                dskeys[d] = handler.GetDatastoreKeyFromForm(WornHands)
-            endif
-        elseif d == 3
-            if WornFeet && PlayerHasArmorEquipped(WornFeet)
-                dskeys[d] = handler.GetDatastoreKeyFromForm(WornFeet)
-            endif
-        elseif d == 4
-            if WornCloak && PlayerHasArmorEquipped(WornCloak)
-                dskeys[d] = handler.GetDatastoreKeyFromForm(WornCloak)
-            endif
-        else
-            if d < key_count && PlayerHasArmorEquipped(akWornGearFormsArray[d])
-                dskeys[d] = handler.GetDatastoreKeyFromForm(akWornGearFormsArray[d])
-            endif
+
+    ; Main body array
+    while i < akWornGearMainFormsArray.Length
+        if PlayerHasArmorEquipped(akWornGearMainFormsArray[i])
+            dskeys[j] = handler.GetDatastoreKeyFromForm(akWornGearMainFormsArray[i])
+            j += 1
         endif
-        d += 1
+        i += 1
     endWhile
 
-    while i < 12
-        int j = 0
+    ; Accessory array
+    int misc_count = ArrayCountArmor(akWornGearFormsArray)
+    i = 0
+    while i < misc_count
+        if PlayerHasArmorEquipped(akWornGearFormsArray[i])
+            dskeys[j] = handler.GetDatastoreKeyFromForm(akWornGearFormsArray[i])
+            j += 1
+        endif
+        i += 1
+    endWhile
+
+    int key_count = j + 1
+
+    int k = 0
+    int type_to_match = 1
+    int type_counter = -1
+    while k < 12
+        int m = 0
         int column_value = 0
 
         type_counter += 1
@@ -422,12 +446,12 @@ function RecalculateProtectionData_SKSE(Armor[] akWornGearFormsArray, int[] aiWo
         endif
 
         bool gear_type_found = false
-        while j < key_count && !gear_type_found
+        while m < key_count && !gear_type_found
             ; This calculation can be out of sync with reality (queued events exit that 
             ; are not yet processed). The array will eventually be accurate after
             ; the next integrity check.
-            int gear_type = StorageUtil.IntListGet(akWornGearData, dskeys[j], 0)
-            int val = StorageUtil.IntListGet(akWornGearData, dskeys[j], i + 1)
+            int gear_type = StorageUtil.IntListGet(akWornGearData, dskeys[m], 0)
+            int val = StorageUtil.IntListGet(akWornGearData, dskeys[m], k + 1)
     
             if type_to_match != handler.GEARTYPE_MISC
                 ; Native type takes priority
@@ -444,21 +468,21 @@ function RecalculateProtectionData_SKSE(Armor[] akWornGearFormsArray, int[] aiWo
                 ; Sum MISC type items (and never type match)
                 column_value += val
             endif
-            j += 1
+            m += 1
         endWhile
 
         ; Result for this column
-        aiWornGearValuesArray[i] = column_value
-        i += 1
+        aiWornGearValuesArray[k] = column_value
+        k += 1
     endWhile
-
+    
     ;Signal to the UI that we're ready for the "change" values to be updated.
     GetInterfaceHandler().InvalidateFetchedChangeRanges()
 
     FrostDebug(0, "Worn Gear Values: " + aiWornGearValuesArray)
 endFunction
 
-function RecalculateProtectionData_Vanilla(Armor[] akWornGearFormsArray, int[] aiWornGearValuesArray)
+function RecalculateProtectionData_Vanilla(Armor[] akWornGearMainFormsArray, Armor[] akWornGearFormsArray, int[] aiWornGearValuesArray)
     bool realHeadFound = false
     bool realCloakFound = false
     
@@ -469,58 +493,63 @@ function RecalculateProtectionData_Vanilla(Armor[] akWornGearFormsArray, int[] a
         j += 1
     endWhile
 
-    int wornCount = ArrayCountArmor(akWornGearFormsArray)
+    int[] armorData
+    if akWornGearMainFormsArray[4]
+        realCloakFound = true
+        armorData = handler.GetArmorProtectionData_Vanilla(akWornGearMainFormsArray[4], handler.GEARTYPE_CLOAK)
+        aiWornGearValuesArray[8] = armorData[1]
+        aiWornGearValuesArray[9] = armorData[2]
+    endif
+
+    if akWornGearMainFormsArray[1]
+        realHeadFound = true
+        armorData = handler.GetArmorProtectionData_Vanilla(akWornGearMainFormsArray[1], handler.GEARTYPE_HEAD)
+        aiWornGearValuesArray[2] = armorData[1]
+        aiWornGearValuesArray[3] = armorData[2]
+
+        ; Check for extra cloak piece
+        if !realCloakFound
+            aiWornGearValuesArray[8] = armorData[11]
+            aiWornGearValuesArray[9] = armorData[12]
+        endif
+    endif
+
+    if akWornGearMainFormsArray[0]
+        armorData = handler.GetArmorProtectionData_Vanilla(akWornGearMainFormsArray[0], handler.GEARTYPE_BODY)
+        aiWornGearValuesArray[0] = armorData[1]
+        aiWornGearValuesArray[1] = armorData[2]
+
+        ; Check for extra head piece
+        if !realHeadFound
+            aiWornGearValuesArray[2] = armorData[5]
+            aiWornGearValuesArray[3] = armorData[6]
+        endif
+        ; Check for extra cloak piece
+        if !realCloakFound
+            aiWornGearValuesArray[8] = armorData[11]
+            aiWornGearValuesArray[9] = armorData[12]
+        endif
+    endif
+
+    if akWornGearMainFormsArray[2]
+        armorData = handler.GetArmorProtectionData_Vanilla(akWornGearMainFormsArray[2], handler.GEARTYPE_HANDS)
+        aiWornGearValuesArray[4] = armorData[1]
+        aiWornGearValuesArray[5] = armorData[2]
+    endif
+
+    if akWornGearMainFormsArray[3]
+        armorData = handler.GetArmorProtectionData_Vanilla(akWornGearMainFormsArray[3], handler.GEARTYPE_FEET)
+        aiWornGearValuesArray[6] = armorData[1]
+        aiWornGearValuesArray[7] = armorData[2]
+    endif
+
+    int miscCount = ArrayCountArmor(akWornGearFormsArray)
 
     int i = 0
-    while i < wornCount
-        int[] armorData = handler.GetArmorProtectionData_Vanilla(akWornGearFormsArray[i])
-        int gearType = armorData[0]
-
-        if gearType == handler.GEARTYPE_BODY
-            aiWornGearValuesArray[0] = armorData[1]
-            aiWornGearValuesArray[1] = armorData[2]
-
-            ; Check for extra head piece
-            if !realHeadFound
-                aiWornGearValuesArray[2] = armorData[5]
-                aiWornGearValuesArray[3] = armorData[6]
-            endif
-
-            ; Check for extra cloak piece
-            if !realCloakFound
-                aiWornGearValuesArray[8] = armorData[11]
-                aiWornGearValuesArray[9] = armorData[12]
-            endif
-
-        elseif gearType == handler.GEARTYPE_HEAD
-            realHeadFound = true
-            aiWornGearValuesArray[2] = armorData[1]
-            aiWornGearValuesArray[3] = armorData[2]
-
-            ; Check for extra cloak piece
-            if !realCloakFound
-                aiWornGearValuesArray[8] = armorData[11]
-                aiWornGearValuesArray[9] = armorData[12]
-            endif
-
-        elseif gearType == handler.GEARTYPE_HANDS
-            aiWornGearValuesArray[4] = armorData[1]
-            aiWornGearValuesArray[5] = armorData[2]
-
-        elseif gearType == handler.GEARTYPE_FEET
-            aiWornGearValuesArray[6] = armorData[1]
-            aiWornGearValuesArray[7] = armorData[2]
-
-        elseif gearType == handler.GEARTYPE_CLOAK
-            realCloakFound = true
-            aiWornGearValuesArray[8] = armorData[1]
-            aiWornGearValuesArray[9] = armorData[2]
-
-        elseif gearType == handler.GEARTYPE_MISC
-            aiWornGearValuesArray[8] = aiWornGearValuesArray[8] + armorData[1]
-            aiWornGearValuesArray[9] = aiWornGearValuesArray[9] + armorData[2]
-        endif
-
+    while i < miscCount
+        armorData = handler.GetArmorProtectionData_Vanilla(akWornGearFormsArray[i], handler.GEARTYPE_MISC)
+        aiWornGearValuesArray[8] = aiWornGearValuesArray[8] + armorData[1]
+        aiWornGearValuesArray[9] = aiWornGearValuesArray[9] + armorData[2]
         i += 1
     endWhile
 endFunction
@@ -736,12 +765,12 @@ int property mock_RemoveWornGearEntryForArmorUnequipped_callcount = 0 auto hidde
 
 State mock_testObjectEquipped
 
-    int function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
+    int function AddWornGearEntryForArmorEquipped(Armor akArmor, Armor[] akWornGearMainFormsArray, Armor[] akWornGearFormsArray, keyword akWornGearData)
         mock_AddWornGearEntryForArmorEquipped_callcount += 1
         return 0
     endFunction
 
-    bool function RemoveWornGearEntryForArmorUnequipped(Armor akArmor, Armor[] akWornGearFormsArray, keyword akWornGearData)
+    bool function RemoveWornGearEntryForArmorUnequipped(Armor akArmor, Armor[] akWornGearMainFormsArray, Armor[] akWornGearFormsArray, keyword akWornGearData)
         mock_RemoveWornGearEntryForArmorUnequipped_callcount += 1
         return false
     endFunction

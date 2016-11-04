@@ -619,8 +619,14 @@ int[] function GetArmorProtectionData_SKSE(Armor akArmor)
     return armor_data
 endFunction
 
-int[] function GetArmorProtectionData_Vanilla(Armor akArmor)
-	int gearType = GetGearType_Vanilla(akArmor)
+int[] function GetArmorProtectionData_Vanilla(Armor akArmor, int aiGearType = -1)
+	int gearType
+	if aiGearType == -1
+		gearType = GetGearType_Vanilla(akArmor)
+	else
+		gearType = aiGearType
+	endif
+
 	int[] armor_data = GetArmorData_Vanilla(akArmor, gearType)
 
 	if armor_data[0] == GEARTYPE_IGNORE
