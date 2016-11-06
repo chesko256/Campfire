@@ -582,15 +582,15 @@ endFunction
 function testRemoveWornGearEntryForArmorUnequipped_Fail()
 	beforeEach_RemoveWornGearEntryForArmorUnequippedSuite()
 
-	mockWornGearForms[0] = ArmorIronCuirass
-	mockWornGearForms[1] = ArmorIronHelmet
+	mockWornGearMainForms[0] = ArmorIronCuirass
+	mockWornGearMainForms[1] = ArmorIronHelmet
 
 	bool result = clothing.RemoveWornGearEntryForArmorUnequipped(ArmorIronBoots, mockWornGearMainForms, mockWornGearForms, _Frost_WornGearData_mock)
 
 	expectBool(result, to, beFalsy)
-	expectForm(mockWornGearForms[0], to, beEqualTo, ArmorIronCuirass)
-	expectForm(mockWornGearForms[1], to, beEqualTo, ArmorIronHelmet)
-	expectForm(mockWornGearForms[2], to, beNone)
+	expectForm(mockWornGearMainForms[0], to, beEqualTo, ArmorIronCuirass)
+	expectForm(mockWornGearMainForms[1], to, beEqualTo, ArmorIronHelmet)
+	expectForm(mockWornGearMainForms[2], to, beNone)
 
 	afterEach_RemoveWornGearEntryForArmorUnequippedSuite()
 endFunction

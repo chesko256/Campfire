@@ -57,13 +57,11 @@ meshes\frostfall\_Frost_treepineforestuprootedstump01_NoMesh.nif
 meshes\frostfall\_Frost_tundradriftwood02_NoMesh.nif
 meshes\frostfall\_Frost_VaporBlastAreaEffect.nif
 meshes\frostfall\_frost_WoodHarvestingAnimAxe.nif
-Scripts\Lilac.pex
 Scripts\FrostfallAPI.pex
 Scripts\FrostUtil.pex
 Scripts\qf__de_trackingquest_010177d7.pex
 Scripts\_FrostInternal.pex
 Scripts\_Frost_APDatastoreDefaultData.pex
-Scripts\_Frost_APDatastoreHandler_test.pex
 Scripts\_Frost_ArmorProtectionDatastoreHandler.pex
 Scripts\_Frost_ArmorSpellScript.pex
 Scripts\_Frost_ArmorSpellUpdateWarmth.pex
@@ -75,7 +73,6 @@ Scripts\_Frost_BranchHarvestNodeController.pex
 Scripts\_Frost_BranchTreeHarvestNodeController.pex
 Scripts\_Frost_ClimateSystem.pex
 Scripts\_Frost_ClothingSystem.pex
-Scripts\_Frost_ClothingSystem_test.pex
 Scripts\_Frost_ColdWaterEffect0.pex
 Scripts\_Frost_ColdWaterEffect1.pex
 Scripts\_Frost_ColdWaterEffect2.pex
@@ -111,7 +108,6 @@ Scripts\_Frost_SkyUIConfigPanelScript.pex
 Scripts\_Frost_Strings.pex
 Scripts\_Frost_SwimEvent.pex
 Scripts\_Frost_TempRestoreExposureScript.pex
-Scripts\_Frost_Test_e2e_ClothingScript.pex
 Scripts\_Frost_TreeAliasScript.pex
 Scripts\_Frost_VaporBlastScript.pex
 Scripts\_Frost_VaporBlastScrollScript.pex
@@ -169,7 +165,6 @@ Scripts\Source\FrostUtil.psc
 Scripts\Source\qf__de_trackingquest_010177d7.psc
 Scripts\Source\_FrostInternal.psc
 Scripts\Source\_Frost_APDatastoreDefaultData.psc
-Scripts\Source\_Frost_APDatastoreHandler_test.psc
 Scripts\Source\_Frost_ArmorProtectionDatastoreHandler.psc
 Scripts\Source\_Frost_ArmorSpellUpdateWarmth.psc
 Scripts\Source\_Frost_BaseSystem.psc
@@ -180,7 +175,6 @@ Scripts\Source\_Frost_BranchHarvestNodeController.psc
 Scripts\Source\_Frost_BranchTreeHarvestNodeController.psc
 Scripts\Source\_Frost_ClimateSystem.psc
 Scripts\Source\_Frost_ClothingSystem.psc
-Scripts\Source\_Frost_ClothingSystem_test.psc
 Scripts\Source\_Frost_ColdWaterEffect0.psc
 Scripts\Source\_Frost_ColdWaterEffect1.psc
 Scripts\Source\_Frost_ColdWaterEffect2.psc
@@ -221,7 +215,6 @@ Scripts\Source\_Frost_SkyUIConfigPanelScript.psc
 Scripts\Source\_Frost_Strings.psc
 Scripts\Source\_Frost_SwimEvent.psc
 Scripts\Source\_Frost_TempRestoreExposureScript.psc
-Scripts\Source\_Frost_Test_e2e_ClothingScript.psc
 Scripts\Source\_Frost_TreeAliasScript.psc
 Scripts\Source\_Frost_VaporBlastScript.psc
 Scripts\Source\_Frost_VaporBlastScrollScript.psc

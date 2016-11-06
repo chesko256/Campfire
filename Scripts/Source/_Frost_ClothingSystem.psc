@@ -540,8 +540,8 @@ function RecalculateProtectionData_Vanilla(Armor[] akWornGearMainFormsArray, Arm
     int i = 0
     while i < miscCount
         armorData = handler.GetArmorProtectionData_Vanilla(akWornGearFormsArray[i], handler.GEARTYPE_MISC)
-        aiWornGearValuesArray[8] = aiWornGearValuesArray[8] + armorData[1]
-        aiWornGearValuesArray[9] = aiWornGearValuesArray[9] + armorData[2]
+        aiWornGearValuesArray[10] = aiWornGearValuesArray[10] + armorData[1]
+        aiWornGearValuesArray[11] = aiWornGearValuesArray[11] + armorData[2]
         i += 1
     endWhile
 endFunction

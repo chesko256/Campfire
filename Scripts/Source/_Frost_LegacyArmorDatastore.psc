@@ -2994,10 +2994,10 @@ int[] function FindCloakProtectionLevels(Armor akArmor)
 		found = true
 	elseif LinkedArrayHasArmor(akArmor, ArmorCloakLeather1, ArmorCloakLeather2, ArmorCloakLeather3, ArmorCloakLeather4)
 		protectionLevels[0] = 1
-		protectionLevels[1] = 5
+		protectionLevels[1] = 4
 		found = true
 	elseif LinkedArrayHasArmor(akArmor, ArmorCloakFur1, ArmorCloakFur2, ArmorCloakFur3, ArmorCloakFur4)
-		protectionLevels[0] = 5
+		protectionLevels[0] = 4
 		protectionLevels[1] = 1
 		found = true
 	endif

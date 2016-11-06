@@ -628,7 +628,6 @@ int[] function GetArmorProtectionData_Vanilla(Armor akArmor, int aiGearType = -1
 	endif
 
 	int[] armor_data = GetArmorData_Vanilla(akArmor, gearType)
-
 	if armor_data[0] == GEARTYPE_IGNORE
     	return armor_data
     endif
@@ -700,9 +699,10 @@ int[] function GetArmorProtectionDataByKeyword(Armor akArmor, int aiGearType)
 	if !found_keyword
 		while i < 5
 			if akArmor.HasKeyword(OverrideKeywords[i])
-				; For some reason, resolving the armor_data index in the index field
-				; (i.e. armor_data[OverrideExtraPartIndex[i]] = <anything>) results in always
-				; assigning "1" to that field, regardless of what <anything> is.
+				; For some reason, resolving an array index in the index field and then adding
+				; a number to it (i.e. armor_data[OverrideExtraPartIndex[i] + 1] = <anything>) 
+				; results in always assigning "1" to that field, regardless of what <anything> is.
+				; This is most likely a bug in Papyrus itself.
 				int idx = OverrideExtraPartIndex[i]
 				armor_data[idx] = OverrideValues[i]
 				idx += 1

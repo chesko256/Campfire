@@ -810,7 +810,6 @@ endFunction
 function CheckDatastore_Vanilla()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
 	int[] armor_data = handler.GetArmorData_Vanilla(ArmorHideCuirass, handler.GEARTYPE_BODY)
-	debug.trace("armor_data for the datastore check was " + armor_data)
 	if armor_data[0] == handler.GEARTYPE_NOTFOUND
 		GetLegacyArmorDatastore().PopulateDefaultArmorData()
 		debug.trace("[Frostfall] Finished saving the default armor data.")
