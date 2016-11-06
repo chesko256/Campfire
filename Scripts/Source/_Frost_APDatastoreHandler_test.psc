@@ -17,7 +17,7 @@ Armor property _Frost_UnitTestWaterproofHands auto
 Armor property _Frost_UnitTestWarmCloak auto
 Armor property _Frost_UnitTestBodyExtraCloak auto
 Armor property _Frost_UnitTestBodyExtraCloakHead auto
-Armor property _Frost_UnitTestBodyExtraAll auto
+Armor property _Frost_UnitTestHeadExtraCloak auto
 Armor property ClothesCirclet01 auto
 Armor property JewelryRingGold auto
 Armor property JewelryNecklaceGoldGems auto
@@ -60,7 +60,6 @@ function GetArmorProtectionDataByKeywordSuite()
 	it("should get correct data when keyword set for warm cloak gear", testGetArmorProtectionDataByKeyword_WarmCloak())
 	it("should get correct data when keyword set for body gear with extra cloak keyword", testGetArmorProtectionDataByKeyword_BodyExtraCloak())
 	it("should get correct data when keyword set for body gear with extra cloak and head keyword", testGetArmorProtectionDataByKeyword_BodyExtraHeadCloak())
-	it("should get correct data when keyword set for body gear with extra head, hands, feet, cloak, and misc keyword", testGetArmorProtectionDataByKeyword_BodyExtraAll())
 endFunction
 
 function GetArmorProtectionDataByAnalysisSuite()
@@ -510,7 +509,7 @@ function testGetArmorProtectionData_Analysis()
 endFunction
 
 function testGetArmorProtectionDataByKeyword_IgnoreKeyword()
-	int[] result = ap.GetArmorProtectionDataByKeyword(_Frost_UnitTestIgnoreBody)
+	int[] result = ap.GetArmorProtectionDataByKeyword(_Frost_UnitTestIgnoreBody, ap.GEARTYPE_BODY)
 	expectInt(result[0], to, beEqualTo, 7)
 	expectInt(result[1], to, beEqualTo, 0)
 	expectInt(result[2], to, beEqualTo, 0)
@@ -530,9 +529,9 @@ endFunction
 
 
 function testGetArmorProtectionDataByKeyword_NormalBody()
-	int[] result = ap.GetArmorProtectionDataByKeyword(_Frost_UnitTestNormalBody)
+	int[] result = ap.GetArmorProtectionDataByKeyword(_Frost_UnitTestNormalBody, ap.GEARTYPE_BODY)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_BODY)
-	expectInt(result[1], to, beEqualTo, 125)
+	expectInt(result[1], to, beEqualTo, 110)
 	expectInt(result[2], to, beEqualTo, 54)
 	expectInt(result[3], to, beEqualTo, 0)
 	expectInt(result[4], to, beEqualTo, 0)
@@ -549,7 +548,7 @@ function testGetArmorProtectionDataByKeyword_NormalBody()
 endFunction
 
 function testGetArmorProtectionDataByKeyword_WarmHead()
-	int[] result = ap.GetArmorProtectionDataByKeyword(_Frost_UnitTestWarmHead)
+	int[] result = ap.GetArmorProtectionDataByKeyword(_Frost_UnitTestWarmHead, ap.GEARTYPE_HEAD)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_HEAD)
 	expectInt(result[1], to, beEqualTo, 40)
 	expectInt(result[2], to, beEqualTo, 29)
@@ -568,7 +567,7 @@ function testGetArmorProtectionDataByKeyword_WarmHead()
 endFunction
 
 function testGetArmorProtectionDataByKeyword_WaterproofHands()
-	int[] result = ap.GetArmorProtectionDataByKeyword(_Frost_UnitTestWaterproofHands)
+	int[] result = ap.GetArmorProtectionDataByKeyword(_Frost_UnitTestWaterproofHands, ap.GEARTYPE_HANDS)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_HANDS)
 	expectInt(result[1], to, beEqualTo, 15)
 	expectInt(result[2], to, beEqualTo, 29)
@@ -587,7 +586,7 @@ function testGetArmorProtectionDataByKeyword_WaterproofHands()
 endFunction
 
 function testGetArmorProtectionDataByKeyword_VeryWarmFeet()
-	int[] result = ap.GetArmorProtectionDataByKeyword(_Frost_UnitTestVeryWarmFeet)
+	int[] result = ap.GetArmorProtectionDataByKeyword(_Frost_UnitTestVeryWarmFeet, ap.GEARTYPE_FEET)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_FEET)
 	expectInt(result[1], to, beEqualTo, 24)
 	expectInt(result[2], to, beEqualTo, 21)
@@ -606,10 +605,10 @@ function testGetArmorProtectionDataByKeyword_VeryWarmFeet()
 endFunction
 
 function testGetArmorProtectionDataByKeyword_WarmCloak()
-	int[] result = ap.GetArmorProtectionDataByKeyword(_Frost_UnitTestWarmCloak)
+	int[] result = ap.GetArmorProtectionDataByKeyword(_Frost_UnitTestWarmCloak, ap.GEARTYPE_CLOAK)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_CLOAK)
-	expectInt(result[1], to, beEqualTo, 30)
-	expectInt(result[2], to, beEqualTo, 20)
+	expectInt(result[1], to, beEqualTo, 40)
+	expectInt(result[2], to, beEqualTo, 12)
 	expectInt(result[3], to, beEqualTo, 0)
 	expectInt(result[4], to, beEqualTo, 0)
 	expectInt(result[5], to, beEqualTo, 0)
@@ -625,7 +624,7 @@ function testGetArmorProtectionDataByKeyword_WarmCloak()
 endFunction
 
 function testGetArmorProtectionDataByKeyword_BodyExtraCloak()
-	int[] result = ap.GetArmorProtectionDataByKeyword(_Frost_UnitTestBodyExtraCloak)
+	int[] result = ap.GetArmorProtectionDataByKeyword(_Frost_UnitTestBodyExtraCloak, ap.GEARTYPE_BODY)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_BODY)
 	expectInt(result[1], to, beEqualTo, 60)
 	expectInt(result[2], to, beEqualTo, 35)
@@ -637,53 +636,53 @@ function testGetArmorProtectionDataByKeyword_BodyExtraCloak()
 	expectInt(result[8], to, beEqualTo, 0)
 	expectInt(result[9], to, beEqualTo, 0)
 	expectInt(result[10], to, beEqualTo, 0)
-	expectInt(result[11], to, beEqualTo, 20)
-	expectInt(result[12], to, beEqualTo, 30)
+	expectInt(result[11], to, beEqualTo, 12)
+	expectInt(result[12], to, beEqualTo, 40)
+	expectInt(result[13], to, beEqualTo, 0)
+	expectInt(result[14], to, beEqualTo, 0)
+endFunction
+
+function testGetArmorProtectionDataByKeyword_HeadExtraCloak()
+	int[] result = ap.GetArmorProtectionDataByKeyword(_Frost_UnitTestHeadExtraCloak, ap.GEARTYPE_HEAD)
+	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_HEAD)
+	expectInt(result[1], to, beEqualTo, 40)
+	expectInt(result[2], to, beEqualTo, 29)
+	expectInt(result[3], to, beEqualTo, 0)
+	expectInt(result[4], to, beEqualTo, 0)
+	expectInt(result[5], to, beEqualTo, 0)
+	expectInt(result[6], to, beEqualTo, 0)
+	expectInt(result[7], to, beEqualTo, 0)
+	expectInt(result[8], to, beEqualTo, 0)
+	expectInt(result[9], to, beEqualTo, 0)
+	expectInt(result[10], to, beEqualTo, 0)
+	expectInt(result[11], to, beEqualTo, 12)
+	expectInt(result[12], to, beEqualTo, 12)
 	expectInt(result[13], to, beEqualTo, 0)
 	expectInt(result[14], to, beEqualTo, 0)
 endFunction
 
 function testGetArmorProtectionDataByKeyword_BodyExtraHeadCloak()
-	int[] result = ap.GetArmorProtectionDataByKeyword(_Frost_UnitTestBodyExtraCloakHead)
+	int[] result = ap.GetArmorProtectionDataByKeyword(_Frost_UnitTestBodyExtraCloakHead, ap.GEARTYPE_BODY)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_BODY)
 	expectInt(result[1], to, beEqualTo, 190)
 	expectInt(result[2], to, beEqualTo, 109)
 	expectInt(result[3], to, beEqualTo, 0)
 	expectInt(result[4], to, beEqualTo, 0)
 	expectInt(result[5], to, beEqualTo, 40)
-	expectInt(result[6], to, beEqualTo, 58)
+	expectInt(result[6], to, beEqualTo, 29)
 	expectInt(result[7], to, beEqualTo, 0)
 	expectInt(result[8], to, beEqualTo, 0)
 	expectInt(result[9], to, beEqualTo, 0)
 	expectInt(result[10], to, beEqualTo, 0)
-	expectInt(result[11], to, beEqualTo, 30)
-	expectInt(result[12], to, beEqualTo, 6)
+	expectInt(result[11], to, beEqualTo, 40)
+	expectInt(result[12], to, beEqualTo, 12)
 	expectInt(result[13], to, beEqualTo, 0)
 	expectInt(result[14], to, beEqualTo, 0)
 endFunction
 
-function testGetArmorProtectionDataByKeyword_BodyExtraAll()
-	int[] result = ap.GetArmorProtectionDataByKeyword(_Frost_UnitTestBodyExtraAll)
-	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_BODY)
-	expectInt(result[1], to, beEqualTo, 190)
-	expectInt(result[2], to, beEqualTo, 109)
-	expectInt(result[3], to, beEqualTo, 0)
-	expectInt(result[4], to, beEqualTo, 0)
-	expectInt(result[5], to, beEqualTo, 40)
-	expectInt(result[6], to, beEqualTo, 58)
-	expectInt(result[7], to, beEqualTo, 15)
-	expectInt(result[8], to, beEqualTo, 6)
-	expectInt(result[9], to, beEqualTo, 12)
-	expectInt(result[10], to, beEqualTo, 6)
-	expectInt(result[11], to, beEqualTo, 30)
-	expectInt(result[12], to, beEqualTo, 6)
-	expectInt(result[13], to, beEqualTo, 12)
-	expectInt(result[14], to, beEqualTo, 20)
-endFunction
-
 
 function testGetArmorProtectionDataByAnalysis_NoGearType()
-	int[] result = ap.GetArmorProtectionDataByAnalysis(_Camp_Backpack_Brown)
+	int[] result = ap.GetArmorProtectionDataByAnalysis(_Camp_Backpack_Brown, ap.SLOTMASK_BACKPACK)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_IGNORE)
 	expectInt(result[1], to, beEqualTo, 0)
 	expectInt(result[2], to, beEqualTo, 0)
@@ -702,10 +701,10 @@ function testGetArmorProtectionDataByAnalysis_NoGearType()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_BodyGear()
-	int[] result = ap.GetArmorProtectionDataByAnalysis(ArmorIronCuirass)
+	int[] result = ap.GetArmorProtectionDataByAnalysis(ArmorIronCuirass, ap.SLOTMASK_BODY)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_BODY)
 	expectInt(result[1], to, beEqualTo, 110)
-	expectInt(result[2], to, beEqualTo, 35)
+	expectInt(result[2], to, beEqualTo, 54)
 	expectInt(result[3], to, beEqualTo, 0)
 	expectInt(result[4], to, beEqualTo, 0)
 	expectInt(result[5], to, beEqualTo, 0)
@@ -721,10 +720,12 @@ function testGetArmorProtectionDataByAnalysis_BodyGear()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_BodyGearExtraHood()
-	int[] result = ap.GetArmorProtectionDataByAnalysis(EnchClothesWarlockRobesHoodedAlteration01)
+	int mask = ap.SLOTMASK_BODY
+	mask += ap.SLOTMASK_HEAD
+	int[] result = ap.GetArmorProtectionDataByAnalysis(EnchClothesWarlockRobesHoodedAlteration01, mask)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_BODY)
 	expectInt(result[1], to, beEqualTo, 110)
-	expectInt(result[2], to, beEqualTo, 35)
+	expectInt(result[2], to, beEqualTo, 54)
 	expectInt(result[3], to, beEqualTo, 0)
 	expectInt(result[4], to, beEqualTo, 0)
 	expectInt(result[5], to, beEqualTo, 25)
@@ -740,10 +741,10 @@ function testGetArmorProtectionDataByAnalysis_BodyGearExtraHood()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_HeadGear()
-	int[] result = ap.GetArmorProtectionDataByAnalysis(ArmorIronHelmet)
+	int[] result = ap.GetArmorProtectionDataByAnalysis(ArmorIronHelmet, ap.SLOTMASK_HEAD)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_HEAD)
 	expectInt(result[1], to, beEqualTo, 30)
-	expectInt(result[2], to, beEqualTo, 14)
+	expectInt(result[2], to, beEqualTo, 29)
 	expectInt(result[3], to, beEqualTo, 0)
 	expectInt(result[4], to, beEqualTo, 0)
 	expectInt(result[5], to, beEqualTo, 0)
@@ -759,10 +760,10 @@ function testGetArmorProtectionDataByAnalysis_HeadGear()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_HandsGear()
-	int[] result = ap.GetArmorProtectionDataByAnalysis(ArmorIronGauntlets)
+	int[] result = ap.GetArmorProtectionDataByAnalysis(ArmorIronGauntlets, ap.SLOTMASK_HANDS)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_HANDS)
 	expectInt(result[1], to, beEqualTo, 12)
-	expectInt(result[2], to, beEqualTo, 6)
+	expectInt(result[2], to, beEqualTo, 14)
 	expectInt(result[3], to, beEqualTo, 0)
 	expectInt(result[4], to, beEqualTo, 0)
 	expectInt(result[5], to, beEqualTo, 0)
@@ -778,7 +779,7 @@ function testGetArmorProtectionDataByAnalysis_HandsGear()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_FeetGear()
-	int[] result = ap.GetArmorProtectionDataByAnalysis(ArmorIronBoots)
+	int[] result = ap.GetArmorProtectionDataByAnalysis(ArmorIronBoots, ap.SLOTMASK_FEET)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_FEET)
 	expectInt(result[1], to, beEqualTo, 12)
 	expectInt(result[2], to, beEqualTo, 14)
@@ -797,10 +798,10 @@ function testGetArmorProtectionDataByAnalysis_FeetGear()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_CloakGear()
-	int[] result = ap.GetArmorProtectionDataByAnalysis(_Frost_UnitTestWarmCloak)
+	int[] result = ap.GetArmorProtectionDataByAnalysis(_Frost_UnitTestWarmCloak, ap.SLOTMASK_CLOAK)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_CLOAK)
-	expectInt(result[1], to, beEqualTo, 10)
-	expectInt(result[2], to, beEqualTo, 10)
+	expectInt(result[1], to, beEqualTo, 12)
+	expectInt(result[2], to, beEqualTo, 12)
 	expectInt(result[3], to, beEqualTo, 0)
 	expectInt(result[4], to, beEqualTo, 0)
 	expectInt(result[5], to, beEqualTo, 0)
@@ -816,7 +817,7 @@ function testGetArmorProtectionDataByAnalysis_CloakGear()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_Shields()
-	int[] result = ap.GetArmorProtectionDataByAnalysis(ArmorIronShield)
+	int[] result = ap.GetArmorProtectionDataByAnalysis(ArmorIronShield, ap.SLOTMASK_SHIELD)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_MISC)
 	expectInt(result[1], to, beEqualTo, 0)
 	expectInt(result[2], to, beEqualTo, 20)
@@ -835,7 +836,7 @@ function testGetArmorProtectionDataByAnalysis_Shields()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_HeadGearHoods()
-	int[] result = ap.GetArmorProtectionDataByAnalysis(ClothesCollegeHood)
+	int[] result = ap.GetArmorProtectionDataByAnalysis(ClothesCollegeHood, ap.SLOTMASK_HEAD)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_HEAD)
 	expectInt(result[1], to, beEqualTo, 25)
 	expectInt(result[2], to, beEqualTo, 43)
@@ -854,8 +855,8 @@ function testGetArmorProtectionDataByAnalysis_HeadGearHoods()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_HeadGearCirclet()
-	int[] result = ap.GetArmorProtectionDataByAnalysis(ClothesCirclet01)
-	expectInt(result[0], to, beEqualTo, 7)
+	int[] result = ap.GetArmorProtectionDataByAnalysis(ClothesCirclet01, ap.SLOTMASK_CIRCLET)
+	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_IGNORE)
 	expectInt(result[1], to, beEqualTo, 0)
 	expectInt(result[2], to, beEqualTo, 0)
 	expectInt(result[3], to, beEqualTo, 0)
@@ -873,8 +874,8 @@ function testGetArmorProtectionDataByAnalysis_HeadGearCirclet()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_Ring()
-	int[] result = ap.GetArmorProtectionDataByAnalysis(JewelryRingGold)
-	expectInt(result[0], to, beEqualTo, 7)
+	int[] result = ap.GetArmorProtectionDataByAnalysis(JewelryRingGold, ap.SLOTMASK_RING)
+	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_IGNORE)
 	expectInt(result[1], to, beEqualTo, 0)
 	expectInt(result[2], to, beEqualTo, 0)
 	expectInt(result[3], to, beEqualTo, 0)
@@ -892,8 +893,8 @@ function testGetArmorProtectionDataByAnalysis_Ring()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_Amulet()
-	int[] result = ap.GetArmorProtectionDataByAnalysis(JewelryNecklaceGoldGems)
-	expectInt(result[0], to, beEqualTo, 7)
+	int[] result = ap.GetArmorProtectionDataByAnalysis(JewelryNecklaceGoldGems, ap.SLOTMASK_AMULET)
+	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_IGNORE)
 	expectInt(result[1], to, beEqualTo, 0)
 	expectInt(result[2], to, beEqualTo, 0)
 	expectInt(result[3], to, beEqualTo, 0)
@@ -957,7 +958,7 @@ function testGetDatastoreKeyFromForm()
 	expectString(result, to, beEqualTo, "77385___Skyrim.esm")
 
 	result = ap.GetDatastoreKeyFromForm(_Frost_UnitTestWarmCloak)
-	expectString(result, to, beEqualTo, "492662___Frostfall.esp")
+	expectString(result, to, beEqualTo, "2055___FrostfallTests.esp")
 endFunction
 
 function testGetDatastoreKeyFromID()
@@ -965,5 +966,5 @@ function testGetDatastoreKeyFromID()
 	expectString(result, to, beEqualTo, "77385___Skyrim.esm")
 
 	result = ap.GetDatastoreKeyFromID(_Frost_UnitTestWarmCloak.GetFormID())
-	expectString(result, to, beEqualTo, "492662___Frostfall.esp")
+	expectString(result, to, beEqualTo, "2055___FrostfallTests.esp")
 endFunction

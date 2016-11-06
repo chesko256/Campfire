@@ -208,20 +208,14 @@ int function AddWornGearEntryForArmorEquipped_SKSE(Armor akArmor, Armor[] akWorn
     bool shouldStoreData = false
     if armor_data[0] < handler.GEARTYPE_MISC
         idx = akWornGearMainFormsArray.Find(akArmor)
-        if idx == -1
-            AddToWornGearFormsArray(akArmor, armor_data[0], akWornGearMainFormsArray, akWornGearFormsArray)
-            shouldStoreData = true
-        else
-            return 0
-        endif
     else
         idx = akWornGearFormsArray.Find(akArmor)
-        if idx == -1
-            AddToWornGearFormsArray(akArmor, armor_data[0], akWornGearMainFormsArray, akWornGearFormsArray)
-            shouldStoreData = true
-        else
-            return 0
-        endif
+    endif
+
+    if idx == -1
+        shouldStoreData = true
+    else
+        return 0
     endif
 
     if shouldStoreData
@@ -292,9 +286,10 @@ bool function AddToWornGearFormsArray(Armor akArmor, int aiGearType, Armor[] akW
     elseif aiGearType < 6
         ; Main type
         akWornGearMainFormsArray[aiGearType - 1] = akArmor
+        return true
     else
         ;Misc Type
-        ArrayAddArmor(akWornGearFormsArray, akArmor)
+        return ArrayAddArmor(akWornGearFormsArray, akArmor)
     endif
 endFunction
 
@@ -407,14 +402,18 @@ function RecalculateProtectionData_SKSE(Armor[] akWornGearMainFormsArray, Armor[
     ; | "80145___Skyrim.esm"      | 1    | 60        | 0        |     | 0         | 0        |
 
     int i = 0
-    int j = 0
+    int k = 0
+    int key_count = 0
+    int type_counter = -1
+    int type_to_match = 1
+
     string[] dskeys = new String[31]
 
     ; Main body array
     while i < akWornGearMainFormsArray.Length
         if PlayerHasArmorEquipped(akWornGearMainFormsArray[i])
-            dskeys[j] = handler.GetDatastoreKeyFromForm(akWornGearMainFormsArray[i])
-            j += 1
+            dskeys[key_count] = handler.GetDatastoreKeyFromForm(akWornGearMainFormsArray[i])
+            key_count += 1
         endif
         i += 1
     endWhile
@@ -424,17 +423,12 @@ function RecalculateProtectionData_SKSE(Armor[] akWornGearMainFormsArray, Armor[
     i = 0
     while i < misc_count
         if PlayerHasArmorEquipped(akWornGearFormsArray[i])
-            dskeys[j] = handler.GetDatastoreKeyFromForm(akWornGearFormsArray[i])
-            j += 1
+            dskeys[key_count] = handler.GetDatastoreKeyFromForm(akWornGearFormsArray[i])
+            key_count += 1
         endif
         i += 1
     endWhile
 
-    int key_count = j + 1
-
-    int k = 0
-    int type_to_match = 1
-    int type_counter = -1
     while k < 12
         int m = 0
         int column_value = 0
@@ -478,8 +472,6 @@ function RecalculateProtectionData_SKSE(Armor[] akWornGearMainFormsArray, Armor[
     
     ;Signal to the UI that we're ready for the "change" values to be updated.
     GetInterfaceHandler().InvalidateFetchedChangeRanges()
-
-    FrostDebug(0, "Worn Gear Values: " + aiWornGearValuesArray)
 endFunction
 
 function RecalculateProtectionData_Vanilla(Armor[] akWornGearMainFormsArray, Armor[] akWornGearFormsArray, int[] aiWornGearValuesArray)
@@ -751,8 +743,12 @@ function SendEvent_UpdateWarmth()
 endFunction
 
 bool function PlayerHasArmorEquipped(Armor akArmor)
-    ; An alias for PlayerRef.IsEquipped(), to make testing easier.
-    return PlayerRef.IsEquipped(akArmor)
+    ; An alias for PlayerRef.IsEquipped().
+    if !akArmor
+        return false
+    else
+        return PlayerRef.IsEquipped(akArmor)
+    endif
 endFunction
 
 
@@ -787,6 +783,10 @@ EndState
 
 State mock_testRecalculateProtectionData
     bool function PlayerHasArmorEquipped(Armor akArmor)
-        return true
+        if akArmor
+            return true
+        else
+            return false
+        endif
     endFunction
 endState

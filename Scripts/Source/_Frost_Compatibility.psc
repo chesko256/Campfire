@@ -792,7 +792,7 @@ bool function CheckJSONReadWrite()
 endFunction
 
 function CheckDatastore()
-	if isSKSELoaded
+	if GetSKSELoaded()
 		CheckDatastore_SKSE()
 	else
 		CheckDatastore_Vanilla()
@@ -813,6 +813,7 @@ function CheckDatastore_Vanilla()
 	debug.trace("armor_data for the datastore check was " + armor_data)
 	if armor_data[0] == handler.GEARTYPE_NOTFOUND
 		GetLegacyArmorDatastore().PopulateDefaultArmorData()
+		debug.trace("[Frostfall] Finished saving the default armor data.")
 	endif
 endFunction
 
@@ -827,6 +828,7 @@ function PopulateDefaultArmorData()
 	defaults.SetDefaults_Cloak()
 	defaults.SetDefaults_Shield()
 	handler.SaveDefaultArmorProfile()
+	debug.trace("[Frostfall] Finished saving the default armor data.")
 endFunction
 
 function RunCompatibilityArmors()

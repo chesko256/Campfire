@@ -700,8 +700,13 @@ int[] function GetArmorProtectionDataByKeyword(Armor akArmor, int aiGearType)
 	if !found_keyword
 		while i < 5
 			if akArmor.HasKeyword(OverrideKeywords[i])
-				armor_data[OverrideExtraPartIndex[i]] = OverrideValues[i]
-				armor_data[OverrideExtraPartIndex[i + 1]] = OverrideValues[i + 11]
+				; For some reason, resolving the armor_data index in the index field
+				; (i.e. armor_data[OverrideExtraPartIndex[i]] = <anything>) results in always
+				; assigning "1" to that field, regardless of what <anything> is.
+				int idx = OverrideExtraPartIndex[i]
+				armor_data[idx] = OverrideValues[i]
+				idx += 1
+				armor_data[idx] = OverrideValues[i + 11]
 				found_keyword = true
 			endif
 			i += 1
@@ -713,8 +718,10 @@ int[] function GetArmorProtectionDataByKeyword(Armor akArmor, int aiGearType)
 	if found_keyword && (aiGearType == GEARTYPE_BODY || aiGearType == GEARTYPE_HEAD)
 		while i < OverrideKeywords.Length
 			if akArmor.HasKeyword(OverrideKeywords[i])
-				armor_data[OverrideExtraPartIndex[i]] = OverrideValues[i]
-				armor_data[OverrideExtraPartIndex[i + 1]] = OverrideValues[i + 11]
+				int idx = OverrideExtraPartIndex[i]
+				armor_data[idx] = OverrideValues[i]
+				idx += 1
+				armor_data[idx] = OverrideValues[i + 11]
 			endif
 			i += 1
 		endWhile
