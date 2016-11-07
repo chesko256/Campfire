@@ -135,6 +135,8 @@ bool is_vampire = false
 bool last_vampire_state = false
 bool in_interior = false
 bool was_in_interior = false
+bool was_in_tent = false
+bool was_in_shelter = false
 bool near_heat = false
 bool was_near_heat = false
 bool can_display_limit_msg = true
@@ -301,7 +303,12 @@ function UpdateExposure(float afExposureTarget)
 
 	; If enough game time has passed since the last update, modify based on waiting instead.
 	float timeDeltaGameHours = (Utility.GetCurrentGameTime() - last_update_game_time) * 24.0
-	ExposureValueUpdate(afExposureTarget, timeDeltaGameHours)
+	float target = afExposureTarget
+	if target > EXPOSURE_LEVEL_4
+		target = EXPOSURE_LEVEL_4
+	endif
+	
+	ExposureValueUpdate(target, timeDeltaGameHours)
 	ExposureEffectsUpdate()
 
 	StoreLastPlayerState()
@@ -439,6 +446,8 @@ endFunction
 function StoreLastPlayerState()
 	last_worldspace = this_worldspace
 	was_in_interior = in_interior
+	was_in_tent = in_tent
+	was_in_shelter = in_shelter
 	was_near_heat = near_heat
 	last_x = player_x
 	last_y = player_y
@@ -930,8 +939,8 @@ endFunction
 function DisplayWarmUpMessage(float exposure, float target)
 	; suddenly near heat
 	; enough time has passed
-	if warm_message_debounce == 0 && !was_near_heat && near_heat
-		if exposure < target 
+	if (warm_message_debounce == 0 && (!was_near_heat && near_heat)) || (!was_in_tent && in_tent) || (!was_in_shelter && in_shelter && near_heat)
+		if exposure < target
 			(_Frost_MainQuest as _Frost_WeathersenseMessages).DisplayTemperatureMessage(true)
 			warm_message_debounce = 3
 		else
@@ -956,7 +965,7 @@ function AdvanceEnduranceSkill()
         int next_level = EndurancePerkPointsEarned.GetValueInt() + 1
 
         ; 200, 400, 600, 800...
-        float ticks_required = 200 * next_level
+        float ticks_required = 150 * next_level
 
         float new_progress = (1.0 / ticks_required)
         float current_progress = EndurancePerkPointProgress.GetValue()

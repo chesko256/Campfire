@@ -28,7 +28,11 @@ GlobalVariable property _Camp_TentSeeThru auto
 GlobalVariable property _Camp_WasFirstPersonBeforeUse auto
 Message property _Camp_TentMainMenu auto
 Message property _Camp_TentSitMenu auto
+Message property _Camp_TentSitMenuFrostfall auto
 Message property _Camp_TentLayMenu auto
+Message property _Camp_TentLayMenuFrostfall auto
+Message property _Camp_TentSitMenuFrostfallHeat auto
+Message property _Camp_TentLayMenuFrostfallHeat auto
 Message property _Camp_TentPickUpError auto
 Message property _Camp_Help_TentActivate auto
 Message property _Camp_TalkMenu auto
@@ -240,7 +244,24 @@ function ShowSitMenu(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
 	CheckTentFeatures(TentObject)
 	int i
-	i = _Camp_TentSitMenu.Show(0, 0)
+	if Compatibility.IsFrostfallLoaded
+		float exposurepct = FrostUtil.GetPlayerExposure() - 20.0
+		if exposurepct < 0.0
+			exposurepct = 0.0
+		endif
+		float limitpct = FrostUtil.GetPlayerExposureLimit() - 20.0
+		if limitpct < 0.0
+			limitpct = 0.0
+		endif
+		float wetnesspct = (FrostUtil.GetPlayerWetness() / 750.0) * 100.0
+		if FrostUtil.GetPlayerHeatSourceLevel() >= 1 && FrostUtil.IsPlayerNearFire()
+			i = _Camp_TentSitMenuFrostfallHeat.Show(exposurepct, limitpct, wetnesspct)
+		else
+			i = _Camp_TentSitMenuFrostfall.Show(exposurepct, limitpct, wetnesspct)
+		endif
+	else
+		i = _Camp_TentSitMenu.Show()
+	endif
 	if i == 0										;Light
 		ToggleLantern(akTent)
 	elseif i == 1									;Talk To...
@@ -265,7 +286,24 @@ function ShowLayMenu(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
 	CheckTentFeatures(TentObject)
 	int i
-	i = _Camp_TentLayMenu.Show(0, 0)
+	if Compatibility.IsFrostfallLoaded
+		float exposurepct = FrostUtil.GetPlayerExposure() - 20.0
+		if exposurepct < 0.0
+			exposurepct = 0.0
+		endif
+		float limitpct = FrostUtil.GetPlayerExposureLimit() - 20.0
+		if limitpct < 0.0
+			limitpct = 0.0
+		endif
+		float wetnesspct = (FrostUtil.GetPlayerWetness() / 750.0) * 100.0
+		if FrostUtil.GetPlayerHeatSourceLevel() >= 1 && FrostUtil.IsPlayerNearFire()
+			i = _Camp_TentLayMenuFrostfallHeat.Show(exposurepct, limitpct, wetnesspct)
+		else
+			i = _Camp_TentLayMenuFrostfall.Show(exposurepct, limitpct, wetnesspct)
+		endif
+	else
+		i = _Camp_TentLayMenu.Show()
+	endif
 	if i == 0										;Sleep
 		TentObject.bGettingUp = true
 		_Camp_FadeDown.Apply()

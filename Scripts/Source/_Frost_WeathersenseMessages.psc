@@ -6,6 +6,9 @@ import FrostUtil
 Actor property PlayerRef auto
 GlobalVariable property _Frost_Setting_DisplayAttributesInWeathersense auto
 GlobalVariable property _Frost_Setting_DisplayAttributeValuesInWeathersense auto
+GlobalVariable property _Frost_HelpDone_Shelter auto
+GlobalVariable property _Frost_Setting_DisplayTutorials auto
+Message property _Frost_Help_Shelter auto
 
 ; Player Status
 Message property _Frost_StatusCnd_E1W1 auto
@@ -363,6 +366,7 @@ function DisplayTemperatureMessage(bool abForceNoValue = false)
 					elseif FIRE_LEVEL == 3
 						_frost_StatusTemp_Colder_FireLevel3.Show(limitPct)
 					endif
+					ShowTutorial_Shelter()
 				elseif heatStatus == NEAR_SHELTER
 					_frost_StatusTemp_Colder_Shelter.Show(limitPct)
 				elseif heatStatus == NEAR_FIRE_AND_SHELTER
@@ -533,6 +537,7 @@ function DisplayTemperatureMessage(bool abForceNoValue = false)
 					elseif FIRE_LEVEL == 3
 						_frost_StatusTemp_Colder_FireLevel3_NoValue.Show()
 					endif
+					ShowTutorial_Shelter()
 				elseif heatStatus == NEAR_SHELTER
 					_frost_StatusTemp_Colder_Shelter_NoValue.Show()
 				elseif heatStatus == NEAR_FIRE_AND_SHELTER
@@ -686,3 +691,10 @@ function DisplayTemperatureMessage(bool abForceNoValue = false)
 		endif
 	endif
 EndFunction
+
+function ShowTutorial_Shelter()
+	if _Frost_Setting_DisplayTutorials.GetValueInt() == 2 && _Frost_HelpDone_Shelter.GetValueInt() == 1
+		_Frost_Help_Shelter.Show()
+		_Frost_HelpDone_Shelter.SetValue(2)
+	endif
+endFunction

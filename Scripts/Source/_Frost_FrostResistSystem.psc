@@ -2,8 +2,9 @@ Scriptname _Frost_FrostResistSystem extends _Frost_BaseSystem
 
 Actor property PlayerRef auto
 Spell property _Frost_FrostResistBonusSpell auto
+Perk property _Frost_FrostResistWarmthModPerk auto
 
-float old_amount
+float property old_amount auto hidden
 
 function Update()
 	CheckFrostResist()
@@ -21,7 +22,6 @@ function UpdateFrostResistBonus(float new_amount)
 		new_amount = 50.0
 	endif
 
-	_Frost_FrostResistBonusSpell.SetNthEffectMagnitude(0, new_amount)
 	PlayerRef.RemoveSpell(_Frost_FrostResistBonusSpell)
 	Utility.WaitMenuMode(0.1)
 	PlayerRef.AddSpell(_Frost_FrostResistBonusSpell, false)

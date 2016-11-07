@@ -469,7 +469,7 @@ int[] function GetTotalArmorProtectionValues(Armor akArmor, string asArmorName =
 	if GetSKSELoaded()
 		ap = GetTotalArmorProtectionValues_SKSE(akArmor, asArmorName)
 	else
-		ap = GetTotalArmorProtectionValues_Vanilla(akArmor)
+		ap = GetArmorProtectionData_Vanilla(akArmor)
 	endif
 
 	FrostDebug(0, "GetTotalArmorProtectionValues ap = " + ap)
@@ -483,11 +483,6 @@ int[] function GetTotalArmorProtectionValues(Armor akArmor, string asArmorName =
 	armor_totals[1] = ap[2] + ap[4] + ap[6] + ap[8] + ap[10] + ap[12] + ap[14]
 
 	return armor_totals
-endFunction
-
-;@TODO: Shorten this execution path if it makes sense (go directly to GetArmorData_Vanilla).
-int[] function GetTotalArmorProtectionValues_Vanilla(Armor akArmor)
-	return GetArmorProtectionData(akArmor)
 endFunction
 
 int[] function GetTotalArmorProtectionValues_SKSE(Armor akArmor, string asArmorName = "")
@@ -573,7 +568,7 @@ int function GetGearType_Vanilla(Armor akArmor)
 		return GEARTYPE_BODY
 	elseif akArmor.HasKeyword(ArmorGauntlets) || akArmor.HasKeyword(ClothingHands)
 		return GEARTYPE_HANDS
-	elseif akArmor.HasKeyword(ArmorHelmet) || akArmor.HasKeyword(ClothingHead); @TODO: || akArmor == ClothesMGRobesArchmage1Hooded
+	elseif akArmor.HasKeyword(ArmorHelmet) || akArmor.HasKeyword(ClothingHead)
 		return GEARTYPE_HEAD
 	elseif akArmor.HasKeyword(ArmorBoots) || akArmor.HasKeyword(ClothingFeet)
 		return GEARTYPE_FEET
@@ -600,24 +595,40 @@ int[] function GetArmorProtectionData_SKSE(Armor akArmor)
 	int armorMask = akArmor.GetSlotMask()
     int gearType = GetGearType(akArmor, armorMask)
     
+    ; Custom data
     int[] armor_data = GetArmorData(akArmor)
-    
     if armor_data[0] == GEARTYPE_IGNORE
     	return armor_data
     endif
 
+    ; Keywords set by developer
     if armor_data[0] == GEARTYPE_NOTFOUND
     	armor_data = GetArmorProtectionDataByKeyword(akArmor, gearType)
-    	if armor_data[0] == GEARTYPE_IGNORE
-    		return armor_data
-    	endif
-    	if armor_data[0] == GEARTYPE_NOTFOUND
-    		armor_data = GetArmorProtectionDataByAnalysis(akArmor, armorMask)
-    	endif
+    endif
+    if armor_data[0] == GEARTYPE_IGNORE
+    	return armor_data
+    endif
+
+    ; Default data
+    if armor_data[0] == GEARTYPE_NOTFOUND
+    	string dskey = GetDatastoreKeyFromForm(akArmor)
+    	armor_data = GetDefaultArmorData(dskey)
+    endif
+	if armor_data[0] == GEARTYPE_IGNORE
+    	return armor_data
+    endif
+
+    ; Unknown
+	if armor_data[0] == GEARTYPE_NOTFOUND
+    	armor_data = GetArmorProtectionDataByAnalysis(akArmor, armorMask)
+    endif
+	if armor_data[0] == GEARTYPE_IGNORE
+    	return armor_data
     endif
 
     return armor_data
 endFunction
+
 
 int[] function GetArmorProtectionData_Vanilla(Armor akArmor, int aiGearType = -1)
 	int gearType
@@ -627,19 +638,26 @@ int[] function GetArmorProtectionData_Vanilla(Armor akArmor, int aiGearType = -1
 		gearType = aiGearType
 	endif
 
+	; Custom data
 	int[] armor_data = GetArmorData_Vanilla(akArmor, gearType)
 	if armor_data[0] == GEARTYPE_IGNORE
     	return armor_data
     endif
 
+    ; Keywords set by developer
     if armor_data[0] == GEARTYPE_NOTFOUND
     	armor_data = GetArmorProtectionDataByKeyword(akArmor, gearType)
-    	if armor_data[0] == GEARTYPE_IGNORE
-    		return armor_data
-    	endif
-    	if armor_data[0] == GEARTYPE_NOTFOUND
-    		armor_data = GetArmorProtectionDataByAnalysis_Vanilla(akArmor, gearType)
-    	endif
+    endif
+    if armor_data[0] == GEARTYPE_IGNORE
+    	return armor_data
+    endif
+
+    ; Default data
+    if armor_data[0] == GEARTYPE_NOTFOUND
+    	armor_data = GetDefaultArmorData_Vanilla(akArmor, gearType)
+    endif
+    if armor_data[0] == GEARTYPE_IGNORE
+    	return armor_data
     endif
 
     return armor_data
@@ -814,53 +832,6 @@ int[] function GetArmorProtectionDataByAnalysis(Armor akArmor, int aiArmorMask)
 	return armor_data
 endFunction
 
-int[] function GetArmorProtectionDataByAnalysis_Vanilla(Armor akArmor, int aiGearType)
-	int[] armor_data = new int[15]
-
-	if aiGearType == GEARTYPE_NOTFOUND
-		; No gear type found for this item. Ignore it.
-		armor_data[0] = GEARTYPE_IGNORE
-		return armor_data
-	endif
-
-	; Ignore circlets, rings, and amulets
-	if akArmor.HasKeyword(ArmorJewelry)
-		armor_data[0] = GEARTYPE_IGNORE
-		return armor_data
-	endif
-
-	armor_data[0] = aiGearType
-
-	if aiGearType == GEARTYPE_BODY
-		armor_data[1] = DEFAULT_BODY_WARMTH
-		armor_data[2] = DEFAULT_BODY_COVERAGE
-	elseif aiGearType == GEARTYPE_HEAD
-		;@TODO: Differentiate hoods?
-		armor_data[1] = DEFAULT_HEAD_WARMTH
-		armor_data[2] = DEFAULT_HEAD_COVERAGE
-	elseif aiGearType == GEARTYPE_HANDS
-		armor_data[1] = DEFAULT_HANDS_WARMTH
-		armor_data[2] = DEFAULT_HANDS_COVERAGE
-	elseif aiGearType == GEARTYPE_FEET
-		armor_data[1] = DEFAULT_FEET_WARMTH
-		armor_data[2] = DEFAULT_FEET_COVERAGE
-	elseif aiGearType == GEARTYPE_CLOAK
-		armor_data[1] = DEFAULT_CLOAK_WARMTH
-		armor_data[2] = DEFAULT_CLOAK_COVERAGE
-	elseif aiGearType == GEARTYPE_MISC
-		if IsArmorShield(akArmor)
-			armor_data[1] = DEFAULT_SHIELD_WARMTH
-			armor_data[2] = DEFAULT_SHIELD_COVERAGE
-		else
-			armor_data[1] = DEFAULT_MISC_WARMTH
-			armor_data[2] = DEFAULT_MISC_COVERAGE
-		endif
-	endif
-
-	FrostDebug(0, "GetArmorProtectionDataByAnalysis Result: " + armor_data)
-	return armor_data
-endFunction
-
 string function GetDatastoreKeyFromForm(Armor akArmor)
 	int form_id = akArmor.GetFormID()
 	return GetDatastoreKeyFromID(form_id)
@@ -896,8 +867,6 @@ endFunction
 int function GetBaseFormID(int aiFormID)
 	return LogicalAnd(aiFormID, 0x00FFFFFF)
 endFunction
-
-; Frostfall 3.1 Stuff
 
 bool function DatastoreHasKey(string asKey, bool abCheckDefaultValues = true)
 	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
@@ -1275,9 +1244,7 @@ int[] function GetArmorData(Armor akArmor)
 		armor_data[11] = JsonUtil.IntListGet(profile_path, dskey, 11)
 		armor_data[12] = JsonUtil.IntListGet(profile_path, dskey, 12)
 		armor_data[13] = JsonUtil.IntListGet(profile_path, dskey, 13)
-		armor_data[14] = JsonUtil.IntListGet(profile_path, dskey, 14)
-	else
-		armor_data = GetDefaultArmorData(dskey)
+		armor_data[14] = JsonUtil.IntListGet(profile_path, dskey, 14)		
 	endif
 	return armor_data
 endFunction
@@ -1285,6 +1252,10 @@ endFunction
 int[] function GetArmorData_Vanilla(Armor akArmor, int aiGearType)
 	_Frost_LegacyArmorDatastore ds = GetLegacyArmorDatastore()
 	int[] armor_data = new int[15]
+
+	; Until Inspect Equipment is implemented, just return.
+	return armor_data
+
 	int[] protectionLevels
 
 	;@TODO: Handle zero value by returning -1 from legacy datastore
@@ -1302,6 +1273,7 @@ int[] function GetArmorData_Vanilla(Armor akArmor, int aiGearType)
 			armor_data[1] = StandardBodyValues[warmthLevel]
 			armor_data[2] = StandardBodyValues[coverageLevel + 5]
 		else
+
 			armor_data[0] = GEARTYPE_NOTFOUND
 			return armor_data
 		endif
@@ -1442,11 +1414,165 @@ int[] function GetDefaultArmorData(string asKey)
 	return armor_data
 endFunction
 
+int[] function GetDefaultArmorData_Vanilla(Armor akArmor, int aiGearType)
+	_Frost_LegacyArmorDatastore ds = GetLegacyArmorDatastore()
+	int[] armor_data = new int[15]
+	int[] protectionLevels
+
+	;@TODO: Handle zero value by returning -1 from legacy datastore
+	;@TODO: Check the Ignore arrays first in all cases.
+	;@TODO: Make the Ignore array single.
+
+	if aiGearType == GEARTYPE_NOTFOUND
+		; No gear type found for this item. Ignore it.
+		armor_data[0] = GEARTYPE_IGNORE
+		return armor_data
+	endif
+
+	; Ignore circlets, rings, and amulets
+	if akArmor.HasKeyword(ArmorJewelry)
+		armor_data[0] = GEARTYPE_IGNORE
+		return armor_data
+	endif
+
+	armor_data[0] = aiGearType
+
+	if aiGearType == GEARTYPE_BODY
+		protectionLevels = ds.FindBodyProtectionLevels(akArmor)
+		int warmthLevel = protectionLevels[0]
+		int coverageLevel = protectionLevels[1]
+		bool found = protectionLevels[2]
+
+		if found
+			armor_data[1] = StandardBodyValues[warmthLevel]
+			armor_data[2] = StandardBodyValues[coverageLevel + 5]
+		else
+			armor_data[1] = DEFAULT_BODY_WARMTH
+			armor_data[2] = DEFAULT_BODY_COVERAGE
+		endif
+
+		; check extra head
+		protectionLevels = ds.FindHeadProtectionLevels(akArmor)
+		warmthLevel = protectionLevels[0]
+		coverageLevel = protectionLevels[1]
+		found = protectionLevels[2]
+
+		if found
+			armor_data[5] = StandardHeadValues[warmthLevel]
+			armor_data[6] = StandardHeadValues[coverageLevel + 5]
+		endif
+
+		; check extra cloak
+		protectionLevels = ds.FindCloakProtectionLevels(akArmor)
+		warmthLevel = protectionLevels[0]
+		coverageLevel = protectionLevels[1]
+		found = protectionLevels[2]
+
+		if found
+			armor_data[11] = StandardCloakValues[warmthLevel]
+			armor_data[12] = StandardCloakValues[coverageLevel + 5]
+		endif
+
+	elseif aiGearType == GEARTYPE_HEAD
+		protectionLevels = ds.FindHeadProtectionLevels(akArmor)
+		int warmthLevel = protectionLevels[0]
+		int coverageLevel = protectionLevels[1]
+		bool found = protectionLevels[2]
+
+		if found
+			armor_data[1] = StandardHeadValues[warmthLevel]
+			armor_data[2] = StandardHeadValues[coverageLevel + 5]
+		else
+			armor_data[1] = DEFAULT_HEAD_WARMTH
+			armor_data[2] = DEFAULT_HEAD_COVERAGE
+		endif
+
+		; check extra cloak
+		protectionLevels = ds.FindCloakProtectionLevels(akArmor)
+		warmthLevel = protectionLevels[0]
+		coverageLevel = protectionLevels[1]
+		found = protectionLevels[2]
+
+		if found
+			armor_data[11] = StandardCloakValues[warmthLevel]
+			armor_data[12] = StandardCloakValues[coverageLevel + 5]
+		endif
+
+	elseif aiGearType == GEARTYPE_HANDS
+		protectionLevels = ds.FindHandsProtectionLevels(akArmor)
+		int warmthLevel = protectionLevels[0]
+		int coverageLevel = protectionLevels[1]
+		bool found = protectionLevels[2]
+
+		if found
+			armor_data[1] = StandardHandsValues[warmthLevel]
+			armor_data[2] = StandardHandsValues[coverageLevel + 5]
+		else
+			armor_data[1] = DEFAULT_HANDS_WARMTH
+			armor_data[2] = DEFAULT_HANDS_COVERAGE
+		endif
+
+	elseif aiGearType == GEARTYPE_FEET
+		protectionLevels = ds.FindFeetProtectionLevels(akArmor)
+		int warmthLevel = protectionLevels[0]
+		int coverageLevel = protectionLevels[1]
+		bool found = protectionLevels[2]
+
+		if found
+			armor_data[1] = StandardFeetValues[warmthLevel]
+			armor_data[2] = StandardFeetValues[coverageLevel + 5]
+		else
+			armor_data[1] = DEFAULT_FEET_WARMTH
+			armor_data[2] = DEFAULT_FEET_COVERAGE
+		endif
+
+	elseif aiGearType == GEARTYPE_CLOAK
+		protectionLevels = ds.FindCloakProtectionLevels(akArmor)
+		int warmthLevel = protectionLevels[0]
+		int coverageLevel = protectionLevels[1]
+		bool found = protectionLevels[2]
+
+		if found
+			armor_data[1] = StandardCloakValues[warmthLevel]
+			armor_data[2] = StandardCloakValues[coverageLevel + 5]
+		else
+			armor_data[1] = DEFAULT_CLOAK_WARMTH
+			armor_data[2] = DEFAULT_CLOAK_COVERAGE
+		endif
+
+	elseif aiGearType == GEARTYPE_MISC
+		protectionLevels = ds.FindMiscProtectionLevels(akArmor)
+		int warmthLevel = protectionLevels[0]
+		int coverageLevel = protectionLevels[1]
+		bool found = protectionLevels[2]
+
+		if found
+			armor_data[1] = StandardMiscValues[warmthLevel]
+			armor_data[2] = StandardMiscValues[coverageLevel + 5]
+		else
+			if IsArmorShield(akArmor)
+				armor_data[1] = DEFAULT_SHIELD_WARMTH
+				armor_data[2] = DEFAULT_SHIELD_COVERAGE
+			else
+				armor_data[1] = DEFAULT_MISC_WARMTH
+				armor_data[2] = DEFAULT_MISC_COVERAGE
+			endif
+		endif
+	endif
+
+	return armor_data
+endFunction
+
 function RestoreAllDefaultArmorData()
 	; The nuclear option - destroys all custom armor data on a profile
 	string profile_path = CONFIG_PATH + ARMOR_PROFILE_PREFIX + _Frost_Setting_CurrentProfile.GetValueInt()
 	JsonUtil.ClearAll(profile_path)
 	JsonUtil.Save(profile_path)
+endFunction
+
+function RestoreAllDefaultArmorData_Vanilla()
+	; The nuclear option - destroys all custom armor data
+
 endFunction
 
 function SaveCurrentUserArmorProfile()
@@ -1473,18 +1599,31 @@ endState
 
 int[] property mock_GetArmorData_value auto hidden
 int[] property mock_GetArmorProtectionDataByKeyword_value auto hidden
-int property mock_GetArmorProtectionDataByType_value auto hidden
 int[] property mock_GetArmorProtectionDataByAnalysis_value auto hidden
+int[] property mock_GetArmorDefaultData_value auto hidden
+int property mock_GetArmorProtectionDataByType_value auto hidden
 
 int property mock_GetArmorData_callcount auto hidden
+int property mock_GetArmorDataVanilla_callcount auto hidden
 int property mock_GetArmorProtectionDataByKeyword_callcount auto hidden
 int property mock_GetArmorProtectionDataByType_callcount auto hidden
+int property mock_GetArmorDefaultData_Vanilla_callcount auto hidden
 int property mock_GetArmorProtectionDataByAnalysis_callcount auto hidden
 
 state mock_getArmorProtectionDataByX
 	int[] function GetArmorData(Armor akArmor)
 		mock_GetArmorData_callcount += 1
 		return mock_GetArmorData_value
+	endFunction
+
+	int[] function GetArmorData_Vanilla(Armor akArmor, int aiGearType)
+		mock_GetArmorDataVanilla_callcount += 1
+		return mock_GetArmorData_value
+	endFunction
+
+	int[] function GetDefaultArmorData_Vanilla(Armor akArmor, int aiGearType)
+		mock_GetArmorDefaultData_Vanilla_callcount += 1
+		return mock_GetArmorDefaultData_value
 	endFunction
 
 	int[] function GetArmorProtectionDataByKeyword(Armor akArmor, int aiGearType)

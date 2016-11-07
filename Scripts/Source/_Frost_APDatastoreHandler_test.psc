@@ -132,7 +132,7 @@ function testGetArmorProtectionData_FoundDataBody()
 	beforeEach_GetArmorProtectionDataByX()
 
 	ap.mock_GetArmorData_value[0] = ap.GEARTYPE_BODY
-	ap.mock_GetArmorData_value[1] = 75
+	ap.mock_GetArmorData_value[1] = 60
 	ap.mock_GetArmorData_value[2] = 35
 	ap.mock_GetArmorData_value[3] = 0
 	ap.mock_GetArmorData_value[4] = 0
@@ -155,7 +155,7 @@ function testGetArmorProtectionData_FoundDataBody()
 	expectInt(ap.mock_GetArmorProtectionDataByAnalysis_callcount, to, beEqualTo, 0)
 	
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_BODY)
-	expectInt(result[1], to, beEqualTo, 75)
+	expectInt(result[1], to, beEqualTo, 60)
 	expectInt(result[2], to, beEqualTo, 35)
 	expectInt(result[3], to, beEqualTo, 0)
 	expectInt(result[4], to, beEqualTo, 0)

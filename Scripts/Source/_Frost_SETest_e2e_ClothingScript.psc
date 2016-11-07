@@ -83,7 +83,6 @@ function beforeAll()
 	_Frost_ArmorProtectionDatastoreHandler ap = GetClothingDatastoreHandler()
 	ap.CreateProtectionKeywordValueMaps()
 	debug.trace(createLilacDebugMessage(WARN, "End-to-End tests are potentially destructive. Do not continue to play after running."))
-	debug.notification("End-to-End Clothing Tests: Starting.")
 	PlayerRef.UnequipAll()
 	WaitForEquipQueueDone()
 	starting_warmth = GetPlayerWarmth()
@@ -92,7 +91,6 @@ endFunction
 
 function afterAll()
 	PlayerRef.UnequipAll()
-	debug.notification("End-to-End Clothing Tests: Complete.")
 endFunction
 
 function beforeEach()
@@ -130,7 +128,7 @@ function testEquipSingle_IronArmor()
 	PlayerRef.EquipItem(ArmorIronCuirass, abSilent = true)
 	WaitForEquipQueueDone()
 
-	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 75)
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 60)
 	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 35)
 
 	PlayerRef.UnequipItem(ArmorIronCuirass, abSilent = true)
@@ -150,7 +148,7 @@ function testEquipSingle_IronHelmet()
 	WaitForEquipQueueDone()
 
 	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 15)
-	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 3)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 14)
 
 	PlayerRef.UnequipItem(ArmorIronHelmet, abSilent = true)
 	WaitForEquipQueueDone()
@@ -168,7 +166,7 @@ function testEquipSingle_IronGauntlets()
 	PlayerRef.EquipItem(ArmorIronGauntlets, abSilent = true)
 	WaitForEquipQueueDone()
 
-	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 7)
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 9)
 	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 6)
 
 	PlayerRef.UnequipItem(ArmorIronGauntlets, abSilent = true)
@@ -228,8 +226,8 @@ function testEquipMulti_Two()
 	PlayerRef.EquipItem(ArmorIronHelmet, abSilent = true)
 	WaitForEquipQueueDone()
 
-	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 90)
-	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 38)
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 75)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 49)
 
 	PlayerRef.UnequipItem(ArmorIronCuirass, abSilent = true)
 	Utility.Wait(0.1)
@@ -255,8 +253,8 @@ function testEquipMulti_Four()
 	PlayerRef.EquipItem(ArmorIronBoots, abSilent = true)
 	WaitForEquipQueueDone()
 
-	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 104)
-	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 50)
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 91)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 61)
 
 	PlayerRef.UnequipItem(ArmorIronCuirass, abSilent = true)
 	Utility.Wait(0.1)
@@ -290,8 +288,8 @@ function testEquipMulti_Six()
 	PlayerRef.EquipItem(_Camp_Cloak_BasicBurlap, abSilent = true)
 	WaitForEquipQueueDone()
 
-	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 109)
-	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 75)
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 103)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 93)
 
 	PlayerRef.UnequipItem(ArmorIronCuirass, abSilent = true)
 	Utility.Wait(0.1)
@@ -324,8 +322,8 @@ function testStress_1()
 	PlayerRef.EquipItem(_Camp_Cloak_BasicBurlap, abSilent = true)
 	WaitForEquipQueueDone()
 
-	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 109)
-	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 75)
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 103)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 93)
 
 	PlayerRef.EquipItem(ArmorLeatherCuirass, abSilent = true)
 	PlayerRef.EquipItem(ArmorLeatherHelmet, abSilent = true)
@@ -335,7 +333,7 @@ function testStress_1()
 	PlayerRef.EquipItem(_Camp_Cloak_BasicHide, abSilent = true)
 	WaitForEquipQueueDone()
 
-	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 189)
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 183)
 	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 221)
 
 	PlayerRef.UnequipItem(ArmorLeatherCuirass, abSilent = true)
@@ -422,7 +420,7 @@ function testStress_3()
 
 	WaitForEquipQueueDone()
 
-	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 189)
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 183)
 	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 221)
 
 	PlayerRef.UnequipItem(ArmorLeatherCuirass, abSilent = true)
@@ -495,7 +493,7 @@ function testStress_4()
 	WaitForEquipQueueDone()
 
 	; also check integrity of the keys array
-	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 189)
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 183)
 	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 221)
 
 	PlayerRef.UnequipItem(ArmorLeatherCuirass, abSilent = true)

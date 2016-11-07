@@ -21,6 +21,7 @@ ReferenceAlias property PlayerAlias auto
 Spell property _Frost_Weathersense_Spell auto
 Spell property _Frost_LegacyConfig_Spell auto
 GlobalVariable property _Frost_HotkeyWeathersense auto
+Perk property _Frost_FrostResistWarmthModPerk auto
 
 ;#Scripts======================================================================
 _Frost_ConditionValues property Conditions auto
@@ -1157,6 +1158,11 @@ function AddStartupSpells()
 		PlayerRef.AddSpell(_Frost_Weathersense_Spell, false)
 	endif
 
+	if !PlayerRef.HasPerk(_Frost_FrostResistWarmthModPerk)
+		PlayerRef.AddPerk(_Frost_FrostResistWarmthModPerk)
+	endif
+
+	GetFrostResistSystem().old_amount = 0.0
 	GetFrostResistSystem().CheckFrostResist()
 endFunction
 

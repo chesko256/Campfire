@@ -7,6 +7,10 @@ import _FrostInternal
 Quest property _Frost_MainQuest auto
 Keyword property _FrostData_ArmorPrecache auto
 
+Message property _Frost_Help_Warmth auto
+GlobalVariable property _Frost_Setting_DisplayTutorials auto
+GlobalVariable property _Frost_HelpDone_Warmth auto
+
 Event OnRaceSwitchComplete()
     if IsPlayerTransformed()
         FrostDebug(1, "I am now a werewolf or vampire lord.")
@@ -25,25 +29,22 @@ Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemRefere
 EndEvent
 
 Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
-	debug.StartStackProfiling()
 	if akBaseObject as Light
 		SendEvent_UpdateWarmth(false)
 	elseif akBaseObject as Armor
+		ShowProtectionTutorial()
 		bool b = qEnter(form_queue, action_queue, akBaseObject, true)
 		ProcessQueuedEvents(form_queue, action_queue)
 	endif
-	debug.StopStackProfiling()
 EndEvent
 
 Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
-	debug.StartStackProfiling()
 	if akBaseObject as Light
 		SendEvent_UpdateWarmth(false)
 	elseif akBaseObject as Armor
 		bool b = qEnter(form_queue, action_queue, akBaseObject, false)
 		ProcessQueuedEvents(form_queue, action_queue)
 	endif
-	debug.StopStackProfiling()
 EndEvent
 
 function SendEvent_UpdateWarmth(bool abDisplayTextUpdate)
@@ -200,5 +201,13 @@ bool function qIsEmpty()
 		return true
 	else
 		return false
+	endif
+endFunction
+
+
+function ShowProtectionTutorial()
+	if _Frost_Setting_DisplayTutorials.GetValueInt() == 2 && _Frost_HelpDone_Warmth.GetValueInt() == 1
+		_Frost_Help_Warmth.Show()
+		_Frost_HelpDone_Warmth.SetValue(2)
 	endif
 endFunction

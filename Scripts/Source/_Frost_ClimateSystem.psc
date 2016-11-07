@@ -52,6 +52,7 @@ Message property _Frost_WeatherTransMsg_ClearToSnowSevere auto
 Message property _Frost_WeatherTransMsg_RainToSnow auto
 Message property _Frost_WeatherTransMsg_RainToSnowSevere auto
 Message property _Frost_Help_Cold auto
+Message property _Frost_Help_ColdSE auto
 
 Worldspace property Tamriel auto
 Worldspace property WindhelmWorld auto
@@ -540,7 +541,11 @@ endFunction
 
 function ShowTutorial_Cold()
 	if _Frost_Setting_DisplayTutorials.GetValueInt() == 2 && _Frost_HelpDone_Cold.GetValueInt() == 1
-		_Frost_Help_Cold.Show()
+		if CampUtil.GetSKSELoaded()
+			_Frost_Help_Cold.Show()
+		else
+			_Frost_Help_ColdSE.Show()
+		endif
 		_Frost_HelpDone_Cold.SetValue(2)
 	endif
 endFunction

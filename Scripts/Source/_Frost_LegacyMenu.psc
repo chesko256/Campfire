@@ -5,6 +5,10 @@ import FrostUtil
 _Frost_Main property FrostfallMain auto
 Quest property _Frost_TrackingQuest auto
 
+ImageSpaceModifier property _Frost_ColdISM_Level3 auto
+ImageSpaceModifier property _Frost_ColdISM_Level4 auto
+ImageSpaceModifier property _Frost_ColdISM_Level5 auto
+
 Message property _Frost_legacyconfig_firsttime auto
 {Enable Frostfall, Back}
 
@@ -408,6 +412,11 @@ function menu_effects2()
 	int i = _Frost_legacyconfig_effects2.Show()
 	if i == 0
 		MenuHandler_Toggle(_Frost_legacyconfig_fxISM_on, _Frost_legacyconfig_fxISM_off, _Frost_Setting_FullScreenEffects)
+		if _Frost_Setting_FullScreenEffects.GetValueInt() == 1
+			_Frost_ColdISM_Level3.Remove()
+			_Frost_ColdISM_Level4.Remove()
+			_Frost_ColdISM_Level5.Remove()
+		endif
 		menu_effects2()
 	elseif i == 1
 		MenuHandler_Toggle(_Frost_legacyconfig_fxforcefeedback_on, _Frost_legacyconfig_fxforcefeedback_off, _Frost_Setting_ForceFeedback)

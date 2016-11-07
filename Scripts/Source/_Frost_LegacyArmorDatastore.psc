@@ -979,15 +979,97 @@ function SetDefaults_Body()
 
 
 	SetArmorData(551294, "Skyrim.esm", GEARTYPE_BODY, WARMTH_GOOD, COVERAGE_POOR, aiExtraType = EXTRA_CLOAKFUR) ; ArmorStormcloakBearCuirass 		@MULTI
-	SetArmorData(1099416, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_POOR, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_FAIR) ; ClothesThalmorRobesHooded 		@MULTI
 	SetArmorData(383878, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_MAX, aiExtraType = EXTRA_CLOAKLEATHER) ; ArmorNightingaleCuirassPlayer01  @MULTI
 	SetArmorData(1035278, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_MAX, aiExtraType = EXTRA_CLOAKLEATHER) ; ArmorNightingaleCuirassPlayer02 @MULTI
 	SetArmorData(1035279, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_MAX, aiExtraType = EXTRA_CLOAKLEATHER) ; ArmorNightingaleCuirassPlayer03 @MULTI
 	SetArmorData(46555, "Dawnguard.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiExtraType = EXTRA_CLOAKLEATHER) ; DLC1ArmorVampireArmorRoyalRed 	@MULTI
 	SetArmorData(103621, "Dawnguard.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiExtraType = EXTRA_CLOAKLEATHER) ; DLC1ArmorVampireArmorValerica	@MULTI
-	SetArmorData(118186, "Dragonborn.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_POOR, aiHeadWarmthType = WARMTH_GOOD, aiHeadCoverageType = COVERAGE_GOOD) ; DLC2DarkElfOutfit 		@MULTI
-	SetArmorData(225381, "Dragonborn.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_POOR, aiHeadWarmthType = WARMTH_GOOD, aiHeadCoverageType = COVERAGE_GOOD) ; DLC2DarkElfOutfitBlue	@MULTI
-	SetArmorData(225382, "Dragonborn.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_POOR, aiHeadWarmthType = WARMTH_GOOD, aiHeadCoverageType = COVERAGE_GOOD) ; DLC2DarkElfOutfitRed	@MULTI
+	SetArmorData(118186, "Dragonborn.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_GOOD, aiHeadCoverageType = COVERAGE_GOOD) ; DLC2DarkElfOutfit 		@MULTI
+	SetArmorData(225381, "Dragonborn.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_GOOD, aiHeadCoverageType = COVERAGE_GOOD) ; DLC2DarkElfOutfitBlue	@MULTI
+	SetArmorData(225382, "Dragonborn.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_GOOD, aiHeadCoverageType = COVERAGE_GOOD) ; DLC2DarkElfOutfitRed	@MULTI
+
+	; Robes
+	SetArmorData(0x10F570, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; ClothesMGRobesArchmage1Hooded
+	SetArmorData(0x10CFE4, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; ClothesMonkRobesColorBrownHooded
+	SetArmorData(0x10CFEC, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; ClothesMonkRobesColorGreenHooded
+	SetArmorData(0x10CFEA, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; ClothesMonkRobesColorGreyHooded
+	SetArmorData(0x10CFEB, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; ClothesMonkRobesColorRedHooded
+	SetArmorData(0x107106, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; ClothesMonkRobesHooded
+	SetArmorData(0x10710D, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; ClothesNecromancerRobesHooded
+	SetArmorData(0x107108, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; ClothesRobesBlackHooded
+	SetArmorData(0x10710A, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; ClothesRobesBlueHooded
+	SetArmorData(0x10C698, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; ClothesThalmorRobesHooded
+	SetArmorData(0x10710C, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; ClothesWarlockRobesHooded
+	SetArmorData(0x109008, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedAlteration01
+	SetArmorData(0x109009, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedAlteration02
+	SetArmorData(0x10900A, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedAlteration03
+	SetArmorData(0x10900B, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedAlteration04
+	SetArmorData(0x10900C, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedAlteration05
+	SetArmorData(0x10900D, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedAlteration06
+	SetArmorData(0x10900E, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedConjuration01
+	SetArmorData(0x10900F, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedConjuration02
+	SetArmorData(0x109010, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedConjuration03
+	SetArmorData(0x109011, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedConjuration04
+	SetArmorData(0x109012, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedConjuration05
+	SetArmorData(0x109013, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedConjuration06
+	SetArmorData(0x109014, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedDestruction01
+	SetArmorData(0x109015, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedDestruction02
+	SetArmorData(0x109016, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedDestruction03
+	SetArmorData(0x109017, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedDestruction04
+	SetArmorData(0x109018, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedDestruction05
+	SetArmorData(0x109019, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedDestruction06
+	SetArmorData(0x109020, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedIllusion01
+	SetArmorData(0x109021, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedIllusion02
+	SetArmorData(0x109022, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedIllusion03
+	SetArmorData(0x109023, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedIllusion04
+	SetArmorData(0x109024, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedIllusion05
+	SetArmorData(0x109025, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedIllusion06
+	SetArmorData(0x109048, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedMagickaRate02
+	SetArmorData(0x109047, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedMagickaRate03
+	SetArmorData(0x109046, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedMagickaRate04
+	SetArmorData(0x109045, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedMagickaRate05
+	SetArmorData(0x10902B, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedRestoration01
+	SetArmorData(0x10902A, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedRestoration02
+	SetArmorData(0x109029, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedRestoration03
+	SetArmorData(0x109028, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedRestoration04
+	SetArmorData(0x109027, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedRestoration05
+	SetArmorData(0x109026, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesNecroRobesHoodedRestoration06
+	SetArmorData(0x109049, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedAlteration01
+	SetArmorData(0x10904A, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedAlteration02
+	SetArmorData(0x10904B, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedAlteration03
+	SetArmorData(0x10904C, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedAlteration04
+	SetArmorData(0x10904D, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedAlteration05
+	SetArmorData(0x10904E, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedAlteration06
+	SetArmorData(0x10904F, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedConjuration01
+	SetArmorData(0x109050, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedConjuration02
+	SetArmorData(0x109051, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedConjuration03
+	SetArmorData(0x109052, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedConjuration04
+	SetArmorData(0x109053, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedConjuration05
+	SetArmorData(0x109054, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedConjuration06
+	SetArmorData(0x109055, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedDestruction01
+	SetArmorData(0x109056, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedDestruction02
+	SetArmorData(0x109057, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedDestruction03
+	SetArmorData(0x109058, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedDestruction04
+	SetArmorData(0x109059, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedDestruction05
+	SetArmorData(0x10905A, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedDestruction06
+	SetArmorData(0x109089, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedIllusion01
+	SetArmorData(0x109088, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedIllusion02
+	SetArmorData(0x109087, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedIllusion03
+	SetArmorData(0x109086, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedIllusion04
+	SetArmorData(0x109085, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedIllusion05
+	SetArmorData(0x109084, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedIllusion06
+	SetArmorData(0x109083, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedMagickaRate02
+	SetArmorData(0x109082, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedMagickaRate03
+	SetArmorData(0x109081, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedMagickaRate04
+	SetArmorData(0x109080, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedMagickaRate05
+	SetArmorData(0x109066, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedRestoration01
+	SetArmorData(0x109065, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedRestoration02
+	SetArmorData(0x109064, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedRestoration03
+	SetArmorData(0x109063, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedRestoration04
+	SetArmorData(0x109062, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedRestoration05
+	SetArmorData(0x109061, "Skyrim.esm", GEARTYPE_BODY, WARMTH_FAIR, COVERAGE_GOOD, aiHeadWarmthType = WARMTH_FAIR, aiHeadCoverageType = COVERAGE_GOOD) ; EnchClothesWarlockRobesHoodedRestoration06
+
+
 endFunction
 
 function SetDefaults_Head()
@@ -3004,6 +3086,27 @@ int[] function FindCloakProtectionLevels(Armor akArmor)
 
 	if found
 		protectionLevels[2] = GEARTYPE_CLOAK
+	endif
+
+	return protectionLevels
+endFunction
+
+int[] function FindMiscProtectionLevels(Armor akArmor)
+	int[] protectionLevels = new int[3]
+	bool found = false
+
+	if LinkedArrayHasArmor(akArmor, ArmorAccessoryWarm1, ArmorAccessoryWarm2, ArmorAccessoryWarm3, ArmorAccessoryWarm4)
+		protectionLevels[0] = 1
+		protectionLevels[1] = 0
+		found = true
+	elseif LinkedArrayHasArmor(akArmor, ArmorAccessoryWeatherproof1, ArmorAccessoryWeatherproof2, ArmorAccessoryWeatherproof3, ArmorAccessoryWeatherproof4)
+		protectionLevels[0] = 0
+		protectionLevels[1] = 1
+		found = true
+	endif
+
+	if found
+		protectionLevels[2] = GEARTYPE_MISC
 	endif
 
 	return protectionLevels
