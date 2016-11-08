@@ -22,6 +22,9 @@ Spell property _Frost_Weathersense_Spell auto
 Spell property _Frost_LegacyConfig_Spell auto
 GlobalVariable property _Frost_HotkeyWeathersense auto
 Perk property _Frost_FrostResistWarmthModPerk auto
+Perk property _Frost_HypothermiaModGeneralSkills auto
+Perk property _Frost_HypothermiaModHandAbilities auto
+Perk property _Frost_HypothermiaModRegenAbilities auto
 
 ;#Scripts======================================================================
 _Frost_ConditionValues property Conditions auto
@@ -1160,6 +1163,18 @@ function AddStartupSpells()
 
 	if !PlayerRef.HasPerk(_Frost_FrostResistWarmthModPerk)
 		PlayerRef.AddPerk(_Frost_FrostResistWarmthModPerk)
+	endif
+
+	if !PlayerRef.HasPerk(_Frost_HypothermiaModGeneralSkills)
+		PlayerRef.AddPerk(_Frost_HypothermiaModGeneralSkills)
+	endif
+
+	if !PlayerRef.HasPerk(_Frost_HypothermiaModHandAbilities)
+		PlayerRef.AddPerk(_Frost_HypothermiaModHandAbilities)
+	endif
+
+	if !PlayerRef.HasPerk(_Frost_HypothermiaModRegenAbilities)
+		PlayerRef.AddPerk(_Frost_HypothermiaModRegenAbilities)
 	endif
 
 	GetFrostResistSystem().old_amount = 0.0
