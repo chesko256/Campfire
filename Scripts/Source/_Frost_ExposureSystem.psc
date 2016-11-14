@@ -7,7 +7,6 @@ import _FrostInternal
 
 Quest property _Frost_MainQuest auto
 Actor property PlayerRef auto
-Spell property _Frost_Hypothermia_Spell_Effects auto
 GlobalVariable property TimeScale auto
 GlobalVariable property _Frost_Setting_ExposureRate auto
 GlobalVariable property _Frost_Setting_ExposureOn auto
@@ -580,12 +579,6 @@ function ExposureEffectsUpdate()
 
 	if exposure_level >= 4
 		GetFrostbite()
-	endif
-
-	if last_exposure_level != exposure_level
-		PlayerRef.RemoveSpell(_Frost_Hypothermia_Spell_Effects)
-		Utility.Wait(0.1)
-		PlayerRef.AddSpell(_Frost_Hypothermia_Spell_Effects, false)
 	endif
 
 	ApplyVisualEffects()

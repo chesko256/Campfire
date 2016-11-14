@@ -20,6 +20,9 @@ Keyword property ArmorHelmet auto
 Keyword property ClothingHead auto
 Keyword property ArmorBoots auto
 Keyword property ClothingFeet auto
+Keyword property ArmorClothing auto
+Keyword property ArmorLight auto
+Keyword property ArmorHeavy auto
 FormList property _Camp_Backpacks auto
 
 ; Override keywords
@@ -408,7 +411,7 @@ function CreateProtectionKeywordValueMaps()
 	OverrideKeywords[9] = _Frost_ExtraCloakLeather
 	OverrideKeywords[10] = _Frost_ExtraCloakFur
 
-	OverrideValues[0] = WARMTH_CLOAK_FAIR
+	OverrideValues[0] = WARMTH_CLOAK_GOOD
 	OverrideValues[1] = WARMTH_CLOAK_FAIR
 	OverrideValues[2] = WARMTH_CLOAK_MAX
 	OverrideValues[3] = WARMTH_MISC_POOR
@@ -419,7 +422,7 @@ function CreateProtectionKeywordValueMaps()
 	OverrideValues[8] = WARMTH_CLOAK_FAIR
 	OverrideValues[9] = WARMTH_CLOAK_FAIR
 	OverrideValues[10] = WARMTH_CLOAK_MAX
-	OverrideValues[11] = COVERAGE_CLOAK_FAIR
+	OverrideValues[11] = COVERAGE_CLOAK_GOOD
 	OverrideValues[12] = COVERAGE_CLOAK_MAX
 	OverrideValues[13] = COVERAGE_CLOAK_FAIR
 	OverrideValues[14] = COVERAGE_MISC_FAIR
@@ -574,7 +577,7 @@ int function GetGearType_Vanilla(Armor akArmor)
 		return GEARTYPE_FEET
 	elseif akArmor.HasKeyword(WAF_ClothingCloak) || IsArmorCloak(akArmor)
 		return GEARTYPE_CLOAK
-	elseif IsArmorShield(akArmor)
+	elseif IsArmorShield(akArmor) || akArmor.HasKeyword(ArmorClothing) || akArmor.HasKeyword(ArmorLight) || akArmor.HasKeyword(ArmorHeavy)
 		return GEARTYPE_MISC
 	else
 		return GEARTYPE_NOTFOUND
@@ -637,9 +640,17 @@ int[] function GetArmorProtectionData_Vanilla(Armor akArmor, int aiGearType = -1
 	else
 		gearType = aiGearType
 	endif
+	
+	if GetLegacyArmorDatastore().IsArmorIgnored(akArmor)
+		armor_data = new int[15]
+		armor_data[0] = GEARTYPE_IGNORE
+		return armor_data
+	endif
+	
+	_Frost_LegacyArmorDatastore ds = GetLegacyArmorDatastore()
 
 	; Custom data
-	int[] armor_data = GetArmorData_Vanilla(akArmor, gearType)
+	int[] armor_data = GetArmorData_Vanilla(akArmor, gearType, ds)
 	if armor_data[0] == GEARTYPE_IGNORE
     	return armor_data
     endif
@@ -654,7 +665,7 @@ int[] function GetArmorProtectionData_Vanilla(Armor akArmor, int aiGearType = -1
 
     ; Default data
     if armor_data[0] == GEARTYPE_NOTFOUND
-    	armor_data = GetDefaultArmorData_Vanilla(akArmor, gearType)
+    	armor_data = GetDefaultArmorData_Vanilla(akArmor, gearType, ds)
     endif
     if armor_data[0] == GEARTYPE_IGNORE
     	return armor_data
@@ -1249,37 +1260,30 @@ int[] function GetArmorData(Armor akArmor)
 	return armor_data
 endFunction
 
-int[] function GetArmorData_Vanilla(Armor akArmor, int aiGearType)
-	_Frost_LegacyArmorDatastore ds = GetLegacyArmorDatastore()
+int[] function GetArmorData_Vanilla(Armor akArmor, int aiGearType, _Frost_LegacyArmorDatastore akDatastore)
 	int[] armor_data = new int[15]
-
-	; Until Inspect Equipment is implemented, just return.
-	return armor_data
-
 	int[] protectionLevels
 
-	;@TODO: Handle zero value by returning -1 from legacy datastore
-	;@TODO: Check the Ignore arrays first in all cases.
-	;@TODO: Make the Ignore array single.
+	;@TODO: Handle zero value
+
+	armor_data[0] = aiGearType
 
 	if aiGearType == GEARTYPE_BODY
-		protectionLevels = ds.FindBodyProtectionLevels(akArmor)
+		protectionLevels = akDatastore.FindCustomBodyProtectionLevels(akArmor)
 		int warmthLevel = protectionLevels[0]
 		int coverageLevel = protectionLevels[1]
 		bool found = protectionLevels[2]
 
 		if found
-			armor_data[0] = aiGearType
 			armor_data[1] = StandardBodyValues[warmthLevel]
 			armor_data[2] = StandardBodyValues[coverageLevel + 5]
 		else
-
 			armor_data[0] = GEARTYPE_NOTFOUND
 			return armor_data
 		endif
 
 		; check extra head
-		protectionLevels = ds.FindHeadProtectionLevels(akArmor)
+		protectionLevels = akDatastore.FindCustomHeadProtectionLevels(akArmor)
 		warmthLevel = protectionLevels[0]
 		coverageLevel = protectionLevels[1]
 		found = protectionLevels[2]
@@ -1290,7 +1294,7 @@ int[] function GetArmorData_Vanilla(Armor akArmor, int aiGearType)
 		endif
 
 		; check extra cloak
-		protectionLevels = ds.FindCloakProtectionLevels(akArmor)
+		protectionLevels = akDatastore.FindCustomCloakProtectionLevels(akArmor)
 		warmthLevel = protectionLevels[0]
 		coverageLevel = protectionLevels[1]
 		found = protectionLevels[2]
@@ -1301,13 +1305,12 @@ int[] function GetArmorData_Vanilla(Armor akArmor, int aiGearType)
 		endif
 
 	elseif aiGearType == GEARTYPE_HEAD
-		protectionLevels = ds.FindHeadProtectionLevels(akArmor)
+		protectionLevels = akDatastore.FindCustomHeadProtectionLevels(akArmor)
 		int warmthLevel = protectionLevels[0]
 		int coverageLevel = protectionLevels[1]
 		bool found = protectionLevels[2]
 
 		if found
-			armor_data[0] = aiGearType
 			armor_data[1] = StandardHeadValues[warmthLevel]
 			armor_data[2] = StandardHeadValues[coverageLevel + 5]
 		else
@@ -1316,7 +1319,7 @@ int[] function GetArmorData_Vanilla(Armor akArmor, int aiGearType)
 		endif
 
 		; check extra cloak
-		protectionLevels = ds.FindCloakProtectionLevels(akArmor)
+		protectionLevels = akDatastore.FindCustomCloakProtectionLevels(akArmor)
 		warmthLevel = protectionLevels[0]
 		coverageLevel = protectionLevels[1]
 		found = protectionLevels[2]
@@ -1327,13 +1330,12 @@ int[] function GetArmorData_Vanilla(Armor akArmor, int aiGearType)
 		endif
 
 	elseif aiGearType == GEARTYPE_HANDS
-		protectionLevels = ds.FindHandsProtectionLevels(akArmor)
+		protectionLevels = akDatastore.FindCustomHandsProtectionLevels(akArmor)
 		int warmthLevel = protectionLevels[0]
 		int coverageLevel = protectionLevels[1]
 		bool found = protectionLevels[2]
 
 		if found
-			armor_data[0] = aiGearType
 			armor_data[1] = StandardHandsValues[warmthLevel]
 			armor_data[2] = StandardHandsValues[coverageLevel + 5]
 		else
@@ -1342,13 +1344,12 @@ int[] function GetArmorData_Vanilla(Armor akArmor, int aiGearType)
 		endif
 
 	elseif aiGearType == GEARTYPE_FEET
-		protectionLevels = ds.FindFeetProtectionLevels(akArmor)
+		protectionLevels = akDatastore.FindCustomFeetProtectionLevels(akArmor)
 		int warmthLevel = protectionLevels[0]
 		int coverageLevel = protectionLevels[1]
 		bool found = protectionLevels[2]
 
 		if found
-			armor_data[0] = aiGearType
 			armor_data[1] = StandardFeetValues[warmthLevel]
 			armor_data[2] = StandardFeetValues[coverageLevel + 5]
 		else
@@ -1357,13 +1358,12 @@ int[] function GetArmorData_Vanilla(Armor akArmor, int aiGearType)
 		endif
 
 	elseif aiGearType == GEARTYPE_CLOAK
-		protectionLevels = ds.FindCloakProtectionLevels(akArmor)
+		protectionLevels = akDatastore.FindCustomCloakProtectionLevels(akArmor)
 		int warmthLevel = protectionLevels[0]
 		int coverageLevel = protectionLevels[1]
 		bool found = protectionLevels[2]
 
 		if found
-			armor_data[0] = aiGearType
 			armor_data[1] = StandardCloakValues[warmthLevel]
 			armor_data[2] = StandardCloakValues[coverageLevel + 5]
 		else
@@ -1371,21 +1371,20 @@ int[] function GetArmorData_Vanilla(Armor akArmor, int aiGearType)
 			return armor_data
 		endif
 
-	;@TODO
-	;/
 	elseif aiGearType == GEARTYPE_MISC
-		protectionLevels = ds.FindMiscProtectionLevels(akArmor)
+		protectionLevels = akDatastore.FindCustomMiscProtectionLevels(akArmor)
 		int warmthLevel = protectionLevels[0]
 		int coverageLevel = protectionLevels[1]
+		bool found = protectionLevels[2]
 
-		if warmthLevel > -1 || coverageLevel > -1
-			armor_data[0] = aiGearType
+		if found
 			armor_data[1] = StandardMiscValues[warmthLevel]
 			armor_data[2] = StandardMiscValues[coverageLevel + 5]
+		else
+			armor_data[0] = GEARTYPE_NOTFOUND
+			return armor_data
 		endif
-	/;
 	endif
-	; else if it wasn't found...
 
 	return armor_data
 endFunction
@@ -1414,14 +1413,11 @@ int[] function GetDefaultArmorData(string asKey)
 	return armor_data
 endFunction
 
-int[] function GetDefaultArmorData_Vanilla(Armor akArmor, int aiGearType)
-	_Frost_LegacyArmorDatastore ds = GetLegacyArmorDatastore()
+int[] function GetDefaultArmorData_Vanilla(Armor akArmor, int aiGearType, _Frost_LegacyArmorDatastore akDatastore)
 	int[] armor_data = new int[15]
 	int[] protectionLevels
 
-	;@TODO: Handle zero value by returning -1 from legacy datastore
-	;@TODO: Check the Ignore arrays first in all cases.
-	;@TODO: Make the Ignore array single.
+	;@TODO: Handle zero value
 
 	if aiGearType == GEARTYPE_NOTFOUND
 		; No gear type found for this item. Ignore it.
@@ -1429,7 +1425,7 @@ int[] function GetDefaultArmorData_Vanilla(Armor akArmor, int aiGearType)
 		return armor_data
 	endif
 
-	; Ignore circlets, rings, and amulets
+	; Ignore circlets, rings, and amulets by default
 	if akArmor.HasKeyword(ArmorJewelry)
 		armor_data[0] = GEARTYPE_IGNORE
 		return armor_data
@@ -1438,7 +1434,7 @@ int[] function GetDefaultArmorData_Vanilla(Armor akArmor, int aiGearType)
 	armor_data[0] = aiGearType
 
 	if aiGearType == GEARTYPE_BODY
-		protectionLevels = ds.FindBodyProtectionLevels(akArmor)
+		protectionLevels = akDatastore.FindBodyProtectionLevels(akArmor)
 		int warmthLevel = protectionLevels[0]
 		int coverageLevel = protectionLevels[1]
 		bool found = protectionLevels[2]
@@ -1452,7 +1448,7 @@ int[] function GetDefaultArmorData_Vanilla(Armor akArmor, int aiGearType)
 		endif
 
 		; check extra head
-		protectionLevels = ds.FindHeadProtectionLevels(akArmor)
+		protectionLevels = akDatastore.FindHeadProtectionLevels(akArmor)
 		warmthLevel = protectionLevels[0]
 		coverageLevel = protectionLevels[1]
 		found = protectionLevels[2]
@@ -1463,7 +1459,7 @@ int[] function GetDefaultArmorData_Vanilla(Armor akArmor, int aiGearType)
 		endif
 
 		; check extra cloak
-		protectionLevels = ds.FindCloakProtectionLevels(akArmor)
+		protectionLevels = akDatastore.FindCloakProtectionLevels(akArmor)
 		warmthLevel = protectionLevels[0]
 		coverageLevel = protectionLevels[1]
 		found = protectionLevels[2]
@@ -1474,7 +1470,7 @@ int[] function GetDefaultArmorData_Vanilla(Armor akArmor, int aiGearType)
 		endif
 
 	elseif aiGearType == GEARTYPE_HEAD
-		protectionLevels = ds.FindHeadProtectionLevels(akArmor)
+		protectionLevels = akDatastore.FindHeadProtectionLevels(akArmor)
 		int warmthLevel = protectionLevels[0]
 		int coverageLevel = protectionLevels[1]
 		bool found = protectionLevels[2]
@@ -1488,7 +1484,7 @@ int[] function GetDefaultArmorData_Vanilla(Armor akArmor, int aiGearType)
 		endif
 
 		; check extra cloak
-		protectionLevels = ds.FindCloakProtectionLevels(akArmor)
+		protectionLevels = akDatastore.FindCloakProtectionLevels(akArmor)
 		warmthLevel = protectionLevels[0]
 		coverageLevel = protectionLevels[1]
 		found = protectionLevels[2]
@@ -1499,7 +1495,7 @@ int[] function GetDefaultArmorData_Vanilla(Armor akArmor, int aiGearType)
 		endif
 
 	elseif aiGearType == GEARTYPE_HANDS
-		protectionLevels = ds.FindHandsProtectionLevels(akArmor)
+		protectionLevels = akDatastore.FindHandsProtectionLevels(akArmor)
 		int warmthLevel = protectionLevels[0]
 		int coverageLevel = protectionLevels[1]
 		bool found = protectionLevels[2]
@@ -1513,7 +1509,7 @@ int[] function GetDefaultArmorData_Vanilla(Armor akArmor, int aiGearType)
 		endif
 
 	elseif aiGearType == GEARTYPE_FEET
-		protectionLevels = ds.FindFeetProtectionLevels(akArmor)
+		protectionLevels = akDatastore.FindFeetProtectionLevels(akArmor)
 		int warmthLevel = protectionLevels[0]
 		int coverageLevel = protectionLevels[1]
 		bool found = protectionLevels[2]
@@ -1527,7 +1523,7 @@ int[] function GetDefaultArmorData_Vanilla(Armor akArmor, int aiGearType)
 		endif
 
 	elseif aiGearType == GEARTYPE_CLOAK
-		protectionLevels = ds.FindCloakProtectionLevels(akArmor)
+		protectionLevels = akDatastore.FindCloakProtectionLevels(akArmor)
 		int warmthLevel = protectionLevels[0]
 		int coverageLevel = protectionLevels[1]
 		bool found = protectionLevels[2]
@@ -1541,7 +1537,7 @@ int[] function GetDefaultArmorData_Vanilla(Armor akArmor, int aiGearType)
 		endif
 
 	elseif aiGearType == GEARTYPE_MISC
-		protectionLevels = ds.FindMiscProtectionLevels(akArmor)
+		protectionLevels = akDatastore.FindMiscProtectionLevels(akArmor)
 		int warmthLevel = protectionLevels[0]
 		int coverageLevel = protectionLevels[1]
 		bool found = protectionLevels[2]
@@ -1616,12 +1612,12 @@ state mock_getArmorProtectionDataByX
 		return mock_GetArmorData_value
 	endFunction
 
-	int[] function GetArmorData_Vanilla(Armor akArmor, int aiGearType)
+	int[] function GetArmorData_Vanilla(Armor akArmor, int aiGearType, _Frost_LegacyArmorDatastore akDatastore)
 		mock_GetArmorDataVanilla_callcount += 1
 		return mock_GetArmorData_value
 	endFunction
 
-	int[] function GetDefaultArmorData_Vanilla(Armor akArmor, int aiGearType)
+	int[] function GetDefaultArmorData_Vanilla(Armor akArmor, int aiGearType, _Frost_LegacyArmorDatastore akDatastore)
 		mock_GetArmorDefaultData_Vanilla_callcount += 1
 		return mock_GetArmorDefaultData_value
 	endFunction

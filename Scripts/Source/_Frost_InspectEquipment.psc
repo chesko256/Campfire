@@ -2,6 +2,12 @@ scriptname _Frost_InspectEquipment extends ActiveMagicEffect
 
 import FrostUtil
 
+GlobalVariable property _Frost_InspectHasBody auto
+GlobalVariable property _Frost_InspectHasHead auto
+GlobalVariable property _Frost_InspectHasHands auto
+GlobalVariable property _Frost_InspectHasFeet auto
+GlobalVariable property _Frost_InspectHasCloak auto
+
 Message property _Frost_InspectEquipmentMsg_root auto
 {
 	Exposure Protection
@@ -9,13 +15,13 @@ Message property _Frost_InspectEquipmentMsg_root auto
 	Worn Equipment: X Warmth, X Coverage
 	Total (with bonuses): X Warmth, X Coverage
 
-	Inspect Equipment 	Restore Defaults	Back
+	Modify Equipment 	Restore Defaults	Back
 
 }
 
 Message property _Frost_InspectEquipmentMsg_select auto
 {
-	Select a piece of currently worn gear you would like to inspect.
+	Select a piece of currently worn gear you would like to modify.
 
 	Body	Head	Hands	Feet 	Cloak	Back
 }
@@ -26,7 +32,7 @@ Message property _Frost_InspectEquipmentMsg_body auto
 
 	Current Protection: X Warmth, X Coverage
 
-	Modify Protection	Back
+	Modify	Back
 }
 
 Message property _Frost_InspectEquipmentMsg_head auto
@@ -35,7 +41,7 @@ Message property _Frost_InspectEquipmentMsg_head auto
 
 	Current Protection: X Warmth, X Coverage
 
-	Modify Protection	Back
+	Modify	Back
 }
 
 Message property _Frost_InspectEquipmentMsg_hands auto
@@ -44,7 +50,7 @@ Message property _Frost_InspectEquipmentMsg_hands auto
 
 	Current Protection: X Warmth, X Coverage
 
-	Modify Protection	Back
+	Modify	Back
 }
 
 Message property _Frost_InspectEquipmentMsg_feet auto
@@ -53,7 +59,7 @@ Message property _Frost_InspectEquipmentMsg_feet auto
 
 	Current Protection: X Warmth, X Coverage
 
-	Modify Protection	Back
+	Modify	Back
 }
 
 Message property _Frost_InspectEquipmentMsg_cloak auto
@@ -62,14 +68,23 @@ Message property _Frost_InspectEquipmentMsg_cloak auto
 
 	Current Protection: X Warmth, X Coverage
 
-	Modify Protection	Back
+	Modify	Back
+}
+
+Message property _Frost_InspectEquipmentMsg_accessory auto
+{
+	Worn Accessory
+
+	Current Protection: X Warmth, X Coverage
+
+	Modify	Back
 }
 
 Message property _Frost_InspectEquipmentMsg_inspectwarmth_body auto
 Message property _Frost_InspectEquipmentMsg_inspectwarmth_head auto
 Message property _Frost_InspectEquipmentMsg_inspectwarmth_hands auto
 Message property _Frost_InspectEquipmentMsg_inspectwarmth_feet auto
-Message property _Frost_InspectEquipmentMsg_inspectwarmth_cloak auto
+Message property _Frost_InspectEquipmentMsg_inspect_cloak auto
 {
 	At first glance, this equipment appears to provide X warmth.
 
@@ -82,7 +97,6 @@ Message property _Frost_InspectEquipmentMsg_inspectcoverage_body auto
 Message property _Frost_InspectEquipmentMsg_inspectcoverage_head auto
 Message property _Frost_InspectEquipmentMsg_inspectcoverage_hands auto
 Message property _Frost_InspectEquipmentMsg_inspectcoverage_feet auto
-Message property _Frost_InspectEquipmentMsg_inspectcoverage_cloak auto
 {
 	At first glance, this equipment appears to provide X coverage.
 
@@ -96,45 +110,60 @@ Message property _Frost_InspectEquipmentMsg_inspectconfirm auto
 	The warmth and coverage of this gear has been changed.
 }
 
+Message property _Frost_InspectEquipmentMsg_defaultsingle auto
+Message property _Frost_InspectEquipmentMsg_defaultsingleconfirm auto
+Message property _Frost_InspectEquipmentMsg_defaultall auto
+Message property _Frost_InspectEquipmentMsg_defaultallconfirm auto
+
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	rootMenu()
 EndEvent
 
 function rootMenu()
-	int i = _Frost_InspectEquipmentMsg_root(GetPlayerArmorWarmth(), GetPlayerArmorCoverage(), GetPlayerWarmth(), GetPlayerCoverage())
+	int exposure = ((GetPlayerExposure() - 20) as int)
+	if exposure < 0
+		exposure = 0
+	endif
+	int wetness = (((GetPlayerWetness() / 750) * 100) as int)
+
+	int i = _Frost_InspectEquipmentMsg_root.Show(exposure, wetness, GetPlayerArmorWarmth(), GetPlayerArmorCoverage(), GetPlayerWarmth(), GetPlayerCoverage())
 	if i == 0
 		InspectEquipment()
 	elseif i == 1
-		RestoreDefaults()
+		RestoreAllDefaults()
 	elseif i == 2
 		; Exit
 	endif
 endFunction
 
+function RestoreAllDefaults()
+
+endFunction
+
 function InspectEquipment()
 
-	int[] wornValues = GetClothingSystem().WornGearValues
-	if wornValues[0] > 0 && wornValues[1] > 0
+	Armor[] wornForms = GetClothingSystem().WornGearMainForms
+	if wornForms[0]
 		_Frost_InspectHasBody.SetValueInt(2)
 	else
 		_Frost_InspectHasBody.SetValueInt(1)
 	endif
-	if wornValues[2] > 0 && wornValues[3] > 0
+	if wornForms[1]
 		_Frost_InspectHasHead.SetValueInt(2)
 	else
 		_Frost_InspectHasHead.SetValueInt(1)
 	endif
-	if wornValues[4] > 0 && wornValues[5] > 0
+	if wornForms[2]
 		_Frost_InspectHasHands.SetValueInt(2)
 	else
 		_Frost_InspectHasHands.SetValueInt(1)
 	endif
-	if wornValues[6] > 0 && wornValues[7] > 0
+	if wornForms[3]
 		_Frost_InspectHasFeet.SetValueInt(2)
 	else
 		_Frost_InspectHasFeet.SetValueInt(1)
 	endif
-	if wornValues[8] > 0 && wornValues[9] > 0
+	if wornForms[4]
 		_Frost_InspectHasCloak.SetValueInt(2)
 	else
 		_Frost_InspectHasCloak.SetValueInt(1)
@@ -156,10 +185,16 @@ function InspectEquipment()
 	endif
 endFunction
 
+function DefaultSingle()
+
+endFunction
+
 function InspectBody(int[] aiWornGearValues)
 	int i = _Frost_InspectEquipmentMsg_body.Show(aiWornGearValues[0], aiWornGearValues[1])
 	if i == 0
 		ModifyGearWarmth(1, aiWornGearValues)
+	elseif i == 1
+		DefaultSingle()
 	else
 		InspectEquipment()
 	endif
@@ -169,6 +204,8 @@ function InspectHead(int[] aiWornGearValues)
 	int i = _Frost_InspectEquipmentMsg_head.Show(aiWornGearValues[2], aiWornGearValues[3])
 	if i == 0
 		ModifyGearWarmth(2, aiWornGearValues)
+	elseif i == 1
+		DefaultSingle()
 	else
 		InspectEquipment()
 	endif
@@ -178,6 +215,8 @@ function InspectHands(int[] aiWornGearValues)
 	int i = _Frost_InspectEquipmentMsg_hands.Show(aiWornGearValues[4], aiWornGearValues[5])
 	if i == 0
 		ModifyGearWarmth(3, aiWornGearValues)
+	elseif i == 1
+		DefaultSingle()
 	else
 		InspectEquipment()
 	endif
@@ -187,6 +226,8 @@ function InspectFeet(int[] aiWornGearValues)
 	int i = _Frost_InspectEquipmentMsg_feet.Show(aiWornGearValues[6], aiWornGearValues[7])
 	if i == 0
 		ModifyGearWarmth(4, aiWornGearValues)
+	elseif i == 1
+		DefaultSingle()
 	else
 		InspectEquipment()
 	endif
@@ -196,6 +237,8 @@ function InspectCloak(int[] aiWornGearValues)
 	int i = _Frost_InspectEquipmentMsg_cloak.Show(aiWornGearValues[8], aiWornGearValues[9])
 	if i == 0
 		ModifyGearWarmth(5, aiWornGearValues)
+	elseif i == 1
+		DefaultSingle()
 	else
 		InspectEquipment()
 	endif
@@ -203,7 +246,10 @@ endFunction
 
 function ModifyGearWarmth(int aiGearType, int[] aiWornGearValues)
 	Message warmthSelectMsg
-	int idx
+	int idx = 0
+	int jdx = 0
+	bool dual_value = false
+	int choice_count = 5
 	if aiGearType == 1
 		warmthSelectMsg = _Frost_InspectEquipmentMsg_inspectwarmth_body
 		idx = 0
@@ -217,14 +263,22 @@ function ModifyGearWarmth(int aiGearType, int[] aiWornGearValues)
 		warmthSelectMsg = _Frost_InspectEquipmentMsg_inspectwarmth_feet
 		idx = 6
 	elseif aiGearType == 5
-		warmthSelectMsg = _Frost_InspectEquipmentMsg_inspectwarmth_cloak
+		warmthSelectMsg = _Frost_InspectEquipmentMsg_inspect_cloak
 		idx = 8
+		jdx = 9
+		choice_count = 3
 	endif
 
-	int i = warmthSelectMsg.Show(aiWornGearValues[idx])
-	if i < 5
+	int i
+	if dual_value
+		i = warmthSelectMsg.Show(aiWornGearValues[idx], aiWornGearValues[jdx])
+	else
+		i = warmthSelectMsg.Show(aiWornGearValues[idx])
+	endif
+
+	if i < choice_count
 		ModifyGearCoverage(aiGearType, aiWornGearValues, i)
-	else i == 5
+	elseif i == choice_count
 		if aiGearType == 1
 			InspectBody(aiWornGearValues)
 		elseif aiGearType == 2
@@ -255,8 +309,9 @@ function ModifyGearCoverage(int aiGearType, int[] aiWornGearValues, int aiWarmth
 		coverageSelectMsg = _Frost_InspectEquipmentMsg_inspectcoverage_feet
 		idx = 6
 	elseif aiGearType == 5
-		coverageSelectMsg = _Frost_InspectEquipmentMsg_inspectcoverage_cloak
-		idx = 8
+		; we're done
+		CommitModification(aiGearType, aiWarmthChoice, -1)
+		return
 	endif
 
 	int choice
@@ -264,10 +319,13 @@ function ModifyGearCoverage(int aiGearType, int[] aiWornGearValues, int aiWarmth
 	if i < 5
 		choice = i
 		CommitModification(aiGearType, aiWarmthChoice, i)
-	else i == 5
+	elseif i == 5
 		if aiGearType == 1
+			; ExtraHeadPrompt()
+			; ExtraCloakPrompt()
 			InspectBody(aiWornGearValues)
 		elseif aiGearType == 2
+			; ExtraCloakPrompt()
 			InspectHead(aiWornGearValues)
 		elseif aiGearType == 3
 			InspectHands(aiWornGearValues)
@@ -280,5 +338,16 @@ function ModifyGearCoverage(int aiGearType, int[] aiWornGearValues, int aiWarmth
 endFunction
 
 function CommitModification(int aiGearType, int aiWarmthChoice, int aiCoverageChoice)
+	int idx = aiGearType - 1
+	Armor theArmor = GetClothingSystem().WornGearMainForms[idx]
+	SetArmorData(theArmor, asPluginName, aiGearType, aiWarmthChoice, aiCoverageChoice)
+	; confirmation message
+endFunction
+
+function ExtraHeadPrompt()
+
+endFunction
+
+function ExtraCloakPrompt()
 
 endFunction

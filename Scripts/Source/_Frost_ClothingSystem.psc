@@ -39,12 +39,32 @@ Armor property initial_feet auto hidden
 Armor property initial_shield auto hidden
 
 Message property _Frost_ProtectionTotalsMsg auto
-Message property _Frost_ProtectionArmorDisplayBody auto
-Message property _Frost_ProtectionArmorDisplayHead auto
-Message property _Frost_ProtectionArmorDisplayHands auto
-Message property _Frost_ProtectionArmorDisplayFeet auto
-Message property _Frost_ProtectionArmorDisplayCloak auto
-Message property _Frost_ProtectionArmorDisplayShield auto
+
+Message property _Frost_ProtArmor_Poor_Poor auto
+Message property _Frost_ProtArmor_Fair_Poor auto
+Message property _Frost_ProtArmor_Good_Poor auto
+Message property _Frost_ProtArmor_Excellent_Poor auto
+Message property _Frost_ProtArmor_Max_Poor auto
+Message property _Frost_ProtArmor_Poor_Fair auto
+Message property _Frost_ProtArmor_Fair_Fair auto
+Message property _Frost_ProtArmor_Good_Fair auto
+Message property _Frost_ProtArmor_Excellent_Fair auto
+Message property _Frost_ProtArmor_Max_Fair auto
+Message property _Frost_ProtArmor_Poor_Good auto
+Message property _Frost_ProtArmor_Fair_Good auto
+Message property _Frost_ProtArmor_Good_Good auto
+Message property _Frost_ProtArmor_Excellent_Good auto
+Message property _Frost_ProtArmor_Max_Good auto
+Message property _Frost_ProtArmor_Poor_Excellent auto
+Message property _Frost_ProtArmor_Fair_Excellent auto
+Message property _Frost_ProtArmor_Good_Excellent auto
+Message property _Frost_ProtArmor_Excellent_Excellent auto
+Message property _Frost_ProtArmor_Max_Excellent auto
+Message property _Frost_ProtArmor_Poor_Max auto
+Message property _Frost_ProtArmor_Fair_Max auto
+Message property _Frost_ProtArmor_Good_Max auto
+Message property _Frost_ProtArmor_Excellent_Max auto
+Message property _Frost_ProtArmor_Max_Max auto
 
 _Frost_ArmorProtectionDatastoreHandler handler
 
@@ -597,21 +617,7 @@ function DisplayWarmthCoverageNoSkyUIPkg_Vanilla(Armor akArmor, int aiGearType)
                 if result[0] == -99
                     ;debug.notification(name + " - " + str.Warmth + " N/A, " + str.Coverage + " N/A")
                 else
-                    if aiGearType == handler.GEARTYPE_BODY
-                        _Frost_ProtectionArmorDisplayBody.Show(result[0], result[1])
-                    elseif aiGearType == handler.GEARTYPE_HEAD
-                        _Frost_ProtectionArmorDisplayHead.Show(result[0], result[1])
-                    elseif aiGearType == handler.GEARTYPE_HANDS
-                        _Frost_ProtectionArmorDisplayHands.Show(result[0], result[1])
-                    elseif aiGearType == handler.GEARTYPE_FEET
-                        _Frost_ProtectionArmorDisplayFeet.Show(result[0], result[1])
-                    elseif aiGearType == handler.GEARTYPE_CLOAK
-                        _Frost_ProtectionArmorDisplayCloak.Show(result[0], result[1])
-                    elseif aiGearType == handler.GEARTYPE_MISC
-                        if IsArmorShield(akArmor)
-                            _Frost_ProtectionArmorDisplayShield.Show(result[0], result[1])
-                        endif
-                    endif
+                    DisplaySingleGearProtectionNotification(result[0], result[1], aiGearType)
                 endif
                 waitingForMenuExit = true
             endif
@@ -619,6 +625,104 @@ function DisplayWarmthCoverageNoSkyUIPkg_Vanilla(Armor akArmor, int aiGearType)
 
         ; Show the total warmth and coverage
         ; RegisterForSingleUpdate(3)
+    endif
+endFunction
+
+int function GetArmorProtectionCategory(int aiProtectionValue, int aiInterval1, int aiInterval2, int aiInterval3, int aiInterval4)
+    if aiProtectionValue <= aiInterval1
+        return 1
+    elseif aiProtectionValue <= aiInterval2
+        return 2
+    elseif aiProtectionValue <= aiInterval3
+        return 3
+    elseif aiProtectionValue <= aiInterval4
+        return 4
+    elseif aiProtectionValue > aiInterval4
+        return 5
+    endif
+endFunction
+
+function DisplaySingleGearProtectionNotification(int aiWarmth, int aiCoverage, int aiGearType)
+    int warmthCategory
+    int coverageCategory
+
+    if aiGearType == handler.GEARTYPE_BODY
+        warmthCategory = GetArmorProtectionCategory(aiWarmth, 75, 125, 150, 180)
+        coverageCategory = GetArmorProtectionCategory(aiCoverage, 35, 54, 72, 91)
+    elseif aiGearType == handler.GEARTYPE_HEAD
+        warmthCategory = GetArmorProtectionCategory(aiWarmth, 15, 30, 40, 50)
+        coverageCategory = GetArmorProtectionCategory(aiCoverage, 14, 29, 43, 58)        
+    elseif aiGearType == handler.GEARTYPE_HANDS
+        warmthCategory = GetArmorProtectionCategory(aiWarmth, 9, 12, 15, 21)
+        coverageCategory = GetArmorProtectionCategory(aiCoverage, 6, 14, 21, 29)
+    elseif aiGearType == handler.GEARTYPE_FEET
+        warmthCategory = GetArmorProtectionCategory(aiWarmth, 7, 12, 15, 21)
+        coverageCategory = GetArmorProtectionCategory(aiCoverage, 6, 14, 21, 29)
+    elseif aiGearType == handler.GEARTYPE_CLOAK || aiGearType == handler.GEARTYPE_MISC
+        warmthCategory = GetArmorProtectionCategory(aiWarmth, 6, 12, 20, 30)
+        coverageCategory = GetArmorProtectionCategory(aiCoverage, 6, 12, 20, 30)
+    endif
+
+    if warmthCategory == 1
+        if coverageCategory == 1
+            _Frost_ProtArmor_Poor_Poor.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 2
+            _Frost_ProtArmor_Poor_Fair.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 3
+            _Frost_ProtArmor_Poor_Good.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 4
+            _Frost_ProtArmor_Poor_Excellent.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 5
+            _Frost_ProtArmor_Poor_Max.Show(aiWarmth, aiCoverage)
+        endif
+    elseif warmthCategory == 2
+        if coverageCategory == 1
+            _Frost_ProtArmor_Fair_Poor.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 2
+            _Frost_ProtArmor_Fair_Fair.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 3
+            _Frost_ProtArmor_Fair_Good.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 4
+            _Frost_ProtArmor_Fair_Excellent.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 5
+            _Frost_ProtArmor_Fair_Max.Show(aiWarmth, aiCoverage)
+        endif
+    elseif warmthCategory == 3
+        if coverageCategory == 1
+            _Frost_ProtArmor_Good_Poor.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 2
+            _Frost_ProtArmor_Good_Fair.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 3
+            _Frost_ProtArmor_Good_Good.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 4
+            _Frost_ProtArmor_Good_Excellent.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 5
+            _Frost_ProtArmor_Good_Max.Show(aiWarmth, aiCoverage)
+        endif
+    elseif warmthCategory == 4
+        if coverageCategory == 1
+            _Frost_ProtArmor_Excellent_Poor.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 2
+            _Frost_ProtArmor_Excellent_Fair.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 3
+            _Frost_ProtArmor_Excellent_Good.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 4
+            _Frost_ProtArmor_Excellent_Excellent.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 5
+            _Frost_ProtArmor_Excellent_Max.Show(aiWarmth, aiCoverage)
+        endif
+    elseif warmthCategory == 5
+        if coverageCategory == 1
+            _Frost_ProtArmor_Max_Poor.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 2
+            _Frost_ProtArmor_Max_Fair.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 3
+            _Frost_ProtArmor_Max_Good.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 4
+            _Frost_ProtArmor_Max_Excellent.Show(aiWarmth, aiCoverage)
+        elseif coverageCategory == 5
+            _Frost_ProtArmor_Max_Max.Show(aiWarmth, aiCoverage)
+        endif
     endif
 endFunction
 

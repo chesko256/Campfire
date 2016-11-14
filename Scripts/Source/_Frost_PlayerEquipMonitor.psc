@@ -206,7 +206,7 @@ endFunction
 
 
 function ShowProtectionTutorial()
-	if _Frost_Setting_DisplayTutorials.GetValueInt() == 2 && _Frost_HelpDone_Warmth.GetValueInt() == 1
+	if _Frost_Setting_DisplayTutorials.GetValueInt() == 2 && Utility.IsInMenuMode() && _Frost_HelpDone_Warmth.GetValueInt() == 1
 		_Frost_Help_Warmth.Show()
 		_Frost_HelpDone_Warmth.SetValue(2)
 	endif

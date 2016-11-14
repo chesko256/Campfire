@@ -3,6 +3,7 @@ scriptname _Frost_APDatastoreHandler_SEtest extends Lilac
 import FrostUtil
 
 _Frost_ArmorProtectionDatastoreHandler ap
+_Frost_LegacyArmorDatastore ds
 
 Armor property ArmorIronCuirass auto
 Armor property ArmorIronHelmet auto
@@ -92,7 +93,9 @@ endFunction
 
 function beforeAll()
 	ap = GetClothingDatastoreHandler()
-	ap.CreateProtectionKeywordValueMaps()
+	ds = GetLegacyArmorDatastore()
+	ds.InitializeDatastore()
+	ds.PopulateDefaultArmorData()
 endFunction
 
 function beforeEach_GetArmorProtectionDataByX()
@@ -682,7 +685,7 @@ function testGetArmorProtectionDataByKeyword_BodyExtraHeadCloak()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_BodyGear()
-	int[] result = ap.GetDefaultArmorData_Vanilla(_Frost_UnitTestUnknownBody1, ap.GEARTYPE_BODY)
+	int[] result = ap.GetDefaultArmorData_Vanilla(_Frost_UnitTestUnknownBody1, ap.GEARTYPE_BODY, ds)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_BODY)
 	expectInt(result[1], to, beEqualTo, 110)
 	expectInt(result[2], to, beEqualTo, 54)
@@ -701,7 +704,7 @@ function testGetArmorProtectionDataByAnalysis_BodyGear()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_BodyGearExtraHood()
-	int[] result = ap.GetDefaultArmorData_Vanilla(EnchClothesWarlockRobesHoodedAlteration01, ap.GEARTYPE_BODY)
+	int[] result = ap.GetDefaultArmorData_Vanilla(EnchClothesWarlockRobesHoodedAlteration01, ap.GEARTYPE_BODY, ds)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_BODY)
 	expectInt(result[1], to, beEqualTo, 110)
 	expectInt(result[2], to, beEqualTo, 72)
@@ -720,7 +723,7 @@ function testGetArmorProtectionDataByAnalysis_BodyGearExtraHood()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_HeadGear()
-	int[] result = ap.GetDefaultArmorData_Vanilla(_Frost_UnitTestUnknownHead1, ap.GEARTYPE_HEAD)
+	int[] result = ap.GetDefaultArmorData_Vanilla(_Frost_UnitTestUnknownHead1, ap.GEARTYPE_HEAD, ds)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_HEAD)
 	expectInt(result[1], to, beEqualTo, 30)
 	expectInt(result[2], to, beEqualTo, 29)
@@ -739,7 +742,7 @@ function testGetArmorProtectionDataByAnalysis_HeadGear()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_HandsGear()
-	int[] result = ap.GetDefaultArmorData_Vanilla(_Frost_UnitTestUnknownHands1, ap.GEARTYPE_HANDS)
+	int[] result = ap.GetDefaultArmorData_Vanilla(_Frost_UnitTestUnknownHands1, ap.GEARTYPE_HANDS, ds)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_HANDS)
 	expectInt(result[1], to, beEqualTo, 12)
 	expectInt(result[2], to, beEqualTo, 14)
@@ -758,7 +761,7 @@ function testGetArmorProtectionDataByAnalysis_HandsGear()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_FeetGear()
-	int[] result = ap.GetDefaultArmorData_Vanilla(_Frost_UnitTestUnknownFeet1, ap.GEARTYPE_FEET)
+	int[] result = ap.GetDefaultArmorData_Vanilla(_Frost_UnitTestUnknownFeet1, ap.GEARTYPE_FEET, ds)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_FEET)
 	expectInt(result[1], to, beEqualTo, 12)
 	expectInt(result[2], to, beEqualTo, 14)
@@ -777,7 +780,7 @@ function testGetArmorProtectionDataByAnalysis_FeetGear()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_CloakGear()
-	int[] result = ap.GetDefaultArmorData_Vanilla(_Frost_UnitTestUnknownCloak1, ap.GEARTYPE_CLOAK)
+	int[] result = ap.GetDefaultArmorData_Vanilla(_Frost_UnitTestUnknownCloak1, ap.GEARTYPE_CLOAK, ds)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_CLOAK)
 	expectInt(result[1], to, beEqualTo, 12)
 	expectInt(result[2], to, beEqualTo, 12)
@@ -796,7 +799,7 @@ function testGetArmorProtectionDataByAnalysis_CloakGear()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_Shields()
-	int[] result = ap.GetDefaultArmorData_Vanilla(_Frost_UnitTestUnknownShield1, ap.GEARTYPE_MISC)
+	int[] result = ap.GetDefaultArmorData_Vanilla(_Frost_UnitTestUnknownShield1, ap.GEARTYPE_MISC, ds)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_MISC)
 	expectInt(result[1], to, beEqualTo, 0)
 	expectInt(result[2], to, beEqualTo, 20)
@@ -815,7 +818,7 @@ function testGetArmorProtectionDataByAnalysis_Shields()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_HeadGearCirclet()
-	int[] result = ap.GetDefaultArmorData_Vanilla(ClothesCirclet01, ap.GEARTYPE_HEAD)
+	int[] result = ap.GetDefaultArmorData_Vanilla(ClothesCirclet01, ap.GEARTYPE_HEAD, ds)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_IGNORE)
 	expectInt(result[1], to, beEqualTo, 0)
 	expectInt(result[2], to, beEqualTo, 0)
@@ -834,7 +837,7 @@ function testGetArmorProtectionDataByAnalysis_HeadGearCirclet()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_Ring()
-	int[] result = ap.GetDefaultArmorData_Vanilla(JewelryRingGold, ap.GEARTYPE_NOTFOUND)
+	int[] result = ap.GetDefaultArmorData_Vanilla(JewelryRingGold, ap.GEARTYPE_NOTFOUND, ds)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_IGNORE)
 	expectInt(result[1], to, beEqualTo, 0)
 	expectInt(result[2], to, beEqualTo, 0)
@@ -853,7 +856,7 @@ function testGetArmorProtectionDataByAnalysis_Ring()
 endFunction
 
 function testGetArmorProtectionDataByAnalysis_Amulet()
-	int[] result = ap.GetDefaultArmorData_Vanilla(JewelryNecklaceGoldGems, ap.GEARTYPE_NOTFOUND)
+	int[] result = ap.GetDefaultArmorData_Vanilla(JewelryNecklaceGoldGems, ap.GEARTYPE_NOTFOUND, ds)
 	expectInt(result[0], to, beEqualTo, ap.GEARTYPE_IGNORE)
 	expectInt(result[1], to, beEqualTo, 0)
 	expectInt(result[2], to, beEqualTo, 0)

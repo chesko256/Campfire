@@ -6,7 +6,7 @@ import FrostUtil
 import _FrostInternal
 
 int property SKSE_MIN_VERSION = 10703 autoReadOnly
-int property CAMPFIRE_MIN_VERSION = 10901 autoReadOnly
+int property CAMPFIRE_MIN_VERSION = 11003 autoReadOnly
 float property WEARABLELANTERNS_MIN_VERSION = 4.02 autoReadOnly
 GlobalVariable property _Frost_PreviousVersion auto
 GlobalVariable property _Frost_FrostfallVersion auto
@@ -20,11 +20,10 @@ actor property PlayerRef auto
 ReferenceAlias property PlayerAlias auto
 Spell property _Frost_Weathersense_Spell auto
 Spell property _Frost_LegacyConfig_Spell auto
+Spell property _Frost_RegionDetect auto
+Spell property _Frost_InspectEquipment_Spell auto
 GlobalVariable property _Frost_HotkeyWeathersense auto
 Perk property _Frost_FrostResistWarmthModPerk auto
-Perk property _Frost_HypothermiaModGeneralSkills auto
-Perk property _Frost_HypothermiaModHandAbilities auto
-Perk property _Frost_HypothermiaModRegenAbilities auto
 
 ;#Scripts======================================================================
 _Frost_ConditionValues property Conditions auto
@@ -198,6 +197,7 @@ GlobalVariable property _Frost_Upgraded_3_0_2 auto
 GlobalVariable property _Frost_Upgraded_3_1 auto
 GlobalVariable property _Frost_Upgraded_3_2 auto
 GlobalVariable property _Frost_Upgraded_3_2_1 auto
+GlobalVariable property _Frost_Upgraded_3_3_1 auto
 GlobalVariable property _Frost_Setting_DisplayTutorials auto
 
 Event OnPlayerLoadGame()
@@ -216,8 +216,8 @@ function ErrorSKSE(int version)
 endFunction
 
 function FatalErrorCampfire(float version)
-	float version_formatted = ((version as float) / 100)
-	float min_version_formatted = ((CAMPFIRE_MIN_VERSION as float) / 100)
+	float version_formatted = ((version as float) / 10000)
+	float min_version_formatted = ((CAMPFIRE_MIN_VERSION as float) / 10000)
 	trace("[Frostfall][ERROR] Detected Campfire version " + version_formatted + ", out of date! Expected " + min_version_formatted + " or newer.")
 	while true
 		_Frost_CriticalError_Campfire.Show(version_formatted, min_version_formatted)
@@ -310,7 +310,9 @@ function RunCompatibility()
 		Upgrade_3_2_1()
 	endif
 
-	;@TODO: Upgrade for 3.3, rerun CreateProtectionKeywordValueMaps.
+	if _Frost_Upgraded_3_3_1.GetValueInt() != 2
+		Upgrade_3_3_1()
+	endif
 
 	; Verify that the default datastore has been populated.
 	CheckDatastore()
@@ -743,6 +745,38 @@ function Upgrade_3_2_1()
 	_Frost_Upgraded_3_2_1.SetValueInt(2)
 endFunction
 
+function Upgrade_3_3_1()
+	; Include the Conjured Cloak spells in leveled lists.
+	
+	LItemSpellTomes25AllConjuration.AddForm(_Frost_SpellTomeBoundCloakLesser, 1, 1)
+	LItemSpellTomes25Conjuration.AddForm(_Frost_SpellTomeBoundCloakLesser, 1, 1)
+	LItemScroll25Skill.AddForm(_Frost_ScrollBoundCloakLesser, 1, 1)
+	LItemSpellTomes50AllConjuration.AddForm(_Frost_SpellTomeBoundCloakGreater, 1, 1)
+	LItemSpellTomes50Conjuration.AddForm(_Frost_SpellTomeBoundCloakGreater, 1, 1)
+	LItemSpellTomes50Spells.AddForm(_Frost_SpellTomeBoundCloakGreater, 1, 1)
+
+	; Rebalance cloaks
+	if _Frost_PreviousVersion.GetValue() > 0.0
+		if isSKSELoaded
+			_Frost_ArmorProtectionDatastoreHandler ap = GetClothingDatastoreHandler()
+			ap.SetArmorDataByKey("356637___Frostfall.esp", ap.GEARTYPE_CLOAK, 20, 20, abExportToDefaults = true, abSave = false) ; _Frost_Cloak_BoundLesser
+			ap.SetArmorDataByKey("359400___Frostfall.esp", ap.GEARTYPE_CLOAK, 12, 40, abExportToDefaults = true, abSave = true) ; _Frost_Cloak_BoundGreater
+		endif
+	endif
+
+	if _Frost_PreviousVersion.GetValue() > 0.0
+		; Rebuild the value maps
+		GetClothingDatastoreHandler().CreateProtectionKeywordValueMaps()
+
+		if !isSKSELoaded
+			GetLegacyArmorDatastore().InitializeCustomArrays()
+		endif
+	endif
+
+	trace("[Frostfall] Upgraded to 3.3.1.")
+	_Frost_Upgraded_3_3_1.SetValueInt(2)
+endFunction
+
 bool function CheckJSONReadWrite()
 	; Attempt to open the file and write a value.
 	string path = "../FrostfallData/startup_test_file"
@@ -813,10 +847,10 @@ endFunction
 
 function CheckDatastore_Vanilla()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
-	int[] armor_data = handler.GetArmorData_Vanilla(ArmorHideCuirass, handler.GEARTYPE_BODY)
-	if armor_data[0] == handler.GEARTYPE_NOTFOUND
-		GetLegacyArmorDatastore().PopulateDefaultArmorData()
-		debug.trace("[Frostfall] Finished saving the default armor data.")
+	_Frost_LegacyArmorDatastore legacyDatastore = GetLegacyArmorDatastore()
+	int[] protectionLevels = legacyDatastore.FindBodyProtectionLevels(ArmorHideCuirass)
+	if protectionLevels[2] == handler.GEARTYPE_NOTFOUND
+		legacyDatastore.PopulateDefaultArmorData()
 	endif
 endFunction
 
@@ -1151,8 +1185,10 @@ endFunction
 function AddStartupSpells()
 	if isSKYUILoaded
 		PlayerRef.RemoveSpell(_Frost_LegacyConfig_Spell)
+		PlayerRef.RemoveSpell(_Frost_InspectEquipment_Spell)
 	else
 		PlayerRef.AddSpell(_Frost_LegacyConfig_Spell, false)
+		PlayerRef.AddSpell(_Frost_InspectEquipment_Spell, false)
 	endif
 
 	if _Frost_HotkeyWeathersense.GetValueInt() != 0
@@ -1165,16 +1201,8 @@ function AddStartupSpells()
 		PlayerRef.AddPerk(_Frost_FrostResistWarmthModPerk)
 	endif
 
-	if !PlayerRef.HasPerk(_Frost_HypothermiaModGeneralSkills)
-		PlayerRef.AddPerk(_Frost_HypothermiaModGeneralSkills)
-	endif
-
-	if !PlayerRef.HasPerk(_Frost_HypothermiaModHandAbilities)
-		PlayerRef.AddPerk(_Frost_HypothermiaModHandAbilities)
-	endif
-
-	if !PlayerRef.HasPerk(_Frost_HypothermiaModRegenAbilities)
-		PlayerRef.AddPerk(_Frost_HypothermiaModRegenAbilities)
+	if !PlayerRef.HasSpell(_Frost_RegionDetect)
+		PlayerRef.AddSpell(_Frost_RegionDetect, false)
 	endif
 
 	GetFrostResistSystem().old_amount = 0.0
@@ -1237,9 +1265,9 @@ function AddSpellBooks()
 		; LItemScroll75Skill.AddForm(_Frost_ScrollConjureShelterLesser, 1, 1)
 
 		;100
-		LItemSpellTomes100Conjuration.AddForm(_Frost_SpellTomeConjureShelterGreater, 1, 1)
-		MGRitualConjurationBooks.AddForm(_Frost_SpellTomeConjureShelterGreater, 1, 1)
-		LItemScroll100Skill.AddForm(_Frost_ScrollConjureShelterGreater, 1, 1)
+		; LItemSpellTomes100Conjuration.AddForm(_Frost_SpellTomeConjureShelterGreater, 1, 1)
+		; MGRitualConjurationBooks.AddForm(_Frost_SpellTomeConjureShelterGreater, 1, 1)
+		; LItemScroll100Skill.AddForm(_Frost_ScrollConjureShelterGreater, 1, 1)
 
 		added_spell_books = true
 	endif

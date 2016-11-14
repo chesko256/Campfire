@@ -288,8 +288,8 @@ function testEquipMulti_Six()
 	PlayerRef.EquipItem(_Camp_Cloak_BasicBurlap, abSilent = true)
 	WaitForEquipQueueDone()
 
-	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 103)
-	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 93)
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 111)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 101)
 
 	PlayerRef.UnequipItem(ArmorIronCuirass, abSilent = true)
 	Utility.Wait(0.1)
@@ -322,8 +322,8 @@ function testStress_1()
 	PlayerRef.EquipItem(_Camp_Cloak_BasicBurlap, abSilent = true)
 	WaitForEquipQueueDone()
 
-	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 103)
-	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 93)
+	expectInt(GetPlayerWarmth(), to, beEqualTo, starting_warmth + 111)
+	expectInt(GetPlayerCoverage(), to, beEqualTo, starting_coverage + 101)
 
 	PlayerRef.EquipItem(ArmorLeatherCuirass, abSilent = true)
 	PlayerRef.EquipItem(ArmorLeatherHelmet, abSilent = true)

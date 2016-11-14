@@ -2444,8 +2444,8 @@ function SetDefaults_Cloak()
 	;    Frostfall
 	;
 	;##############################
-	ap.SetArmorDataByKey("356637___Frostfall.esp", ap.GEARTYPE_CLOAK, 10, 10, abExportToDefaults = true, abSave = false) ; _Frost_Cloak_BoundLesser
-	ap.SetArmorDataByKey("359400___Frostfall.esp", ap.GEARTYPE_CLOAK, 25, 25, abExportToDefaults = true, abSave = false) ; _Frost_Cloak_BoundGreater
+	ap.SetArmorDataByKey("356637___Frostfall.esp", ap.GEARTYPE_CLOAK, 20, 20, abExportToDefaults = true, abSave = false) ; _Frost_Cloak_BoundLesser
+	ap.SetArmorDataByKey("359400___Frostfall.esp", ap.GEARTYPE_CLOAK, 12, 40, abExportToDefaults = true, abSave = false) ; _Frost_Cloak_BoundGreater
 endFunction
 
 function SetDefaults_Shield()
