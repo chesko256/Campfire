@@ -208,6 +208,10 @@ Armor[] ArmorCustomBodyWarmthPoor1
 Armor[] ArmorCustomBodyWarmthPoor2
 Armor[] ArmorCustomBodyWarmthPoor3
 Armor[] ArmorCustomBodyWarmthPoor4
+Armor[] ArmorCustomBodyWarmthFair1
+Armor[] ArmorCustomBodyWarmthFair2
+Armor[] ArmorCustomBodyWarmthFair3
+Armor[] ArmorCustomBodyWarmthFair4
 Armor[] ArmorCustomBodyWarmthGood1
 Armor[] ArmorCustomBodyWarmthGood2
 Armor[] ArmorCustomBodyWarmthGood3
@@ -225,6 +229,10 @@ Armor[] ArmorCustomHandsWarmthPoor1
 Armor[] ArmorCustomHandsWarmthPoor2
 Armor[] ArmorCustomHandsWarmthPoor3
 Armor[] ArmorCustomHandsWarmthPoor4
+Armor[] ArmorCustomHandsWarmthFair1
+Armor[] ArmorCustomHandsWarmthFair2
+Armor[] ArmorCustomHandsWarmthFair3
+Armor[] ArmorCustomHandsWarmthFair4
 Armor[] ArmorCustomHandsWarmthGood1
 Armor[] ArmorCustomHandsWarmthGood2
 Armor[] ArmorCustomHandsWarmthGood3
@@ -242,6 +250,10 @@ Armor[] ArmorCustomHeadWarmthPoor1
 Armor[] ArmorCustomHeadWarmthPoor2
 Armor[] ArmorCustomHeadWarmthPoor3
 Armor[] ArmorCustomHeadWarmthPoor4
+Armor[] ArmorCustomHeadWarmthFair1
+Armor[] ArmorCustomHeadWarmthFair2
+Armor[] ArmorCustomHeadWarmthFair3
+Armor[] ArmorCustomHeadWarmthFair4
 Armor[] ArmorCustomHeadWarmthGood1
 Armor[] ArmorCustomHeadWarmthGood2
 Armor[] ArmorCustomHeadWarmthGood3
@@ -259,6 +271,10 @@ Armor[] ArmorCustomFeetWarmthPoor1
 Armor[] ArmorCustomFeetWarmthPoor2
 Armor[] ArmorCustomFeetWarmthPoor3
 Armor[] ArmorCustomFeetWarmthPoor4
+Armor[] ArmorCustomFeetWarmthFair1
+Armor[] ArmorCustomFeetWarmthFair2
+Armor[] ArmorCustomFeetWarmthFair3
+Armor[] ArmorCustomFeetWarmthFair4
 Armor[] ArmorCustomFeetWarmthGood1
 Armor[] ArmorCustomFeetWarmthGood2
 Armor[] ArmorCustomFeetWarmthGood3
@@ -276,6 +292,10 @@ Armor[] ArmorCustomBodyCoveragePoor1
 Armor[] ArmorCustomBodyCoveragePoor2
 Armor[] ArmorCustomBodyCoveragePoor3
 Armor[] ArmorCustomBodyCoveragePoor4
+Armor[] ArmorCustomBodyCoverageFair1
+Armor[] ArmorCustomBodyCoverageFair2
+Armor[] ArmorCustomBodyCoverageFair3
+Armor[] ArmorCustomBodyCoverageFair4
 Armor[] ArmorCustomBodyCoverageGood1
 Armor[] ArmorCustomBodyCoverageGood2
 Armor[] ArmorCustomBodyCoverageGood3
@@ -293,6 +313,10 @@ Armor[] ArmorCustomHandsCoveragePoor1
 Armor[] ArmorCustomHandsCoveragePoor2
 Armor[] ArmorCustomHandsCoveragePoor3
 Armor[] ArmorCustomHandsCoveragePoor4
+Armor[] ArmorCustomHandsCoverageFair1
+Armor[] ArmorCustomHandsCoverageFair2
+Armor[] ArmorCustomHandsCoverageFair3
+Armor[] ArmorCustomHandsCoverageFair4
 Armor[] ArmorCustomHandsCoverageGood1
 Armor[] ArmorCustomHandsCoverageGood2
 Armor[] ArmorCustomHandsCoverageGood3
@@ -310,6 +334,10 @@ Armor[] ArmorCustomHeadCoveragePoor1
 Armor[] ArmorCustomHeadCoveragePoor2
 Armor[] ArmorCustomHeadCoveragePoor3
 Armor[] ArmorCustomHeadCoveragePoor4
+Armor[] ArmorCustomHeadCoverageFair1
+Armor[] ArmorCustomHeadCoverageFair2
+Armor[] ArmorCustomHeadCoverageFair3
+Armor[] ArmorCustomHeadCoverageFair4
 Armor[] ArmorCustomHeadCoverageGood1
 Armor[] ArmorCustomHeadCoverageGood2
 Armor[] ArmorCustomHeadCoverageGood3
@@ -327,6 +355,10 @@ Armor[] ArmorCustomFeetCoveragePoor1
 Armor[] ArmorCustomFeetCoveragePoor2
 Armor[] ArmorCustomFeetCoveragePoor3
 Armor[] ArmorCustomFeetCoveragePoor4
+Armor[] ArmorCustomFeetCoverageFair1
+Armor[] ArmorCustomFeetCoverageFair2
+Armor[] ArmorCustomFeetCoverageFair3
+Armor[] ArmorCustomFeetCoverageFair4
 Armor[] ArmorCustomFeetCoverageGood1
 Armor[] ArmorCustomFeetCoverageGood2
 Armor[] ArmorCustomFeetCoverageGood3
@@ -692,6 +724,40 @@ function InitializeCustomArrays()
 	ArmorCustomCloakFur2 = new Armor[128]
 	ArmorCustomCloakFur3 = new Armor[128]
 	ArmorCustomCloakFur4 = new Armor[128]
+
+	ArmorCustomBodyWarmthFair1 = new Armor[128]
+	ArmorCustomBodyWarmthFair2 = new Armor[128]
+	ArmorCustomBodyWarmthFair3 = new Armor[128]
+	ArmorCustomBodyWarmthFair4 = new Armor[128]
+	ArmorCustomHandsWarmthFair1 = new Armor[128]
+	ArmorCustomHandsWarmthFair2 = new Armor[128]
+	ArmorCustomHandsWarmthFair3 = new Armor[128]
+	ArmorCustomHandsWarmthFair4 = new Armor[128]
+	ArmorCustomHeadWarmthFair1 = new Armor[128]
+	ArmorCustomHeadWarmthFair2 = new Armor[128]
+	ArmorCustomHeadWarmthFair3 = new Armor[128]
+	ArmorCustomHeadWarmthFair4 = new Armor[128]
+	ArmorCustomFeetWarmthFair1 = new Armor[128]
+	ArmorCustomFeetWarmthFair2 = new Armor[128]
+	ArmorCustomFeetWarmthFair3 = new Armor[128]
+	ArmorCustomFeetWarmthFair4 = new Armor[128]
+	ArmorCustomBodyCoverageFair1 = new Armor[128]
+	ArmorCustomBodyCoverageFair2 = new Armor[128]
+	ArmorCustomBodyCoverageFair3 = new Armor[128]
+	ArmorCustomBodyCoverageFair4 = new Armor[128]
+	ArmorCustomHandsCoverageFair1 = new Armor[128]
+	ArmorCustomHandsCoverageFair2 = new Armor[128]
+	ArmorCustomHandsCoverageFair3 = new Armor[128]
+	ArmorCustomHandsCoverageFair4 = new Armor[128]
+	ArmorCustomHeadCoverageFair1 = new Armor[128]
+	ArmorCustomHeadCoverageFair2 = new Armor[128]
+	ArmorCustomHeadCoverageFair3 = new Armor[128]
+	ArmorCustomHeadCoverageFair4 = new Armor[128]
+	ArmorCustomFeetCoverageFair1 = new Armor[128]
+	ArmorCustomFeetCoverageFair2 = new Armor[128]
+	ArmorCustomFeetCoverageFair3 = new Armor[128]
+	ArmorCustomFeetCoverageFair4 = new Armor[128]
+
 	ArmorCustomIgnore1 = new Armor[128]
 	ArmorCustomIgnore2 = new Armor[128]
 	ArmorCustomIgnore3 = new Armor[128]
@@ -3200,196 +3266,287 @@ endFunction
 ; Custom Values
 ;
 
-function SetArmorData(int aiFormID, string asPluginName, int aiGearType, int aiWarmthType = 0, int aiCoverageType = 0, int aiHeadWarmthType = 0, int aiHeadCoverageType = 0, int aiExtraType = 0)
+function SetArmorData(Armor akArmor, int aiGearType, int aiWarmthType = 0, int aiCoverageType = 0, int aiHeadWarmthType = 0, int aiHeadCoverageType = 0, int aiExtraType = 0)
 	;debug.trace("SetArmorData " + aiFormID + " " + asPluginName + " " + aiGearType + " " + aiWarmthType + " " + aiCoverageType + " " + aiHeadWarmthType + " " + aiHeadCoverageType + " " + aiExtraType)
 	if aiGearType == GEARTYPE_BODY
-		SetArmorDataBody(aiFormID, asPluginName, aiWarmthType, aiCoverageType, aiHeadWarmthType, aiHeadCoverageType, aiExtraType)
+		SetArmorDataBody(akArmor, aiWarmthType, aiCoverageType, aiHeadWarmthType, aiHeadCoverageType, aiExtraType)
 	elseif aiGearType == GEARTYPE_HEAD
-		SetArmorDataHead(aiFormID, asPluginName, aiWarmthType, aiCoverageType, aiExtraType)
+		SetArmorDataHead(akArmor, aiWarmthType, aiCoverageType, aiExtraType)
 	elseif aiGearType == GEARTYPE_HANDS
-		SetArmorDataHands(aiFormID, asPluginName, aiWarmthType, aiCoverageType)
+		SetArmorDataHands(akArmor, aiWarmthType, aiCoverageType)
 	elseif aiGearType == GEARTYPE_FEET
-		SetArmorDataFeet(aiFormID, asPluginName, aiWarmthType, aiCoverageType)
+		SetArmorDataFeet(akArmor, aiWarmthType, aiCoverageType)
 	elseif aiGearType == GEARTYPE_CLOAK
-		SetArmorDataCloak(aiFormID, asPluginName, aiExtraType)
+		SetArmorDataCloak(akArmor, aiExtraType)
 	elseif aiGearType == GEARTYPE_MISC
-		SetArmorDataMisc(aiFormID, asPluginName, aiExtraType)
+		SetArmorDataMisc(akArmor, aiExtraType)
 	elseif aiGearType == GEARTYPE_IGNORE
-		SetArmorDataIgnore(aiFormID, asPluginName)
+		SetArmorDataIgnore(akArmor)
 	endif
 endFunction
 
-function SetArmorDataBody(int aiFormID, string asPluginName, int aiWarmthType, int aiCoverageType, int aiHeadWarmthType = 0, int aiHeadCoverageType = 0, int aiExtraCloakType = 0)	
-	Armor theArmor = Game.GetFormFromFile(aiFormID, asPluginName) as Armor
-	if !theArmor
-		return
+function UnsetArmorData(Armor akArmor, int aiGearType)
+	if aiGearType == GEARTYPE_BODY
+		UnsetArmorDataBody(akArmor)
+	elseif aiGearType == GEARTYPE_HEAD
+		UnsetArmorDataHead(akArmor)
+	elseif aiGearType == GEARTYPE_HANDS
+		UnsetArmorDataHands(akArmor)
+	elseif aiGearType == GEARTYPE_FEET
+		UnsetArmorDataFeet(akArmor)
+	elseif aiGearType == GEARTYPE_CLOAK
+		UnsetArmorDataCloak(akArmor)
+	elseif aiGearType == GEARTYPE_MISC
+		UnsetArmorDataMisc(akArmor)
 	endif
+endFunction
 
-	if aiWarmthType == WARMTH_FAIR
-		; pass - this will be assigned automatically when not found
-	elseif aiWarmthType == WARMTH_POOR
-		LinkedArrayAddArmor(theArmor, ArmorCustomBodyWarmthPoor1, ArmorCustomBodyWarmthPoor2, ArmorCustomBodyWarmthPoor3, ArmorCustomBodyWarmthPoor4)
+function SetArmorDataBody(Armor akArmor, int aiWarmthType, int aiCoverageType, int aiHeadWarmthType = 0, int aiHeadCoverageType = 0, int aiExtraCloakType = 0)
+	; Remove the armor from any existing arrays.
+	UnsetArmorDataBody(akArmor)
+
+	; Add the new entry.
+	if aiWarmthType == WARMTH_POOR
+		LinkedArrayAddArmor(akArmor, ArmorCustomBodyWarmthPoor1, ArmorCustomBodyWarmthPoor2, ArmorCustomBodyWarmthPoor3, ArmorCustomBodyWarmthPoor4)
+	elseif aiWarmthType == WARMTH_FAIR
+		LinkedArrayAddArmor(akArmor, ArmorCustomBodyWarmthFair1, ArmorCustomBodyWarmthFair2, ArmorCustomBodyWarmthFair3, ArmorCustomBodyWarmthFair4)
 	elseif aiWarmthType == WARMTH_GOOD
-		LinkedArrayAddArmor(theArmor, ArmorCustomBodyWarmthGood1, ArmorCustomBodyWarmthGood2, ArmorCustomBodyWarmthGood3, ArmorCustomBodyWarmthGood4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomBodyWarmthGood1, ArmorCustomBodyWarmthGood2, ArmorCustomBodyWarmthGood3, ArmorCustomBodyWarmthGood4)
 	elseif aiWarmthType == WARMTH_EXCELLENT
-		LinkedArrayAddArmor(theArmor, ArmorCustomBodyWarmthExcellent1, ArmorCustomBodyWarmthExcellent2, ArmorCustomBodyWarmthExcellent3, ArmorCustomBodyWarmthExcellent4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomBodyWarmthExcellent1, ArmorCustomBodyWarmthExcellent2, ArmorCustomBodyWarmthExcellent3, ArmorCustomBodyWarmthExcellent4)
 	elseif aiWarmthType == WARMTH_MAX
-		LinkedArrayAddArmor(theArmor, ArmorCustomBodyWarmthMax1, ArmorCustomBodyWarmthMax2, ArmorCustomBodyWarmthMax3, ArmorCustomBodyWarmthMax4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomBodyWarmthMax1, ArmorCustomBodyWarmthMax2, ArmorCustomBodyWarmthMax3, ArmorCustomBodyWarmthMax4)
 	endif
 
-	if aiCoverageType == COVERAGE_FAIR
-		; pass - this will be assigned automatically when not found
-	elseif aiCoverageType == COVERAGE_POOR
-		LinkedArrayAddArmor(theArmor, ArmorCustomBodyCoveragePoor1, ArmorCustomBodyCoveragePoor2, ArmorCustomBodyCoveragePoor3, ArmorCustomBodyCoveragePoor4)
+	if aiCoverageType == COVERAGE_POOR
+		LinkedArrayAddArmor(akArmor, ArmorCustomBodyCoveragePoor1, ArmorCustomBodyCoveragePoor2, ArmorCustomBodyCoveragePoor3, ArmorCustomBodyCoveragePoor4)
+	elseif aiCoverageType == COVERAGE_FAIR
+		LinkedArrayAddArmor(akArmor, ArmorCustomBodyCoverageFair1, ArmorCustomBodyCoverageFair2, ArmorCustomBodyCoverageFair3, ArmorCustomBodyCoverageFair4)
 	elseif aiCoverageType == COVERAGE_GOOD
-		LinkedArrayAddArmor(theArmor, ArmorCustomBodyCoverageGood1, ArmorCustomBodyCoverageGood2, ArmorCustomBodyCoverageGood3, ArmorCustomBodyCoverageGood4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomBodyCoverageGood1, ArmorCustomBodyCoverageGood2, ArmorCustomBodyCoverageGood3, ArmorCustomBodyCoverageGood4)
 	elseif aiCoverageType == COVERAGE_EXCELLENT
-		LinkedArrayAddArmor(theArmor, ArmorCustomBodyCoverageExcellent1, ArmorCustomBodyCoverageExcellent2, ArmorCustomBodyCoverageExcellent3, ArmorCustomBodyCoverageExcellent4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomBodyCoverageExcellent1, ArmorCustomBodyCoverageExcellent2, ArmorCustomBodyCoverageExcellent3, ArmorCustomBodyCoverageExcellent4)
 	elseif aiCoverageType == COVERAGE_MAX
-		LinkedArrayAddArmor(theArmor, ArmorCustomBodyCoverageMax1, ArmorCustomBodyCoverageMax2, ArmorCustomBodyCoverageMax3, ArmorCustomBodyCoverageMax4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomBodyCoverageMax1, ArmorCustomBodyCoverageMax2, ArmorCustomBodyCoverageMax3, ArmorCustomBodyCoverageMax4)
 	endif
 
 	if aiHeadWarmthType > 0 || aiHeadCoverageType > 0
-		SetArmorDataHead(aiFormID, asPluginName, aiHeadWarmthType, aiHeadCoverageType)
+		SetArmorDataHead(akArmor, aiHeadWarmthType, aiHeadCoverageType)
 	endif
 
 	if aiExtraCloakType != 0
-		SetArmorDataCloak(aiFormID, asPluginName, aiExtraCloakType)
+		SetArmorDataCloak(akArmor, aiExtraCloakType)
 	endif
 endFunction
 
-function SetArmorDataHead(int aiFormID, string asPluginName, int aiWarmthType, int aiCoverageType, int aiExtraCloakType = 0)
-	Armor theArmor = Game.GetFormFromFile(aiFormID, asPluginName) as Armor
-	if !theArmor
-		return
-	endif
+function UnsetArmorDataBody(Armor akArmor)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomBodyWarmthPoor1, ArmorCustomBodyWarmthPoor2, ArmorCustomBodyWarmthPoor3, ArmorCustomBodyWarmthPoor4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomBodyWarmthFair1, ArmorCustomBodyWarmthFair2, ArmorCustomBodyWarmthFair3, ArmorCustomBodyWarmthFair4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomBodyWarmthGood1, ArmorCustomBodyWarmthGood2, ArmorCustomBodyWarmthGood3, ArmorCustomBodyWarmthGood4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomBodyWarmthExcellent1, ArmorCustomBodyWarmthExcellent2, ArmorCustomBodyWarmthExcellent3, ArmorCustomBodyWarmthExcellent4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomBodyWarmthMax1, ArmorCustomBodyWarmthMax2, ArmorCustomBodyWarmthMax3, ArmorCustomBodyWarmthMax4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomBodyCoveragePoor1, ArmorCustomBodyCoveragePoor2, ArmorCustomBodyCoveragePoor3, ArmorCustomBodyCoveragePoor4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomBodyCoverageFair1, ArmorCustomBodyCoverageFair2, ArmorCustomBodyCoverageFair3, ArmorCustomBodyCoverageFair4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomBodyCoverageGood1, ArmorCustomBodyCoverageGood2, ArmorCustomBodyCoverageGood3, ArmorCustomBodyCoverageGood4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomBodyCoverageExcellent1, ArmorCustomBodyCoverageExcellent2, ArmorCustomBodyCoverageExcellent3, ArmorCustomBodyCoverageExcellent4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomBodyCoverageMax1, ArmorCustomBodyCoverageMax2, ArmorCustomBodyCoverageMax3, ArmorCustomBodyCoverageMax4)
 
-	if aiWarmthType == WARMTH_FAIR
-		; pass - this will be assigned automatically when not found
-	elseif aiWarmthType == WARMTH_POOR
-		LinkedArrayAddArmor(theArmor, ArmorCustomHeadWarmthPoor1, ArmorCustomHeadWarmthPoor2, ArmorCustomHeadWarmthPoor3, ArmorCustomHeadWarmthPoor4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadWarmthPoor1, ArmorCustomHeadWarmthPoor2, ArmorCustomHeadWarmthPoor3, ArmorCustomHeadWarmthPoor4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadWarmthFair1, ArmorCustomHeadWarmthFair2, ArmorCustomHeadWarmthFair3, ArmorCustomHeadWarmthFair4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadWarmthGood1, ArmorCustomHeadWarmthGood2, ArmorCustomHeadWarmthGood3, ArmorCustomHeadWarmthGood4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadWarmthExcellent1, ArmorCustomHeadWarmthExcellent2, ArmorCustomHeadWarmthExcellent3, ArmorCustomHeadWarmthExcellent4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadWarmthMax1, ArmorCustomHeadWarmthMax2, ArmorCustomHeadWarmthMax3, ArmorCustomHeadWarmthMax4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadCoveragePoor1, ArmorCustomHeadCoveragePoor2, ArmorCustomHeadCoveragePoor3, ArmorCustomHeadCoveragePoor4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadCoverageFair1, ArmorCustomHeadCoverageFair2, ArmorCustomHeadCoverageFair3, ArmorCustomHeadCoverageFair4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadCoverageGood1, ArmorCustomHeadCoverageGood2, ArmorCustomHeadCoverageGood3, ArmorCustomHeadCoverageGood4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadCoverageExcellent1, ArmorCustomHeadCoverageExcellent2, ArmorCustomHeadCoverageExcellent3, ArmorCustomHeadCoverageExcellent4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadCoverageMax1, ArmorCustomHeadCoverageMax2, ArmorCustomHeadCoverageMax3, ArmorCustomHeadCoverageMax4)
+
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomCloakCloth1, ArmorCustomCloakCloth2, ArmorCustomCloakCloth3, ArmorCustomCloakCloth4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomCloakLeather1, ArmorCustomCloakLeather2, ArmorCustomCloakLeather3, ArmorCustomCloakLeather4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomCloakFur1, ArmorCustomCloakFur2, ArmorCustomCloakFur3, ArmorCustomCloakFur4)
+endFunction
+
+function SetArmorDataHead(Armor akArmor, int aiWarmthType, int aiCoverageType, int aiExtraCloakType = 0)
+	; Remove the armor from any existing arrays.
+	UnsetArmorDataHead(akArmor)
+
+	; Add the new entry.
+	if aiWarmthType == WARMTH_POOR
+		LinkedArrayAddArmor(akArmor, ArmorCustomHeadWarmthPoor1, ArmorCustomHeadWarmthPoor2, ArmorCustomHeadWarmthPoor3, ArmorCustomHeadWarmthPoor4)
+	elseif aiWarmthType == WARMTH_FAIR
+		LinkedArrayAddArmor(akArmor, ArmorCustomHeadWarmthFair1, ArmorCustomHeadWarmthFair2, ArmorCustomHeadWarmthFair3, ArmorCustomHeadWarmthFair4)
 	elseif aiWarmthType == WARMTH_GOOD
-		LinkedArrayAddArmor(theArmor, ArmorCustomHeadWarmthGood1, ArmorCustomHeadWarmthGood2, ArmorCustomHeadWarmthGood3, ArmorCustomHeadWarmthGood4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomHeadWarmthGood1, ArmorCustomHeadWarmthGood2, ArmorCustomHeadWarmthGood3, ArmorCustomHeadWarmthGood4)
 	elseif aiWarmthType == WARMTH_EXCELLENT
-		LinkedArrayAddArmor(theArmor, ArmorCustomHeadWarmthExcellent1, ArmorCustomHeadWarmthExcellent2, ArmorCustomHeadWarmthExcellent3, ArmorCustomHeadWarmthExcellent4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomHeadWarmthExcellent1, ArmorCustomHeadWarmthExcellent2, ArmorCustomHeadWarmthExcellent3, ArmorCustomHeadWarmthExcellent4)
 	elseif aiWarmthType == WARMTH_MAX
-		LinkedArrayAddArmor(theArmor, ArmorCustomHeadWarmthMax1, ArmorCustomHeadWarmthMax2, ArmorCustomHeadWarmthMax3, ArmorCustomHeadWarmthMax4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomHeadWarmthMax1, ArmorCustomHeadWarmthMax2, ArmorCustomHeadWarmthMax3, ArmorCustomHeadWarmthMax4)
 	endif
 
-	if aiCoverageType == COVERAGE_FAIR
-		; pass - this will be assigned automatically when not found
-	elseif aiCoverageType == COVERAGE_POOR
-		LinkedArrayAddArmor(theArmor, ArmorCustomHeadCoveragePoor1, ArmorCustomHeadCoveragePoor2, ArmorCustomHeadCoveragePoor3, ArmorCustomHeadCoveragePoor4)
+	if aiCoverageType == COVERAGE_POOR
+		LinkedArrayAddArmor(akArmor, ArmorCustomHeadCoveragePoor1, ArmorCustomHeadCoveragePoor2, ArmorCustomHeadCoveragePoor3, ArmorCustomHeadCoveragePoor4)
+	elseif aiCoverageType == COVERAGE_FAIR
+		LinkedArrayAddArmor(akArmor, ArmorCustomHeadCoverageFair1, ArmorCustomHeadCoverageFair2, ArmorCustomHeadCoverageFair3, ArmorCustomHeadCoverageFair4)
 	elseif aiCoverageType == COVERAGE_GOOD
-		LinkedArrayAddArmor(theArmor, ArmorCustomHeadCoverageGood1, ArmorCustomHeadCoverageGood2, ArmorCustomHeadCoverageGood3, ArmorCustomHeadCoverageGood4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomHeadCoverageGood1, ArmorCustomHeadCoverageGood2, ArmorCustomHeadCoverageGood3, ArmorCustomHeadCoverageGood4)
 	elseif aiCoverageType == COVERAGE_EXCELLENT
-		LinkedArrayAddArmor(theArmor, ArmorCustomHeadCoverageExcellent1, ArmorCustomHeadCoverageExcellent2, ArmorCustomHeadCoverageExcellent3, ArmorCustomHeadCoverageExcellent4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomHeadCoverageExcellent1, ArmorCustomHeadCoverageExcellent2, ArmorCustomHeadCoverageExcellent3, ArmorCustomHeadCoverageExcellent4)
 	elseif aiCoverageType == COVERAGE_MAX
-		LinkedArrayAddArmor(theArmor, ArmorCustomHeadCoverageMax1, ArmorCustomHeadCoverageMax2, ArmorCustomHeadCoverageMax3, ArmorCustomHeadCoverageMax4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomHeadCoverageMax1, ArmorCustomHeadCoverageMax2, ArmorCustomHeadCoverageMax3, ArmorCustomHeadCoverageMax4)
 	endif
 
 	if aiExtraCloakType != 0
-		SetArmorDataCloak(aiFormID, asPluginName, aiExtraCloakType)
+		SetArmorDataCloak(akArmor, aiExtraCloakType)
 	endif
 endFunction
 
-function SetArmorDataHands(int aiFormID, string asPluginName, int aiWarmthType, int aiCoverageType)
-	Armor theArmor = Game.GetFormFromFile(aiFormID, asPluginName) as Armor
-	if !theArmor
-		return
-	endif
+function UnsetArmorDataHead(Armor akArmor)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadWarmthPoor1, ArmorCustomHeadWarmthPoor2, ArmorCustomHeadWarmthPoor3, ArmorCustomHeadWarmthPoor4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadWarmthFair1, ArmorCustomHeadWarmthFair2, ArmorCustomHeadWarmthFair3, ArmorCustomHeadWarmthFair4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadWarmthGood1, ArmorCustomHeadWarmthGood2, ArmorCustomHeadWarmthGood3, ArmorCustomHeadWarmthGood4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadWarmthExcellent1, ArmorCustomHeadWarmthExcellent2, ArmorCustomHeadWarmthExcellent3, ArmorCustomHeadWarmthExcellent4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadWarmthMax1, ArmorCustomHeadWarmthMax2, ArmorCustomHeadWarmthMax3, ArmorCustomHeadWarmthMax4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadCoveragePoor1, ArmorCustomHeadCoveragePoor2, ArmorCustomHeadCoveragePoor3, ArmorCustomHeadCoveragePoor4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadCoverageFair1, ArmorCustomHeadCoverageFair2, ArmorCustomHeadCoverageFair3, ArmorCustomHeadCoverageFair4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadCoverageGood1, ArmorCustomHeadCoverageGood2, ArmorCustomHeadCoverageGood3, ArmorCustomHeadCoverageGood4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadCoverageExcellent1, ArmorCustomHeadCoverageExcellent2, ArmorCustomHeadCoverageExcellent3, ArmorCustomHeadCoverageExcellent4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHeadCoverageMax1, ArmorCustomHeadCoverageMax2, ArmorCustomHeadCoverageMax3, ArmorCustomHeadCoverageMax4)
 
-	if aiWarmthType == WARMTH_FAIR
-		; pass - this will be assigned automatically when not found
-	elseif aiWarmthType == WARMTH_POOR
-		LinkedArrayAddArmor(theArmor, ArmorCustomHandsWarmthPoor1, ArmorCustomHandsWarmthPoor2, ArmorCustomHandsWarmthPoor3, ArmorCustomHandsWarmthPoor4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomCloakCloth1, ArmorCustomCloakCloth2, ArmorCustomCloakCloth3, ArmorCustomCloakCloth4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomCloakLeather1, ArmorCustomCloakLeather2, ArmorCustomCloakLeather3, ArmorCustomCloakLeather4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomCloakFur1, ArmorCustomCloakFur2, ArmorCustomCloakFur3, ArmorCustomCloakFur4)
+endFunction
+
+function SetArmorDataHands(Armor akArmor, int aiWarmthType, int aiCoverageType)
+	; Remove the armor from any existing arrays.
+	UnsetArmorDataHands(akArmor)
+
+	; Add the new entry.
+	if aiWarmthType == WARMTH_POOR
+		LinkedArrayAddArmor(akArmor, ArmorCustomHandsWarmthPoor1, ArmorCustomHandsWarmthPoor2, ArmorCustomHandsWarmthPoor3, ArmorCustomHandsWarmthPoor4)
+	elseif aiWarmthType == WARMTH_FAIR
+		LinkedArrayAddArmor(akArmor, ArmorCustomHandsWarmthFair1, ArmorCustomHandsWarmthFair2, ArmorCustomHandsWarmthFair3, ArmorCustomHandsWarmthFair4)
 	elseif aiWarmthType == WARMTH_GOOD
-		LinkedArrayAddArmor(theArmor, ArmorCustomHandsWarmthGood1, ArmorCustomHandsWarmthGood2, ArmorCustomHandsWarmthGood3, ArmorCustomHandsWarmthGood4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomHandsWarmthGood1, ArmorCustomHandsWarmthGood2, ArmorCustomHandsWarmthGood3, ArmorCustomHandsWarmthGood4)
 	elseif aiWarmthType == WARMTH_EXCELLENT
-		LinkedArrayAddArmor(theArmor, ArmorCustomHandsWarmthExcellent1, ArmorCustomHandsWarmthExcellent2, ArmorCustomHandsWarmthExcellent3, ArmorCustomHandsWarmthExcellent4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomHandsWarmthExcellent1, ArmorCustomHandsWarmthExcellent2, ArmorCustomHandsWarmthExcellent3, ArmorCustomHandsWarmthExcellent4)
 	elseif aiWarmthType == WARMTH_MAX
-		LinkedArrayAddArmor(theArmor, ArmorCustomHandsWarmthMax1, ArmorCustomHandsWarmthMax2, ArmorCustomHandsWarmthMax3, ArmorCustomHandsWarmthMax4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomHandsWarmthMax1, ArmorCustomHandsWarmthMax2, ArmorCustomHandsWarmthMax3, ArmorCustomHandsWarmthMax4)
 	endif
 
-	if aiCoverageType == COVERAGE_FAIR
-		; pass - this will be assigned automatically when not found
-	elseif aiCoverageType == COVERAGE_POOR
-		LinkedArrayAddArmor(theArmor, ArmorCustomHandsCoveragePoor1, ArmorCustomHandsCoveragePoor2, ArmorCustomHandsCoveragePoor3, ArmorCustomHandsCoveragePoor4)
+	if aiCoverageType == COVERAGE_POOR
+		LinkedArrayAddArmor(akArmor, ArmorCustomHandsCoveragePoor1, ArmorCustomHandsCoveragePoor2, ArmorCustomHandsCoveragePoor3, ArmorCustomHandsCoveragePoor4)
+	elseif aiCoverageType == COVERAGE_FAIR
+		LinkedArrayAddArmor(akArmor, ArmorCustomHandsCoverageFair1, ArmorCustomHandsCoverageFair2, ArmorCustomHandsCoverageFair3, ArmorCustomHandsCoverageFair4)
 	elseif aiCoverageType == COVERAGE_GOOD
-		LinkedArrayAddArmor(theArmor, ArmorCustomHandsCoverageGood1, ArmorCustomHandsCoverageGood2, ArmorCustomHandsCoverageGood3, ArmorCustomHandsCoverageGood4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomHandsCoverageGood1, ArmorCustomHandsCoverageGood2, ArmorCustomHandsCoverageGood3, ArmorCustomHandsCoverageGood4)
 	elseif aiCoverageType == COVERAGE_EXCELLENT
-		LinkedArrayAddArmor(theArmor, ArmorCustomHandsCoverageExcellent1, ArmorCustomHandsCoverageExcellent2, ArmorCustomHandsCoverageExcellent3, ArmorCustomHandsCoverageExcellent4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomHandsCoverageExcellent1, ArmorCustomHandsCoverageExcellent2, ArmorCustomHandsCoverageExcellent3, ArmorCustomHandsCoverageExcellent4)
 	elseif aiCoverageType == COVERAGE_MAX
-		LinkedArrayAddArmor(theArmor, ArmorCustomHandsCoverageMax1, ArmorCustomHandsCoverageMax2, ArmorCustomHandsCoverageMax3, ArmorCustomHandsCoverageMax4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomHandsCoverageMax1, ArmorCustomHandsCoverageMax2, ArmorCustomHandsCoverageMax3, ArmorCustomHandsCoverageMax4)
 	endif
 endFunction
 
-function SetArmorDataFeet(int aiFormID, string asPluginName, int aiWarmthType, int aiCoverageType)
-	Armor theArmor = Game.GetFormFromFile(aiFormID, asPluginName) as Armor
-	if !theArmor
-		return
-	endif
+function UnsetArmorDataHands(Armor akArmor)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHandsWarmthPoor1, ArmorCustomHandsWarmthPoor2, ArmorCustomHandsWarmthPoor3, ArmorCustomHandsWarmthPoor4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHandsWarmthFair1, ArmorCustomHandsWarmthFair2, ArmorCustomHandsWarmthFair3, ArmorCustomHandsWarmthFair4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHandsWarmthGood1, ArmorCustomHandsWarmthGood2, ArmorCustomHandsWarmthGood3, ArmorCustomHandsWarmthGood4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHandsWarmthExcellent1, ArmorCustomHandsWarmthExcellent2, ArmorCustomHandsWarmthExcellent3, ArmorCustomHandsWarmthExcellent4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHandsWarmthMax1, ArmorCustomHandsWarmthMax2, ArmorCustomHandsWarmthMax3, ArmorCustomHandsWarmthMax4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHandsCoveragePoor1, ArmorCustomHandsCoveragePoor2, ArmorCustomHandsCoveragePoor3, ArmorCustomHandsCoveragePoor4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHandsCoverageFair1, ArmorCustomHandsCoverageFair2, ArmorCustomHandsCoverageFair3, ArmorCustomHandsCoverageFair4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHandsCoverageGood1, ArmorCustomHandsCoverageGood2, ArmorCustomHandsCoverageGood3, ArmorCustomHandsCoverageGood4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHandsCoverageExcellent1, ArmorCustomHandsCoverageExcellent2, ArmorCustomHandsCoverageExcellent3, ArmorCustomHandsCoverageExcellent4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomHandsCoverageMax1, ArmorCustomHandsCoverageMax2, ArmorCustomHandsCoverageMax3, ArmorCustomHandsCoverageMax4)
+endFunction
 
-	if aiWarmthType == WARMTH_FAIR
-		; pass - this will be assigned automatically when not found
-	elseif aiWarmthType == WARMTH_POOR
-		LinkedArrayAddArmor(theArmor, ArmorCustomFeetWarmthPoor1, ArmorCustomFeetWarmthPoor2, ArmorCustomFeetWarmthPoor3, ArmorCustomFeetWarmthPoor4)
+function SetArmorDataFeet(Armor akArmor, int aiWarmthType, int aiCoverageType)
+	; Remove the armor from any existing arrays.
+	UnsetArmorDataFeet(akArmor)
+
+	; Add the new entry.
+	if aiWarmthType == WARMTH_POOR
+		LinkedArrayAddArmor(akArmor, ArmorCustomFeetWarmthPoor1, ArmorCustomFeetWarmthPoor2, ArmorCustomFeetWarmthPoor3, ArmorCustomFeetWarmthPoor4)
+	elseif aiWarmthType == WARMTH_FAIR
+		LinkedArrayAddArmor(akArmor, ArmorCustomFeetWarmthFair1, ArmorCustomFeetWarmthFair2, ArmorCustomFeetWarmthFair3, ArmorCustomFeetWarmthFair4)
 	elseif aiWarmthType == WARMTH_GOOD
-		LinkedArrayAddArmor(theArmor, ArmorCustomFeetWarmthGood1, ArmorCustomFeetWarmthGood2, ArmorCustomFeetWarmthGood3, ArmorCustomFeetWarmthGood4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomFeetWarmthGood1, ArmorCustomFeetWarmthGood2, ArmorCustomFeetWarmthGood3, ArmorCustomFeetWarmthGood4)
 	elseif aiWarmthType == WARMTH_EXCELLENT
-		LinkedArrayAddArmor(theArmor, ArmorCustomFeetWarmthExcellent1, ArmorCustomFeetWarmthExcellent2, ArmorCustomFeetWarmthExcellent3, ArmorCustomFeetWarmthExcellent4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomFeetWarmthExcellent1, ArmorCustomFeetWarmthExcellent2, ArmorCustomFeetWarmthExcellent3, ArmorCustomFeetWarmthExcellent4)
 	elseif aiWarmthType == WARMTH_MAX
-		LinkedArrayAddArmor(theArmor, ArmorCustomFeetWarmthMax1, ArmorCustomFeetWarmthMax2, ArmorCustomFeetWarmthMax3, ArmorCustomFeetWarmthMax4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomFeetWarmthMax1, ArmorCustomFeetWarmthMax2, ArmorCustomFeetWarmthMax3, ArmorCustomFeetWarmthMax4)
 	endif
 
-	if aiCoverageType == COVERAGE_FAIR
-		; pass - this will be assigned automatically when not found
-	elseif aiCoverageType == COVERAGE_POOR
-		LinkedArrayAddArmor(theArmor, ArmorCustomFeetCoveragePoor1, ArmorCustomFeetCoveragePoor2, ArmorCustomFeetCoveragePoor3, ArmorCustomFeetCoveragePoor4)
+	if aiCoverageType == COVERAGE_POOR
+		LinkedArrayAddArmor(akArmor, ArmorCustomFeetCoveragePoor1, ArmorCustomFeetCoveragePoor2, ArmorCustomFeetCoveragePoor3, ArmorCustomFeetCoveragePoor4)
+	elseif aiCoverageType == COVERAGE_FAIR
+		LinkedArrayAddArmor(akArmor, ArmorCustomFeetCoverageFair1, ArmorCustomFeetCoverageFair2, ArmorCustomFeetCoverageFair3, ArmorCustomFeetCoverageFair4)
 	elseif aiCoverageType == COVERAGE_GOOD
-		LinkedArrayAddArmor(theArmor, ArmorCustomFeetCoverageGood1, ArmorCustomFeetCoverageGood2, ArmorCustomFeetCoverageGood3, ArmorCustomFeetCoverageGood4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomFeetCoverageGood1, ArmorCustomFeetCoverageGood2, ArmorCustomFeetCoverageGood3, ArmorCustomFeetCoverageGood4)
 	elseif aiCoverageType == COVERAGE_EXCELLENT
-		LinkedArrayAddArmor(theArmor, ArmorCustomFeetCoverageExcellent1, ArmorCustomFeetCoverageExcellent2, ArmorCustomFeetCoverageExcellent3, ArmorCustomFeetCoverageExcellent4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomFeetCoverageExcellent1, ArmorCustomFeetCoverageExcellent2, ArmorCustomFeetCoverageExcellent3, ArmorCustomFeetCoverageExcellent4)
 	elseif aiCoverageType == COVERAGE_MAX
-		LinkedArrayAddArmor(theArmor, ArmorCustomFeetCoverageMax1, ArmorCustomFeetCoverageMax2, ArmorCustomFeetCoverageMax3, ArmorCustomFeetCoverageMax4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomFeetCoverageMax1, ArmorCustomFeetCoverageMax2, ArmorCustomFeetCoverageMax3, ArmorCustomFeetCoverageMax4)
 	endif
 endFunction
 
-function SetArmorDataCloak(int aiFormID, string asPluginName, int aiCloakType)
-	Armor theArmor = Game.GetFormFromFile(aiFormID, asPluginName) as Armor
-	if !theArmor
-		return
-	endif
+function UnsetArmorDataFeet(Armor akArmor)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomFeetWarmthPoor1, ArmorCustomFeetWarmthPoor2, ArmorCustomFeetWarmthPoor3, ArmorCustomFeetWarmthPoor4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomFeetWarmthFair1, ArmorCustomFeetWarmthFair2, ArmorCustomFeetWarmthFair3, ArmorCustomFeetWarmthFair4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomFeetWarmthGood1, ArmorCustomFeetWarmthGood2, ArmorCustomFeetWarmthGood3, ArmorCustomFeetWarmthGood4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomFeetWarmthExcellent1, ArmorCustomFeetWarmthExcellent2, ArmorCustomFeetWarmthExcellent3, ArmorCustomFeetWarmthExcellent4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomFeetWarmthMax1, ArmorCustomFeetWarmthMax2, ArmorCustomFeetWarmthMax3, ArmorCustomFeetWarmthMax4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomFeetCoveragePoor1, ArmorCustomFeetCoveragePoor2, ArmorCustomFeetCoveragePoor3, ArmorCustomFeetCoveragePoor4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomFeetCoverageFair1, ArmorCustomFeetCoverageFair2, ArmorCustomFeetCoverageFair3, ArmorCustomFeetCoverageFair4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomFeetCoverageGood1, ArmorCustomFeetCoverageGood2, ArmorCustomFeetCoverageGood3, ArmorCustomFeetCoverageGood4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomFeetCoverageExcellent1, ArmorCustomFeetCoverageExcellent2, ArmorCustomFeetCoverageExcellent3, ArmorCustomFeetCoverageExcellent4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomFeetCoverageMax1, ArmorCustomFeetCoverageMax2, ArmorCustomFeetCoverageMax3, ArmorCustomFeetCoverageMax4)
+endFunction
 
+function SetArmorDataCloak(Armor akArmor, int aiCloakType)
+	; Remove the armor from any existing arrays.
+	UnsetArmorDataCloak(akArmor)
+
+	; Add the new entry.
 	if aiCloakType == EXTRA_CLOAKCLOTH
-		LinkedArrayAddArmor(theArmor, ArmorCustomCloakCloth1, ArmorCustomCloakCloth2, ArmorCustomCloakCloth3, ArmorCustomCloakCloth4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomCloakCloth1, ArmorCustomCloakCloth2, ArmorCustomCloakCloth3, ArmorCustomCloakCloth4)
 	elseif aiCloakType == EXTRA_CLOAKLEATHER
-		LinkedArrayAddArmor(theArmor, ArmorCustomCloakLeather1, ArmorCustomCloakLeather2, ArmorCustomCloakLeather3, ArmorCustomCloakLeather4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomCloakLeather1, ArmorCustomCloakLeather2, ArmorCustomCloakLeather3, ArmorCustomCloakLeather4)
 	elseif aiCloakType == EXTRA_CLOAKFUR
-		LinkedArrayAddArmor(theArmor, ArmorCustomCloakFur1, ArmorCustomCloakFur2, ArmorCustomCloakFur3, ArmorCustomCloakFur4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomCloakFur1, ArmorCustomCloakFur2, ArmorCustomCloakFur3, ArmorCustomCloakFur4)
 	endif
 endFunction
 
-function SetArmorDataMisc(int aiFormID, string asPluginName, int aiExtraType)
-	Armor theArmor = Game.GetFormFromFile(aiFormID, asPluginName) as Armor
-	if !theArmor
-		return
-	endif
+function UnsetArmorDataCloak(Armor akArmor)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomCloakCloth1, ArmorCustomCloakCloth2, ArmorCustomCloakCloth3, ArmorCustomCloakCloth4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomCloakLeather1, ArmorCustomCloakLeather2, ArmorCustomCloakLeather3, ArmorCustomCloakLeather4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomCloakFur1, ArmorCustomCloakFur2, ArmorCustomCloakFur3, ArmorCustomCloakFur4)
+endFunction
 
+function SetArmorDataMisc(Armor akArmor, int aiExtraType)
+	; Remove the armor from any existing arrays.
+	UnsetArmorDataMisc(akArmor)
+
+	; Add the new entry.
 	if aiExtraType == EXTRA_WARMACCESSORY
-		LinkedArrayAddArmor(theArmor, ArmorCustomAccessoryWarm1, ArmorCustomAccessoryWarm2, ArmorCustomAccessoryWarm3, ArmorCustomAccessoryWarm4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomAccessoryWarm1, ArmorCustomAccessoryWarm2, ArmorCustomAccessoryWarm3, ArmorCustomAccessoryWarm4)
 	elseif aiExtraType == EXTRA_WEATHERPROOFACCESSORY
-		LinkedArrayAddArmor(theArmor, ArmorCustomAccessoryWeatherproof1, ArmorCustomAccessoryWeatherproof2, ArmorCustomAccessoryWeatherproof3, ArmorCustomAccessoryWeatherproof4)
+		LinkedArrayAddArmor(akArmor, ArmorCustomAccessoryWeatherproof1, ArmorCustomAccessoryWeatherproof2, ArmorCustomAccessoryWeatherproof3, ArmorCustomAccessoryWeatherproof4)
 	endif
 endFunction
 
-function SetArmorDataIgnore(int aiFormID, string asPluginName)
-	Armor theArmor = Game.GetFormFromFile(aiFormID, asPluginName) as Armor
-	if !theArmor
-		return
-	endif
+function UnsetArmorDataMisc(Armor akArmor)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomAccessoryWarm1, ArmorCustomAccessoryWarm2, ArmorCustomAccessoryWarm3, ArmorCustomAccessoryWarm4)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomAccessoryWeatherproof1, ArmorCustomAccessoryWeatherproof2, ArmorCustomAccessoryWeatherproof3, ArmorCustomAccessoryWeatherproof4)
+endFunction
 
-	LinkedArrayAddArmor(theArmor, ArmorCustomIgnore1, ArmorCustomIgnore2, ArmorCustomIgnore3, ArmorCustomIgnore4)
+function SetArmorDataIgnore(Armor akArmor)
+	LinkedArrayAddArmor(akArmor, ArmorCustomIgnore1, ArmorCustomIgnore2, ArmorCustomIgnore3, ArmorCustomIgnore4)
+endFunction
+
+function UnsetArmorDataIgnore(Armor akArmor)
+	LinkedArrayRemoveArmor(akArmor, ArmorCustomIgnore1, ArmorCustomIgnore2, ArmorCustomIgnore3, ArmorCustomIgnore4)
 endFunction
 
 ;
@@ -3651,6 +3808,9 @@ int[] function FindCustomBodyProtectionLevels(Armor akArmor)
 	if LinkedArrayHasArmor(akArmor, ArmorCustomBodyWarmthPoor1, ArmorCustomBodyWarmthPoor2, ArmorCustomBodyWarmthPoor3, ArmorCustomBodyWarmthPoor4)
 		protectionLevels[0] = 0
 		found = true
+	elseif LinkedArrayHasArmor(akArmor, ArmorCustomBodyWarmthFair1, ArmorCustomBodyWarmthFair2, ArmorCustomBodyWarmthFair3, ArmorCustomBodyWarmthFair4)
+		protectionLevels[0] = 1
+		found = true
 	elseif LinkedArrayHasArmor(akArmor, ArmorCustomBodyWarmthGood1, ArmorCustomBodyWarmthGood2, ArmorCustomBodyWarmthGood3, ArmorCustomBodyWarmthGood4)
 		protectionLevels[0] = 2
 		found = true
@@ -3665,6 +3825,9 @@ int[] function FindCustomBodyProtectionLevels(Armor akArmor)
 	if LinkedArrayHasArmor(akArmor, ArmorCustomBodyCoveragePoor1, ArmorCustomBodyCoveragePoor2, ArmorCustomBodyCoveragePoor3, ArmorCustomBodyCoveragePoor4)
 		protectionLevels[1] = 0
 		found = true
+	elseif LinkedArrayHasArmor(akArmor, ArmorCustomBodyCoverageFair1, ArmorCustomBodyCoverageFair2, ArmorCustomBodyCoverageFair3, ArmorCustomBodyCoverageFair4)
+		protectionLevels[1] = 1
+		found = true
 	elseif LinkedArrayHasArmor(akArmor, ArmorCustomBodyCoverageGood1, ArmorCustomBodyCoverageGood2, ArmorCustomBodyCoverageGood3, ArmorCustomBodyCoverageGood4)
 		protectionLevels[1] = 2
 		found = true
@@ -3676,14 +3839,8 @@ int[] function FindCustomBodyProtectionLevels(Armor akArmor)
 		found = true
 	endif
 
-	; If I found one, but not the other, it is implicit that the one I didn't find is "Fair" protection.
-	; If I found neither, the geartype remains "not found".
+	; If not found, the geartype remains "not found".
 	if found
-		if protectionLevels[0] == -1
-			protectionLevels[0] = 1
-		elseif protectionLevels[1] == -1
-			protectionLevels[1] = 1
-		endif
 		protectionLevels[2] = GEARTYPE_BODY
 	endif
 
@@ -3699,6 +3856,9 @@ int[] function FindCustomHeadProtectionLevels(Armor akArmor)
 	if LinkedArrayHasArmor(akArmor, ArmorCustomHeadWarmthPoor1, ArmorCustomHeadWarmthPoor2, ArmorCustomHeadWarmthPoor3, ArmorCustomHeadWarmthPoor4)
 		protectionLevels[0] = 0
 		found = true
+	elseif LinkedArrayHasArmor(akArmor, ArmorCustomHeadWarmthFair1, ArmorCustomHeadWarmthFair2, ArmorCustomHeadWarmthFair3, ArmorCustomHeadWarmthFair4)
+		protectionLevels[0] = 1
+		found = true
 	elseif LinkedArrayHasArmor(akArmor, ArmorCustomHeadWarmthGood1, ArmorCustomHeadWarmthGood2, ArmorCustomHeadWarmthGood3, ArmorCustomHeadWarmthGood4)
 		protectionLevels[0] = 2
 		found = true
@@ -3713,6 +3873,9 @@ int[] function FindCustomHeadProtectionLevels(Armor akArmor)
 	if LinkedArrayHasArmor(akArmor, ArmorCustomHeadCoveragePoor1, ArmorCustomHeadCoveragePoor2, ArmorCustomHeadCoveragePoor3, ArmorCustomHeadCoveragePoor4)
 		protectionLevels[1] = 0
 		found = true
+	elseif LinkedArrayHasArmor(akArmor, ArmorCustomHeadCoverageFair1, ArmorCustomHeadCoverageFair2, ArmorCustomHeadCoverageFair3, ArmorCustomHeadCoverageFair4)
+		protectionLevels[1] = 1
+		found = true
 	elseif LinkedArrayHasArmor(akArmor, ArmorCustomHeadCoverageGood1, ArmorCustomHeadCoverageGood2, ArmorCustomHeadCoverageGood3, ArmorCustomHeadCoverageGood4)
 		protectionLevels[1] = 2
 		found = true
@@ -3725,11 +3888,6 @@ int[] function FindCustomHeadProtectionLevels(Armor akArmor)
 	endif
 
 	if found
-		if protectionLevels[0] == -1
-			protectionLevels[0] = 1
-		elseif protectionLevels[1] == -1
-			protectionLevels[1] = 1
-		endif
 		protectionLevels[2] = GEARTYPE_HEAD
 	endif
 
@@ -3745,6 +3903,9 @@ int[] function FindCustomHandsProtectionLevels(Armor akArmor)
 	if LinkedArrayHasArmor(akArmor, ArmorCustomHandsWarmthPoor1, ArmorCustomHandsWarmthPoor2, ArmorCustomHandsWarmthPoor3, ArmorCustomHandsWarmthPoor4)
 		protectionLevels[0] = 0
 		found = true
+	elseif LinkedArrayHasArmor(akArmor, ArmorCustomHandsWarmthFair1, ArmorCustomHandsWarmthFair2, ArmorCustomHandsWarmthFair3, ArmorCustomHandsWarmthFair4)
+		protectionLevels[0] = 1
+		found = true
 	elseif LinkedArrayHasArmor(akArmor, ArmorCustomHandsWarmthGood1, ArmorCustomHandsWarmthGood2, ArmorCustomHandsWarmthGood3, ArmorCustomHandsWarmthGood4)
 		protectionLevels[0] = 2
 		found = true
@@ -3759,6 +3920,9 @@ int[] function FindCustomHandsProtectionLevels(Armor akArmor)
 	if LinkedArrayHasArmor(akArmor, ArmorCustomHandsCoveragePoor1, ArmorCustomHandsCoveragePoor2, ArmorCustomHandsCoveragePoor3, ArmorCustomHandsCoveragePoor4)
 		protectionLevels[1] = 0
 		found = true
+	elseif LinkedArrayHasArmor(akArmor, ArmorCustomHandsCoverageFair1, ArmorCustomHandsCoverageFair2, ArmorCustomHandsCoverageFair3, ArmorCustomHandsCoverageFair4)
+		protectionLevels[1] = 1
+		found = true
 	elseif LinkedArrayHasArmor(akArmor, ArmorCustomHandsCoverageGood1, ArmorCustomHandsCoverageGood2, ArmorCustomHandsCoverageGood3, ArmorCustomHandsCoverageGood4)
 		protectionLevels[1] = 2
 		found = true
@@ -3771,11 +3935,6 @@ int[] function FindCustomHandsProtectionLevels(Armor akArmor)
 	endif
 
 	if found
-		if protectionLevels[0] == -1
-			protectionLevels[0] = 1
-		elseif protectionLevels[1] == -1
-			protectionLevels[1] = 1
-		endif
 		protectionLevels[2] = GEARTYPE_HANDS
 	endif
 
@@ -3791,6 +3950,9 @@ int[] function FindCustomFeetProtectionLevels(Armor akArmor)
 	if LinkedArrayHasArmor(akArmor, ArmorCustomFeetWarmthPoor1, ArmorCustomFeetWarmthPoor2, ArmorCustomFeetWarmthPoor3, ArmorCustomFeetWarmthPoor4)
 		protectionLevels[0] = 0
 		found = true
+	elseif LinkedArrayHasArmor(akArmor, ArmorCustomFeetWarmthFair1, ArmorCustomFeetWarmthFair2, ArmorCustomFeetWarmthFair3, ArmorCustomFeetWarmthFair4)
+		protectionLevels[0] = 1
+		found = true
 	elseif LinkedArrayHasArmor(akArmor, ArmorCustomFeetWarmthGood1, ArmorCustomFeetWarmthGood2, ArmorCustomFeetWarmthGood3, ArmorCustomFeetWarmthGood4)
 		protectionLevels[0] = 2
 		found = true
@@ -3805,6 +3967,9 @@ int[] function FindCustomFeetProtectionLevels(Armor akArmor)
 	if LinkedArrayHasArmor(akArmor, ArmorCustomFeetCoveragePoor1, ArmorCustomFeetCoveragePoor2, ArmorCustomFeetCoveragePoor3, ArmorCustomFeetCoveragePoor4)
 		protectionLevels[1] = 0
 		found = true
+	elseif LinkedArrayHasArmor(akArmor, ArmorCustomFeetCoverageFair1, ArmorCustomFeetCoverageFair2, ArmorCustomFeetCoverageFair3, ArmorCustomFeetCoverageFair4)
+		protectionLevels[1] = 1
+		found = true
 	elseif LinkedArrayHasArmor(akArmor, ArmorCustomFeetCoverageGood1, ArmorCustomFeetCoverageGood2, ArmorCustomFeetCoverageGood3, ArmorCustomFeetCoverageGood4)
 		protectionLevels[1] = 2
 		found = true
@@ -3817,11 +3982,6 @@ int[] function FindCustomFeetProtectionLevels(Armor akArmor)
 	endif
 
 	if found
-		if protectionLevels[0] == -1
-			protectionLevels[0] = 1
-		elseif protectionLevels[1] == -1
-			protectionLevels[1] = 1
-		endif
 		protectionLevels[2] = GEARTYPE_FEET
 	endif
 
