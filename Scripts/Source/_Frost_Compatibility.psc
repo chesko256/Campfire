@@ -178,6 +178,8 @@ Message property _Frost_CriticalError_SkyUIInterfacePackage auto
 Message property _Frost_CriticalError_SkyUIInterfacePackageOld auto
 Message property _Frost_CriticalError_JSONReadWrite auto
 Message property _Frost_Error_WearableLanterns auto
+Message property _Frost_StartUpPopulatingData auto
+Message property _Frost_StartUpPopulatingDataDone auto
 Weather property DLC2AshStorm auto hidden
 bool added_spell_books = false
 GlobalVariable property _Frost_Setting_MeterExposureColor auto
@@ -211,7 +213,7 @@ Event OnPlayerLoadGame()
 endEvent
 
 function ErrorSKSE(int version)
-	trace("[Frostfall][Warning] Detected SKSE version " + ((version as float) / 10000) + ". Expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer.")
+	trace("[Frostfall][Warning] Detected SKSE version " + ((version as float) / 10000) + ". Expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer. Using Fallback Mode.")
 	_Frost_CriticalError_SKSE.Show(((version as float) / 10000), ((SKSE_MIN_VERSION as float) / 10000))
 endFunction
 
@@ -850,7 +852,9 @@ function CheckDatastore_Vanilla()
 	_Frost_LegacyArmorDatastore legacyDatastore = GetLegacyArmorDatastore()
 	int[] protectionLevels = legacyDatastore.FindBodyProtectionLevels(ArmorHideCuirass)
 	if protectionLevels[2] == handler.GEARTYPE_NOTFOUND
+		_Frost_StartUpPopulatingData.Show()
 		legacyDatastore.PopulateDefaultArmorData()
+		_Frost_StartUpPopulatingDataDone.Show()
 	endif
 endFunction
 

@@ -64,8 +64,8 @@ int property DEFAULT_HEADHOOD_WARMTH 			= 25 autoReadOnly hidden
 int property DEFAULT_HEADHOOD_COVERAGE 			= 43 autoReadOnly hidden
 int property DEFAULT_FEET_WARMTH 				= 12 autoReadOnly hidden
 int property DEFAULT_FEET_COVERAGE 				= 14 autoReadOnly hidden
-int property DEFAULT_CLOAK_WARMTH				= 12 autoReadOnly hidden
-int property DEFAULT_CLOAK_COVERAGE				= 12 autoReadOnly hidden
+int property DEFAULT_CLOAK_WARMTH				= 20 autoReadOnly hidden
+int property DEFAULT_CLOAK_COVERAGE				= 20 autoReadOnly hidden
 int property DEFAULT_SHIELD_WARMTH				= 0 autoReadOnly hidden
 int property DEFAULT_SHIELD_COVERAGE			= 20 autoReadOnly hidden
 int property DEFAULT_MISC_WARMTH				= 12 autoReadOnly hidden
@@ -575,7 +575,7 @@ int function GetGearType_Vanilla(Armor akArmor)
 		return GEARTYPE_HEAD
 	elseif akArmor.HasKeyword(ArmorBoots) || akArmor.HasKeyword(ClothingFeet)
 		return GEARTYPE_FEET
-	elseif akArmor.HasKeyword(WAF_ClothingCloak) || IsArmorCloak(akArmor)
+	elseif IsArmorCloak(akArmor) || akArmor.HasKeyword(WAF_ClothingCloak)
 		return GEARTYPE_CLOAK
 	elseif IsArmorShield(akArmor) || akArmor.HasKeyword(ArmorClothing) || akArmor.HasKeyword(ArmorLight) || akArmor.HasKeyword(ArmorHeavy)
 		return GEARTYPE_MISC

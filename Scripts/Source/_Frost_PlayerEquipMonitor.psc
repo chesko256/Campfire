@@ -8,6 +8,7 @@ Quest property _Frost_MainQuest auto
 Keyword property _FrostData_ArmorPrecache auto
 
 Message property _Frost_Help_Warmth auto
+Message property _Frost_Help_Warmth2 auto
 GlobalVariable property _Frost_Setting_DisplayTutorials auto
 GlobalVariable property _Frost_HelpDone_Warmth auto
 
@@ -208,6 +209,7 @@ endFunction
 function ShowProtectionTutorial()
 	if _Frost_Setting_DisplayTutorials.GetValueInt() == 2 && Utility.IsInMenuMode() && _Frost_HelpDone_Warmth.GetValueInt() == 1
 		_Frost_Help_Warmth.Show()
+		_Frost_Help_Warmth2.Show()
 		_Frost_HelpDone_Warmth.SetValue(2)
 	endif
 endFunction

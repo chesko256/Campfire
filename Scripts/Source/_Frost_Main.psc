@@ -20,10 +20,10 @@ Armor property _Frost_DummyBoots auto
 Armor property _Frost_DummyShield auto
 Spell property _Frost_NoWait_Spell auto
 Spell property _Frost_LegacyConfig_Spell auto
-Message property _Frost_StartingUp auto
 Message property _Frost_FirstStartup_1 auto
 Message property _Frost_FirstStartup_2 auto
 Message property _Frost_FirstStartup_3 auto
+Message property _Frost_FirstStartup_3SE auto
 Message property _Frost_StartStarsMsg auto
 Book property _Frost_SurvivorsGuide auto
 Quest property _Frost_TrackingQuest auto
@@ -34,10 +34,11 @@ Armor property _Camp_ArmorSonsBoots auto
 int stars_counter = 0
 bool started_via_stars = false
 bool gave_friend_items = false
+bool isSKYUILoaded = false
 
 Event OnInit()
 	; Add config spell on start-up.
-	bool isSKYUILoaded = Game.GetFormFromFile(0x01000814, "SkyUI.esp")
+	isSKYUILoaded = Game.GetFormFromFile(0x01000814, "SkyUI.esp")
 	if isSKYUILoaded
 		PlayerRef.RemoveSpell(_Frost_LegacyConfig_Spell)
 	else
@@ -59,10 +60,14 @@ Event OnUpdate()
 	endif
 
 	if _Frost_TrackingQuest.GetStage() == 0			;Kicks things off for the player
-		_Frost_TrackingQuest.SetStage(10)
+		if isSKYUILoaded
+			_Frost_TrackingQuest.SetStage(10)
+		else
+			_Frost_TrackingQuest.SetStage(15)
+		endif
 	endif
 	
-	if _Frost_TrackingQuest.GetStage() == 10 && !started_via_stars
+	if (_Frost_TrackingQuest.GetStage() == 10 || _Frost_TrackingQuest.GetStage() == 15) && !started_via_stars
 		if !IsRefInInterior(PlayerRef) && 		\
 			PlayerRef.GetAngleX() <= -55.0 && 	\
 			(GameHour.GetValue() > 19.0 || GameHour.GetValue() < 7.0)
@@ -100,7 +105,6 @@ function RegisterForModEvents()
 endFunction
 
 Event StartFrostfall(bool abBypassStartupMessage = false)
-	; _Frost_StartingUp.Show()
 	FrostDebug(1, "Starting Frostfall...")
 	GetClothingDatastoreHandler().InitializeDatastore()
 	FrostUtil.GetCompatibilitySystem().RunCompatibilityArmors()
@@ -242,7 +246,11 @@ function StartModFirstTime(bool abBypassStartupMessage = false)
 		utility.wait(6)
 		_Frost_FirstStartup_2.Show()
 		utility.wait(1)
-		_Frost_FirstStartup_3.Show()
+		if isSKYUILoaded
+			_Frost_FirstStartup_3.Show()
+		else
+			_Frost_FirstStartup_3SE.Show()
+		endif
 	endif
 endFunction
 

@@ -1,6 +1,14 @@
 ;BEGIN FRAGMENT CODE - Do not edit anything between this and the end comment
-;NEXT FRAGMENT INDEX 3
+;NEXT FRAGMENT INDEX 5
 Scriptname QF__DE_TrackingQuest_010177D7 Extends Quest Hidden
+
+;BEGIN FRAGMENT Fragment_3
+Function Fragment_3()
+;BEGIN CODE
+SetObjectiveDisplayed(10)
+;END CODE
+EndFunction
+;END FRAGMENT
 
 ;BEGIN FRAGMENT Fragment_0
 Function Fragment_0()

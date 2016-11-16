@@ -306,8 +306,19 @@ bool function IsArmorShield(Armor akArmor) global
 endFunction
 
 bool function IsArmorCloak(Armor akArmor) global
-    ;@TODO
-    return false
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+
+    if Frostfall.LegacyArmorDatastore.FindCustomCloakProtectionLevels(akArmor)[2] == 5
+        return true
+    elseif Frostfall.LegacyArmorDatastore.FindCloakProtectionLevels(akArmor)[2] == 5
+        return true
+    else
+        return false
+    endif
 endFunction
 
 ; Public Functions ================================================================================

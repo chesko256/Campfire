@@ -202,14 +202,14 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 
     	if _Frost_TrackingQuest.GetStage() == 0
     		_Frost_legacyconfig_activate_error.Show()
-    	elseif _Frost_TrackingQuest.GetStage() == 10
+    	elseif _Frost_TrackingQuest.GetStage() < 20
     		int i = _Frost_legacyconfig_firsttime.Show()
     		if i == 0
     			startmod()
     		else
     			; Exit
     		endif
-    	elseif _Frost_TrackingQuest.GetStage() > 10
+    	elseif _Frost_TrackingQuest.GetStage() == 20
         	menu_root()
         endif
     endif
