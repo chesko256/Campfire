@@ -5,31 +5,31 @@ import CommonArrayHelper
 
 GlobalVariable property _Frost_DatastoreInitialized auto
 
-int WARMTH_POOR 		= 1
-int WARMTH_FAIR 		= 2
-int WARMTH_GOOD 		= 3
-int WARMTH_EXCELLENT 	= 4
-int WARMTH_MAX 			= 5
+int property WARMTH_POOR 		= 1 autoReadOnly
+int property WARMTH_FAIR 		= 2 autoReadOnly
+int property WARMTH_GOOD 		= 3 autoReadOnly
+int property WARMTH_EXCELLENT 	= 4 autoReadOnly
+int property WARMTH_MAX 		= 5 autoReadOnly
 
-int COVERAGE_POOR 		= 1
-int COVERAGE_FAIR 		= 2
-int COVERAGE_GOOD 		= 3
-int COVERAGE_EXCELLENT 	= 4
-int COVERAGE_MAX 		= 5
+int property COVERAGE_POOR 		= 1 autoReadOnly
+int property COVERAGE_FAIR 		= 2 autoReadOnly
+int property COVERAGE_GOOD 		= 3 autoReadOnly
+int property COVERAGE_EXCELLENT = 4 autoReadOnly
+int property COVERAGE_MAX 		= 5 autoReadOnly
 
-int EXTRA_WARMACCESSORY 		= 1
-int EXTRA_WEATHERPROOFACCESSORY = 2
-int EXTRA_CLOAKCLOTH 			= 3
-int EXTRA_CLOAKLEATHER 			= 4
-int EXTRA_CLOAKFUR 				= 5
+int property EXTRA_WARMACCESSORY = 1 autoReadOnly
+int property EXTRA_WEATHERPROOFACCESSORY = 2 autoReadOnly
+int property EXTRA_CLOAKCLOTH 	 = 3 autoReadOnly
+int property EXTRA_CLOAKLEATHER  = 4 autoReadOnly
+int property EXTRA_CLOAKFUR 	 = 5 autoReadOnly
 
-int GEARTYPE_BODY 		= 1
-int GEARTYPE_HEAD 		= 2
-int GEARTYPE_HANDS 		= 3
-int GEARTYPE_FEET 		= 4
-int GEARTYPE_CLOAK 		= 5
-int GEARTYPE_MISC 		= 6
-int GEARTYPE_IGNORE 	= 7
+int property GEARTYPE_BODY 		= 1 autoReadOnly
+int property GEARTYPE_HEAD 		= 2 autoReadOnly
+int property GEARTYPE_HANDS 	= 3 autoReadOnly
+int property GEARTYPE_FEET 		= 4 autoReadOnly
+int property GEARTYPE_CLOAK 	= 5 autoReadOnly
+int property GEARTYPE_MISC 		= 6 autoReadOnly
+int property GEARTYPE_IGNORE 	= 7 autoReadOnly
 
 ;
 ; Default Value arrays
@@ -408,10 +408,7 @@ function InitializeDatastore()
 	_Frost_DatastoreInitialized.SetValueInt(2)
 endFunction
 
-function PopulateDefaultArmorData()
-	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
-	handler.CreateProtectionKeywordValueMaps()
-	
+function PopulateDefaultArmorData()	
 	SetDefaults_Body()
 	SetDefaults_Head()
 	SetDefaults_Hands()
@@ -4033,6 +4030,7 @@ int[] function FindCustomMiscProtectionLevels(Armor akArmor)
 
 	return protectionLevels
 endFunction
+
 
 function DumpAllArrays()
 	DumpArray("ArmorBodyWarmthPoor1", ArmorBodyWarmthPoor1)

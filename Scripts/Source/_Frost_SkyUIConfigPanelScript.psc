@@ -692,20 +692,15 @@ function PageReset_Interface()
 		Interface_DisplayAttributeValuesInWeathersense_OID = AddToggleOption("$FrostfallInterfaceSettingWeathersenseDetail", false, OPTION_FLAG_DISABLED)
 	endif
 
-	if Compatibility.isUIPackageInstalled
-		; Interface_Notifications_EquipmentValues_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentValues", false, OPTION_FLAG_DISABLED)
-		; Interface_Notifications_EquipmentSummary_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentSummary", false, OPTION_FLAG_DISABLED)
+	if _Frost_Setting_Notifications_EquipmentValues.GetValueInt() == 2
+		Interface_Notifications_EquipmentValues_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentValues", true)
 	else
-		if _Frost_Setting_Notifications_EquipmentValues.GetValueInt() == 2
-			Interface_Notifications_EquipmentValues_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentValues", true)
-		else
-			Interface_Notifications_EquipmentValues_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentValues", false)
-		endif
-		if _Frost_Setting_Notifications_EquipmentSummary.GetValueInt() == 2
-			Interface_Notifications_EquipmentSummary_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentSummary", true)
-		else
-			Interface_Notifications_EquipmentSummary_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentSummary", false)
-		endif
+		Interface_Notifications_EquipmentValues_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentValues", false)
+	endif
+	if _Frost_Setting_Notifications_EquipmentSummary.GetValueInt() == 2
+		Interface_Notifications_EquipmentSummary_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentSummary", true)
+	else
+		Interface_Notifications_EquipmentSummary_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentSummary", false)
 	endif
 
 endFunction
@@ -2412,7 +2407,7 @@ function SwitchToProfile(int aiProfileIndex)
 
 	; Update the player's currently worn armor values.
 	_Frost_ClothingSystem clothing = GetClothingSystem()
-	clothing.RefreshWornGearData(clothing.WornGearForms, clothing._Frost_WornGearData)
+	clothing.RefreshWornGearData(clothing.WornGearMainForms, clothing.WornGearForms, clothing._Frost_WornGearData)
 	clothing.SendEvent_UpdateWarmthAndCoverage(false)
 endFunction
 
@@ -3193,7 +3188,7 @@ function RepairArmorDefaults()
 	Compatibility.RunCompatibilityArmors()
 	ArmorPageReset(true)
 	_Frost_ClothingSystem clothing = GetClothingSystem()
-	clothing.RefreshWornGearData(clothing.WornGearForms, clothing._Frost_WornGearData)
+	clothing.RefreshWornGearData(clothing.WornGearMainForms, clothing.WornGearForms, clothing._Frost_WornGearData)
 	clothing.SendEvent_UpdateWarmthAndCoverage(false)
 endFunction
 
@@ -3217,7 +3212,7 @@ function DefaultWornArmor()
 
 	ArmorPageReset(true)
 
-	clothing.RefreshWornGearData(clothing.WornGearForms, clothing._Frost_WornGearData)
+	clothing.RefreshWornGearData(clothing.WornGearMainForms, clothing.WornGearForms, clothing._Frost_WornGearData)
 	clothing.SendEvent_UpdateWarmthAndCoverage(false)
 endFunction
 
@@ -3232,7 +3227,7 @@ function DefaultAllArmor()
 
 	ArmorPageReset(true)
 	_Frost_ClothingSystem clothing = GetClothingSystem()
-	clothing.RefreshWornGearData(clothing.WornGearForms, clothing._Frost_WornGearData)
+	clothing.RefreshWornGearData(clothing.WornGearMainForms, clothing.WornGearForms, clothing._Frost_WornGearData)
 	clothing.SendEvent_UpdateWarmthAndCoverage(false)
 endFunction
 
@@ -3240,9 +3235,9 @@ function RefreshSingleItemValues(Armor akArmor)
 	; Update currently worn armor data in-place and force recalculate
 	TryToRemoveArmorFromPrecache(akArmor, _FrostData_ArmorPrecache)
 	_Frost_ClothingSystem clothing = GetClothingSystem()
-	bool b = clothing.RemoveWornGearEntryForArmorUnequipped(akArmor, clothing.WornGearForms, clothing._Frost_WornGearData)
-	b = clothing.AddWornGearEntryForArmorEquipped(akArmor, clothing.WornGearForms, clothing._Frost_WornGearData)
-	clothing.RecalculateProtectionData(clothing.WornGearForms, clothing.WornGearValues, clothing._Frost_WornGearData)
+	bool b = clothing.RemoveWornGearEntryForArmorUnequipped(akArmor, clothing.WornGearMainForms, clothing.WornGearForms, clothing._Frost_WornGearData)
+	b = clothing.AddWornGearEntryForArmorEquipped(akArmor, clothing.WornGearMainForms, clothing.WornGearForms, clothing._Frost_WornGearData)
+	clothing.RecalculateProtectionData(clothing.WornGearMainForms, clothing.WornGearForms, clothing.WornGearValues, clothing._Frost_WornGearData)
 	clothing.SendEvent_UpdateWarmthAndCoverage(false)
 endFunction
 

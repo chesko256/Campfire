@@ -25,11 +25,16 @@ Message property _Frost_FirstStartup_2 auto
 Message property _Frost_FirstStartup_3 auto
 Message property _Frost_FirstStartup_3SE auto
 Message property _Frost_StartStarsMsg auto
+Message property _Frost_StartingUpMsg auto
+Message property _Frost_StartingUpDoneMsg auto
 Book property _Frost_SurvivorsGuide auto
 Quest property _Frost_TrackingQuest auto
 MiscObject property _Camp_Tent_LeatherSmall1BR_MISC auto
 Armor property _Camp_Cloak_BasicBurlap auto
 Armor property _Camp_ArmorSonsBoots auto
+ImageSpaceModifier property _Frost_ColdISM_Level3 auto
+ImageSpaceModifier property _Frost_ColdISM_Level4 auto
+ImageSpaceModifier property _Frost_ColdISM_Level5 auto
 
 int stars_counter = 0
 bool started_via_stars = false
@@ -105,16 +110,13 @@ function RegisterForModEvents()
 endFunction
 
 Event StartFrostfall(bool abBypassStartupMessage = false)
-	FrostDebug(1, "Starting Frostfall...")
-	GetClothingDatastoreHandler().InitializeDatastore()
-	FrostUtil.GetCompatibilitySystem().RunCompatibilityArmors()
+	debug.trace("[Frostfall] Starting Frostfall...")
+	_Frost_StartingUpMsg.Show()
 
+	GetClothingDatastoreHandler().InitializeDatastore()
 	; Menu-Mode blocked functions
 	if !self.IsRunning()
 		self.Start()
-	endif
-	if !GetClothingDatastoreHandler().IsRunning()
-		GetClothingDatastoreHandler().Start()
 	endif
 	PlayerAlias.ForceRefTo(PlayerRef)
 	StartModFirstTime(abBypassStartupMessage)
@@ -124,9 +126,12 @@ Event StartFrostfall(bool abBypassStartupMessage = false)
 	FrostUtil.GetCompatibilitySystem().RunCompatibility()
 	FrostUtil.GetCompatibilitySystem().SendEvent_FrostfallLoaded()
 	CheckInitialEquipment()
+	_Frost_StartingUpDoneMsg.Show()
+	debug.trace("[Frostfall] Frostfall is now running.")
 endEvent
 
 Event StopFrostfall()
+	debug.trace("[Frostfall] Stopping Frostfall...")
 	if self.IsRunning()
 		self.Stop()
 	endif
@@ -136,11 +141,16 @@ Event StopFrostfall()
 		Game.EnableFastTravel()
 	endif
 	PlayerRef.RemoveSpell(_Frost_NoWait_Spell)
+	_Frost_ColdISM_Level3.Remove()
+	_Frost_ColdISM_Level4.Remove()
+	_Frost_ColdISM_Level5.Remove()
 	RemoveAllMeters()
 	UnregisterCampfireSkill()
+	debug.trace("[Frostfall] Frostfall shut down successfully.")
 endEvent
 
 function StartAllSystems()
+	GetClothingDatastoreHandler().StartSystem()
 	GetClimateSystem().StartSystem()
 	GetHeatSourceSystem().StartSystem()
 	GetClothingSystem().StartSystem()

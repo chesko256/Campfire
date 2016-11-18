@@ -348,19 +348,44 @@ bool function RemoveWornGearEntryForArmorUnequipped_Vanilla(Armor akArmor, Armor
 endFunction
 
 
-;/* RefreshWornGearData wrapper */;
+; SKSE-only
 function RefreshWornGearData(Armor[] akWornGearMainFormsArray, Armor[] akWornGearFormsArray, keyword akWornGearData)
-    if GetSKSELoaded()
-        RefreshWornGearData_SKSE(akWornGearMainFormsArray, akWornGearFormsArray, akWornGearData)
-    else
-        RefreshWornGearData_Vanilla(akWornGearFormsArray)
-    endif
-endFunction
-
-;@TODO: UPDATE
-function RefreshWornGearData_SKSE(Armor[] akWornGearMainFormsArray, Armor[] akWornGearFormsArray, keyword akWornGearData)
     ; Pull the latest values for all currently worn gear. (Player switched profiles, changed the JSON file
     ; by hand since they last loaded the game, etc)
+
+    ; Main forms
+    int j = 0
+    while j < akWornGearMainFormsArray.Length
+        if akWornGearMainFormsArray[j]
+            Armor the_armor = akWornGearMainFormsArray[j]
+            int[] armor_data = handler.GetArmorProtectionData(the_armor)
+            string dskey = handler.GetDatastoreKeyFromForm(the_armor)
+    
+            int type = armor_data[0]
+            StorageUtil.IntListSet(akWornGearData, dskey, 0, type) ; type
+            int jdx = (type * 2)
+    
+            StorageUtil.IntListSet(akWornGearData, dskey, 1, armor_data[3])
+            StorageUtil.IntListSet(akWornGearData, dskey, 2, armor_data[4])
+            StorageUtil.IntListSet(akWornGearData, dskey, 3, armor_data[5])
+            StorageUtil.IntListSet(akWornGearData, dskey, 4, armor_data[6])
+            StorageUtil.IntListSet(akWornGearData, dskey, 5, armor_data[7])
+            StorageUtil.IntListSet(akWornGearData, dskey, 6, armor_data[8])
+            StorageUtil.IntListSet(akWornGearData, dskey, 7, armor_data[9])
+            StorageUtil.IntListSet(akWornGearData, dskey, 8, armor_data[10])
+            StorageUtil.IntListSet(akWornGearData, dskey, 9, armor_data[11])
+            StorageUtil.IntListSet(akWornGearData, dskey, 10, armor_data[12])
+            StorageUtil.IntListSet(akWornGearData, dskey, 11, armor_data[13])
+            StorageUtil.IntListSet(akWornGearData, dskey, 12, armor_data[14])
+    
+            ; Main values - these overwrite "extra" data in the same category (shouldn't do that anyway)
+            StorageUtil.IntListSet(akWornGearData, dskey, jdx - 1, armor_data[1])     ; warmth
+            StorageUtil.IntListSet(akWornGearData, dskey, jdx, armor_data[2])         ; coverage
+        endif
+        j += 1
+    endWhile
+
+    ; Accessories
     int i = 0
     int gear_count = ArrayCountArmor(akWornGearFormsArray)
     while i < gear_count
@@ -391,16 +416,6 @@ function RefreshWornGearData_SKSE(Armor[] akWornGearMainFormsArray, Armor[] akWo
         i += 1
     endWhile
 endFunction
-
-function RefreshWornGearData_Vanilla(Armor[] akWornGearFormsArray)
-    ; Pull the latest values for all currently worn gear. (Player defaulted protection values, etc)
-    int i = 0
-    int gear_count = ArrayCountArmor(akWornGearFormsArray)
-    while i < gear_count
-        ;@TODO
-    endWhile
-endFunction
-
 
 ;/* RecalculateProtectionData wrapper */;
 function RecalculateProtectionData(Armor[] akWornGearMainFormsArray, Armor[] akWornGearFormsArray, int[] aiWornGearValuesArray, keyword akWornGearData)
@@ -777,20 +792,35 @@ endFunction
 ;*** Pure vanilla functions
 ;***
 
-function WornGearFormsIntegrityCheck(Armor[] akWornGearFormsArray)
-    int i = 0
-    int key_count = ArrayCountArmor(akWornGearFormsArray)
-    debug.trace("[Frostfall] Beginning worn gear integrity check.")
+function WornGearFormsIntegrityCheck(Armor[] akWornGearFormsArray, Armor[] akWornGearMainFormsArray)
     int removed = 0
-    while i < key_count
-        Armor the_armor = akWornGearFormsArray[i]
-        if !PlayerRef.IsEquipped(the_armor)
-            ArrayRemoveArmor(akWornGearFormsArray, akWornGearFormsArray[i], true)
-            removed += 1
+    int i = 0
+    int j = 0
+    
+    debug.trace("[Frostfall] Beginning worn gear integrity check.")
+
+    while i < akWornGearMainFormsArray.Length
+        Armor the_armor = akWornGearMainFormsArray[i]
+        if the_armor
+            if !PlayerRef.IsEquipped(the_armor)
+                ArrayRemoveArmor(akWornGearMainFormsArray, the_armor, false)
+                removed += 1
+            endif
         endif
         i += 1
     endWhile
-    debug.trace("[Frostfall] Integrity check complete. Removed " + removed + " invalid forms from worn gear list.")
+
+    int misc_key_count = ArrayCountArmor(akWornGearFormsArray)
+    while j < misc_key_count
+        Armor the_armor = akWornGearFormsArray[j]
+        if !PlayerRef.IsEquipped(the_armor)
+            ArrayRemoveArmor(akWornGearFormsArray, the_armor, true)
+            removed += 1
+        endif
+        j += 1
+    endWhile
+
+    debug.trace("[Frostfall] Integrity check complete. Removed " + removed + " invalid forms from worn gear lists.")
 endFunction
 
 int function GetArmorWarmth(int[] aiWornGearValuesArray)

@@ -56,3 +56,8 @@ GlobalVariable property _Frost_CurrentTemperature auto
 GlobalVariable property _Frost_FrostfallVersion auto
 GlobalVariable property _Frost_APIVersion auto
 Keyword property ArmorShield auto
+Keyword property WAF_ClothingCloak auto
+Keyword property FrostfallIsCloakCloth auto
+Keyword property FrostfallIsCloakFur auto
+Keyword property FrostfallIsCloakLeather auto
+Keyword property FrostfallEnableKeywordProtection auto

@@ -316,6 +316,10 @@ bool function IsArmorCloak(Armor akArmor) global
         return true
     elseif Frostfall.LegacyArmorDatastore.FindCloakProtectionLevels(akArmor)[2] == 5
         return true
+    elseif akArmor.HasKeyword(Frostfall.WAF_ClothingCloak)
+        return true
+    elseif akArmor.HasKeyword(Frostfall.FrostfallEnableKeywordProtection) && (akArmor.HasKeyword(Frostfall.FrostfallIsCloakCloth) || akArmor.HasKeyword(Frostfall.FrostfallIsCloakFur) || akArmor.HasKeyword(Frostfall.FrostfallIsCloakLeather))
+        return true
     else
         return false
     endif

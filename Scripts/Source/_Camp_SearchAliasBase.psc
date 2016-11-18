@@ -19,24 +19,24 @@ Event OnInit()
 EndEvent
 
 Event InstinctsRunAliases()
-	debug.trace("[Campfire]" + self + " InstinctsRunAliases received.")
+	;debug.trace("[Campfire]" + self + " InstinctsRunAliases received.")
 	float detection_distance = 2048.0 + (_Camp_PerkRank_KeenSenses.GetValueInt() * 1024.0)
 	if Conditions.IsPlayerInInterior
 		detection_distance /= 2
 	endif
 	ObjectReference ref = self.GetRef()
 	if ref && PlayerRef.GetDistance(ref) <= detection_distance
-		debug.trace("[Campfire] " + ref + " running!")
+		;debug.trace("[Campfire] " + ref + " running!")
 		AliasStart(ref)
 	else
-		debug.trace("[Campfire] " + ref + " is none or too far away.")
+		;debug.trace("[Campfire] " + ref + " is none or too far away.")
 	endif
 endEvent
 
 Event InstinctsStopSearch()
 	initialized = false
 	AliasStop(self.GetRef())
-	debug.trace("[Campfire] " + self.GetRef() + " shut down.")
+	;debug.trace("[Campfire] " + self.GetRef() + " shut down.")
 endEvent
 
 function AliasStart(ObjectReference akReference)

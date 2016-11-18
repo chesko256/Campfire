@@ -17,6 +17,45 @@ E-mail - chesko.tesmod@gmail.com
 This changelog is mainly for posterity purposes. This mod has evolved a lot in the amount of time it's been in development. Read on only if you enjoy watching me change my mind many, many times.
 
 ===========================================
+Frostfall 3.3.1 Change Log
+===========================================
+
+### Features
+- First unified release of Frostfall on Classic Skyrim and Special Edition.
+- Re-added Bound Cloak spells and made their spell tomes and scrolls acquirable once again.
+- **(Special Edition / Fallback Mode)** Added default compatibility for **Immersive Armors**.
+- **(Special Edition / Fallback Mode)** When equipping gear, the "grade" of the protection is now displayed alongside the number. (i.e. "Provides good warmth (140)and fair coverage (54).") This should help with comparing different sets of gear.
+- **(Special Edition / Fallback Mode)** Inspect Equipment power was added.
+ - Use this power to customize the protection of your equipment, and view the protection of your current gear.
+- Added support for mod authors to add injected keywords in order to provide default Frostfall protection for their gear. See [this page](http://skyrimsurvival.com/home/frostfall/armor-compatibility/) for more info.
+- Added a tutorial for Warmth and Coverage.
+- Added a tutorial about the importance of shelter near your fire.
+
+### Changes
+- Removed C#-based installer on PC, in favor of a more standard XML FOMOD installer.
+- Endurance skill now progresses 25% faster.
+- Most of the "log" campfires found at existing campsites in the world now output more heat.
+- "Cloth" cloaks now grant 20 warmth and 20 coverage (up from 12 and 12).
+- The "Survival Skill" prefix was dropped from all of the unique powers that Frostfall adds.
+
+
+### Bug Fixes
+- Fixed an issue where selecting "Quit to Main Menu" would crash the game to the desktop / Xbox One home screen.
+- Fixed a bug where waiting in a frigid environment or traveling to a cold environment (via Fast Travel, carriage, etc) could kill / incapacitate you.
+- Re-enabled the spell tomes for Conjured Shelter in the world, which were erroneously disabled after the release of 3.3.
+- **(Special Edition / Fallback Mode)** Fixed an issue where equipment was no longer detected properly after disabling and re-enabling Frostfall in-game.
+- **(Special Edition / Fallback Mode)** Disabling Full Screen Effects via Options: Frostfall will now also remove any existing full screen effects currently running.
+- **(Special Edition / Fallback Mode)** Fixed numerous bugs related to the amount of protection that equipment grants.
+- **(Special Edition / Fallback Mode)** Greatly increased how fast the system detects new worn clothing.
+- **(Special Edition / Fallback Mode)** Improved the accuracy of the total Warmth and Coverage message.
+- **(Special Edition / Fallback Mode)** Reduced how often the total Warmth and Coverage message appears.
+- Fixed a bug where a lit fireplace in POISnowy02 was not acting as a heat source.
+- **(Special Edition)** Fixed a bug where a flow shader was not being applied correctly outside of Riverwood.
+- **(Special Edition / Fallback Mode)** Fixed an issue where Frost Resistance was not affecting Warmth correctly.
+- Fixed several ITM errors.
+- Moved Frostfall's testing suite outside of the Frostfall plugin, in order to avoid erroneous tests from starting. (Seen as "Starting End to End Clothing Tests" message)
+
+===========================================
 Frostfall 3.3 SE Change Log
 ===========================================
 

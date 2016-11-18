@@ -4,6 +4,7 @@ import debug
 import CampUtil
 import FrostUtil
 import _FrostInternal
+import CommonArrayHelper
 
 int property SKSE_MIN_VERSION = 10703 autoReadOnly
 int property CAMPFIRE_MIN_VERSION = 11003 autoReadOnly
@@ -178,8 +179,6 @@ Message property _Frost_CriticalError_SkyUIInterfacePackage auto
 Message property _Frost_CriticalError_SkyUIInterfacePackageOld auto
 Message property _Frost_CriticalError_JSONReadWrite auto
 Message property _Frost_Error_WearableLanterns auto
-Message property _Frost_StartUpPopulatingData auto
-Message property _Frost_StartUpPopulatingDataDone auto
 Weather property DLC2AshStorm auto hidden
 bool added_spell_books = false
 GlobalVariable property _Frost_Setting_MeterExposureColor auto
@@ -201,6 +200,9 @@ GlobalVariable property _Frost_Upgraded_3_2 auto
 GlobalVariable property _Frost_Upgraded_3_2_1 auto
 GlobalVariable property _Frost_Upgraded_3_3_1 auto
 GlobalVariable property _Frost_Setting_DisplayTutorials auto
+
+;#Release Notes====================================================================
+Message property _Frost_ReleaseNotes_3_3_1 auto
 
 Event OnPlayerLoadGame()
 	RunCompatibility()
@@ -283,7 +285,7 @@ function RunCompatibility()
 	endif
 
 	_Frost_ClothingSystem clothing = GetClothingSystem()
-	clothing.WornGearFormsIntegrityCheck(clothing.WornGearForms)
+	clothing.WornGearFormsIntegrityCheck(clothing.WornGearForms, clothing.WornGearMainForms)
 
 	if isSKSELoaded
 		bool can_read_write = CheckJSONReadWrite()
@@ -757,22 +759,56 @@ function Upgrade_3_3_1()
 	LItemSpellTomes50Conjuration.AddForm(_Frost_SpellTomeBoundCloakGreater, 1, 1)
 	LItemSpellTomes50Spells.AddForm(_Frost_SpellTomeBoundCloakGreater, 1, 1)
 
-	; Rebalance cloaks
-	if _Frost_PreviousVersion.GetValue() > 0.0
-		if isSKSELoaded
-			_Frost_ArmorProtectionDatastoreHandler ap = GetClothingDatastoreHandler()
-			ap.SetArmorDataByKey("356637___Frostfall.esp", ap.GEARTYPE_CLOAK, 20, 20, abExportToDefaults = true, abSave = false) ; _Frost_Cloak_BoundLesser
-			ap.SetArmorDataByKey("359400___Frostfall.esp", ap.GEARTYPE_CLOAK, 12, 40, abExportToDefaults = true, abSave = true) ; _Frost_Cloak_BoundGreater
-		endif
-	endif
-
+	
 	if _Frost_PreviousVersion.GetValue() > 0.0
 		; Rebuild the value maps
 		GetClothingDatastoreHandler().CreateProtectionKeywordValueMaps()
 
+		; Rebalance cloaks
+		if isSKSELoaded
+			_Frost_ArmorProtectionDatastoreHandler ap = GetClothingDatastoreHandler()
+			ap.SetArmorDataByKey("260764___Campfire.esm", ap.GEARTYPE_CLOAK, 12, 12, abExportToDefaults = true, abSave = false) ; _Camp_Cloak_BasicBurlap
+			ap.SetArmorDataByKey("260765___Campfire.esm", ap.GEARTYPE_CLOAK, 20, 20, abExportToDefaults = true, abSave = false) ; _Camp_Cloak_BasicLinen
+			ap.SetArmorDataByKey("356637___Frostfall.esp", ap.GEARTYPE_CLOAK, 20, 20, abExportToDefaults = true, abSave = false) ; _Frost_Cloak_BoundLesser
+			ap.SetArmorDataByKey("359400___Frostfall.esp", ap.GEARTYPE_CLOAK, 12, 40, abExportToDefaults = true, abSave = true) ; _Frost_Cloak_BoundGreater
+		endif
+
+		; Allow setting of custom armor data in Special Edition
 		if !isSKSELoaded
 			GetLegacyArmorDatastore().InitializeCustomArrays()
 		endif
+
+		_Frost_ClothingSystem clothing = GetClothingSystem()
+		Armor[] tempArmor = new Armor[31]
+		
+		; Value copy the array
+		int i = 0
+		while i < 31
+			tempArmor[i] = clothing.WornGearForms[i]
+			i += 1
+		endWhile
+
+		; Initialize the new main gear forms array.
+		clothing.WornGearMainForms = new Armor[5]
+		clothing.WornGearForms = new Armor[26]
+
+		; Re-apply new values
+		int armorCount = ArrayCountArmor(tempArmor)
+		int j = 0
+		while j < armorCount
+			Armor theArmor = tempArmor[j]
+			if theArmor
+				PlayerRef.UnequipItem(theArmor, abSilent = true)
+				Utility.Wait(0.5)
+				PlayerRef.EquipItem(theArmor, abSilent = true)
+			endif
+			j += 1
+		endWhile
+
+		Utility.Wait(2.0)
+
+		; Show release notes.
+		_Frost_ReleaseNotes_3_3_1.Show()
 	endif
 
 	trace("[Frostfall] Upgraded to 3.3.1.")
@@ -852,15 +888,12 @@ function CheckDatastore_Vanilla()
 	_Frost_LegacyArmorDatastore legacyDatastore = GetLegacyArmorDatastore()
 	int[] protectionLevels = legacyDatastore.FindBodyProtectionLevels(ArmorHideCuirass)
 	if protectionLevels[2] == handler.GEARTYPE_NOTFOUND
-		_Frost_StartUpPopulatingData.Show()
 		legacyDatastore.PopulateDefaultArmorData()
-		_Frost_StartUpPopulatingDataDone.Show()
 	endif
 endFunction
 
 function PopulateDefaultArmorData()
 	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
-	handler.CreateProtectionKeywordValueMaps()
 	_Frost_APDatastoreDefaultData defaults = ((handler as Quest) as _Frost_APDatastoreDefaultData)
 	defaults.SetDefaults_Body()
 	defaults.SetDefaults_Hands()
@@ -1296,6 +1329,7 @@ function RegisterForEventsOnLoad()
 	GetExposureMeterHandler().RegisterForEvents()
 	GetWetnessMeterHandler().RegisterForEvents()
 	GetWeathersenseMeterHandler().RegisterForEvents()
+	
 endFunction
 
 function RegisterForMenusOnLoad()
@@ -2309,9 +2343,437 @@ function IMALoadUp()
 	handler.SetArmorDataByKey("139153___Hothtrooper44_ArmorCompilation.esp", handler.GEARTYPE_IGNORE, abExportToDefaults = true, abSave = false) ; IARitualBoethiahShroud		@IGNORE
 endFunction
 
-;@TODO
 function IMALoadUp_Vanilla()
+	; Check if already loaded
+	_Frost_ArmorProtectionDatastoreHandler handler = GetClothingDatastoreHandler()
+	_Frost_LegacyArmorDatastore ds = GetLegacyArmorDatastore()
+	Armor akaviriCuirass = Game.GetFormFromFile(20258, "Hothtrooper44_ArmorCompilation.esp") as Armor
+	if !akaviriCuirass
+		return
+	endif
+	int[] protectionLevels = ds.FindBodyProtectionLevels(akaviriCuirass)
+	if protectionLevels[2] != handler.GEARTYPE_NOTFOUND
+		return
+	endif
 
+	ds.SetDefaultArmorData(20258, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IAAkaviriSamuraiCuirass
+	ds.SetDefaultArmorData(144010, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_MAX) ; IAAlduinCuirass
+	ds.SetDefaultArmorData(46671, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_EXCELLENT) ; IAApotheusCuirass
+	ds.SetDefaultArmorData(23132, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IABarbarianCuirass
+	ds.SetDefaultArmorData(144116, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IABoiledChitinHCuirass
+	ds.SetDefaultArmorData(544585, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IABoiledChitinLCuirass
+	ds.SetDefaultArmorData(145634, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_EXCELLENT) ; IABosmerCuirass
+	ds.SetDefaultArmorData(145637, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_EXCELLENT) ; IABosmerEngravedCuirass
+	ds.SetDefaultArmorData(145646, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_EXCELLENT) ; IABosmerHeavyCuirass
+	ds.SetDefaultArmorData(145653, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_EXCELLENT) ; IABosmerHuntHeavyCuirass
+	ds.SetDefaultArmorData(145656, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_EXCELLENT) ; IABosmerHuntLightCuirass
+	ds.SetDefaultArmorData(143594, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IAConanCuirass
+	ds.SetDefaultArmorData(143608, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_EXCELLENT) ; IACrimsonArcherCuirass
+	ds.SetDefaultArmorData(145723, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADaedricLordCuirass
+	ds.SetDefaultArmorData(139237, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_MAX) ; IADragonEbonBulkyCuirass
+	ds.SetDefaultArmorData(139238, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_MAX) ; IADragonEbonSleekCuirass
+	ds.SetDefaultArmorData(143558, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_MAX) ; IADragonKnightCuirassFox
+	ds.SetDefaultArmorData(143557, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_MAX) ; IADragonKnightCuirassFull
+	ds.SetDefaultArmorData(15925, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_MAX, ds.COVERAGE_GOOD) ; IAEinherjarBrigandineDarkCuirass
+	ds.SetDefaultArmorData(15926, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_MAX, ds.COVERAGE_GOOD) ; IAEinherjarBrigandineLightCuirass
+	ds.SetDefaultArmorData(32830, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_MAX, ds.COVERAGE_GOOD) ; IAEinherjarPlateDarkCuirass
+	ds.SetDefaultArmorData(4820, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_MAX, ds.COVERAGE_GOOD) ; IAEinherjarPlateLightCuirass
+	ds.SetDefaultArmorData(3428, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IAFalkreathCuirass
+	ds.SetDefaultArmorData(144118, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_MAX, ds.COVERAGE_EXCELLENT) ; IAGlacialCrystalHCuirass
+	ds.SetDefaultArmorData(544590, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_MAX, ds.COVERAGE_EXCELLENT) ; IAGlacialCrystalLCuirass
+	ds.SetDefaultArmorData(3478, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IAHedgeKnightCuirass
+	ds.SetDefaultArmorData(23065, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IAHeroicImperialCuirass
+	ds.SetDefaultArmorData(43878, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_POOR) ; IAHeroicStormcloakCuirass
+	ds.SetDefaultArmorData(14469, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_EXCELLENT) ; IAHunterCuirass
+	ds.SetDefaultArmorData(436741, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IAImperialKnightCuirass
+	ds.SetDefaultArmorData(23050, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IAMercenaryCuirass
+	ds.SetDefaultArmorData(43874, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IAPaladinCuirass	@MULTI
+	; ds.SetDefaultArmorData(23102, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, Y, Z) ; IAPrimitiveNordHeavyCuirass
+	; ds.SetDefaultArmorData(23106, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, Y, Z) ; IAPrimitiveNordLightCuirass
+	ds.SetDefaultArmorData(23151, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IARangerCuirass
+	ds.SetDefaultArmorData(3440, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_EXCELLENT) ; IARedguardKnightHeavyCuirass
+	ds.SetDefaultArmorData(3441, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_EXCELLENT) ; IARedguardKnightLightCuirass
+	ds.SetDefaultArmorData(144113, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IARingmailCuirass
+	ds.SetDefaultArmorData(139149, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_MAX) ; IARitualBoethiahCuirass
+	ds.SetDefaultArmorData(43870, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_EXCELLENT) ; IASeadogCuirass
+	ds.SetDefaultArmorData(144117, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_POOR, aiExtraType = ds.EXTRA_CLOAKFUR) ; IASnowBearCuirass	@MULTI
+	ds.SetDefaultArmorData(53616, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IASpellbinderCrimsonCuirass
+	ds.SetDefaultArmorData(53617, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IASpellbinderRunicCuirass
+	ds.SetDefaultArmorData(436720, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKFUR) ; IAStormlordCuirass	@MULTI
+	ds.SetDefaultArmorData(143492, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_POOR, aiExtraType = ds.EXTRA_CLOAKFUR) ; IATrollbaneHeavyCuirass	@MULTI
+	ds.SetDefaultArmorData(143498, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_POOR, aiExtraType = ds.EXTRA_CLOAKFUR) ; IATrollbaneLightCuirass	@MULTI
+	ds.SetDefaultArmorData(3447, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_MAX, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IAVagabondCrimsonCuirass
+	ds.SetDefaultArmorData(3449, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_MAX, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IAVagabondDuskCuirass
+	ds.SetDefaultArmorData(3448, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_MAX, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IAVagabondLeatherCuirass
+	ds.SetDefaultArmorData(3460, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_MAX) ; IAVanguardPlateCuirass
+	ds.SetDefaultArmorData(144124, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IAVvardenfellGlassCuirass
+	ds.SetDefaultArmorData(50833, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IAWitchplateCuirass
+	ds.SetDefaultArmorData(143995, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IABrigandDwemerScrap
+	ds.SetDefaultArmorData(143996, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IABrigandHighwayChain
+	ds.SetDefaultArmorData(143997, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IABrigandIronHide
+	ds.SetDefaultArmorData(20284, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_MAX) ; IADragonhideHeavyRobe
+	ds.SetDefaultArmorData(144024, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_MAX) ; IADragonhideLRobe
+	ds.SetDefaultArmorData(226058, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_MAX) ; IADragonhideURobe
+	ds.SetDefaultArmorData(23079, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_GOOD) ; IADwarvenMageHRobe
+	ds.SetDefaultArmorData(144028, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_GOOD) ; IADwarvenMageLRobe
+	ds.SetDefaultArmorData(226053, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_GOOD) ; IADwarvenMageURobe
+	ds.SetDefaultArmorData(145736, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAEbonyMageHeavyRobe
+	ds.SetDefaultArmorData(145740, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAEbonyMageLightRobe
+	ds.SetDefaultArmorData(226045, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAEbonyMageUnarmoredRobe
+	ds.SetDefaultArmorData(143533, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IAShamanLRobe
+	ds.SetDefaultArmorData(536248, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IAShamanURobe
+	ds.SetDefaultArmorData(143706, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalHeavyRobeBlackCloak	@MULTI
+	ds.SetDefaultArmorData(143701, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalHeavyRobeBlackNoCloak	@MULTI
+	ds.SetDefaultArmorData(143707, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalHeavyRobeBlueCloak	@MULTI
+	ds.SetDefaultArmorData(143702, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalHeavyRobeBlueNoCloak	@MULTI
+	ds.SetDefaultArmorData(143708, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalHeavyRobeGreenCloak	@MULTI
+	ds.SetDefaultArmorData(143703, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalHeavyRobeGreenNoCloak	@MULTI
+	ds.SetDefaultArmorData(143709, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalHeavyRobeRedCloak	@MULTI
+	ds.SetDefaultArmorData(143704, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalHeavyRobeRedNoCloak	@MULTI
+	ds.SetDefaultArmorData(143710, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalHeavyRobeWhiteCloak	@MULTI
+	ds.SetDefaultArmorData(143705, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalHeavyRobeWhiteNoCloak	@MULTI
+	ds.SetDefaultArmorData(143731, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalLightRobeBlackCloak	@MULTI
+	ds.SetDefaultArmorData(143726, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalLightRobeBlackNoCloak	@MULTI
+	ds.SetDefaultArmorData(143732, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalLightRobeBlueCloak	@MULTI
+	ds.SetDefaultArmorData(143727, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalLightRobeBlueNoCloak	@MULTI
+	ds.SetDefaultArmorData(143733, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalLightRobeGreenCloak	@MULTI
+	ds.SetDefaultArmorData(143728, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalLightRobeGreenNoCloak	@MULTI
+	ds.SetDefaultArmorData(143734, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalLightRobeRedCloak	@MULTI
+	ds.SetDefaultArmorData(143729, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalLightRobeRedNoCloak	@MULTI
+	ds.SetDefaultArmorData(143735, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalLightRobeWhiteCloak	@MULTI
+	ds.SetDefaultArmorData(143730, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalLightRobeWhiteNoCloak	@MULTI
+	ds.SetDefaultArmorData(143755, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalUnarmoredRobeBlack	@MULTI
+	ds.SetDefaultArmorData(143756, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalUnarmoredRobeBlue	@MULTI
+	ds.SetDefaultArmorData(143757, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalUnarmoredRobeGreen	@MULTI
+	ds.SetDefaultArmorData(143758, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalUnarmoredRobeRed	@MULTI
+	ds.SetDefaultArmorData(143759, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_FAIR, ds.COVERAGE_GOOD, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IATribunalUnarmoredRobeWhite	@MULTI
+	ds.SetDefaultArmorData(16070, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IANordMailHeavyHauberk
+	ds.SetDefaultArmorData(16068, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IANordMailLightShirt
+	ds.SetDefaultArmorData(3466, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_EXCELLENT, ds.COVERAGE_FAIR) ; IAWarchiefHeavyBulwark
+	ds.SetDefaultArmorData(3467, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_BODY, ds.WARMTH_EXCELLENT, ds.COVERAGE_FAIR) ; IAWarchiefLightBulwark
+
+
+	ds.SetDefaultArmorData(20259, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IAAkaviriSamuraiGauntlets
+	ds.SetDefaultArmorData(144011, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IAAlduinGauntlets
+	ds.SetDefaultArmorData(23133, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IABarbarianGauntlets
+	ds.SetDefaultArmorData(144096, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IABoiledChitinHGauntlets
+	ds.SetDefaultArmorData(544586, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IABoiledChitinLGauntlets
+	ds.SetDefaultArmorData(145647, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IABosmerHeavyGauntlets
+	ds.SetDefaultArmorData(145654, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IABosmerHuntHeavyGauntlets
+	ds.SetDefaultArmorData(145657, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IABosmerHuntLightGauntlets
+	ds.SetDefaultArmorData(145724, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_GOOD) ; IADaedricLordGauntlets
+	ds.SetDefaultArmorData(139239, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonBulkyGauntlets
+	ds.SetDefaultArmorData(143560, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonKnightGauntlets0
+	ds.SetDefaultArmorData(143561, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonKnightGauntlets1
+	ds.SetDefaultArmorData(143562, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonKnightGauntlets2
+	ds.SetDefaultArmorData(23080, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_GOOD) ; IADwarvenMageHGauntlets
+	ds.SetDefaultArmorData(144026, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_GOOD) ; IADwarvenMageLGauntlets
+	ds.SetDefaultArmorData(226051, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_GOOD) ; IADwarvenMageUGauntlets
+	ds.SetDefaultArmorData(15917, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_MAX, ds.COVERAGE_GOOD) ; IAEinherjarBrigandineDarkGauntlets
+	ds.SetDefaultArmorData(32832, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_MAX, ds.COVERAGE_GOOD) ; IAEinherjarPlateDarkGauntlets
+	ds.SetDefaultArmorData(4818, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_MAX, ds.COVERAGE_GOOD) ; IAEinherjarPlateLightGauntlets
+	ds.SetDefaultArmorData(3429, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAFalkreathGauntlets
+	ds.SetDefaultArmorData(144100, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_MAX, ds.COVERAGE_FAIR) ; IAGlacialCrystalHGauntlets
+	ds.SetDefaultArmorData(544591, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_MAX, ds.COVERAGE_FAIR) ; IAGlacialCrystalLGauntlets
+	ds.SetDefaultArmorData(3479, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAHedgeKnightGauntlets
+	ds.SetDefaultArmorData(43877, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAHeroicStormcloakGauntlets
+	ds.SetDefaultArmorData(23051, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IAMercenaryGauntlets
+	ds.SetDefaultArmorData(43873, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAPaladinGauntlets
+	;ds.SetDefaultArmorData(23103, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, Y, Z) ; IAPrimitiveNordHeavyGauntlets
+	;ds.SetDefaultArmorData(23107, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, Y, Z) ; IAPrimitiveNordLightGauntlets
+	ds.SetDefaultArmorData(3436, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IARedguardKnightHeavyGauntlets
+	ds.SetDefaultArmorData(3437, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IARedguardKnightLightGauntlets
+	ds.SetDefaultArmorData(6189, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IASeadogGauntlets
+	ds.SetDefaultArmorData(144120, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IASnowBearGauntlets
+	ds.SetDefaultArmorData(53615, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IASpellbinderCrimsonGauntlets
+	ds.SetDefaultArmorData(53618, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IASpellbinderRunicGauntlets
+	ds.SetDefaultArmorData(436721, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAStormlordGauntlets
+	ds.SetDefaultArmorData(143493, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IATrollbaneHeavyGauntlets
+	ds.SetDefaultArmorData(3453, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_MAX) ; IAVagabondCrimsonGauntlets
+	ds.SetDefaultArmorData(3455, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_MAX) ; IAVagabondDuskGauntlets
+	ds.SetDefaultArmorData(3461, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_GOOD) ; IAVanguardPlateGauntlets
+	ds.SetDefaultArmorData(144125, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IAVvardenfellGlassGauntlets
+	ds.SetDefaultArmorData(50835, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IAWitchplateGauntlets
+	ds.SetDefaultArmorData(46670, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IAApotheusGloves
+	ds.SetDefaultArmorData(143609, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IACrimsonArcherGloves
+	ds.SetDefaultArmorData(139240, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonSleekGloves
+	ds.SetDefaultArmorData(20281, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonhideHeavyGloves
+	ds.SetDefaultArmorData(144022, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonhideLGloves
+	ds.SetDefaultArmorData(226061, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonhideUGloves
+	ds.SetDefaultArmorData(145737, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAEbonyMageHeavyGloves
+	ds.SetDefaultArmorData(145741, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAEbonyMageLightGloves
+	ds.SetDefaultArmorData(226043, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAEbonyMageUnarmoredGloves
+	ds.SetDefaultArmorData(139150, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IARitualBoethiahGloves
+	ds.SetDefaultArmorData(143536, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IAShamanLGloves
+	ds.SetDefaultArmorData(536246, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IAShamanUGloves
+	ds.SetDefaultArmorData(143691, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalHeavyGlovesBlack
+	ds.SetDefaultArmorData(143692, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalHeavyGlovesBlue
+	ds.SetDefaultArmorData(143693, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalHeavyGlovesGreen
+	ds.SetDefaultArmorData(143694, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalHeavyGlovesRed
+	ds.SetDefaultArmorData(143695, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalHeavyGlovesWhite
+	ds.SetDefaultArmorData(143716, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalLightGlovesBlack
+	ds.SetDefaultArmorData(143717, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalLightGlovesBlue
+	ds.SetDefaultArmorData(143718, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalLightGlovesGreen
+	ds.SetDefaultArmorData(143719, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalLightGlovesRed
+	ds.SetDefaultArmorData(143720, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalLightGlovesWhite
+	ds.SetDefaultArmorData(143745, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalUnarmoredGlovesBlack
+	ds.SetDefaultArmorData(143746, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalUnarmoredGlovesBlue
+	ds.SetDefaultArmorData(143747, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalUnarmoredGlovesGreen
+	ds.SetDefaultArmorData(143748, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalUnarmoredGlovesRed
+	ds.SetDefaultArmorData(143749, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalUnarmoredGlovesWhite
+	ds.SetDefaultArmorData(145643, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IABosmerBracers
+	ds.SetDefaultArmorData(145638, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IABosmerEngravedBracers
+	ds.SetDefaultArmorData(143592, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IAConanBracers
+	ds.SetDefaultArmorData(15918, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_MAX, ds.COVERAGE_GOOD) ; IAEinherjarBrigandineLightBracers
+	ds.SetDefaultArmorData(23066, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IAHeroicImperialBracers
+	ds.SetDefaultArmorData(14468, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IAHunterBracers
+	ds.SetDefaultArmorData(16065, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IANordMailHeavyBracers
+	ds.SetDefaultArmorData(16069, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IANordMailLightBracers
+	ds.SetDefaultArmorData(23152, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IARangerBracers
+	ds.SetDefaultArmorData(144114, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IARingmailBracers
+	ds.SetDefaultArmorData(143499, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IATrollbaneLightBracers
+	ds.SetDefaultArmorData(3454, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_FAIR, ds.COVERAGE_MAX) ; IAVagabondLeatherBracers
+	ds.SetDefaultArmorData(436744, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAImperialKnightVambraces
+	ds.SetDefaultArmorData(3470, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_EXCELLENT, ds.COVERAGE_FAIR) ; IAWarchiefHeavyGrips
+	ds.SetDefaultArmorData(3471, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HANDS, ds.WARMTH_EXCELLENT, ds.COVERAGE_FAIR) ; IAWarchiefLightGrips
+
+
+	ds.SetDefaultArmorData(20260, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IAAkaviriSamuraiHelmet
+	ds.SetDefaultArmorData(144012, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IAAlduinHelmet
+	ds.SetDefaultArmorData(46669, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IAApotheusHelm
+	ds.SetDefaultArmorData(23134, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IABarbarianHelmet
+	ds.SetDefaultArmorData(144097, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IABoiledChitinHHelmet
+	ds.SetDefaultArmorData(544587, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IABoiledChitinLHelmet
+	ds.SetDefaultArmorData(145639, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IABosmerEngravedHelmet
+	ds.SetDefaultArmorData(145648, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IABosmerHeavyHelmet
+	ds.SetDefaultArmorData(145649, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IABosmerHelmet
+	ds.SetDefaultArmorData(145652, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IABosmerHuntHeavyHelmet
+	ds.SetDefaultArmorData(139247, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonHHelmClassic
+	ds.SetDefaultArmorData(139248, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonHHelmClassicVeil
+	ds.SetDefaultArmorData(139249, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonHHelmClaw
+	ds.SetDefaultArmorData(139250, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonHHelmClawVeil
+	ds.SetDefaultArmorData(139243, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonHHelmGrand
+	ds.SetDefaultArmorData(139244, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonHHelmGrandVeil
+	ds.SetDefaultArmorData(139245, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonHHelmHorn
+	ds.SetDefaultArmorData(139246, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonHHelmHornVeil
+	ds.SetDefaultArmorData(139241, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonHHelmStout
+	ds.SetDefaultArmorData(139242, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonHHelmStoutVeil
+	ds.SetDefaultArmorData(543154, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonLHelmClassic
+	ds.SetDefaultArmorData(543155, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonLHelmClassicVeil
+	ds.SetDefaultArmorData(543156, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonLHelmClaw
+	ds.SetDefaultArmorData(543157, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonLHelmClawVeil
+	ds.SetDefaultArmorData(543158, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonLHelmGrand
+	ds.SetDefaultArmorData(543159, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonLHelmGrandVeil
+	ds.SetDefaultArmorData(543160, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonLHelmHorn
+	ds.SetDefaultArmorData(543161, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonLHelmHornVeil
+	ds.SetDefaultArmorData(543162, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonLHelmStout
+	ds.SetDefaultArmorData(543163, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonLHelmStoutVeil
+	ds.SetDefaultArmorData(143563, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonKnightHHelm
+	ds.SetDefaultArmorData(548818, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonKnightLHelm
+	ds.SetDefaultArmorData(3430, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IAFalkreathHelmet
+	ds.SetDefaultArmorData(144101, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_MAX, ds.COVERAGE_FAIR) ; IAGlacialCrystalHHelmet
+	ds.SetDefaultArmorData(544592, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_MAX, ds.COVERAGE_FAIR) ; IAGlacialCrystalLHelmet
+	ds.SetDefaultArmorData(3480, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IAHedgeKnightHelmet
+	ds.SetDefaultArmorData(23067, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IAHeroicImperialHelmet
+	ds.SetDefaultArmorData(43876, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAHeroicStormcloakHelmet
+	ds.SetDefaultArmorData(436743, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IAImperialKnightHelmet
+	ds.SetDefaultArmorData(16071, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IANordMailHeavyHelmet
+	ds.SetDefaultArmorData(16072, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IANordMailHeavySpectacleHelmet
+	ds.SetDefaultArmorData(16074, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IANordMailLightSpectacleHelmet
+	ds.SetDefaultArmorData(16073, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IANordMailLightHelmet
+	ds.SetDefaultArmorData(139134, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAOrcishMaskHelm
+	ds.SetDefaultArmorData(15853, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IAPaladinGreatHelm
+	ds.SetDefaultArmorData(43872, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IAPaladinHelmet
+	;ds.SetDefaultArmorData(23104, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, Y, Z) ; IAPrimitiveNordHeavyHelmet
+	;ds.SetDefaultArmorData(23108, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, Y, Z) ; IAPrimitiveNordLightHelmet
+	ds.SetDefaultArmorData(139151, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IARitualBoethiahHelm
+	ds.SetDefaultArmorData(143534, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAShamanLHelm
+	ds.SetDefaultArmorData(536247, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAShamanUHelm
+	ds.SetDefaultArmorData(144121, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IASnowBearHelmet
+	ds.SetDefaultArmorData(53613, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IASpellbinderCrimsonHelmet
+	ds.SetDefaultArmorData(53620, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IASpellbinderRunicHelmet
+	ds.SetDefaultArmorData(436723, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IAStormlordHelmet
+	ds.SetDefaultArmorData(143496, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IATrollbaneHeavyHelmet
+	ds.SetDefaultArmorData(143501, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IATrollbaneLightHelmet
+	ds.SetDefaultArmorData(143494, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IATrollbaneHeavyHeaddress
+	ds.SetDefaultArmorData(143500, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IATrollbaneLightHeaddress
+	ds.SetDefaultArmorData(3472, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAWarchiefHeavyHeaddress
+	ds.SetDefaultArmorData(3473, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAWarchiefLightHeaddress
+	ds.SetDefaultArmorData(3456, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_GOOD) ; IAVagabondHelmet
+	ds.SetDefaultArmorData(3462, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAVanguardPlateHelmet
+	ds.SetDefaultArmorData(3463, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAVanguardPlateHelmetCLOSED
+	ds.SetDefaultArmorData(144126, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IAVvardenfellGlassHelmet
+	ds.SetDefaultArmorData(17238, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IAApotheusHood
+	ds.SetDefaultArmorData(18651, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAArmorHeavyFurHoodBlack
+	ds.SetDefaultArmorData(8949, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IAArmorHeavyFurHoodBlackScarf	@MULTI
+	ds.SetDefaultArmorData(18650, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAArmorHeavyFurHoodPlain
+	ds.SetDefaultArmorData(764316, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IAArmorHeavyFurHoodPlainScarf	@MULTI
+	ds.SetDefaultArmorData(18652, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAArmorHeavyFurHoodWhite
+	ds.SetDefaultArmorData(6185, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IAArmorHeavyFurHoodWhiteScarf	@MULTI
+	ds.SetDefaultArmorData(18654, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAArmorLightFurHoodBlack
+	ds.SetDefaultArmorData(8957, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IAArmorLightFurHoodBlackScarf	@MULTI
+	ds.SetDefaultArmorData(18653, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAArmorLightFurHoodPlain
+	ds.SetDefaultArmorData(764315, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IAArmorLightFurHoodPlainScarf	@MULTI
+	ds.SetDefaultArmorData(18655, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAArmorLightFurHoodWhite
+	ds.SetDefaultArmorData(7567, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IAArmorLightFurHoodWhiteScarf	@MULTI
+	ds.SetDefaultArmorData(145640, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IABosmerEngravedHood
+	ds.SetDefaultArmorData(145650, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IABosmerHood
+	ds.SetDefaultArmorData(145658, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IABosmerHuntLightHood
+	ds.SetDefaultArmorData(139251, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonHHood
+	ds.SetDefaultArmorData(543164, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonLHood
+	ds.SetDefaultArmorData(20283, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonhideHeavyHood
+	ds.SetDefaultArmorData(144023, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonhideLHood
+	ds.SetDefaultArmorData(226060, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonhideUHood
+	ds.SetDefaultArmorData(23081, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IADwarvenMageHHood
+	ds.SetDefaultArmorData(144027, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IADwarvenMageLHood
+	ds.SetDefaultArmorData(226052, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IADwarvenMageUHood
+	ds.SetDefaultArmorData(145738, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAEbonyMageHeavyHood
+	ds.SetDefaultArmorData(145742, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAEbonyMageLightHood
+	ds.SetDefaultArmorData(226044, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAEbonyMageUnarmoredHood
+	ds.SetDefaultArmorData(15921, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_MAX, ds.COVERAGE_FAIR) ; IAEinherjarBrigandineDarkHood
+	ds.SetDefaultArmorData(15922, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_MAX, ds.COVERAGE_FAIR) ; IAEinherjarBrigandineLightHood
+	ds.SetDefaultArmorData(32831, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_MAX, ds.COVERAGE_FAIR) ; IAEinherjarPlateDarkHood
+	ds.SetDefaultArmorData(4819, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_MAX, ds.COVERAGE_FAIR) ; IAEinherjarPlateLightHood
+	ds.SetDefaultArmorData(18649, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAFurHoodBlack
+	ds.SetDefaultArmorData(8956, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAFurHoodBlackScarf
+	ds.SetDefaultArmorData(18648, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAFurHoodPlain
+	ds.SetDefaultArmorData(764314, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAFurHoodPlainScarf
+	ds.SetDefaultArmorData(18656, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAFurHoodWhite
+	ds.SetDefaultArmorData(7566, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAFurHoodWhiteScarf
+	ds.SetDefaultArmorData(23153, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_FAIR, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IARangerHood	@MULTI
+	ds.SetDefaultArmorData(144115, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IARingmailHood
+	ds.SetDefaultArmorData(143696, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalHeavyHoodBlack
+	ds.SetDefaultArmorData(143697, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalHeavyHoodBlue
+	ds.SetDefaultArmorData(143698, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalHeavyHoodGreen
+	ds.SetDefaultArmorData(143699, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalHeavyHoodRed
+	ds.SetDefaultArmorData(143700, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalHeavyHoodWhite
+	ds.SetDefaultArmorData(143721, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalLightHoodBlack
+	ds.SetDefaultArmorData(143722, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalLightHoodBlue
+	ds.SetDefaultArmorData(143723, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalLightHoodGreen
+	ds.SetDefaultArmorData(143724, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalLightHoodRed
+	ds.SetDefaultArmorData(143725, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalLightHoodWhite
+	ds.SetDefaultArmorData(143750, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalUnarmoredHoodBlack
+	ds.SetDefaultArmorData(143751, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalUnarmoredHoodBlue
+	ds.SetDefaultArmorData(143752, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalUnarmoredHoodGreen
+	ds.SetDefaultArmorData(143753, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalUnarmoredHoodRed
+	ds.SetDefaultArmorData(143754, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalUnarmoredHoodWhite
+	ds.SetDefaultArmorData(50836, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IAWitchplateHood
+	ds.SetDefaultArmorData(3464, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAWarchiefHeavyBattlecrown
+	ds.SetDefaultArmorData(3465, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR) ; IAWarchiefLightBattlecrown
+	ds.SetDefaultArmorData(143593, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_IGNORE) ; IAConanCirclet 	@CHECK
+	ds.SetDefaultArmorData(143464, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR, aiExtraType = ds.EXTRA_CLOAKFUR) ; IAMantleSilverHandHeavy	@MULTI
+	ds.SetDefaultArmorData(143465, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_EXCELLENT, ds.COVERAGE_POOR, aiExtraType = ds.EXTRA_CLOAKFUR) ; IAMantleSilverHandLight	@MULTI
+	ds.SetDefaultArmorData(4807, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IASeadogTricorne
+	ds.SetDefaultArmorData(7571, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IASeadogTricorneFeathered
+	ds.SetDefaultArmorData(145633, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; Bosmer Coif
+	ds.SetDefaultArmorData(145645, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_HEAD, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; Bosmer Reinforced Coif
+
+
+	ds.SetDefaultArmorData(20257, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IAAkaviriSamuraiBoots
+	ds.SetDefaultArmorData(144009, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IAAlduinBoots
+	ds.SetDefaultArmorData(46672, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IAApotheusBoots
+	ds.SetDefaultArmorData(23131, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IABarbarianBoots
+	ds.SetDefaultArmorData(144095, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IABoiledChitinHBoots
+	ds.SetDefaultArmorData(544584, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IABoiledChitinLBoots
+	ds.SetDefaultArmorData(145632, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IABosmerBoots
+	ds.SetDefaultArmorData(145635, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IABosmerEngravedBoots
+	ds.SetDefaultArmorData(145644, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IABosmerHeavyBoots
+	ds.SetDefaultArmorData(145651, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IABosmerHuntHeavyBoots
+	ds.SetDefaultArmorData(145655, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IABosmerHuntLightBoots
+	ds.SetDefaultArmorData(143591, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_POOR) ; IAConanBoots
+	ds.SetDefaultArmorData(143607, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IACrimsonArcherBoots
+	ds.SetDefaultArmorData(145722, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_GOOD) ; IADaedricLordBoots
+	ds.SetDefaultArmorData(139235, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonBulkyBoots
+	ds.SetDefaultArmorData(139236, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonEbonSleekBoots
+	ds.SetDefaultArmorData(20280, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonhideHeavyBoots
+	ds.SetDefaultArmorData(144021, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonhideLBoots
+	ds.SetDefaultArmorData(226062, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonhideUBoots
+	ds.SetDefaultArmorData(143556, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonKnightHBoots
+	ds.SetDefaultArmorData(548819, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IADragonKnightLBoots
+	ds.SetDefaultArmorData(23078, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_GOOD) ; IADwarvenMageHBoots
+	ds.SetDefaultArmorData(144025, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_GOOD) ; IADwarvenMageLBoots
+	ds.SetDefaultArmorData(226050, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_GOOD) ; IADwarvenMageUBoots
+	ds.SetDefaultArmorData(145735, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAEbonyMageHeavyBoots
+	ds.SetDefaultArmorData(145739, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAEbonyMageLightBoots
+	ds.SetDefaultArmorData(226042, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAEbonyMageUnarmoredBoots
+	ds.SetDefaultArmorData(15913, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_MAX, ds.COVERAGE_GOOD) ; IAEinherjarBrigandineDarkBoots
+	ds.SetDefaultArmorData(15914, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_MAX, ds.COVERAGE_GOOD) ; IAEinherjarBrigandineLightBoots
+	ds.SetDefaultArmorData(3432, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_MAX, ds.COVERAGE_GOOD) ; IAEinherjarPlateDarkBoots
+	ds.SetDefaultArmorData(4817, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_MAX, ds.COVERAGE_GOOD) ; IAEinherjarPlateLightBoots
+	ds.SetDefaultArmorData(3426, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAFalkreathBoots
+	ds.SetDefaultArmorData(144099, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_MAX, ds.COVERAGE_FAIR) ; IAGlacialCrystalHBoots
+	ds.SetDefaultArmorData(544589, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_MAX, ds.COVERAGE_FAIR) ; IAGlacialCrystalLBoots
+	ds.SetDefaultArmorData(3477, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAHedgeKnightBoots
+	ds.SetDefaultArmorData(23064, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IAHeroicImperialBoots
+	ds.SetDefaultArmorData(43879, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAHeroicStormcloakBoots
+	ds.SetDefaultArmorData(14466, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IAHunterBoots
+	ds.SetDefaultArmorData(23049, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IAMercenaryBoots
+	ds.SetDefaultArmorData(16064, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IANordMailHeavyBoots
+	ds.SetDefaultArmorData(16067, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_POOR, ds.COVERAGE_POOR) ; IANordMailLightBoots
+	ds.SetDefaultArmorData(43875, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAPaladinBoots
+	;ds.SetDefaultArmorData(23101, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, Y, Z) ; IAPrimitiveNordHeavyBoots
+	;ds.SetDefaultArmorData(23105, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, Y, Z) ; IAPrimitiveNordLightBoots
+	ds.SetDefaultArmorData(23150, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_POOR) ; IARangerBoots
+	ds.SetDefaultArmorData(3434, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IARedguardKnightHeavyBoots
+	ds.SetDefaultArmorData(3435, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IARedguardKnightLightBoots
+	ds.SetDefaultArmorData(144112, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IARingmailBoots
+	ds.SetDefaultArmorData(139148, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_EXCELLENT) ; IARitualBoethiahBoots
+	ds.SetDefaultArmorData(6188, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_GOOD) ; IASeadogBoots
+	ds.SetDefaultArmorData(143535, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_POOR) ; IAShamanLBoots
+	ds.SetDefaultArmorData(536245, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_POOR) ; IAShamanUBoots
+	ds.SetDefaultArmorData(144119, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IASnowBearBoots
+	ds.SetDefaultArmorData(53614, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IASpellbinderCrimsonBoots
+	ds.SetDefaultArmorData(53619, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IASpellbinderRunicBoots
+	ds.SetDefaultArmorData(436722, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAStormlordBoots
+	ds.SetDefaultArmorData(143686, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalHeavyBootsBlack
+	ds.SetDefaultArmorData(143687, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalHeavyBootsBlue
+	ds.SetDefaultArmorData(143688, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalHeavyBootsGreen
+	ds.SetDefaultArmorData(143689, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalHeavyBootsRed
+	ds.SetDefaultArmorData(143690, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalHeavyBootsWhite
+	ds.SetDefaultArmorData(143711, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalLightBootsBlack
+	ds.SetDefaultArmorData(143712, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalLightBootsBlue
+	ds.SetDefaultArmorData(143713, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalLightBootsGreen
+	ds.SetDefaultArmorData(143714, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalLightBootsRed
+	ds.SetDefaultArmorData(143715, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalLightBootsWhite
+	ds.SetDefaultArmorData(143740, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalUnarmoredBootsBlack
+	ds.SetDefaultArmorData(143741, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalUnarmoredBootsBlue
+	ds.SetDefaultArmorData(143742, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalUnarmoredBootsGreen
+	ds.SetDefaultArmorData(143743, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalUnarmoredBootsRed
+	ds.SetDefaultArmorData(143744, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IATribunalUnarmoredBootsWhite
+	ds.SetDefaultArmorData(143491, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IATrollbaneHeavyBoots
+	ds.SetDefaultArmorData(143497, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IATrollbaneLightBoots
+	ds.SetDefaultArmorData(3450, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_MAX) ; IAVagabondCrimsonBoots
+	ds.SetDefaultArmorData(3452, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_MAX) ; IAVagabondDuskBoots
+	ds.SetDefaultArmorData(3451, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_MAX) ; IAVagabondLeatherBoots
+	ds.SetDefaultArmorData(3459, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_GOOD) ; IAVanguardPlateBoots
+	ds.SetDefaultArmorData(144123, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IAVvardenfellGlassBoots
+	ds.SetDefaultArmorData(50834, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_FAIR, ds.COVERAGE_FAIR) ; IAWitchplateBoots
+	ds.SetDefaultArmorData(436742, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_GOOD, ds.COVERAGE_FAIR) ; IAImperialKnightGreaves
+	ds.SetDefaultArmorData(3474, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_EXCELLENT, ds.COVERAGE_FAIR) ; IAWarchiefHeavyStompers
+	ds.SetDefaultArmorData(3475, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_FEET, ds.WARMTH_EXCELLENT, ds.COVERAGE_FAIR) ; IAWarchiefLightStompers
+
+
+	ds.SetDefaultArmorData(145642, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_CLOAK, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IABosmerFullCape
+	ds.SetDefaultArmorData(145660, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_CLOAK, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IABosmerShoulderCape
+	ds.SetDefaultArmorData(145641, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_CLOAK, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IABosmerEngravedShoulderCape
+	ds.SetDefaultArmorData(436740, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_CLOAK, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IAImperialKnightCape
+	ds.SetDefaultArmorData(63308, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_CLOAK, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IARedguardKnightCape
+	ds.SetDefaultArmorData(11733, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_CLOAK, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IASeadogCape
+	ds.SetDefaultArmorData(13097, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_CLOAK, aiExtraType = ds.EXTRA_CLOAKCLOTH) ; IAApotheusScarf
+
+
+	ds.SetDefaultArmorData(3427, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_IGNORE) ; IAFalkreathCrown
+	ds.SetDefaultArmorData(143495, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_IGNORE) ; IATrollbaneHeavyMask		@IGNORE
+	ds.SetDefaultArmorData(143502, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_IGNORE) ; IATrollbaneLightMask 		@IGNORE
+	ds.SetDefaultArmorData(143736, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_IGNORE) ; IATribunalMaskBronze		@IGNORE
+	ds.SetDefaultArmorData(143737, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_IGNORE) ; IATribunalMaskEbony			@IGNORE
+	ds.SetDefaultArmorData(143738, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_IGNORE) ; IATribunalMaskGold			@IGNORE
+	ds.SetDefaultArmorData(143739, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_IGNORE) ; IATribunalMaskSilver		@IGNORE
+	ds.SetDefaultArmorData(139152, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_IGNORE) ; IARitualBoethiahMask		@IGNORE
+	ds.SetDefaultArmorData(10329, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_IGNORE) ; IASeadogEarings 				@IGNORE
+	ds.SetDefaultArmorData(10335, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_IGNORE) ; IASeadogEyepatch				@IGNORE
+	ds.SetDefaultArmorData(145659, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_IGNORE) ; IABosmerMask 				@IGNORE
+	ds.SetDefaultArmorData(139153, "Hothtrooper44_ArmorCompilation.esp", ds.GEARTYPE_IGNORE) ; IARitualBoethiahShroud		@IGNORE
 endFunction
 
 ;@TODO

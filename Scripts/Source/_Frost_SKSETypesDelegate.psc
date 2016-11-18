@@ -16,6 +16,9 @@ _Frost_SkyUIConfigPanelScript property FrostConfig Auto
 string CONFIG_PATH = "../FrostfallData/"
 
 Event OnInit()
+	if !self.IsRunning()
+		self.Start()
+	endif
 	RegisterForAllEvents()
 EndEvent
 
@@ -60,8 +63,8 @@ Event SaveSettingToCurrentProfile(string asKey, int aiValue)
 	FrostConfig.SaveSettingToCurrentProfile(asKey, aiValue)
 endEvent
 
-Event ApplyMeterPreset()
-	FrostConfig.ApplyMeterPreset(1)
+Event ApplyMeterPreset(int aiValue)
+	FrostConfig.ApplyMeterPreset(aiValue)
 endEvent
 
 Event RegisterForKeysOnLoad()

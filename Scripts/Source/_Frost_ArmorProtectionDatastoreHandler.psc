@@ -182,6 +182,19 @@ int property COVERAGE_MISC_GOOD 				= 20 autoReadOnly hidden
 int property COVERAGE_MISC_EXCELLENT 			= 30 autoReadOnly hidden
 int property COVERAGE_MISC_MAX 					= 40 autoReadOnly hidden
 
+function StartSystem()
+	if !self.IsRunning()
+		self.Start()
+	endif
+	CreateProtectionKeywordValueMaps()
+endFunction
+
+function StopSystem()
+	if self.IsRunning()
+		self.Stop()
+	endif
+endFunction
+
 ;/ Array / Datastore Schemas ==================================================
 	
 	The Armor Protection Datastore and the Clothing System use various arrays
@@ -289,12 +302,6 @@ int property COVERAGE_MISC_MAX 					= 40 autoReadOnly hidden
 string CONFIG_PATH = "../FrostfallData/"
 string ARMOR_PROFILE_PREFIX = "armor_profile"
 string ARMOR_DEFAULT_PREFIX = "armor_default_values"
-
-function StopSystem()
-	if self.IsRunning()
-		self.Stop()
-	endif
-endFunction
 
 function CreateProtectionKeywordValueMaps()
 	; "Ignore" keyword?
@@ -513,9 +520,9 @@ int[] function GetTotalArmorProtectionValuesWithType(Armor akArmor, string asArm
 	endif
 
 	if GetSKSELoaded()
-		GetTotalArmorProtectionValuesWithType_SKSE(akArmor, asArmorName)
+		ap = GetTotalArmorProtectionValuesWithType_SKSE(akArmor, asArmorName)
 	else
-		GetTotalArmorProtectionValuesWithType_Vanilla(akArmor)
+		ap = GetTotalArmorProtectionValuesWithType_Vanilla(akArmor)
 	endif
 	
 	FrostDebug(0, "GetTotalArmorProtectionValuesWithType ap = " + ap)
@@ -575,9 +582,9 @@ int function GetGearType_Vanilla(Armor akArmor)
 		return GEARTYPE_HEAD
 	elseif akArmor.HasKeyword(ArmorBoots) || akArmor.HasKeyword(ClothingFeet)
 		return GEARTYPE_FEET
-	elseif IsArmorCloak(akArmor) || akArmor.HasKeyword(WAF_ClothingCloak)
+	elseif IsArmorCloak(akArmor)
 		return GEARTYPE_CLOAK
-	elseif IsArmorShield(akArmor) || akArmor.HasKeyword(ArmorClothing) || akArmor.HasKeyword(ArmorLight) || akArmor.HasKeyword(ArmorHeavy)
+	elseif IsArmorShield(akArmor) || akArmor.HasKeyword(ArmorClothing)
 		return GEARTYPE_MISC
 	else
 		return GEARTYPE_NOTFOUND

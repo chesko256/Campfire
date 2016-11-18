@@ -8,6 +8,38 @@ Change Log
 
 ===================================================
 
+## Campfire 1.10.3
+
+### Features
+
+- **(Frostfall)** Your exposure and wetness are now displayed when using your tent. It will also note if you are being warmed by a nearby fire.
+- You can now acquire branches once again when Quick campfire lighting mode is enabled.
+
+### Notes
+- There was an issue where Campfire could not be uninstalled after placing objects into the world and not picking them back up again using Skyrim Special Edition. After uninstallation, the game would report that the "save has been corrupted". However, following Skyrim SE's 1.2 update, I have been unable to reproduce this issue. If you run into it again, please let me know.
+
+## Campfire 1.10.2
+
+### Features
+
+- First unified release of Campfire on Classic Skyrim and Special Edition.
+- Added "Quick" Campfire Building setting.
+ - This setting skips the starting fuel, tinder, and lighting process of campfire building.
+ - When using Quick building, campfires cost 4 deadwood or firewood to place, and spawn automatically lit. It starts as a "Crackling" campfire.
+ - You will be prompted if you want to use "Quick" or "Realistic" when building a campfire for the first time. "Realistic" works as campfires have historically, with tinder, lighting, etc.
+ - You can put the campfire out with Frost magic, and relight the campfire with Fire magic, bashing it with a torch, or clicking on it and selecting "Relight".
+ - You can upgrade the campfire to a Roaring campfire.
+ - If the campfire burns out when using Quick building, it immediately disappears; you can't "start over". To get another campfire, make a new one.
+ - You still gain Camping skill progress when using Quick building.
+ - You will be unable to harvest branches, create tinder, or create kindling when using Quick building, as those items no longer serve a purpose under this mode.
+
+- Added cloak recipes to tanning racks in order to make them more discoverable.
+
+### Bug Fixes
+
+- Fixed a texture bug on backpacks with no amulet attached.
+- Fixed a delay when putting out a campfire. Campfires are now put out instantly.
+
 Release 1.10.1
 
  - Cloaks and backpacks have been re-added.

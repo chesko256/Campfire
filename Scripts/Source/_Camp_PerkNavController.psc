@@ -111,32 +111,32 @@ function TakeDown()
 
 	; Failsafes to ensure that, no matter what, these objects are removed
 	if !myPerkNextBug
-		CampDebug(2, "Next Perk Nav Bug reference is empty. Attempting to locate.")
+		CampDebug(0, "Next Perk Nav Bug reference is empty. Attempting to locate.")
 		myPerkNextBug = Game.FindClosestReferenceOfTypeFromRef(_Camp_PerkNextBug, self, 640.0)
 		if myPerkNextBug
-			CampDebug(2, "Next Perk Nav Bug reference located.")
+			CampDebug(0, "Next Perk Nav Bug reference located.")
 		else
-			CampDebug(2, "Couldn't find Next Perk Nav Bug.")
+			CampDebug(0, "Couldn't find Next Perk Nav Bug.")
 		endif
 	endif
 
 	if !myPerkPrevBug
-		CampDebug(2, "Previous Perk Nav Bug reference is empty. Attempting to locate.")
+		CampDebug(0, "Previous Perk Nav Bug reference is empty. Attempting to locate.")
 		myPerkPrevBug = Game.FindClosestReferenceOfTypeFromRef(_Camp_PerkPrevBug, self, 640.0)
 		if myPerkPrevBug
-			CampDebug(2, "Previous Perk Nav Bug reference located.")
+			CampDebug(0, "Previous Perk Nav Bug reference located.")
 		else
-			CampDebug(2, "Couldn't find Previous Perk Nav Bug.")
+			CampDebug(0, "Couldn't find Previous Perk Nav Bug.")
 		endif
 	endif
 
 	if !myPerkExitBug
-		CampDebug(2, "Exit Perk Nav Bug reference is empty. Attempting to locate.")
+		CampDebug(0, "Exit Perk Nav Bug reference is empty. Attempting to locate.")
 		myPerkExitBug = Game.FindClosestReferenceOfTypeFromRef(_Camp_PerkExitBug, self, 640.0)
 		if myPerkExitBug
-			CampDebug(2, "Exit Perk Nav Bug reference located.")
+			CampDebug(0, "Exit Perk Nav Bug reference located.")
 		else
-			CampDebug(2, "Couldn't find Exit Perk Nav Bug.")
+			CampDebug(0, "Couldn't find Exit Perk Nav Bug.")
 		endif
 	endif
 
@@ -149,7 +149,7 @@ function TakeDown()
 	myPerkExitBug = None
 
 	if myCampfire.IsDisabled()
-		CampDebug(2, "Perk Nav Controller found disabled parent campfire " + myCampfire + ", removing.")
+		CampDebug(0, "Perk Nav Controller found disabled parent campfire " + myCampfire + ", removing.")
 		(myCampfire as CampCampfire).TakeDown()
 	endif
 
@@ -217,19 +217,19 @@ function CheckCampfireExists()
 endFunction
 
 Event OnCellAttach()
-	CampDebug(2, "Checking if Perk Nav Controller is valid on cell attach.")
+	CampDebug(0, "Checking if Perk Nav Controller is valid on cell attach.")
     CheckCampfireExists()
 EndEvent
 
 Event OnCellDetach()
-    CampDebug(2, "Checking if Perk Nav Controller is valid on cell detach. (myCampfire = " + myCampfire + ")")
+    CampDebug(0, "Checking if Perk Nav Controller is valid on cell detach. (myCampfire = " + myCampfire + ")")
     if !myCampfire
-        CampDebug(2, "(Detach) Found invalid Campfire perk bug nav controller " + self + " (parent campfire did not exist). Cleaning up.")
+        CampDebug(0, "(Detach) Found invalid Campfire perk bug nav controller " + self + " (parent campfire did not exist). Cleaning up.")
         TakeDown()
-        CampDebug(2, self + " removed.")
+        CampDebug(0, self + " removed.")
     elseif myCampfire.IsDisabled()
-        CampDebug(2, "(Detach) Found invalid Campfire perk bug nav controller " + self + " (parent campfire " + myCampfire + " was disabled). Cleaning up.")
+        CampDebug(0, "(Detach) Found invalid Campfire perk bug nav controller " + self + " (parent campfire " + myCampfire + " was disabled). Cleaning up.")
         TakeDown()
-        CampDebug(2, self + " removed.")
+        CampDebug(0, self + " removed.")
     endif
 EndEvent

@@ -2434,8 +2434,8 @@ function SetDefaults_Cloak()
 	;    Campfire
 	;
 	;##############################
-	ap.SetArmorDataByKey("260764___Campfire.esm", ap.GEARTYPE_CLOAK, 5, 5, abExportToDefaults = true, abSave = false) ; _Camp_Cloak_BasicBurlap
-	ap.SetArmorDataByKey("260765___Campfire.esm", ap.GEARTYPE_CLOAK, 10, 10, abExportToDefaults = true, abSave = false) ; _Camp_Cloak_BasicLinen
+	ap.SetArmorDataByKey("260764___Campfire.esm", ap.GEARTYPE_CLOAK, 12, 12, abExportToDefaults = true, abSave = false) ; _Camp_Cloak_BasicBurlap
+	ap.SetArmorDataByKey("260765___Campfire.esm", ap.GEARTYPE_CLOAK, 20, 20, abExportToDefaults = true, abSave = false) ; _Camp_Cloak_BasicLinen
 	ap.SetArmorDataByKey("260766___Campfire.esm", ap.GEARTYPE_CLOAK, 40, 12, abExportToDefaults = true, abSave = false) ; _Camp_Cloak_BasicFur
 	ap.SetArmorDataByKey("260767___Campfire.esm", ap.GEARTYPE_CLOAK, 12, 40, abExportToDefaults = true, abSave = false) ; _Camp_Cloak_BasicHide
 
