@@ -72,8 +72,12 @@ Event UpdateWarmth(bool abDisplayTextUpdate)
 	updating_warmth = false
 
 	if abDisplayTextUpdate
-		if old_warmth != warmth
-			GetClothingSystem().RegisterForSingleUpdate(2)
+		if FrostUtil.GetCompatibilitySystem().isUIPackageInstalled
+			return
+		else
+			if old_warmth != warmth
+				GetClothingSystem().RegisterForSingleUpdate(2)
+			endif
 		endif
 	endif
 endEvent

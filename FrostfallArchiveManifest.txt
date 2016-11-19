@@ -91,6 +91,7 @@ Scripts\_Frost_HarvestTreeBranchGenerator.pex
 Scripts\_Frost_HeatSourceSystem.pex
 Scripts\_Frost_InnerFireMonitorScript.pex
 Scripts\_Frost_InnerFire_EffectScript.pex
+Scripts\_Frost_InspectEquipment.pex
 Scripts\_Frost_InterfaceHandler.pex
 Scripts\_Frost_KindleEffectScript.pex
 Scripts\_Frost_KindleEffectScrollScript.pex
@@ -140,7 +141,10 @@ Scripts\_Frost_FallbackReceiverExposureSystem.pex
 Scripts\_Frost_FallbackReceiverMain.pex
 Scripts\_Frost_FallbackReceiverRescueSystem.pex
 Scripts\_Frost_FallbackReceiverWetnessSystem.pex
+Scripts\_Frost_BoundCloakEventReceiver.pex
+Scripts\_Frost_OnConjuredObjectIDReceiver.pex
 Scripts\_Frost_LegacyArmorDatastore.pex
+Scripts\_Frost_LegacyMenu.pex
 Scripts\_Frost_SKSETypesAlias.pex
 Scripts\_Frost_SKSETypesDelegate.pex
 Scripts\Source\_Frost_FallbackReceiverCoverageSystem.psc
@@ -148,7 +152,10 @@ Scripts\Source\_Frost_FallbackReceiverExposureSystem.psc
 Scripts\Source\_Frost_FallbackReceiverMain.psc
 Scripts\Source\_Frost_FallbackReceiverRescueSystem.psc
 Scripts\Source\_Frost_FallbackReceiverWetnessSystem.psc
+Scripts\Source\_Frost_BoundCloakEventReceiver.psc
+Scripts\Source\_Frost_OnConjuredObjectIDReceiver.psc
 Scripts\Source\_Frost_LegacyArmorDatastore.psc
+Scripts\Source\_Frost_LegacyMenu.psc
 Scripts\Source\_Frost_SKSETypesAlias.psc
 Scripts\Source\_Frost_SKSETypesDelegate.psc
 Scripts\Source\_Frost_EnterWarmHandsAct.psc
@@ -196,6 +203,7 @@ Scripts\Source\_Frost_HarvestTreeBranchGenerator.psc
 Scripts\Source\_Frost_HeatSourceSystem.psc
 Scripts\Source\_Frost_InnerFireMonitorScript.psc
 Scripts\Source\_Frost_InnerFire_EffectScript.psc
+Scripts\Source\_Frost_InspectEquipment.psc
 Scripts\Source\_Frost_InterfaceHandler.psc
 Scripts\Source\_Frost_KindleEffectScript.psc
 Scripts\Source\_Frost_KindleEffectScrollScript.psc

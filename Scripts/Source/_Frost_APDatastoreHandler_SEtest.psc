@@ -94,6 +94,7 @@ endFunction
 function beforeAll()
 	ap = GetClothingDatastoreHandler()
 	ds = GetLegacyArmorDatastore()
+	ap.CreateProtectionKeywordValueMaps()
 	ds.InitializeDatastore()
 	ds.PopulateDefaultArmorData()
 endFunction

@@ -44,8 +44,12 @@ Event UpdateCoverage(bool abDisplayTextUpdate)
 	updating_coverage = false
 
 	if abDisplayTextUpdate
-		if old_coverage != coverage
-			GetClothingSystem().RegisterForSingleUpdate(2)
+		if FrostUtil.GetCompatibilitySystem().isUIPackageInstalled
+			return
+		else
+			if old_coverage != coverage
+				GetClothingSystem().RegisterForSingleUpdate(2)
+			endif
 		endif
 	endif
 endEvent

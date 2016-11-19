@@ -692,17 +692,20 @@ function PageReset_Interface()
 		Interface_DisplayAttributeValuesInWeathersense_OID = AddToggleOption("$FrostfallInterfaceSettingWeathersenseDetail", false, OPTION_FLAG_DISABLED)
 	endif
 
-	if _Frost_Setting_Notifications_EquipmentValues.GetValueInt() == 2
-		Interface_Notifications_EquipmentValues_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentValues", true)
+	if Compatibility.isUIPackageInstalled
+		; pass
 	else
-		Interface_Notifications_EquipmentValues_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentValues", false)
+		if _Frost_Setting_Notifications_EquipmentValues.GetValueInt() == 2
+			Interface_Notifications_EquipmentValues_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentValues", true)
+		else
+			Interface_Notifications_EquipmentValues_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentValues", false)
+		endif
+		if _Frost_Setting_Notifications_EquipmentSummary.GetValueInt() == 2
+			Interface_Notifications_EquipmentSummary_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentSummary", true)
+		else
+			Interface_Notifications_EquipmentSummary_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentSummary", false)
+		endif
 	endif
-	if _Frost_Setting_Notifications_EquipmentSummary.GetValueInt() == 2
-		Interface_Notifications_EquipmentSummary_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentSummary", true)
-	else
-		Interface_Notifications_EquipmentSummary_OID = AddToggleOption("$FrostfallInterfaceSettingEquipmentSummary", false)
-	endif
-
 endFunction
 
 function PageReset_Meters()

@@ -35,7 +35,20 @@ bool property isDLC2Loaded auto hidden						;Dragonborn
 bool property isHFLoaded auto hidden						;Hearthfire
 
 ;#Supported Mods===============================================================
-bool property isUIPackageInstalled auto hidden				;SkyUI optional UI package
+bool uiPackageInstalled = false
+bool property isUIPackageInstalled hidden
+	bool function get()
+		return uiPackageInstalled
+	endFunction
+	function set(bool isInstalled)
+		uiPackageInstalled = isInstalled
+		if isInstalled
+			_Frost_Setting_Notifications_EquipmentValues.SetValueInt(1)
+			_Frost_Setting_Notifications_EquipmentSummary.SetValueInt(1)
+		endif
+	endFunction	
+endProperty
+
 bool property isSKYUILoaded auto hidden						;SkyUI 4.1+
 bool property isSKSELoaded auto hidden						;SKSE 1.7.3+
 bool property isLastSeedLoaded auto hidden					;Last Seed
@@ -184,6 +197,8 @@ bool added_spell_books = false
 GlobalVariable property _Frost_Setting_MeterExposureColor auto
 GlobalVariable property _Frost_Setting_MeterExposureColorWarm auto
 GlobalVariable property _Frost_AttributeExposureMeter auto
+GlobalVariable property _Frost_Setting_Notifications_EquipmentValues auto
+GlobalVariable property _Frost_Setting_Notifications_EquipmentSummary auto
 Armor property ArmorBanditCuirass1 auto
 Armor property ArmorBanditCuirass2 auto
 Armor property ArmorBanditCuirass3 auto
@@ -1329,7 +1344,7 @@ function RegisterForEventsOnLoad()
 	GetExposureMeterHandler().RegisterForEvents()
 	GetWetnessMeterHandler().RegisterForEvents()
 	GetWeathersenseMeterHandler().RegisterForEvents()
-	
+
 endFunction
 
 function RegisterForMenusOnLoad()
