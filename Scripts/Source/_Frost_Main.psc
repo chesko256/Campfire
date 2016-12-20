@@ -161,6 +161,7 @@ function StartAllSystems()
 	GetExposureSystem().StartSystem()
 	GetWetnessSystem().StartSystem()
 	GetFrostResistSystem().StartSystem()
+	GetPlayerStateSystem().StartSystem()
 endFunction
 
 function StopAllSystems()
@@ -175,6 +176,7 @@ function StopAllSystems()
 	GetExposureSystem().StopSystem()
 	GetWetnessSystem().StopSystem()
 	GetFrostResistSystem().StopSystem()
+	GetPlayerStateSystem().StopSystem()
 	Utility.Wait(2)
 endFunction
 

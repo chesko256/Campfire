@@ -4,8 +4,15 @@ import CampUtil
 
 ObjectReference property FireLightingReference auto hidden
 
+bool event_debounce = false
+
 Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
-	SendEvent_PlayerHit(akAggressor, akSource, akProjectile)
+	if !event_debounce
+		event_debounce = true
+		SendEvent_PlayerHit(akAggressor, akSource, akProjectile)
+		Utility.Wait(3)
+		event_debounce = false
+	endif
 EndEvent
 
 function SendEvent_PlayerHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile)

@@ -161,6 +161,15 @@ _Frost_ShelterSystem function GetShelterSystem() global
     return Frostfall.Shelter
 endFunction
 
+_Frost_PlayerStateSystem function GetPlayerStateSystem() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return none
+    endif
+    return Frostfall.PlayerState
+endFunction
+
 _Frost_FrostResistSystem function GetFrostResistSystem() global
     FrostfallAPI Frostfall = GetAPI()
     if Frostfall == none
@@ -319,6 +328,21 @@ bool function IsArmorCloak(Armor akArmor) global
     elseif akArmor.HasKeyword(Frostfall.WAF_ClothingCloak)
         return true
     elseif akArmor.HasKeyword(Frostfall.FrostfallEnableKeywordProtection) && (akArmor.HasKeyword(Frostfall.FrostfallIsCloakCloth) || akArmor.HasKeyword(Frostfall.FrostfallIsCloakFur) || akArmor.HasKeyword(Frostfall.FrostfallIsCloakLeather))
+        return true
+    else
+        return false
+    endif
+endFunction
+
+bool function IsWarmEnoughToRemoveGearInTent() global
+    FrostfallAPI Frostfall = GetAPI()
+    if Frostfall == none
+        RaiseFrostAPIError()
+        return false
+    endif
+
+    int temp = Frostfall._Frost_CurrentTemperature.GetValueInt()
+    if temp > 0.0
         return true
     else
         return false
@@ -2180,21 +2204,6 @@ endEvent
 
 ; Deprecated / Unused Functions ===================================================================
 
-bool function IsWarmEnoughToRemoveGearInTent() global
-    FrostfallAPI Frostfall = GetAPI()
-    if Frostfall == none
-        RaiseFrostAPIError()
-        return false
-    endif
-
-    int temp = Frostfall._Frost_CurrentTemperature.GetValueInt()
-    if temp > 0.0
-        return true
-    else
-        return false
-    endif
-endFunction
-
 bool function IsWarmEnoughToHarvestWood() global
     ; This feature was deprecated, always return true
     return true
@@ -2202,8 +2211,4 @@ endFunction
 
 function Event_LegacyWoodHarvest() global
     ;pass
-endFunction
-
-bool function IsPlayerVampire() global
-    return false
 endFunction

@@ -39,7 +39,7 @@ ObjectReference function get_async(Activator akFuture, ObjectReference akFutureA
 						bool initially_disabled = false, bool is_propped = false, bool is_hanging = false, bool is_temp = false,					\
 						bool is_interaction_disabled = false)
 	
-	CampDebug(0, self + " get_async")
+	CampDebug(0, self + " get_async placing form " + form_to_place)
 	thread_queued = true
 
 	_OriginAngle = new float[3]

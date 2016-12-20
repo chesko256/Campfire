@@ -56,21 +56,22 @@ endFunction
 function UseObject(ObjectReference akActionRef)
 	SetSelectedObjectConjured(self)
 	
-	if Setting_BypassMenu
-		Required_LinkedActivatorRef.Activate(Game.GetPlayer())
-		return
-	endif
-
+	
 	if akActionRef == Game.GetPlayer()
-		int i = GetObjectMainMenu().Show()
-		if i == 0										;Use
+		if Setting_BypassMenu && !Game.GetPlayer().IsSneaking()
 			Required_LinkedActivatorRef.Activate(Game.GetPlayer())
-		elseif i == 1									;Pick Up
-			PickUp()
-		elseif i == 2									;Dispel
-			TakeDown()
+			return
 		else
-			;exit
+			int i = GetObjectMainMenu().Show()
+			if i == 0										;Use
+				Required_LinkedActivatorRef.Activate(Game.GetPlayer())
+			elseif i == 1									;Pick Up
+				PickUp()
+			elseif i == 2									;Dispel
+				TakeDown()
+			else
+				;exit
+			endif
 		endif
 	endif
 endFunction

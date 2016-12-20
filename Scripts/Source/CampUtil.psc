@@ -192,7 +192,11 @@ bool function IsPlayerUndead() global
 	if playerRace.HasKeyword(Campfire.ActorTypeUndead)
 		return true
 	else
-		return false
+		if (Campfire.PlayerVampireQuest as PlayerVampireQuestScript).VampireStatus > 0
+			return true
+		else
+			return false
+		endif
 	endif
 endFunction
 

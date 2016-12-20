@@ -51,6 +51,8 @@ Message property _Frost_WeatherTransMsg_ClearToSnowMountain auto
 Message property _Frost_WeatherTransMsg_ClearToSnowSevere auto
 Message property _Frost_WeatherTransMsg_RainToSnow auto
 Message property _Frost_WeatherTransMsg_RainToSnowSevere auto
+Message property _Frost_CalmMsg auto
+Message property _Frost_Calm2Msg auto
 Message property _Frost_Help_Cold auto
 Message property _Frost_Help_ColdSE auto
 
@@ -80,14 +82,17 @@ int property REGION_WYRMSTOOTH 				= 20	autoReadOnly
 int property REGION_DARKEND 				= 21	autoReadOnly
 
 bool first_update = true
-bool in_region_pineforest = false
-bool in_region_volcanictundra = false
-bool in_region_fallforest = false
-bool in_region_reach = false
-bool in_region_tundra = false
-bool in_region_tundramarsh = false
-bool in_region_coast = false
-bool in_region_snow = false
+
+int current_region = -1
+int property currentRegion
+	int function get()
+		return current_region
+	endFunction
+	function set(int aiRegion)
+		FrostDebug(1, "Now entering region " + aiRegion)
+		current_region = aiRegion
+	endFunction
+endProperty
 
 float pos_x
 float pos_y
@@ -103,6 +108,7 @@ bool was_nighttime
 bool is_nighttime
 Weather last_incoming_weather
 Weather last_current_weather
+bool was_on_high_hrothgar_peak
 
 ; Public functions
 bool function IsRaining()
@@ -130,10 +136,11 @@ function UpdateClimateState()
 	Weather incoming_weather
 	int current_temperature
 
-	pos_x = PlayerRef.GetPositionX()
-	pos_y = PlayerRef.GetPositionY()
-	pos_z = PlayerRef.GetPositionZ()
-	ws = PlayerRef.GetWorldSpace()
+	_Frost_PlayerStateSystem stateSystem = GetPlayerStateSystem()
+	pos_x = stateSystem.playerX
+	pos_y = stateSystem.playerY
+	pos_z = stateSystem.playerZ
+	ws = stateSystem.thisWorldSpace
 	int region = GetPlayerRegion()
 
 	bool transitioning = IsWeatherTransitioning()
@@ -182,23 +189,7 @@ bool function IsWeatherTransitioning()
 endFunction
 
 Event OnTamrielRegionChange(int region, bool in_region)
-	if region == 1
-		in_region_pineforest = in_region
-	elseif region == 2
-		in_region_volcanictundra = in_region
-	elseif region == 3
-		in_region_fallforest = in_region
-	elseif region == 4
-		in_region_reach = in_region
-	elseif region == 5
-		in_region_tundra = in_region
-	elseif region == 6
-		in_region_tundramarsh = in_region
-	elseif region == 7
-		in_region_coast = in_region
-	elseif region == 8
-		in_region_snow = in_region
-	endif
+	currentRegion = region
 endEvent
 
 int function GetCurrentTemperature(Weather this_weather, int region)
@@ -283,9 +274,18 @@ endFunction
 
 int function GetMinTemperatureByLocation()
 	int min_temp = -100
+	int returnVal
 	if ws == WindhelmWorld || ws == WindhelmPitWorldspace
+		was_on_high_hrothgar_peak = false
 		return 2
+	elseif (pos_x <= 74340 && pos_x >= 32000) && (pos_y <= -21000 && pos_y >= -66600) && pos_z >= 35541
+		if !was_on_high_hrothgar_peak
+			was_on_high_hrothgar_peak = true
+			ShowCalmMessage()
+		endif
+		return 10
 	else
+		was_on_high_hrothgar_peak = false
 		return min_temp
 	endif
 endFunction
@@ -298,8 +298,9 @@ int function GetMaxTemperatureByLocation()
 
 	; High Hrothgar
 	if (pos_x <= 74340 && pos_x >= 32000) && (pos_y <= -21000 && pos_y >= -66600)
-								;						~~~~    _  ~~~~
-		if pos_z >= 34000		;Elevation 4                ~~/~~\~~~~~~
+		if pos_z >= 35541		;Elevation 5			~~~~    _  ~~~~
+			max_temp = 10		;                                                       (A strange calm at the peak.)
+		elseif pos_z >= 34000	;Elevation 4                ~~/~~\~~~~~~
 			max_temp = -20      ;                        ~~~ /  ~~\~~~
 		elseif pos_z >= 27500	;Elevation 3               /   ??  \
 			max_temp = -15      ;                        / . ~~   ?? \
@@ -384,34 +385,54 @@ int function GetRegionBaselineTemperature(int region)
 endFunction
 
 int function GetPlayerRegion()
-	if in_region_pineforest || _Frost_WorldspacesExteriorPineForest.HasForm(ws)
-		return REGION_PINEFOREST
-	elseif in_region_volcanictundra || _Frost_WorldspacesExteriorVolcanicTundra.HasForm(ws)
-		return REGION_VOLCANICTUNDRA
-	elseif in_region_fallforest || _Frost_WorldspacesExteriorFallForest.HasForm(ws)
-		return REGION_FALLFOREST
-	elseif in_region_reach
-		return REGION_REACH
-	elseif in_region_tundra || _Frost_WorldspacesExteriorWhiterun.HasForm(ws)
-		return REGION_TUNDRA
-	elseif in_region_tundramarsh || _Frost_WorldspacesExteriorTundraMarsh.HasForm(ws)
-		return REGION_TUNDRAMARSH
-	elseif in_region_coast || _Frost_WorldspacesExteriorCoast.HasForm(ws)
-		return REGION_COAST
-	elseif in_region_snow || _Frost_WorldspacesExteriorSnowy.HasForm(ws)
-		return REGION_SNOW
-	elseif _Frost_WorldspacesExteriorOblivion.HasForm(ws)
-		return REGION_OBLIVION
-	elseif Compatibility.isDLC1Loaded && ws == Compatibility.WS_FalmerValley
-		return REGION_FALMERVALLEY
-	elseif Compatibility.isDLC2Loaded && ws == Compatibility.WS_Solstheim
-		return REGION_SOLSTHEIM
-	elseif Compatibility.isWTHLoaded && ws == Compatibility.WS_Wyrmstooth
-		return REGION_WYRMSTOOTH
-	elseif Compatibility.isDRKLoaded && ws == Compatibility.WS_Darkend
-		return REGION_DARKEND
+	if ws == Tamriel
+		if currentRegion == REGION_PINEFOREST
+			return REGION_PINEFOREST
+		elseif currentRegion == REGION_VOLCANICTUNDRA
+			return REGION_VOLCANICTUNDRA
+		elseif currentRegion == REGION_FALLFOREST
+			return REGION_FALLFOREST
+		elseif currentRegion == REGION_REACH
+			return REGION_REACH
+		elseif currentRegion == REGION_TUNDRA
+			return REGION_TUNDRA
+		elseif currentRegion == REGION_TUNDRAMARSH
+			return REGION_TUNDRAMARSH
+		elseif currentRegion == REGION_COAST
+			return REGION_COAST
+		elseif currentRegion == REGION_SNOW
+			return REGION_SNOW
+		else
+			return REGION_UNKNOWN
+		endif
 	else
-		return -1
+		if _Frost_WorldspacesExteriorPineForest.HasForm(ws)
+			return REGION_PINEFOREST
+		elseif _Frost_WorldspacesExteriorVolcanicTundra.HasForm(ws)
+			return REGION_VOLCANICTUNDRA
+		elseif _Frost_WorldspacesExteriorFallForest.HasForm(ws)
+			return REGION_FALLFOREST
+		elseif _Frost_WorldspacesExteriorWhiterun.HasForm(ws)
+			return REGION_TUNDRA
+		elseif _Frost_WorldspacesExteriorTundraMarsh.HasForm(ws)
+			return REGION_TUNDRAMARSH
+		elseif _Frost_WorldspacesExteriorCoast.HasForm(ws)
+			return REGION_COAST
+		elseif _Frost_WorldspacesExteriorSnowy.HasForm(ws)
+			return REGION_SNOW
+		elseif _Frost_WorldspacesExteriorOblivion.HasForm(ws)
+			return REGION_OBLIVION
+		elseif Compatibility.isDLC1Loaded && ws == Compatibility.WS_FalmerValley
+			return REGION_FALMERVALLEY
+		elseif Compatibility.isDLC2Loaded && ws == Compatibility.WS_Solstheim
+			return REGION_SOLSTHEIM
+		elseif Compatibility.isWTHLoaded && ws == Compatibility.WS_Wyrmstooth
+			return REGION_WYRMSTOOTH
+		elseif Compatibility.isDRKLoaded && ws == Compatibility.WS_Darkend
+			return REGION_DARKEND
+		else
+			return REGION_UNKNOWN
+		endif
 	endif
 endFunction
 
@@ -536,6 +557,14 @@ function ShowWeatherTransitionMessage(Weather current_weather, Weather incoming_
 				FrostDebug(1, "%%%% Climate ::: Weather Transition INCOMING: SNOW     OUTGOING: RAIN")
 			endif
 		endif
+	endif
+endFunction
+
+function ShowCalmMessage()
+	if _Frost_Setting_WeatherMessages.GetValueInt() == 2
+		_Frost_CalmMsg.Show()
+		Wait(2)
+		_Frost_Calm2Msg.Show()
 	endif
 endFunction
 

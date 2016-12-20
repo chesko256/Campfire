@@ -10,50 +10,50 @@ GlobalVariable property _Camp_PreviousVersion auto
 GlobalVariable property _Camp_CampfireVersion auto
 GlobalVariable property _Camp_IsBeta auto
 
-;#PROPERTIES=====================================================================================================================
+; #PROPERTIES=====================================================================================================================
 actor property PlayerRef auto
 ReferenceAlias property PlayerAlias auto
 Activator[] property PerkNodeControllers auto hidden
-bool property multiple_perk_trees = false auto hidden 				;Flag for perk tree navigation
+bool property multiple_perk_trees = false auto hidden 				; Flag for perk tree navigation
 
-;#Examine======================================================================
+; #Examine======================================================================
 ; TBD
 
-;#Scripts======================================================================
-_Camp_SkyUIConfigPanelScript property CampConfig Auto 				;SkyUI Configuration script
-_Camp_Main property Campfire auto 									;Main script
-_Camp_ObjectPlacementThreadManager property PlacementSystem auto 	;Placement System Script
+; #Scripts======================================================================
+_Camp_SkyUIConfigPanelScript property CampConfig Auto 				; SkyUI Configuration script
+_Camp_Main property Campfire auto 									; Main script
+_Camp_ObjectPlacementThreadManager property PlacementSystem auto 	; Placement System Script
 _Camp_TentSystem property TentSys auto
 _Camp_ConditionValues property Conditions auto
 
-;#Quests=======================================================================
-Quest property _Camp_MainQuest auto 						;Main quest
-Quest property _Camp_FollowerQuest auto 					;Follower tracking quest
+; #Quests=======================================================================
+Quest property _Camp_MainQuest auto 						; Main quest
+Quest property _Camp_FollowerQuest auto 					; Follower tracking quest
 
-;#Official DLC=================================================================
-bool property isDLC1Loaded auto	hidden						;Dawnguard
-bool property isDLC2Loaded auto hidden						;Dragonborn
-bool property isHFLoaded auto hidden						;Hearthfire
+; #Official DLC=================================================================
+bool property isDLC1Loaded auto	hidden						; Dawnguard
+bool property isDLC2Loaded auto hidden						; Dragonborn
+bool property isHFLoaded auto hidden						; Hearthfire
 
-;#Supported Mods===============================================================
-bool property isSKSELoaded auto hidden						;SKSE
-bool property isSKYUILoaded auto hidden						;SkyUI 3.4+
-bool property isFrostfallLoaded auto hidden					;Frostfall
-bool property isFrostfallLegacyLoaded auto hidden			;Frostfall 2.6 or below
-bool property isLastSeedLoaded auto hidden					;Last Seed
-bool property isArtOfTheCatchLoaded auto hidden 			;Art of the Catch
-bool property isIMCNLoaded auto hidden						;Imp's More Complex Needs
-bool property isRNDLoaded auto hidden			 			;Realistic Needs and Diseases
-bool property isINEEDLoaded auto hidden						;iNeed
-bool property isEOLoaded auto hidden						;Equipping Overhaul
+; #Supported Mods===============================================================
+bool property isSKSELoaded auto hidden						; SKSE
+bool property isSKYUILoaded auto hidden						; SkyUI 3.4+
+bool property isFrostfallLoaded auto hidden					; Frostfall
+bool property isFrostfallLegacyLoaded auto hidden			; Frostfall 2.6 or below
+bool property isLastSeedLoaded auto hidden					; Last Seed
+bool property isArtOfTheCatchLoaded auto hidden 			; Art of the Catch
+bool property isIMCNLoaded auto hidden						; Imp's More Complex Needs
+bool property isRNDLoaded auto hidden			 			; Realistic Needs and Diseases
+bool property isINEEDLoaded auto hidden						; iNeed
+bool property isEOLoaded auto hidden						; Equipping Overhaul
 
-;#Merchant Containers==========================================================
+; #Merchant Containers==========================================================
 ObjectReference property MerchantRiverwoodTraderContainer auto
 
-;#FormLists====================================================================
-formlist property _Camp_Trees auto							;List of valid trees for Wood Harvesting
-formlist property _Camp_WorldspacesInteriors auto			;Interior exception worldspace
-formlist property _Camp_ModWaterSkins auto 					;List of waterskins from other mods
+; #FormLists====================================================================
+formlist property _Camp_Trees auto							; List of valid trees for Wood Harvesting
+formlist property _Camp_WorldspacesInteriors auto			; Interior exception worldspace
+formlist property _Camp_ModWaterSkins auto 					; List of waterskins from other mods
 formlist property _Camp_HeatSources_All auto
 formlist property _Camp_HeatSources_Fire auto
 formlist property _Camp_HeatSources_Fire_Small auto
@@ -67,31 +67,31 @@ formlist property EnchantmentResistMagic auto
 formlist property EnchantmentResistDisease auto
 formlist property EnchantmentResistPoison auto
 
-;#Keywords=========================================================================
+; #Keywords=========================================================================
 Keyword property WAF_ClothingCloak auto
 
-;#Trees============================================================================
-;@TODO: Move to Frostfall
-;TreeObject property TreeReachTreeStump01 auto hidden
+; #Trees============================================================================
+; @TODO: Move to Frostfall
+; TreeObject property TreeReachTreeStump01 auto hidden
 
-;#DLC / Mod Worldspaces============================================================
-Worldspace property DLC2WS auto hidden						;Solstheim
+; #DLC / Mod Worldspaces============================================================
+Worldspace property DLC2WS auto hidden						; Solstheim
 
-;#Campfire Perk System=============================================================
+; #Campfire Perk System=============================================================
 Activator property _Camp_PerkNavControllerAct auto
 Activator property _Camp_PerkNodeController_Camping auto
 
 ; GlobalVariable property _Camp_PerkNodeControllersSorted auto ; Constant value = 1
 GlobalVariable property _Camp_PerkNodeControllerCount auto
 
-;#Followers========================================================================
+; #Followers========================================================================
 ReferenceAlias property Follower1 auto
 ReferenceAlias property Follower2 auto
 ReferenceAlias property Follower3 auto
 ReferenceAlias property Animal auto
 Faction property CurrentHireling auto
 
-;#Misc=============================================================================
+; #Misc=============================================================================
 GlobalVariable property _Camp_HotkeyCreateItem auto
 GlobalVariable property _Camp_HotkeyBuildCampfire auto
 GlobalVariable property _Camp_HotkeyHarvestWood auto
@@ -126,7 +126,7 @@ Message property _Camp_Upgrade_1_6_Msg auto
 Message property _Camp_BetaMessage auto
 Weather property DLC2AshStorm auto hidden
 
-;#Upgrade Flags====================================================================
+; #Upgrade Flags====================================================================
 bool Upgraded_1_1 = false
 bool Upgraded_1_4 = false
 bool Upgraded_1_6 = false

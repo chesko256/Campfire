@@ -2,6 +2,7 @@ scriptname _Frost_ColdWaterEffect3 extends ActiveMagicEffect
 
 import Utility
 import FrostUtil
+import CampUtil
 
 Actor property PlayerRef auto
 Message property _Frost_WaterTemp3Msg auto
@@ -13,6 +14,7 @@ GlobalVariable property _Frost_Setting_ForceFeedback auto
 GlobalVariable property _Frost_Setting_FrigidWaterIsLethal auto
 GlobalVariable property _Frost_Setting_ConditionMessages auto
 GlobalVariable property _Frost_Setting_MaxExposureMode auto
+GlobalVariable property _Frost_Setting_VampireMode auto
 Spell property _Frost_ColdWaterDeathSpell auto
 
 bool message_1_shown
@@ -36,7 +38,9 @@ function HandleFrigidWater()
 		ForceFeedbackQuick()
 	endif
 
-	if _Frost_Setting_FrigidWaterIsLethal.GetValueInt() == 2
+	bool isInvulnerableUndead = IsPlayerUndead() && _Frost_Setting_VampireMode.GetValueInt() == 2
+
+	if _Frost_Setting_FrigidWaterIsLethal.GetValueInt() == 2 && !isInvulnerableUndead
 		update_count = 0
 		message_1_shown = false
 		message_2_shown = false

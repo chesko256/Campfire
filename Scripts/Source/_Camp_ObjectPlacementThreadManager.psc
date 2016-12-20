@@ -849,8 +849,8 @@ function UpdateIndicatorPosition(ObjectReference akIndicator, float afDistance, 
     endif
 endFunction
 
-function PlaceableObjectUsed(MiscObject akInventoryItem, Activator akPlacementIndicator, Ingredient akIngredient, MiscObject akMiscItem, Int aiCost, Perk akPerk, string asIngredientName, string asMiscItemName, string asPerkName)
-    bool can_use = MeetsRequirements(akIngredient, akMiscItem, aiCost, akPerk, asIngredientName, asMiscItemName, asPerkName)
+function PlaceableObjectUsed(MiscObject akInventoryItem, Activator akPlacementIndicator, Ingredient akIngredient, MiscObject akMiscItem, Int aiCost, Perk akPerk, Message akIngredientError, Message akMiscItemError, Message akPerkError)
+    bool can_use = MeetsRequirements(akIngredient, akMiscItem, aiCost, akPerk, akIngredientError, akMiscItemError, akPerkError)
     if !can_use
         return
     endif
@@ -870,8 +870,8 @@ function PlaceableObjectUsed(MiscObject akInventoryItem, Activator akPlacementIn
     indicator.Ready()
 endFunction
 
-function UsableObjectUsed(Activator akActivatorToUse, Furniture akFurnitureToUse, Ingredient akIngredient, MiscObject akMiscItem, Int aiCost, Perk akPerk, string asIngredientName, string asMiscItemName, string asPerkName)
-    bool can_use = MeetsRequirements(akIngredient, akMiscItem, aiCost, akPerk, asIngredientName, asMiscItemName, asPerkName)
+function UsableObjectUsed(Activator akActivatorToUse, Furniture akFurnitureToUse, Ingredient akIngredient, MiscObject akMiscItem, Int aiCost, Perk akPerk, Message akIngredientError, Message akMiscItemError, Message akPerkError)
+    bool can_use = MeetsRequirements(akIngredient, akMiscItem, aiCost, akPerk, akIngredientError, akMiscItemError, akPerkError)
     if !can_use
         return
     endif
@@ -894,13 +894,15 @@ function UsableObjectUsed(Activator akActivatorToUse, Furniture akFurnitureToUse
     endif
 endFunction
 
-bool function MeetsRequirements(Ingredient akIngredient, MiscObject akMiscItem, Int aiCost, Perk akPerk, string asIngredientName, string asMiscItemName, string asPerkName)
+bool function MeetsRequirements(Ingredient akIngredient, MiscObject akMiscItem, Int aiCost, Perk akPerk, Message akIngredientError, Message akMiscItemError, Message akPerkError)
     if PlayerCanPlaceObjects()
         _Camp_Strings str = GetCampfireStrings()
         if akPerk
             if !PlayerRef.HasPerk(akPerk)
                 _Camp_PlaceObjectError_Perk.Show()
-                if Compatibility.isSKSELoaded
+                if akPerkError
+                    akPerkError.Show()
+                elseif Compatibility.isSKSELoaded
                     debug.notification(akPerk.GetName() + str.IngredientRequired)
                 endif
                 return false
@@ -909,7 +911,9 @@ bool function MeetsRequirements(Ingredient akIngredient, MiscObject akMiscItem, 
         if akIngredient && aiCost > 0
             if !(PlayerRef.GetItemCount(akIngredient) >= aiCost)
                 _Camp_PlaceObjectError_Item.Show()
-                if Compatibility.isSKSELoaded
+                if akIngredientError
+                    akIngredientError.Show(aiCost)
+                elseif Compatibility.isSKSELoaded
                     debug.notification(aiCost + " " + akIngredient.GetName() + str.IngredientRequired)
                 endif
                 return false
@@ -917,7 +921,9 @@ bool function MeetsRequirements(Ingredient akIngredient, MiscObject akMiscItem, 
         elseif akMiscItem && aiCost > 0
             if !(PlayerRef.GetItemCount(akMiscItem) >= aiCost)
                 _Camp_PlaceObjectError_Item.Show()
-                if Compatibility.isSKSELoaded
+                if akMiscItemError
+                    akMiscItemError.Show(aiCost)
+                elseif Compatibility.isSKSELoaded
                     debug.notification(aiCost + " " + akMiscItem.GetName() + str.IngredientRequired)
                 endif
                 return false

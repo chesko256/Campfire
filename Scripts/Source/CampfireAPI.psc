@@ -41,6 +41,7 @@ GlobalVariable property _Camp_CampfireVersion auto
 Quest property CampfireObjectPlacementSystem auto
 Quest property CampfireTentSystem auto
 Quest property _Camp_MainQuest auto
+Quest property PlayerVampireQuest auto
 ReferenceAlias property EventEmitter_CampfirePerkPurchased auto
 ReferenceAlias property EventEmitter_InstinctsRunAliases auto
 ReferenceAlias property EventEmitter_InstinctsStartSearch auto

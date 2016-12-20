@@ -27,15 +27,6 @@ Activator property Required_placement_indicator auto
 * Required: The object that will indicate to the player where to place this item. }
 ;*********/;
 
-;/********p* CampPlaceableMiscItem/z_angle_offset
-* SYNTAX
-*/;
-float property z_angle_offset auto
-{
-* DESCRIPTION
-* Adjust Z angle (compass rotation) of placed item. Use if placed item is at a different angle than the placement indicator. }
-;********/;
-
 ;/********p* CampPlaceableMiscItem/consumable_ingredient
 * SYNTAX
 */;
@@ -72,31 +63,31 @@ Perk property necessary_perk auto
 * Optional: A perk required to use / place this item. }
 ;********/;
 
-;/********p* CampPlaceableMiscItem/consumable_ingredient_name
+;/********p* CampPlaceableMiscItem/consumable_ingredient_error
 * SYNTAX
 */;
-string property consumable_ingredient_name auto
+message property consumable_ingredient_error auto
 {
 * DESCRIPTION
-* Optional: The name of any required ingredient. Used if user does not have SKSE installed. }
+* Optional: The error message displaying the name of the required ingredient. Must contain 1 numeric parameter (%.0f) for the ingredient cost. }
 ;********/;
 
-;/********p* CampPlaceableMiscItem/consumable_miscitem_name
+;/********p* CampPlaceableMiscItem/consumable_miscitem_error
 * SYNTAX
 */;
-string property consumable_miscitem_name auto
+message property consumable_miscitem_error auto
 {
 * DESCRIPTION
-* Optional: The name of any required misc item. Used if user does not have SKSE installed. }
+* Optional: The error message displaying the name of the required misc item. Must contain 1 numeric parameter (%.0f) for the item cost. }
 ;********/;
 
-;/********p* CampPlaceableMiscItem/necessary_perk_name
+;/********p* CampPlaceableMiscItem/necessary_perk_error
 * SYNTAX
 */;
-string property necessary_perk_name auto
+message property necessary_perk_error auto
 {
 * DESCRIPTION
-* Optional: The name of any required perk. Used if user does not have SKSE installed. }
+* Optional: The error message displaying the name of the required perk. }
 ;********/;
 
 Event OnEquipped(Actor akActor)
@@ -108,9 +99,9 @@ Event OnEquipped(Actor akActor)
 										  					  consumable_misc_item,			\
 										  					  consumable_cost,				\
 										  					  necessary_perk,               \
-                                                              consumable_ingredient_name,   \
-                                                              consumable_miscitem_name,     \
-                                                              necessary_perk_name)
+                                                              consumable_ingredient_error,   \
+                                                              consumable_miscitem_error,     \
+                                                              necessary_perk_error)
 		endif
 	endif
 endEvent

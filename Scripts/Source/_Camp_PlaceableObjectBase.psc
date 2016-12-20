@@ -39,7 +39,7 @@ bool property Setting_IsConjured = False auto
 bool property Setting_BypassMenu = False auto
 {
 * DESCRIPTION
-* Optional: If true, no menu will be shown when clicking on this object and the default action will be taken. The intended use is that this object is created and destroyed by another object, like a conjured shelter. Otherwise, you would have no way to destroy the object once placed. }
+* Optional: If true, no menu will be shown when clicking on this object when the player is STANDING and the default action will be taken. If the player sneaks, the menu will be brought up. The intended use is that this object is created and destroyed by another object, like a conjured shelter. Or, for placing semi-permanent objects in the world. }
 ;*********/;
 
 ;/********p* _Camp_PlaceableObjectBase/UniqueConjuredObjectIDGlobal

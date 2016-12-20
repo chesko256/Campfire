@@ -13,12 +13,10 @@ GlobalVariable property _Frost_Setting_ExposureOn auto
 GlobalVariable property _Frost_Setting_ExposurePauseDialogue auto
 GlobalVariable property _Frost_Setting_ExposurePauseCombat auto
 GlobalVariable property _Frost_Setting_MaxExposureMode auto
-GlobalVariable property _Frost_Setting_NoFastTravel auto
 GlobalVariable property _Frost_Setting_ConditionMessages auto
 GlobalVariable property _Frost_Setting_FullScreenEffects auto
 GlobalVariable property _Frost_Setting_SoundEffects auto
 GlobalVariable property _Frost_Setting_ForceFeedback auto
-GlobalVariable property _Frost_Setting_NoWaiting auto
 GlobalVariable property _Frost_Setting_DisplayTutorials auto
 GlobalVariable property _Frost_Setting_VampireMode auto
 GlobalVariable property _Frost_WetLevel auto
@@ -45,11 +43,7 @@ GlobalVariable property EndurancePerkPointsTotal auto
 GlobalVariable property EndurancePerkPointProgress auto
 GlobalVariable property EndurancePerkPoints auto
 GlobalVariable property _Frost_HelpDone_Exposure auto
-FormList property _Frost_FastTravelExceptions auto
 FormList property _Frost_ExposureExceptions auto
-FormList property _Frost_SleepObjects auto
-FormList property _Frost_WorldspacesFTException auto
-FormList property _Frost_WorldspacesExteriorOblivion auto
 Message property _Frost_HypoState_5 auto
 Message property _Frost_HypoState_4 auto
 Message property _Frost_HypoState_3 auto
@@ -82,7 +76,6 @@ Static property CampfireHeatsourceOverrideNormal auto
 Static property CampfireHeatsourceOverrideWarm auto
 Static property XMarker auto
 Spell property _Frost_InnerFireSpell auto
-Spell property _Frost_NoWait_Spell auto
 Potion property _Frost_FrostbittenPotionBody auto
 Potion property _Frost_FrostbittenPotionHead auto
 Potion property _Frost_FrostbittenPotionHands auto
@@ -94,6 +87,8 @@ Keyword property _Frost_FrostbiteHandsKW auto
 Keyword property _Frost_FrostbiteFeetKW auto
 Keyword property ActorTypeDragon auto
 
+ReferenceAlias property DialogueSpeaker auto
+Quest property _Frost_PlayerDialogueDetect auto
 Quest property DLC2DialogueRavenRock auto hidden
 
 float property MIN_EXPOSURE = 0.0 autoReadOnly
@@ -108,40 +103,46 @@ float property EXPOSURE_LEVEL_3 = 60.0 autoReadOnly
 float property EXPOSURE_LEVEL_2 = 40.0 autoReadOnly
 float property EXPOSURE_LEVEL_1 = 20.0 autoReadOnly
 
-float current_temperature = 10.0
-float last_update_time = 0.0
-float this_update_time = 0.0
-float  this_update_game_time = 0.0
-float last_update_game_time = 0.0
-float player_x = 0.0
-float player_y = 0.0
-float last_x = 0.0
-float last_y = 0.0
-float distance_moved = 0.0
-int exposure_level = 0
-int last_exposure_level = 0
-float last_exposure_target = 0.0
-float last_exposure = 0.0
-int warm_message_debounce = 0
-bool totalwarm_message_debounce = false
-WorldSpace this_worldspace = None
-WorldSpace last_worldspace = None
-Weather current_weather = None
-bool in_tent = false
-bool tent_is_warm = false
-bool in_shelter = false
-bool is_meditating = false
-bool is_vampire = false
-bool last_vampire_state = false
-bool in_interior = false
-bool was_in_interior = false
-bool was_in_tent = false
-bool was_in_shelter = false
-bool near_heat = false
-bool was_near_heat = false
-bool can_display_limit_msg = true
-bool recently_fast_travelled = false
-bool ism_running = false
+float currentTemperature = 10.0
+float lastUpdateTime = 0.0
+float thisUpdateTime = 0.0
+float  thisUpdateGameTime = 0.0
+float lastUpdateGameTime = 0.0
+
+int exposureLevel = 0
+int lastExposureLevel = 0
+float lastExposureTarget = 0.0
+float lastExposure = 0.0
+int warmMessageDebounce = 0
+bool totalWarmMessageDebounce = false
+Weather currentWeather = None
+bool canDisplayLimitMsg = true
+bool recentlyFastTravelled = false
+bool ismRunning = false
+
+; Current State
+float playerX = 0.0
+float playerY = 0.0
+bool inTent = false
+bool tentIsWarm = false
+bool inShelter = false
+bool inInterior = false
+bool nearHeat = false
+bool isVampire = false
+bool isMeditating = false
+WorldSpace thisWorldSpace = None
+
+; Historic State
+float lastX = 0.0
+float lastY = 0.0
+float distanceMoved = 0.0
+bool wasInTent = false
+bool wasInShelter = false
+bool wasInInterior = false
+bool wasNearHeat = false
+bool lastVampireState = false
+WorldSpace lastWorldSpace = None
+
 
 function RegisterForEvents()
 	FallbackEventEmitter meditateEvent = GetEventEmitter_OnInnerFireMeditate()
@@ -152,29 +153,29 @@ function RegisterForEvents()
 endFunction
 
 function Update()
-	if last_update_time == 0.0
+	if lastUpdateTime == 0.0
 		; Skip the first update
-		last_update_time = Game.GetRealHoursPassed()
-		last_update_game_time = Utility.GetCurrentGameTime()
+		lastUpdateTime = Game.GetRealHoursPassed()
+		lastUpdateGameTime = Utility.GetCurrentGameTime()
 		return
 	endif
 
-	this_update_time = Game.GetRealHoursPassed()
-	this_update_game_time = Utility.GetCurrentGameTime()
+	currentTemperature = GetEffectiveTemperature()
 
-	;@TODO: Move to state update quest
-	RefreshAbleToWait()
-	RefreshAbleToFastTravel()
-	RefreshVampireState()
+	GetCurrentPlayerState()
 
-	RefreshPlayerStateData()
+	distanceMoved = GetDistanceMoved()
+	recentlyFastTravelled = GetFastTravelled(distanceMoved)
+	if recentlyFastTravelled
+		SetAfterFastTravelCondition()
+	endif
 
 	float target = CalculateExposureTarget()
 	_Frost_ExposureTarget.SetValue(target)
 
 	; Display the exposure meter in contextual mode if the
 	; exposure target changes dramatically.
-	if abs(last_exposure_target - target) >= 20.0
+	if abs(lastExposureTarget - target) >= 20.0
 		SendEvent_ForceExposureMeterDisplay()
 	endif
 
@@ -187,13 +188,13 @@ function Update()
 
 	UpdateExposure(target)
 
-	if warm_message_debounce > 0
-		warm_message_debounce -= 1
+	if warmMessageDebounce > 0
+		warmMessageDebounce -= 1
 	endif
 
-	last_exposure_target = target
-	last_update_time = this_update_time
-	last_update_game_time = this_update_game_time
+	lastExposureTarget = target
+	lastUpdateTime = thisUpdateTime
+	lastUpdateGameTime = thisUpdateGameTime
 endFunction
 
 float function CalculateExposureTarget()
@@ -252,7 +253,7 @@ float function CalculateExposureTarget()
 	endif
 
 	; Cap at 'Freezing' if using Inner Flame
-	if is_meditating && target > EXPOSURE_LEVEL_4
+	if isMeditating && target > EXPOSURE_LEVEL_4
 		target = EXPOSURE_LEVEL_4
 	endif
 
@@ -260,7 +261,7 @@ float function CalculateExposureTarget()
 endFunction
 
 function UpdateExposure(float afExposureTarget)
-	if recently_fast_travelled
+	if recentlyFastTravelled
 		FrostDebug(1, "Player fast travelled.")
 		StoreLastPlayerState()
 		return
@@ -302,13 +303,9 @@ function UpdateExposure(float afExposureTarget)
 	endif
 
 	; If enough game time has passed since the last update, modify based on waiting instead.
-	float timeDeltaGameHours = (Utility.GetCurrentGameTime() - last_update_game_time) * 24.0
-	float target = afExposureTarget
-	if target > EXPOSURE_LEVEL_4
-		target = EXPOSURE_LEVEL_4
-	endif
+	float timeDeltaGameHours = (Utility.GetCurrentGameTime() - lastUpdateGameTime) * 24.0
 	
-	ExposureValueUpdate(target, timeDeltaGameHours)
+	ExposureValueUpdate(afExposureTarget, timeDeltaGameHours)
 	ExposureEffectsUpdate()
 
 	StoreLastPlayerState()
@@ -329,7 +326,7 @@ function ModAttributeExposure(float amount, float target, bool allow_skill_advan
 		advance_skill = true
 	endif
 
-	if is_meditating
+	if isMeditating
 		advance_skill = false
 	endif
 
@@ -341,15 +338,15 @@ function ModAttributeExposure(float amount, float target, bool allow_skill_advan
 			advance_skill = false
 			if target < MAX_EXPOSURE && target > EXPOSURE_LEVEL_1
 				; Something is preventing the player from getting colder, display message.
-				if can_display_limit_msg
-					if near_heat && !(in_tent || in_shelter)
+				if canDisplayLimitMsg
+					if nearHeat && !(inTent || inShelter)
 						_frost_StatusTemp_Steady_Fire_Chilly.Show()
-					elseif !near_heat && (in_tent || in_shelter)
+					elseif !nearHeat && (inTent || inShelter)
 						_frost_StatusTemp_Steady_Shelter_Chilly.Show()
-					elseif near_heat && (in_tent || in_shelter)
+					elseif nearHeat && (inTent || inShelter)
 						_frost_StatusTemp_Steady_FireShelter_Chilly.Show()
 					endif
-					can_display_limit_msg = false
+					canDisplayLimitMsg = false
 				endif
 				limit_condition_triggered = true
 			endif
@@ -365,9 +362,9 @@ function ModAttributeExposure(float amount, float target, bool allow_skill_advan
 			advance_skill = false
 			if target < MAX_EXPOSURE && target > EXPOSURE_LEVEL_1
 				; Something is preventing the player from getting warmer, display message.
-				if !in_interior && (near_heat || in_tent || is_meditating) && can_display_limit_msg
+				if !inInterior && (nearHeat || inTent || isMeditating) && canDisplayLimitMsg
 					_Frost_ExposureCap_Warm.Show()
-					can_display_limit_msg = false
+					canDisplayLimitMsg = false
 				endif
 				limit_condition_triggered = true
 			endif
@@ -392,7 +389,7 @@ function ModAttributeExposure(float amount, float target, bool allow_skill_advan
 	endif
 
 	if limit_condition_triggered == false
-		can_display_limit_msg = true
+		canDisplayLimitMsg = true
 	endif
 
 	SendEvent_UpdateExposureMeter()
@@ -406,12 +403,12 @@ function ModAttributeExposure(float amount, float target, bool allow_skill_advan
 endFunction
 
 function SetExposureMeterGlow(float exposureValue)
-	if ((exposureValue > 20.0 && last_exposure <= 20.0) || \
-		(exposureValue <= 20.0 && last_exposure <= 20.0) || \
-		(exposureValue <= 20.0 && last_exposure > 20.0))
+	if ((exposureValue > 20.0 && lastExposure <= 20.0) || \
+		(exposureValue <= 20.0 && lastExposure <= 20.0) || \
+		(exposureValue <= 20.0 && lastExposure > 20.0))
 		SendEvent_SetExposureMeterGlow(exposureValue)
 	endif
-	last_exposure = exposureValue
+	lastExposure = exposureValue
 endFunction
 
 function SetExposureMeterPercentValue(float exposureValue)
@@ -422,117 +419,40 @@ function SetExposureMeterPercentValue(float exposureValue)
 	_Frost_AttributeExposureMeter.SetValue(exposure_meter_value)
 endFunction
 
-function RefreshPlayerStateData()
-	current_temperature = GetEffectiveTemperature()
-	if GetCurrentTent() && CurrentTentHasShelter()
-		in_tent	= true
-	else
-		in_tent = false
-	endif
-	tent_is_warm = IsCurrentTentWarm()
-	in_shelter = IsPlayerTakingShelter()
-	this_worldspace = PlayerRef.GetWorldSpace()
-	player_x = PlayerRef.GetPositionX()
-	player_y = PlayerRef.GetPositionY()
-	in_interior = CampUtil.IsRefInInterior(PlayerRef)
-	distance_moved = GetDistanceMoved()
+function GetCurrentPlayerState()
+	_Frost_PlayerStateSystem stateSystem = GetPlayerStateSystem()
 
-	recently_fast_travelled = GetFastTravelled(distance_moved)
-	if recently_fast_travelled
-		SetAfterFastTravelCondition()
-	endif
+	; Ensure that we get the complete state at the sample interval.
+	while stateSystem.updateInProgress
+		FrostDebug(0, "@@@@ Exposure ::: Waiting for Player State System to finish update.")
+		Utility.Wait(0.1)
+	endWhile
+
+	thisUpdateTime = stateSystem.thisUpdateTime
+	thisUpdateGameTime = stateSystem.thisUpdateGameTime
+	inTent = stateSystem.inTent
+	tentIsWarm = stateSystem.tentIsWarm
+	inShelter = stateSystem.inShelter
+	thisWorldSpace = stateSystem.thisWorldSpace
+	playerX = stateSystem.playerX
+	playerY = stateSystem.playerY
+	inInterior = stateSystem.inInterior
 endFunction
 
 function StoreLastPlayerState()
-	last_worldspace = this_worldspace
-	was_in_interior = in_interior
-	was_in_tent = in_tent
-	was_in_shelter = in_shelter
-	was_near_heat = near_heat
-	last_x = player_x
-	last_y = player_y
-	last_vampire_state = is_vampire
-	last_exposure_level = exposure_level
-endFunction
-
-function RefreshAbleToWait()
-	bool has_spell = PlayerRef.HasSpell(_Frost_NoWait_Spell)
-	if _Frost_Setting_NoWaiting.GetValueInt() == 2 && 	\
-		!IsRefInInterior(PlayerRef) && 					\
-		!Game.FindClosestReferenceOfAnyTypeInListFromRef(_Frost_SleepObjects, PlayerRef, 600.0)
-		if !has_spell
-			PlayerRef.AddSpell(_Frost_NoWait_Spell, false)
-		endif
-	else
-		if has_spell
-			PlayerRef.RemoveSpell(_Frost_NoWait_Spell)
-		endif
-	endif
-	;@TODO: Provide FrostUtil.IsAbleToWait()
-endFunction
-
-;@TODO: Possibly wrap in FrostUtil IsAbleToFastTravel() or similar
-;@TODO: Check fast travel exceptions too, like black book
-function RefreshAbleToFastTravel()
-
-	if FrostUtil.GetCompatibilitySystem().isDLC2Loaded
-		WorldSpace my_ws = PlayerRef.GetWorldspace()
-		if _Frost_WorldspacesExteriorOblivion.HasForm(my_ws) || _Frost_WorldspacesFTException.HasForm(my_ws)
-			if !Game.IsFastTravelControlsEnabled()
-				Game.EnableFastTravel()
-			endif
-			return
-		endif
-	endif
-
-	; Is the player riding a dragon?
-	if (_Frost_MainQuest as _Frost_ConditionValues).IsRidingFlyingMount
-		if !Game.IsFastTravelControlsEnabled()
-			Game.EnableFastTravel()
-		endif
-		return
-	endif
-
-	; Is the player near a fast travel exception?
-	ObjectReference exception = Game.FindClosestReferenceOfAnyTypeInListFromRef(_Frost_FastTravelExceptions, PlayerRef,  600.0)
-	if exception
-		if !Game.IsFastTravelControlsEnabled()
-			Game.EnableFastTravel()
-		endif
-		return
-	endif
-
-	if _Frost_Setting_NoFastTravel.GetValueInt() == 2
-		if Game.IsFastTravelControlsEnabled()
-			Game.EnableFastTravel(false)
-		endif
-	else
-		if !Game.IsFastTravelControlsEnabled()
-			Game.EnableFastTravel()
-		endif
-	endif
-endFunction
-
-; @TODO: Candidate for moving to utility / misc monitor script
-function RefreshVampireState()
-	if _Frost_Setting_VampireMode.GetValueInt() > 0
-		if IsPlayerUndead()
-			is_vampire = true
-		else
-			is_vampire = false
-		endif
-	else
-		is_vampire = false
-	endif
-
-	if is_vampire != last_vampire_state
-		(_Frost_MainQuest as _Frost_ConditionValues).IsVampire = is_vampire
-		SendEvent_UpdateWarmth(false)
-	endif
+	lastWorldSpace = thisWorldSpace
+	wasInInterior = inInterior
+	wasInTent = inTent
+	wasInShelter = inShelter
+	wasNearHeat = nearHeat
+	lastX = playerX
+	lastY = playerY
+	lastVampireState = isVampire
+	lastExposureLevel = exposureLevel
 endFunction
 
 float function GetDistanceMoved()
-	return abs(sqrt(pow((player_x - last_x), 2) + pow((player_y - last_y), 2)))
+	return abs(sqrt(pow((playerX - lastX), 2) + pow((playerY - lastY), 2)))
 endFunction
 
 bool function GetFastTravelled(float afDistance)
@@ -544,11 +464,11 @@ bool function GetFastTravelled(float afDistance)
 		return true
 	endif
 
-	if this_worldspace != last_worldspace && ((this_update_game_time - last_update_game_time) * 24.0) < 1.0
+	if thisWorldSpace != lastWorldSpace && ((thisUpdateGameTime - lastUpdateGameTime) * 24.0) < 1.0
 		return false
 	endif
 
-	if was_in_interior != in_interior
+	if wasInInterior != inInterior
 		return false
 	endif
 
@@ -569,15 +489,15 @@ function ExposureEffectsUpdate()
 	float current_exposure = _Frost_AttributeExposure.GetValue()
 	UpdateExposureLevel()
 
-	if exposure_level == 6
-		if is_vampire && _Frost_Setting_VampireMode.GetValueInt() == 2
+	if exposureLevel == 6
+		if isVampire && _Frost_Setting_VampireMode.GetValueInt() == 2
 			;pass
 		else
 			HandleMaxExposure()
 		endif
 	endif
 
-	if exposure_level >= 4
+	if exposureLevel >= 4
 		GetFrostbite()
 	endif
 
@@ -589,50 +509,50 @@ endFunction
 function UpdateExposureLevel()
 	float current_exposure = _Frost_AttributeExposure.GetValue()
 	if current_exposure >= MAX_EXPOSURE
-		exposure_level = 6
+		exposureLevel = 6
 	elseif current_exposure >= EXPOSURE_LEVEL_5
-		exposure_level = 5
+		exposureLevel = 5
 	elseif current_exposure >= EXPOSURE_LEVEL_4
-		exposure_level = 4
+		exposureLevel = 4
 	elseif current_exposure >= EXPOSURE_LEVEL_3
-		exposure_level = 3
+		exposureLevel = 3
 	elseif current_exposure >= EXPOSURE_LEVEL_2
-		exposure_level = 2
+		exposureLevel = 2
 	elseif current_exposure >= EXPOSURE_LEVEL_1
-		exposure_level = 1
+		exposureLevel = 1
 	elseif current_exposure > MIN_EXPOSURE
-		exposure_level = 0
+		exposureLevel = 0
 	elseif current_exposure == MIN_EXPOSURE
-		exposure_level = -1
+		exposureLevel = -1
 	endif
-	if exposure_level > 0
-		totalwarm_message_debounce = false
+	if exposureLevel > 0
+		totalWarmMessageDebounce = false
 	endif
 	ShowExposureStateMessage()
 
-	_Frost_ExposureLevel.SetValueInt(exposure_level)
-	FrostfallExposureLevelReadOnly.SetValueInt(exposure_level)
+	_Frost_ExposureLevel.SetValueInt(exposureLevel)
+	FrostfallExposureLevelReadOnly.SetValueInt(exposureLevel)
 endFunction
 
 function ShowExposureStateMessage()
 	if _Frost_Setting_ConditionMessages.GetValueInt() == 2
-		bool increasing = exposure_level > last_exposure_level
-		if increasing && exposure_level == 5 && last_exposure_level != 5
+		bool increasing = exposureLevel > lastExposureLevel
+		if increasing && exposureLevel == 5 && lastExposureLevel != 5
 			_Frost_HypoState_5.Show()
-		elseif increasing && exposure_level == 4 && last_exposure_level != 4
+		elseif increasing && exposureLevel == 4 && lastExposureLevel != 4
 			_Frost_HypoState_4.Show()
-		elseif increasing && exposure_level == 3 && last_exposure_level != 3
+		elseif increasing && exposureLevel == 3 && lastExposureLevel != 3
 			_Frost_HypoState_3.Show()
-		elseif increasing && exposure_level == 2 && last_exposure_level != 2
+		elseif increasing && exposureLevel == 2 && lastExposureLevel != 2
 			_Frost_HypoState_2.Show()
 			ShowTutorial_Exposure()
-		elseif increasing && exposure_level == 1 && last_exposure_level != 1
+		elseif increasing && exposureLevel == 1 && lastExposureLevel != 1
 			_Frost_HypoState_1.Show()
-		elseif increasing && exposure_level == 0 && last_exposure_level != 0 && last_exposure_level != -1
+		elseif increasing && exposureLevel == 0 && lastExposureLevel != 0 && lastExposureLevel != -1
 			_Frost_HypoState_0.Show()
-		elseif exposure_level == -1 && last_exposure_level != -1 && !totalwarm_message_debounce
+		elseif exposureLevel == -1 && lastExposureLevel != -1 && !totalWarmMessageDebounce
 			_Frost_HypoState_0_Min.Show()
-			totalwarm_message_debounce = true
+			totalWarmMessageDebounce = true
 		endif
 	endif
 endFunction
@@ -640,45 +560,45 @@ endFunction
 function ApplyVisualEffects()
 	; Make sure to clear ISM if a vampire, or existing effect if setting toggled off
 	if _Frost_Setting_FullScreenEffects.GetValueInt() == 1
-		if ism_running
+		if ismRunning
 			_Frost_ColdISM_Level3.Remove()
 			_Frost_ColdISM_Level4.Remove()
 			_Frost_ColdISM_Level5.Remove()
-			ism_running = false
+			ismRunning = false
 		endif
 		return
 	endif
 
-	if exposure_level <= 2
-		if ism_running
+	if exposureLevel <= 2
+		if ismRunning
 			_Frost_ColdISM_Level3.Remove()
 			_Frost_ColdISM_Level4.Remove()
 			_Frost_ColdISM_Level5.Remove()
-			ism_running = false
+			ismRunning = false
 		endif
-	elseif exposure_level == 3
+	elseif exposureLevel == 3
 		_Frost_ColdISM_Level3.ApplyCrossFade(4.0)
-		ism_running = true
-	elseif exposure_level == 4
+		ismRunning = true
+	elseif exposureLevel == 4
 		_Frost_ColdISM_Level4.ApplyCrossFade(4.0)
-		ism_running = true
-	elseif exposure_level == 5
+		ismRunning = true
+	elseif exposureLevel == 5
 		_Frost_ColdISM_Level5.ApplyCrossFade(4.0)
-		ism_running = true
+		ismRunning = true
 	endif
 endFunction
 
 function ApplySoundEffects()
 	if _Frost_Setting_SoundEffects.GetValueInt() == 2
 		bool gender = PlayerRef.GetActorBase().GetSex() == 1
- 		bool increasing = exposure_level > last_exposure_level
-		if increasing && exposure_level == 4 && last_exposure_level != 4
+ 		bool increasing = exposureLevel > lastExposureLevel
+		if increasing && exposureLevel == 4 && lastExposureLevel != 4
 			if gender == 1
 				_Frost_Female_FreezingSM.Play(PlayerRef)
 			else
 				_Frost_Male_FreezingSM.Play(PlayerRef)
 			endif
-		elseif increasing && exposure_level == 5 && last_exposure_level != 5
+		elseif increasing && exposureLevel == 5 && lastExposureLevel != 5
 			if gender == 1
 				_Frost_Female_FreezingToDeathSM.Play(PlayerRef)
 			else
@@ -690,10 +610,10 @@ endFunction
 
 function ApplyForceFeedback()
 	if _Frost_Setting_ForceFeedback.GetValueInt() == 2
-		bool increasing = exposure_level > last_exposure_level
-		if increasing && exposure_level == 4 && last_exposure_level != 4
+		bool increasing = exposureLevel > lastExposureLevel
+		if increasing && exposureLevel == 4 && lastExposureLevel != 4
 			Game.ShakeController(0.7, 0.3, 1.5)
-		elseif increasing && exposure_level == 5 && last_exposure_level != 5
+		elseif increasing && exposureLevel == 5 && lastExposureLevel != 5
 			Game.ShakeController(0.4, 0.6, 2.5)
 		endif
 	endif
@@ -729,7 +649,7 @@ function HandleMaxExposure()
 		if PlayerRef.IsOnMount()
 			KnockPlayerOffHorse()
 		endif
-
+		
 		SendEvent_OnRescuePlayer(PlayerRef.IsSwimming())
 	else
 		; Do nothing.
@@ -765,7 +685,6 @@ Event OnPlayerCameraState(int oldState, int newState)
 EndEvent
 
 bool function PlayerIsInDialogue()
-	;@TODO: Figure out how to do this without SKSE
 	if GetSKSELoaded()
 		if UI.IsMenuOpen("Dialogue Menu")
 			return true
@@ -773,8 +692,13 @@ bool function PlayerIsInDialogue()
 			return false
 		endif
 	else
-		; something else
-		return false
+		_Frost_PlayerDialogueDetect.Stop()
+		_Frost_PlayerDialogueDetect.Start()
+		if DialogueSpeaker.GetActorRef()
+			return true
+		else
+			return false
+		endif
 	endif
 endFunction
 
@@ -784,10 +708,10 @@ float function GetEffectiveTemperature()
 	float current_temp = _Frost_CurrentTemperature.GetValue()
 	float temp_increase = 0
 
-	current_weather = GetCurrentWeatherActual()
-	int current_weather_class = GetWeatherClassificationActual(current_weather)
+	currentWeather = GetCurrentWeatherActual()
+	int current_weather_class = GetWeatherClassificationActual(currentWeather)
 
-	if IsWeatherSevere(current_weather) && current_weather_class == 3
+	if IsWeatherSevere(currentWeather) && current_weather_class == 3
 		temp_increase = ((_Frost_AttributeCoverage.GetValue() * 10.0) / _Frost_Calc_MaxCoverage.GetValue())
 	elseif current_weather_class >= 2
 		temp_increase = ((_Frost_AttributeCoverage.GetValue() * 5.0) / _Frost_Calc_MaxCoverage.GetValue())
@@ -818,20 +742,20 @@ function ExposureValueUpdate(float afExposureTarget, float gameHoursPassed)
 	; If the player is near a heat source, how fast should they warm up?
 	currentHeatSize = _Frost_CurrentHeatSourceSize.GetValueInt()
 	if currentHeatSize > 0
-		near_heat = true
+		nearHeat = true
 		heatAmount = HEAT_FACTOR * _Frost_CurrentHeatSourceSize.GetValueInt()
 	else
-		near_heat = false
+		nearHeat = false
 		heatAmount = AMBIENT_FACTOR
-		if in_tent
+		if inTent
 			heatAmount += TENT_FACTOR
-			if tent_is_warm
+			if tentIsWarm
 				heatAmount += WARM_TENT_BONUS
 			endif
 		endif
 	endif
 
-	FrostDebug(0, "@@@@ Exposure ::: near_heat: " + near_heat + ", in_interior: " + in_interior + ", in_tent: " + in_tent + ", tent_is_warm: " + tent_is_warm)
+	FrostDebug(0, "@@@@ Exposure ::: nearHeat: " + nearHeat + ", inInterior: " + inInterior + ", inTent: " + inTent + ", tentIsWarm: " + tentIsWarm)
 
 	float currentExposure = _Frost_AttributeExposure.GetValue()
 	if currentExposure < afExposureTarget
@@ -854,7 +778,7 @@ endFunction
 function GetColder(float target, float game_hours_passed)
 	FrostDebug(1, "@@@@ Exposure ::: GetColder : Target " + Math.Ceiling(target) + " : GameHoursPassed " + game_hours_passed)
 	float update_freq = UpdateFrequencyGlobal.GetValue()
-	float time_delta_seconds = (this_update_time - last_update_time) * 3600.0
+	float time_delta_seconds = (thisUpdateTime - lastUpdateTime) * 3600.0
 	if time_delta_seconds > (update_freq * 2)
 		time_delta_seconds = (update_freq * 2)
 	endif
@@ -863,7 +787,7 @@ function GetColder(float target, float game_hours_passed)
 	float exposure_reduction = 1.0 - (((_Frost_AttributeWarmth.GetValueInt() * 90.0) / _Frost_Calc_MaxWarmth.GetValue()) / 100.0)
 	; Rise (multiplier on Y-axis) over Run (distance from hemeostasis temperature)
 	float slope = _Frost_Calc_ExtremeMultiplier.GetValue()/(_Frost_Calc_ExtremeTemp.GetValue() - _Frost_Calc_StasisTemp.GetValue())
-	float a_x = current_temperature
+	float a_x = currentTemperature
 	float a_b = (-slope + _Frost_Calc_StasisMultiplier.GetValue()) * _Frost_Calc_StasisTemp.GetValue()
 	; Slope-intercept form solving for Y
 	float temp_multiplier = (slope * a_x) + a_b
@@ -875,6 +799,9 @@ function GetColder(float target, float game_hours_passed)
 
 	if game_hours_passed >= 1.0
 		float duration_amount = (target / 4) * game_hours_passed
+		if target > EXPOSURE_LEVEL_4
+			target = EXPOSURE_LEVEL_4
+		endif
 		ModAttributeExposure(duration_amount, target, allow_skill_advancement=false)
 	else
 		ModAttributeExposure(amount, target)
@@ -882,7 +809,7 @@ function GetColder(float target, float game_hours_passed)
 endFunction
 
 function GetFrostbite(bool force_frostbite = false)
-	if is_vampire
+	if isVampire
 		return
 	endif
 	_Frost_ClothingSystem clothing = GetClothingSystem()
@@ -933,13 +860,13 @@ endFunction
 function DisplayWarmUpMessage(float exposure, float target)
 	; suddenly near heat
 	; enough time has passed
-	if (warm_message_debounce == 0 && (!was_near_heat && near_heat)) || (!was_in_tent && in_tent) || (!was_in_shelter && in_shelter && near_heat)
+	if (warmMessageDebounce == 0 && (!wasNearHeat && nearHeat)) || (!wasInTent && inTent) || (!wasInShelter && inShelter && nearHeat)
 		if exposure < target
 			(_Frost_MainQuest as _Frost_WeathersenseMessages).DisplayTemperatureMessage(true)
-			warm_message_debounce = 3
+			warmMessageDebounce = 3
 		else
 			_Frost_WarmUpMessage.Show()
-			warm_message_debounce = 3
+			warmMessageDebounce = 3
 		endif
 	endif
 endFunction
@@ -947,10 +874,10 @@ endFunction
 ; Endurance Skill
 function AdvanceEnduranceSkill()
     if EndurancePerkPointsEarned.GetValueInt() < EndurancePerkPointsTotal.GetValueInt()
-    	if in_interior || GetCurrentTent() || _Frost_CurrentHeatSourceSize.GetValueInt() > 0
+    	if inInterior || GetCurrentTent() || _Frost_CurrentHeatSourceSize.GetValueInt() > 0
     		return
     	endif
-    	if (current_temperature <= 0) || (current_temperature < 10 && GetWeatherClassificationActual(current_weather) >= 2)
+    	if (currentTemperature <= 0) || (currentTemperature < 10 && GetWeatherClassificationActual(currentWeather) >= 2)
     		; continue
     	else
     		return
@@ -1029,9 +956,9 @@ EndFunction
 
 Event OnInnerFireMeditate(bool abMeditating)
 	if abMeditating
-		is_meditating = true
+		isMeditating = true
 	else
-		is_meditating = false
+		isMeditating = false
 	endif
 endEvent
 
@@ -1091,15 +1018,6 @@ function SendEvent_OnRescuePlayer(bool in_water)
 		emitter.PushBool(handle, in_water)
 		emitter.Send(handle)
 	endif
-endFunction
-
-function SendEvent_UpdateWarmth(bool abDisplayTextUpdate)
-	FallbackEventEmitter emitter = GetEventEmitter_UpdateWarmth()
-    int handle = emitter.Create("Frost_UpdateWarmth")
-    if handle
-    	emitter.PushBool(handle, abDisplayTextUpdate)
-        emitter.Send(handle)
-    endif
 endFunction
 
 ;@TODO: Am I adding apocrypha / etc to oblivion worldspaces?

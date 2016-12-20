@@ -49,23 +49,23 @@ bool property isUIPackageInstalled hidden
 	endFunction	
 endProperty
 
-bool property isSKYUILoaded auto hidden						;SkyUI 4.1+
-bool property isSKSELoaded auto hidden						;SKSE 1.7.3+
-bool property isLastSeedLoaded auto hidden					;Last Seed
-bool property isCOTLoaded auto hidden						;Climates of Tamriel
-bool property isIMALoaded auto hidden						;Immersive Armors 7.1
-bool property isWTHLoaded auto hidden						;Wyrmstooth
-bool property isSKYRELoaded auto hidden						;Skyim Redone
-bool property isSCLoaded auto hidden						;Scenic Carriages
-bool property isNFHLoaded auto hidden						;Northborn Fur Hoods
-bool property isWICLoaded auto hidden						;Winter is Coming
-bool property isCOSLoaded auto hidden						;Cloaks of Skyrim
-bool property isCOSDGLoaded auto hidden						;Cloaks of Skyrim - Dawnguard
-bool property isHDTCloaksLoaded auto hidden					;Illustrious HDT Cloaks
-bool property isAEALoaded auto hidden						;Aesir Armor
-bool property isWACLoaded auto hidden						;Wet and Cold
-bool property isSSILoaded auto hidden						;Summerset Isle
-bool property isDRKLoaded auto hidden						;DarkenD
+bool property isSKYUILoaded auto hidden						; SkyUI 4.1+
+bool property isSKSELoaded auto hidden						; SKSE 1.7.3+
+bool property isLastSeedLoaded auto hidden					; Last Seed
+bool property isCOTLoaded auto hidden						; Climates of Tamriel
+bool property isIMALoaded auto hidden						; Immersive Armors 7.1
+bool property isWTHLoaded auto hidden						; Wyrmstooth
+bool property isSKYRELoaded auto hidden						; Skyim Redone
+bool property isSCLoaded auto hidden						; Scenic Carriages
+bool property isNFHLoaded auto hidden						; Northborn Fur Hoods
+bool property isWICLoaded auto hidden						; Winter is Coming
+bool property isCOSLoaded auto hidden						; Cloaks of Skyrim
+bool property isCOSDGLoaded auto hidden						; Cloaks of Skyrim - Dawnguard
+bool property isHDTCloaksLoaded auto hidden					; Illustrious HDT Cloaks
+bool property isAEALoaded auto hidden						; Aesir Armor
+bool property isWACLoaded auto hidden						; Wet and Cold
+bool property isSSILoaded auto hidden						; Summerset Isle
+bool property isDRKLoaded auto hidden						; DarkenD
 
 ;#Wet and Cold=================================================================
 Faction property _WetIsUnderShelterFaction auto hidden
@@ -214,10 +214,12 @@ GlobalVariable property _Frost_Upgraded_3_1 auto
 GlobalVariable property _Frost_Upgraded_3_2 auto
 GlobalVariable property _Frost_Upgraded_3_2_1 auto
 GlobalVariable property _Frost_Upgraded_3_3_1 auto
+GlobalVariable property _Frost_Upgraded_3_4 auto
 GlobalVariable property _Frost_Setting_DisplayTutorials auto
 
 ;#Release Notes====================================================================
 Message property _Frost_ReleaseNotes_3_3_1 auto
+Message property _Frost_ReleaseNotes_3_4 auto
 
 Event OnPlayerLoadGame()
 	RunCompatibility()
@@ -331,6 +333,10 @@ function RunCompatibility()
 
 	if _Frost_Upgraded_3_3_1.GetValueInt() != 2
 		Upgrade_3_3_1()
+	endif
+
+	if _Frost_Upgraded_3_4.GetValueInt() != 2
+		Upgrade_3_4()
 	endif
 
 	; Verify that the default datastore has been populated.
@@ -828,6 +834,18 @@ function Upgrade_3_3_1()
 
 	trace("[Frostfall] Upgraded to 3.3.1.")
 	_Frost_Upgraded_3_3_1.SetValueInt(2)
+endFunction
+
+function Upgrade_3_4()
+	if _Frost_PreviousVersion.GetValue() > 0.0
+		; Upgraded from previous version, start the new Frost Resist system.
+		GetPlayerStateSystem().StartSystem()
+
+		; Show release notes.
+		_Frost_ReleaseNotes_3_4.Show()
+	endif
+	trace("[Frostfall] Upgraded to 3.4.")
+	_Frost_Upgraded_3_4.SetValueInt(2)
 endFunction
 
 bool function CheckJSONReadWrite()

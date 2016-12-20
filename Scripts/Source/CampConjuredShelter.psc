@@ -173,7 +173,6 @@ function TakeDown()
 	ForceStopUsingFurniture(mySpareBedRoll2SitMarker)
 	ForceStopUsingFurniture(mySpareBedRoll3SitMarker)
 
-	; Destroy invisible objects (markers, etc)
 	TryToDisableAndDeleteRef(myPlayerMarker_MainWeapon)
 	TryToDisableAndDeleteRef(myPlayerMarker_OffHandWeapon)
 	TryToDisableAndDeleteRef(myPlayerMarker_BigWeapon)
@@ -185,11 +184,13 @@ function TakeDown()
 	TryToDisableAndDeleteRef(myPlayerMarker_Backpack)
 	TryToDisableAndDeleteRef(myPlayerMarker_Shield)
 	TryToDisableAndDeleteRef(myPlayerMarker_ShieldInterior)
+
 	TryToDisableAndDeleteRef(myPlayerSitMarker)
 	TryToDisableAndDeleteRef(myPlayerLayDownMarker)
 	TryToDisableAndDeleteRef(myPlayerWithSpouseLayDownMarker)
 	TryToDisableAndDeleteRef(mySpouseLayDownMarker)
 	TryToDisableAndDeleteRef(myAnimalLayDownMarker)
+	TryToDisableAndDeleteRef(myExitFront)
 	TryToDisableAndDeleteRef(mySpareBedRoll1SitMarker)
 	TryToDisableAndDeleteRef(mySpareBedRoll2SitMarker)
 	TryToDisableAndDeleteRef(mySpareBedRoll3SitMarker)
@@ -273,29 +274,22 @@ function TakeDown()
 	WarpOutRef(mySpareBedRoll1)
 	WarpOutRef(mySpareBedRoll2)
 	WarpOutRef(mySpareBedRoll3)
+	WarpOutRef(mySnowTent)
+	WarpOutRef(myAshTent)
+	WarpOutRef(myNormalTent)
+	WarpOutRef(myTent)
 	WarpOutRef(self)
 
-	Utility.Wait(1.2)
+	Utility.Wait(2.0)
 
 	; Warp out the sphere
 	DispelSphere()
 
-	; Remove references
 	TryToDisableAndDeleteRef(mySphere)
-	TryToDisableAndDeleteRef(myBaseStatic1)
-	TryToDisableAndDeleteRef(myBaseStatic2)
-	TryToDisableAndDeleteRef(myBaseStatic3)
-	TryToDisableAndDeleteRef(myBaseStatic4)
-	TryToDisableAndDeleteRef(myBaseStatic5)
-	TryToDisableAndDeleteRef(myBaseStatic6)
-	TryToDisableAndDeleteRef(myBaseStatic7)
-	TryToDisableAndDeleteRef(myClutterMisc1)
-	TryToDisableAndDeleteRef(myClutterMisc2)
-	TryToDisableAndDeleteRef(myClutterMisc3)
-	TryToDisableAndDeleteRef(myClutterMisc4)
-	TryToDisableAndDeleteRef(myClutterMisc5)
-	TryToDisableAndDeleteRef(myClutterMisc6)
-	TryToDisableAndDeleteRef(myClutterMisc7)
+	TryToDisableAndDeleteRef(mySnowTent)
+	TryToDisableAndDeleteRef(myAshTent)
+	TryToDisableAndDeleteRef(myNormalTent)
+	TryToDisableAndDeleteRef(myTent)
 	TryToDisableAndDeleteRef(myClutterStatic1)
 	TryToDisableAndDeleteRef(myClutterStatic2)
 	TryToDisableAndDeleteRef(myClutterStatic3)
@@ -303,6 +297,14 @@ function TakeDown()
 	TryToDisableAndDeleteRef(myClutterStatic5)
 	TryToDisableAndDeleteRef(myClutterStatic6)
 	TryToDisableAndDeleteRef(myClutterStatic7)
+	TryToDisableAndDeleteRef(myClutterMisc1)
+	TryToDisableAndDeleteRef(myClutterMisc2)
+	TryToDisableAndDeleteRef(myClutterMisc3)
+	TryToDisableAndDeleteRef(myClutterMisc4)
+	TryToDisableAndDeleteRef(myClutterMisc5)
+	TryToDisableAndDeleteRef(myClutterMisc6)
+	TryToDisableAndDeleteRef(myClutterMisc7)
+
 	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterActivator1)
 	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterActivator2)
 	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterActivator3)
@@ -315,7 +317,16 @@ function TakeDown()
 	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterFurniture5)
 	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterFurniture6)
 	TryToDisableAndDeletePotentialPlaceableObjectRef(myClutterFurniture7)
+
+	TryToDisableAndDeleteRef(myBaseStatic1)
+	TryToDisableAndDeleteRef(myBaseStatic2)
+	TryToDisableAndDeleteRef(myBaseStatic3)
+	TryToDisableAndDeleteRef(myBaseStatic4)
+	TryToDisableAndDeleteRef(myBaseStatic5)
+	TryToDisableAndDeleteRef(myBaseStatic6)
+	TryToDisableAndDeleteRef(myBaseStatic7)
 	TryToDisableAndDeleteRef(myBedRoll)
+	TryToDisableAndDeleteRef(myWard)
 	TryToDisableAndDeleteRef(myLanternLit)
 	TryToDisableAndDeleteRef(myLanternUnlit)
 	TryToDisableAndDeleteRef(myLanternLight)
@@ -328,8 +339,7 @@ function TakeDown()
 	TryToDisableAndDeleteRef(mySpareBedRoll1)
 	TryToDisableAndDeleteRef(mySpareBedRoll2)
 	TryToDisableAndDeleteRef(mySpareBedRoll3)
-
-	; Clear properties to ensure proper reference removal
+	
 	myPlayerMarker_MainWeapon = None
 	myPlayerMarker_OffHandWeapon = None
 	myPlayerMarker_BigWeapon = None
@@ -341,13 +351,13 @@ function TakeDown()
 	myPlayerMarker_Backpack = None
 	myPlayerMarker_Shield = None
 	myPlayerMarker_ShieldInterior = None
-	myClutterMisc1 = None
-	myClutterMisc2 = None
-	myClutterMisc3 = None
-	myClutterMisc4 = None
-	myClutterMisc5 = None
-	myClutterMisc6 = None
-	myClutterMisc7 = None
+	myBaseStatic1 = None
+	myBaseStatic2 = None
+	myBaseStatic3 = None
+	myBaseStatic4 = None
+	myBaseStatic5 = None
+	myBaseStatic6 = None
+	myBaseStatic7 = None
 	myClutterStatic1 = None
 	myClutterStatic2 = None
 	myClutterStatic3 = None
@@ -372,7 +382,9 @@ function TakeDown()
 	myPlayerWithSpouseLayDownMarker = None
 	mySpouseLayDownMarker = None
 	myAnimalLayDownMarker = None
+	myExitFront = None
 	myBedRoll = None
+	myWard = None
 	myLanternLit = None
 	myLanternUnlit = None
 	myLanternLight = None
@@ -389,6 +401,10 @@ function TakeDown()
 	mySpareBedRoll2SitMarker = None
 	mySpareBedRoll3SitMarker = None
 	mySphere = None
+	mySnowTent = None
+	myAshTent = None
+	myNormalTent = None
+	myTent = None
 	myShelterCollider = None
 	myLargeTentTriggerVolume = None
 	myFollowerAMarker_MainWeapon = None
@@ -464,6 +480,22 @@ function WarpInObjects()
 	if myBaseStatic7
 		myBaseStatic7.EnableNoWait()
 		PlayWarpInEffect(myBaseStatic7)
+	endif
+	if mySnowTent
+		mySnowTent.EnableNoWait()
+		PlayWarpInEffect(mySnowTent)
+	endif
+	if myAshTent
+		myAshTent.EnableNoWait()
+		PlayWarpInEffect(myAshTent)
+	endif
+	if myNormalTent
+		myNormalTent.EnableNoWait()
+		PlayWarpInEffect(myNormalTent)
+	endif
+	if myTent
+		myTent.EnableNoWait()
+		PlayWarpInEffect(myTent)
 	endif
 	Utility.Wait(0.3)
 	if myClutterFurniture1
@@ -669,8 +701,12 @@ function PlaceObject_Sphere()
 	mySphereFuture = PlacementSystem.PlaceObject(self, SphereModel, PositionRef_Sphere, initially_disabled = true, is_temp = is_temporary)
 endFunction
 function PlaceObject_LargeTentTriggerVolume()
-	Activator TriggerModel = Game.GetFormFromFile(0x02062F53, "Campfire.esm") as Activator
-	myLargeTentTriggerVolumeFuture = PlacementSystem.PlaceObject(self, TriggerModel, PositionRef_Sphere, is_temp = is_temporary)
+	if Setting_UseShelterSphere
+		Activator TriggerModel = Game.GetFormFromFile(0x02062F53, "Campfire.esm") as Activator
+		myLargeTentTriggerVolumeFuture = PlacementSystem.PlaceObject(self, TriggerModel, PositionRef_Sphere, is_temp = is_temporary)
+	else
+		parent.PlaceObject_LargeTentTriggerVolume()
+	endif
 endFunction
 
 ; Warp-in objects
@@ -839,4 +875,20 @@ function PlaceObject_Lantern3(CampTentEx Extended)
 	myLanternUnlit3Future = PlacementSystem.PlaceObject(self, TentSystem.GetLantern(bOn = false, bHanging = false, bSilverCandlestick = Setting_UseSilverCandlestick), Extended.PositionRef_Lantern3, is_interaction_disabled = true, is_temp = is_temporary)
 	myLanternLit3Future = PlacementSystem.PlaceObject(self, TentSystem.GetLantern(bOn = true, bHanging = false, bSilverCandlestick = Setting_UseSilverCandlestick), Extended.PositionRef_Lantern3, initially_disabled = true, is_interaction_disabled = true, is_temp = is_temporary)
 	myLanternLight3Future = PlacementSystem.PlaceObject(self, TentSystem.GetLanternLight(), Extended.PositionRef_Lantern3, initially_disabled = true, is_temp = is_temporary)
+endFunction
+
+function PlaceObject_Tent()
+	myTentFuture = PlacementSystem.PlaceObject(self, TentAsset_ShelterModel, PositionRef_Shelter, initially_disabled = true, is_temp = is_temporary)
+endFunction
+
+function PlaceObject_NormalTent()
+	myNormalTentFuture = PlacementSystem.PlaceObject(self, TentAsset_ShelterModelExterior, PositionRef_Shelter, initially_disabled = true, is_temp = is_temporary)
+endFunction
+
+function PlaceObject_SnowTent()
+	mySnowTentFuture = PlacementSystem.PlaceObject(self, TentAsset_ShelterModelMaterialSnow, PositionRef_Shelter, initially_disabled = true, is_temp = is_temporary)
+endFunction
+
+function PlaceObject_AshTent()
+	myAshTentFuture = PlacementSystem.PlaceObject(self, TentAsset_ShelterModelMaterialAsh, PositionRef_Shelter, initially_disabled = true, is_temp = is_temporary)
 endFunction

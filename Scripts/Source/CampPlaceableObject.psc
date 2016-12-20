@@ -55,21 +55,21 @@ endFunction
 function UseObject(ObjectReference akActionRef)
 	SetSelectedObjectConjured(self)
 	
-	if Setting_BypassMenu
-		ToggleAndUse()
-		return
-	endif
-
 	if akActionRef == Game.GetPlayer() && !in_use
-		int i = GetObjectMainMenu().Show()
-		if i == 0										;Use
+		if Setting_BypassMenu && !Game.GetPlayer().IsSneaking()
 			ToggleAndUse()
-		elseif i == 1									;Pick Up
-			PickUp()
-		elseif i == 2									;Dispel
-			TakeDown()
+			return
 		else
-			;exit
+			int i = GetObjectMainMenu().Show()
+			if i == 0										;Use
+				ToggleAndUse()
+			elseif i == 1									;Pick Up
+				PickUp()
+			elseif i == 2									;Dispel
+				TakeDown()
+			else
+				;exit
+			endif
 		endif
 	endif
 endFunction
