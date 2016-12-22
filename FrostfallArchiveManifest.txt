@@ -147,6 +147,8 @@ Scripts\_Frost_LegacyArmorDatastore.pex
 Scripts\_Frost_LegacyMenu.pex
 Scripts\_Frost_SKSETypesAlias.pex
 Scripts\_Frost_SKSETypesDelegate.pex
+Scripts\_Frost_PlayerStateSystem.pex
+Scripts\Source\_Frost_PlayerStateSystem.psc
 Scripts\Source\_Frost_FallbackReceiverCoverageSystem.psc
 Scripts\Source\_Frost_FallbackReceiverExposureSystem.psc
 Scripts\Source\_Frost_FallbackReceiverMain.psc

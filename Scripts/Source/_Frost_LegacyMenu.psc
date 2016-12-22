@@ -64,6 +64,8 @@ Message property _Frost_legacyconfig_explethality_rescue auto
 Message property _Frost_legacyconfig_explethality_off auto
 Message property _Frost_legacyconfig_expwater_on auto
 Message property _Frost_legacyconfig_expwater_off auto
+Message property _Frost_legacyconfig_expdialogue_on auto
+Message property _Frost_legacyconfig_expdialogue_off auto
 Message property _Frost_legacyconfig_expcombat_on auto
 Message property _Frost_legacyconfig_expcombat_off auto
 Message property _Frost_legacyconfig_expmovement_on auto
@@ -353,8 +355,11 @@ function menu_exposure()
     	MenuHandler_Toggle(_Frost_legacyconfig_expwater_on, _Frost_legacyconfig_expwater_off, _Frost_Setting_FrigidWaterIsLethal)
     	menu_exposure()
     elseif i == 3
-    	menu_exposure2()
+    	MenuHandler_Toggle(_Frost_legacyconfig_expdialogue_on, _Frost_legacyconfig_expdialogue_off, _Frost_Setting_ExposurePauseDialogue)
+    	menu_exposure()
     elseif i == 4
+    	menu_exposure2()
+    elseif i == 5
     	menu_options()
     endif
 endFunction

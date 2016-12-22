@@ -347,6 +347,10 @@ Scripts\_Camp_InstinctsGlowEventReceiver.pex
 Scripts\_Camp_SearchAliasEventReceiver.pex
 Scripts\_Camp_SearchQuestEventReceiver.pex
 Scripts\_Camp_CombinedActionsScript.pex
+Scripts\_Camp_QuickLightFireFurnScript.pex
+Scripts\_Camp_QuickLightMethod.pex
+Scripts\Source\_Camp_QuickLightFireFurnScript.psc
+Scripts\Source\_Camp_QuickLightMethod.psc
 Scripts\Source\_Camp_CombinedActionsScript.psc
 Scripts\Source\_Camp_ExaminePowerController.psc
 Scripts\Source\_Camp_InstinctsCtrlEventReceiver.psc

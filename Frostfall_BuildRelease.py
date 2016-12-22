@@ -95,8 +95,10 @@ shutil.copyfile("./Campfire/Interface/Translations/skyui_russian.txt", dirname +
 shutil.copyfile("./Campfire/Interface/Translations/skyui_spanish.txt", dirname + "/SkyUI51AddOn/Interface/Translations/skyui_spanish.txt")
 
 # Copy files - Installer
+shutil.copyfile("./Campfire/Installers/Frostfall/InstallSplash1.jpg", dirname + "/InstallSplash1.jpg")
+shutil.copyfile("./Campfire/Installers/Frostfall/InstallSplash2.jpg", dirname + "/InstallSplash2.jpg")
 shutil.copyfile("./Campfire/Installers/Frostfall/fomod/info.xml", dirname + "/fomod/info.xml")
-shutil.copyfile("./Campfire/Installers/Frostfall/fomod/script.cs", dirname + "/fomod/script.cs")
+shutil.copyfile("./Campfire/Installers/Frostfall/fomod/ModuleConfig.xml", dirname + "/fomod/ModuleConfig.xml")
 
 # Create release zip
 zip_name_ver = user_input.replace(".", "_")

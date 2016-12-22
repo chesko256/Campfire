@@ -17,6 +17,34 @@ E-mail - chesko.tesmod@gmail.com
 This changelog is mainly for posterity purposes. This mod has evolved a lot in the amount of time it's been in development. Read on only if you enjoy watching me change my mind many, many times.
 
 ===========================================
+Frostfall 3.4.1 Change Log
+===========================================
+
+- Hotfix update: Fixes areas being the wrong temperature if you upgraded from 3.3.1. If you did not upgrade, this problem will not affect you.
+
+
+===========================================
+Frostfall 3.4 Change Log
+===========================================
+
+### Features
+- **(Special Edition)** Exposure will now pause while you are in dialogue. This setting can be changed in Options: Frostfall. (This was historically an SKSE-only feature.)
+- The Throat of the World is no longer deadly due to cold.
+- Increased performance of the primary Exposure system.
+- Other general stability and performance improvements.
+
+### Changes
+- Improved compatibility with certain vampire mods like Vampiric Thirst.
+
+### Bug Fixes
+- Fixed an issue where the player's exposure would not rise above ~60%.
+- Fixed an issue where running up a steep incline could cause the controller to vibrate.
+- Fixed an issue where using the Immortal vampire setting would not make you immune to succumbing to frigid water.
+- Fixed several issues with the fireplaces of Conjured Shelters not working correctly.
+- Greatly reduced the number of events generated when getting hit, which should increase game stability in combat.
+- Fixed a recurring Papyrus log error when the exposure meter was above 80%.
+
+===========================================
 Frostfall 3.3.1 Change Log
 ===========================================
 

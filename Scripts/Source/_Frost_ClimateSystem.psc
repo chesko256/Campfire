@@ -23,6 +23,7 @@ FormList property _Frost_WorldspacesExteriorPineForest auto
 FormList property _Frost_WorldspacesExteriorVolcanicTundra auto
 FormList property _Frost_WorldspacesExteriorFallForest auto
 FormList property _Frost_WorldspacesExteriorWhiterun auto
+FormList property _Frost_WorldspacesExteriorReach auto
 FormList property _Frost_WorldspacesExteriorTundraMarsh auto
 FormList property _Frost_WorldspacesExteriorCoast auto
 FormList property _Frost_WorldspacesExteriorSnowy auto
@@ -774,47 +775,45 @@ endFunction
 int function UpdateCurrentRegion(float playerX, float playerY)
 	if ws == Tamriel
 		bool inTundraMarsh = IsPointInPolygonFast(tundramarsh_polyx, tundramarsh_polyy, tundramarsh_minx, tundramarsh_maxx, tundramarsh_miny, tundramarsh_maxy, playerX, playerY)
-		if inTundraMarsh
-			return REGION_TUNDRAMARSH
-		endif
-
 		bool inTundra = IsPointInPolygonFast(tundra_polyx, tundra_polyy, tundra_minx, tundra_maxx, tundra_miny, tundra_maxy, playerX, playerY)
-		if inTundra
-			return REGION_TUNDRA
-		endif
-
 		bool inFallForest = IsPointInPolygonFast(fallforest_polyx, fallforest_polyy, fallforest_minx, fallforest_maxx, fallforest_miny, fallforest_maxy, playerX, playerY)
-		if inFallForest
-			return REGION_FALLFOREST
+		bool inVolcanicTundra = IsPointInPolygonFast(volcanictundra_polyx, volcanictundra_polyy, volcanictundra_minx, volcanictundra_maxx, volcanictundra_miny, volcanictundra_maxy, playerX, playerY)
+		bool inPineForestVolcanic = IsPointInPolygonFast(pineforestvolcanic_polyx, pineforestvolcanic_polyy, pineforestvolcanic_minx, pineforestvolcanic_maxx, pineforestvolcanic_miny, pineforestvolcanic_maxy, playerX, playerY)
+		bool inPineForestFalkreath = IsPointInPolygonFast(pineforestfalkreath_polyx, pineforestfalkreath_polyy, pineforestfalkreath_minx, pineforestfalkreath_maxx, pineforestfalkreath_miny, pineforestfalkreath_maxy, playerX, playerY)
+		bool inPineForest = inPineForestVolcanic || inPineForestFalkreath
+		bool inReach = IsPointInPolygonFast(reach_polyx, reach_polyy, reach_minx, reach_maxx, reach_miny, reach_maxy, playerX, playerY)
+		bool inCoast = IsPointInPolygonFast(coast_polyx, coast_polyy, coast_minx, coast_maxx, coast_miny, coast_maxy, playerX, playerY)
+		bool inSnow = IsPointInPolygonFast(snow_polyx, snow_polyy, snow_minx, snow_maxx, snow_miny, snow_maxy, playerX, playerY)
+
+		if inPineForest && !inVolcanicTundra
+			return REGION_PINEFOREST
 		endif
 
-		bool inVolcanicTundra = IsPointInPolygonFast(volcanictundra_polyx, volcanictundra_polyy, volcanictundra_minx, volcanictundra_maxx, volcanictundra_miny, volcanictundra_maxy, playerX, playerY)
-		if inVolcanicTundra
+		if inVolcanicTundra && !inSnow
 			return REGION_VOLCANICTUNDRA
 		endif
 
-		bool inPineForestVolcanic = IsPointInPolygonFast(pineforestvolcanic_polyx, pineforestvolcanic_polyy, pineforestvolcanic_minx, pineforestvolcanic_maxx, pineforestvolcanic_miny, pineforestvolcanic_maxy, playerX, playerY)
-		if inPineForestVolcanic
-			return REGION_PINEFOREST
+		if inFallForest && !inPineForest && !inVolcanicTundra
+			return REGION_FALLFOREST
 		endif
 
-		bool inPineForestFalkreath = IsPointInPolygonFast(pineforestfalkreath_polyx, pineforestfalkreath_polyy, pineforestfalkreath_minx, pineforestfalkreath_maxx, pineforestfalkreath_miny, pineforestfalkreath_maxy, playerX, playerY)
-		if inPineForestFalkreath
-			return REGION_PINEFOREST
-		endif
-
-		bool inReach = IsPointInPolygonFast(reach_polyx, reach_polyy, reach_minx, reach_maxx, reach_miny, reach_maxy, playerX, playerY)
-		if inReach
+		if inReach && !inTundraMarsh
 			return REGION_REACH
-		endif	
+		endif
 
-		bool inCoast = IsPointInPolygonFast(coast_polyx, coast_polyy, coast_minx, coast_maxx, coast_miny, coast_maxy, playerX, playerY)
+		if inTundra && !inTundraMarsh && !inPineForest && !inCoast
+			return REGION_TUNDRA
+		endif
+
+		if inTundraMarsh && !inCoast
+			return REGION_TUNDRAMARSH
+		endif
+
 		if inCoast
 			return REGION_COAST
 		endif
 
-		bool inSnow = IsPointInPolygonFast(snow_polyx, snow_polyy, snow_minx, snow_maxx, snow_miny, snow_maxy, playerX, playerY)
-		if inSnow
+		if inSnow && !inCoast && !inTundra && !inTundraMarsh
 			return REGION_SNOW
 		endif
 		
@@ -830,6 +829,8 @@ int function UpdateCurrentRegion(float playerX, float playerY)
 			return REGION_TUNDRA
 		elseif _Frost_WorldspacesExteriorTundraMarsh.HasForm(ws)
 			return REGION_TUNDRAMARSH
+		elseif _Frost_WorldspacesExteriorReach.HasForm(ws)
+			return REGION_REACH
 		elseif _Frost_WorldspacesExteriorCoast.HasForm(ws)
 			return REGION_COAST
 		elseif _Frost_WorldspacesExteriorSnowy.HasForm(ws)
@@ -856,11 +857,19 @@ function UpdateClimateState()
 	int current_temperature
 
 	_Frost_PlayerStateSystem stateSystem = GetPlayerStateSystem()
+
+	; Ensure that we get the complete state at the sample interval.
+	while stateSystem.updateInProgress
+		FrostDebug(0, "%%%% Climate ::: Waiting for Player State System to finish update.")
+		Utility.Wait(0.2)
+	endWhile
+
 	pos_x = stateSystem.playerX
 	pos_y = stateSystem.playerY
 	pos_z = stateSystem.playerZ
 	ws = stateSystem.thisWorldSpace
 	int region = UpdateCurrentRegion(pos_x, pos_y)
+	; debug.trace("Region is now " + region)
 
 	bool transitioning = IsWeatherTransitioning()
 	if transitioning
@@ -1346,9 +1355,9 @@ bool function IsPointInPolygonFast(float[] polyX, float[] polyY, float minX, flo
     ;float x           = the x coordinate under test
     ;float y           = the y coordinate under test
     
-    debug.trace("Checking point in polygon.")
+    ;debug.trace("Checking point in polygon.")
     if x < minX || x > maxX || y < minY || y > maxY
-    	debug.trace("    Escaped early, outside of bounding box!")
+    	;debug.trace("    Escaped early, outside of bounding box!")
     	return false
     endif
         
@@ -1367,6 +1376,6 @@ bool function IsPointInPolygonFast(float[] polyX, float[] polyY, float minX, flo
         i += 1
     endWhile
        
-    debug.trace("    Check returning " + oddNodes)
+    ;debug.trace("    Check returning " + oddNodes)
     return oddNodes
 endFunction

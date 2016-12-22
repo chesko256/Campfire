@@ -870,7 +870,7 @@ function RegisterForControlsOnLoad()
 endFunction
 
 function RegisterForEventsOnLoad()
-	; pass
+	RegisterForModEvent("Campfire_SaveSettingToProfile", "SaveCampfireSettingToProfile")
 endFunction
 
 function SetHarvestWoodAbility(bool abEnabled)
@@ -900,3 +900,7 @@ function SendEvent_CampfireLoaded()
 		emitter.Send(handle)
 	endif
 endFunction
+
+Event SaveCampfireSettingToProfile(string asSettingName, int aiSettingValue)
+	CampConfig.SaveSettingToCurrentProfile(asSettingName, aiSettingValue)
+endEvent

@@ -425,7 +425,7 @@ function GetCurrentPlayerState()
 	; Ensure that we get the complete state at the sample interval.
 	while stateSystem.updateInProgress
 		FrostDebug(0, "@@@@ Exposure ::: Waiting for Player State System to finish update.")
-		Utility.Wait(0.1)
+		Utility.Wait(0.2)
 	endWhile
 
 	thisUpdateTime = stateSystem.thisUpdateTime

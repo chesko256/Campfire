@@ -7,7 +7,7 @@ import _FrostInternal
 import CommonArrayHelper
 
 int property SKSE_MIN_VERSION = 10703 autoReadOnly
-int property CAMPFIRE_MIN_VERSION = 11003 autoReadOnly
+int property CAMPFIRE_MIN_VERSION = 11100 autoReadOnly
 float property WEARABLELANTERNS_MIN_VERSION = 4.02 autoReadOnly
 GlobalVariable property _Frost_PreviousVersion auto
 GlobalVariable property _Frost_FrostfallVersion auto
@@ -221,6 +221,8 @@ GlobalVariable property _Frost_Setting_DisplayTutorials auto
 Message property _Frost_ReleaseNotes_3_3_1 auto
 Message property _Frost_ReleaseNotes_3_4 auto
 
+bool hotfix341 = false
+
 Event OnPlayerLoadGame()
 	RunCompatibility()
 	RegisterForKeysOnLoad()
@@ -337,6 +339,10 @@ function RunCompatibility()
 
 	if _Frost_Upgraded_3_4.GetValueInt() != 2
 		Upgrade_3_4()
+	endif
+
+	if !hotfix341
+		Upgrade_3_4_1()
 	endif
 
 	; Verify that the default datastore has been populated.
@@ -848,6 +854,12 @@ function Upgrade_3_4()
 	_Frost_Upgraded_3_4.SetValueInt(2)
 endFunction
 
+function Upgrade_3_4_1()
+	; Initialize the new arrays in the Climate System.
+	GetClimateSystem().InitializeArrays()
+	hotfix341 = true
+endFunction
+
 bool function CheckJSONReadWrite()
 	; Attempt to open the file and write a value.
 	string path = "../FrostfallData/startup_test_file"
@@ -1271,8 +1283,8 @@ function AddStartupSpells()
 		PlayerRef.AddPerk(_Frost_FrostResistWarmthModPerk)
 	endif
 
-	if !PlayerRef.HasSpell(_Frost_RegionDetect)
-		PlayerRef.AddSpell(_Frost_RegionDetect, false)
+	if PlayerRef.HasSpell(_Frost_RegionDetect)
+		PlayerRef.RemoveSpell(_Frost_RegionDetect)
 	endif
 
 	GetFrostResistSystem().old_amount = 0.0

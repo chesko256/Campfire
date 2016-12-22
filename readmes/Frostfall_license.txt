@@ -23,6 +23,8 @@ License Agreement
 	* You can create Frostfall-dependent mods and distribute them. You don’t need permission to do this; you already have permission. As above, you can’t redistribute the entire mod with your mod.
 
 	* You can create mods that use the FrostUtil API. You can’t include FrostUtil API code or the rest of Frostfall in your own mod; you must require that your users install Frostfall in order to take advantage of the things offered by FrostUtil.
+
+	* Specifically - DO NOT include FrostUtil.pex, or any other pex files from this mod, in your mod.
 	
 	* If you have a question, just contact me at chesko.tesmod@gmail.com.
 

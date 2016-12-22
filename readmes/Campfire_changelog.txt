@@ -8,6 +8,22 @@ Change Log
 
 ===================================================
 
+## Campfire 1.11
+
+### Changes
+- Quick campfire lighting was redesigned.
+ - After building the campfire ring, you must click on the ring (just like in Realistic mode). The crafting interface will allow you to build the campfire in a single step by striking a stone or using fire magic (selecting fuel and tinder is skipped, and you start with a Crackling fire).
+ - This enables Quick mode users to choose to increase their Camping or Destruction skill, depending on their choice, just like Realistic users.
+ - This also enables Quick mode users to see the campfire lighting graphics (striking a stone, etc). Numerous players have told me that they found these to be really immersive and that they missed seeing these graphics, even though they like the convenience of Quick mode. I hope this is a happy middle ground!
+
+### Bug Fixes
+- **(Special Edition)** Fixed an issue where using Enchanting Supplies would not tell the player what ingredients were missing.
+- Fixed an issue where campfires could not be built under certain circumstances.
+- Fixed an issue where the campfire lighting mode setting was not being saved to the player's settings profile.
+- Fixed issues that prevented other mod authors from being able to do everything that was intended with conjured shelters using the Campfire Dev Kit.
+
+
+
 ## Campfire 1.10.3
 
 ### Features
