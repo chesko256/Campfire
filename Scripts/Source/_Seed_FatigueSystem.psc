@@ -1,24 +1,17 @@
-scriptname _Seed_FatigueSystem extends Quest
+scriptname _Seed_FatigueSystem extends _Seed_AttributeSystem
 
 ;@TODO: Catch shock spell damage, which reduces magicka
 ;@TODO: Look for other sources of magicka damage
 
-import Utility
-import CampUtil
-
 GlobalVariable property _Seed_VitalitySystemEnabled auto
 GlobalVariable property _Seed_AttributeFatigue auto
 GlobalVariable property _Seed_FatigueRate auto 							; Default - 1.66
-GlobalVariable property _Seed_FatigueActionRateMasterSpells auto 		; Default - 10.0
-GlobalVariable property _Seed_FatigueActionRateExpertSpells auto 		; Default - 2.0
-GlobalVariable property _Seed_FatigueActionRateAdeptSpells auto 		; Default - 1.0
-GlobalVariable property _Seed_FatigueActionRateApprenticeSpells auto 	; Default - 0.5
-GlobalVariable property _Seed_Setting_VampireBehavior auto
-GlobalVariable property _Seed_Setting_Notifications auto
-GlobalVariable property _Seed_Setting_NeedsMeterDisplayMode auto
-GlobalVariable property _Seed_Setting_NeedsSFX auto
-GlobalVariable property _Seed_Setting_NeedsVFX auto
-GlobalVariable property _Seed_Setting_NeedsForceFeedback auto
+
+;@TODO: Is this going to be used?
+; GlobalVariable property _Seed_FatigueActionRateMasterSpells auto 		; Default - 10.0
+; GlobalVariable property _Seed_FatigueActionRateExpertSpells auto 		; Default - 2.0
+; GlobalVariable property _Seed_FatigueActionRateAdeptSpells auto 		; Default - 1.0
+; GlobalVariable property _Seed_FatigueActionRateApprenticeSpells auto 	; Default - 0.5
 
 Spell property _Seed_FatigueSpell1 auto
 Spell property _Seed_FatigueSpell2 auto
@@ -36,44 +29,54 @@ Message property _Seed_FatigueLevel6Msg auto
 
 Quest property _Seed_FatigueMeterQuest auto
 
-Actor property PlayerRef auto
+float property lastSleepDuration = 0.0 auto hidden
 
-float property MAX_FATIGUE = 120.0 autoReadOnly
-float property FATIGUE_LEVEL_5 = 100.0 autoReadOnly
-float property FATIGUE_LEVEL_4 = 80.0 autoReadOnly
-float property FATIGUE_LEVEL_3 = 60.0 autoReadOnly
-float property FATIGUE_LEVEL_2 = 40.0 autoReadOnly
-float property FATIGUE_LEVEL_1 = 20.0 autoReadOnly
-float property MIN_FATIGUE = 0.0 autoReadOnly
+;@TODO: ????
+int locksPicked
 
-float property MAX_FATIGUE = 120.0 autoReadOnly
-float property MIN_FATIGUE = 0.0 autoReadOnly
-float property SLEEP_RESTORE_RATE = 3.0 autoReadOnly
+function StartSystem()
+    parent.StartSystem()
 
-float property update_interval = 1.0 auto hidden
-float property last_update_time auto hidden
-bool property was_sleeping = false auto hidden
-float last_sleep_duration
-int locks_picked
+    ; Initialize arrays
+    attributeSpells = new Spell[6]
+    attributeMessages = new Message[6]
+    attributeSounds = new Sound[6]
+    attributeISMs = new ImageSpaceModifier[6]
 
-Event OnInit()
-	Initialize()
-EndEvent
+    attributeSpells[0] = _Seed_FatigueSpell1
+    attributeSpells[1] = _Seed_FatigueSpell2
+    attributeSpells[2] = _Seed_FatigueSpell3
+    attributeSpells[3] = _Seed_FatigueSpell4
+    attributeSpells[4] = _Seed_FatigueSpell5
+    attributeSpells[5] = _Seed_FatigueSpell6
 
-function Initialize()
-    RegisterForSingleUpdateGameTime(update_interval)
-    last_update_time = GetCurrentGameTime() * 24.0
-    RegisterForSleep()
+    attributeMessages[0] = _Seed_FatigueLevel1Msg
+    attributeMessages[1] = _Seed_FatigueLevel2Msg
+    attributeMessages[2] = _Seed_FatigueLevel3Msg
+    attributeMessages[3] = _Seed_FatigueLevel4Msg
+    attributeMessages[4] = _Seed_FatigueLevel5Msg
+    attributeMessages[5] = _Seed_FatigueLevel6Msg
 
-    ; Increase fatigue on archery attacks and lockpicking.
+    ;@TODO: Sounds
+
+    ;@TODO: ISMs
+
+    ; Register for archery attacks and lockpicking.
     RegisterForTrackedStatsEvent()
     RegisterForActorAction(6)
+
+    ; Apply initial condition.
+    IncreaseAttribute(attributeValueGlobal, 0.01)
 endFunction
 
+;
+; Action Detection
+;
+
 Event OnTrackedStatsEvent(string arStatName, int aiStatValue)
-	if arStatName == "Locks Picked" && aiStatValue > locks_picked
+	if arStatName == "Locks Picked" && aiStatValue > locksPicked
 		debug.trace("[Seed] (Fatigue) Lock Picked")
-		locks_picked = aiStatValue
+		locksPicked = aiStatValue
 		IncreaseFatigue(1.0)
 		int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
 		if mode >= 1 && mode <= 2
@@ -93,40 +96,15 @@ Event OnActorAction(int actionType, Actor akActor, Form source, int slot)
 	endif
 EndEvent
 
-Event OnUpdateGameTime()
-	if was_sleeping
-		was_sleeping = false
-		return
-	endif
-
-	if _Seed_Setting_VampireBehavior.GetValueInt() == 2 && IsPlayerUndead()
-		return
-	endif
-
-	float rate = _Seed_FatigueRate.GetValue()
-	float this_time = GetCurrentGameTime() * 24.0
-	int cycles = Math.Floor((this_time - last_update_time))
-	float fatigue_increase = rate * cycles
-
-    IncreaseFatigue(fatigue_increase)
-    last_update_time = this_time
-
-    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
-    if mode == 1
-        (_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter()
-    endif
-
-    if _Seed_VitalitySystemEnabled.GetValueInt() == 2
-        RegisterForSingleUpdateGameTime(update_interval)
-    endif
-EndEvent
-
 Event OnSleepStart(float afSleepStartTime, float afDesiredSleepEndTime)
 	was_sleeping = true
-	last_sleep_duration = (afDesiredSleepEndTime - afSleepStartTime) * 24.0
+
+    ;@TODO: Does this work when we transition to the next day?
+	lastSleepDuration = (afDesiredSleepEndTime - afSleepStartTime) * 24.0
 EndEvent
 
 Event OnSleepStop(bool abInterrupted)
+    ; if not interrupted...
 	;@TODO: Modify by current hunger and thirst.
 	float fatigue_decrease = last_sleep_duration * SLEEP_RESTORE_RATE
 	DecreaseFatigue(fatigue_decrease)
@@ -154,197 +132,26 @@ function SpellCast(Spell akSpell)
 	endif
 endFunction
 
-function IncreaseFatigue(float amount)
-	float current_fatigue = _Seed_AttributeFatigue.GetValue()
-	if current_fatigue + amount >= MAX_FATIGUE
-		_Seed_AttributeFatigue.SetValue(MAX_FATIGUE)
-	else
-		_Seed_AttributeFatigue.SetValue(current_fatigue + amount)
-	endif
-	(_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).UpdateMeter((120.0 - _Seed_AttributeFatigue.GetValue()) / 120)
+function IncreaseAttribute(GlobalVariable attribute, float amount)
+    ;@TODO: Handle vampire state
+    ;else,
+    parent.IncreaseAttribute(attribute, amount)
 endFunction
 
-function DecreaseFatigue(float amount)
-	float current_fatigue = _Seed_AttributeFatigue.GetValue()
-	if current_fatigue - amount <= MIN_FATIGUE
-		_Seed_AttributeFatigue.SetValue(MIN_FATIGUE)
-	else
-		_Seed_AttributeFatigue.SetValue(current_fatigue - amount)
-	endif
-	(_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).UpdateMeter((120.0 - _Seed_AttributeFatigue.GetValue()) / 120)
+function DecreaseAttribute(GlobalVariable attribute, float amount)
+    ;@TODO: Handle vampire state
+    ;else,
+    parent.DecreaseAttribute(attribute, amount)    
+endFunction
+    
+function IncreaseAttributeOverTime(GlobalVariable attribute, GlobalVariable rate)
+    ;@TODO: Handle vampire state
+    ;else,
+    parent.IncreaseAttributeOverTime(attribute, rate)
 endFunction
 
-function ModFatigue(float amount)
-	float current_fatigue = _Seed_AttributeFatigue.GetValue()
-	if current_fatigue + amount >= MAX_FATIGUE
-		_Seed_AttributeFatigue.SetValue(MAX_FATIGUE)
-	elseif current_fatigue + amount <= MIN_FATIGUE
-		_Seed_AttributeFatigue.SetValue(MIN_FATIGUE)
-	else
-		_Seed_AttributeFatigue.SetValue(current_fatigue + amount)
-	endif
-	(_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).UpdateMeter((120.0 - _Seed_AttributeFatigue.GetValue()) / 120)
-endFunction
-
-function ApplyFatigueEffects()
-    float fatigue = _Seed_AttributeFatigue.GetValue()
-    bool increasing = false
-    if fatigue > last_fatigue
-        increasing = true
-    endif
-
-    if !(IsBetween(last_fatigue, FATIGUE_LEVEL_1, MIN_FATIGUE)) && (IsBetween(fatigue, FATIGUE_LEVEL_1, MIN_FATIGUE))
-        ApplyFatigueLevel1()
-    elseif !(IsBetween(last_fatigue, FATIGUE_LEVEL_2, FATIGUE_LEVEL_1)) && (IsBetween(fatigue, FATIGUE_LEVEL_2, FATIGUE_LEVEL_1))
-        ApplyFatigueLevel2(increasing)
-    elseif !(IsBetween(last_fatigue, FATIGUE_LEVEL_3, FATIGUE_LEVEL_2)) && (IsBetween(fatigue, FATIGUE_LEVEL_3, FATIGUE_LEVEL_2))
-        ApplyFatigueLevel3()
-    elseif !(IsBetween(last_fatigue, FATIGUE_LEVEL_4, FATIGUE_LEVEL_3)) && (IsBetween(fatigue, FATIGUE_LEVEL_4, FATIGUE_LEVEL_3))
-        ApplyFatigueLevel4()
-    elseif !(IsBetween(last_fatigue, FATIGUE_LEVEL_5, FATIGUE_LEVEL_4)) && (IsBetween(fatigue, FATIGUE_LEVEL_5, FATIGUE_LEVEL_4))
-        ApplyFatigueLevel5()
-    elseif !(IsBetween(last_fatigue, MAX_FATIGUE, FATIGUE_LEVEL_5)) && (IsBetween(fatigue, MAX_FATIGUE, FATIGUE_LEVEL_5))
-        ApplyFatigueLevel6()
-    endif
-
-    last_fatigue = fatigue
-endFunction
-
-function RemoveAllFatigueEffects()
-    PlayerRef.RemoveSpell(_Seed_FatigueSpell1)
-    PlayerRef.RemoveSpell(_Seed_FatigueSpell2)
-    PlayerRef.RemoveSpell(_Seed_FatigueSpell3)
-    PlayerRef.RemoveSpell(_Seed_FatigueSpell4)
-    PlayerRef.RemoveSpell(_Seed_FatigueSpell5)
-    PlayerRef.RemoveSpell(_Seed_FatigueSpell6)
-endFunction
-
-function ApplyFatigueLevel1()
-    RemoveAllFatigueEffects()
-    PlayerRef.AddSpell(_Seed_FatigueSpell1, false)
-    if _Seed_Setting_Notifications.GetValueInt() == 2
-        _Seed_FatigueLevel1Msg.Show()
-    endif
-    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
-        ; play needs SFX
-    endif
-    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
-        ; play needs VFX
-    endif
-    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
-    if mode >= 1 && mode <= 4
-        (_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter()
-    endif
-endFunction
-
-function ApplyFatigueLevel2(bool increasing)
-    RemoveAllFatigueEffects()
-    PlayerRef.AddSpell(_Seed_FatigueSpell2, false)
-    ; suppress this message if fatigue is increasing
-    if _Seed_Setting_Notifications.GetValueInt() == 2 && increasing
-        _Seed_FatigueLevel2Msg.Show()
-    endif
-    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
-        ; play needs SFX
-    endif
-    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
-        ; play needs VFX
-    endif
-    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
-    if mode >= 1 && mode <= 4
-        (_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter()
-    endif
-endFunction
-
-function ApplyFatigueLevel3()
-    RemoveAllFatigueEffects()
-    PlayerRef.AddSpell(_Seed_FatigueSpell3, false)
-    if _Seed_Setting_Notifications.GetValueInt() == 2
-        _Seed_FatigueLevel3Msg.Show()
-    endif
-    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
-        ; play needs SFX
-    endif
-    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
-        ; play needs VFX
-    endif
-    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
-        ; play force feedback
-    endif
-    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
-    if mode >= 1 && mode <= 4
-        (_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter()
-    endif
-endFunction
-
-function ApplyFatigueLevel4()
-    RemoveAllFatigueEffects()
-    PlayerRef.AddSpell(_Seed_FatigueSpell4, false)
-    if _Seed_Setting_Notifications.GetValueInt() == 2
-        _Seed_FatigueLevel4Msg.Show()
-    endif
-    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
-        ; play needs SFX
-    endif
-    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
-        ; play needs VFX
-    endif
-    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
-        ; play force feedback
-    endif
-    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
-    if mode >= 1 && mode <= 4
-        (_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter()
-    endif
-endFunction
-
-function ApplyFatigueLevel5()
-    RemoveAllFatigueEffects()
-    PlayerRef.AddSpell(_Seed_FatigueSpell5, false)
-    if _Seed_Setting_Notifications.GetValueInt() == 2
-        _Seed_FatigueLevel5Msg.Show()
-    endif
-    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
-        ; play needs SFX
-    endif
-    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
-        ; play needs VFX
-    endif
-    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
-        ; play force feedback
-    endif
-    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
-    if mode >= 1 && mode <= 4
-        (_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter(true)
-    endif
-endFunction
-
-function ApplyFatigueLevel6()
-    RemoveAllFatigueEffects()
-    PlayerRef.AddSpell(_Seed_FatigueSpell6, false)
-    if _Seed_Setting_Notifications.GetValueInt() == 2
-        _Seed_FatigueLevel6Msg.Show()
-    endif
-    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
-        ; play needs SFX
-    endif
-    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
-        ; play needs VFX
-    endif
-    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
-        ; play force feedback
-    endif
-    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
-    if mode >= 1 && mode <= 4
-        (_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter(true)
-    endif
-endFunction
-
-
-bool function IsBetween(float fValue, float fUpperBound, float fLowerBound)
-    if fValue <= fUpperBound && fValue > fLowerBound
-        return true
-    else
-        return false
-    endif
+function ModAttribute(GlobalVariable attribute, float amount)
+    ;@TODO: Handle vampire state
+    ;else,
+    parent.ModAttribute(attribute, amount)
 endFunction

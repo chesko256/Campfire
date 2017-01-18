@@ -1,22 +1,13 @@
-scriptname _Seed_HungerSystem extends Quest
+scriptname _Seed_HungerSystem extends _Seed_AttributeSystem
 
 ;@TODO: Look for other sources of health damage
 
-import Utility
-import CampUtil
-import CommonHelperWhatever ; IsBetween
+; Update frequency = 0.5
 
-GlobalVariable property _Seed_Setting_VitalitySystemEnabled auto
 GlobalVariable property _Seed_Setting_HungerSystemEnabled auto
-GlobalVariable property _Seed_AttributeHunger auto
-GlobalVariable property _Seed_HungerRate auto
-GlobalVariable property _Seed_HungerActionRate auto
-GlobalVariable property _Seed_Setting_VampireBehavior auto
-GlobalVariable property _Seed_Setting_Notifications auto
-GlobalVariable property _Seed_Setting_NeedsMeterDisplayMode auto
-GlobalVariable property _Seed_Setting_NeedsSFX auto
-GlobalVariable property _Seed_Setting_NeedsVFX auto
-GlobalVariable property _Seed_Setting_NeedsForceFeedback auto
+
+;@TODO: Is this going to be used?
+; GlobalVariable property _Seed_HungerActionRate auto
 
 Spell property _Seed_HungerSpell1 auto
 Spell property _Seed_HungerSpell2 auto
@@ -34,29 +25,36 @@ Message property _Seed_HungerLevel6Msg auto
 
 Quest property _Seed_HungerMeterQuest auto
 
-Actor property PlayerRef auto
+;
+; Events
+;
 
-float property MAX_HUNGER = 120.0 autoReadOnly
-float property HUNGER_LEVEL_5 = 100.0 autoReadOnly
-float property HUNGER_LEVEL_4 = 80.0 autoReadOnly
-float property HUNGER_LEVEL_3 = 60.0 autoReadOnly
-float property HUNGER_LEVEL_2 = 40.0 autoReadOnly
-float property HUNGER_LEVEL_1 = 20.0 autoReadOnly
-float property MIN_HUNGER = 0.0 autoReadOnly
+function StartSystem()
+    parent.StartSystem()
 
-float property update_interval = 0.5 auto hidden
-float property last_update_time auto hidden
-bool property was_sleeping = false auto hidden
-float last_hunger = 0.0
+    ; Initialize arrays
+    attributeSpells = new Spell[6]
+    attributeMessages = new Message[6]
+    attributeSounds = new Sound[6]
+    attributeISMs = new ImageSpaceModifier[6]
 
-Event OnInit()
-		Initialize()
-EndEvent
+    attributeSpells[0] = _Seed_HungerSpell1
+    attributeSpells[1] = _Seed_HungerSpell2
+    attributeSpells[2] = _Seed_HungerSpell3
+    attributeSpells[3] = _Seed_HungerSpell4
+    attributeSpells[4] = _Seed_HungerSpell5
+    attributeSpells[5] = _Seed_HungerSpell6
 
-function Initialize()
-    RegisterForSingleUpdateGameTime(update_interval)
-    last_update_time = GetCurrentGameTime() * 24.0
-    RegisterForSleep()
+    attributeMessages[0] = _Seed_HungerLevel1Msg
+    attributeMessages[1] = _Seed_HungerLevel2Msg
+    attributeMessages[2] = _Seed_HungerLevel3Msg
+    attributeMessages[3] = _Seed_HungerLevel4Msg
+    attributeMessages[4] = _Seed_HungerLevel5Msg
+    attributeMessages[5] = _Seed_HungerLevel6Msg
+
+    ;@TODO: Sounds
+
+    ;@TODO: ISMs
 
     ; Register for power attacks and bow attacks.
     RegisterForActorAction(6)
@@ -64,50 +62,17 @@ function Initialize()
     RegisterForAnimationEvent(PlayerRef, "00NextClip")
 
     ; Apply initial condition.
-    IncreaseHunger(0.01)
+    IncreaseAttribute(attributeValueGlobal, 0.01)
 endFunction
 
 function PlayerHit()
-    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
     debug.trace("[Seed] (Hunger) Player Blocked Attack")
-    IncreaseHunger(0.1)
-    if mode >= 1 && mode <= 2
-        (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
-    endif
+    IncreaseAttribute(attributeValueGlobal, 0.1)
 endFunction
 
-Event OnUpdateGameTime()
-		if _Seed_Setting_VampireBehavior.GetValueInt() == 2 && IsPlayerUndead()
-				return
-		endif
-
-		float rate = _Seed_HungerRate.GetValue()
-		float this_time = GetCurrentGameTime() * 24.0
-		int cycles = Math.Floor((this_time - last_update_time) * 2)
-		float hunger_increase
-		if !was_sleeping
-				hunger_increase = rate * cycles
-		else
-				was_sleeping = false
-				hunger_increase = (rate * cycles) / 4
-		endif
-
-    IncreaseHunger(hunger_increase)
-    last_update_time = this_time
-
-    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
-    if mode == 1
-        (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
-    endif
-
-    if _Seed_VitalitySystemEnabled.GetValueInt() == 2
-        RegisterForSingleUpdateGameTime(update_interval)
-    endif
-EndEvent
-
-Event OnSleepStart(float afSleepStartTime, float afDesiredSleepEndTime)
-		was_sleeping = true
-EndEvent
+;
+; Action Detection
+;
 
 Event OnActorAction(int actionType, Actor akActor, Form source, int slot)
     int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
@@ -134,191 +99,26 @@ Event OnAnimationEvent(ObjectReference akSource, string asEventName)
     endif
 EndEvent
 
-function IncreaseHunger(float amount)
-		float current_hunger = _Seed_AttributeHunger.GetValue()
-		if current_hunger + amount >= MAX_HUNGER
-				_Seed_AttributeHunger.SetValue(MAX_HUNGER)
-		else
-				_Seed_AttributeHunger.SetValue(current_hunger + amount)
-		endif
-    (_Seed_HungerMeterQuest as _Seed_HungerMeterController).UpdateMeter((120.0 - _Seed_AttributeHunger.GetValue()) / 120)
-    ApplyHungerEffects()
+function IncreaseAttribute(GlobalVariable attribute, float amount)
+    ;@TODO: Handle vampire state
+    ;else,
+    parent.IncreaseAttribute(attribute, amount)
 endFunction
 
-function DecreaseHunger(float amount)
-		float current_hunger = _Seed_AttributeHunger.GetValue()
-		if current_hunger - amount <= MIN_HUNGER
-				_Seed_AttributeHunger.SetValue(MIN_HUNGER)
-		else
-				_Seed_AttributeHunger.SetValue(current_hunger - amount)
-		endif
-    (_Seed_HungerMeterQuest as _Seed_HungerMeterController).UpdateMeter((120.0 - _Seed_AttributeHunger.GetValue()) / 120)
-    ApplyHungerEffects()
+function DecreaseAttribute(GlobalVariable attribute, float amount)
+    ;@TODO: Handle vampire state
+    ;else,
+    parent.DecreaseAttribute(attribute, amount)
+endFunction
+    
+function IncreaseAttributeOverTime(GlobalVariable attribute, GlobalVariable rate)
+    ;@TODO: Handle vampire state
+    ;else,
+    parent.IncreaseAttributeOverTime(attribute, rate)
 endFunction
 
-function ModHunger(float amount)
-		float current_hunger = _Seed_AttributeHunger.GetValue()
-		if current_hunger + amount >= MAX_HUNGER
-				_Seed_AttributeHunger.SetValue(MAX_HUNGER)
-		elseif current_hunger + amount <= MIN_HUNGER
-				_Seed_AttributeHunger.SetValue(MIN_HUNGER)
-		else
-				_Seed_AttributeHunger.SetValue(current_hunger + amount)
-		endif
-    (_Seed_HungerMeterQuest as _Seed_HungerMeterController).UpdateMeter((120.0 - _Seed_AttributeHunger.GetValue()) / 120)
-    ApplyHungerEffects()
-endFunction
-
-function ApplyHungerEffects()
-    float hunger = _Seed_AttributeHunger.GetValue()
-    bool increasing = false
-    if hunger > last_hunger
-        increasing = true
-    endif
-
-    if !(IsBetween(last_hunger, HUNGER_LEVEL_1, MIN_HUNGER)) && (IsBetween(hunger, HUNGER_LEVEL_1, MIN_HUNGER))
-        ApplyHungerLevel1()
-    elseif !(IsBetween(last_hunger, HUNGER_LEVEL_2, HUNGER_LEVEL_1)) && (IsBetween(hunger, HUNGER_LEVEL_2, HUNGER_LEVEL_1))
-        ApplyHungerLevel2(increasing)
-    elseif !(IsBetween(last_hunger, HUNGER_LEVEL_3, HUNGER_LEVEL_2)) && (IsBetween(hunger, HUNGER_LEVEL_3, HUNGER_LEVEL_2))
-        ApplyHungerLevel3()
-    elseif !(IsBetween(last_hunger, HUNGER_LEVEL_4, HUNGER_LEVEL_3)) && (IsBetween(hunger, HUNGER_LEVEL_4, HUNGER_LEVEL_3))
-        ApplyHungerLevel4()
-    elseif !(IsBetween(last_hunger, HUNGER_LEVEL_5, HUNGER_LEVEL_4)) && (IsBetween(hunger, HUNGER_LEVEL_5, HUNGER_LEVEL_4))
-        ApplyHungerLevel5()
-    elseif !(IsBetween(last_hunger, MAX_HUNGER, HUNGER_LEVEL_5)) && (IsBetween(hunger, MAX_HUNGER, HUNGER_LEVEL_5))
-        ApplyHungerLevel6()
-    endif
-
-    last_hunger = hunger
-endFunction
-
-function RemoveAllHungerEffects()
-    PlayerRef.RemoveSpell(_Seed_HungerSpell1)
-    PlayerRef.RemoveSpell(_Seed_HungerSpell2)
-    PlayerRef.RemoveSpell(_Seed_HungerSpell3)
-    PlayerRef.RemoveSpell(_Seed_HungerSpell4)
-    PlayerRef.RemoveSpell(_Seed_HungerSpell5)
-    PlayerRef.RemoveSpell(_Seed_HungerSpell6)
-endFunction
-
-function ApplyHungerLevel1()
-    RemoveAllHungerEffects()
-    PlayerRef.AddSpell(_Seed_HungerSpell1, false)
-    if _Seed_Setting_Notifications.GetValueInt() == 2
-        _Seed_HungerLevel1Msg.Show()
-    endif
-    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
-        ; play needs SFX
-    endif
-    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
-        ; play needs VFX
-    endif
-    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
-    if mode >= 1 && mode <= 4
-        (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
-    endif
-endFunction
-
-function ApplyHungerLevel2(bool increasing)
-    RemoveAllHungerEffects()
-    PlayerRef.AddSpell(_Seed_HungerSpell2, false)
-    ; suppress this message if hunger is increasing
-    if _Seed_Setting_Notifications.GetValueInt() == 2 && increasing
-        _Seed_HungerLevel2Msg.Show()
-    endif
-    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
-        ; play needs SFX
-    endif
-    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
-        ; play needs VFX
-    endif
-    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
-    if mode >= 1 && mode <= 4
-        (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
-    endif
-endFunction
-
-function ApplyHungerLevel3()
-    RemoveAllHungerEffects()
-    PlayerRef.AddSpell(_Seed_HungerSpell3, false)
-    if _Seed_Setting_Notifications.GetValueInt() == 2
-        _Seed_HungerLevel3Msg.Show()
-    endif
-    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
-        ; play needs SFX
-    endif
-    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
-        ; play needs VFX
-    endif
-    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
-        ; play force feedback
-    endif
-    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
-    if mode >= 1 && mode <= 4
-        (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
-    endif
-endFunction
-
-function ApplyHungerLevel4()
-    RemoveAllHungerEffects()
-    PlayerRef.AddSpell(_Seed_HungerSpell4, false)
-    if _Seed_Setting_Notifications.GetValueInt() == 2
-        _Seed_HungerLevel4Msg.Show()
-    endif
-    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
-        ; play needs SFX
-    endif
-    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
-        ; play needs VFX
-    endif
-    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
-        ; play force feedback
-    endif
-    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
-    if mode >= 1 && mode <= 4
-        (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
-    endif
-endFunction
-
-function ApplyHungerLevel5()
-    RemoveAllHungerEffects()
-    PlayerRef.AddSpell(_Seed_HungerSpell5, false)
-    if _Seed_Setting_Notifications.GetValueInt() == 2
-        _Seed_HungerLevel5Msg.Show()
-    endif
-    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
-        ; play needs SFX
-    endif
-    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
-        ; play needs VFX
-    endif
-    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
-        ; play force feedback
-    endif
-    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
-    if mode >= 1 && mode <= 4
-        (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter(true)
-    endif
-endFunction
-
-function ApplyHungerLevel6()
-    RemoveAllHungerEffects()
-    PlayerRef.AddSpell(_Seed_HungerSpell6, false)
-    if _Seed_Setting_Notifications.GetValueInt() == 2
-        _Seed_HungerLevel6Msg.Show()
-    endif
-    if _Seed_Setting_NeedsSFX.GetValueInt() == 2
-        ; play needs SFX
-    endif
-    if _Seed_Setting_NeedsVFX.GetValueInt() == 2
-        ; play needs VFX
-    endif
-    if _Seed_Setting_NeedsForceFeedback.GetValueInt() == 2
-        ; play force feedback
-    endif
-    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
-    if mode >= 1 && mode <= 4
-        (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter(true)
-    endif
+function ModAttribute(GlobalVariable attribute, float amount)
+    ;@TODO: Handle vampire state
+    ;else,
+    parent.ModAttribute(attribute, amount)
 endFunction
