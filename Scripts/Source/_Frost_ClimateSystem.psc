@@ -1006,7 +1006,7 @@ int function GetMinTemperatureByLocation()
 	if ws == WindhelmWorld || ws == WindhelmPitWorldspace
 		was_on_high_hrothgar_peak = false
 		return 2
-	elseif (pos_x <= 74340 && pos_x >= 32000) && (pos_y <= -21000 && pos_y >= -66600) && pos_z >= 35541
+	elseif ws == Tamriel && (pos_x <= 74340 && pos_x >= 32000) && (pos_y <= -21000 && pos_y >= -66600) && pos_z >= 35541
 		if !was_on_high_hrothgar_peak
 			was_on_high_hrothgar_peak = true
 			ShowCalmMessage()
