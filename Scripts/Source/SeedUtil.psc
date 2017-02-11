@@ -67,7 +67,7 @@ float function GetAPIVersion() global
 * EXAMPLES
 float ver = SeedUtil.GetAPIVersion()
 ;*********/;
-    SeedAPI LastSeed = GetAPI()
+    LastSeedAPI LastSeed = GetAPI()
     if LastSeed == none
         RaiseSeedAPIError()
         return -1.0
@@ -95,7 +95,7 @@ float function GetLastSeedVersion() global
 * EXAMPLES
 float ver = SeedUtil.GetFrostfallVersion()
 ;*********/;
-    SeedAPI LastSeed = GetAPI()
+    LastSeedAPI LastSeed = GetAPI()
     if LastSeed == none
         RaiseSeedAPIError()
         return -1.0
@@ -125,7 +125,7 @@ bool function IsPlayerFocused() global
 ;Is the player focused?
 bool isFocused = SeedUtil.IsPlayerFocused()
 ;*********/;
-    SeedAPI LastSeed = GetAPI()
+    LastSeedAPI LastSeed = GetAPI()
     if LastSeed == none
         RaiseSeedAPIError()
         return false
@@ -161,21 +161,18 @@ bool function IsKnownFood(Form akBaseObject) global
 ;Is the squibble something I can eat?
 bool is_food = SeedUtil.IsItemFood(squibble)
 ;*********/;
-    SeedAPI LastSeed = GetAPI()
+    LastSeedAPI LastSeed = GetAPI()
     if LastSeed == none
         RaiseSeedAPIError()
         return false
     endif
 
-    int near_fire = GetHeatSourceSystem()._Frost_NearFire.GetValueInt()
-    if near_fire == 2
-        return true
-    else
-        return false
-    endif
+    ;@TODO
 endFunction
 
-
+function RaiseSeedAPIError() global
+    debug.trace("[LastSeed][ERROR] Fatal Last Seed API error occurred.")
+endFunction
 
 
 

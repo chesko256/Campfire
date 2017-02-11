@@ -1,6 +1,8 @@
-scriptname _Seed_VitalitySystem extends Quest
+scriptname _Seed_VitalitySystem extends _Seed_AttributeSystem
 
-Actor property PlayerRef auto
+import CommonArrayHelper
+import _SeedInternal
+
 GlobalVariable property _Seed_VitalitySystemEnabled auto
 GlobalVariable property _Seed_AttributeVitality auto
 Spell property _Seed_VitalityEffect8 auto
@@ -37,6 +39,7 @@ Event OnUpdate()
     endif
 EndEvent
 
+;/ @TODO: Use IncreaseAttributeOverTime.
 function QueueVitalityChange(float amount)
     ; The way most users should interface with Vitality.
     ; Adds changes to a queue so they can be rolled up periodically.
@@ -50,6 +53,7 @@ function QueueVitalityChange(float amount)
         SeedDebug(0, "An error occurred when calling QueueVitalityChange(" + amount + "); queue is full.")
     endif
 endFunction
+/;
 
 function ModVitality(float amount)
     ; Modifies Vitality immediately and directly. Used only
@@ -69,6 +73,7 @@ function ModVitality(float amount)
     endif
 endFunction
 
+;/ @TODO: Use new IncreaseAttributeOverTime.
 function UpdateVitality()
     ; Roll up Vitality changes pushed to the queue.
 
@@ -96,6 +101,7 @@ function UpdateVitality()
 
     ApplyVitalityEffects()
 endFunction
+/;
 
 function ApplyVitalityEffects()
     ; Apply magic effects, SFX, VFX.

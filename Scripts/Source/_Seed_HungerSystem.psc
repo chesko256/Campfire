@@ -80,7 +80,7 @@ Event OnActorAction(int actionType, Actor akActor, Form source, int slot)
     if akActor == PlayerRef
         if actionType == 6
             debug.trace("[Seed] (Hunger) Archery Attack " + akActor)
-            IncreaseHunger(0.1)
+            IncreaseAttribute(attributeValueGlobal, 0.1)
             if mode >= 1 && mode <= 2
                 (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
             endif
@@ -91,7 +91,7 @@ EndEvent
 Event OnAnimationEvent(ObjectReference akSource, string asEventName)
     if asEventName == "PowerAttackStop" || asEventName == "00NextClip"
         debug.trace("[Seed] (Hunger) Player PowerAttacked")
-        IncreaseHunger(0.25)
+        IncreaseAttribute(attributeValueGlobal, 0.25)
         int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
         if mode >= 1 && mode <= 3
             (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()

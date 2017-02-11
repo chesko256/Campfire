@@ -21,6 +21,7 @@ endFunction
 
 function StopSystem()
 	self.UnregisterForUpdate()
+	self.UnregisterForUpdateGameTime()
 	if self.IsRunning()
 		self.Stop()
 	endif

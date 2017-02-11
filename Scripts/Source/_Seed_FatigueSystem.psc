@@ -31,6 +31,9 @@ Quest property _Seed_FatigueMeterQuest auto
 
 float property lastSleepDuration = 0.0 auto hidden
 
+;@TODO
+float SLEEP_RESTORE_RATE = 0.0
+
 ;@TODO: ????
 int locksPicked
 
@@ -77,7 +80,7 @@ Event OnTrackedStatsEvent(string arStatName, int aiStatValue)
 	if arStatName == "Locks Picked" && aiStatValue > locksPicked
 		debug.trace("[Seed] (Fatigue) Lock Picked")
 		locksPicked = aiStatValue
-		IncreaseFatigue(1.0)
+		IncreaseAttribute(attributeValueGlobal, 1.0)
 		int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
 		if mode >= 1 && mode <= 2
         	(_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter()
@@ -88,7 +91,7 @@ EndEvent
 Event OnActorAction(int actionType, Actor akActor, Form source, int slot)
 	if akActor == PlayerRef
 		debug.trace("[Seed] (Fatigue) Archery Attack")
-		IncreaseFatigue(0.2)
+		IncreaseAttribute(attributeValueGlobal, 0.2)
 		int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
 		if mode >= 1 && mode <= 2
         	(_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter()
@@ -97,7 +100,8 @@ Event OnActorAction(int actionType, Actor akActor, Form source, int slot)
 EndEvent
 
 Event OnSleepStart(float afSleepStartTime, float afDesiredSleepEndTime)
-	was_sleeping = true
+	;@TODO: ???
+    bool was_sleeping = true
 
     ;@TODO: Does this work when we transition to the next day?
 	lastSleepDuration = (afDesiredSleepEndTime - afSleepStartTime) * 24.0
@@ -106,10 +110,11 @@ EndEvent
 Event OnSleepStop(bool abInterrupted)
     ; if not interrupted...
 	;@TODO: Modify by current hunger and thirst.
-	float fatigue_decrease = last_sleep_duration * SLEEP_RESTORE_RATE
-	DecreaseFatigue(fatigue_decrease)
+	float fatigue_decrease = lastSleepDuration * SLEEP_RESTORE_RATE
+	DecreaseAttribute(attributeValueGlobal, fatigue_decrease)
 EndEvent
 
+;/ @TODO Requires SKSE
 function SpellCast(Spell akSpell)
 	;@TODO: Increase Fatigue during concentration spell cast
 	if akSpell
@@ -131,6 +136,7 @@ function SpellCast(Spell akSpell)
     	endif
 	endif
 endFunction
+/;
 
 function IncreaseAttribute(GlobalVariable attribute, float amount)
     ;@TODO: Handle vampire state

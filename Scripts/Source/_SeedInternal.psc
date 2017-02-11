@@ -9,7 +9,7 @@ bool function IsUpToAndBetween(float fValue, float fUpperBound, float fLowerBoun
 endFunction
 
 function SeedDebug(int aiSeverity, string asLogMessage) global
-	int LOG_LEVEL = (Game.GetFormFromFile(0x, "LastSeed.esp") as GlobalVariable).GetValueInt()
+	int LOG_LEVEL = (Game.GetFormFromFile(0x0, "LastSeed.esp") as GlobalVariable).GetValueInt()
 	if LOG_LEVEL <= 3 && LOG_LEVEL <= aiSeverity
 		if aiSeverity == -1
 			debug.trace("[Last Seed][SystemPerformance] " + asLogMessage)

@@ -33,6 +33,8 @@ bool property wasSleeping = false auto hidden
 string property meterUpdateEvent auto hidden
 string property meterForceEvent auto hidden
 
+float lastUpdateTime = 0.0
+
 
 function StartSystem()
 	parent.StartSystem()
@@ -104,23 +106,21 @@ function IncreaseAttributeOverTime(GlobalVariable attribute, GlobalVariable rate
 	endif
 
 	float thisRate = rate.GetValue()
-	float thisTime = GetCurrentGameTime() * 24.0
+	float thisTime = Utility.GetCurrentGameTime() * 24.0
 	int cycles = Math.Floor((thisTime - lastUpdateTime) * 2)
 
 	float attributeIncrease
 	if !wasSleeping
-		attributeIncrease = rate * cycles
+		attributeIncrease = thisRate * cycles
 	else
 		wasSleeping = false
-		attributeIncrease = (rate * cycles) / 4
+		attributeIncrease = (thisRate * cycles) / 4
 	endif
 
-	IncreaseAttribute(attribute, attributeIncrease, ATTR_MAX)
+	IncreaseAttribute(attribute, attributeIncrease)
 	lastUpdateTime = thisTime
 
-	if initialized
-		RegisterForSingleUpdateGameTime(UpdateFrequencyGlobal.GetValue())
-	endif
+	RegisterForSingleUpdateGameTime(UpdateFrequencyGlobal.GetValue())
 endFunction
 
 function ApplyAttributeEffects(GlobalVariable attribute)
@@ -185,7 +185,7 @@ function ApplyAttributeLevel(int level, bool forceMeter = false)
     endif
 
     if forceMeter
-    	SendEvent_ForceExposureMeterDisplay()
+    	SendEvent_ForceAttributeMeterDisplay()
     endif
 endFunction
 
