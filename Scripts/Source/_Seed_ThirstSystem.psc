@@ -32,12 +32,6 @@ GlobalVariable property _Seed_ThirstActionRate auto
 
 function StartSystem()
     parent.StartSystem()
-
-    ; Initialize arrays
-    attributeSpells = new Spell[6]
-    attributeMessages = new Message[6]
-    attributeSounds = new Sound[6]
-    attributeISMs = new ImageSpaceModifier[6]
     
     attributeSpells[0] = _Seed_ThirstSpell1
     attributeSpells[1] = _Seed_ThirstSpell2
@@ -128,10 +122,10 @@ function DecreaseAttribute(GlobalVariable attribute, float amount)
     parent.DecreaseAttribute(attribute, amount)    
 endFunction
     
-function IncreaseAttributeOverTime(GlobalVariable attribute, GlobalVariable rate)
+function ChangeAttributeOverTime(GlobalVariable attribute, GlobalVariable rate)
     ;@TODO: Handle vampire state
     ;else,
-    parent.IncreaseAttributeOverTime(attribute, rate)
+    parent.ChangeAttributeOverTime(attribute, rate)
 endFunction
 
 function ModAttribute(GlobalVariable attribute, float amount)

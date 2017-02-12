@@ -4,6 +4,7 @@ import SeedUtil
 import CampUtil
 import _SeedInternal
 
+
 Actor property PlayerRef auto
 GlobalVariable property _Seed_Setting_VampireBehavior auto
 GlobalVariable property _Seed_Setting_Notifications auto
@@ -20,6 +21,7 @@ float property ATTR_LEVEL_2 = 40.0 autoReadOnly
 float property ATTR_LEVEL_1 = 20.0 autoReadOnly
 float property ATTR_MIN = 0.0 autoReadOnly
 
+GlobalVariable property attributeEnabled auto
 GlobalVariable property attributeValueGlobal auto
 GlobalVariable property attributeRateGlobal auto
 
@@ -39,11 +41,24 @@ float lastUpdateTime = 0.0
 function StartSystem()
 	parent.StartSystem()
 
+	; Turn on the Enabled global, if necessary
+	if attributeEnabled.GetValueInt() != 2
+		attributeEnabled.SetValueInt(2)
+	endif
+
+	; Initialize arrays
+    attributeSpells = new Spell[6]
+    attributeMessages = new Message[6]
+    attributeSounds = new Sound[6]
+    attributeISMs = new ImageSpaceModifier[6]
+
 	RegisterForSleep()
 endFunction
 
 Event OnUpdateGameTime()
-    IncreaseAttributeOverTime(attributeValueGlobal, attributeRateGlobal)
+	if attributeEnabled.GetValueInt() == 2
+    	ChangeAttributeOverTime(attributeValueGlobal, attributeRateGlobal)
+    endif
 EndEvent
 
 Event OnSleepStart(float afSleepStartTime, float afDesiredSleepEndTime)
@@ -97,7 +112,7 @@ function SetAttribute(GlobalVariable attribute, float value)
     ApplyAttributeEffects(attribute)
 endFunction
 
-function IncreaseAttributeOverTime(GlobalVariable attribute, GlobalVariable rate)
+function ChangeAttributeOverTime(GlobalVariable attribute, GlobalVariable rate)
 	;@TODO: Handle vampire behavior
 
 	if IsPlayerFocused()

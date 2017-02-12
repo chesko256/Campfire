@@ -40,12 +40,6 @@ int locksPicked
 function StartSystem()
     parent.StartSystem()
 
-    ; Initialize arrays
-    attributeSpells = new Spell[6]
-    attributeMessages = new Message[6]
-    attributeSounds = new Sound[6]
-    attributeISMs = new ImageSpaceModifier[6]
-
     attributeSpells[0] = _Seed_FatigueSpell1
     attributeSpells[1] = _Seed_FatigueSpell2
     attributeSpells[2] = _Seed_FatigueSpell3
@@ -100,8 +94,7 @@ Event OnActorAction(int actionType, Actor akActor, Form source, int slot)
 EndEvent
 
 Event OnSleepStart(float afSleepStartTime, float afDesiredSleepEndTime)
-	;@TODO: ???
-    bool was_sleeping = true
+    wasSleeping = true
 
     ;@TODO: Does this work when we transition to the next day?
 	lastSleepDuration = (afDesiredSleepEndTime - afSleepStartTime) * 24.0
@@ -150,10 +143,10 @@ function DecreaseAttribute(GlobalVariable attribute, float amount)
     parent.DecreaseAttribute(attribute, amount)    
 endFunction
     
-function IncreaseAttributeOverTime(GlobalVariable attribute, GlobalVariable rate)
+function ChangeAttributeOverTime(GlobalVariable attribute, GlobalVariable rate)
     ;@TODO: Handle vampire state
     ;else,
-    parent.IncreaseAttributeOverTime(attribute, rate)
+    parent.ChangeAttributeOverTime(attribute, rate)
 endFunction
 
 function ModAttribute(GlobalVariable attribute, float amount)
