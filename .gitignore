@@ -67,6 +67,7 @@
 #Meshes
 !Meshes/campfire/*
 !Meshes/frostfall/*
+!Meshes/lastseed/*
 
 #Readmes
 !readmes/Frostfall*.txt
