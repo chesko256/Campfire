@@ -22,6 +22,7 @@ scriptname _Seed_HungerSystem extends _Seed_AttributeSystem
 /;
 
 import CampUtil
+import _SeedInternal
 
 Spell property HungerSpell1 auto
 Spell property HungerSpell2 auto
@@ -50,9 +51,6 @@ Quest property _Seed_HungerMeterQuest auto
 float BLOCK_ACTION_HUNGER = 0.1
 float POWERATTACK_ACTION_HUNGER = 0.25
 
-;
-; Events
-;
 
 function StartSystem()
     parent.StartSystem()
@@ -87,18 +85,19 @@ function StartSystem()
     IncreaseAttribute(attributeValueGlobal, 0.01)
 endFunction
 
+;
+; Actions
+;
+
+; Called by _Seed_PlayerEventMonitor
 function PlayerHit()
-    debug.trace("[Seed] (Hunger) Player Blocked Attack")
+    SeedDebug(1, "(Hunger) Player Blocked Attack")
     IncreaseAttribute(attributeValueGlobal, BLOCK_ACTION_HUNGER)
 endFunction
 
-;
-; Action Detection
-;
-
 Event OnAnimationEvent(ObjectReference akSource, string asEventName)
     if asEventName == "PowerAttackStop" || asEventName == "00NextClip"
-        debug.trace("[Seed] (Hunger) Player PowerAttacked")
+        SeedDebug(1, "(Hunger) Player PowerAttacked")
         IncreaseAttribute(attributeValueGlobal, POWERATTACK_ACTION_HUNGER)
         int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
         if mode >= 1 && mode <= 3
@@ -106,31 +105,3 @@ Event OnAnimationEvent(ObjectReference akSource, string asEventName)
         endif
     endif
 EndEvent
-
-function IncreaseAttribute(GlobalVariable attribute, float amount)
-    if IsPlayerUndead()
-        return
-    else
-        parent.IncreaseAttribute(attribute, amount)
-    endif
-endFunction
-
-function DecreaseAttribute(GlobalVariable attribute, float amount)
-    parent.DecreaseAttribute(attribute, amount)
-endFunction
-    
-function ChangeAttributeOverTime(GlobalVariable attribute, GlobalVariable rate)
-    if IsPlayerUndead() && rate.GetValue() > 0.0
-        return
-    else
-        parent.ChangeAttributeOverTime(attribute, rate)
-    endif
-endFunction
-
-function ModAttribute(GlobalVariable attribute, float amount)
-    if IsPlayerUndead() && amount > 0.0
-        return
-    else
-        parent.ModAttribute(attribute, amount)
-    endif
-endFunction

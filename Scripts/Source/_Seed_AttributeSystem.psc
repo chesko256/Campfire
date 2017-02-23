@@ -24,6 +24,7 @@ float property ATTR_MIN = 0.0 autoReadOnly
 GlobalVariable property attributeEnabled auto
 GlobalVariable property attributeValueGlobal auto
 GlobalVariable property attributeRateGlobal auto
+bool property undeadImmunity = false auto
 
 int property delayedAttributeIncreaseIntervals = 0 auto hidden
 Spell[] property attributeSpells auto hidden
@@ -57,7 +58,7 @@ endFunction
 
 Event OnUpdateGameTime()
 	if attributeEnabled.GetValueInt() == 2
-    	ChangeAttributeOverTime(attributeValueGlobal, attributeRateGlobal)
+    	ChangeAttributeOverTime(attributeValueGlobal, attributeRateGlobal, undeadStopsIncrease)
     endif
 EndEvent
 
@@ -66,6 +67,10 @@ Event OnSleepStart(float afSleepStartTime, float afDesiredSleepEndTime)
 EndEvent
 
 function IncreaseAttribute(GlobalVariable attribute, float amount)
+	if undeadImmunity && IsPlayerUndead() && amount > 0.0
+		return
+	endif
+	
 	float currentAttributeValue = attribute.GetValue()
 	if currentAttributeValue + amount >= ATTR_MAX
 		attribute.SetValue(ATTR_MAX)
@@ -88,6 +93,10 @@ function DecreaseAttribute(GlobalVariable attribute, float amount)
 endFunction
 
 function ModAttribute(GlobalVariable attribute, float amount)
+	if undeadImmunity && IsPlayerUndead() && amount > 0.0
+		return
+	endif
+
 	float currentAttributeValue = attribute.GetValue()
 	if currentAttributeValue + amount >= ATTR_MAX
 		attribute.SetValue(ATTR_MAX)
@@ -113,14 +122,17 @@ function SetAttribute(GlobalVariable attribute, float value)
 endFunction
 
 function ChangeAttributeOverTime(GlobalVariable attribute, GlobalVariable rate)
-	;@TODO: Handle vampire behavior
+	float thisRate = rate.GetValue()
+
+	if undeadImmunity && IsPlayerUndead && rate.GetValue() > 0.0
+		return
+	endif
 
 	if IsPlayerFocused()
 		delayedAttributeIncreaseIntervals += 1
 		return
 	endif
 
-	float thisRate = rate.GetValue()
 	float thisTime = Utility.GetCurrentGameTime() * 24.0
 	int cycles = Math.Floor((thisTime - lastUpdateTime) * 2)
 
