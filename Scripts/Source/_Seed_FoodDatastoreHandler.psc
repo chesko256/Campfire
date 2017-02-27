@@ -1,28 +1,33 @@
 scriptname _Seed_FoodDatastoreHandler extends Quest
+{ This script handles the lookup and storage of food data. Actual 
+  hunger / thirst / spoilage logic is handled by their requisite
+  systems. }
 
 import StorageUtil
 import _SeedInternal
 
 
 ; Food ID Enum
-int property FOOD_MEAT_RAW 			= 1 	autoReadOnly
-int property FOOD_MEAT_COOKED 		= 2 	autoReadOnly
-int property FOOD_SMALLGAME_RAW 	= 3 	autoReadOnly
-int property FOOD_SMALLGAME_COOKED 	= 4 	autoReadOnly
-int property FOOD_FISH_RAW 			= 5 	autoReadOnly
-int property FOOD_FISH_COOKED 		= 6 	autoReadOnly
-int property FOOD_SEAFOOD_RAW 		= 7 	autoReadOnly
-int property FOOD_SEAFOOD_COOKED 	= 8 	autoReadOnly
-int property FOOD_VEGETABLE 		= 9 	autoReadOnly
-int property FOOD_FRUIT 			= 10 	autoReadOnly
-int property FOOD_CHEESE 			= 11 	autoReadOnly
-int property FOOD_TREAT 			= 12 	autoReadOnly
-int property FOOD_PASTRY 			= 13 	autoReadOnly
-int property FOOD_STEW 				= 14 	autoReadOnly
-int property FOOD_PRESERVED 		= 15 	autoReadOnly
+int property FOOD_BREAD				= 1		autoReadOnly
+int property FOOD_MEAT_RAW 			= 2 	autoReadOnly
+int property FOOD_MEAT_COOKED 		= 3 	autoReadOnly
+int property FOOD_SMALLGAME_RAW 	= 4 	autoReadOnly
+int property FOOD_SMALLGAME_COOKED 	= 5 	autoReadOnly
+int property FOOD_FISH_RAW 			= 6 	autoReadOnly
+int property FOOD_FISH_COOKED 		= 7 	autoReadOnly
+int property FOOD_SEAFOOD_RAW 		= 8 	autoReadOnly
+int property FOOD_SEAFOOD_COOKED 	= 9 	autoReadOnly
+int property FOOD_VEGETABLE 		= 10 	autoReadOnly
+int property FOOD_FRUIT 			= 11 	autoReadOnly
+int property FOOD_CHEESE 			= 12 	autoReadOnly
+int property FOOD_TREAT 			= 13 	autoReadOnly
+int property FOOD_PASTRY 			= 14 	autoReadOnly
+int property FOOD_STEW 				= 15 	autoReadOnly
+int property FOOD_CHEESEBOWL		= 16	autoReadOnly
+int property FOOD_PRESERVED 		= 17 	autoReadOnly
 
 FormList[] property foodLists auto hidden
-
+FormList property _Seed_Bread auto
 FormList property _Seed_MeatRaw auto
 FormList property _Seed_MeatCooked auto
 FormList property _Seed_SmallGameRaw auto
@@ -37,7 +42,12 @@ FormList property _Seed_Cheese auto
 FormList property _Seed_Treats auto
 FormList property _Seed_Pastries auto
 FormList property _Seed_Stews auto
+FormList property _Seed_CheeseBowls auto
 FormList property _Seed_Preserved auto
+
+Potion[] property multiPartWholeFoods auto hidden
+Potion[] property multiPartResultFoods auto hidden
+int[] property multiPartResultFoodQuantities auto hidden
 
 function StartSystem()
 	if !self.IsRunning()
@@ -54,28 +64,31 @@ function StopSystem()
 endFunction
 
 function InitializeArrays()
-	foodLists = new FormList[15]
-	foodList[0] = _Seed_MeatRaw
-	foodList[1] = _Seed_MeatCooked
-	foodList[2] = _Seed_SmallGameRaw
-	foodList[3] = _Seed_SmallGameCooked
-	foodList[4] = _Seed_FishRaw
-	foodList[5] = _Seed_FishCooked
-	foodList[6] = _Seed_SeafoodRaw
-	foodList[7] = _Seed_SeafoodCooked
-	foodList[8] = _Seed_Vegetables
-	foodList[9] = _Seed_Fruit
-	foodList[10] = _Seed_Cheese
-	foodList[11] = _Seed_Treats
-	foodList[12] = _Seed_Pastries
-	foodList[13] = _Seed_Stews
-	foodList[14] = _Seed_Preserved
+	foodLists = new FormList[17]
+	foodList[0] = _Seed_Bread
+	foodList[1] = _Seed_MeatRaw
+	foodList[2] = _Seed_MeatCooked
+	foodList[3] = _Seed_SmallGameRaw
+	foodList[4] = _Seed_SmallGameCooked
+	foodList[5] = _Seed_FishRaw
+	foodList[6] = _Seed_FishCooked
+	foodList[7] = _Seed_SeafoodRaw
+	foodList[8] = _Seed_SeafoodCooked
+	foodList[9] = _Seed_Vegetables
+	foodList[10] = _Seed_Fruit
+	foodList[11] = _Seed_Cheese
+	foodList[12] = _Seed_Treats
+	foodList[13] = _Seed_Pastries
+	foodList[14] = _Seed_Stews
+	foodList[15] = _Seed_CheeseBowls
+	foodList[16] = _Seed_Preserved
 endFunction
 
 int function IdentifyFood(Potion food)
 	; Return values:
 	;	0: Not found
 	;	n: Food Type (see Food IDs)
+
 	int i = 0
 	while i < foodList.Length
 		if foodList[i].HasForm(food)
