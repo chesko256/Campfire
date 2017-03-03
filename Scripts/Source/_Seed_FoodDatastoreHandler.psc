@@ -82,6 +82,23 @@ function InitializeArrays()
 	foodList[14] = _Seed_Stews
 	foodList[15] = _Seed_CheeseBowls
 	foodList[16] = _Seed_Preserved
+
+	multiPartWholeFoods1 = new Potion[128]
+	multiPartWholeFoods2 = new Potion[128]
+	multiPartWholeFoods3 = new Potion[128]
+	multiPartWholeFoods4 = new Potion[128]
+	multiPartResultFoods1 = new Potion[128]
+	multiPartResultFoods2 = new Potion[128]
+	multiPartResultFoods3 = new Potion[128]
+	multiPartResultFoods4 = new Potion[128]
+	multiPartResultFoodQuantities1 = new int[128]
+	multiPartResultFoodQuantities2 = new int[128]
+	multiPartResultFoodQuantities3 = new int[128]
+	multiPartResultFoodQuantities4 = new int[128]
+	multiPartBreakOnPickup1 = new bool[128]
+	multiPartBreakOnPickup2 = new bool[128]
+	multiPartBreakOnPickup3 = new bool[128]
+	multiPartBreakOnPickup4 = new bool[128]
 endFunction
 
 int function IdentifyFood(Potion food)
@@ -103,6 +120,10 @@ endFunction
 function AddFood(Potion food, int foodId)
 	int idx = foodId - 1
 	foodList[idx].AddForm(food)
+endFunction
+
+function AddMultiPartFoodData(Potion wholeFood, Potion resultFood, int quantity, bool breakOnPickup)
+
 endFunction
 
 ;/
