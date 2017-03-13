@@ -1,0 +1,11 @@
+scriptname LastSeedAPI extends Quest
+
+_Seed_VitalitySystem property Vitality auto
+_Seed_HungerSystem property Hunger auto
+_Seed_ThirstSystem property Thirst auto
+_Seed_FatigueSystem property Fatigue auto
+_Seed_FoodDatastoreHandler property FoodDatastore auto
+
+GlobalVariable property _Seed_APIVersion auto
+GlobalVariable property _Seed_LastSeedVersion auto
+GlobalVariable property _Seed_IsPlayerFocused auto

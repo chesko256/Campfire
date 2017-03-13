@@ -58,7 +58,7 @@ endFunction
 
 Event OnUpdateGameTime()
 	if attributeEnabled.GetValueInt() == 2
-    	ChangeAttributeOverTime(attributeValueGlobal, attributeRateGlobal, undeadStopsIncrease)
+    	ChangeAttributeOverTime(attributeValueGlobal, attributeRateGlobal)
     endif
 EndEvent
 
@@ -124,7 +124,7 @@ endFunction
 function ChangeAttributeOverTime(GlobalVariable attribute, GlobalVariable rate)
 	float thisRate = rate.GetValue()
 
-	if undeadImmunity && IsPlayerUndead && rate.GetValue() > 0.0
+	if undeadImmunity && IsPlayerUndead() && rate.GetValue() > 0.0
 		return
 	endif
 

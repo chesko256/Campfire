@@ -44,6 +44,15 @@ _Seed_FatigueSystem function GetFatigueSystem() global
     return LastSeed.Fatigue
 endFunction
 
+_Seed_FoodDatastoreHandler function GetFoodDatastoreHandler() global
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return none
+    endif
+    return LastSeed.FoodDatastore
+endFunction
+
 ; Public Functions ================================================================================
 
 ;/********f* SeedUtil/GetAPIVersion
