@@ -3,6 +3,13 @@ scriptname _Seed_FoodDatastoreHandler extends Quest
   hunger / thirst / spoilage logic is handled by their requisite
   systems. }
 
+;/
+	Food Datastore
+	
+	The store is an 8-array Linked Array that stores data using
+	the pattern [WholeFood, ResultFood, QuantityFood, ...]
+/;
+
 import _SeedInternal
 
 
@@ -28,10 +35,14 @@ int property FOOD_PRESERVED 		= 18 	autoReadOnly
 
 FormList[] property foodLists auto hidden
 FormList property _Seed_Bread auto
-FormList property _Seed_Meat auto
-FormList property _Seed_SmallGame auto
-FormList property _Seed_Fish auto
-FormList property _Seed_Seafood auto
+FormList property _Seed_MeatRaw auto
+FormList property _Seed_MeatCooked auto
+FormList property _Seed_SmallGameRaw auto
+FormList property _Seed_SmallGameCooked auto
+FormList property _Seed_FishRaw auto
+FormList property _Seed_FishCooked auto
+FormList property _Seed_SeafoodRaw auto
+FormList property _Seed_SeafoodCooked auto
 FormList property _Seed_Vegetables auto
 FormList property _Seed_Fruit auto
 FormList property _Seed_Cheese auto
@@ -41,8 +52,6 @@ FormList property _Seed_Stews auto
 FormList property _Seed_CheeseBowls auto
 FormList property _Seed_Milk auto
 FormList property _Seed_Preserved auto
-
-FormList property _Seed_CookedFood auto
 
 Potion property _Seed_Quantity2 auto
 Potion property _Seed_Quantity8 auto
@@ -56,48 +65,10 @@ Potion[] multiPartFoodData6
 Potion[] multiPartFoodData7
 Potion[] multiPartFoodData8
 
-function StartSystem()
-	if !self.IsRunning()
-		self.Start()
-	endif
-	InitializeArrays()
-	CreateFoodKeywordValueMaps()
-endFunction
+;/
+	Public Functions
+/;
 
-function StopSystem()
-	if self.IsRunning()
-		self.Stop()
-	endif
-endFunction
-
-function InitializeArrays()
-	multiPartFoodData1 = new Potion[128]
-	multiPartFoodData2 = new Potion[128]
-	multiPartFoodData3 = new Potion[128]
-	multiPartFoodData4 = new Potion[128]
-	multiPartFoodData5 = new Potion[128]
-	multiPartFoodData6 = new Potion[128]
-	multiPartFoodData7 = new Potion[128]
-	multiPartFoodData8 = new Potion[128]
-
-	foodLists = new FormList[14]
-	foodList[0] = _Seed_Bread
-	foodList[1] = _Seed_Meat
-	foodList[2] = _Seed_SmallGame
-	foodList[3] = _Seed_Fish
-	foodList[4] = _Seed_Seafood
-	foodList[5] = _Seed_Vegetables
-	foodList[6] = _Seed_Fruit
-	foodList[7] = _Seed_Cheese
-	foodList[8] = _Seed_Treats
-	foodList[9] = _Seed_Pastries
-	foodList[10] = _Seed_Stews
-	foodList[11] = _Seed_CheeseBowls
-	foodList[12] = _Seed_Milk
-	foodList[13] = _Seed_Preserved
-endFunction
-
-fix
 int function IdentifyFood(Potion food)
 	;@TODO: Check keywords first
 
@@ -106,13 +77,9 @@ int function IdentifyFood(Potion food)
 	;	n: Food Type (see Food IDs)
 
 	int i = 0
-	while i < foodList.Length
-		if foodList[i].HasForm(food)
-			if _Seed_CookedFood.HasForm(food)
-				return (i + 1) * 100
-			else
-				return i + 1
-			endif
+	while i < foodLists.Length
+		if foodLists[i].HasForm(food)
+			return i + 1
 		else
 			i += 1
 		endif
@@ -120,51 +87,13 @@ int function IdentifyFood(Potion food)
 	return 0
 endFunction
 
-function AddFood(Potion food, int foodId)
+function AddFoodToCategory(Potion food, int foodId)
+	; Adds a food to a category list. Uses the Food ID enum
+	; as the foodId.
+
 	int idx = foodId - 1
-	foodList[idx].AddForm(food)
+	foodLists[idx].AddForm(food)
 endFunction
-
-;/
-	Core problems:
-		How to associate food to restorative value(s)
-			StorageUtil
-				Fast
-				single-platform
-				portable
-				No size constraints
-				would have to use Arrays or FormLists anyway
-			Arrays
-				Fast
-				Somewhat complex
-				multi-platform
-				index size constraints
-				non-portable for Classic users
-			FormLists
-				Slow
-				Simple
-				No size constraints
-				non-portable for Classic users
-		How to associate food to spoilage path
-/;
-
-;/ Array / Datastore Schemas ==================================================
-
-	The Food Datastore and the Spoilage System use arrays and lists in order
-	to pass around data about food, depending on the needs of the system and
-	for performance reasons.
-
-	The following are the most commonly used conventions used throughout
-	Last Seed.
-
-	StorageUtil IntList[] FoodData: The format that the Food Datastore stores
-	a record about a single piece of food. This data is saved to a Default
-	Settings Profile, or to the player's custom Food Profile.
-
-/;
-
-
-
 
 function AddUpdateMultiPartFood(Potion akWholeFood, Potion akResultFood, int aiQuantity)
 	
@@ -175,14 +104,19 @@ function AddUpdateMultiPartFood(Potion akWholeFood, Potion akResultFood, int aiQ
 								  			   	 multiPartFoodData5, multiPartFoodData6, multiPartFoodData7, multiPartFoodData8)
 
 	
-	; Get quantity form
+	Potion quantity
+	if aiQuantity == 2
+		quantity = _Seed_Quantity2
+	elseif aiQuantity == 8
+		quantity = _Seed_Quantity8
+	endif
 
 	if idx == -1
 		int newIdx = LinkedArrayAddPotion(akWholeFood, multiPartFoodData1, multiPartFoodData2, multiPartFoodData3, multiPartFoodData4, 		\
 													   multiPartFoodData5, multiPartFoodData6, multiPartFoodData7, multiPartFoodData8)
 		LinkedArrayAddPotionAt(akResultFood, newIdx + 1, multiPartFoodData1, multiPartFoodData2, multiPartFoodData3, multiPartFoodData4, 	\
 														 multiPartFoodData5, multiPartFoodData6, multiPartFoodData7, multiPartFoodData8)
-		LinkedArrayAddPotionAt(quantityForm, newIdx + 2, multiPartFoodData1, multiPartFoodData2, multiPartFoodData3, multiPartFoodData4, 	\
+		LinkedArrayAddPotionAt(quantity, newIdx + 2, multiPartFoodData1, multiPartFoodData2, multiPartFoodData3, multiPartFoodData4, 	\
 													     multiPartFoodData5, multiPartFoodData6, multiPartFoodData7, multiPartFoodData8)
 	endif
 
@@ -190,7 +124,7 @@ function AddUpdateMultiPartFood(Potion akWholeFood, Potion akResultFood, int aiQ
 		; Update the existing entry
 		LinkedArrayAddPotionAt(akResultFood, idx + 1, multiPartFoodData1, multiPartFoodData2, multiPartFoodData3, multiPartFoodData4, 		\
 													  multiPartFoodData5, multiPartFoodData6, multiPartFoodData7, multiPartFoodData8)
-		LinkedArrayAddPotionAt(quantityForm, idx + 2, multiPartFoodData1, multiPartFoodData2, multiPartFoodData3, multiPartFoodData4, 		\
+		LinkedArrayAddPotionAt(quantity, idx + 2, multiPartFoodData1, multiPartFoodData2, multiPartFoodData3, multiPartFoodData4, 		\
 													  multiPartFoodData5, multiPartFoodData6, multiPartFoodData7, multiPartFoodData8)
 	endif
 endFunction
@@ -237,11 +171,11 @@ int function GetMultiPartFoodQuantity(Potion akWholeFood)
 												 multiPartFoodData5, multiPartFoodData6, multiPartFoodData7, multiPartFoodData8)
 
 	if idx > -1
-		Potion q = LinkedArrayGetPotionAt(idx + 2, multiPartFoodData1, multiPartFoodData2, multiPartFoodData3, multiPartFoodData4, \
-								  				   multiPartFoodData5, multiPartFoodData6, multiPartFoodData7, multiPartFoodData8)
-		if q == _Seed_Quantity2
+		Potion quantity = LinkedArrayGetPotionAt(idx + 2, multiPartFoodData1, multiPartFoodData2, multiPartFoodData3, multiPartFoodData4, \
+								  				   		  multiPartFoodData5, multiPartFoodData6, multiPartFoodData7, multiPartFoodData8)
+		if quantity == _Seed_Quantity2
 			return 2
-		elseif q == _Seed_Quantity8
+		elseif quantity == _Seed_Quantity8
 			return 8
 		endif
 	endif
@@ -249,13 +183,62 @@ endFunction
 
 int function GetMultiPartFoodQuantityFromIndex(int aiWholeFoodIndex)
 	; Gets the result food relative to the multi-part food index.
-	Potion q = LinkedArrayGetPotionAt(aiWholeFoodIndex + 2, multiPartFoodData1, multiPartFoodData2, multiPartFoodData3, multiPartFoodData4, \
-															multiPartFoodData5, multiPartFoodData6, multiPartFoodData7, multiPartFoodData8)
-	if q == _Seed_Quantity2
+	Potion quantity = LinkedArrayGetPotionAt(aiWholeFoodIndex + 2, multiPartFoodData1, multiPartFoodData2, multiPartFoodData3, multiPartFoodData4, \
+																   multiPartFoodData5, multiPartFoodData6, multiPartFoodData7, multiPartFoodData8)
+	if quantity == _Seed_Quantity2
 		return 2
-	elseif q == _Seed_Quantity8
+	elseif quantity == _Seed_Quantity8
 		return 8
 	endif
+endFunction
+
+;/
+	System Management
+/;
+
+function StartSystem()
+	if !self.IsRunning()
+		self.Start()
+	endif
+	InitializeArrays()
+	; CreateFoodKeywordValueMaps()
+endFunction
+
+function StopSystem()
+	if self.IsRunning()
+		self.Stop()
+	endif
+endFunction
+
+function InitializeArrays()
+	multiPartFoodData1 = new Potion[128]
+	multiPartFoodData2 = new Potion[128]
+	multiPartFoodData3 = new Potion[128]
+	multiPartFoodData4 = new Potion[128]
+	multiPartFoodData5 = new Potion[128]
+	multiPartFoodData6 = new Potion[128]
+	multiPartFoodData7 = new Potion[128]
+	multiPartFoodData8 = new Potion[128]
+
+	foodLists = new FormList[14]
+	foodLists[0] = _Seed_Bread
+	foodLists[1] = _Seed_MeatRaw
+	foodLists[2] = _Seed_MeatCooked
+	foodLists[3] = _Seed_SmallGameRaw
+	foodLists[4] = _Seed_SmallGameCooked
+	foodLists[5] = _Seed_FishRaw
+	foodLists[6] = _Seed_FishCooked
+	foodLists[7] = _Seed_SeafoodRaw
+	foodLists[8] = _Seed_SeafoodCooked
+	foodLists[9] = _Seed_Vegetables
+	foodLists[10] = _Seed_Fruit
+	foodLists[11] = _Seed_Cheese
+	foodLists[12] = _Seed_Treats
+	foodLists[13] = _Seed_Pastries
+	foodLists[14] = _Seed_Stews
+	foodLists[15] = _Seed_CheeseBowls
+	foodLists[16] = _Seed_Milk
+	foodLists[17] = _Seed_Preserved
 endFunction
 
 ;/
@@ -263,7 +246,7 @@ endFunction
 /;
 
 int function LinkedArrayAddPotion(Potion akPotion, Potion[] akArray1, Potion[] akArray2, Potion[] akArray3, Potion[] akArray4, \
-													Potion[] akArray5, Potion[] akArray6, Potion[] akArray7, Potion[] akArray8) global
+													Potion[] akArray5, Potion[] akArray6, Potion[] akArray7, Potion[] akArray8)
     ; Adds a form to the first available element in the first available array
 	; associated with this ArrayID.
 
@@ -274,7 +257,7 @@ int function LinkedArrayAddPotion(Potion akPotion, Potion[] akArray1, Potion[] a
     int idx = -1
     idx = akArray1.Find(none)
     if idx != -1
-    	akAray1[idx] = akPotion
+    	akArray1[idx] = akPotion
     	return idx
     endif
 
@@ -331,7 +314,7 @@ int function LinkedArrayAddPotion(Potion akPotion, Potion[] akArray1, Potion[] a
 endFunction
 
 bool function LinkedArrayAddPotionAt(Potion akPotion, int aiIndex, Potion[] akArray1, Potion[] akArray2, Potion[] akArray3, Potion[] akArray4, \
-													Potion[] akArray5, Potion[] akArray6, Potion[] akArray7, Potion[] akArray8) global
+													Potion[] akArray5, Potion[] akArray6, Potion[] akArray7, Potion[] akArray8)
     ; Adds a potion to the linked-array relative index.
 
 	; Return values
@@ -341,7 +324,7 @@ bool function LinkedArrayAddPotionAt(Potion akPotion, int aiIndex, Potion[] akAr
     int idx = 0       
     if aiIndex < 128
     	idx = aiIndex
-    	akAray1[idx] = akPotion
+    	akArray1[idx] = akPotion
     	return true
     endif
 
@@ -390,8 +373,8 @@ bool function LinkedArrayAddPotionAt(Potion akPotion, int aiIndex, Potion[] akAr
     return false
 endFunction
 
-int function LinkedArrayRemovePotion(Potion akPotion, Potion[] akArray1, Potion[] akArray2, Potion[] akArray3, Potion[] akArray4 \
-													   Potion[] akArray5, Potion[] akArray6, Potion[] akArray7, Potion[] akArray8, bool abSort = true) global
+int function LinkedArrayRemovePotion(Potion akPotion, Potion[] akArray1, Potion[] akArray2, Potion[] akArray3, Potion[] akArray4, \
+													  Potion[] akArray5, Potion[] akArray6, Potion[] akArray7, Potion[] akArray8, bool abSort = true)
 	; Removes the first occurrence of a form from the array, if found.
 	
 	; Return values
@@ -399,7 +382,7 @@ int function LinkedArrayRemovePotion(Potion akPotion, Potion[] akArray1, Potion[
     ;	n 	= 	New element index
 
 	int idx = -1
-	idx = akArray1.Find(akForm)
+	idx = akArray1.Find(akPotion)
 	if idx != -1
 		akArray1[idx] = none
 		if abSort
@@ -409,7 +392,7 @@ int function LinkedArrayRemovePotion(Potion akPotion, Potion[] akArray1, Potion[
 	endif
 
 	idx = -1
-	idx = akArray2.Find(akForm)
+	idx = akArray2.Find(akPotion)
 	if idx != -1
 		akArray2[idx] = none
 		if abSort
@@ -419,7 +402,7 @@ int function LinkedArrayRemovePotion(Potion akPotion, Potion[] akArray1, Potion[
 	endif
 
 	idx = -1
-	idx = akArray3.Find(akForm)
+	idx = akArray3.Find(akPotion)
 	if idx != -1
 		akArray3[idx] = none
 		if abSort
@@ -429,7 +412,7 @@ int function LinkedArrayRemovePotion(Potion akPotion, Potion[] akArray1, Potion[
 	endif
 
 	idx = -1
-	idx = akArray4.Find(akForm)
+	idx = akArray4.Find(akPotion)
 	if idx != -1
 		akArray4[idx] = none
 		if abSort
@@ -439,7 +422,7 @@ int function LinkedArrayRemovePotion(Potion akPotion, Potion[] akArray1, Potion[
 	endif
 
 	idx = -1
-	idx = akArray5.Find(akForm)
+	idx = akArray5.Find(akPotion)
 	if idx != -1
 		akArray5[idx] = none
 		if abSort
@@ -449,7 +432,7 @@ int function LinkedArrayRemovePotion(Potion akPotion, Potion[] akArray1, Potion[
 	endif
 
 	idx = -1
-	idx = akArray6.Find(akForm)
+	idx = akArray6.Find(akPotion)
 	if idx != -1
 		akArray6[idx] = none
 		if abSort
@@ -459,7 +442,7 @@ int function LinkedArrayRemovePotion(Potion akPotion, Potion[] akArray1, Potion[
 	endif
 
 	idx = -1
-	idx = akArray7.Find(akForm)
+	idx = akArray7.Find(akPotion)
 	if idx != -1
 		akArray7[idx] = none
 		if abSort
@@ -469,7 +452,7 @@ int function LinkedArrayRemovePotion(Potion akPotion, Potion[] akArray1, Potion[
 	endif
 
 	idx = -1
-	idx = akArray8.Find(akForm)
+	idx = akArray8.Find(akPotion)
 	if idx != -1
 		akArray8[idx] = none
 		if abSort
@@ -482,7 +465,7 @@ int function LinkedArrayRemovePotion(Potion akPotion, Potion[] akArray1, Potion[
 endFunction
 
 bool function LinkedArrayRemovePotionAt(int aiIndex, Potion[] akArray1, Potion[] akArray2, Potion[] akArray3, Potion[] akArray4, \
-													Potion[] akArray5, Potion[] akArray6, Potion[] akArray7, Potion[] akArray8) global
+													Potion[] akArray5, Potion[] akArray6, Potion[] akArray7, Potion[] akArray8)
     ; Removes a potion at the linked-array relative index.
 
 	; Return values
@@ -492,7 +475,7 @@ bool function LinkedArrayRemovePotionAt(int aiIndex, Potion[] akArray1, Potion[]
     int idx = 0       
     if aiIndex < 128
     	idx = aiIndex
-    	akAray1[idx] = None
+    	akArray1[idx] = None
     	return true
     endif
 
@@ -542,7 +525,7 @@ bool function LinkedArrayRemovePotionAt(int aiIndex, Potion[] akArray1, Potion[]
 endFunction
 
 int function LinkedArrayFindPotion(Potion akPotion, Potion[] akArray1, Potion[] akArray2, Potion[] akArray3, Potion[] akArray4, \
-								    			    Potion[] akArray5, Potion[] akArray6, Potion[] akArray7, Potion[] akArray8, bool abSort = true) global
+								    			    Potion[] akArray5, Potion[] akArray6, Potion[] akArray7, Potion[] akArray8, bool abSort = true)
 	; Attempts to find the given potion in the associated array ID, and returns the index (relative to the linked array) if found.
 	
 	; Return values
@@ -586,8 +569,41 @@ int function LinkedArrayFindPotion(Potion akPotion, Potion[] akArray1, Potion[] 
 	return -1
 endFunction
 
+Potion function LinkedArrayGetPotionAt(int aiIndex, Potion[] akArray1, Potion[] akArray2, Potion[] akArray3, Potion[] akArray4, \
+								    			    Potion[] akArray5, Potion[] akArray6, Potion[] akArray7, Potion[] akArray8, bool abSort = true)
+	; Attempts to retrieve the potion at the supplied linked-array relative index. Returns None if aiIndex is out of bounds.	
+
+	int idx = aiIndex
+	if aiIndex < 128
+		return akArray1[idx]
+	elseif aiIndex < 256
+		idx -= 128
+		return akArray2[idx]
+	elseif aiIndex < 384
+		idx -= 256
+		return akArray3[idx]
+	elseif aiIndex < 512
+		idx -= 384
+		return akArray4[idx]
+	elseif aiIndex < 640
+		idx -= 512
+		return akArray5[idx]
+	elseif aiIndex < 768
+		idx -= 640
+		return akArray6[idx]
+	elseif aiIndex < 896
+		idx -= 768
+		return akArray7[idx]
+	elseif aiIndex < 1024
+		idx -= 896
+		return akArray8[idx]
+	endif
+
+	return None
+endFunction
+
 function LinkedArrayClearPotions128(Potion[] akArray1, Potion[] akArray2, Potion[] akArray3, Potion[] akArray4, \
-									Potion[] akArray5, Potion[] akArray6, Potion[] akArray7, Potion[] akArray8) global
+									Potion[] akArray5, Potion[] akArray6, Potion[] akArray7, Potion[] akArray8)
 	; Reinitializes and clears linked arrays into Potion[128] arrays.
 	
 	; Return values
@@ -604,7 +620,7 @@ function LinkedArrayClearPotions128(Potion[] akArray1, Potion[] akArray2, Potion
 endFunction
 
 function LinkedArrayRemoveInvalidPotions(Potion[] akArray1, Potion[] akArray2, Potion[] akArray3, Potion[] akArray4, \
-										 Potion[] akArray5, Potion[] akArray6, Potion[] akArray7, Potion[] akArray8) global
+										 Potion[] akArray5, Potion[] akArray6, Potion[] akArray7, Potion[] akArray8)
 	; Clears all arrays of invalid Potions ([Form <None>]) and re-sorts.
 
 	; Return values
@@ -689,7 +705,7 @@ function LinkedArrayRemoveInvalidPotions(Potion[] akArray1, Potion[] akArray2, P
 endFunction
 
 int function LinkedArrayCountPotions(Potion[] akArray1, Potion[] akArray2, Potion[] akArray3, Potion[] akArray4, \
-									 Potion[] akArray5, Potion[] akArray6, Potion[] akArray7, Potion[] akArray8) global
+									 Potion[] akArray5, Potion[] akArray6, Potion[] akArray7, Potion[] akArray8)
 	;Counts the number of indicies in this linked array that do not have a "none" type
 	
 	; Return values
@@ -780,8 +796,8 @@ int function LinkedArrayCountPotions(Potion[] akArray1, Potion[] akArray2, Potio
 	return myCount
 endFunction
 
-bool function LinkedArraySortPotions(Potion[] akArray1, Potion[] akArray2, Potion[] akArray3, Potion[] akArray4 \
-									 Potion[] akArray5, Potion[] akArray6, Potion[] akArray7, Potion[] akArray8, int i = 0) global
+bool function LinkedArraySortPotions(Potion[] akArray1, Potion[] akArray2, Potion[] akArray3, Potion[] akArray4, \
+									 Potion[] akArray5, Potion[] akArray6, Potion[] akArray7, Potion[] akArray8, int i = 0)
 	; Removes blank elements by shifting all elements down, moving elements
 	; to arrays "below" the current one if necessary.
 	; Optionally starts sorting from element i.
@@ -865,7 +881,7 @@ bool function LinkedArraySortPotions(Potion[] akArray1, Potion[] akArray2, Potio
 							akArray1[j] = none
 						endif
 						;Call this function recursively until it returns
-						LinkedArraySortForms(akArray1, akArray2, akArray3, akArray4, akArray5, akArray6, akArray7, akArray8, firstNoneIndex + 1)
+						LinkedArraySortPotions(akArray1, akArray2, akArray3, akArray4, akArray5, akArray6, akArray7, akArray8, firstNoneIndex + 1)
 						return true
 					else
 						i += 1
@@ -915,7 +931,7 @@ bool function LinkedArraySortPotions(Potion[] akArray1, Potion[] akArray2, Potio
 							akArray1[j] = none
 						endif
 						;Call this function recursively until it returns
-						LinkedArraySortForms(akArray1, akArray2, akArray3, akArray4, akArray5, akArray6, akArray7, akArray8, firstNoneIndex + 1)
+						LinkedArraySortPotions(akArray1, akArray2, akArray3, akArray4, akArray5, akArray6, akArray7, akArray8, firstNoneIndex + 1)
 						return true
 					else
 						i += 1
@@ -965,7 +981,7 @@ bool function LinkedArraySortPotions(Potion[] akArray1, Potion[] akArray2, Potio
 							akArray1[j] = none
 						endif
 						;Call this function recursively until it returns
-						LinkedArraySortForms(akArray1, akArray2, akArray3, akArray4, akArray5, akArray6, akArray7, akArray8, firstNoneIndex + 1)
+						LinkedArraySortPotions(akArray1, akArray2, akArray3, akArray4, akArray5, akArray6, akArray7, akArray8, firstNoneIndex + 1)
 						return true
 					else
 						i += 1
@@ -1015,7 +1031,7 @@ bool function LinkedArraySortPotions(Potion[] akArray1, Potion[] akArray2, Potio
 							akArray1[j] = none
 						endif
 						;Call this function recursively until it returns
-						LinkedArraySortForms(akArray1, akArray2, akArray3, akArray4, akArray5, akArray6, akArray7, akArray8, firstNoneIndex + 1)
+						LinkedArraySortPotions(akArray1, akArray2, akArray3, akArray4, akArray5, akArray6, akArray7, akArray8, firstNoneIndex + 1)
 						return true
 					else
 						i += 1
@@ -1065,7 +1081,7 @@ bool function LinkedArraySortPotions(Potion[] akArray1, Potion[] akArray2, Potio
 							akArray1[j] = none
 						endif
 						;Call this function recursively until it returns
-						LinkedArraySortForms(akArray1, akArray2, akArray3, akArray4, akArray5, akArray6, akArray7, akArray8, firstNoneIndex + 1)
+						LinkedArraySortPotions(akArray1, akArray2, akArray3, akArray4, akArray5, akArray6, akArray7, akArray8, firstNoneIndex + 1)
 						return true
 					else
 						i += 1
@@ -1115,7 +1131,7 @@ bool function LinkedArraySortPotions(Potion[] akArray1, Potion[] akArray2, Potio
 							akArray1[j] = none
 						endif
 						;Call this function recursively until it returns
-						LinkedArraySortForms(akArray1, akArray2, akArray3, akArray4, akArray5, akArray6, akArray7, akArray8, firstNoneIndex + 1)
+						LinkedArraySortPotions(akArray1, akArray2, akArray3, akArray4, akArray5, akArray6, akArray7, akArray8, firstNoneIndex + 1)
 						return true
 					else
 						i += 1
@@ -1165,7 +1181,7 @@ bool function LinkedArraySortPotions(Potion[] akArray1, Potion[] akArray2, Potio
 							akArray1[j] = none
 						endif
 						;Call this function recursively until it returns
-						LinkedArraySortForms(akArray1, akArray2, akArray3, akArray4, akArray5, akArray6, akArray7, akArray8, firstNoneIndex + 1)
+						LinkedArraySortPotions(akArray1, akArray2, akArray3, akArray4, akArray5, akArray6, akArray7, akArray8, firstNoneIndex + 1)
 						return true
 					else
 						i += 1
@@ -1215,7 +1231,7 @@ bool function LinkedArraySortPotions(Potion[] akArray1, Potion[] akArray2, Potio
 							akArray1[j] = none
 						endif
 						;Call this function recursively until it returns
-						LinkedArraySortForms(akArray1, akArray2, akArray3, akArray4, akArray5, akArray6, akArray7, akArray8, firstNoneIndex + 1)
+						LinkedArraySortPotions(akArray1, akArray2, akArray3, akArray4, akArray5, akArray6, akArray7, akArray8, firstNoneIndex + 1)
 						return true
 					else
 						i += 1
