@@ -4,6 +4,29 @@ LastSeedAPI function GetAPI() global
     return (Game.GetFormFromFile(0x0, "LastSeed.esp") as Quest) as LastSeedAPI
 endFunction
 
+; Public Enums ====================================================================================
+
+; Food ID
+int property FOODTYPE_BREAD             = 1     autoReadOnly
+int property FOODTYPE_MEAT_RAW          = 2     autoReadOnly
+int property FOODTYPE_MEAT_COOKED       = 3     autoReadOnly
+int property FOODTYPE_SMALLGAME_RAW     = 4     autoReadOnly
+int property FOODTYPE_SMALLGAME_COOKED  = 5     autoReadOnly
+int property FOODTYPE_FISH_RAW          = 6     autoReadOnly
+int property FOODTYPE_FISH_COOKED       = 7     autoReadOnly
+int property FOODTYPE_SEAFOOD_RAW       = 8     autoReadOnly
+int property FOODTYPE_SEAFOOD_COOKED    = 9     autoReadOnly
+int property FOODTYPE_VEGETABLE         = 10    autoReadOnly
+int property FOODTYPE_FRUIT             = 11    autoReadOnly
+int property FOODTYPE_CHEESE            = 12    autoReadOnly
+int property FOODTYPE_TREAT             = 13    autoReadOnly
+int property FOODTYPE_PASTRY            = 14    autoReadOnly
+int property FOODTYPE_STEW              = 15    autoReadOnly
+int property FOODTYPE_CHEESEBOWL        = 16    autoReadOnly
+int property DRINKTYPE_MILK             = 17    autoReadOnly
+int property DRINKTYPE_ALCOHOLIC        = 18    autoReadOnly
+int property DRINKTYPE_NONALCOHOLIC     = 19    autoReadOnly
+
 ; System Access ===================================================================================
 
 ; These are not intended for public use and are therefore undocumented.
@@ -162,33 +185,33 @@ int function GetFoodType(Potion akFood) global
 * akFood: The form to check.
 *
 * RETURN VALUE
-* 0: This item is not food, or has no known type.
-* 1: This item is Bread.
-* 2: This item is Large Meat (Raw).
-* 3: This item is Large Meat (Cooked).
-* 4: This item is Small Game (Raw).
-* 5: This item is Small Game (Cooked).
-* 6: This item is Fish (Raw).
-* 7: This item is Fish (Cooked).
-* 8: This item is Seafood (Raw).
-* 9: This item is Seafood (Cooked).
-* 10: This item is a Vegetable.
-* 11: This item is Fruit.
-* 12: This item is Cheese (sliced, unpreserved).
-* 13: This item is a Treat.
-* 14: This item is a Pastry.
-* 15: This item is Stew.
-* 16: This item is a Cheese Bowl.
-* 17: This item is Milk.
-* 18: This item is an Alcoholic Drink.
-* 19: This item is a Non-Alcoholic Drink.
+* 0:                                This item is not food, or has no known type.
+* FOODTYPE_BREAD (1):               This item is Bread.
+* FOODTYPE_MEAT_RAW (2):            This item is Large Meat (Raw).
+* FOODTYPE_MEAT_COOKED (3):         This item is Large Meat (Cooked).
+* FOODTYPE_SMALLGAME_RAW (4):       This item is Small Game (Raw).
+* FOODTYPE_SMALLGAME_COOKED (5):    This item is Small Game (Cooked).
+* FOODTYPE_FISH_RAW (6):            This item is Fish (Raw).
+* FOODTYPE_FISH_COOKED (7):         This item is Fish (Cooked).
+* FOODTYPE_SEAFOOD_RAW (8):         This item is Seafood (Raw).
+* FOODTYPE_SEAFOOD_COOKED (9):      This item is Seafood (Cooked).
+* FOODTYPE_VEGETABLE (10):          This item is a Vegetable.
+* FOODTYPE_FRUIT (11):              This item is Fruit.
+* FOODTYPE_CHEESE (12):             This item is Cheese (sliced, unpreserved).
+* FOODTYPE_TREAT (13):              This item is a Treat.
+* FOODTYPE_PASTRY (14):             This item is a Pastry.
+* FOODTYPE_STEW (15):               This item is Stew.
+* FOODTYPE_CHEESEBOWL (16):         This item is a Cheese Bowl.
+* DRINKTYPE_MILK (17):              This item is Milk.
+* DRINKTYPE_ALCOHOLIC (18):         This item is an Alcoholic Drink.
+* DRINKTYPE_NONALCOHOLIC (19):      This item is a Non-Alcoholic Drink.
 *
 * EXAMPLES
 ;Is the spongecake a bread, or a treat?
 int result = SeedUtil.GetFoodType(cake)
-if result == 1
+if result == SeedUtil.FOODTYPE_BREAD
     Debug.trace("It's bread!")
-elseif result == 13
+elseif result == SeedUtil.FOODTYPE_TREAT
     Debug.trace("It's a treat!")
 endif
 ;*********/;
@@ -215,32 +238,32 @@ function SetFoodType(Potion akFood, int aiType) global
 * PARAMETERS
 * akFood: The food to set the type of.
 * aiType: The food's type. See below.
-* 1:    This item is Bread.
-* 2:    This item is Large Meat (Raw).
-* 3:    This item is Large Meat (Cooked).
-* 4:    This item is Small Game (Raw).
-* 5:    This item is Small Game (Cooked).
-* 6:    This item is Fish (Raw).
-* 7:    This item is Fish (Cooked).
-* 8:    This item is Seafood (Raw).
-* 9:    This item is Seafood (Cooked).
-* 10:   This item is a Vegetable.
-* 11:   This item is Fruit.
-* 12:   This item is Cheese (sliced, unpreserved).
-* 13:   This item is a Treat.
-* 14:   This item is a Pastry.
-* 15:   This item is Stew.
-* 16:   This item is a Cheese Bowl.
-* 17:   This item is Milk.
-* 18:   This item is an Alcoholic Drink.
-* 19:   This item is a Non-Alcoholic Drink.
+* FOODTYPE_BREAD (1):               This item is Bread.
+* FOODTYPE_MEAT_RAW (2):            This item is Large Meat (Raw).
+* FOODTYPE_MEAT_COOKED (3):         This item is Large Meat (Cooked).
+* FOODTYPE_SMALLGAME_RAW (4):       This item is Small Game (Raw).
+* FOODTYPE_SMALLGAME_COOKED (5):    This item is Small Game (Cooked).
+* FOODTYPE_FISH_RAW (6):            This item is Fish (Raw).
+* FOODTYPE_FISH_COOKED (7):         This item is Fish (Cooked).
+* FOODTYPE_SEAFOOD_RAW (8):         This item is Seafood (Raw).
+* FOODTYPE_SEAFOOD_COOKED (9):      This item is Seafood (Cooked).
+* FOODTYPE_VEGETABLE (10):          This item is a Vegetable.
+* FOODTYPE_FRUIT (11):              This item is Fruit.
+* FOODTYPE_CHEESE (12):             This item is Cheese (sliced, unpreserved).
+* FOODTYPE_TREAT (13):              This item is a Treat.
+* FOODTYPE_PASTRY (14):             This item is a Pastry.
+* FOODTYPE_STEW (15):               This item is Stew.
+* FOODTYPE_CHEESEBOWL (16):         This item is a Cheese Bowl.
+* DRINKTYPE_MILK (17):              This item is Milk.
+* DRINKTYPE_ALCOHOLIC (18):         This item is an Alcoholic Drink.
+* DRINKTYPE_NONALCOHOLIC (19):      This item is a Non-Alcoholic Drink.
 *
 * RETURN VALUE
 * None.
 *
 * EXAMPLES
 ;Set the spongecake as a treat.
-SeedUtil.SetFoodType(cake, 13)
+SeedUtil.SetFoodType(cake, SeedUtil.FOODTYPE_TREAT)
 * NOTES
 * * The type of base game food (from Skyrim and any DLC)
 * cannot be set to a different value.
@@ -378,10 +401,10 @@ SeedUtil.SetFoodPreserved(waffle, false)
     LastSeedAPI LastSeed = GetAPI()
     if LastSeed == none
         RaiseSeedAPIError()
-        return false
+        return
     endif
 
-    return LastSeed.FoodDatastore.SetFoodPreserved(akFood, abIsPreserved)
+    LastSeed.FoodDatastore.SetFoodPreserved(akFood, abIsPreserved)
 endFunction
 
 

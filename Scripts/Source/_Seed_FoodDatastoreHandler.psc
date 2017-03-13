@@ -10,30 +10,8 @@ scriptname _Seed_FoodDatastoreHandler extends Quest
 	the pattern [WholeFood, ResultFood, QuantityFood, ...]
 /;
 
+import SeedUtil
 import _SeedInternal
-
-
-; Food ID Enum
-int property FOOD_BREAD				= 1		autoReadOnly
-int property FOOD_MEAT_RAW 			= 2 	autoReadOnly
-int property FOOD_MEAT_COOKED 		= 3 	autoReadOnly
-int property FOOD_SMALLGAME_RAW 	= 4 	autoReadOnly
-int property FOOD_SMALLGAME_COOKED 	= 5 	autoReadOnly
-int property FOOD_FISH_RAW 			= 6 	autoReadOnly
-int property FOOD_FISH_COOKED 		= 7 	autoReadOnly
-int property FOOD_SEAFOOD_RAW 		= 8 	autoReadOnly
-int property FOOD_SEAFOOD_COOKED 	= 9 	autoReadOnly
-int property FOOD_VEGETABLE 		= 10 	autoReadOnly
-int property FOOD_FRUIT 			= 11 	autoReadOnly
-int property FOOD_CHEESE 			= 12 	autoReadOnly
-int property FOOD_TREAT 			= 13 	autoReadOnly
-int property FOOD_PASTRY 			= 14 	autoReadOnly
-int property FOOD_STEW 				= 15 	autoReadOnly
-int property FOOD_CHEESEBOWL		= 16	autoReadOnly
-int property DRINK_MILK				= 17	autoReadOnly
-int property DRINK_ALCOHOLIC		= 18	autoReadOnly
-int property DRINK_NONALCOHOLIC		= 19	autoReadOnly
-int property FOOD_PRESERVED 		= 20 	autoReadOnly
 
 FormList[] property foodLists auto hidden
 FormList property _Seed_Bread auto
@@ -81,8 +59,7 @@ int function IdentifyFood(Potion food)
 	;	n: Food Type (see Food IDs)
 
 	int i = 0
-	int len = foodLists.Length - 1	; Don't check preserved foods.
-	while i < len
+	while i < foodLists.Length
 		if foodLists[i].HasForm(food)
 			return i + 1
 		else
@@ -125,7 +102,7 @@ bool function IsFoodPreserved(Potion food)
 	endif
 endFunction
 
-bool function SetFoodPreserved(Potion food, bool abIsPreserved = true)
+function SetFoodPreserved(Potion food, bool abIsPreserved = true)
 	; Sets the preservation state of the food.
 
 	if abIsPreserved
@@ -260,7 +237,7 @@ function InitializeArrays()
 	multiPartFoodData7 = new Potion[128]
 	multiPartFoodData8 = new Potion[128]
 
-	foodLists = new FormList[20]
+	foodLists = new FormList[19]
 	foodLists[0] = _Seed_Bread
 	foodLists[1] = _Seed_MeatRaw
 	foodLists[2] = _Seed_MeatCooked
@@ -280,7 +257,6 @@ function InitializeArrays()
 	foodLists[16] = _Seed_DrinkMilk
 	foodLists[17] = _Seed_DrinkAlcoholic
 	foodLists[18] = _Seed_DrinkNonAlcoholic
-	foodLists[19] = _Seed_Preserved
 endFunction
 
 ;/
