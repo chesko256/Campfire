@@ -147,6 +147,242 @@ bool isFocused = SeedUtil.IsPlayerFocused()
     endif
 endFunction
 
+;/********f* SeedUtil/GetFoodType
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Returns this food's type, if any.
+*
+* SYNTAX
+*/;
+int function GetFoodType(Potion akFood) global
+;/*
+* PARAMETERS
+* akFood: The form to check.
+*
+* RETURN VALUE
+* 0: This item is not food, or has no known type.
+* 1: This item is Bread.
+* 2: This item is Large Meat (Raw).
+* 3: This item is Large Meat (Cooked).
+* 4: This item is Small Game (Raw).
+* 5: This item is Small Game (Cooked).
+* 6: This item is Fish (Raw).
+* 7: This item is Fish (Cooked).
+* 8: This item is Seafood (Raw).
+* 9: This item is Seafood (Cooked).
+* 10: This item is a Vegetable.
+* 11: This item is Fruit.
+* 12: This item is Cheese (sliced, unpreserved).
+* 13: This item is a Treat.
+* 14: This item is a Pastry.
+* 15: This item is Stew.
+* 16: This item is a Cheese Bowl.
+* 17: This item is Milk.
+* 18: This item is an Alcoholic Drink.
+* 19: This item is a Non-Alcoholic Drink.
+*
+* EXAMPLES
+;Is the spongecake a bread, or a treat?
+int result = SeedUtil.GetFoodType(cake)
+if result == 1
+    Debug.trace("It's bread!")
+elseif result == 13
+    Debug.trace("It's a treat!")
+endif
+;*********/;
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return -1
+    endif
+
+    return LastSeed.FoodDatastore.IdentifyFood(akFood)
+endFunction
+
+;/********f* SeedUtil/SetFoodType
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Sets the food's identity to the provided type.
+*
+* SYNTAX
+*/;
+function SetFoodType(Potion akFood, int aiType) global
+;/*
+* PARAMETERS
+* akFood: The food to set the type of.
+* aiType: The food's type. See below.
+* 1:    This item is Bread.
+* 2:    This item is Large Meat (Raw).
+* 3:    This item is Large Meat (Cooked).
+* 4:    This item is Small Game (Raw).
+* 5:    This item is Small Game (Cooked).
+* 6:    This item is Fish (Raw).
+* 7:    This item is Fish (Cooked).
+* 8:    This item is Seafood (Raw).
+* 9:    This item is Seafood (Cooked).
+* 10:   This item is a Vegetable.
+* 11:   This item is Fruit.
+* 12:   This item is Cheese (sliced, unpreserved).
+* 13:   This item is a Treat.
+* 14:   This item is a Pastry.
+* 15:   This item is Stew.
+* 16:   This item is a Cheese Bowl.
+* 17:   This item is Milk.
+* 18:   This item is an Alcoholic Drink.
+* 19:   This item is a Non-Alcoholic Drink.
+*
+* RETURN VALUE
+* None.
+*
+* EXAMPLES
+;Set the spongecake as a treat.
+SeedUtil.SetFoodType(cake, 13)
+* NOTES
+* * The type of base game food (from Skyrim and any DLC)
+* cannot be set to a different value.
+* * Do not set a single food to multiple types. The system
+* does not check if a food is already set as a different type.
+* If the food had its type set via script previously, use
+* SeedUtil.UnsetFoodType() first, and then set the new type.
+;*********/;
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return
+    endif
+
+    LastSeed.FoodDatastore.AddFoodIdentity(akFood, aiType)
+endFunction
+
+;/********f* SeedUtil/UnsetFoodType
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Unsets the food's identity from the provided type.
+*
+* SYNTAX
+*/;
+function UnsetFoodType(Potion akFood, int aiType) global
+;/*
+* PARAMETERS
+* akFood: The food to unset the type of.
+* aiType: The food's current type. See below.
+* 1:    This item is Bread.
+* 2:    This item is Large Meat (Raw).
+* 3:    This item is Large Meat (Cooked).
+* 4:    This item is Small Game (Raw).
+* 5:    This item is Small Game (Cooked).
+* 6:    This item is Fish (Raw).
+* 7:    This item is Fish (Cooked).
+* 8:    This item is Seafood (Raw).
+* 9:    This item is Seafood (Cooked).
+* 10:   This item is a Vegetable.
+* 11:   This item is Fruit.
+* 12:   This item is Cheese (sliced, unpreserved).
+* 13:   This item is a Treat.
+* 14:   This item is a Pastry.
+* 15:   This item is Stew.
+* 16:   This item is a Cheese Bowl.
+* 17:   This item is Milk.
+* 18:   This item is an Alcoholic Drink.
+* 19:   This item is a Non-Alcoholic Drink.
+*
+* RETURN VALUE
+* None.
+*
+* EXAMPLES
+;Unset the spongecake as a treat.
+SeedUtil.UnsetFoodType(cake, 13)
+* NOTES
+* The type of base game food (from Skyrim and any DLC)
+* cannot be unset.
+;*********/;
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return
+    endif
+
+    LastSeed.FoodDatastore.RemoveFoodIdentity(akFood, aiType)
+endFunction
+
+;/********f* SeedUtil/IsFoodPreserved
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Whether or not the food is "preserved" (does not spoil).
+*
+* SYNTAX
+*/;
+bool function IsFoodPreserved(Potion akFood) global
+;/*
+* PARAMETERS
+* akFood: The food to check.
+*
+* RETURN VALUE
+* True:     The food is preserved and does not spoil.
+* False:    The food is not preserved and will spoil, 
+*           if that setting is enabled.
+*
+* EXAMPLES
+Debug.trace("Will the twinkie ever spoil?")
+bool result = SeedUtil.IsFoodPreserved(twinkie)
+if result == false
+    Debug.trace("Guess not.")
+endif
+;*********/;
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return false
+    endif
+
+    return LastSeed.FoodDatastore.IsFoodPreserved(akFood)
+endFunction
+
+;/********f* SeedUtil/SetFoodPreserved
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Set whether or not the food is preserved.
+*
+* SYNTAX
+*/;
+function SetFoodPreserved(Potion akFood, bool abIsPreserved = true) global
+;/*
+* PARAMETERS
+* akFood: The food to set.
+* abIsPreserved (optional): Whether or not the food is
+*                           preserved. Default: True.
+*
+* RETURN VALUE
+* None.
+*
+* EXAMPLES
+;Set the spongecake to never spoil.
+SeedUtil.SetFoodPreserved(cake)
+
+;Set the waffle to spoil (if previously set to spoil).
+SeedUtil.SetFoodPreserved(waffle, false)
+* NOTES
+* Food defaults to not being preserved; there is no need to call
+* this function to mark it as "not preserved".
+;*********/;
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return false
+    endif
+
+    return LastSeed.FoodDatastore.SetFoodPreserved(akFood, abIsPreserved)
+endFunction
 
 
 ;/********f* SeedUtil/IsKnownFood

@@ -81,7 +81,8 @@ int function IdentifyFood(Potion food)
 	;	n: Food Type (see Food IDs)
 
 	int i = 0
-	while i < foodLists.Length
+	int len = foodLists.Length - 1	; Don't check preserved foods.
+	while i < len
 		if foodLists[i].HasForm(food)
 			return i + 1
 		else
@@ -91,12 +92,47 @@ int function IdentifyFood(Potion food)
 	return 0
 endFunction
 
-function AddFoodToCategory(Potion food, int foodId)
-	; Adds a food to a category list. Uses the Food ID enum
-	; as the foodId.
+function AddFoodIdentity(Potion food, int foodId)
+	; Adds a food to a category. Uses the Food ID enum
+	; as the foodId. Also removes it from any other category.
+
+	if foodId < 1 || foodId > 19
+		SeedDebug(3, "Attempted to set food " + food + " to type " + foodId + ", which is an invalid type.")
+		SeedDebug(3, "If you are the author of the mod that used AddFoodIdentity(), check the food type in your code.")
+		return
+	endif
 
 	int idx = foodId - 1
 	foodLists[idx].AddForm(food)
+	SeedDebug(1, "Set food " + food + " as type " + foodId)
+endFunction
+
+function RemoveFoodIdentity(Potion food, int foodId)
+	; Removes a food from a category.
+
+	int idx = foodId - 1
+	foodLists[idx].RemoveAddedForm(food)
+	SeedDebug(1, "Unset food " + food + " from type " + foodId)
+endFunction
+
+bool function IsFoodPreserved(Potion food)
+	; Returns whether or not the food is preserved.
+
+	if _Seed_Preserved.HasForm(food)
+		return true
+	else
+		return false
+	endif
+endFunction
+
+bool function SetFoodPreserved(Potion food, bool abIsPreserved = true)
+	; Sets the preservation state of the food.
+
+	if abIsPreserved
+		_Seed_Preserved.AddForm(food)
+	else
+		_Seed_Preserved.RemoveAddedForm(food)
+	endif
 endFunction
 
 function AddUpdateMultiPartFood(Potion akWholeFood, Potion akResultFood, int aiQuantity)
