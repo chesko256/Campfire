@@ -30,8 +30,10 @@ int property FOOD_TREAT 			= 13 	autoReadOnly
 int property FOOD_PASTRY 			= 14 	autoReadOnly
 int property FOOD_STEW 				= 15 	autoReadOnly
 int property FOOD_CHEESEBOWL		= 16	autoReadOnly
-int property FOOD_MILK				= 17	autoReadOnly
-int property FOOD_PRESERVED 		= 18 	autoReadOnly
+int property DRINK_MILK				= 17	autoReadOnly
+int property DRINK_ALCOHOLIC		= 18	autoReadOnly
+int property DRINK_NONALCOHOLIC		= 19	autoReadOnly
+int property FOOD_PRESERVED 		= 20 	autoReadOnly
 
 FormList[] property foodLists auto hidden
 FormList property _Seed_Bread auto
@@ -50,7 +52,9 @@ FormList property _Seed_Treats auto
 FormList property _Seed_Pastries auto
 FormList property _Seed_Stews auto
 FormList property _Seed_CheeseBowls auto
-FormList property _Seed_Milk auto
+FormList property _Seed_DrinkMilk auto
+FormList property _Seed_DrinkAlcoholic auto
+FormList property _Seed_DrinkNonAlcoholic auto
 FormList property _Seed_Preserved auto
 
 Potion property _Seed_Quantity2 auto
@@ -220,7 +224,7 @@ function InitializeArrays()
 	multiPartFoodData7 = new Potion[128]
 	multiPartFoodData8 = new Potion[128]
 
-	foodLists = new FormList[14]
+	foodLists = new FormList[20]
 	foodLists[0] = _Seed_Bread
 	foodLists[1] = _Seed_MeatRaw
 	foodLists[2] = _Seed_MeatCooked
@@ -237,8 +241,10 @@ function InitializeArrays()
 	foodLists[13] = _Seed_Pastries
 	foodLists[14] = _Seed_Stews
 	foodLists[15] = _Seed_CheeseBowls
-	foodLists[16] = _Seed_Milk
-	foodLists[17] = _Seed_Preserved
+	foodLists[16] = _Seed_DrinkMilk
+	foodLists[17] = _Seed_DrinkAlcoholic
+	foodLists[18] = _Seed_DrinkNonAlcoholic
+	foodLists[19] = _Seed_Preserved
 endFunction
 
 ;/
