@@ -359,6 +359,8 @@ bool result = SeedUtil.IsFoodPreserved(twinkie)
 if result == false
     Debug.trace("Guess not.")
 endif
+* NOTES
+* Drinks of type Alcoholic and Non-Alcoholic always return 'true'.
 ;*********/;
     LastSeedAPI LastSeed = GetAPI()
     if LastSeed == none
@@ -407,6 +409,50 @@ SeedUtil.SetFoodPreserved(waffle, false)
     LastSeed.FoodDatastore.SetFoodPreserved(akFood, abIsPreserved)
 endFunction
 
+;/********f* SeedUtil/GetFoodMaxPerishDurationByType
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Whether or not the food is "preserved" (does not spoil).
+*
+* SYNTAX
+*/;
+int function GetFoodMaxPerishDurationByType(int aiFoodType) global
+;/*
+* PARAMETERS
+* aiFoodType: The food type to check. -1 indicates an invalid type, or this food does not spoil.
+*
+* RETURN VALUE
+* The duration (in hours) it takes this type of food to spoil to the next stage.
+*
+* EXAMPLES
+Debug.trace("How many hours does it take raw fish to spoil?")
+int result = SeedUtil.GetFoodMaxPerishDurationByType(6)
+;*********/;
+    
+    if aiFoodType < 1 || aiFoodType > 17
+        return -1
+    endif
+
+    int t = aiFoodType
+
+    if t == 2 || t == 4 || t == 6 || t == 8
+        ; Raw meat, game, fish, and seafood
+        return 24
+    elseif t == 3 || t == 5 || t == 7 || t == 9
+        ; Cooked meat, game, fish, and seafood
+        return 60
+    elseif t == 1 || t == 10 || t == 11 || t == 12 || t == 14 || t == 16 || t == 17
+        ; Bread, vegetables, fruit, cheese, pastries, cheese bowls, and milk
+        return 120
+    elseif t == 13 || t == 15
+        ; Treats and stews
+        return 168
+    endif
+
+    return -1
+endFunction
 
 ;/********f* SeedUtil/IsKnownFood
 * API VERSION ADDED

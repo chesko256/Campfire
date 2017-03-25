@@ -14,6 +14,9 @@ import SeedUtil
 import _SeedInternal
 
 FormList[] property foodLists auto hidden
+Potion[] property spoiledVersions auto hidden
+FormList property _Seed_SpoiledFoods auto
+
 FormList property _Seed_Bread auto
 FormList property _Seed_MeatRaw auto
 FormList property _Seed_MeatCooked auto
@@ -46,6 +49,25 @@ Potion[] multiPartFoodData5
 Potion[] multiPartFoodData6
 Potion[] multiPartFoodData7
 Potion[] multiPartFoodData8
+
+Potion property _Seed_Spoiled_Bread auto
+Potion property _Seed_Spoiled_MeatRaw auto
+Potion property _Seed_Spoiled_MeatCooked auto
+Potion property _Seed_Spoiled_SmallGameRaw auto
+Potion property _Seed_Spoiled_SmallGameCooked auto
+Potion property _Seed_Spoiled_FishRaw auto
+Potion property _Seed_Spoiled_FishCooked auto
+Potion property _Seed_Spoiled_SeafoodRaw auto
+Potion property _Seed_Spoiled_SeafoodCooked auto
+Potion property _Seed_Spoiled_Vegetables auto
+Potion property _Seed_Spoiled_Fruit auto
+Potion property _Seed_Spoiled_Cheese auto
+Potion property _Seed_Spoiled_Treats auto
+Potion property _Seed_Spoiled_Pastries auto
+Potion property _Seed_Spoiled_Stews auto
+Potion property _Seed_Spoiled_CheeseBowls auto
+Potion property _Seed_Spoiled_DrinkMilk auto
+MiscObject property _Seed_PerishedFood auto
 
 ;/
 	Public Functions
@@ -110,6 +132,24 @@ function SetFoodPreserved(Potion food, bool abIsPreserved = true)
 	else
 		_Seed_Preserved.RemoveAddedForm(food)
 	endif
+endFunction
+
+Form function GetSpoiledVersion(Potion food, int aiType = -1)
+	if _Seed_SpoiledFoods.HasForm(food)
+		return _Seed_PerishedFood
+	endif
+
+	int typeIndex
+	if aiType != -1
+		typeIndex = aiType - 1
+	else
+		aiType = IdentifyFood(food) - 1
+		if typeIndex < 0
+			return None
+		endif
+	endif
+
+	return spoiledVersions[typeIndex]
 endFunction
 
 function AddUpdateMultiPartFood(Potion akWholeFood, Potion akResultFood, int aiQuantity)
@@ -257,6 +297,27 @@ function InitializeArrays()
 	foodLists[16] = _Seed_DrinkMilk
 	foodLists[17] = _Seed_DrinkAlcoholic
 	foodLists[18] = _Seed_DrinkNonAlcoholic
+
+	spoiledVersions = new Potion[19]
+	spoiledVersions[0] = _Seed_Spoiled_Bread
+	spoiledVersions[1] = _Seed_Spoiled_MeatRaw
+	spoiledVersions[2] = _Seed_Spoiled_MeatCooked
+	spoiledVersions[3] = _Seed_Spoiled_SmallGameRaw
+	spoiledVersions[4] = _Seed_Spoiled_SmallGameCooked
+	spoiledVersions[5] = _Seed_Spoiled_FishRaw
+	spoiledVersions[6] = _Seed_Spoiled_FishCooked
+	spoiledVersions[7] = _Seed_Spoiled_SeafoodRaw
+	spoiledVersions[8] = _Seed_Spoiled_SeafoodCooked
+	spoiledVersions[9] = _Seed_Spoiled_Vegetables
+	spoiledVersions[10] = _Seed_Spoiled_Fruit
+	spoiledVersions[11] = _Seed_Spoiled_Cheese
+	spoiledVersions[12] = _Seed_Spoiled_Treats
+	spoiledVersions[13] = _Seed_Spoiled_Pastries
+	spoiledVersions[14] = _Seed_Spoiled_Stews
+	spoiledVersions[15] = _Seed_Spoiled_CheeseBowls
+	spoiledVersions[16] = _Seed_Spoiled_DrinkMilk
+	spoiledVersions[17] = None
+	spoiledVersions[18] = None
 endFunction
 
 ;/

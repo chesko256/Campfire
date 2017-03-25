@@ -17,8 +17,6 @@ scriptname _Seed_SpoilSystem extends _Seed_BaseSystem
 
 ObjectReference property _Seed_ProvisionsContainerRef auto
 
-
-
 function InitializeSystem()
 
 endFunction
