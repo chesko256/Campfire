@@ -54,16 +54,14 @@ Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRefe
 		if foodType > 0 && !isPreserved
 			int remaining = aiItemCount
 			int i = TrackingList.GetSize() - 1
-			while remaining > 0 && i > 0
+			while remaining > 0 && i >= 0
 				ObjectReference ref = TrackingList.GetAt(i) as ObjectReference
 				if (ref as _Seed_PerishableFoodTrackerScript).Food == akBaseItem
 					_Seed_PerishableFoodTrackerScript tracker = ref as _Seed_PerishableFoodTrackerScript
 
 					int amountRemoved = tracker.ReduceQuantity(remaining) ; remove the quantity (the function returns the number actually removed and deletes itself if necessary)
 					remaining -= amountRemoved
-					if remaining <= 0
-					; remove the tracker from the list(?)
-					else
+					if remaining > 0
 						i -= 1
 					endif
 				else
