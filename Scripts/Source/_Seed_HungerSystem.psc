@@ -21,7 +21,7 @@ scriptname _Seed_HungerSystem extends _Seed_AttributeSystem
         Immune: Immune.
 /;
 
-import CampUtil
+import CampUtil 
 import _SeedInternal
 
 Spell property HungerSpell1 auto
