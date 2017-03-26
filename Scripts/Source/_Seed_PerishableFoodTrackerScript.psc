@@ -22,6 +22,14 @@ Event OnUpdateGameTime()
 	; Random back-off for load reduction
 	Wait(RandomFloat(1.0, 3.0))
 
+	; @TEST
+	; Does the Food still exist? (Mod that adds this food
+	; could have been uninstalled)
+	if !Food
+		DeleteTracker()
+		return
+	endif
+
 	AdvanceSpoilage()
 
 	if CurrentPerishHours >= MaxPerishHours
