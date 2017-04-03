@@ -1,12 +1,22 @@
 scriptname _Seed_ThirstSystem extends _Seed_AttributeSystem
+;/
+    Levels of Thirst:
+
+    Things that affect thirst:
+
+    Update frequency: Every 30 in-game minutes
+
+    Vampire Behavior:
+        Mortal: As normal.
+        Supernatural: As normal.
+        Immune: Immune.
+/;
 
 ;@TODO: Catch frost spell damage, which reduces stamina
 ;@TODO: Look for other sources of stamina damage
 
-GlobalVariable property _Seed_ThirstSystemEnabled auto
-
 ;@TODO: Is this going to be used?
-; GlobalVariable property _Seed_ThirstActionRate auto         ; Default - 0.25
+GlobalVariable property _Seed_ThirstActionRate auto         ; Default - 0.25
 
 Spell property _Seed_ThirstSpell1 auto
 Spell property _Seed_ThirstSpell2 auto
@@ -23,8 +33,6 @@ Message property _Seed_ThirstLevel5Msg auto
 Message property _Seed_ThirstLevel6Msg auto
 
 Quest property _Seed_ThirstMeterQuest auto
-
-GlobalVariable property _Seed_ThirstActionRate auto
 
 ;
 ; Events
@@ -51,13 +59,17 @@ function StartSystem()
 
     ;@TODO: ISMs
 
+    RegisterForEvents()
+
+    ; Apply initial condition.
+    IncreaseAttribute(attributeValueGlobal, 0.01)
+endFunction
+
+function RegisterForEvents()
     ; Register for sprinting and jumping.
     RegisterForControl("Sprint")
     RegisterForAnimationEvent(PlayerRef, "PowerAttackStop")
     RegisterForAnimationEvent(PlayerRef, "00NextClip")
-
-    ; Apply initial condition.
-    IncreaseAttribute(attributeValueGlobal, 0.01)
 endFunction
 
 ;
@@ -109,27 +121,3 @@ Event OnUpdate()
 		    debug.trace("[Seed] (Thirst) Player Sprinting End")
     endif
 EndEvent
-
-function IncreaseAttribute(GlobalVariable attribute, float amount)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.IncreaseAttribute(attribute, amount)
-endFunction
-
-function DecreaseAttribute(GlobalVariable attribute, float amount)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.DecreaseAttribute(attribute, amount)    
-endFunction
-    
-function ChangeAttributeOverTime(GlobalVariable attribute, GlobalVariable rate)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.ChangeAttributeOverTime(attribute, rate)
-endFunction
-
-function ModAttribute(GlobalVariable attribute, float amount)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.ModAttribute(attribute, amount)
-endFunction

@@ -70,9 +70,79 @@ Potion property _Seed_Spoiled_DrinkMilk auto
 MiscObject property _Seed_PerishedFood auto
 
 ;/
-	Public Functions
+	System Management
 /;
 
+function StartSystem()
+	if !self.IsRunning()
+		self.Start()
+	endif
+	InitializeArrays()
+	; CreateFoodKeywordValueMaps()
+endFunction
+
+function StopSystem()
+	if self.IsRunning()
+		self.Stop()
+	endif
+endFunction
+
+function InitializeArrays()
+	multiPartFoodData1 = new Potion[128]
+	multiPartFoodData2 = new Potion[128]
+	multiPartFoodData3 = new Potion[128]
+	multiPartFoodData4 = new Potion[128]
+	multiPartFoodData5 = new Potion[128]
+	multiPartFoodData6 = new Potion[128]
+	multiPartFoodData7 = new Potion[128]
+	multiPartFoodData8 = new Potion[128]
+
+	foodLists = new FormList[19]
+	foodLists[0] = _Seed_Bread
+	foodLists[1] = _Seed_MeatRaw
+	foodLists[2] = _Seed_MeatCooked
+	foodLists[3] = _Seed_SmallGameRaw
+	foodLists[4] = _Seed_SmallGameCooked
+	foodLists[5] = _Seed_FishRaw
+	foodLists[6] = _Seed_FishCooked
+	foodLists[7] = _Seed_SeafoodRaw
+	foodLists[8] = _Seed_SeafoodCooked
+	foodLists[9] = _Seed_Vegetables
+	foodLists[10] = _Seed_Fruit
+	foodLists[11] = _Seed_Cheese
+	foodLists[12] = _Seed_Treats
+	foodLists[13] = _Seed_Pastries
+	foodLists[14] = _Seed_Stews
+	foodLists[15] = _Seed_CheeseBowls
+	foodLists[16] = _Seed_DrinkMilk
+	foodLists[17] = _Seed_DrinkAlcoholic
+	foodLists[18] = _Seed_DrinkNonAlcoholic
+
+	spoiledVersions = new Potion[19]
+	spoiledVersions[0] = _Seed_Spoiled_Bread
+	spoiledVersions[1] = _Seed_Spoiled_MeatRaw
+	spoiledVersions[2] = _Seed_Spoiled_MeatCooked
+	spoiledVersions[3] = _Seed_Spoiled_SmallGameRaw
+	spoiledVersions[4] = _Seed_Spoiled_SmallGameCooked
+	spoiledVersions[5] = _Seed_Spoiled_FishRaw
+	spoiledVersions[6] = _Seed_Spoiled_FishCooked
+	spoiledVersions[7] = _Seed_Spoiled_SeafoodRaw
+	spoiledVersions[8] = _Seed_Spoiled_SeafoodCooked
+	spoiledVersions[9] = _Seed_Spoiled_Vegetables
+	spoiledVersions[10] = _Seed_Spoiled_Fruit
+	spoiledVersions[11] = _Seed_Spoiled_Cheese
+	spoiledVersions[12] = _Seed_Spoiled_Treats
+	spoiledVersions[13] = _Seed_Spoiled_Pastries
+	spoiledVersions[14] = _Seed_Spoiled_Stews
+	spoiledVersions[15] = _Seed_Spoiled_CheeseBowls
+	spoiledVersions[16] = _Seed_Spoiled_DrinkMilk
+	spoiledVersions[17] = None
+	spoiledVersions[18] = None
+endFunction
+
+;/
+	Public Functions
+/;
 int function IdentifyFood(Potion food)
 	;@TODO: Check keywords first
 
@@ -247,77 +317,6 @@ int function GetMultiPartFoodQuantityFromIndex(int aiWholeFoodIndex)
 	elseif quantity == _Seed_Quantity8
 		return 8
 	endif
-endFunction
-
-;/
-	System Management
-/;
-
-function StartSystem()
-	if !self.IsRunning()
-		self.Start()
-	endif
-	InitializeArrays()
-	; CreateFoodKeywordValueMaps()
-endFunction
-
-function StopSystem()
-	if self.IsRunning()
-		self.Stop()
-	endif
-endFunction
-
-function InitializeArrays()
-	multiPartFoodData1 = new Potion[128]
-	multiPartFoodData2 = new Potion[128]
-	multiPartFoodData3 = new Potion[128]
-	multiPartFoodData4 = new Potion[128]
-	multiPartFoodData5 = new Potion[128]
-	multiPartFoodData6 = new Potion[128]
-	multiPartFoodData7 = new Potion[128]
-	multiPartFoodData8 = new Potion[128]
-
-	foodLists = new FormList[19]
-	foodLists[0] = _Seed_Bread
-	foodLists[1] = _Seed_MeatRaw
-	foodLists[2] = _Seed_MeatCooked
-	foodLists[3] = _Seed_SmallGameRaw
-	foodLists[4] = _Seed_SmallGameCooked
-	foodLists[5] = _Seed_FishRaw
-	foodLists[6] = _Seed_FishCooked
-	foodLists[7] = _Seed_SeafoodRaw
-	foodLists[8] = _Seed_SeafoodCooked
-	foodLists[9] = _Seed_Vegetables
-	foodLists[10] = _Seed_Fruit
-	foodLists[11] = _Seed_Cheese
-	foodLists[12] = _Seed_Treats
-	foodLists[13] = _Seed_Pastries
-	foodLists[14] = _Seed_Stews
-	foodLists[15] = _Seed_CheeseBowls
-	foodLists[16] = _Seed_DrinkMilk
-	foodLists[17] = _Seed_DrinkAlcoholic
-	foodLists[18] = _Seed_DrinkNonAlcoholic
-
-	spoiledVersions = new Potion[19]
-	spoiledVersions[0] = _Seed_Spoiled_Bread
-	spoiledVersions[1] = _Seed_Spoiled_MeatRaw
-	spoiledVersions[2] = _Seed_Spoiled_MeatCooked
-	spoiledVersions[3] = _Seed_Spoiled_SmallGameRaw
-	spoiledVersions[4] = _Seed_Spoiled_SmallGameCooked
-	spoiledVersions[5] = _Seed_Spoiled_FishRaw
-	spoiledVersions[6] = _Seed_Spoiled_FishCooked
-	spoiledVersions[7] = _Seed_Spoiled_SeafoodRaw
-	spoiledVersions[8] = _Seed_Spoiled_SeafoodCooked
-	spoiledVersions[9] = _Seed_Spoiled_Vegetables
-	spoiledVersions[10] = _Seed_Spoiled_Fruit
-	spoiledVersions[11] = _Seed_Spoiled_Cheese
-	spoiledVersions[12] = _Seed_Spoiled_Treats
-	spoiledVersions[13] = _Seed_Spoiled_Pastries
-	spoiledVersions[14] = _Seed_Spoiled_Stews
-	spoiledVersions[15] = _Seed_Spoiled_CheeseBowls
-	spoiledVersions[16] = _Seed_Spoiled_DrinkMilk
-	spoiledVersions[17] = None
-	spoiledVersions[18] = None
 endFunction
 
 ;/

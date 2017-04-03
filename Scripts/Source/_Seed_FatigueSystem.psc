@@ -58,12 +58,16 @@ function StartSystem()
 
     ;@TODO: ISMs
 
-    ; Register for archery attacks and lockpicking.
-    RegisterForTrackedStatsEvent()
-    RegisterForActorAction(6)
+    RegisterForEvents()
 
     ; Apply initial condition.
     IncreaseAttribute(attributeValueGlobal, 0.01)
+endFunction
+
+function RegisterForEvents()
+    ; Register for archery attacks and lockpicking.
+    RegisterForTrackedStatsEvent()
+    RegisterForActorAction(6)
 endFunction
 
 ;

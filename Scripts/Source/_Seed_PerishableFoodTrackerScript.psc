@@ -75,6 +75,8 @@ function DeleteTracker()
 endFunction
 
 int function ReduceQuantity(int aiAmountRequested)
+	; Returns the amount actually removed.
+	
 	if aiAmountRequested >= Quantity
 		int amountRemoved = Quantity
 		Quantity = 0

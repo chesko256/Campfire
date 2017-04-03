@@ -1374,7 +1374,6 @@ function RegisterForEventsOnLoad()
 	GetExposureMeterHandler().RegisterForEvents()
 	GetWetnessMeterHandler().RegisterForEvents()
 	GetWeathersenseMeterHandler().RegisterForEvents()
-
 endFunction
 
 function RegisterForMenusOnLoad()

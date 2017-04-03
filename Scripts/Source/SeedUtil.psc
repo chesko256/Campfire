@@ -1,7 +1,7 @@
 scriptname SeedUtil hidden
 
 LastSeedAPI function GetAPI() global
-    return (Game.GetFormFromFile(0x0, "LastSeed.esp") as Quest) as LastSeedAPI
+    return (Game.GetFormFromFile(0x0000B16A, "LastSeed.esp") as Quest) as LastSeedAPI
 endFunction
 
 ; Public Enums ====================================================================================
@@ -74,6 +74,24 @@ _Seed_FoodDatastoreHandler function GetFoodDatastoreHandler() global
         return none
     endif
     return LastSeed.FoodDatastore
+endFunction
+
+_Seed_Compatibility function GetCompatibilitySystem() global
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return none
+    endif
+    return LastSeed.Compatibility
+endFunction
+
+FallbackEventEmitter function GetEventEmitter_LastSeedLoaded() global
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return none
+    endif
+    return LastSeed.EventEmitter_LastSeedLoaded as FallbackEventEmitter
 endFunction
 
 ; Public Functions ================================================================================

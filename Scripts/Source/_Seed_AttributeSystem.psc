@@ -216,6 +216,10 @@ function ApplyAttributeLevel(int level, bool forceMeter = false)
     endif
 endFunction
 
+function RegisterForEvents()
+	; Extend
+endFunction
+
 ;@NOFALLBACK
 function SendEvent_UpdateAttributeMeter()
 	if GetSKSELoaded()

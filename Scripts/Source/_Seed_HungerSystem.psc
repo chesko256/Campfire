@@ -77,12 +77,16 @@ function StartSystem()
     attributeISMs[4] = HungerISM5
     attributeISMs[5] = HungerISM6
 
-    ; Register for power attacks.
-    RegisterForAnimationEvent(PlayerRef, "PowerAttackStop")
-    RegisterForAnimationEvent(PlayerRef, "00NextClip")
+    RegisterForEvents()
 
     ; Apply initial condition.
     IncreaseAttribute(attributeValueGlobal, 0.01)
+endFunction
+
+function RegisterForEvents()
+    ; Register for power attacks.
+    RegisterForAnimationEvent(PlayerRef, "PowerAttackStop")
+    RegisterForAnimationEvent(PlayerRef, "00NextClip")
 endFunction
 
 ;
