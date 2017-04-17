@@ -502,6 +502,36 @@ bool is_food = SeedUtil.IsItemFood(squibble)
     ;@TODO
 endFunction
 
+;/********f* SeedUtil/RestorePlayerHunger
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Restores the player's hunger by the provided amount.
+*
+* SYNTAX
+*/;
+function RestorePlayerHunger(float afAmount) global
+;/*
+* PARAMETERS
+* afAmount: The amount to restore hunger by.
+*
+* RETURN VALUE
+* None.
+*
+* EXAMPLES
+;Restore the player's hunger up to the next level.
+SeedUtil.RestorePlayerHunger(20.0)
+;*********/;
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return
+    endif
+
+    LastSeed.Hunger.DecreaseAttribute(afAmount)
+endFunction
+
 function RaiseSeedAPIError() global
     debug.trace("[LastSeed][ERROR] Fatal Last Seed API error occurred.")
 endFunction

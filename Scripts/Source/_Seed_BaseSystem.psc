@@ -12,10 +12,8 @@ function StartSystem()
 	if !self.IsRunning()
 		self.Start()
 	endif
-	if UpdateFrequencyGlobal
-		RegisterForSingleUpdate(1)
-	endif
 	StartUp()
+	OnUpdateGameTime()
 	initialized = true
 endFunction
 
@@ -43,11 +41,11 @@ bool function IsSystemRunning()
 	return initialized
 endFunction
 
-Event OnUpdate()
+Event OnUpdateGameTime()
 	float start_time = Game.GetRealHoursPassed()
 	Update()
 	if UpdateFrequencyGlobal
-		RegisterForSingleUpdate(UpdateFrequencyGlobal.GetValue())
+		RegisterForSingleUpdateGameTime(UpdateFrequencyGlobal.GetValue())
 		SeedDebug(-1, self + " update finished in " + ((Game.GetRealHoursPassed() - start_time) * 3600.0) + " seconds.")
 	endif
 endEvent

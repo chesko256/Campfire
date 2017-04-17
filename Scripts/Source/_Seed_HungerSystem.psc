@@ -48,13 +48,24 @@ ImageSpaceModifier property HungerISM6 auto
 
 Quest property _Seed_HungerMeterQuest auto
 
-float BLOCK_ACTION_HUNGER = 0.1
-float POWERATTACK_ACTION_HUNGER = 0.25
+FormList property _Seed_RecentlyEatenFood auto
+
+float BLOCK_ACTION_HUNGER = 0.25
+float POWERATTACK_ACTION_HUNGER = 0.75
 
 
-function StartSystem()
-    parent.StartSystem()
+function StartUp()
+    debugSystemName = "Hunger"
+    meterUpdateEvent = "LastSeed_UpdateHungerMeter"
+    meterForceEvent = "LastSeed_ForceHungerMeterDisplay"
 
+    ; Initialize arrays
+    attributeSpells = new Spell[6]
+    attributeMessages = new Message[6]
+    attributeSounds = new Sound[6]
+    attributeISMs = new ImageSpaceModifier[6]
+
+    ; Populate arrays
     attributeSpells[0] = HungerSpell1
     attributeSpells[1] = HungerSpell2
     attributeSpells[2] = HungerSpell3
@@ -80,13 +91,25 @@ function StartSystem()
     RegisterForEvents()
 
     ; Apply initial condition.
-    IncreaseAttribute(attributeValueGlobal, 0.01)
+    IncreaseAttribute(0.01)
 endFunction
 
 function RegisterForEvents()
+    if !self.IsRunning()
+        return
+    endif
+
     ; Register for power attacks.
     RegisterForAnimationEvent(PlayerRef, "PowerAttackStop")
     RegisterForAnimationEvent(PlayerRef, "00NextClip")
+endFunction
+
+function ChangeAttributeOverTime(bool suspendWhileSleeping = false)
+    parent.ChangeAttributeOverTime(suspendWhileSleeping)
+
+    ; Every update, clear the recently eaten food list.
+    _Seed_RecentlyEatenFood.Revert()
+    SeedDebug(0, "Cleared the recently eaten food list.")
 endFunction
 
 ;
@@ -96,13 +119,13 @@ endFunction
 ; Called by _Seed_PlayerEventMonitor
 function PlayerHit()
     SeedDebug(1, "(Hunger) Player Blocked Attack")
-    IncreaseAttribute(attributeValueGlobal, BLOCK_ACTION_HUNGER)
+    IncreaseAttribute(BLOCK_ACTION_HUNGER)
 endFunction
 
 Event OnAnimationEvent(ObjectReference akSource, string asEventName)
     if asEventName == "PowerAttackStop" || asEventName == "00NextClip"
         SeedDebug(1, "(Hunger) Player PowerAttacked")
-        IncreaseAttribute(attributeValueGlobal, POWERATTACK_ACTION_HUNGER)
+        IncreaseAttribute(POWERATTACK_ACTION_HUNGER)
         int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
         if mode >= 1 && mode <= 3
             (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()

@@ -61,10 +61,14 @@ function StartSystem()
     RegisterForEvents()
 
     ; Apply initial condition.
-    IncreaseAttribute(attributeValueGlobal, 0.01)
+    IncreaseAttribute(0.01)
 endFunction
 
 function RegisterForEvents()
+    if !self.IsRunning()
+        return
+    endif
+
     ; Register for archery attacks and lockpicking.
     RegisterForTrackedStatsEvent()
     RegisterForActorAction(6)
@@ -78,7 +82,7 @@ Event OnTrackedStatsEvent(string arStatName, int aiStatValue)
 	if arStatName == "Locks Picked" && aiStatValue > locksPicked
 		debug.trace("[Seed] (Fatigue) Lock Picked")
 		locksPicked = aiStatValue
-		IncreaseAttribute(attributeValueGlobal, 1.0)
+		IncreaseAttribute(1.0)
 		int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
 		if mode >= 1 && mode <= 2
         	(_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter()
@@ -89,7 +93,7 @@ EndEvent
 Event OnActorAction(int actionType, Actor akActor, Form source, int slot)
 	if akActor == PlayerRef
 		debug.trace("[Seed] (Fatigue) Archery Attack")
-		IncreaseAttribute(attributeValueGlobal, 0.2)
+		IncreaseAttribute(0.2)
 		int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
 		if mode >= 1 && mode <= 2
         	(_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter()
@@ -108,7 +112,7 @@ Event OnSleepStop(bool abInterrupted)
     ; if not interrupted...
 	;@TODO: Modify by current hunger and thirst.
 	float fatigue_decrease = lastSleepDuration * SLEEP_RESTORE_RATE
-	DecreaseAttribute(attributeValueGlobal, fatigue_decrease)
+	DecreaseAttribute(fatigue_decrease)
 EndEvent
 
 ;/ @TODO Requires SKSE
@@ -134,27 +138,3 @@ function SpellCast(Spell akSpell)
 	endif
 endFunction
 /;
-
-function IncreaseAttribute(GlobalVariable attribute, float amount)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.IncreaseAttribute(attribute, amount)
-endFunction
-
-function DecreaseAttribute(GlobalVariable attribute, float amount)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.DecreaseAttribute(attribute, amount)    
-endFunction
-    
-function ChangeAttributeOverTime(GlobalVariable attribute, GlobalVariable rate)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.ChangeAttributeOverTime(attribute, rate)
-endFunction
-
-function ModAttribute(GlobalVariable attribute, float amount)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.ModAttribute(attribute, amount)
-endFunction

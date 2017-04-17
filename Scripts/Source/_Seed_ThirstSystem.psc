@@ -62,10 +62,14 @@ function StartSystem()
     RegisterForEvents()
 
     ; Apply initial condition.
-    IncreaseAttribute(attributeValueGlobal, 0.01)
+    IncreaseAttribute(0.01)
 endFunction
 
 function RegisterForEvents()
+    if !self.IsRunning()
+        return
+    endif
+
     ; Register for sprinting and jumping.
     RegisterForControl("Sprint")
     RegisterForAnimationEvent(PlayerRef, "PowerAttackStop")
@@ -79,7 +83,7 @@ endFunction
 Event OnAnimationEvent(ObjectReference akSource, string asEventName)
     if asEventName == "PowerAttackStop" || asEventName == "00NextClip"
         debug.trace("[Seed] (Thirst) Player PowerAttacked")
-        IncreaseAttribute(attributeValueGlobal, 0.25)
+        IncreaseAttribute(0.25)
         int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
         if mode >= 1 && mode <= 3
             (_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).DisplayMeter()
@@ -87,21 +91,22 @@ Event OnAnimationEvent(ObjectReference akSource, string asEventName)
     endif
 EndEvent
 
-function PlayerHit()
+;/function PlayerHit()
         debug.trace("[Seed] (Thirst) Player Blocked Attack")
-        IncreaseAttribute(attributeValueGlobal, 0.1)
+        IncreaseAttribute(0.1)
         int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
         if mode >= 1 && mode <= 2
                 (_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).DisplayMeter()
         endif
 endFunction
+/;
 
 ;@TODO: Xbox-incompatible. Reimplement?
 Event OnControlDown(string control)
     ; Increase Thirst while sprinting or when jumping.
     debug.trace("[Seed] (Thirst) Player Sprinting")
     RegisterForSingleUpdate(2)
-    IncreaseAttribute(attributeValueGlobal, _Seed_ThirstActionRate.GetValue())
+    IncreaseAttribute(_Seed_ThirstActionRate.GetValue())
     int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
     if mode >= 1 && mode <= 3
         (_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).DisplayMeter()
@@ -111,7 +116,7 @@ EndEvent
 ;@TODO: Is this the best way to handle this?
 Event OnUpdate()
     if PlayerRef.IsSprinting()
-		    IncreaseAttribute(attributeValueGlobal, _Seed_ThirstActionRate.GetValue())
+		    IncreaseAttribute(_Seed_ThirstActionRate.GetValue())
         int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
         if mode >= 1 && mode <= 2
 		        (_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).DisplayMeter()

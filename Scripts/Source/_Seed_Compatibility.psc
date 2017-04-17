@@ -51,14 +51,14 @@ Event OnPlayerLoadGame()
 endEvent
 
 function ErrorSKSE(int version)
-	trace("[Last Seed][Warning] Detected SKSE version " + ((version as float) / 10000) + ". Expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer. Using Fallback Mode.")
+	trace("[LastSeed][Warning] Detected SKSE version " + ((version as float) / 10000) + ". Expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer. Using Fallback Mode.")
 	_Seed_CriticalError_SKSE.Show(((version as float) / 10000), ((SKSE_MIN_VERSION as float) / 10000))
 endFunction
 
 function FatalErrorCampfire(float version)
 	float version_formatted = ((version as float) / 10000)
 	float min_version_formatted = ((CAMPFIRE_MIN_VERSION as float) / 10000)
-	trace("[Last Seed][ERROR] Detected Campfire version " + version_formatted + ", out of date! Expected " + min_version_formatted + " or newer.")
+	trace("[LastSeed][ERROR] Detected Campfire version " + version_formatted + ", out of date! Expected " + min_version_formatted + " or newer.")
 	while true
 		_Seed_CriticalError_Campfire.Show(version_formatted, min_version_formatted)
 		utility.wait(3.0)
@@ -66,10 +66,10 @@ function FatalErrorCampfire(float version)
 endFunction
 
 function RunCompatibility()
-	trace("[Last Seed]======================================================================================================")
-	trace("[Last Seed]                    Last Seed is now performing start-up and compatibility checks.                    ")
-	trace("[Last Seed]           Errors related to missing files may follow. These are NORMAL and should be ignored.        ")
-	trace("[Last Seed]======================================================================================================")
+	trace("[LastSeed]======================================================================================================")
+	trace("[LastSeed]                    Last Seed is now performing start-up and compatibility checks.                    ")
+	trace("[LastSeed]     Papyrus warnings related to missing files may follow. These are NORMAL and should be ignored.    ")
+	trace("[LastSeed]======================================================================================================")
 
 	if _Camp_IsSpecialEdition.GetValueInt() != 2
 		bool skse_loaded = SKSE.GetVersion()
@@ -80,7 +80,7 @@ function RunCompatibility()
 				ErrorSKSE(skse_version)
 			else
 				isSKSELoaded = true
-				trace("[Last Seed] Detected SKSE version " + ((skse_version as float) / 10000) + " (expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer, success!)")
+				trace("[LastSeed] Detected SKSE version " + ((skse_version as float) / 10000) + " (expected " + ((SKSE_MIN_VERSION as float) / 10000) + " or newer, success!)")
 			endif
 		else
 			isSKSELoaded = false
@@ -100,7 +100,7 @@ function RunCompatibility()
 	if campfire_version < CAMPFIRE_MIN_VERSION
 		FatalErrorCampfire(campfire_version)
 	else
-		trace("[Last Seed] Detected Campfire version " + campfire_version + " (expected " + CAMPFIRE_MIN_VERSION + " or newer, success!)")
+		trace("[LastSeed] Detected Campfire version " + campfire_version + " (expected " + CAMPFIRE_MIN_VERSION + " or newer, success!)")
 	endif
 
 	if isSKYUILoaded
@@ -115,9 +115,9 @@ function RunCompatibility()
 		endif
 	endif
 
-	trace("[Last Seed]======================================================================================================")
-	trace("[Last Seed]                      Last Seed start-up and compatibility checks complete.   		                ")
-	trace("[Last Seed]======================================================================================================")
+	trace("[LastSeed]======================================================================================================")
+	trace("[LastSeed]                      Last Seed start-up and compatibility checks complete.   		                ")
+	trace("[LastSeed]======================================================================================================")
 
 	if isSKYUILoaded
 		; SendEvent_SKSE_LoadProfileOnStartup()
@@ -171,7 +171,7 @@ bool function IsPluginLoaded(int iFormID, string sPluginName)
 	if isSKSELoaded
 		int i = Game.GetModByName(sPluginName)
 		if i != 255
-			debug.trace("[Last Seed] Loaded: " + sPluginName)
+			debug.trace("[LastSeed] Loaded: " + sPluginName)
 			return true
 		else
 			return false
@@ -179,7 +179,7 @@ bool function IsPluginLoaded(int iFormID, string sPluginName)
 	else
 		bool b = Game.GetFormFromFile(iFormID, sPluginName)
 		if b
-			debug.trace("[Last Seed] Loaded: " + sPluginName)
+			debug.trace("[LastSeed] Loaded: " + sPluginName)
 			return true
 		else
 			return false

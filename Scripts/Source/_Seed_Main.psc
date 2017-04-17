@@ -36,7 +36,7 @@ Event OnUpdate()
 		endif
 	endif
 	; @DEBUG
-	SeedDebug(3, "Performing debug start up...")
+	SeedDebug(2, "Performing debug start up...")
 	Utility.Wait(5)
 	StartPrompt()
 EndEvent
@@ -90,7 +90,7 @@ Event StopLastSeed()
 	endif
 	PlayerAlias.Clear()
 	StopAllSystems()
-	;@TODO: Remove ISMS
+	RemoveAllISMs()
 	RemoveAllMeters()
 	UnregisterCampfireSkill()
 	debug.trace("[LastSeed] Last Seed shut down successfully.")
@@ -98,7 +98,7 @@ endEvent
 
 function StartAllSystems()
 	GetFoodDatastoreHandler().StartSystem()
-	;GetHungerSystem().StartSystem()
+	GetHungerSystem().StartSystem()
 	;GetThirstSystem().StartSystem()
 	;GetFatigueSystem().StartSystem()
 	;GetVitalitySystem().StartSystem()
@@ -106,10 +106,17 @@ endFunction
 
 function StopAllSystems()
 	GetFoodDatastoreHandler().StopSystem()
-	;GetHungerSystem().StopSystem()
+	GetHungerSystem().StopSystem()
 	;GetThirstSystem().StopSystem()
 	;GetFatigueSystem().StopSystem()
 	;GetVitalitySystem().StopSystem()
+endFunction
+
+function RemoveAllISMs()
+	GetHungerSystem().RemoveAllISMs()
+	;GetThirstSystem().RemoveAllISMs()
+	;GetFatigueSystem().RemoveAllISMs()
+	;GetVitalitySystem().RemoveAllISMs()
 endFunction
 
 function StartModFirstTime(bool abBypassStartupMessage = false)
