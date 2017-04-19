@@ -466,20 +466,19 @@ int result = SeedUtil.GetFoodMaxPerishDurationByType(6)
 
     if t == 2 || t == 4 || t == 6 || t == 8
         ; Raw meat, game, fish, and seafood
-        ; return 24
-        return 2
+        return 24
     elseif t == 3 || t == 5 || t == 7 || t == 9
         ; Cooked meat, game, fish, and seafood
-        ; return 60
-        return 2
+        return 60
+
     elseif t == 1 || t == 10 || t == 11 || t == 12 || t == 14 || t == 16 || t == 17
         ; Bread, vegetables, fruit, cheese, pastries, cheese bowls, and milk
-        ; return 120
-        return 2
+        return 120
+
     elseif t == 13 || t == 15
         ; Treats and stews
-        ; return 168
-        return 2
+        return 168
+
     endif
 
     return -1

@@ -131,7 +131,7 @@ function StartModFirstTime(bool abBypassStartupMessage = false)
 		endif
 		utility.wait(6)
 		_Seed_FirstStartup_2.Show()
-		utility.wait(1)
+		utility.wait(3)
 		if isSKYUILoaded
 			_Seed_FirstStartup_3.Show()
 		else
