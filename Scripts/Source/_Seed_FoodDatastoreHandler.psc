@@ -59,14 +59,14 @@ Potion property _Seed_Spoiled_FishRaw auto
 Potion property _Seed_Spoiled_FishCooked auto
 Potion property _Seed_Spoiled_SeafoodRaw auto
 Potion property _Seed_Spoiled_SeafoodCooked auto
-Potion property _Seed_Spoiled_Vegetables auto
+Potion property _Seed_Spoiled_Vegetable auto
 Potion property _Seed_Spoiled_Fruit auto
 Potion property _Seed_Spoiled_Cheese auto
-Potion property _Seed_Spoiled_Treats auto
-Potion property _Seed_Spoiled_Pastries auto
-Potion property _Seed_Spoiled_Stews auto
-Potion property _Seed_Spoiled_CheeseBowls auto
-Potion property _Seed_Spoiled_DrinkMilk auto
+Potion property _Seed_Spoiled_Treat auto
+Potion property _Seed_Spoiled_Pastry auto
+Potion property _Seed_Spoiled_Stew auto
+Potion property _Seed_Spoiled_CheeseBowl auto
+Potion property _Seed_Spoiled_Milk auto
 MiscObject property _Seed_PerishedFood auto
 
 ;/
@@ -128,14 +128,14 @@ function InitializeArrays()
 	spoiledVersions[6] = _Seed_Spoiled_FishCooked
 	spoiledVersions[7] = _Seed_Spoiled_SeafoodRaw
 	spoiledVersions[8] = _Seed_Spoiled_SeafoodCooked
-	spoiledVersions[9] = _Seed_Spoiled_Vegetables
+	spoiledVersions[9] = _Seed_Spoiled_Vegetable
 	spoiledVersions[10] = _Seed_Spoiled_Fruit
 	spoiledVersions[11] = _Seed_Spoiled_Cheese
-	spoiledVersions[12] = _Seed_Spoiled_Treats
-	spoiledVersions[13] = _Seed_Spoiled_Pastries
-	spoiledVersions[14] = _Seed_Spoiled_Stews
-	spoiledVersions[15] = _Seed_Spoiled_CheeseBowls
-	spoiledVersions[16] = _Seed_Spoiled_DrinkMilk
+	spoiledVersions[12] = _Seed_Spoiled_Treat
+	spoiledVersions[13] = _Seed_Spoiled_Pastry
+	spoiledVersions[14] = _Seed_Spoiled_Stew
+	spoiledVersions[15] = _Seed_Spoiled_CheeseBowl
+	spoiledVersions[16] = _Seed_Spoiled_Milk
 	spoiledVersions[17] = None
 	spoiledVersions[18] = None
 endFunction

@@ -5,6 +5,7 @@ _Seed_HungerSystem property Hunger auto
 _Seed_ThirstSystem property Thirst auto
 _Seed_FatigueSystem property Fatigue auto
 _Seed_FoodDatastoreHandler property FoodDatastore auto
+_Seed_SpoilSystem property Spoil auto
 _Seed_Compatibility property Compatibility auto
 
 GlobalVariable property _Seed_APIVersion auto

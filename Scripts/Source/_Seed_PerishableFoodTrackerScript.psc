@@ -10,6 +10,8 @@ int property Quantity auto hidden
 float property CurrentPerishHours = 0.0 auto hidden
 float property MaxPerishHours auto hidden
 ObjectReference property TrackedContainer auto hidden
+ObjectReference property _Seed_SpoiledFoodSystemContainerRef auto
+FormList property MyTrackingList auto hidden
 
 float lastGameTimeHoursPassed = 0.0
 
@@ -49,8 +51,15 @@ function AdvanceSpoilage()
 endFunction
 
 function SpoilFood()
+	SeedDebug(0, "Spoiling food. Current data: ")
+	SeedDebug(0, "    Food: " + Food)
+	SeedDebug(0, "    SpoiledFood: " + SpoiledFood)
+	SeedDebug(0, "    Quantity: " + Quantity)
+	SeedDebug(0, "    CurrentPerishHours: " + CurrentPerishHours)
+	SeedDebug(0, "    MaxPerishHours: " + MaxPerishHours)
+	SeedDebug(0, "    TrackedContainer: " + TrackedContainer)
 	if TrackedContainer && Food && SpoiledFood
-		TrackedContainer.RemoveItem(Food, Quantity, true)
+		TrackedContainer.RemoveItem(Food, Quantity, true, _Seed_SpoiledFoodSystemContainerRef)
 		TrackedContainer.AddItem(SpoiledFood, Quantity, true)
 		DeleteTracker()
 	else
@@ -70,6 +79,8 @@ endFunction
 
 function DeleteTracker()
 	TrackedContainer = None
+	MyTrackingList.RemoveAddedForm(self)
+	MyTrackingList = None
 	self.Disable()
 	self.Delete()
 endFunction

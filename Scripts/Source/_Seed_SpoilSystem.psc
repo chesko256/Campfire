@@ -14,25 +14,3 @@ scriptname _Seed_SpoilSystem extends _Seed_BaseSystem
     
 
 /;
-
-ObjectReference property _Seed_ProvisionsContainerRef auto
-
-function InitializeSystem()
-
-endFunction
-
-function AdvanceFollowerSpoilage()
-
-endFunction
-
-function AdvancePlayerSpoilage()
-
-endFunction
-
-function AdvanceProvisionsSpoilage()
-
-endFunction
-
-function SpoilFoodInContainer(ObjectReference akContainer)
-	
-endFunction
