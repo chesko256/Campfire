@@ -22,6 +22,22 @@ GlobalVariable property _Seed_Setting_SystemEnabled_Vitality auto
 GlobalVariable property _Seed_Setting_VampireBehavior auto
 GlobalVariable property _Seed_Setting_Focus auto
 
+GlobalVariable property _Seed_Setting_MeterVitalityFillDirection auto
+GlobalVariable property _Seed_Setting_MeterVitalityHAnchor auto
+GlobalVariable property _Seed_Setting_MeterVitalityVAnchor auto
+GlobalVariable property _Seed_Setting_MeterVitalityXPos auto
+GlobalVariable property _Seed_Setting_MeterVitalityYPos auto
+GlobalVariable property _Seed_Setting_MeterVitalityHeight auto
+GlobalVariable property _Seed_Setting_MeterVitalityWidth auto
+
+GlobalVariable property _Seed_Setting_MeterHungerFillDirection auto
+GlobalVariable property _Seed_Setting_MeterHungerHAnchor auto
+GlobalVariable property _Seed_Setting_MeterHungerVAnchor auto
+GlobalVariable property _Seed_Setting_MeterHungerXPos auto
+GlobalVariable property _Seed_Setting_MeterHungerYPos auto
+GlobalVariable property _Seed_Setting_MeterHungerHeight auto
+GlobalVariable property _Seed_Setting_MeterHungerWidth auto
+
 GlobalVariable property _Seed_IsPlayerFocused auto
 
 GlobalVariable property _Seed_Setting_CurrentProfile auto
@@ -30,7 +46,13 @@ GlobalVariable property _Seed_Setting_AutoSaveLoad auto
 GlobalVariable property _Seed_HelpDone_Focus auto
 GlobalVariable property _Seed_HelpDone_Variety auto
 
+_Seed_Meter property VitalityMeter auto
+_Seed_Meter property HungerMeter auto
+_Seed_VitalityMeterInterfaceHandler property VitalityMeterHandler auto
+_Seed_HungerMeterInterfaceHandler property HungerMeterHandler auto
+
 bool must_exit = false
+bool config_is_open = false
 
 string[] ProfileList
 
@@ -93,7 +115,32 @@ Event OnConfigInit()
 	Pages[4] = "$LastSeedAdvancedPage"
 	Pages[5] = "$LastSeedHelpPage"
 	Pages[6] = "$LastSeedSaveLoadPage"
+
+	FILL_DIRECTIONS = new string[3]
+	FILL_DIRECTIONS[0] = "Left"
+	FILL_DIRECTIONS[1] = "Right"
+	FILL_DIRECTIONS[2] = "Both"
+
+	HORIZONTAL_ANCHORS = new string[3]
+	HORIZONTAL_ANCHORS[0] = "Left"
+	HORIZONTAL_ANCHORS[1] = "Right"
+	HORIZONTAL_ANCHORS[2] = "Center"
+
+	VERTICAL_ANCHORS = new string[3]
+	VERTICAL_ANCHORS[0] = "Top"
+	VERTICAL_ANCHORS[1] = "Bottom"
+	VERTICAL_ANCHORS[2] = "Center"
 endEvent
+
+Event OnConfigOpen()
+	config_is_open = true
+EndEvent
+
+Event OnConfigClose()
+	UnregisterForAllModEvents()
+	meter_being_configured = METER_BEING_CONFIGURED_NONE
+	config_is_open = false
+EndEvent
 
 int function GetVersion()
 	return 1
@@ -104,7 +151,7 @@ Event OnVersionUpdate(int a_version)
 EndEvent
 
 function PageReset_Overview()
-
+	AddTextOption("Coming soon.", "", OPTION_FLAG_DISABLED)
 endFunction
 
 function PageReset_Gameplay()
@@ -116,28 +163,28 @@ function PageReset_Gameplay()
 
 	AddHeaderOption("$LastSeedGameplayHeaderGeneral")
 	if _Seed_Setting_Focus.GetValueInt() == 2
-		Gameplay_FocusEnabled_OID = AddToggleOption("$LastSeedGameplaySettingFocusEnable", true)
+		Gameplay_FocusEnabled_OID = AddToggleOption("$LastSeedGameplaySettingFocusEnable", true, OPTION_FLAG_DISABLED)
 	else
-		Gameplay_FocusEnabled_OID = AddToggleOption("$LastSeedGameplaySettingFocusEnable", false)
+		Gameplay_FocusEnabled_OID = AddToggleOption("$LastSeedGameplaySettingFocusEnable", false, OPTION_FLAG_DISABLED)
 	endif
 	AddToggleOption("$LastSeedGameplaySettingNeedsDialoguePause", false, OPTION_FLAG_DISABLED)
-	AddMenuOption("$LastSeedGameplaySettingPlayerVampirism", "Superhuman", OPTION_FLAG_DISABLED)
+	AddMenuOption("$LastSeedGameplaySettingPlayerVampirism", "Mortal", OPTION_FLAG_DISABLED)
 	AddToggleOption("$LastSeedGameplaySettingsFollowers", false, OPTION_FLAG_DISABLED)
-	AddToggleOption("$LastSeedGameplaySettingSpoilageEnable", false, OPTION_FLAG_DISABLED)
+	AddToggleOption("$LastSeedGameplaySettingSpoilageEnable", true, OPTION_FLAG_DISABLED)
 	AddToggleOption("$LastSeedGameplaySettingPortioningEnable", false, OPTION_FLAG_DISABLED)
 	AddEmptyOption()
 	AddHeaderOption("$LastSeedGameplayHeaderVitality")
-	AddToggleOption("$LastSeedGameplaySettingVitalityEnable", false, OPTION_FLAG_DISABLED)
+	AddToggleOption("$LastSeedGameplaySettingVitalityEnable", true, OPTION_FLAG_DISABLED)
 	AddSliderOption("$LastSeedGameplaySettingVitalityRate", 1.0, "", OPTION_FLAG_DISABLED)
-	AddMenuOption("$LastSeedGameplaySettingPlayerVitalityMode", "Nothing", OPTION_FLAG_DISABLED)
+	AddMenuOption("$LastSeedGameplaySettingPlayerVitalityMode", "Death", OPTION_FLAG_DISABLED)
 	
 	SetCursorPosition(1)
 
 	AddHeaderOption("$LastSeedGameplayHeaderHunger")
     if _Seed_Setting_SystemEnabled_Hunger.GetValueInt() == 2
-	    Gameplay_HungerEnabled_OID = AddToggleOption("$LastSeedGameplaySettingHungerEnable", true)
+	    Gameplay_HungerEnabled_OID = AddToggleOption("$LastSeedGameplaySettingHungerEnable", true, OPTION_FLAG_DISABLED)
 	else
-		Gameplay_HungerEnabled_OID = AddToggleOption("$LastSeedGameplaySettingHungerEnable", false)
+		Gameplay_HungerEnabled_OID = AddToggleOption("$LastSeedGameplaySettingHungerEnable", false, OPTION_FLAG_DISABLED)
 	endif
 	AddSliderOption("$LastSeedGameplaySettingHungerRate", 1.0, "", OPTION_FLAG_DISABLED)
 	AddEmptyOption()
@@ -148,15 +195,15 @@ function PageReset_Gameplay()
 	AddHeaderOption("$LastSeedGameplayHeaderFatigue")
 	AddToggleOption("$LastSeedGameplaySettingFatigueEnable", false, OPTION_FLAG_DISABLED)
 	AddSliderOption("$LastSeedGameplaySettingFatigueRate", 1.0, "", OPTION_FLAG_DISABLED)
-	AddToggleOption("$LastSeedGameplaySettingPlayerMovement", true, OPTION_FLAG_DISABLED)
+	AddToggleOption("$LastSeedGameplaySettingPlayerMovement", false, OPTION_FLAG_DISABLED)
 endFunction
 
 function PageReset_Interface()
-
+	AddTextOption("Coming soon.", "", OPTION_FLAG_DISABLED)
 endFunction
 
 function PageReset_Meters()
-
+	AddTextOption("Coming soon.", "", OPTION_FLAG_DISABLED)
 endFunction
 
 function PageReset_Advanced()
@@ -177,7 +224,8 @@ function PageReset_SaveLoad()
 
 	AddHeaderOption("$LastSeedSaveLoadHeaderProfile")
 	if _Seed_Setting_AutoSaveLoad.GetValueInt() == 2
-		SaveLoad_SelectProfile_OID = AddMenuOption("$LastSeedSaveLoadCurrentProfile", GetProfileName(_Seed_Setting_CurrentProfile.GetValueInt()))
+		;@REENABLE
+		SaveLoad_SelectProfile_OID = AddMenuOption("$LastSeedSaveLoadCurrentProfile", GetProfileName(_Seed_Setting_CurrentProfile.GetValueInt()), OPTION_FLAG_DISABLED)
 	else
 		SaveLoad_SelectProfile_OID = AddMenuOption("$LastSeedSaveLoadCurrentProfile", GetProfileName(_Seed_Setting_CurrentProfile.GetValueInt()), OPTION_FLAG_DISABLED)
 	endif
@@ -189,11 +237,14 @@ function PageReset_SaveLoad()
 	AddEmptyOption()
 	AddEmptyOption()
 	AddEmptyOption()
-	SaveLoad_ProfileHelp_OID = AddTextOption("$LastSeedSaveLoadAboutProfiles", "")
+	;@REENABLE
+	SaveLoad_ProfileHelp_OID = AddTextOption("$LastSeedSaveLoadAboutProfiles", "", OPTION_FLAG_DISABLED)
 	if _Seed_Setting_AutoSaveLoad.GetValueInt() == 2
-		SaveLoad_Enable_OID = AddToggleOption("$LastSeedSaveLoadEnable", true)
+		;@REENABLE
+		SaveLoad_Enable_OID = AddToggleOption("$LastSeedSaveLoadEnable", true, OPTION_FLAG_DISABLED)
 	else
-		SaveLoad_Enable_OID = AddToggleOption("$LastSeedSaveLoadEnable", false)
+		;@REENABLE
+		SaveLoad_Enable_OID = AddToggleOption("$LastSeedSaveLoadEnable", false, OPTION_FLAG_DISABLED)
 	endif
 
 	SetCursorPosition(1) ; Move cursor to top right position
@@ -203,11 +254,13 @@ function PageReset_SaveLoad()
 		SKI_Main skyui = Game.GetFormFromFile(0x00000814, "SkyUI.esp") as SKI_Main
 		int version = skyui.ReqSWFRelease
 		if version >= 1026 	; SkyUI 5.1+
-			SaveLoad_RenameProfile_OID = AddInputOption("", "$LastSeedSaveLoadRenameProfile")
+			;@REENABLE
+			SaveLoad_RenameProfile_OID = AddInputOption("", "$LastSeedSaveLoadRenameProfile", OPTION_FLAG_DISABLED)
 		else
 			SaveLoad_RenameProfile_OID = AddTextOption("$LastSeedSkyUI51Required", "$LastSeedSaveLoadRenameProfile", OPTION_FLAG_DISABLED)
 		endif
-		SaveLoad_DefaultProfile_OID = AddTextOption("", "$LastSeedSaveLoadDefaultProfile")
+		;@REENABLE
+		SaveLoad_DefaultProfile_OID = AddTextOption("", "$LastSeedSaveLoadDefaultProfile", OPTION_FLAG_DISABLED)
 	endif
 	AddEmptyOption()
 	AddEmptyOption()
@@ -223,15 +276,7 @@ function PageReset_SaveLoad()
 endFunction
 
 function PageReset_Help()
-	SetCursorFillMode(TOP_TO_BOTTOM)
-
-	AddHeaderOption("$LastSeedHelpHeaderTutorials")
-	if _Seed_Setting_DisplayTutorials.GetValueInt() == 2
-		Help_SettingEnableTutorials_OID = AddToggleOption("$LastSeedHelpEnableTutorials", true)
-	else
-		Help_SettingEnableTutorials_OID = AddToggleOption("$LastSeedHelpEnableTutorials", false)
-	endif
-	Help_ResetTutorials_OID = AddTextOption("", "$LastSeedHelpResetTutorials")
+	AddTextOption("Coming soon.", "", OPTION_FLAG_DISABLED)
 endFunction
 
 event OnPageReset(string page)
@@ -518,4 +563,446 @@ endFunction
 function ResetTutorials()
 	_Seed_HelpDone_Focus.SetValueInt(1)
 	_Seed_HelpDone_Variety.SetValueInt(1)
+endFunction
+
+
+; Meters ======================================================================
+
+string[] FILL_DIRECTIONS
+string[] HORIZONTAL_ANCHORS
+string[] VERTICAL_ANCHORS
+
+float NORMAL_METER_WIDTH = 292.8
+float NORMAL_METER_HEIGHT = 25.2
+
+float CHARGE_METER_WIDTH = 292.0
+float CHARGE_METER_HEIGHT = 22.0
+float CHARGE_METER_HEIGHT_INV = -22.0
+
+int VITALITY_METER_BOTTOMLEFT_HANCHOR = 0 		; HANCHOR_LEFT
+int VITALITY_METER_BOTTOMLEFT_VANCHOR = 1 		; VANCHOR_BOTTOM
+int VITALITY_METER_BOTTOMLEFT_FILLDIR = 1 		; FILLDIR_RIGHT
+int VITALITY_METER_BOTTOMRIGHT_HANCHOR = 1		; HANCHOR_RIGHT
+int VITALITY_METER_BOTTOMRIGHT_VANCHOR = 1 		; VANCHOR_BOTTOM
+int VITALITY_METER_BOTTOMRIGHT_FILLDIR = 0		; FILLDIR_LEFT
+int VITALITY_METER_TOPLEFT_HANCHOR = 0 			; HANCHOR_LEFT
+int VITALITY_METER_TOPLEFT_VANCHOR = 0 			; VANCHOR_TOP
+int VITALITY_METER_TOPLEFT_FILLDIR = 1 			; FILLDIR_RIGHT
+int VITALITY_METER_TOPRIGHT_HANCHOR = 1			; HANCHOR_RIGHT
+int VITALITY_METER_TOPRIGHT_VANCHOR = 0 		; VANCHOR_TOP
+int VITALITY_METER_TOPRIGHT_FILLDIR = 0			; FILLDIR_LEFT
+
+int HUNGER_METER_BOTTOMLEFT_HANCHOR = 2 		; HANCHOR_CENTER
+int HUNGER_METER_BOTTOMLEFT_VANCHOR = 1 		; VANCHOR_BOTTOM
+int HUNGER_METER_BOTTOMLEFT_FILLDIR = 2 		; FILLDIR_BOTH
+int HUNGER_METER_BOTTOMRIGHT_HANCHOR = 2		; HANCHOR_CENTER
+int HUNGER_METER_BOTTOMRIGHT_VANCHOR = 1 		; VANCHOR_BOTTOM
+int HUNGER_METER_BOTTOMRIGHT_FILLDIR = 2		; FILLDIRBOTH
+int HUNGER_METER_TOPLEFT_HANCHOR = 2 			; HANCHOR_CENTER
+int HUNGER_METER_TOPLEFT_VANCHOR = 1 			; VANCHOR_BOTTOM
+int HUNGER_METER_TOPLEFT_FILLDIR = 2 			; FILLDIR_BOTH
+int HUNGER_METER_TOPRIGHT_HANCHOR = 2			; HANCHOR_CENTER
+int HUNGER_METER_TOPRIGHT_VANCHOR = 1 			; VANCHOR_BOTTOM
+int HUNGER_METER_TOPRIGHT_FILLDIR = 2			; FILLDIRBOTH
+
+float VITALITY_METER_BOTTOMLEFT_16_9_X = 69.2
+float VITALITY_METER_BOTTOMLEFT_16_9_Y = 618.0
+float VITALITY_METER_BOTTOMRIGHT_16_9_X = 1211.0
+float VITALITY_METER_BOTTOMRIGHT_16_9_Y = 618.0
+float VITALITY_METER_TOPLEFT_16_9_X = 69.2
+float VITALITY_METER_TOPLEFT_16_9_Y = 113.0
+float VITALITY_METER_TOPRIGHT_16_9_X = 1211.0
+float VITALITY_METER_TOPRIGHT_16_9_Y = 113.0
+
+float HUNGER_METER_BOTTOMLEFT_16_9_X = 916.75
+float HUNGER_METER_BOTTOMLEFT_16_9_Y = 717.5
+float HUNGER_METER_BOTTOMRIGHT_16_9_X = 916.75
+float HUNGER_METER_BOTTOMRIGHT_16_9_Y = 717.5
+float HUNGER_METER_TOPLEFT_16_9_X = 916.75
+float HUNGER_METER_TOPLEFT_16_9_Y = 717.5
+float HUNGER_METER_TOPRIGHT_16_9_X = 916.75
+float HUNGER_METER_TOPRIGHT_16_9_Y = 717.5
+
+float VITALITY_METER_BOTTOMLEFT_16_10_X = 64.2
+float VITALITY_METER_BOTTOMLEFT_16_10_Y = 628.0
+float VITALITY_METER_BOTTOMRIGHT_16_10_X = 1216.0
+float VITALITY_METER_BOTTOMRIGHT_16_10_Y = 628.0
+float VITALITY_METER_TOPLEFT_16_10_X = 64.2
+float VITALITY_METER_TOPLEFT_16_10_Y = 113.0
+float VITALITY_METER_TOPRIGHT_16_10_X = 1216.0
+float VITALITY_METER_TOPRIGHT_16_10_Y = 113.0
+
+float HUNGER_METER_BOTTOMLEFT_16_10_X = 916.75
+float HUNGER_METER_BOTTOMLEFT_16_10_Y = 717.5
+float HUNGER_METER_BOTTOMRIGHT_16_10_X = 916.75
+float HUNGER_METER_BOTTOMRIGHT_16_10_Y = 717.5
+float HUNGER_METER_TOPLEFT_16_10_X = 916.75
+float HUNGER_METER_TOPLEFT_16_10_Y = 717.5
+float HUNGER_METER_TOPRIGHT_16_10_X = 916.75
+float HUNGER_METER_TOPRIGHT_16_10_Y = 717.5
+
+float VITALITY_METER_BOTTOMLEFT_4_3_X = 69.2
+float VITALITY_METER_BOTTOMLEFT_4_3_Y = 645.0
+float VITALITY_METER_BOTTOMRIGHT_4_3_X = 1218.0
+float VITALITY_METER_BOTTOMRIGHT_4_3_Y = 645.0
+float VITALITY_METER_TOPLEFT_4_3_X = 65.2
+float VITALITY_METER_TOPLEFT_4_3_Y = 113.0
+float VITALITY_METER_TOPRIGHT_4_3_X = 1218.0
+float VITALITY_METER_TOPRIGHT_4_3_Y = 113.0
+
+float HUNGER_METER_BOTTOMLEFT_4_3_X = 916.75
+float HUNGER_METER_BOTTOMLEFT_4_3_Y = 717.5
+float HUNGER_METER_BOTTOMRIGHT_4_3_X = 916.75
+float HUNGER_METER_BOTTOMRIGHT_4_3_Y = 717.5
+float HUNGER_METER_TOPLEFT_4_3_X = 916.75
+float HUNGER_METER_TOPLEFT_4_3_Y = 717.5
+float HUNGER_METER_TOPRIGHT_4_3_X = 916.75
+float HUNGER_METER_TOPRIGHT_4_3_Y = 717.5
+
+int meter_being_configured = 0
+int METER_BEING_CONFIGURED_NONE = 0
+int METER_BEING_CONFIGURED_VITALITY = 1
+int METER_BEING_CONFIGURED_HUNGER = 2
+int METER_BEING_CONFIGURED_THIRST = 3
+int METER_BEING_CONFIGURED_FATIGUE = 4
+
+function ApplyMeterPreset(int aiPresetIdx)
+	int w = Utility.GetINIInt("iSize W:Display")
+	int h = Utility.GetINIInt("iSize H:Display")
+	float ratio = (w as float)/(h as float)
+	debug.trace("[LastSeed] Detected display resolution " + w + "x" + h + " (" + ratio + " aspect ratio).")
+	if ratio > 1.7 && ratio < 1.8
+		debug.trace("[LastSeed] Loading 16:9 aspect ratio meter preset.")
+	elseif ratio == 1.6
+		debug.trace("[LastSeed] Loading 16:10 aspect ratio meter preset.")
+		aiPresetIdx += 4
+	elseif ratio > 1.3 && ratio < 1.4
+		debug.trace("[LastSeed] Loading 4:3 aspect ratio meter preset.")
+		aiPresetIdx += 8
+	else
+		if config_is_open
+			bool result = ShowMessage("$FrostfallMeterLayoutProblem")
+			if result == false
+				return
+			endif
+		else
+			debug.trace("[LastSeed] The display aspect ratio wasn't supported. Defaulting to 16:9.")
+		endif
+	endif
+
+	if aiPresetIdx == 0
+		; 16:9 Bottom Left
+		_Seed_Setting_MeterVitalityFillDirection.SetValueInt(VITALITY_METER_BOTTOMLEFT_FILLDIR)
+		_Seed_Setting_MeterVitalityHAnchor.SetValueInt(VITALITY_METER_BOTTOMLEFT_HANCHOR)
+		_Seed_Setting_MeterVitalityVAnchor.SetValueInt(VITALITY_METER_BOTTOMLEFT_VANCHOR)
+		_Seed_Setting_MeterVitalityXPos.SetValue(VITALITY_METER_BOTTOMLEFT_16_9_X)
+		_Seed_Setting_MeterVitalityYPos.SetValue(VITALITY_METER_BOTTOMLEFT_16_9_Y)
+		_Seed_Setting_MeterVitalityHeight.SetValue(NORMAL_METER_HEIGHT)
+		_Seed_Setting_MeterVitalityWidth.SetValue(NORMAL_METER_WIDTH)
+
+		_Seed_Setting_MeterHungerFillDirection.SetValueInt(HUNGER_METER_BOTTOMLEFT_FILLDIR)
+		_Seed_Setting_MeterHungerHAnchor.SetValueInt(HUNGER_METER_BOTTOMLEFT_HANCHOR)
+		_Seed_Setting_MeterHungerVAnchor.SetValueInt(HUNGER_METER_BOTTOMLEFT_VANCHOR)
+		_Seed_Setting_MeterHungerXPos.SetValue(HUNGER_METER_BOTTOMLEFT_16_9_X)
+		_Seed_Setting_MeterHungerYPos.SetValue(HUNGER_METER_BOTTOMLEFT_16_9_Y)
+		_Seed_Setting_MeterHungerHeight.SetValue(CHARGE_METER_HEIGHT_INV)
+		_Seed_Setting_MeterHungerWidth.SetValue(CHARGE_METER_WIDTH)
+	elseif aiPresetIdx == 1
+		; 16:9 Bottom Right
+		_Seed_Setting_MeterVitalityFillDirection.SetValueInt(VITALITY_METER_BOTTOMRIGHT_FILLDIR)
+		_Seed_Setting_MeterVitalityHAnchor.SetValueInt(VITALITY_METER_BOTTOMRIGHT_HANCHOR)
+		_Seed_Setting_MeterVitalityVAnchor.SetValueInt(VITALITY_METER_BOTTOMRIGHT_VANCHOR)
+		_Seed_Setting_MeterVitalityXPos.SetValue(VITALITY_METER_BOTTOMRIGHT_16_9_X)
+		_Seed_Setting_MeterVitalityYPos.SetValue(VITALITY_METER_BOTTOMRIGHT_16_9_Y)
+		_Seed_Setting_MeterVitalityHeight.SetValue(NORMAL_METER_HEIGHT)
+		_Seed_Setting_MeterVitalityWidth.SetValue(NORMAL_METER_WIDTH)
+
+		_Seed_Setting_MeterHungerFillDirection.SetValueInt(HUNGER_METER_BOTTOMRIGHT_FILLDIR)
+		_Seed_Setting_MeterHungerHAnchor.SetValueInt(HUNGER_METER_BOTTOMRIGHT_HANCHOR)
+		_Seed_Setting_MeterHungerVAnchor.SetValueInt(HUNGER_METER_BOTTOMRIGHT_VANCHOR)
+		_Seed_Setting_MeterHungerXPos.SetValue(HUNGER_METER_BOTTOMRIGHT_16_9_X)
+		_Seed_Setting_MeterHungerYPos.SetValue(HUNGER_METER_BOTTOMRIGHT_16_9_Y)
+		_Seed_Setting_MeterHungerHeight.SetValue(CHARGE_METER_HEIGHT_INV)
+		_Seed_Setting_MeterHungerWidth.SetValue(CHARGE_METER_WIDTH)
+	elseif aiPresetIdx == 2
+		; 16:9 Top Left
+		_Seed_Setting_MeterVitalityFillDirection.SetValueInt(VITALITY_METER_TOPLEFT_FILLDIR)
+		_Seed_Setting_MeterVitalityHAnchor.SetValueInt(VITALITY_METER_TOPLEFT_HANCHOR)
+		_Seed_Setting_MeterVitalityVAnchor.SetValueInt(VITALITY_METER_TOPLEFT_VANCHOR)
+		_Seed_Setting_MeterVitalityXPos.SetValue(VITALITY_METER_TOPLEFT_16_9_X)
+		_Seed_Setting_MeterVitalityYPos.SetValue(VITALITY_METER_TOPLEFT_16_9_Y)
+		_Seed_Setting_MeterVitalityHeight.SetValue(NORMAL_METER_HEIGHT)
+		_Seed_Setting_MeterVitalityWidth.SetValue(NORMAL_METER_WIDTH)
+
+		_Seed_Setting_MeterHungerFillDirection.SetValueInt(HUNGER_METER_TOPLEFT_FILLDIR)
+		_Seed_Setting_MeterHungerHAnchor.SetValueInt(HUNGER_METER_TOPLEFT_HANCHOR)
+		_Seed_Setting_MeterHungerVAnchor.SetValueInt(HUNGER_METER_TOPLEFT_VANCHOR)
+		_Seed_Setting_MeterHungerXPos.SetValue(HUNGER_METER_TOPLEFT_16_9_X)
+		_Seed_Setting_MeterHungerYPos.SetValue(HUNGER_METER_TOPLEFT_16_9_Y)
+		_Seed_Setting_MeterHungerHeight.SetValue(CHARGE_METER_HEIGHT_INV)
+		_Seed_Setting_MeterHungerWidth.SetValue(CHARGE_METER_WIDTH)
+	elseif aiPresetIdx == 3
+		; 16:9 Top Right
+		_Seed_Setting_MeterVitalityFillDirection.SetValueInt(VITALITY_METER_TOPRIGHT_FILLDIR)
+		_Seed_Setting_MeterVitalityHAnchor.SetValueInt(VITALITY_METER_TOPRIGHT_HANCHOR)
+		_Seed_Setting_MeterVitalityVAnchor.SetValueInt(VITALITY_METER_TOPRIGHT_VANCHOR)
+		_Seed_Setting_MeterVitalityXPos.SetValue(VITALITY_METER_TOPRIGHT_16_9_X)
+		_Seed_Setting_MeterVitalityYPos.SetValue(VITALITY_METER_TOPRIGHT_16_9_Y)
+		_Seed_Setting_MeterVitalityHeight.SetValue(NORMAL_METER_HEIGHT)
+		_Seed_Setting_MeterVitalityWidth.SetValue(NORMAL_METER_WIDTH)
+
+		_Seed_Setting_MeterHungerFillDirection.SetValueInt(HUNGER_METER_TOPRIGHT_FILLDIR)
+		_Seed_Setting_MeterHungerHAnchor.SetValueInt(HUNGER_METER_TOPRIGHT_HANCHOR)
+		_Seed_Setting_MeterHungerVAnchor.SetValueInt(HUNGER_METER_TOPRIGHT_VANCHOR)
+		_Seed_Setting_MeterHungerXPos.SetValue(HUNGER_METER_TOPRIGHT_16_9_X)
+		_Seed_Setting_MeterHungerYPos.SetValue(HUNGER_METER_TOPRIGHT_16_9_Y)
+		_Seed_Setting_MeterHungerHeight.SetValue(CHARGE_METER_HEIGHT_INV)
+		_Seed_Setting_MeterHungerWidth.SetValue(CHARGE_METER_WIDTH)
+	elseif aiPresetIdx == 4
+		; 16:10 Bottom Left
+		_Seed_Setting_MeterVitalityFillDirection.SetValueInt(VITALITY_METER_BOTTOMLEFT_FILLDIR)
+		_Seed_Setting_MeterVitalityHAnchor.SetValueInt(VITALITY_METER_BOTTOMLEFT_HANCHOR)
+		_Seed_Setting_MeterVitalityVAnchor.SetValueInt(VITALITY_METER_BOTTOMLEFT_VANCHOR)
+		_Seed_Setting_MeterVitalityXPos.SetValue(VITALITY_METER_BOTTOMLEFT_16_10_X)
+		_Seed_Setting_MeterVitalityYPos.SetValue(VITALITY_METER_BOTTOMLEFT_16_10_Y)
+		_Seed_Setting_MeterVitalityHeight.SetValue(NORMAL_METER_HEIGHT)
+		_Seed_Setting_MeterVitalityWidth.SetValue(NORMAL_METER_WIDTH)
+
+		_Seed_Setting_MeterHungerFillDirection.SetValueInt(HUNGER_METER_BOTTOMLEFT_FILLDIR)
+		_Seed_Setting_MeterHungerHAnchor.SetValueInt(HUNGER_METER_BOTTOMLEFT_HANCHOR)
+		_Seed_Setting_MeterHungerVAnchor.SetValueInt(HUNGER_METER_BOTTOMLEFT_VANCHOR)
+		_Seed_Setting_MeterHungerXPos.SetValue(HUNGER_METER_BOTTOMLEFT_16_10_X)
+		_Seed_Setting_MeterHungerYPos.SetValue(HUNGER_METER_BOTTOMLEFT_16_10_Y)
+		_Seed_Setting_MeterHungerHeight.SetValue(CHARGE_METER_HEIGHT_INV)
+		_Seed_Setting_MeterHungerWidth.SetValue(CHARGE_METER_WIDTH)
+	elseif aiPresetIdx == 5
+		; 16:10 Bottom Right
+		_Seed_Setting_MeterVitalityFillDirection.SetValueInt(VITALITY_METER_BOTTOMRIGHT_FILLDIR)
+		_Seed_Setting_MeterVitalityHAnchor.SetValueInt(VITALITY_METER_BOTTOMRIGHT_HANCHOR)
+		_Seed_Setting_MeterVitalityVAnchor.SetValueInt(VITALITY_METER_BOTTOMRIGHT_VANCHOR)
+		_Seed_Setting_MeterVitalityXPos.SetValue(VITALITY_METER_BOTTOMRIGHT_16_10_X)
+		_Seed_Setting_MeterVitalityYPos.SetValue(VITALITY_METER_BOTTOMRIGHT_16_10_Y)
+		_Seed_Setting_MeterVitalityHeight.SetValue(NORMAL_METER_HEIGHT)
+		_Seed_Setting_MeterVitalityWidth.SetValue(NORMAL_METER_WIDTH)
+
+		_Seed_Setting_MeterHungerFillDirection.SetValueInt(HUNGER_METER_BOTTOMRIGHT_FILLDIR)
+		_Seed_Setting_MeterHungerHAnchor.SetValueInt(HUNGER_METER_BOTTOMRIGHT_HANCHOR)
+		_Seed_Setting_MeterHungerVAnchor.SetValueInt(HUNGER_METER_BOTTOMRIGHT_VANCHOR)
+		_Seed_Setting_MeterHungerXPos.SetValue(HUNGER_METER_BOTTOMRIGHT_16_10_X)
+		_Seed_Setting_MeterHungerYPos.SetValue(HUNGER_METER_BOTTOMRIGHT_16_10_Y)
+		_Seed_Setting_MeterHungerHeight.SetValue(CHARGE_METER_HEIGHT_INV)
+		_Seed_Setting_MeterHungerWidth.SetValue(CHARGE_METER_WIDTH)
+	elseif aiPresetIdx == 6
+		; 16:10 Top Left
+		_Seed_Setting_MeterVitalityFillDirection.SetValueInt(VITALITY_METER_TOPLEFT_FILLDIR)
+		_Seed_Setting_MeterVitalityHAnchor.SetValueInt(VITALITY_METER_TOPLEFT_HANCHOR)
+		_Seed_Setting_MeterVitalityVAnchor.SetValueInt(VITALITY_METER_TOPLEFT_VANCHOR)
+		_Seed_Setting_MeterVitalityXPos.SetValue(VITALITY_METER_TOPLEFT_16_10_X)
+		_Seed_Setting_MeterVitalityYPos.SetValue(VITALITY_METER_TOPLEFT_16_10_Y)
+		_Seed_Setting_MeterVitalityHeight.SetValue(NORMAL_METER_HEIGHT)
+		_Seed_Setting_MeterVitalityWidth.SetValue(NORMAL_METER_WIDTH)
+
+		_Seed_Setting_MeterHungerFillDirection.SetValueInt(HUNGER_METER_TOPLEFT_FILLDIR)
+		_Seed_Setting_MeterHungerHAnchor.SetValueInt(HUNGER_METER_TOPLEFT_HANCHOR)
+		_Seed_Setting_MeterHungerVAnchor.SetValueInt(HUNGER_METER_TOPLEFT_VANCHOR)
+		_Seed_Setting_MeterHungerXPos.SetValue(HUNGER_METER_TOPLEFT_16_10_X)
+		_Seed_Setting_MeterHungerYPos.SetValue(HUNGER_METER_TOPLEFT_16_10_Y)
+		_Seed_Setting_MeterHungerHeight.SetValue(CHARGE_METER_HEIGHT_INV)
+		_Seed_Setting_MeterHungerWidth.SetValue(CHARGE_METER_WIDTH)
+	elseif aiPresetIdx == 7
+		; 16:10 Top Right
+		_Seed_Setting_MeterVitalityFillDirection.SetValueInt(VITALITY_METER_TOPRIGHT_FILLDIR)
+		_Seed_Setting_MeterVitalityHAnchor.SetValueInt(VITALITY_METER_TOPRIGHT_HANCHOR)
+		_Seed_Setting_MeterVitalityVAnchor.SetValueInt(VITALITY_METER_TOPRIGHT_VANCHOR)
+		_Seed_Setting_MeterVitalityXPos.SetValue(VITALITY_METER_TOPRIGHT_16_10_X)
+		_Seed_Setting_MeterVitalityYPos.SetValue(VITALITY_METER_TOPRIGHT_16_10_Y)
+		_Seed_Setting_MeterVitalityHeight.SetValue(NORMAL_METER_HEIGHT)
+		_Seed_Setting_MeterVitalityWidth.SetValue(NORMAL_METER_WIDTH)
+
+		_Seed_Setting_MeterHungerFillDirection.SetValueInt(HUNGER_METER_TOPRIGHT_FILLDIR)
+		_Seed_Setting_MeterHungerHAnchor.SetValueInt(HUNGER_METER_TOPRIGHT_HANCHOR)
+		_Seed_Setting_MeterHungerVAnchor.SetValueInt(HUNGER_METER_TOPRIGHT_VANCHOR)
+		_Seed_Setting_MeterHungerXPos.SetValue(HUNGER_METER_TOPRIGHT_16_10_X)
+		_Seed_Setting_MeterHungerYPos.SetValue(HUNGER_METER_TOPRIGHT_16_10_Y)
+		_Seed_Setting_MeterHungerHeight.SetValue(CHARGE_METER_HEIGHT_INV)
+		_Seed_Setting_MeterHungerWidth.SetValue(CHARGE_METER_WIDTH)
+	elseif aiPresetIdx == 8
+		; 4:3 Bottom Left
+		_Seed_Setting_MeterVitalityFillDirection.SetValueInt(VITALITY_METER_BOTTOMLEFT_FILLDIR)
+		_Seed_Setting_MeterVitalityHAnchor.SetValueInt(VITALITY_METER_BOTTOMLEFT_HANCHOR)
+		_Seed_Setting_MeterVitalityVAnchor.SetValueInt(VITALITY_METER_BOTTOMLEFT_VANCHOR)
+		_Seed_Setting_MeterVitalityXPos.SetValue(VITALITY_METER_BOTTOMLEFT_4_3_X)
+		_Seed_Setting_MeterVitalityYPos.SetValue(VITALITY_METER_BOTTOMLEFT_4_3_Y)
+		_Seed_Setting_MeterVitalityHeight.SetValue(NORMAL_METER_HEIGHT)
+		_Seed_Setting_MeterVitalityWidth.SetValue(NORMAL_METER_WIDTH)
+
+		_Seed_Setting_MeterHungerFillDirection.SetValueInt(HUNGER_METER_BOTTOMLEFT_FILLDIR)
+		_Seed_Setting_MeterHungerHAnchor.SetValueInt(HUNGER_METER_BOTTOMLEFT_HANCHOR)
+		_Seed_Setting_MeterHungerVAnchor.SetValueInt(HUNGER_METER_BOTTOMLEFT_VANCHOR)
+		_Seed_Setting_MeterHungerXPos.SetValue(HUNGER_METER_BOTTOMLEFT_4_3_X)
+		_Seed_Setting_MeterHungerYPos.SetValue(HUNGER_METER_BOTTOMLEFT_4_3_Y)
+		_Seed_Setting_MeterHungerHeight.SetValue(CHARGE_METER_HEIGHT_INV)
+		_Seed_Setting_MeterHungerWidth.SetValue(CHARGE_METER_WIDTH)
+	elseif aiPresetIdx == 9
+		; 4:3 Bottom Right
+		_Seed_Setting_MeterVitalityFillDirection.SetValueInt(VITALITY_METER_BOTTOMRIGHT_FILLDIR)
+		_Seed_Setting_MeterVitalityHAnchor.SetValueInt(VITALITY_METER_BOTTOMRIGHT_HANCHOR)
+		_Seed_Setting_MeterVitalityVAnchor.SetValueInt(VITALITY_METER_BOTTOMRIGHT_VANCHOR)
+		_Seed_Setting_MeterVitalityXPos.SetValue(VITALITY_METER_BOTTOMRIGHT_4_3_X)
+		_Seed_Setting_MeterVitalityYPos.SetValue(VITALITY_METER_BOTTOMRIGHT_4_3_Y)
+		_Seed_Setting_MeterVitalityHeight.SetValue(NORMAL_METER_HEIGHT)
+		_Seed_Setting_MeterVitalityWidth.SetValue(NORMAL_METER_WIDTH)
+
+		_Seed_Setting_MeterHungerFillDirection.SetValueInt(HUNGER_METER_BOTTOMRIGHT_FILLDIR)
+		_Seed_Setting_MeterHungerHAnchor.SetValueInt(HUNGER_METER_BOTTOMRIGHT_HANCHOR)
+		_Seed_Setting_MeterHungerVAnchor.SetValueInt(HUNGER_METER_BOTTOMRIGHT_VANCHOR)
+		_Seed_Setting_MeterHungerXPos.SetValue(HUNGER_METER_BOTTOMRIGHT_4_3_X)
+		_Seed_Setting_MeterHungerYPos.SetValue(HUNGER_METER_BOTTOMRIGHT_4_3_Y)
+		_Seed_Setting_MeterHungerHeight.SetValue(CHARGE_METER_HEIGHT_INV)
+		_Seed_Setting_MeterHungerWidth.SetValue(CHARGE_METER_WIDTH)
+	elseif aiPresetIdx == 10
+		; 4:3 Top Left
+		_Seed_Setting_MeterVitalityFillDirection.SetValueInt(VITALITY_METER_TOPLEFT_FILLDIR)
+		_Seed_Setting_MeterVitalityHAnchor.SetValueInt(VITALITY_METER_TOPLEFT_HANCHOR)
+		_Seed_Setting_MeterVitalityVAnchor.SetValueInt(VITALITY_METER_TOPLEFT_VANCHOR)
+		_Seed_Setting_MeterVitalityXPos.SetValue(VITALITY_METER_TOPLEFT_4_3_X)
+		_Seed_Setting_MeterVitalityYPos.SetValue(VITALITY_METER_TOPLEFT_4_3_Y)
+		_Seed_Setting_MeterVitalityHeight.SetValue(NORMAL_METER_HEIGHT)
+		_Seed_Setting_MeterVitalityWidth.SetValue(NORMAL_METER_WIDTH)
+
+		_Seed_Setting_MeterHungerFillDirection.SetValueInt(HUNGER_METER_TOPLEFT_FILLDIR)
+		_Seed_Setting_MeterHungerHAnchor.SetValueInt(HUNGER_METER_TOPLEFT_HANCHOR)
+		_Seed_Setting_MeterHungerVAnchor.SetValueInt(HUNGER_METER_TOPLEFT_VANCHOR)
+		_Seed_Setting_MeterHungerXPos.SetValue(HUNGER_METER_TOPLEFT_4_3_X)
+		_Seed_Setting_MeterHungerYPos.SetValue(HUNGER_METER_TOPLEFT_4_3_Y)
+		_Seed_Setting_MeterHungerHeight.SetValue(CHARGE_METER_HEIGHT_INV)
+		_Seed_Setting_MeterHungerWidth.SetValue(CHARGE_METER_WIDTH)
+	elseif aiPresetIdx == 11
+		; 4:3 Top Right
+		_Seed_Setting_MeterVitalityFillDirection.SetValueInt(VITALITY_METER_TOPRIGHT_FILLDIR)
+		_Seed_Setting_MeterVitalityHAnchor.SetValueInt(VITALITY_METER_TOPRIGHT_HANCHOR)
+		_Seed_Setting_MeterVitalityVAnchor.SetValueInt(VITALITY_METER_TOPRIGHT_VANCHOR)
+		_Seed_Setting_MeterVitalityXPos.SetValue(VITALITY_METER_TOPRIGHT_4_3_X)
+		_Seed_Setting_MeterVitalityYPos.SetValue(VITALITY_METER_TOPRIGHT_4_3_Y)
+		_Seed_Setting_MeterVitalityHeight.SetValue(NORMAL_METER_HEIGHT)
+		_Seed_Setting_MeterVitalityWidth.SetValue(NORMAL_METER_WIDTH)
+
+		_Seed_Setting_MeterHungerFillDirection.SetValueInt(HUNGER_METER_TOPRIGHT_FILLDIR)
+		_Seed_Setting_MeterHungerHAnchor.SetValueInt(HUNGER_METER_TOPRIGHT_HANCHOR)
+		_Seed_Setting_MeterHungerVAnchor.SetValueInt(HUNGER_METER_TOPRIGHT_VANCHOR)
+		_Seed_Setting_MeterHungerXPos.SetValue(HUNGER_METER_TOPRIGHT_4_3_X)
+		_Seed_Setting_MeterHungerYPos.SetValue(HUNGER_METER_TOPRIGHT_4_3_Y)
+		_Seed_Setting_MeterHungerHeight.SetValue(CHARGE_METER_HEIGHT_INV)
+		_Seed_Setting_MeterHungerWidth.SetValue(CHARGE_METER_WIDTH)
+	endif
+
+	UpdateMeterConfiguration(0)
+	UpdateMeterConfiguration(1)
+endFunction
+
+function ConfigureMeter(int aiMeterIdx, int aiFillDirectionIdx, int aiHAnchorIdx, int aiVAnchorIdx, float afPositionX, float afPositionY, float afHeight, float afWidth)
+	; Not configured: Color, Opacity
+	Common_SKI_MeterWidget MyMeter = None
+	CommonMeterInterfaceHandler MyMeterHandler = None
+	if aiMeterIdx == 0
+		MyMeter = VitalityMeter
+		MyMeterHandler = VitalityMeterHandler
+	elseif aiMeterIdx == 1
+		MyMeter = HungerMeter
+		MyMeterHandler = HungerMeterHandler
+	endif
+
+	if !MyMeter
+		return
+	endIf
+
+	MyMeter.FillDirection = FILL_DIRECTIONS[aiFillDirectionIdx]
+	MyMeter.HAnchor = HORIZONTAL_ANCHORS[aiHAnchorIdx]
+	MyMeter.VAnchor = VERTICAL_ANCHORS[aiVAnchorIdx]
+	MyMeter.X = afPositionX
+	MyMeter.Y = afPositionY
+	MyMeter.Height = afHeight
+	MyMeter.Width = afWidth
+	MyMeterHandler.ForceMeterDisplay()
+endFunction
+
+function UpdateMeterConfiguration(int aiMeterIdx)
+	if aiMeterIdx == 0
+		; Vitality
+		ConfigureMeter(0, _Seed_Setting_MeterVitalityFillDirection.GetValueInt(), 	\
+						  _Seed_Setting_MeterVitalityHAnchor.GetValueInt(),			\
+						  _Seed_Setting_MeterVitalityVAnchor.GetValueInt(),			\
+						  _Seed_Setting_MeterVitalityXPos.GetValue(),				\
+						  _Seed_Setting_MeterVitalityYPos.GetValue(),				\
+						  _Seed_Setting_MeterVitalityHeight.GetValue(),				\
+						  _Seed_Setting_MeterVitalityWidth.GetValue())
+
+	elseif aiMeterIdx == 1
+		; Hunger
+		ConfigureMeter(1, _Seed_Setting_MeterHungerFillDirection.GetValueInt(), 	\
+						  _Seed_Setting_MeterHungerHAnchor.GetValueInt(),			\
+						  _Seed_Setting_MeterHungerVAnchor.GetValueInt(),			\
+						  _Seed_Setting_MeterHungerXPos.GetValue(),					\
+						  _Seed_Setting_MeterHungerYPos.GetValue(),					\
+						  _Seed_Setting_MeterHungerHeight.GetValue(),				\
+						  _Seed_Setting_MeterHungerWidth.GetValue())
+	endif
+endFunction
+
+function RemoveAllMeters()
+	SendEvent_LastSeedRemoveVitalityMeter()
+	SendEvent_LastSeedRemoveHungerMeter()
+endFunction
+
+function ForceAllMeters()
+	SendEvent_ForceVitalityMeterDisplay()
+	SendEvent_ForceHungerMeterDisplay()
+endFunction
+
+float function GetMeterScale(float afCurrentWidth, float afBaseWidth)
+	return afCurrentWidth / afBaseWidth
+endFunction
+
+bool function IsMeterInverted(CommonMeterInterfaceHandler handler)
+	if handler.meter_inversion_value != -1.0
+		if handler.lower_is_better && handler.AttributeValue.GetValue() < handler.meter_inversion_value
+			return true
+		elseif !handler.lower_is_better && handler.AttributeValue.GetValue() > handler.meter_inversion_value
+			return true
+		else
+			return false
+		endif
+	else
+		return false
+	endif
+endFunction
+
+function SendEvent_LastSeedRemoveVitalityMeter()
+	int handle = ModEvent.Create("LastSeed_RemoveVitalityMeter")
+    if handle
+        ModEvent.Send(handle)
+    endif
+endFunction
+
+function SendEvent_LastSeedRemoveHungerMeter()
+	int handle = ModEvent.Create("LastSeed_RemoveHungerMeter")
+    if handle
+        ModEvent.Send(handle)
+    endif
+endFunction
+
+function SendEvent_ForceVitalityMeterDisplay(bool abFlash = false)
+	int handle = ModEvent.Create("LastSeed_ForceVitalityMeterDisplay")
+	if handle
+		ModEvent.PushBool(handle, abFlash)
+		ModEvent.Send(handle)
+	endif
+endFunction
+
+function SendEvent_ForceHungerMeterDisplay(bool abFlash = false)
+	int handle = ModEvent.Create("LastSeed_ForceHungerMeterDisplay")
+	if handle
+		ModEvent.PushBool(handle, abFlash)
+		ModEvent.Send(handle)
+	endif
 endFunction

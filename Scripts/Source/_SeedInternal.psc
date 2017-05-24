@@ -1,10 +1,18 @@
 scriptname _SeedInternal
 
 bool function IsUpToAndBetween(float fValue, float fUpperBound, float fLowerBound) global
-    if fValue <= fUpperBound && fValue > fLowerBound
-        return true
+    if fLowerBound == 0.0
+    	if fValue <= fUpperBound && fValue >= fLowerBound
+        	return true
+    	else
+        	return false
+    	endif
     else
-        return false
+    	if fValue <= fUpperBound && fValue > fLowerBound
+        	return true
+    	else
+        	return false
+    	endif
     endif
 endFunction
 

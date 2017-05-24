@@ -8,6 +8,7 @@ Actor property PlayerRef auto
 Activator property _Seed_PerkNodeController_Provisioning auto
 ReferenceAlias property PlayerAlias auto
 GlobalVariable property LastSeedRunning auto
+GlobalVariable property _Seed_QuickstartEnabled auto
 Message property _Seed_StartSleepMsg auto
 Message property _Seed_StartingUpMsg auto
 Message property _Seed_StartingUpDoneMsg auto
@@ -16,6 +17,8 @@ Message property _Seed_FirstStartup_2 auto
 Message property _Seed_FirstStartup_3 auto
 Message property _Seed_FirstStartup_3SE auto
 Quest property _Seed_TrackingQuest auto
+Spell property _Seed_IntensityPlayerSpell auto
+Spell property _Seed_CheckNeedsSpell auto
 
 bool started_via_sleep = false
 bool isSKYUILoaded = false
@@ -23,10 +26,10 @@ bool isSKYUILoaded = false
 Event OnInit()
 	isSKYUILoaded = Game.GetFormFromFile(0x01000814, "SkyUI.esp")
 	RegisterForSleep()
-	RegisterForSingleUpdate(5)
+	StartUp()
 endEvent
 
-Event OnUpdate()
+function StartUp()
 	; Kicks things off for the player
 	if _Seed_TrackingQuest.GetStage() == 0
 		if isSKYUILoaded
@@ -35,11 +38,13 @@ Event OnUpdate()
 			_Seed_TrackingQuest.SetStage(15)
 		endif
 	endif
-	; @DEBUG
-	SeedDebug(2, "Performing debug start up...")
-	Utility.Wait(5)
-	StartPrompt()
-EndEvent
+	
+	if _Seed_QuickstartEnabled.GetValueInt() == 2
+		SeedDebug(2, "Performing debug start up...")
+		Utility.Wait(5)
+		OnSleepStop(false)
+	endif
+endFunction
 
 Event OnSleepStop(bool abInterrupted)
 	if abInterrupted
@@ -48,26 +53,21 @@ Event OnSleepStop(bool abInterrupted)
 
 	; Don't allow the player to start the mod at inopportune times
 	; (cart ride at beginning, etc)
-	if !Game.IsFightingControlsEnabled() || PlayerRef.IsInInterior()
-		RegisterForSingleUpdate(5)
+	if !Game.IsFightingControlsEnabled()
 		return
 	endif
 
-	StartPrompt()
-EndEvent
-
-function StartPrompt()
 	int i = _Seed_StartSleepMsg.Show()
 	if i == 0
 		started_via_sleep = true
 		LastSeedRunning.SetValueInt(2)
 		StartLastSeed()
 	endif
-endFunction
+EndEvent
 
 Event StartLastSeed(bool abBypassStartupMessage = false)
 	debug.trace("[LastSeed] Starting Last Seed...")
-	_Seed_StartingUpMsg.Show()
+	;_Seed_StartingUpMsg.Show()
 
 	if !self.IsRunning()
 		self.Start()
@@ -79,8 +79,13 @@ Event StartLastSeed(bool abBypassStartupMessage = false)
 	StartAllSystems()
 	SeedUtil.GetCompatibilitySystem().RunCompatibility()
 	SeedUtil.GetCompatibilitySystem().SendEvent_LastSeedLoaded()
-	_Seed_StartingUpDoneMsg.Show()
+
+	; Apply initial vitality condition.
+    GetVitalitySystem().ChangeAttributeOverTime()
+
+	;_Seed_StartingUpDoneMsg.Show()
 	debug.trace("[LastSeed] Last Seed is now running.")
+	UnregisterForSleep()
 endEvent
 
 Event StopLastSeed()
@@ -92,6 +97,7 @@ Event StopLastSeed()
 	StopAllSystems()
 	RemoveAllISMs()
 	RemoveAllMeters()
+	RemoveAllSpells()
 	UnregisterCampfireSkill()
 	debug.trace("[LastSeed] Last Seed shut down successfully.")
 endEvent
@@ -99,29 +105,29 @@ endEvent
 function StartAllSystems()
 	GetFoodDatastoreHandler().StartSystem()
 	GetHungerSystem().StartSystem()
+	GetVitalitySystem().StartSystem()
 	GetSpoilageSystem().StartSystem()
 	;GetThirstSystem().StartSystem()
 	;GetFatigueSystem().StartSystem()
-	;GetVitalitySystem().StartSystem()
 endFunction
 
 function StopAllSystems()
 	GetFoodDatastoreHandler().StopSystem()
 	GetHungerSystem().StopSystem()
+	GetVitalitySystem().StopSystem()
 	GetSpoilageSystem().StopSystem()
 	;GetThirstSystem().StopSystem()
 	;GetFatigueSystem().StopSystem()
-	;GetVitalitySystem().StopSystem()
 endFunction
 
 function RemoveAllISMs()
 	GetHungerSystem().RemoveAllISMs()
 	;GetThirstSystem().RemoveAllISMs()
 	;GetFatigueSystem().RemoveAllISMs()
-	;GetVitalitySystem().RemoveAllISMs()
+	GetVitalitySystem().RemoveAllISMs()
 endFunction
 
-function StartModFirstTime(bool abBypassStartupMessage = false)
+function StartModFirstTime(bool abBypassStartupMessage = true)
 	if _Seed_TrackingQuest.GetStage() == 20
 		return
 	else
@@ -132,11 +138,13 @@ function StartModFirstTime(bool abBypassStartupMessage = false)
 		utility.wait(6)
 		_Seed_FirstStartup_2.Show()
 		utility.wait(3)
-		if isSKYUILoaded
+		;@REENABLE when config is working
+		;/if isSKYUILoaded
 			_Seed_FirstStartup_3.Show()
 		else
 			_Seed_FirstStartup_3SE.Show()
 		endif
+		/;
 	endif
 endFunction
 
@@ -156,6 +164,11 @@ function RemoveAllMeters()
 		SendEvent_LastSeedRemoveThirstMeter()
 		SendEvent_LastSeedRemoveFatigueMeter()
 	endif
+endFunction
+
+function RemoveAllSpells()
+	PlayerRef.RemoveSpell(_Seed_IntensityPlayerSpell)
+	PlayerRef.RemoveSpell(_Seed_CheckNeedsSpell)
 endFunction
 
 ;@NOFALLBACK

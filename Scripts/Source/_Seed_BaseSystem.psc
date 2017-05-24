@@ -13,6 +13,7 @@ function StartSystem()
 		self.Start()
 	endif
 	StartUp()
+	RegisterForSingleUpdate(5)
 	OnUpdateGameTime()
 	initialized = true
 endFunction
@@ -40,6 +41,11 @@ endFunction
 bool function IsSystemRunning()
 	return initialized
 endFunction
+
+; @Override
+Event OnUpdate()
+	; pass
+endEvent
 
 Event OnUpdateGameTime()
 	float start_time = Game.GetRealHoursPassed()

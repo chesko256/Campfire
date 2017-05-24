@@ -3,10 +3,6 @@ scriptname _Seed_FatigueSystem extends _Seed_AttributeSystem
 ;@TODO: Catch shock spell damage, which reduces magicka
 ;@TODO: Look for other sources of magicka damage
 
-GlobalVariable property _Seed_VitalitySystemEnabled auto
-GlobalVariable property _Seed_AttributeFatigue auto
-GlobalVariable property _Seed_FatigueRate auto 							; Default - 1.66
-
 ;@TODO: Is this going to be used?
 ; GlobalVariable property _Seed_FatigueActionRateMasterSpells auto 		; Default - 10.0
 ; GlobalVariable property _Seed_FatigueActionRateExpertSpells auto 		; Default - 2.0

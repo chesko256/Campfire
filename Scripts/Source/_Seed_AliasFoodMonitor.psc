@@ -36,13 +36,13 @@ Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemRefere
 			tracker.SpoiledFood = spoiled
 			tracker.Quantity = aiItemCount
 			tracker.MaxPerishHours = spoilDuration
-			tracker.MyTrackingList = TrackingList
-			SeedDebug(0, "New tracker data | Food: " + akBaseItem + ", Spoiled Food: " + spoiled + ", Count: " + aiItemCount + ", Max Perish Hours: " + spoilDuration)
+			tracker.MyTrackingList = TrackingList			
 			if isActor
 				tracker.TrackedContainer = self.GetActorRef()
 			else
 				tracker.TrackedContainer = self.GetRef()
 			endif
+			SeedDebug(0, "New tracker data >>>> Food: " + akBaseItem + ", Spoiled Food: " + spoiled + ", Count: " + aiItemCount + ", Max Perish Hours: " + spoilDuration + ", TrackedContainer: " + tracker.TrackedContainer)
 
 			TrackingList.AddForm(tracker)
 			SeedDebug(0, "Added " + tracker + " to the list " + TrackingList)
@@ -57,7 +57,10 @@ Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemRefere
 EndEvent
 
 Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akDestContainer)
+	GoToState("Processing")
+	SeedDebug(0, "_Seed_AliasFoodMonitor OnItemRemoved")
 	if akBaseItem as Potion
+		SeedDebug(0, "_Seed_AliasFoodMonitor item was food.")
 		if akDestContainer == _Seed_SpoiledFoodSystemContainerRef
 			; This item was removed due to food spoilage. Allow the tracker to handle its own state.
 			return
@@ -70,20 +73,27 @@ Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRefe
 			int i = TrackingList.GetSize() - 1
 			while remaining > 0 && i >= 0
 				ObjectReference ref = TrackingList.GetAt(i) as ObjectReference
-				if (ref as _Seed_PerishableFoodTrackerScript).Food == akBaseItem
-					_Seed_PerishableFoodTrackerScript tracker = ref as _Seed_PerishableFoodTrackerScript	
-					int amountRemoved = tracker.ReduceQuantity(remaining) ; remove the quantity (the function returns the number actually removed and deletes itself if necessary)
-					remaining -= amountRemoved
+				if ref
+					_Seed_PerishableFoodTrackerScript tracker = ref as _Seed_PerishableFoodTrackerScript
+					if tracker.Food == akBaseItem && tracker.Quantity > 0
+						int amountRemoved = tracker.ReduceQuantity(remaining) ; remove the quantity (the function returns the number actually removed and deletes itself if necessary)
+						remaining -= amountRemoved
 					
-					if remaining > 0
+						if remaining > 0
+							SeedDebug(0, "Starting the tracker search over.")
+							i = TrackingList.GetSize() - 1
+						endif
+					else
+						SeedDebug(0, "Checking next value. Reason: Food = " + tracker.Food + ", Quantity = " + tracker.Quantity)
 						i -= 1
 					endif
 				else
+					SeedDebug(0, "Checking next value. Reason: ref was None")
 					i -= 1
 				endif
 			endWhile
 
-			SeedDebug(0, "State of the Food Tracking FormList is:")
+			SeedDebug(0, "Finished search. State of the Food Tracking FormList is:")
 			int j = 0
 			while j < TrackingList.GetSize()
 				SeedDebug(0, "    " + TrackingList.GetAt(j))
@@ -91,5 +101,12 @@ Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRefe
 			endWhile
 		endif
 	endif
+	GoToState("")
 EndEvent
 
+State Processing
+	Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akDestContainer)
+		GoToState("")
+		SeedDebug(0, "_Seed_AliasFoodMonitor suppressing duplicate call.")
+	EndEvent
+endState

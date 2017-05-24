@@ -13,17 +13,18 @@ GlobalVariable property _Seed_Setting_NeedsSFX auto
 GlobalVariable property _Seed_Setting_NeedsVFX auto
 GlobalVariable property _Seed_Setting_NeedsForceFeedback auto
 
-float property ATTR_MAX = 120.0 autoReadOnly
-float property ATTR_LEVEL_5 = 100.0 autoReadOnly
-float property ATTR_LEVEL_4 = 80.0 autoReadOnly
-float property ATTR_LEVEL_3 = 60.0 autoReadOnly
-float property ATTR_LEVEL_2 = 40.0 autoReadOnly
-float property ATTR_LEVEL_1 = 20.0 autoReadOnly
-float property ATTR_MIN = 0.0 autoReadOnly
+float property ATTR_MAX = 120.0 auto hidden
+float property ATTR_LEVEL_5 = 100.0 auto hidden
+float property ATTR_LEVEL_4 = 80.0 auto hidden
+float property ATTR_LEVEL_3 = 60.0 auto hidden
+float property ATTR_LEVEL_2 = 40.0 auto hidden
+float property ATTR_LEVEL_1 = 20.0 auto hidden
+float property ATTR_MIN = 0.0 auto hidden
 
 GlobalVariable property attributeEnabled auto
 GlobalVariable property attributeValueGlobal auto
 GlobalVariable property attributeRateGlobal auto
+GlobalVariable property attributeLevelGlobal auto
 bool property undeadImmunity = false auto
 
 int property delayedAttributeIncreaseIntervals = 0 auto hidden
@@ -37,7 +38,7 @@ string property meterUpdateEvent auto hidden
 string property meterForceEvent auto hidden
 string property debugSystemName auto hidden
 
-float lastUpdateTime = 0.0
+float property lastUpdateTime = 0.0 auto hidden
 
 
 function StartSystem()
@@ -49,6 +50,12 @@ function StartSystem()
 	endif
 
 	RegisterForSleep()
+	SeedDebug(1, "[" + debugSystemName + "]: Started.")
+endFunction
+
+function StopSystem()
+	parent.StopSystem()
+	SeedDebug(1, "[" + debugSystemName + "]: Stopped.")
 endFunction
 
 function Update()
@@ -61,7 +68,7 @@ Event OnSleepStart(float afSleepStartTime, float afDesiredSleepEndTime)
 	wasSleeping = true
 EndEvent
 
-function IncreaseAttribute(float amount)
+function IncreaseAttribute(float amount, float target = -1.0)
 	if undeadImmunity && IsPlayerUndead() && amount > 0.0
 		return
 	endif
@@ -76,7 +83,7 @@ function IncreaseAttribute(float amount)
     ApplyAttributeEffects()
 endFunction
 
-function DecreaseAttribute(float amount)
+function DecreaseAttribute(float amount, float target = -1.0)
 	float currentAttributeValue = attributeValueGlobal.GetValue()
 	if currentAttributeValue - amount <= ATTR_MIN
 		attributeValueGlobal.SetValue(ATTR_MIN)
@@ -117,14 +124,18 @@ function SetAttribute(float value)
 endFunction
 
 function ChangeAttributeOverTime(bool suspendWhileSleeping = false)
+	SeedDebug(1, "[" + debugSystemName + "]: ChangeAttributeOverTime()")
 	; Skip the first update.
 	if lastUpdateTime == 0.0
 		lastUpdateTime = Utility.GetCurrentGameTime() * 24.0
 		return
 	endif
 
+	float thisTime = Utility.GetCurrentGameTime() * 24.0
+
 	if suspendWhileSleeping && wasSleeping
 		wasSleeping = false
+		lastUpdateTime = thisTime
 		return
 	endif
 
@@ -134,8 +145,10 @@ function ChangeAttributeOverTime(bool suspendWhileSleeping = false)
 		return
 	endif
 
-	float thisTime = Utility.GetCurrentGameTime() * 24.0
 	int cycles = Math.Floor((thisTime - lastUpdateTime) * 2)
+	if cycles < 1
+		cycles = 1
+	endif
 
 	if IsPlayerFocused()
 		delayedAttributeIncreaseIntervals += cycles
@@ -193,10 +206,10 @@ function ApplyAttributeEffects()
         ApplyAttributeLevel(3, increasing)
     
     elseif !(IsUpToAndBetween(lastAttributeValue, ATTR_LEVEL_5, ATTR_LEVEL_4)) && (IsUpToAndBetween(currentAttributeValue, ATTR_LEVEL_5, ATTR_LEVEL_4))
-        ApplyAttributeLevel(4, increasing, true, 1)
+        ApplyAttributeLevel(4, increasing, true, true, 1)
     
     elseif !(IsUpToAndBetween(lastAttributeValue, ATTR_MAX, ATTR_LEVEL_5)) && (IsUpToAndBetween(currentAttributeValue, ATTR_MAX, ATTR_LEVEL_5))
-        ApplyAttributeLevel(5, increasing, true, 2)
+        ApplyAttributeLevel(5, increasing, true, true, 1)
     endif
 
     lastAttributeValue = currentAttributeValue
@@ -220,8 +233,10 @@ function RemoveAllISMs()
 	endWhile
 endFunction
 
-function ApplyAttributeLevel(int level, bool isIncreasing, bool forceMeter = false, int rumbleLevel = 0)
+function ApplyAttributeLevel(int level, bool isIncreasing, bool forceMeter = false, bool flashMeter = false, int rumbleLevel = 0, bool lowerIsWorse = false, bool bypassVitalityTargetUpdate = false)
 	SeedDebug(0, "[" + debugSystemName + "] level " + level + ", isIncreasing " + isIncreasing + ", forceMeter " + forceMeter + ", rumbleLevel " + rumbleLevel)
+
+	attributeLevelGlobal.SetValueInt(level)
 
 	Spell thisSpell = attributeSpells[level]
 	Message thisMessage = attributeMessages[level]
@@ -232,17 +247,20 @@ function ApplyAttributeLevel(int level, bool isIncreasing, bool forceMeter = fal
     PlayerRef.AddSpell(thisSpell, false)
 
     if _Seed_Setting_Notifications.GetValueInt() == 2
+    	SeedDebug(0, "[" + debugSystemName + "]: Showing message.")
         thisMessage.Show()
     endif
     
-    if _Seed_Setting_NeedsSFX.GetValueInt() == 2 && isIncreasing
+    if _Seed_Setting_NeedsSFX.GetValueInt() == 2 && ((!lowerIsWorse && isIncreasing) || (lowerIsWorse && !isIncreasing))
         if thisSound
+        	SeedDebug(0, "[" + debugSystemName + "]: Playing sound.")
         	int sfxid = thisSound.Play(PlayerRef)
         endif
     endif
 
     if _Seed_Setting_NeedsVFX.GetValueInt() == 2
         if thisISM
+        	SeedDebug(0, "[" + debugSystemName + "]: Applying crossfade ISM.")
         	thisISM.ApplyCrossFade(4.0)
         else
         	RemoveAllISMs()
@@ -250,16 +268,48 @@ function ApplyAttributeLevel(int level, bool isIncreasing, bool forceMeter = fal
     endif
 
     if forceMeter
-    	SendEvent_ForceAttributeMeterDisplay()
+    	SeedDebug(0, "[" + debugSystemName + "]: Forcing meter display.")
+    	SendEvent_ForceAttributeMeterDisplay(flashMeter)
     endif
 
-    if rumbleLevel > 0 && isIncreasing
+    if rumbleLevel > 0 && ((!lowerIsWorse && isIncreasing) || (lowerIsWorse && !isIncreasing))
     	if rumbleLevel == 1
+    		SeedDebug(0, "[" + debugSystemName + "]: Playing rumble level 1.")
     		Game.ShakeController(0.6, 0.2, 1.0)
     	elseif rumbleLevel == 2
+    		SeedDebug(0, "[" + debugSystemName + "]: Playing rumble level 2.")
     		Game.ShakeController(0.2, 0.4, 2.0)
     	endif
     endif
+
+    if !bypassVitalityTargetUpdate
+    	GetVitalitySystem().UpdateVitalityTarget()
+    endif
+endFunction
+
+function DisplayCurrentStatus()
+	float currentAttributeValue = attributeValueGlobal.GetValue()
+
+	if IsUpToAndBetween(currentAttributeValue, ATTR_LEVEL_1, ATTR_MIN)
+		attributeMessages[0].Show()
+    
+    elseif IsUpToAndBetween(currentAttributeValue, ATTR_LEVEL_2, ATTR_LEVEL_1)
+        attributeMessages[1].Show()
+    
+    elseif IsUpToAndBetween(currentAttributeValue, ATTR_LEVEL_3, ATTR_LEVEL_2)
+        attributeMessages[2].Show()
+    
+    elseif IsUpToAndBetween(currentAttributeValue, ATTR_LEVEL_4, ATTR_LEVEL_3)
+        attributeMessages[3].Show()
+    
+    elseif IsUpToAndBetween(currentAttributeValue, ATTR_LEVEL_5, ATTR_LEVEL_4)
+        attributeMessages[4].Show()
+    
+    elseif IsUpToAndBetween(currentAttributeValue, ATTR_MAX, ATTR_LEVEL_5)
+        attributeMessages[5].Show()
+    endif
+
+    SendEvent_ForceAttributeMeterDisplay()
 endFunction
 
 function RegisterForEvents()

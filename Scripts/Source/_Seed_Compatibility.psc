@@ -12,6 +12,9 @@ GlobalVariable property _Seed_PreviousVersion auto
 GlobalVariable property _Seed_LastSeedVersion auto
 GlobalVariable property _Camp_IsSpecialEdition auto
 
+Spell property _Seed_IntensityPlayerSpell auto
+Spell property _Seed_CheckNeedsSpell auto
+
 string CONFIG_PATH = "../LastSeedData/"
 bool datastore_update_required = false
 
@@ -103,17 +106,8 @@ function RunCompatibility()
 		trace("[LastSeed] Detected Campfire version " + campfire_version + " (expected " + CAMPFIRE_MIN_VERSION + " or newer, success!)")
 	endif
 
-	if isSKYUILoaded
-		isSKYUILoaded = IsPluginLoaded(0x01000814, "SkyUI.esp")
-		if !isSKYUILoaded
-			;SkyUI was removed since the last save.
-		endif
-	else
-		isSKYUILoaded = IsPluginLoaded(0x01000814, "SkyUI.esp")
-		if isSKYUILoaded
-			;SkyUI was just loaded.
-		endif
-	endif
+	isSKYUILoaded = IsPluginLoaded(0x01000814, "SkyUI.esp")
+	isFrostfallLoaded = IsPluginLoaded(0x00064AF8, "Frostfall.esp")
 
 	trace("[LastSeed]======================================================================================================")
 	trace("[LastSeed]                      Last Seed start-up and compatibility checks complete.   		                ")
@@ -126,8 +120,11 @@ function RunCompatibility()
 	; RegisterForControlsOnLoad()
 	RegisterForEventsOnLoad()
 	; RegisterForMenusOnLoad()
-	; AddStartupSpells()
-	RegisterCampfireSkill()
+	AddStartupSpells()
+	; RegisterCampfireSkill()
+
+	; Load a meter preset for the user's display aspect ratio
+	SendEvent_SKSE_ApplyMeterPreset(2)
 endFunction
 
 function VanillaGameLoadUp()
@@ -142,7 +139,13 @@ function RegisterForEventsOnLoad()
 	GetHungerSystem().RegisterForEvents()
 	GetThirstSystem().RegisterForEvents()
 	GetFatigueSystem().RegisterForEvents()
-	; GetVitalitySystem().RegisterForEvents()
+	GetVitalityMeterHandler().RegisterForEvents()
+	GetHungerMeterHandler().RegisterForEvents()
+endFunction
+
+function AddStartupSpells()
+	PlayerRef.AddSpell(_Seed_IntensityPlayerSpell)
+	PlayerRef.AddSpell(_Seed_CheckNeedsSpell)
 endFunction
 
 function SendEvent_LastSeedLoaded()
@@ -183,6 +186,17 @@ bool function IsPluginLoaded(int iFormID, string sPluginName)
 			return true
 		else
 			return false
+		endif
+	endif
+endFunction
+
+;@NOFALLBACK
+function SendEvent_SKSE_ApplyMeterPreset(int aiValue)
+	if isSKSELoaded
+		int handle = ModEvent.Create("LastSeed_ApplyMeterPreset")
+		if handle
+			ModEvent.PushInt(handle, aiValue)
+			ModEvent.Send(handle)
 		endif
 	endif
 endFunction

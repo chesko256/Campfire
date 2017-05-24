@@ -52,6 +52,7 @@ endFunction
 
 function SpoilFood()
 	SeedDebug(0, "Spoiling food. Current data: ")
+	SeedDebug(0, "    Tracker: " + self)
 	SeedDebug(0, "    Food: " + Food)
 	SeedDebug(0, "    SpoiledFood: " + SpoiledFood)
 	SeedDebug(0, "    Quantity: " + Quantity)
@@ -64,23 +65,27 @@ function SpoilFood()
 		DeleteTracker()
 	else
 		if !TrackedContainer
-			SeedDebug(3, "A perishable food tracker lost (or never knew) the container it was tracking.")
+			SeedDebug(2, "A perishable food tracker lost (or never knew) the container it was tracking.")
 		endif
 		if !Food
-			SeedDebug(3, "A perishable food tracker lost (or never knew) the food it was tracking.")
+			SeedDebug(2, "A perishable food tracker lost (or never knew) the food it was tracking.")
 		endif
 		if !SpoiledFood
-			SeedDebug(3, "A perishable food tracker lost (or never knew) the result food to grant the tracked container.")
+			SeedDebug(2, "A perishable food tracker lost (or never knew) the result food to grant the tracked container.")
 		endif
-		SeedDebug(3, "Deleting the tracker.")
+		SeedDebug(2, "Deleting the tracker.")
 		DeleteTracker()
 	endif
 endFunction
 
 function DeleteTracker()
+	SeedDebug(0, "Deleting food tracker " + self)
 	TrackedContainer = None
-	MyTrackingList.RemoveAddedForm(self)
-	MyTrackingList = None
+	if MyTrackingList
+		MyTrackingList.RemoveAddedForm(self)
+		MyTrackingList = None
+	endif
+	UnregisterForUpdateGameTime()
 	self.Disable()
 	self.Delete()
 endFunction
@@ -89,6 +94,7 @@ int function ReduceQuantity(int aiAmountRequested)
 	; Returns the amount actually removed.
 	
 	if aiAmountRequested >= Quantity
+		SeedDebug(0, "food tracker " + self + " had ReduceQuantity request for more than total quantity.")
 		int amountRemoved = Quantity
 		Quantity = 0
 
@@ -97,7 +103,9 @@ int function ReduceQuantity(int aiAmountRequested)
 
 		return amountRemoved
 	else
+		SeedDebug(0, "food tracker " + self + " reducing quantity by " + aiAmountRequested)
 		Quantity -= aiAmountRequested
+		SeedDebug(0, "food tracker " + self + " quantity is now " + Quantity)
 		return aiAmountRequested
 	endif
 endFunction

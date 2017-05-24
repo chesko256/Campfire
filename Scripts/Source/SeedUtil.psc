@@ -76,6 +76,42 @@ _Seed_SpoilSystem function GetSpoilageSystem() global
     return LastSeed.Spoil
 endFunction
 
+_Seed_VitalityMeterInterfaceHandler function GetVitalityMeterHandler() global
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return none
+    endif
+    return LastSeed.VitalityMeterHandler
+endFunction
+
+_Seed_HungerMeterInterfaceHandler function GetHungerMeterHandler() global
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return none
+    endif
+    return LastSeed.HungerMeterHandler
+endFunction
+
+;/_Seed_ThirstMeterInterfaceHandler function GetThirstMeterHandler() global
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return none
+    endif
+    return LastSeed.ThirstMeterHandler
+endFunction
+
+_Seed_FatigueMeterInterfaceHandler function GetFatigueMeterHandler() global
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return none
+    endif
+    return LastSeed.FatigueMeterHandler
+endFunction
+/;
 _Seed_FoodDatastoreHandler function GetFoodDatastoreHandler() global
     LastSeedAPI LastSeed = GetAPI()
     if LastSeed == none
@@ -543,6 +579,291 @@ SeedUtil.RestorePlayerHunger(20.0)
     endif
 
     LastSeed.Hunger.DecreaseAttribute(afAmount)
+endFunction
+
+;/********f* SeedUtil/GetPlayerHunger
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Gets the player's current Hunger.
+*
+* SYNTAX
+*/;
+float function GetPlayerHunger() global
+;/*
+* PARAMETERS
+* None.
+*
+* RETURN VALUE
+* The player's current Hunger value.
+*
+* EXAMPLES
+;How hungry is the player?
+float hunger = SeedUtil.GetPlayerHunger()
+;*********/;
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return -1.0
+    endif
+
+    return LastSeed.Hunger.attributeValueGlobal.GetValue()
+endFunction
+
+;/********f* SeedUtil/GetPlayerHungerLevel
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Return the player's current hunger level. May be easier to use than GetPlayerHunger() if you don't
+* need to know the actual hunger value.
+*
+* SYNTAX
+*/;
+int function GetPlayerHungerLevel() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* * The player's current hunger level.
+* * 0 = Well Fed
+* * 1 = Satisfied
+* * 2 = Hungry
+* * 3 = Very Hungry
+* * 4 = Ravenous
+* * 5 = Starving
+*
+* EXAMPLES
+;Is the player hungry?
+float hng_level = SeedUtil.GetPlayerHungerLevel()
+if hng_level >= 2
+    debug.notification("Man I'm hungry!")
+endif
+;*********/;
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return -1
+    endif
+
+    return LastSeed._Seed_HungerLevel.GetValueInt()
+endFunction
+
+;/********f* SeedUtil/GetPlayerThirst
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Gets the player's current Thirst.
+*
+* SYNTAX
+*/;
+float function GetPlayerThirst() global
+;/*
+* PARAMETERS
+* None.
+*
+* RETURN VALUE
+* The player's current Thirst value.
+*
+* EXAMPLES
+;How thirsty is the player?
+float thirst = SeedUtil.GetPlayerThirst()
+;*********/;
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return -1.0
+    endif
+
+    return LastSeed.Thirst.attributeValueGlobal.GetValue()
+endFunction
+
+;/********f* SeedUtil/GetPlayerThirstLevel
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Return the player's current thirst level. May be easier to use than GetPlayerThirst() if you don't
+* need to know the actual thirst value.
+*
+* SYNTAX
+*/;
+int function GetPlayerThirstLevel() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* * The player's current thirst level.
+* * 0 = Quenched
+* * 1 = Refreshed
+* * 2 = Thirsty
+* * 3 = Very Thirsty
+* * 4 = Parched
+* * 5 = Dehydrated
+*
+* EXAMPLES
+;Is the player thirsty?
+float thirst_level = SeedUtil.GetPlayerThirstLevel()
+if thirst_level >= 2
+    debug.notification("Man I'm thirsty!")
+endif
+;*********/;
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return -1
+    endif
+
+    return LastSeed._Seed_ThirstLevel.GetValueInt()
+endFunction
+
+;/********f* SeedUtil/GetPlayerFatigue
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Gets the player's current Fatigue.
+*
+* SYNTAX
+*/;
+float function GetPlayerFatigue() global
+;/*
+* PARAMETERS
+* None.
+*
+* RETURN VALUE
+* The player's current Fatigue value.
+*
+* EXAMPLES
+;How fatigued is the player?
+float fatigue = SeedUtil.GetPlayerFatigue()
+;*********/;
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return -1.0
+    endif
+
+    return LastSeed.Fatigue.attributeValueGlobal.GetValue()
+endFunction
+
+;/********f* SeedUtil/GetPlayerFatigueLevel
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Return the player's current fatigue level. May be easier to use than GetPlayerFatigue() if you don't
+* need to know the actual fatigue value.
+*
+* SYNTAX
+*/;
+int function GetPlayerFatigueLevel() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* * The player's current fatigue level.
+* * 0 = Rested / Well Rested / Lover's Comfort
+* * 1 = Sharp
+* * 2 = Tired
+* * 3 = Very Tired
+* * 4 = Haggard
+* * 5 = Exhausted
+*
+* EXAMPLES
+;Is the player tired?
+float fatigue_level = SeedUtil.GetPlayerFatigueLevel()
+if fatigue_level >= 2
+    debug.notification("Man I'm tired!")
+endif
+;*********/;
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return -1
+    endif
+
+    return LastSeed._Seed_FatigueLevel.GetValueInt()
+endFunction
+
+;/********f* SeedUtil/GetPlayerVitality
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Gets the player's current Vitality.
+*
+* SYNTAX
+*/;
+float function GetPlayerVitality() global
+;/*
+* PARAMETERS
+* None.
+*
+* RETURN VALUE
+* The player's current Vitality value.
+*
+* EXAMPLES
+;How high is the player's Vitality?
+float vitality = SeedUtil.GetPlayerVitality()
+;*********/;
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return -1.0
+    endif
+
+    return LastSeed.Vitality.attributeValueGlobal.GetValue()
+endFunction
+
+;/********f* SeedUtil/GetPlayerVitalityLevel
+* API VERSION ADDED
+* 1
+*
+* DESCRIPTION
+* Return the player's current vitality level. May be easier to use than GetPlayerVitality() if you don't
+* need to know the actual vitality value.
+*
+* SYNTAX
+*/;
+int function GetPlayerVitalityLevel() global
+;/*
+* PARAMETERS
+* None
+*
+* RETURN VALUE
+* * The player's current vitality level.
+* * 0 = Dying
+* * 1 = Ruined
+* * 2 = Weakened
+* * 3 = Drained
+* * 4 = Healthy
+* * 5 = Very Healthy
+* * 6 = Vigorous
+* * 7 = Peak Condition
+*
+* NOTES
+* Unlike other needs, higher vitality is better.
+* 
+* EXAMPLES
+;Is the player healthy?
+float vitality_level = SeedUtil.GetPlayerVitalityLevel()
+if vitality_level >= 5
+    debug.notification("I'm a health nut!")
+endif
+;*********/;
+    LastSeedAPI LastSeed = GetAPI()
+    if LastSeed == none
+        RaiseSeedAPIError()
+        return -1
+    endif
+
+    return LastSeed._Seed_VitalityLevel.GetValueInt()
 endFunction
 
 function RaiseSeedAPIError() global

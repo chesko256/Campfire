@@ -76,12 +76,13 @@ Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRefe
 EndEvent
 /;
 
-Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
+;/Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
 	if abHitBlocked
 		(_Seed_HungerSystemQuest as _Seed_HungerSystem).PlayerHit()
 		; (_Seed_ThirstSystemQuest as _Seed_ThirstSystem).PlayerHit()
 	endif
 EndEvent
+/;
 
 ;/Event OnSpellCast(Form akSpell)
 	if akSpell && akSpell as Spell

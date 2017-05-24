@@ -1,19 +1,9 @@
 scriptname _Seed_HungerSystem extends _Seed_AttributeSystem
 ;/
-    Levels of Hunger:
-        Well Fed
-        Satisfied
-        Hungry
-        Very Hungry
-        Ravenous
-        Starving
-
     Things that affect hunger:
         Time
         Power Attacks
         Blocks
-
-    Update frequency: Every 30 in-game minutes
 
     Vampire Behavior:
         Mortal: As normal.
@@ -50,9 +40,8 @@ Quest property _Seed_HungerMeterQuest auto
 
 FormList property _Seed_RecentlyEatenFood auto
 
-float BLOCK_ACTION_HUNGER = 0.25
-float POWERATTACK_ACTION_HUNGER = 0.75
-
+float REGEN_HUNGER_RATE = 0.50
+float lastHealth = 0.0
 
 function StartUp()
     debugSystemName = "Hunger"
@@ -85,9 +74,6 @@ function StartUp()
     attributeSounds[4] = HungerSound5
     attributeSounds[5] = HungerSound6
 
-    attributeISMs[4] = HungerISM5
-    attributeISMs[5] = HungerISM6
-
     RegisterForEvents()
 
     ; Apply initial condition.
@@ -98,10 +84,6 @@ function RegisterForEvents()
     if !self.IsRunning()
         return
     endif
-
-    ; Register for power attacks.
-    RegisterForAnimationEvent(PlayerRef, "PowerAttackStop")
-    RegisterForAnimationEvent(PlayerRef, "00NextClip")
 endFunction
 
 function ChangeAttributeOverTime(bool suspendWhileSleeping = false)
@@ -116,19 +98,24 @@ endFunction
 ; Actions
 ;
 
-; Called by _Seed_PlayerEventMonitor
-function PlayerHit()
-    SeedDebug(1, "(Hunger) Player Blocked Attack")
-    IncreaseAttribute(BLOCK_ACTION_HUNGER)
-endFunction
-
-Event OnAnimationEvent(ObjectReference akSource, string asEventName)
-    if asEventName == "PowerAttackStop" || asEventName == "00NextClip"
-        SeedDebug(1, "(Hunger) Player PowerAttacked")
-        IncreaseAttribute(POWERATTACK_ACTION_HUNGER)
-        int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
-        if mode >= 1 && mode <= 3
-            (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
-        endif
+; Impact the player's hunger if the player is regenerating health.
+Event OnUpdate()
+    bool regenerating = false
+    float thisHealth = PlayerRef.GetActorValue("Health")
+    if thisHealth > lastHealth
+        regenerating = true
     endif
+
+    if regenerating
+        if PlayerRef.IsInCombat()
+            IncreaseAttribute(REGEN_HUNGER_RATE * 0.5)
+        else
+            IncreaseAttribute(REGEN_HUNGER_RATE)
+        endif
+        SendEvent_ForceAttributeMeterDisplay()
+        RegisterForSingleUpdate(2)
+    else
+        RegisterForSingleUpdate(5)
+    endif
+    lastHealth = thisHealth
 EndEvent
