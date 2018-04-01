@@ -3,10 +3,6 @@ scriptname _Seed_FatigueSystem extends _Seed_AttributeSystem
 ;@TODO: Catch shock spell damage, which reduces magicka
 ;@TODO: Look for other sources of magicka damage
 
-GlobalVariable property _Seed_VitalitySystemEnabled auto
-GlobalVariable property _Seed_AttributeFatigue auto
-GlobalVariable property _Seed_FatigueRate auto 							; Default - 1.66
-
 ;@TODO: Is this going to be used?
 ; GlobalVariable property _Seed_FatigueActionRateMasterSpells auto 		; Default - 10.0
 ; GlobalVariable property _Seed_FatigueActionRateExpertSpells auto 		; Default - 2.0
@@ -31,17 +27,14 @@ Quest property _Seed_FatigueMeterQuest auto
 
 float property lastSleepDuration = 0.0 auto hidden
 
+;@TODO
+float SLEEP_RESTORE_RATE = 0.0
+
 ;@TODO: ????
 int locksPicked
 
 function StartSystem()
     parent.StartSystem()
-
-    ; Initialize arrays
-    attributeSpells = new Spell[6]
-    attributeMessages = new Message[6]
-    attributeSounds = new Sound[6]
-    attributeISMs = new ImageSpaceModifier[6]
 
     attributeSpells[0] = _Seed_FatigueSpell1
     attributeSpells[1] = _Seed_FatigueSpell2
@@ -61,12 +54,20 @@ function StartSystem()
 
     ;@TODO: ISMs
 
+    RegisterForEvents()
+
+    ; Apply initial condition.
+    IncreaseAttribute(0.01)
+endFunction
+
+function RegisterForEvents()
+    if !self.IsRunning()
+        return
+    endif
+
     ; Register for archery attacks and lockpicking.
     RegisterForTrackedStatsEvent()
     RegisterForActorAction(6)
-
-    ; Apply initial condition.
-    IncreaseAttribute(attributeValueGlobal, 0.01)
 endFunction
 
 ;
@@ -77,7 +78,7 @@ Event OnTrackedStatsEvent(string arStatName, int aiStatValue)
 	if arStatName == "Locks Picked" && aiStatValue > locksPicked
 		debug.trace("[Seed] (Fatigue) Lock Picked")
 		locksPicked = aiStatValue
-		IncreaseFatigue(1.0)
+		IncreaseAttribute(1.0)
 		int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
 		if mode >= 1 && mode <= 2
         	(_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter()
@@ -88,7 +89,7 @@ EndEvent
 Event OnActorAction(int actionType, Actor akActor, Form source, int slot)
 	if akActor == PlayerRef
 		debug.trace("[Seed] (Fatigue) Archery Attack")
-		IncreaseFatigue(0.2)
+		IncreaseAttribute(0.2)
 		int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
 		if mode >= 1 && mode <= 2
         	(_Seed_FatigueMeterQuest as _Seed_FatigueMeterController).DisplayMeter()
@@ -97,7 +98,7 @@ Event OnActorAction(int actionType, Actor akActor, Form source, int slot)
 EndEvent
 
 Event OnSleepStart(float afSleepStartTime, float afDesiredSleepEndTime)
-	was_sleeping = true
+    wasSleeping = true
 
     ;@TODO: Does this work when we transition to the next day?
 	lastSleepDuration = (afDesiredSleepEndTime - afSleepStartTime) * 24.0
@@ -106,10 +107,11 @@ EndEvent
 Event OnSleepStop(bool abInterrupted)
     ; if not interrupted...
 	;@TODO: Modify by current hunger and thirst.
-	float fatigue_decrease = last_sleep_duration * SLEEP_RESTORE_RATE
-	DecreaseFatigue(fatigue_decrease)
+	float fatigue_decrease = lastSleepDuration * SLEEP_RESTORE_RATE
+	DecreaseAttribute(fatigue_decrease)
 EndEvent
 
+;/ @TODO Requires SKSE
 function SpellCast(Spell akSpell)
 	;@TODO: Increase Fatigue during concentration spell cast
 	if akSpell
@@ -131,27 +133,4 @@ function SpellCast(Spell akSpell)
     	endif
 	endif
 endFunction
-
-function IncreaseAttribute(GlobalVariable attribute, float amount)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.IncreaseAttribute(attribute, amount)
-endFunction
-
-function DecreaseAttribute(GlobalVariable attribute, float amount)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.DecreaseAttribute(attribute, amount)    
-endFunction
-    
-function IncreaseAttributeOverTime(GlobalVariable attribute, GlobalVariable rate)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.IncreaseAttributeOverTime(attribute, rate)
-endFunction
-
-function ModAttribute(GlobalVariable attribute, float amount)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.ModAttribute(attribute, amount)
-endFunction
+/;

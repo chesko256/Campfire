@@ -7,7 +7,7 @@ Quest property _Seed_FatigueSystemQuest auto
 Quest property _Seed_HungerSystemQuest auto
 Quest property _Seed_ThirstSystemQuest auto
 
-Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
+;/ Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
 
 	if (_Seed_SpoilSystemQuest as _Seed_SpoilSystem).spoil_in_progress
 		debug.trace("[Seed] ########################### Discarding OnItemAdded event, spoil cycle in progress.")
@@ -74,28 +74,32 @@ Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemRefe
 		endif
 	endif
 EndEvent
+/;
 
-Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
+;/Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked)
 	if abHitBlocked
 		(_Seed_HungerSystemQuest as _Seed_HungerSystem).PlayerHit()
-		(_Seed_ThirstSystemQuest as _Seed_ThirstSystem).PlayerHit()
+		; (_Seed_ThirstSystemQuest as _Seed_ThirstSystem).PlayerHit()
 	endif
 EndEvent
+/;
 
-Event OnSpellCast(Form akSpell)
+;/Event OnSpellCast(Form akSpell)
 	if akSpell && akSpell as Spell
 		debug.trace("[Seed] Player casting spell " + akSpell)
 		(_Seed_FatigueSystemQuest as _Seed_FatigueSystem).SpellCast(akSpell as Spell)
 	endif
 EndEvent
+/;
 
-bool function IsTrackableFood(Form akBaseItem)
+;/ bool function IsTrackableFood(Form akBaseItem)
 	if (akBaseItem as Potion) && (akBaseItem as Potion).IsFood() && !(_Seed_SpoilSystemQuest as _Seed_SpoilSystem).HasSpoilStage4Name(akBaseItem.GetName())
 		return true
 	else
 		return false
 	endif
 endFunction
+/; 
 
 function BigArrayAddRef_Do(int index, ObjectReference akReference, ObjectReference[] array1, ObjectReference[] array2)
     if index > 255

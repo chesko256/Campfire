@@ -1,36 +1,52 @@
 scriptname _Seed_HungerSystem extends _Seed_AttributeSystem
+;/
+    Things that affect hunger:
+        Time
+        Power Attacks
+        Blocks
 
-;@TODO: Look for other sources of health damage
+    Vampire Behavior:
+        Mortal: As normal.
+        Supernatural: Immune.
+        Immune: Immune.
+/;
 
-; Update frequency = 0.5
+import CampUtil 
+import _SeedInternal
 
-GlobalVariable property _Seed_Setting_HungerSystemEnabled auto
+Spell property HungerSpell1 auto
+Spell property HungerSpell2 auto
+Spell property HungerSpell3 auto
+Spell property HungerSpell4 auto
+Spell property HungerSpell5 auto
+Spell property HungerSpell6 auto
 
-;@TODO: Is this going to be used?
-; GlobalVariable property _Seed_HungerActionRate auto
+Message property HungerMessage1 auto
+Message property HungerMessage2 auto
+Message property HungerMessage3 auto
+Message property HungerMessage4 auto
+Message property HungerMessage5 auto
+Message property HungerMessage6 auto
 
-Spell property _Seed_HungerSpell1 auto
-Spell property _Seed_HungerSpell2 auto
-Spell property _Seed_HungerSpell3 auto
-Spell property _Seed_HungerSpell4 auto
-Spell property _Seed_HungerSpell5 auto
-Spell property _Seed_HungerSpell6 auto
+Sound property HungerSound3 auto
+Sound property HungerSound4 auto
+Sound property HungerSound5 auto
+Sound property HungerSound6 auto
 
-Message property _Seed_HungerLevel1Msg auto
-Message property _Seed_HungerLevel2Msg auto
-Message property _Seed_HungerLevel3Msg auto
-Message property _Seed_HungerLevel4Msg auto
-Message property _Seed_HungerLevel5Msg auto
-Message property _Seed_HungerLevel6Msg auto
+ImageSpaceModifier property HungerISM5 auto
+ImageSpaceModifier property HungerISM6 auto
 
 Quest property _Seed_HungerMeterQuest auto
 
-;
-; Events
-;
+FormList property _Seed_RecentlyEatenFood auto
 
-function StartSystem()
-    parent.StartSystem()
+float REGEN_HUNGER_RATE = 0.50
+float lastHealth = 0.0
+
+function StartUp()
+    debugSystemName = "Hunger"
+    meterUpdateEvent = "LastSeed_UpdateHungerMeter"
+    meterForceEvent = "LastSeed_ForceHungerMeterDisplay"
 
     ; Initialize arrays
     attributeSpells = new Spell[6]
@@ -38,87 +54,68 @@ function StartSystem()
     attributeSounds = new Sound[6]
     attributeISMs = new ImageSpaceModifier[6]
 
-    attributeSpells[0] = _Seed_HungerSpell1
-    attributeSpells[1] = _Seed_HungerSpell2
-    attributeSpells[2] = _Seed_HungerSpell3
-    attributeSpells[3] = _Seed_HungerSpell4
-    attributeSpells[4] = _Seed_HungerSpell5
-    attributeSpells[5] = _Seed_HungerSpell6
+    ; Populate arrays
+    attributeSpells[0] = HungerSpell1
+    attributeSpells[1] = HungerSpell2
+    attributeSpells[2] = HungerSpell3
+    attributeSpells[3] = HungerSpell4
+    attributeSpells[4] = HungerSpell5
+    attributeSpells[5] = HungerSpell6
 
-    attributeMessages[0] = _Seed_HungerLevel1Msg
-    attributeMessages[1] = _Seed_HungerLevel2Msg
-    attributeMessages[2] = _Seed_HungerLevel3Msg
-    attributeMessages[3] = _Seed_HungerLevel4Msg
-    attributeMessages[4] = _Seed_HungerLevel5Msg
-    attributeMessages[5] = _Seed_HungerLevel6Msg
+    attributeMessages[0] = HungerMessage1
+    attributeMessages[1] = HungerMessage2
+    attributeMessages[2] = HungerMessage3
+    attributeMessages[3] = HungerMessage4
+    attributeMessages[4] = HungerMessage5
+    attributeMessages[5] = HungerMessage6
 
-    ;@TODO: Sounds
+    attributeSounds[2] = HungerSound3
+    attributeSounds[3] = HungerSound4
+    attributeSounds[4] = HungerSound5
+    attributeSounds[5] = HungerSound6
 
-    ;@TODO: ISMs
-
-    ; Register for power attacks and bow attacks.
-    RegisterForActorAction(6)
-    RegisterForAnimationEvent(PlayerRef, "PowerAttackStop")
-    RegisterForAnimationEvent(PlayerRef, "00NextClip")
+    RegisterForEvents()
 
     ; Apply initial condition.
-    IncreaseAttribute(attributeValueGlobal, 0.01)
+    IncreaseAttribute(0.01)
 endFunction
 
-function PlayerHit()
-    debug.trace("[Seed] (Hunger) Player Blocked Attack")
-    IncreaseAttribute(attributeValueGlobal, 0.1)
+function RegisterForEvents()
+    if !self.IsRunning()
+        return
+    endif
+endFunction
+
+function ChangeAttributeOverTime(bool suspendWhileSleeping = false)
+    parent.ChangeAttributeOverTime(suspendWhileSleeping)
+
+    ; Every update, clear the recently eaten food list.
+    _Seed_RecentlyEatenFood.Revert()
+    SeedDebug(0, "Cleared the recently eaten food list.")
 endFunction
 
 ;
-; Action Detection
+; Actions
 ;
 
-Event OnActorAction(int actionType, Actor akActor, Form source, int slot)
-    int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
-	; Increase Hunger when the player attacks.
-    if akActor == PlayerRef
-        if actionType == 6
-            debug.trace("[Seed] (Hunger) Archery Attack " + akActor)
-            IncreaseHunger(0.1)
-            if mode >= 1 && mode <= 2
-                (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
-            endif
-        endif
+; Impact the player's hunger if the player is regenerating health.
+Event OnUpdate()
+    bool regenerating = false
+    float thisHealth = PlayerRef.GetActorValue("Health")
+    if thisHealth > lastHealth
+        regenerating = true
     endif
-EndEvent
 
-Event OnAnimationEvent(ObjectReference akSource, string asEventName)
-    if asEventName == "PowerAttackStop" || asEventName == "00NextClip"
-        debug.trace("[Seed] (Hunger) Player PowerAttacked")
-        IncreaseHunger(0.25)
-        int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
-        if mode >= 1 && mode <= 3
-            (_Seed_HungerMeterQuest as _Seed_HungerMeterController).DisplayMeter()
+    if regenerating
+        if PlayerRef.IsInCombat()
+            IncreaseAttribute(REGEN_HUNGER_RATE * 0.5)
+        else
+            IncreaseAttribute(REGEN_HUNGER_RATE)
         endif
+        SendEvent_ForceAttributeMeterDisplay()
+        RegisterForSingleUpdate(2)
+    else
+        RegisterForSingleUpdate(5)
     endif
+    lastHealth = thisHealth
 EndEvent
-
-function IncreaseAttribute(GlobalVariable attribute, float amount)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.IncreaseAttribute(attribute, amount)
-endFunction
-
-function DecreaseAttribute(GlobalVariable attribute, float amount)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.DecreaseAttribute(attribute, amount)
-endFunction
-    
-function IncreaseAttributeOverTime(GlobalVariable attribute, GlobalVariable rate)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.IncreaseAttributeOverTime(attribute, rate)
-endFunction
-
-function ModAttribute(GlobalVariable attribute, float amount)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.ModAttribute(attribute, amount)
-endFunction

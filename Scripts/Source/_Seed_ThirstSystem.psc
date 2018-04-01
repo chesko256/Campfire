@@ -1,12 +1,22 @@
 scriptname _Seed_ThirstSystem extends _Seed_AttributeSystem
+;/
+    Levels of Thirst:
+
+    Things that affect thirst:
+
+    Update frequency: Every 30 in-game minutes
+
+    Vampire Behavior:
+        Mortal: As normal.
+        Supernatural: As normal.
+        Immune: Immune.
+/;
 
 ;@TODO: Catch frost spell damage, which reduces stamina
 ;@TODO: Look for other sources of stamina damage
 
-GlobalVariable property _Seed_ThirstSystemEnabled auto
-
 ;@TODO: Is this going to be used?
-; GlobalVariable property _Seed_ThirstActionRate auto         ; Default - 0.25
+GlobalVariable property _Seed_ThirstActionRate auto         ; Default - 0.25
 
 Spell property _Seed_ThirstSpell1 auto
 Spell property _Seed_ThirstSpell2 auto
@@ -30,12 +40,6 @@ Quest property _Seed_ThirstMeterQuest auto
 
 function StartSystem()
     parent.StartSystem()
-
-    ; Initialize arrays
-    attributeSpells = new Spell[6]
-    attributeMessages = new Message[6]
-    attributeSounds = new Sound[6]
-    attributeISMs = new ImageSpaceModifier[6]
     
     attributeSpells[0] = _Seed_ThirstSpell1
     attributeSpells[1] = _Seed_ThirstSpell2
@@ -55,13 +59,21 @@ function StartSystem()
 
     ;@TODO: ISMs
 
+    RegisterForEvents()
+
+    ; Apply initial condition.
+    IncreaseAttribute(0.01)
+endFunction
+
+function RegisterForEvents()
+    if !self.IsRunning()
+        return
+    endif
+
     ; Register for sprinting and jumping.
     RegisterForControl("Sprint")
     RegisterForAnimationEvent(PlayerRef, "PowerAttackStop")
     RegisterForAnimationEvent(PlayerRef, "00NextClip")
-
-    ; Apply initial condition.
-    IncreaseAttribute(attributeValueGlobal, 0.01)
 endFunction
 
 ;
@@ -71,7 +83,7 @@ endFunction
 Event OnAnimationEvent(ObjectReference akSource, string asEventName)
     if asEventName == "PowerAttackStop" || asEventName == "00NextClip"
         debug.trace("[Seed] (Thirst) Player PowerAttacked")
-        IncreaseThirst(0.25)
+        IncreaseAttribute(0.25)
         int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
         if mode >= 1 && mode <= 3
             (_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).DisplayMeter()
@@ -79,21 +91,22 @@ Event OnAnimationEvent(ObjectReference akSource, string asEventName)
     endif
 EndEvent
 
-function PlayerHit()
+;/function PlayerHit()
         debug.trace("[Seed] (Thirst) Player Blocked Attack")
-        IncreaseThirst(0.1)
+        IncreaseAttribute(0.1)
         int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
         if mode >= 1 && mode <= 2
                 (_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).DisplayMeter()
         endif
 endFunction
+/;
 
 ;@TODO: Xbox-incompatible. Reimplement?
 Event OnControlDown(string control)
     ; Increase Thirst while sprinting or when jumping.
     debug.trace("[Seed] (Thirst) Player Sprinting")
     RegisterForSingleUpdate(2)
-    IncreaseThirst(_Seed_ThirstActionRate.GetValue())
+    IncreaseAttribute(_Seed_ThirstActionRate.GetValue())
     int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
     if mode >= 1 && mode <= 3
         (_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).DisplayMeter()
@@ -103,7 +116,7 @@ EndEvent
 ;@TODO: Is this the best way to handle this?
 Event OnUpdate()
     if PlayerRef.IsSprinting()
-		    IncreaseThirst(_Seed_ThirstActionRate.GetValue())
+		    IncreaseAttribute(_Seed_ThirstActionRate.GetValue())
         int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
         if mode >= 1 && mode <= 2
 		        (_Seed_ThirstMeterQuest as _Seed_ThirstMeterController).DisplayMeter()
@@ -113,27 +126,3 @@ Event OnUpdate()
 		    debug.trace("[Seed] (Thirst) Player Sprinting End")
     endif
 EndEvent
-
-function IncreaseAttribute(GlobalVariable attribute, float amount)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.IncreaseAttribute(attribute, amount)
-endFunction
-
-function DecreaseAttribute(GlobalVariable attribute, float amount)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.DecreaseAttribute(attribute, amount)    
-endFunction
-    
-function IncreaseAttributeOverTime(GlobalVariable attribute, GlobalVariable rate)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.IncreaseAttributeOverTime(attribute, rate)
-endFunction
-
-function ModAttribute(GlobalVariable attribute, float amount)
-    ;@TODO: Handle vampire state
-    ;else,
-    parent.ModAttribute(attribute, amount)
-endFunction

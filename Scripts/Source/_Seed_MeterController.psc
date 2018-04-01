@@ -92,7 +92,7 @@ function DisplayMeter(bool abFlash = false)
 endFunction
 
 function HideMeter()
-    debug.trace("[Seed] HideMeter()")
+    debug.trace("[LastSeed] HideMeter()")
     ;@TODO: Centralize
     _Seed_SKI_MeterWidget meter = ((self as Quest) as _Seed_SKI_MeterWidget)
     transitioning = true
@@ -114,7 +114,7 @@ function SetAlwaysOff()
 endFunction
 
 Event OnUpdate()
-    debug.trace("[Seed] Meter display update " + CompanionResource)
+    debug.trace("[LastSeed] Meter display update " + CompanionResource)
     int mode = _Seed_Setting_NeedsMeterDisplayMode.GetValueInt()
 
     ; Sanity check - bail out on Always On / Off
@@ -124,7 +124,7 @@ Event OnUpdate()
 
     ; If value is low and setting enabled, stay on
     if _Seed_Setting_MetersAlwaysOnWhenLow.GetValueInt() == 2 && AttributeGlobal.GetValue() >= 80.0
-        debug.trace("[Seed] Value too low, staying on. " + CompanionResource)
+        debug.trace("[LastSeed] Value too low, staying on. " + CompanionResource)
         RegisterForSingleUpdate(7.0)
         return
     endif
@@ -141,7 +141,7 @@ Event OnUpdate()
         if av_pct == 1.0
             HideMeter()
         else
-            debug.trace("[Seed] Didn't meet hide conditions, staying on. " + CompanionResource)
+            debug.trace("[LastSeed] Didn't meet hide conditions, staying on. " + CompanionResource)
             RegisterForSingleUpdate(7.0)
         endif
     elseif mode == 4

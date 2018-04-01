@@ -67,6 +67,7 @@
 #Meshes
 !Meshes/campfire/*
 !Meshes/frostfall/*
+!Meshes/lastseed/*
 
 #Readmes
 !readmes/Frostfall*.txt
@@ -82,6 +83,8 @@
 #Scripts
 !qf__de_trackingquest_010177d7.pex
 !qf__de_trackingquest_010177d7.psc
+!QF__Seed_TrackingQuest_0400A69D.pex
+!QF__Seed_TrackingQuest_0400A69D.psc
 !_DE_*.pex
 !_DE_*.psc
 !_Camp*.pex
@@ -98,8 +101,8 @@
 !Frost*.psc
 !_Seed*.pex
 !_Seed*.psc
-!Seed*.pex
-!Seed*.psc
+!LastSeed*.pex
+!LastSeed*.psc
 !_HN*.psc
 !_HN*.pex
 
