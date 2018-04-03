@@ -70,10 +70,6 @@ formlist property EnchantmentResistPoison auto
 ; #Keywords=========================================================================
 Keyword property WAF_ClothingCloak auto
 
-; #Trees============================================================================
-; @TODO: Move to Frostfall
-; TreeObject property TreeReachTreeStump01 auto hidden
-
 ; #DLC / Mod Worldspaces============================================================
 Worldspace property DLC2WS auto hidden						; Solstheim
 
@@ -293,12 +289,12 @@ function RunCompatibility()
 	endif
 
 	if isSKYUILoaded
-		isSKYUILoaded = IsPluginLoaded(0x01000814, "SkyUI.esp")
+		isSKYUILoaded = IsPluginLoaded(0x01000814, "SkyUI.esp") || IsPluginLoaded(0x01000814, "SkyUI_SE.esp")
 		if !isSKYUILoaded
 			;SkyUI was removed since the last save.
 		endif
 	else
-		isSKYUILoaded = IsPluginLoaded(0x01000814, "SkyUI.esp")
+		isSKYUILoaded = IsPluginLoaded(0x01000814, "SkyUI.esp") || IsPluginLoaded(0x01000814, "SkyUI_SE.esp")
 		if isSKYUILoaded
 			;SkyUI was just loaded.
 		endif
@@ -810,9 +806,6 @@ function VanillaGameLoadUp()
 
 	; Grab forms we can't fill as properties
 	PlacementSystem.SmallFire = Game.GetFormFromFile(0x00056204, "Campfire.esm")
-
-	;@TODO: Move to Frostfall
-	; TreeReachTreeStump01 = Game.GetFormFromFile(0x000B8A75, "Skyrim.esm") as TreeObject
 endFunction
 
 

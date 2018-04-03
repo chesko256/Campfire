@@ -802,6 +802,9 @@ function PageReset_SaveLoad()
 	AddEmptyOption()
 	if _Frost_Setting_AutoSaveLoad.GetValueInt() == 2
 		SKI_Main skyui = Game.GetFormFromFile(0x00000814, "SkyUI.esp") as SKI_Main
+		if !skyui
+			skyui = Game.GetFormFromFile(0x00000814, "SkyUI_SE.esp") as SKI_Main
+		endif
 		int version = skyui.ReqSWFRelease
 		if version >= 1026 	; SkyUI 5.1+
 			SaveLoad_RenameProfile_OID = AddInputOption("", "$FrostfallSaveLoadRenameProfile")
@@ -2115,7 +2118,22 @@ function LoadProfileOnStartup()
 endFunction
 
 Event OnKeyDown(int keyCode)
-	if UI.IsMenuOpen("Console") || UI.IsMenuOpen("Book Menu") || UI.IsMenuOpen("BarterMenu") || UI.IsMenuOpen("ContainerMenu") || UI.IsMenuOpen("Crafting Menu") || UI.IsMenuOpen("Dialogue Menu") || UI.IsMenuOpen("FavoritesMenu") || UI.IsMenuOpen("InventoryMenu") || UI.IsMenuOpen("Journal Menu") || UI.IsMenuOpen("Lockpicking Menu") || UI.IsMenuOpen("MagicMenu") || UI.IsMenuOpen("MapMenu") || UI.IsMenuOpen("MessageBoxMenu") || UI.IsMenuOpen("Sleep/Wait Menu") || UI.IsMenuOpen("StatsMenu")
+	if UI.IsMenuOpen("Console") || \
+	 UI.IsMenuOpen("Book Menu") || \
+	 UI.IsMenuOpen("BarterMenu") || \
+	 UI.IsMenuOpen("ContainerMenu") || \
+	 UI.IsMenuOpen("Crafting Menu") || \
+	 UI.IsMenuOpen("Dialogue Menu") || \
+	 UI.IsMenuOpen("FavoritesMenu") || \
+	 UI.IsMenuOpen("InventoryMenu") || \
+	 UI.IsMenuOpen("Journal Menu") || \
+	 UI.IsMenuOpen("Lockpicking Menu") || \
+	 UI.IsMenuOpen("MagicMenu") || \
+	 UI.IsMenuOpen("MapMenu") || \
+	 UI.IsMenuOpen("MessageBoxMenu") || \
+	 UI.IsMenuOpen("Sleep/Wait Menu") || \
+	 UI.IsMenuOpen("StatsMenu") || \
+	 UI.IsMenuOpen("UITextEntryMenu")
 		return
 	endif
 	if keyCode == _Frost_HotkeyWeathersense.GetValueInt()

@@ -84,9 +84,6 @@ Formlist property _Frost_ExposureExceptions auto
 Formlist property _Camp_HeatSources_All auto
 Formlist property _Camp_HeatSources_Other auto
 
-;#Trees============================================================================
-;TreeObject property TreeReachTreeStump01 auto hidden
-
 ;#DLC / Mod Worldspaces============================================================
 Worldspace property WS_FalmerValley auto hidden
 Worldspace property WS_Solstheim auto hidden
@@ -374,12 +371,12 @@ function RunCompatibility()
 	endif
 
 	if isSKYUILoaded
-		isSKYUILoaded = IsPluginLoaded(0x01000814, "SkyUI.esp")
+		isSKYUILoaded = IsPluginLoaded(0x01000814, "SkyUI.esp") || IsPluginLoaded(0x01000814, "SkyUI_SE.esp")
 		if !isSKYUILoaded
 			;SkyUI was removed since the last save.
 		endif
 	else
-		isSKYUILoaded = IsPluginLoaded(0x01000814, "SkyUI.esp")
+		isSKYUILoaded = IsPluginLoaded(0x01000814, "SkyUI.esp") || IsPluginLoaded(0x01000814, "SkyUI_SE.esp")
 		if isSKYUILoaded
 			;SkyUI was just loaded.
 		endif
@@ -1247,8 +1244,6 @@ function VanillaGameLoadUp()
 	if added_spell_books == false
 		AddSpellBooks()
 	endif
-
-	; TreeReachTreeStump01 = Game.GetFormFromFile(0x000B8A75, "Skyrim.esm") as TreeObject
 endFunction
 
 function ModifyFurArmorNames()
@@ -1305,11 +1300,8 @@ function AddSpellBooks()
 		LItemSpellTomes25Alteration.AddForm(_Frost_SpellTomeFoxskin, 1, 1)
 		LItemSpellTomes25AllIllusion.AddForm(_Frost_SpellTomeSoothe2, 1, 1)
 		LItemSpellTomes25Illusion.AddForm(_Frost_SpellTomeSoothe2, 1, 1)
-		;LItemSpellTomes25AllConjuration.AddForm(_Frost_SpellTomeBoundCloakLesser, 1, 1)
-		;LItemSpellTomes25Conjuration.AddForm(_Frost_SpellTomeBoundCloakLesser, 1, 1)
 		LItemScroll25Skill.AddForm(_Frost_ScrollBask, 1, 1)
 		LItemScroll25Skill.AddForm(_Frost_ScrollFoxskin, 1, 1)
-		;LItemScroll25Skill.AddForm(_Frost_ScrollBoundCloakLesser, 1, 1)
 
 		;50
 		LItemSpellTomes50AllAlteration.AddForm(_Frost_SpellTomeWolfskin, 1, 1)
@@ -1324,9 +1316,6 @@ function AddSpellBooks()
 		LItemSpellTOmes50AllRestoration.AddForm(_Frost_SpellTomeKindle, 1, 1)
 		LItemSpellTOmes50Restoration.AddForm(_Frost_SpellTomeKindle, 1, 1)
 		LItemSpellTomes50Spells.AddForm(_Frost_SpellTomeKindle, 1, 1)
-		; LItemSpellTomes50AllConjuration.AddForm(_Frost_SpellTomeBoundCloakGreater, 1, 1)
-		; LItemSpellTomes50Conjuration.AddForm(_Frost_SpellTomeBoundCloakGreater, 1, 1)
-		; LItemSpellTomes50Spells.AddForm(_Frost_SpellTomeBoundCloakGreater, 1, 1)
 		LItemScroll50Skill.AddForm(_Frost_ScrollRevel, 1, 1)
 		LItemScroll50Skill.AddForm(_Frost_ScrollWolfskin, 1, 1)
 		LItemScroll50Skill.AddForm(_Frost_ScrollVaporBlast, 1, 1)
@@ -1334,9 +1323,6 @@ function AddSpellBooks()
 		LItemScroll50Skill.AddForm(_Frost_ScrollBoundCloakGreater, 1, 1)
 
 		;75
-		; LItemSpellTomes75AllConjuration.AddForm(_Frost_SpellTomeConjureShelterLesser, 1, 1)
-		; LItemSpellTomes75Conjuration.AddForm(_Frost_SpellTomeConjureShelterLesser, 1, 1)
-		; LItemSpellTomes75Spells.AddForm(_Frost_SpellTomeConjureShelterLesser, 1, 1)
 		LItemSpellTomes75AllAlteration.AddForm(_Frost_SpellTomeTransmuteWood, 1, 1)
 		LItemSpellTomes75Alteration.AddForm(_Frost_SpellTomeTransmuteWood, 1, 1)
 		LItemSpellTomes75Spells.AddForm(_Frost_SpellTomeTransmuteWood, 1, 1)
@@ -1344,12 +1330,6 @@ function AddSpellBooks()
 		LItemSpellTomes75Alteration.AddForm(_Frost_SpellTomeBearskin, 1, 1)
 		LItemSpellTomes75Spells.AddForm(_Frost_SpellTomeBearskin, 1, 1)
 		LItemScroll75Skill.AddForm(_Frost_ScrollBearskin, 1, 1)
-		; LItemScroll75Skill.AddForm(_Frost_ScrollConjureShelterLesser, 1, 1)
-
-		;100
-		; LItemSpellTomes100Conjuration.AddForm(_Frost_SpellTomeConjureShelterGreater, 1, 1)
-		; MGRitualConjurationBooks.AddForm(_Frost_SpellTomeConjureShelterGreater, 1, 1)
-		; LItemScroll100Skill.AddForm(_Frost_ScrollConjureShelterGreater, 1, 1)
 
 		added_spell_books = true
 	endif

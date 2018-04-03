@@ -43,7 +43,7 @@ bool isSKYUILoaded = false
 
 Event OnInit()
 	; Add config spell on start-up.
-	isSKYUILoaded = Game.GetFormFromFile(0x01000814, "SkyUI.esp")
+	isSKYUILoaded = Game.GetFormFromFile(0x01000814, "SkyUI.esp") || Game.GetFormFromFile(0x01000814, "SkyUI_SE.esp")
 	if isSKYUILoaded
 		PlayerRef.RemoveSpell(_Frost_LegacyConfig_Spell)
 	else
