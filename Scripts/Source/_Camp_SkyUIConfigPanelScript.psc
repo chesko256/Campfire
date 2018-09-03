@@ -1128,7 +1128,14 @@ function LoadProfileOnStartup()
 		JsonUtil.SetIntValue(CONFIG_PATH + "common", "auto_load", 2)
 		JsonUtil.SetIntValue(CONFIG_PATH + "common", "last_profile", 1)
 		JsonUtil.Save(CONFIG_PATH + "common")
-		SwitchToProfile(1)
+
+		; Test reading to the newly saved file. If we can't read from it, STOP.
+		int test = JsonUtil.GetIntValue(CONFIG_PATH + "common", "auto_load", 0)
+		if test != 2
+			return
+		else
+			SwitchToProfile(1)
+		endif
 	endif
 endFunction
 

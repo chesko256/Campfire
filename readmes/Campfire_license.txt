@@ -1,53 +1,21 @@
-===================================================
+The MIT License (MIT)
 
-C A M P F I R E
+Copyright (c) 2018 Chesko
 
-Complete Camping System
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-License Agreement
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-===================================================
-
-=== TL;DR ===
-
-	* You can use the mod for personal use.
-
-	* You can’t copy and distribute the mod on other websites or include it in a package or collection.
-
-	* You can't upload the mod to Bethesda.net for any platform.
-
-	* You can't sell the mod.
-
-	* You can make translations of the mod, and you don’t have to ask for permission; you already have permission. You can’t translate and redistribute the entire mod; you can only create and distribute a translated version of Campfire.esm. You can also translate and distribute the Campfire_<LANGUAGE>.txt files used by SkyUI’s Mod Configuration Menu. Please see the Quest "CampfireStrings", attached script "_Camp_Strings" for string properties that should also be translated. There should be no strings in need of translation in any script files.
-
-	* You can create Campfire-dependent mods and distribute them. You don’t need permission to do this; you already have permission. As above, you can’t redistribute the entire mod with your mod.
-
-	* You can create mods that use the CampUtil API. You can’t include CampUtil API code or the rest of Campfire in your own mod; you must require that your users install Campfire in order to take advantage of the things offered by CampUtil.
-
-	* Specifically - DO NOT include CampUtil.pex, or any other pex files from this mod, in your mod.
-	
-	* If you have a question, just contact me at chesko.tesmod@gmail.com.
-
-	* Thank you for using Campfire and respecting my wishes for how I intend for it to be used and distributed. You’re awesome.
-
-
-=== License Agreement ===
-
-FAIR END USER LICENSE AGREEMENT
-
-Modified from The Simple EULA Project
-http://simpleeulas.weebly.com/fair-eulas.html
-
-1. Chesko ("Mod Developer") grants you a license to install and use this software ("Mod") on all computers you own. You may create backups to the Mod but do not circulate/distribute them in public. If you do not agree to the following terms of this license, please uninstall and remove all copies.
-
-2. The Mod is protected by the copyright laws of the U.S. and other countries, and Mod Developer retains all intellectual property rights in the Mod. You may not separately publish, sell, market, distribute, lend, lease, rent, or sublicense the Mod. However, this license is not to be construed as prohibiting or limiting any fair use sanctioned by copyright law, such as permitted library and classroom usage or reverse engineering.
-
-NO WARRANTY
-
-3. The Mod is provided "as is," with all faults, defects and errors, and without warranty of any kind.
-
-4. Mod Developer has taken reasonable steps to keep the Mod free of harmful code.
-
-GENERAL PROVISIONS
-
-5. This agreement will apply from the date of the installation of the Mod.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

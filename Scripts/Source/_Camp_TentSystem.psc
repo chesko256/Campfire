@@ -90,17 +90,11 @@ function UpdateTentUseState(ObjectReference akTent)
 		EO_TurnOn()
 		SendEvent_OnBedrollSitLay(akTent, true)
 
-		_Camp_FadeDown.Apply()
-		wait(0.5)
-		_Camp_ForceBlackVFX.Play(PlayerRef)
-		_Camp_FadeDown.PopTo(_Camp_Black)
 		if TentObject.myExitFront && TentObject.myExitFront.IsEnabled() && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
-			PlayerRef.MoveTo(TentObject.myExitFront)
+			FadeAndMovePlayer(TentObject.myExitFront)
 		else
-			PlayerRef.MoveTo(PlayerRef)
+			FadeAndMovePlayer(akTent, 115.0, 180.0)
 		endif
-		_Camp_ForceBlackVFX.Stop(PlayerRef)
-		_Camp_Black.PopTo(_Camp_FadeUp)
 
 		CleanUpTent(akTent)
 		
@@ -128,8 +122,16 @@ function UpdateTentUseState(ObjectReference akTent)
 		EO_TurnOn()
 		SendEvent_OnBedrollSitLay(akTent, true)
 
-		if TentObject.myExitFront && TentObject.myExitFront.IsEnabled() && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
-			PlayerRef.SplineTranslateToRef(TentObject.myExitFront, 1.0, 65.0)
+		if GetCompatibilitySystem().isSkyrimVR
+			if TentObject.myExitFront && TentObject.myExitFront.IsEnabled() && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
+				FadeAndMovePlayer(TentObject.myExitFront)
+			else
+				FadeAndMovePlayer(akTent, 115.0, 180.0)
+			endif
+		else
+			if TentObject.myExitFront && TentObject.myExitFront.IsEnabled() && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
+				PlayerRef.SplineTranslateToRef(TentObject.myExitFront, 1.0, 65.0)
+			endif
 		endif
 		CleanUpTent(akTent)
 
@@ -196,6 +198,25 @@ function ActivateLayDownMarker(CampTent TentObject, bool abLayingDown = true)
 	endif
 endFunction
 
+function FadeAndMovePlayer(ObjectReference akDestinationRef, float afForwardDistance = -1.0, float afZAngleOffset = -1.0)
+	_Camp_FadeDown.Apply()
+	wait(0.5)
+	_Camp_ForceBlackVFX.Play(PlayerRef)
+	_Camp_FadeDown.PopTo(_Camp_Black)
+	if afForwardDistance != -1.0
+		float[] center_point = new float[2]
+		center_point = GetOffsets(PlayerRef, afForwardDistance)
+		PlayerRef.MoveTo(akDestinationRef, center_point[0], center_point[1])
+		if afZAngleOffset != -1.0
+			PlayerRef.SetAngle(PlayerRef.GetAngleX(), PlayerRef.GetAngleY(), PlayerRef.GetAngleZ() + afZAngleOffset)
+		endif
+	else
+		PlayerRef.MoveTo(akDestinationRef)
+	endif
+	_Camp_ForceBlackVFX.Stop(PlayerRef)
+	_Camp_Black.PopTo(_Camp_FadeUp)
+endFunction
+
 function CheckTentFeatures(CampTent TentObject)
 	; Set lantern capability
     if TentObject.myLanternUnlit
@@ -215,25 +236,25 @@ function ShowMainMenu(ObjectReference akTent)
 	CampTent TentObject = akTent as CampTent
 	CheckTentFeatures(TentObject)
 	int i = _Camp_TentMainMenu.Show()
-	if i == 0										;Sit
+	if i == 0 || i == 1								;Sit / Relax (VR)
 		SetWasFirstPerson()
-		if Compatibility.isSKSELoaded
+		if Compatibility.isSKSELoaded && !Compatibility.isSkyrimVR
 			Message.ResetHelpMessage("Activate")
 			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
 		endif
 		PlayerSit(akTent)
-	elseif i == 1									;Lie Down
+	elseif i == 2									;Lie Down
 		SetWasFirstPerson()
 		if Compatibility.isSKSELoaded
 			Message.ResetHelpMessage("Activate")
 			_Camp_Help_TentActivate.ShowAsHelpMessage("Activate", 5, 30, 1)
 		endif
 		PlayerLieDown(akTent)
-	elseif i == 2	 								;Sleep
+	elseif i == 3	 								;Sleep
 		PlayerSleep(TentObject)
-	elseif i == 3									;Light
+	elseif i == 4									;Light
 		ToggleLantern(akTent)
-	elseif i == 4 || i == 5							;Pack or Dismiss
+	elseif i == 5 || i == 6							;Pack or Dismiss
 		PackTent(akTent)
 	else
 		;exit
@@ -276,7 +297,15 @@ function ShowSitMenu(ObjectReference akTent)
 		endif
 
 	elseif i == 3 									;Get Up
-		TentObject.myPlayerSitMarker.Activate(PlayerRef)
+		if GetCompatibilitySystem().isSkyrimVR
+			if TentObject.myExitFront && TentObject.myExitFront.IsEnabled() && PlayerRef.GetDistance(TentObject.myExitFront) < 1000.0
+				FadeAndMovePlayer(TentObject.myExitFront)
+			else
+				FadeAndMovePlayer(akTent, 115.0, 180.0)
+			endif
+		else
+			TentObject.myPlayerSitMarker.Activate(PlayerRef)
+		endif
 	elseif i == 4
 		;do nothing
 	endif
@@ -426,10 +455,11 @@ function PlayerSit(ObjectReference akTent)
 			DisplayPlayerTentEquipment(akTent)
 		endif
 	endif
-	TryToDisableRef(TentObject.myShelterCollider)
 	; Setting must be on and there must be a separate exterior object
 	if _Camp_TentSeeThru.GetValueInt() == 2 && (TentObject.myTent && TentObject.myNormalTent)
-		TryToDisableRef(TentObject.myTentExterior, true)
+		if !Compatibility.isSkyrimVR
+			TryToDisableRef(TentObject.myTentExterior, true)
+		endif
 	endif
 
 	; Start the quest so that the aliases fill and follower packages run.
@@ -489,10 +519,11 @@ function PlayerLieDown(ObjectReference akTent)
 			DisplayPlayerTentEquipment(akTent)
 		endif
 	endif
-	TryToDisableRef(TentObject.myShelterCollider)
 	; Setting must be on and there must be a separate exterior object
 	if _Camp_TentSeeThru.GetValueInt() == 2 && (TentObject.myTent && TentObject.myNormalTent)
-		TryToDisableRef(TentObject.myTentExterior, true)
+		if !Compatibility.isSkyrimVR
+			TryToDisableRef(TentObject.myTentExterior, true)
+		endif
 	endif
 
 	; Start the quest so that the aliases fill and follower packages run.
@@ -601,9 +632,7 @@ function SelectExterior(ObjectReference akTent, bool abInTent)
 	if TentObject.myTentExterior != TentObject.myTent
 		TryToEnableRef(TentObject.myTent, true)
 	endif
-	if !abInTent
-		TryToEnableRef(TentObject.myShelterCollider)
-	endif
+	TryToEnableRef(TentObject.myShelterCollider)
 	
 	TryToDisableRef(TentObject.myNormalTent)
 	TryToDisableRef(TentObject.mySnowTent)
@@ -1185,9 +1214,6 @@ function CleanUpTent(ObjectReference akTent)
 		(TentObject.mySpareBedRoll3 as _Camp_CampTentNPCBedrollScript).CleanUp()
 	endif
 
-	if !IsRefInInterior(PlayerRef)
-		TryToEnableRef(TentObject.myShelterCollider)
-	endif
 	TryToEnableRef(TentObject.myTentExterior, true)
 endFunction
 
@@ -1262,3 +1288,17 @@ function AdvanceCampingSkill()
         endif
     endif
 endFunction
+
+float[] function GetOffsets(Actor akSource, Float afDistance = 100.0, float afOffset = 0.0)
+    Float A = akSource.GetAngleZ() + afOffset
+    Float YDist = Sin(A)
+    Float XDist = Cos(A)
+
+    XDist *= afDistance
+    YDist *= afDistance
+
+    Float[] Offsets = New Float[2]
+    Offsets[0] = YDist
+    Offsets[1] = XDist
+    Return Offsets
+EndFunction

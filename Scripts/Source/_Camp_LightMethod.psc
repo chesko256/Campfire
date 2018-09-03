@@ -1,6 +1,7 @@
 scriptname _Camp_LightMethod extends ObjectReference
 
 import Utility
+import _CampInternal
 import CampUtil
 
 bool property is_flames = false auto
@@ -24,10 +25,18 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
 
 		if is_stone
 			ObjectReference light_marker = PlayerRef.PlaceAtMe(_Camp_CampfireLightStoneMarker)
-			light_marker.Activate(PlayerRef)
+			if GetCompatibilitySystem().isSkyrimVR
+				ExitMenus()
+			else
+				light_marker.Activate(PlayerRef)
+			endif
 		elseif is_flames
 			ObjectReference light_marker = PlayerRef.PlaceAtMe(_Camp_CampfireLightFlamesMarker)
-			light_marker.Activate(PlayerRef)
+			if GetCompatibilitySystem().isSkyrimVR
+				ExitMenus()
+			else
+				light_marker.Activate(PlayerRef)
+			endif
 		endif
 
 		PlayerRef.RemoveItem(this_item, 1, true)

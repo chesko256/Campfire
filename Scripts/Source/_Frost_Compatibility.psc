@@ -7,7 +7,7 @@ import _FrostInternal
 import CommonArrayHelper
 
 int property SKSE_MIN_VERSION = 10703 autoReadOnly
-int property CAMPFIRE_MIN_VERSION = 11100 autoReadOnly
+int property CAMPFIRE_MIN_VERSION = 11200 autoReadOnly
 float property WEARABLELANTERNS_MIN_VERSION = 4.02 autoReadOnly
 GlobalVariable property _Frost_PreviousVersion auto
 GlobalVariable property _Frost_FrostfallVersion auto

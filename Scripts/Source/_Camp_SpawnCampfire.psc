@@ -8,7 +8,8 @@ Message property _Camp_CampfireModeSelect auto
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	if PlayerCanPlaceObjects()
-		if _Camp_Setting_CampfireMode.GetValueInt() > 1
+		int mode = _Camp_Setting_CampfireMode.GetValueInt()
+		if mode < 0 || mode > 1
 			int i = _Camp_CampfireModeSelect.Show()
 			if i == 0
 				; Quick

@@ -1900,7 +1900,12 @@ function PlaceObject_PlayerShieldInterior()
 endFunction
 
 function PlaceObject_PlayerSitMarker()
-	myPlayerSitMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_TentSitMarker, RequiredPositionRef_PlayerBed, x_pos_offset = 12.1647, y_pos_offset = -22.7978, z_pos_offset = 5.1221, z_local_ang_adjust = 180.0 + Setting_PlayerSitAngle, is_temp = is_temporary)
+	if GetCompatibilitySystem().isSkyrimVR
+		Furniture VRSitMarker = Game.GetFormFromFile(0x0207BEA1, "Campfire.esm") as Furniture
+		myPlayerSitMarkerFuture = PlacementSystem.PlaceObject(self, VRSitMarker, RequiredPositionRef_PlayerBed, z_pos_offset = 18.0, z_local_ang_adjust = 180.0 + Setting_PlayerSitAngle, is_temp = is_temporary)
+	else
+		myPlayerSitMarkerFuture = PlacementSystem.PlaceObject(self, _Camp_TentSitMarker, RequiredPositionRef_PlayerBed, x_pos_offset = 12.1647, y_pos_offset = -22.7978, z_pos_offset = 5.1221, z_local_ang_adjust = 180.0 + Setting_PlayerSitAngle, is_temp = is_temporary)
+	endif
 endFunction
 
 function PlaceObject_PlayerLayDownMarker()

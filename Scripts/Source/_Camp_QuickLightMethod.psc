@@ -1,6 +1,7 @@
 scriptname _Camp_QuickLightMethod extends ObjectReference
 
 import Utility
+import _CampInternal
 import CampUtil
 
 int property requiredLightingMethod auto
@@ -58,10 +59,18 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
 		; Select the lighting method
 		if requiredLightingMethod == STONE
 			ObjectReference light_marker = PlayerRef.PlaceAtMe(_Camp_CampfireQuickLightStoneMarker)
-			light_marker.Activate(PlayerRef)
+			if GetCompatibilitySystem().isSkyrimVR
+				ExitMenus()
+			else
+				light_marker.Activate(PlayerRef)
+			endif
 		elseif requiredLightingMethod == MAGIC
 			ObjectReference light_marker = PlayerRef.PlaceAtMe(_Camp_CampfireQuickLightFlamesMarker)
-			light_marker.Activate(PlayerRef)
+			if GetCompatibilitySystem().isSkyrimVR
+				ExitMenus()
+			else
+				light_marker.Activate(PlayerRef)
+			endif
 		endif
 
 		PlayerRef.RemoveItem(this_item, 1, true)

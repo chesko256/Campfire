@@ -28,50 +28,71 @@ int stone_fx_counter = 0
 ObjectReference parent_campfire
 ObjectReference spark_marker
 int sound_id = 0
+float currentX
+float currentY
+
+; Skyrim VR
+Event OnInit()
+	if !in_use && GetCompatibilitySystem().isSkyrimVR
+		currentX = PlayerRef.GetPositionX()
+    	currentY = PlayerRef.GetPositionY()
+		in_use = true
+		SetUpLightingCampfire()
+		AddFireLightingFX()
+		RegisterForSingleUpdate(1)
+	endif
+endEvent
 
 Event OnActivate(ObjectReference akActionRef)
 	if !in_use
 		in_use = true
 		Game.DisablePlayerControls(true, true, true, false, true, false, false, false)
-		(_Camp_PlayerAlias as _Camp_PlayerHitMonitor).FireLightingReference = self
-		parent_campfire = GetLastUsedCampfire()
-		(parent_campfire as CampCampfire).FireLightingReference = self
+		SetUpLightingCampfire()
 		
-		int modifier_rank
-		if is_stone
-			modifier_rank = _Camp_PerkRank_Firecraft.GetValueInt()
-		elseif is_flamespell
-			modifier_rank = Math.Floor(PlayerRef.GetAV("Destruction") / 20)
-			if modifier_rank > 4
-				modifier_rank = 4
-			endif
-		endif
-		total_required_seconds = (parent_campfire as CampCampfire).base_time_to_light - (modifier_rank * 10)
-		if total_required_seconds <= 0
-			total_required_seconds = 1
-		endif
-		remaining_seconds = total_required_seconds
-		CampDebug(0, "Campfire lighting modifier rank " + modifier_rank)
-		CampDebug(0, "Campfire lighting total seconds " + total_required_seconds)
-
 		int j = 0
 		while !self.IsFurnitureInUse() && j < 50
 			j += 1
 			Utility.Wait(0.1)
 		endWhile
 
-		if is_stone
-			spark_marker = PlayerRef.PlaceAtMe(XMarker)
-			float[] dist = new float[2]
-			dist = GetOffsets(PlayerRef, 130.0)
-			spark_marker.MoveTo(PlayerRef, afXOffset = dist[0], afYOffset = dist[1], afZOffset = 10.0)
-		elseif is_flamespell
-			FlameFX()
-		endif
-
+		AddFireLightingFX()
 		RegisterForSingleUpdate(1)
 	endif
 EndEvent
+
+function SetUpLightingCampfire()
+	(_Camp_PlayerAlias as _Camp_PlayerHitMonitor).FireLightingReference = self
+	parent_campfire = GetLastUsedCampfire()
+	(parent_campfire as CampCampfire).FireLightingReference = self
+	
+	int modifier_rank
+	if is_stone
+		modifier_rank = _Camp_PerkRank_Firecraft.GetValueInt()
+	elseif is_flamespell
+		modifier_rank = Math.Floor(PlayerRef.GetAV("Destruction") / 20)
+		if modifier_rank > 4
+			modifier_rank = 4
+		endif
+	endif
+	total_required_seconds = (parent_campfire as CampCampfire).base_time_to_light - (modifier_rank * 10)
+	if total_required_seconds <= 0
+		total_required_seconds = 1
+	endif
+	remaining_seconds = total_required_seconds
+	CampDebug(0, "Campfire lighting modifier rank " + modifier_rank)
+	CampDebug(0, "Campfire lighting total seconds " + total_required_seconds)
+endFunction
+
+function AddFireLightingFX()
+	if is_stone
+		spark_marker = PlayerRef.PlaceAtMe(XMarker)
+		float[] dist = new float[2]
+		dist = GetOffsets(PlayerRef, 130.0)
+		spark_marker.MoveTo(PlayerRef, afXOffset = dist[0], afYOffset = dist[1], afZOffset = 10.0)
+	elseif is_flamespell
+		FlameFX()
+	endif
+endFunction
 
 Event OnUpdate()
 	remaining_seconds -= 1.0
@@ -80,9 +101,10 @@ Event OnUpdate()
 	
 	if was_hit
 		StopLighting()
+		return
 	endif
 
-	if self.IsFurnitureInUse()
+	if self.IsFurnitureInUse() || (GetCompatibilitySystem().isSkyrimVR && (PlayerRef.GetPositionX() == currentX && PlayerRef.GetPositionY() == currentY))
 		if is_stone
 			stone_fx_counter += 1
 			StoneFX()
@@ -108,13 +130,15 @@ Event OnUpdate()
 				Game.AdvanceSkill("Destruction", 66.0)	; Equivalent to 1x cast of Fireball
 			endif
 
-			self.Activate(PlayerRef)
+			if !GetCompatibilitySystem().isSkyrimVR
+				self.Activate(PlayerRef)
 
-			int i = 0
-			while self.IsFurnitureInUse() && i < 50
-				Utility.Wait(0.1)
-				i += 1
-			endWhile
+				int i = 0
+				while self.IsFurnitureInUse() && i < 50
+					Utility.Wait(0.1)
+					i += 1
+				endWhile
+			endif
 
 			(parent_campfire as CampCampfire).RegisterForCampfireCallback(0.1)
 			
@@ -146,11 +170,15 @@ endFunction
 function FlameFX()
 	sound_id = MAGCloakFireLP.Play(PlayerRef)
 	Sound.SetInstanceVolume(sound_id, 0.65)
-	PlayerRef.AddSpell(_Camp_LightFireFXFlamesSpell, false)
+	if !GetCompatibilitySystem().isSkyrimVR
+		PlayerRef.AddSpell(_Camp_LightFireFXFlamesSpell, false)
+	endif
 endFunction
 
 function StopLighting()
-	self.Activate(PlayerRef)
+	if !GetCompatibilitySystem().isSkyrimVR
+		self.Activate(PlayerRef)
+	endif
 endFunction
 
 function TakeDown()
@@ -162,7 +190,9 @@ function TakeDown()
 		spark_marker.Disable()
 		spark_marker.Delete()
 	endif
-	PlayerRef.RemoveSpell(_Camp_LightFireFXFlamesSpell)
+	if !GetCompatibilitySystem().isSkyrimVR
+		PlayerRef.RemoveSpell(_Camp_LightFireFXFlamesSpell)
+	endif
 	(_Camp_PlayerAlias as _Camp_PlayerHitMonitor).FireLightingReference = none
 	(parent_campfire as CampCampfire).FireLightingReference = none
 	(parent_campfire as CampCampfire).mySteam.DisableNoWait(true)

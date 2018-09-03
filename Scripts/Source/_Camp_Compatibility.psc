@@ -36,6 +36,7 @@ bool property isDLC2Loaded auto hidden						; Dragonborn
 bool property isHFLoaded auto hidden						; Hearthfire
 
 ; #Supported Mods===============================================================
+bool property isSkyrimVR auto hidden						; Skyrim VR
 bool property isSKSELoaded auto hidden						; SKSE
 bool property isSKYUILoaded auto hidden						; SkyUI 3.4+
 bool property isFrostfallLoaded auto hidden					; Frostfall
@@ -77,7 +78,6 @@ Worldspace property DLC2WS auto hidden						; Solstheim
 Activator property _Camp_PerkNavControllerAct auto
 Activator property _Camp_PerkNodeController_Camping auto
 
-; GlobalVariable property _Camp_PerkNodeControllersSorted auto ; Constant value = 1
 GlobalVariable property _Camp_PerkNodeControllerCount auto
 
 ; #Followers========================================================================
@@ -209,37 +209,6 @@ function CleanUpInvalidFollowers()
 	endif
 endFunction
 
-function FatalErrorFrostfallLegacy()
-	trace("[Campfire][ERROR] Detected Frostfall legacy version (2.6 or less). Expected 3.0 or newer.")
-	int idx
-	string author
-	_Camp_Strings str = GetCampfireStrings()
-	if isSKSELoaded
-		idx = Game.GetModByName("Chesko_Frostfall.esp")
-		author = Game.GetModAuthor(idx)
-	endif
-
-	if isSKSELoaded
-		if idx != 255
-			while true
-				; Frostfall Legacy was detected and resolved to a specific position in the load order. Prevent continued play.
-				MessageBox(str.FrostfallCriticalError1 + str.FrostfallCriticalError2 + Game.GetModName(idx) + str.FrostfallCriticalError3 + idx + str.FrostfallCriticalError4 + author + ")")
-				utility.wait(3.0)
-			endWhile
-		else
-			; Something strange happened - GetFormFromFile found Frostfall, but GetModByName didn't. Allow continued play.
-			Quest found_plugin = Game.GetFormFromFile(0x0286F3, "Chesko_Frostfall.esp") as Quest
-			MessageBox(str.FrostfallCriticalErrorUnknown1 + str.FrostfallCriticalErrorUnknown2 + found_plugin + str.FrostfallCriticalErrorUnknown3)
-		endif
-	else
-		while true
-			; Frostfall Legacy was detected but SKSE is not loaded, so debug info is limited. Prevent continued play.
-			MessageBox(str.FrostfallCriticalError1 + str.FrostfallCriticalError2NoSKSE)
-			utility.wait(3.0)
-		endWhile
-	endif
-endFunction
-
 function RunCompatibility()
 	if _Camp_IsBeta.GetValueInt() == 2
 		_Camp_BetaMessage.Show(_Camp_CampfireVersion.GetValue())
@@ -299,6 +268,9 @@ function RunCompatibility()
 			;SkyUI was just loaded.
 		endif
 	endif
+
+	isSkyrimVR = IsPluginLoaded(0x00000BD7, "SkyrimVR.esm")
+	Conditions.IsSkyrimVR = isSkyrimVR
 
 	if isDLC1Loaded
 		isDLC1Loaded = IsPluginLoaded(0x02009403, "Dawnguard.esm")
@@ -413,11 +385,6 @@ function RunCompatibility()
 			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0003B2CC, "iNeed.esp"))
 			_Camp_ModWaterSkins.AddForm(Game.GetFormFromFile(0x0003AD62, "iNeed.esp"))
 		endif
-	endif
-
-	isFrostfallLegacyLoaded = IsPluginLoaded(0x0286F3, "Chesko_Frostfall.esp")
-	if isFrostfallLegacyLoaded
-		FatalErrorFrostfallLegacy()
 	endif
 
 	if isFrostfallLoaded
@@ -675,22 +642,12 @@ function RunCompatibility()
 endFunction
 
 bool function IsPluginLoaded(int iFormID, string sPluginName)
-	if isSKSELoaded
-		int i = Game.GetModByName(sPluginName)
-		if i != 255
-			debug.trace("[Campfire] Loaded: " + sPluginName)
-			return true
-		else
-			return false
-		endif
+	bool b = Game.GetFormFromFile(iFormID, sPluginName)
+	if b
+		debug.trace("[Campfire] Loaded: " + sPluginName)
+		return true
 	else
-		bool b = Game.GetFormFromFile(iFormID, sPluginName)
-		if b
-			debug.trace("[Campfire] Loaded: " + sPluginName)
-			return true
-		else
-			return false
-		endif
+		return false
 	endif
 endFunction
 

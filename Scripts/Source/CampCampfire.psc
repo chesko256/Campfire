@@ -482,14 +482,20 @@ endFunction
 
 function PlayerUseCampfire()
     in_use = true
+    _Camp_Compatibility compatibility = GetCompatibilitySystem()
+    float currentX = PlayerRef.GetPositionX()
+    float currentY = PlayerRef.GetPositionY()
     self.BlockActivation(false)
     self.Activate(PlayerRef)
-    ;Wait until the player is "using" the object, or enough time passes.
-    int j = 0
-    while !self.IsFurnitureInUse() && j < 50
-        utility.wait(0.1)
-        j += 1
-    endWhile
+
+    ;Wait until the player is "using" the object, or enough time passes, if not Skyrim VR.
+    if !compatibility.isSkyrimVR
+        int j = 0
+        while !self.IsFurnitureInUse() && j < 50
+            utility.wait(0.1)
+            j += 1
+        endWhile
+    endif
 
     ;Do they need the Blank item?
     PlayerRef.AddItem(_Camp_BlankItem, 1, true)
@@ -515,12 +521,25 @@ function PlayerUseCampfire()
         PlayerRef.AddItem(_Camp_CampfireItem_DestructionSkill, 1, true)
     endif
 
+    ; Make sure that a valid campfire mode has been set. If not, set them to Quick mode.
+    int mode = _Camp_Setting_CampfireMode.GetValueInt()
+    if mode < 0 || mode > 1
+        _Camp_Setting_CampfireMode.SetValueInt(0)
+        SendEvent_SaveSettingToProfile("campfire_mode", 0)
+    endif
+
     ShowTutorial(1)
 
     ;Wait until they finish.
-    while self.IsFurnitureInUse()
-        utility.wait(1)
-    endWhile
+    if compatibility.isSkyrimVR
+        while PlayerRef.GetPositionX() == currentX && PlayerRef.GetPositionY() == currentY
+            utility.wait(1)
+        endWhile
+    else
+        while self.IsFurnitureInUse()
+            utility.wait(1)
+        endWhile
+    endif
     int gw_count = PlayerRef.GetItemCount(_Camp_CampfireItem_GoodWeather)
     int ds_count = PlayerRef.GetItemCount(_Camp_CampfireItem_DestructionSkill)
     int a_count = PlayerRef.GetItemCount(_Camp_BlankItem)
@@ -836,7 +855,13 @@ function PlaceObject_SitFurniture1()
     mySitFurniture1Future = PlacementSystem.PlaceObject(self, FireAsset_SitFurniture1, PositionRef_SitFurniture1, is_temp = is_temporary)
 endFunction
 function PlaceObject_SitFurniture2()
-    mySitFurniture2Future = PlacementSystem.PlaceObject(self, FireAsset_SitFurniture2, PositionRef_SitFurniture2, is_temp = is_temporary)
+    ; Player
+    if GetCompatibilitySystem().isSkyrimVR
+        Furniture VRSitMarker = Game.GetFormFromFile(0x0207BEA2, "Campfire.esm") as Furniture
+        mySitFurniture2Future = PlacementSystem.PlaceObject(self, VRSitMarker, PositionRef_SitFurniture2, z_pos_offset = -8.0, is_temp = is_temporary)
+    else
+        mySitFurniture2Future = PlacementSystem.PlaceObject(self, FireAsset_SitFurniture2, PositionRef_SitFurniture2, is_temp = is_temporary)
+    endif
 endFunction
 function PlaceObject_SitFurniture3()
     mySitFurniture3Future = PlacementSystem.PlaceObject(self, FireAsset_SitFurniture3, PositionRef_SitFurniture3, is_temp = is_temporary)
@@ -1321,6 +1346,18 @@ endFunction
 function SetBonusLevel(int aiBonusLevel)
     if myUpliftedTriggerVolume
         (myUpliftedTriggerVolume as _Camp_UpliftedTriggerVolumeScript).bonus_level = aiBonusLevel
+    endif
+endFunction
+
+; @NOFALLBACK
+function SendEvent_SaveSettingToProfile(string asSettingName, int aiSettingValue)
+    if GetCompatibilitySystem().isSKYUILoaded
+        int handle = ModEvent.Create("Campfire_SaveSettingToProfile")
+        if handle
+            ModEvent.PushString(handle, asSettingName)
+            ModEvent.PushInt(handle, aiSettingValue)
+            ModEvent.Send(handle)
+        endif
     endif
 endFunction
 

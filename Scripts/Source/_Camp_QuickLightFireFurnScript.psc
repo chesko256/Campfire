@@ -24,6 +24,35 @@ int stone_fx_counter = 0
 ObjectReference parent_campfire
 ObjectReference spark_marker
 int sound_id = 0
+float currentX
+float currentY
+
+; Skyrim VR
+Event OnInit()
+	if !in_use && GetCompatibilitySystem().isSkyrimVR
+		currentX = PlayerRef.GetPositionX()
+    	currentY = PlayerRef.GetPositionY()
+		in_use = true
+
+		parent_campfire = GetLastUsedCampfire()
+		(parent_campfire as CampCampfire).FireLightingReference = self
+		
+		total_required_seconds = 5
+		remaining_seconds = total_required_seconds
+		CampDebug(0, "Campfire lighting total seconds " + total_required_seconds)
+
+		if is_stone
+			spark_marker = PlayerRef.PlaceAtMe(XMarker)
+			float[] dist = new float[2]
+			dist = GetOffsets(PlayerRef, 130.0)
+			spark_marker.MoveTo(PlayerRef, afXOffset = dist[0], afYOffset = dist[1], afZOffset = 10.0)
+		elseif is_flamespell
+			FlameFX()
+		endif
+
+		RegisterForSingleUpdate(1)
+	endif
+endEvent
 
 Event OnActivate(ObjectReference akActionRef)
 	if !in_use
@@ -60,7 +89,7 @@ Event OnUpdate()
 	CampDebug(1, "Trying to light campfire, " + remaining_seconds + " secs remaining...")
 	float percentage = (remaining_seconds / total_required_seconds)
 
-	if self.IsFurnitureInUse()
+	if self.IsFurnitureInUse() || (GetCompatibilitySystem().isSkyrimVR && (PlayerRef.GetPositionX() == currentX && PlayerRef.GetPositionY() == currentY))
 		if is_stone
 			stone_fx_counter += 1
 			StoneFX()
@@ -81,13 +110,15 @@ Event OnUpdate()
 				Game.AdvanceSkill("Destruction", 66.0)	; Equivalent to 1x cast of Fireball
 			endif
 
-			self.Activate(PlayerRef)
+			if !GetCompatibilitySystem().isSkyrimVR
+				self.Activate(PlayerRef)
 
-			int i = 0
-			while self.IsFurnitureInUse() && i < 50
-				Utility.Wait(0.1)
-				i += 1
-			endWhile
+				int i = 0
+				while self.IsFurnitureInUse() && i < 50
+					Utility.Wait(0.1)
+					i += 1
+				endWhile
+			endif
 
 			(parent_campfire as CampCampfire).RegisterForCampfireCallback(0.1)
 			

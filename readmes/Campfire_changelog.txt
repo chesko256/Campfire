@@ -8,6 +8,32 @@ Change Log
 
 ===================================================
 
+## Campfire 1.12
+
+### Features
+- Now compatible with Skyrim VR!
+  - A new option, "Relax", is added when selecting your bed roll. This replaces "Sit" and "Lie Down" when playing Skyrim VR.
+  - Reworked several interactions with tents and campfires in order to ensure a comfortable experience in VR.
+  - Ensured that rain and snow are blocked by tents when inside a tent in VR.
+
+- Now compatible with SKSE64 (Skyrim SE)!
+  - Updated Skyrim SE version to include PapyrusUtil 3.4b for SKSE64 2.0.7 and SSE 1.5.39.
+
+### Changes
+- When using a campfire, you no longer kneel in front of it.
+- Followers now sleep in bed rolls at night and sit on bed rolls during the day, instead of mirroring the player's behavior, when sitting or lying down in a bed roll.
+
+### Bug Fixes
+- Fixed an issue where fires could not be built under certain conditions.
+- We now no longer overwrite settings if a Settings Profile fails to load.
+- Removed legacy Frostfall check, as it sometimes produced warnings when it should not.
+- Fixed an issue where separating a certain backpack with amulet would not produce the backpack and amulet again.
+- Prevented Campfire hotkeys from activating when the Text Entry menu from UIExtensions is open.
+- **(Special Edition)** Fixed an issues where plugins in the user's Data folder, but not their load order, would register as loaded.
+
+
+
+
 ## Campfire 1.11
 
 ### Changes
